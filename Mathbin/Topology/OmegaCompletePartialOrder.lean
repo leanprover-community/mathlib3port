@@ -81,9 +81,9 @@ def Scott (α : Type u) :=
 instance Scott.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] :
     TopologicalSpace (Scott α) where
   IsOpen := Scott.IsOpen α
-  is_open_univ := Scott.isOpen_univ α
-  is_open_inter := Scott.IsOpen.inter α
-  is_open_sUnion := Scott.isOpen_unionₛ α
+  isOpen_univ := Scott.isOpen_univ α
+  isOpen_inter := Scott.IsOpen.inter α
+  isOpen_unionₛ := Scott.isOpen_unionₛ α
 #align Scott.topological_space Scott.topologicalSpace
 
 section notBelow

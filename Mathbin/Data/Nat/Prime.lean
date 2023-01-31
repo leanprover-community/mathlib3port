@@ -95,7 +95,7 @@ theorem Prime.two_le : ∀ {p : ℕ}, Prime p → 2 ≤ p
 
 #print Nat.Prime.one_lt /-
 theorem Prime.one_lt {p : ℕ} : Prime p → 1 < p :=
-  prime.two_le
+  Prime.two_le
 #align nat.prime.one_lt Nat.Prime.one_lt
 -/
 
@@ -471,7 +471,7 @@ theorem le_minFac' {m n : ℕ} : n = 1 ∨ m ≤ minFac n ↔ ∀ p, 2 ≤ p →
 theorem prime_def_minFac {p : ℕ} : Prime p ↔ 2 ≤ p ∧ minFac p = p :=
   ⟨fun pp =>
     ⟨pp.two_le,
-      let ⟨f2, fd, a⟩ := min_fac_has_prop <| ne_of_gt pp.one_lt
+      let ⟨f2, fd, a⟩ := minFac_has_prop <| ne_of_gt pp.one_lt
       ((dvd_prime pp).1 fd).resolve_left (ne_of_gt f2)⟩,
     fun ⟨p2, e⟩ => e ▸ minFac_prime (ne_of_gt p2)⟩
 #align nat.prime_def_min_fac Nat.prime_def_minFac
@@ -500,7 +500,7 @@ instance decidablePrime (p : ℕ) : Decidable (Prime p) :=
 #print Nat.not_prime_iff_minFac_lt /-
 theorem not_prime_iff_minFac_lt {n : ℕ} (n2 : 2 ≤ n) : ¬Prime n ↔ minFac n < n :=
   (not_congr <| prime_def_minFac.trans <| and_iff_right n2).trans <|
-    (lt_iff_le_and_ne.trans <| and_iff_right <| min_fac_le <| le_of_succ_le n2).symm
+    (lt_iff_le_and_ne.trans <| and_iff_right <| minFac_le <| le_of_succ_le n2).symm
 #align nat.not_prime_iff_min_fac_lt Nat.not_prime_iff_minFac_lt
 -/
 

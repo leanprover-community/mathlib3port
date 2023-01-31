@@ -115,7 +115,7 @@ theorem orthogonal_supᵢ_eigenspaces_invariant ⦃v : E⦄ (hv : v ∈ (⨆ μ,
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space has no eigenvalues. -/
 theorem orthogonal_supᵢ_eigenspaces (μ : 𝕜) :
-    eigenspace (T.restrict hT.orthogonal_supr_eigenspaces_invariant) μ = ⊥ :=
+    eigenspace (T.restrict hT.orthogonal_supᵢ_eigenspaces_invariant) μ = ⊥ :=
   by
   set p : Submodule 𝕜 E := (⨆ μ, eigenspace T μ)ᗮ
   refine' eigenspace_restrict_eq_bot hT.orthogonal_supr_eigenspaces_invariant _
@@ -148,7 +148,7 @@ include dec_𝕜
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` give
 an internal direct sum decomposition of `E`. -/
 theorem direct_sum_isInternal : DirectSum.IsInternal fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.orthogonalFamilyEigenspaces'.is_internal_iff.mpr hT.orthogonal_supr_eigenspaces_eq_bot'
+  hT.orthogonalFamilyEigenspaces'.isInternal_iff.mpr hT.orthogonal_supᵢ_eigenspaces_eq_bot'
 #align linear_map.is_symmetric.direct_sum_is_internal LinearMap.IsSymmetric.direct_sum_isInternal
 
 section Version1
@@ -156,14 +156,13 @@ section Version1
 /-- Isometry from an inner product space `E` to the direct sum of the eigenspaces of some
 self-adjoint operator `T` on `E`. -/
 noncomputable def diagonalization : E ≃ₗᵢ[𝕜] PiLp 2 fun μ : Eigenvalues T => eigenspace T μ :=
-  hT.direct_sum_is_internal.isometryL2OfOrthogonalFamily hT.orthogonalFamilyEigenspaces'
+  hT.direct_sum_isInternal.isometryL2OfOrthogonalFamily hT.orthogonalFamilyEigenspaces'
 #align linear_map.is_symmetric.diagonalization LinearMap.IsSymmetric.diagonalization
 
 @[simp]
 theorem diagonalization_symm_apply (w : PiLp 2 fun μ : Eigenvalues T => eigenspace T μ) :
     hT.diagonalization.symm w = ∑ μ, w μ :=
-  hT.direct_sum_is_internal.isometry_L2_of_orthogonal_family_symm_apply
-    hT.orthogonalFamilyEigenspaces' w
+  hT.direct_sum_isInternal.isometryL2OfOrthogonalFamily_symm_apply hT.orthogonalFamilyEigenspaces' w
 #align linear_map.is_symmetric.diagonalization_symm_apply LinearMap.IsSymmetric.diagonalization_symm_apply
 
 /-- *Diagonalization theorem*, *spectral theorem*; version 1: A self-adjoint operator `T` on a
@@ -198,7 +197,7 @@ finite-dimensional inner product space `E`.
 TODO Postcompose with a permutation so that these eigenvectors are listed in increasing order of
 eigenvalue. -/
 noncomputable irreducible_def eigenvectorBasis : OrthonormalBasis (Fin n) 𝕜 E :=
-  hT.direct_sum_is_internal.subordinateOrthonormalBasis hn hT.orthogonalFamilyEigenspaces'
+  hT.direct_sum_isInternal.subordinateOrthonormalBasis hn hT.orthogonalFamilyEigenspaces'
 #align linear_map.is_symmetric.eigenvector_basis LinearMap.IsSymmetric.eigenvectorBasis
 
 /-- The sequence of real eigenvalues associated to the standard orthonormal basis of eigenvectors
@@ -207,7 +206,7 @@ for a self-adjoint operator `T` on `E`.
 TODO Postcompose with a permutation so that these eigenvalues are listed in increasing order. -/
 noncomputable irreducible_def eigenvalues (i : Fin n) : ℝ :=
   @IsROrC.re 𝕜 _ <|
-    hT.direct_sum_is_internal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamilyEigenspaces'
+    hT.direct_sum_isInternal.subordinateOrthonormalBasisIndex hn i hT.orthogonalFamilyEigenspaces'
 #align linear_map.is_symmetric.eigenvalues LinearMap.IsSymmetric.eigenvalues
 
 theorem hasEigenvector_eigenvectorBasis (i : Fin n) :
@@ -235,13 +234,13 @@ theorem hasEigenvector_eigenvectorBasis (i : Fin n) :
 #align linear_map.is_symmetric.has_eigenvector_eigenvector_basis LinearMap.IsSymmetric.hasEigenvector_eigenvectorBasis
 
 theorem hasEigenvalue_eigenvalues (i : Fin n) : HasEigenvalue T (hT.Eigenvalues hn i) :=
-  Module.End.hasEigenvalue_of_hasEigenvector (hT.has_eigenvector_eigenvector_basis hn i)
+  Module.End.hasEigenvalue_of_hasEigenvector (hT.hasEigenvector_eigenvectorBasis hn i)
 #align linear_map.is_symmetric.has_eigenvalue_eigenvalues LinearMap.IsSymmetric.hasEigenvalue_eigenvalues
 
 @[simp]
 theorem apply_eigenvectorBasis (i : Fin n) :
     T (hT.eigenvectorBasis hn i) = (hT.Eigenvalues hn i : 𝕜) • hT.eigenvectorBasis hn i :=
-  mem_eigenspace_iff.mp (hT.has_eigenvector_eigenvector_basis hn i).1
+  mem_eigenspace_iff.mp (hT.hasEigenvector_eigenvectorBasis hn i).1
 #align linear_map.is_symmetric.apply_eigenvector_basis LinearMap.IsSymmetric.apply_eigenvectorBasis
 
 /-- *Diagonalization theorem*, *spectral theorem*; version 2: A self-adjoint operator `T` on a

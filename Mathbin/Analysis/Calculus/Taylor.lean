@@ -416,6 +416,6 @@ theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ}
   intro x hx
   rw [div_mul_eq_mul_div₀]
   refine' taylor_mean_remainder_bound hab hf hx fun y => _
-  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_Icc h).norm.le_Sup_image_Icc
+  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_Icc h).norm.le_supₛ_image_Icc
 #align exists_taylor_mean_remainder_bound exists_taylor_mean_remainder_bound
 

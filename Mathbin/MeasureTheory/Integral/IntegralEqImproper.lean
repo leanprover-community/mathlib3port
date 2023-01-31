@@ -463,7 +463,7 @@ theorem AeCover.integrableOfIntegralNormBounded [l.ne_bot] [l.IsCountablyGenerat
 theorem AeCover.integrableOfIntegralNormTendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ)
     (htendsto : Tendsto (fun i => ∫ x in φ i, ‖f x‖ ∂μ) l (𝓝 I)) : Integrable f μ :=
-  let ⟨I', hI'⟩ := htendsto.is_bounded_under_le
+  let ⟨I', hI'⟩ := htendsto.isBoundedUnder_le
   hφ.integrableOfIntegralNormBounded I' hfi hI'
 #align measure_theory.ae_cover.integrable_of_integral_norm_tendsto MeasureTheory.AeCover.integrableOfIntegralNormTendsto
 
@@ -479,7 +479,7 @@ theorem AeCover.integrableOfIntegralTendstoOfNonnegAe [l.ne_bot] [l.IsCountablyG
     {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → ℝ} (I : ℝ) (hfi : ∀ i, IntegrableOn f (φ i) μ)
     (hnng : ∀ᵐ x ∂μ, 0 ≤ f x) (htendsto : Tendsto (fun i => ∫ x in φ i, f x ∂μ) l (𝓝 I)) :
     Integrable f μ :=
-  let ⟨I', hI'⟩ := htendsto.is_bounded_under_le
+  let ⟨I', hI'⟩ := htendsto.isBoundedUnder_le
   hφ.integrableOfIntegralBoundedOfNonnegAe I' hfi hnng hI'
 #align measure_theory.ae_cover.integrable_of_integral_tendsto_of_nonneg_ae MeasureTheory.AeCover.integrableOfIntegralTendstoOfNonnegAe
 
@@ -546,7 +546,7 @@ theorem integrableOfIntervalIntegralNormTendsto (I : ℝ)
     (hfi : ∀ i, IntegrableOn f (Ioc (a i) (b i)) μ) (ha : Tendsto a l atBot)
     (hb : Tendsto b l atTop) (h : Tendsto (fun i => ∫ x in a i..b i, ‖f x‖ ∂μ) l (𝓝 I)) :
     Integrable f μ :=
-  let ⟨I', hI'⟩ := h.is_bounded_under_le
+  let ⟨I', hI'⟩ := h.isBoundedUnder_le
   integrableOfIntervalIntegralNormBounded I' hfi ha hb hI'
 #align measure_theory.integrable_of_interval_integral_norm_tendsto MeasureTheory.integrableOfIntervalIntegralNormTendsto
 
@@ -573,7 +573,7 @@ then `f` is integrable on the interval (-∞, b) -/
 theorem integrableOnIicOfIntervalIntegralNormTendsto (I b : ℝ)
     (hfi : ∀ i, IntegrableOn f (Ioc (a i) b) μ) (ha : Tendsto a l atBot)
     (h : Tendsto (fun i => ∫ x in a i..b, ‖f x‖ ∂μ) l (𝓝 I)) : IntegrableOn f (Iic b) μ :=
-  let ⟨I', hI'⟩ := h.is_bounded_under_le
+  let ⟨I', hI'⟩ := h.isBoundedUnder_le
   integrableOnIicOfIntervalIntegralNormBounded I' b hfi ha hI'
 #align measure_theory.integrable_on_Iic_of_interval_integral_norm_tendsto MeasureTheory.integrableOnIicOfIntervalIntegralNormTendsto
 
@@ -600,7 +600,7 @@ then `f` is integrable on the interval (a, ∞) -/
 theorem integrableOnIoiOfIntervalIntegralNormTendsto (I a : ℝ)
     (hfi : ∀ i, IntegrableOn f (Ioc a (b i)) μ) (hb : Tendsto b l atTop)
     (h : Tendsto (fun i => ∫ x in a..b i, ‖f x‖ ∂μ) l (𝓝 <| I)) : IntegrableOn f (Ioi a) μ :=
-  let ⟨I', hI'⟩ := h.is_bounded_under_le
+  let ⟨I', hI'⟩ := h.isBoundedUnder_le
   integrableOnIoiOfIntervalIntegralNormBounded I' a hfi hb hI'
 #align measure_theory.integrable_on_Ioi_of_interval_integral_norm_tendsto MeasureTheory.integrableOnIoiOfIntervalIntegralNormTendsto
 

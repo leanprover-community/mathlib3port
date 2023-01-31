@@ -63,7 +63,7 @@ class like `paracompact_space.{u v}`. Due to lemma `precise_refinement` below, e
 `s : α → set X` indexed on `α : Type v` has a *precise* locally finite refinement, i.e., a locally
 finite refinement `t : α → set X` indexed on the same type such that each `∀ i, t i ⊆ s i`. -/
 class ParacompactSpace (X : Type v) [TopologicalSpace X] : Prop where
-  locally_finite_refinement :
+  locallyFinite_refinement :
     ∀ (α : Type v) (s : α → Set X) (ho : ∀ a, IsOpen (s a)) (hc : (⋃ a, s a) = univ),
       ∃ (β : Type v)(t : β → Set X)(ho : ∀ b, IsOpen (t b))(hc : (⋃ b, t b) = univ),
         LocallyFinite t ∧ ∀ b, ∃ a, t b ⊆ s a
@@ -167,11 +167,11 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
       simpa only [K'.find_shiftr] using
         diff_subset_diff_right interior_subset (K'.shiftr.mem_diff_shiftr_find x)
     have Kdiffc : ∀ n, IsCompact (Kdiff n ∩ s) := fun n =>
-      ((K.is_compact _).diff isOpen_interior).inter_right hs
+      ((K.is_compact _).diffₓ isOpen_interior).inter_right hs
     -- Next we choose a finite covering `B (c n i) (r n i)` of each
     -- `Kdiff (n + 1) ∩ s` such that `B (c n i) (r n i) ∩ s` is disjoint with `K n`
     have : ∀ (n) (x : Kdiff (n + 1) ∩ s), K nᶜ ∈ 𝓝 (x : X) := fun n x =>
-      IsOpen.mem_nhds (K.is_closed n).is_open_compl fun hx' =>
+      IsOpen.mem_nhds (K.is_closed n).isOpen_compl fun hx' =>
         x.2.1.2 <| K.subset_interior_succ _ hx'
     haveI : ∀ (n) (x : Kdiff n ∩ s), Nonempty (ι x) := fun n x => (hB x x.2.2).Nonempty
     choose! r hrp hr using fun n (x : Kdiff (n + 1) ∩ s) => (hB x x.2.2).mem_iff.1 (this n x)
@@ -191,7 +191,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
         ⟨interior (K (K'.find x + 3)),
           IsOpen.mem_nhds isOpen_interior (K.subset_interior_succ _ (hKcov x).1), _⟩
       have : (⋃ k ≤ K'.find x + 2, range <| Sigma.mk k : Set (Σn, T' n)).Finite :=
-        (finite_le_nat _).bUnion fun k hk => finite_range _
+        (finite_le_nat _).bunionᵢ fun k hk => finite_range _
       apply this.subset
       rintro ⟨k, c, hc⟩
       simp only [mem_Union, mem_set_of_eq, mem_image, Subtype.coe_mk]

@@ -83,7 +83,7 @@ instance (priority := 100) RegularMono.ofIsSplitMono (f : X ⟶ Y) [IsSplitMono 
 /-- If `f` is a regular mono, then any map `k : W ⟶ Y` equalizing `regular_mono.left` and
     `regular_mono.right` induces a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
 def RegularMono.lift' {W : C} (f : X ⟶ Y) [RegularMono f] (k : W ⟶ Y)
-    (h : k ≫ (RegularMono.left : Y ⟶ @RegularMono.z _ _ _ _ f _) = k ≫ regular_mono.right) :
+    (h : k ≫ (RegularMono.left : Y ⟶ @RegularMono.z _ _ _ _ f _) = k ≫ RegularMono.right) :
     { l : W ⟶ X // l ≫ f = k } :=
   Fork.IsLimit.lift' RegularMono.isLimit _ h
 #align category_theory.regular_mono.lift' CategoryTheory.RegularMono.lift'
@@ -172,7 +172,7 @@ instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCate
 
 instance (priority := 100) strongMonoCategory_of_regularMonoCategory [RegularMonoCategory C] :
     StrongMonoCategory C
-    where strong_mono_of_mono _ _ f _ :=
+    where strongMono_of_mono _ _ f _ :=
     by
     haveI := regular_mono_of_mono f
     infer_instance
@@ -219,7 +219,7 @@ instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : 
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
     `regular_epi.right` induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
-    (h : (RegularEpi.left : RegularEpi.w f ⟶ X) ≫ k = regular_epi.right ≫ k) :
+    (h : (RegularEpi.left : RegularEpi.w f ⟶ X) ≫ k = RegularEpi.right ≫ k) :
     { l : Y ⟶ W // f ≫ l = k } :=
   Cofork.IsColimit.desc' RegularEpi.isColimit _ h
 #align category_theory.regular_epi.desc' CategoryTheory.RegularEpi.desc'
@@ -312,7 +312,7 @@ instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategor
 
 instance (priority := 100) strongEpiCategory_of_regularEpiCategory [RegularEpiCategory C] :
     StrongEpiCategory C
-    where strong_epi_of_epi _ _ f _ :=
+    where strongEpi_of_epi _ _ f _ :=
     by
     haveI := regular_epi_of_epi f
     infer_instance

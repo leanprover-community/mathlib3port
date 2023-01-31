@@ -196,7 +196,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α}, (IsAntichain.{u2} α r s) -> (forall (φ : RelIso.{u2, u1} α β r r'), IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' (RelIso.toRelEmbedding.{u2, u1} α β r r' φ))) s))
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_iso IsAntichain.image_relIsoₓ'. -/
 theorem image_relIso (hs : IsAntichain r s) (φ : r ≃r r') : IsAntichain r' (φ '' s) :=
-  hs.image_rel_embedding φ
+  hs.image_relEmbedding φ
 #align is_antichain.image_rel_iso IsAntichain.image_relIso
 
 /- warning: is_antichain.preimage_rel_iso -> IsAntichain.preimage_relIso is a dubious translation:
@@ -207,7 +207,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_rel_iso IsAntichain.preimage_relIsoₓ'. -/
 theorem preimage_relIso {t : Set β} (hs : IsAntichain r' t) (φ : r ≃r r') :
     IsAntichain r (φ ⁻¹' t) :=
-  hs.preimage_rel_embedding φ
+  hs.preimage_relEmbedding φ
 #align is_antichain.preimage_rel_iso IsAntichain.preimage_relIso
 
 /- warning: is_antichain.image_rel_embedding_iff -> IsAntichain.image_relEmbedding_iff is a dubious translation:
@@ -217,8 +217,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelEmbedding.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' φ)) s)) (IsAntichain.{u2} α r s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iffₓ'. -/
 theorem image_relEmbedding_iff {φ : r ↪r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
-  ⟨fun h => (φ.Injective.preimage_image s).subst (h.preimage_rel_embedding φ), fun h =>
-    h.image_rel_embedding φ⟩
+  ⟨fun h => (φ.Injective.preimage_image s).subst (h.preimage_relEmbedding φ), fun h =>
+    h.image_relEmbedding φ⟩
 #align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iff
 
 /- warning: is_antichain.image_rel_iso_iff -> IsAntichain.image_relIso_iff is a dubious translation:
@@ -261,7 +261,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_embedding_iff IsAntichain.image_embedding_iffₓ'. -/
 theorem image_embedding_iff [LE α] [LE β] {φ : α ↪o β} :
     IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
-  image_rel_embedding_iff
+  image_relEmbedding_iff
 #align is_antichain.image_embedding_iff IsAntichain.image_embedding_iff
 
 /- warning: is_antichain.image_iso -> IsAntichain.image_iso is a dubious translation:
@@ -283,7 +283,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_iso_iff IsAntichain.image_iso_iffₓ'. -/
 theorem image_iso_iff [LE α] [LE β] {φ : α ≃o β} :
     IsAntichain (· ≤ ·) (φ '' s) ↔ IsAntichain (· ≤ ·) s :=
-  image_rel_embedding_iff
+  image_relEmbedding_iff
 #align is_antichain.image_iso_iff IsAntichain.image_iso_iff
 
 /- warning: is_antichain.preimage_iso -> IsAntichain.preimage_iso is a dubious translation:
@@ -354,7 +354,7 @@ variable [Preorder α]
 
 #print isAntichain_and_least_iff /-
 theorem isAntichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq' hb h.2.1 (h.2.2 hb)⟩,
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq'' hb h.2.1 (h.2.2 hb)⟩,
     by
     rintro rfl
     exact ⟨isAntichain_singleton _ _, isLeast_singleton⟩⟩

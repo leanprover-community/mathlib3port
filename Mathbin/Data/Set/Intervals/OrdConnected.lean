@@ -147,14 +147,14 @@ theorem ordConnected_dual {s : Set α} : OrdConnected (OrderDual.ofDual ⁻¹' s
 #print Set.ordConnected_interₛ /-
 theorem ordConnected_interₛ {S : Set (Set α)} (hS : ∀ s ∈ S, OrdConnected s) :
     OrdConnected (⋂₀ S) :=
-  ⟨fun x hx y hy => subset_sInter fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
+  ⟨fun x hx y hy => subset_interₛ fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
 #align set.ord_connected_sInter Set.ordConnected_interₛ
 -/
 
 #print Set.ordConnected_interᵢ /-
 theorem ordConnected_interᵢ {ι : Sort _} {s : ι → Set α} (hs : ∀ i, OrdConnected (s i)) :
     OrdConnected (⋂ i, s i) :=
-  ord_connected_sInter <| forall_range_iff.2 hs
+  ordConnected_interₛ <| forall_range_iff.2 hs
 #align set.ord_connected_Inter Set.ordConnected_interᵢ
 -/
 
@@ -169,7 +169,7 @@ instance ordConnected_interᵢ' {ι : Sort _} {s : ι → Set α} [∀ i, OrdCon
 #print Set.ordConnected_binterᵢ /-
 theorem ordConnected_binterᵢ {ι : Sort _} {p : ι → Prop} {s : ∀ (i : ι) (hi : p i), Set α}
     (hs : ∀ i hi, OrdConnected (s i hi)) : OrdConnected (⋂ (i) (hi), s i hi) :=
-  ord_connected_Inter fun i => ord_connected_Inter <| hs i
+  ordConnected_interᵢ fun i => ordConnected_interᵢ <| hs i
 #align set.ord_connected_bInter Set.ordConnected_binterᵢ
 -/
 
@@ -187,7 +187,7 @@ theorem ordConnected_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α 
 #print Set.ordConnected_pi' /-
 instance ordConnected_pi' {ι : Type _} {α : ι → Type _} [∀ i, Preorder (α i)] {s : Set ι}
     {t : ∀ i, Set (α i)} [h : ∀ i, OrdConnected (t i)] : OrdConnected (s.pi t) :=
-  ord_connected_pi fun i hi => h i
+  ordConnected_pi fun i hi => h i
 #align set.ord_connected_pi' Set.ordConnected_pi'
 -/
 
@@ -315,7 +315,7 @@ theorem ordConnected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdCon
 
 #print Set.dual_ordConnected_iff /-
 @[simp]
-theorem dual_ordConnected_iff {s : Set α} : OrdConnected (of_dual ⁻¹' s) ↔ OrdConnected s :=
+theorem dual_ordConnected_iff {s : Set α} : OrdConnected (ofDual ⁻¹' s) ↔ OrdConnected s :=
   by
   simp_rw [ord_connected_def, to_dual.surjective.forall, dual_Icc, Subtype.forall']
   exact forall_swap
@@ -324,7 +324,7 @@ theorem dual_ordConnected_iff {s : Set α} : OrdConnected (of_dual ⁻¹' s) ↔
 
 #print Set.dual_ordConnected /-
 @[instance]
-theorem dual_ordConnected {s : Set α} [OrdConnected s] : OrdConnected (of_dual ⁻¹' s) :=
+theorem dual_ordConnected {s : Set α} [OrdConnected s] : OrdConnected (ofDual ⁻¹' s) :=
   dual_ordConnected_iff.2 ‹_›
 #align set.dual_ord_connected Set.dual_ordConnected
 -/
@@ -338,14 +338,14 @@ variable {α : Type _} [LinearOrder α] {s : Set α} {x : α}
 #print Set.ordConnected_uIcc /-
 @[instance]
 theorem ordConnected_uIcc {a b : α} : OrdConnected [a, b] :=
-  ord_connected_Icc
+  ordConnected_Icc
 #align set.ord_connected_uIcc Set.ordConnected_uIcc
 -/
 
 #print Set.ordConnected_uIoc /-
 @[instance]
 theorem ordConnected_uIoc {a b : α} : OrdConnected (Ι a b) :=
-  ord_connected_Ioc
+  ordConnected_Ioc
 #align set.ord_connected_uIoc Set.ordConnected_uIoc
 -/
 

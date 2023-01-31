@@ -223,7 +223,7 @@ theorem isIso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a :=
   rw [←
     show _ = a from
       (category.comp_id _).symm.trans
-        ((is_kernel_pair.id_of_mono f).IsLimit.cone_point_unique_up_to_iso_inv_comp h.is_limit
+        ((is_kernel_pair.id_of_mono f).IsLimit.conePointUniqueUpToIso_inv_comp h.is_limit
           walking_cospan.left)]
   infer_instance
 #align category_theory.is_kernel_pair.is_iso_of_mono CategoryTheory.IsKernelPair.isIso_of_mono

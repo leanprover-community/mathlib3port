@@ -68,7 +68,7 @@ end
 local notation "F" => FreeMonoidalCategory
 
 -- mathport name: exprN
-local notation "N" => discrete ∘ normal_monoidal_object
+local notation "N" => Discrete ∘ NormalMonoidalObject
 
 -- mathport name: «expr ⟶ᵐ »
 local infixr:10 " ⟶ᵐ " => Hom

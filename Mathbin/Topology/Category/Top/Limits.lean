@@ -51,7 +51,7 @@ def limitCone (F : J ⥤ TopCat.{max v u}) : Cone F
     {
       app := fun j =>
         { toFun := fun u => u.val j
-          continuous_to_fun :=
+          continuous_toFun :=
             show Continuous ((fun u : ∀ j : J, F.obj j => u j) ∘ Subtype.val) by continuity } }
 #align Top.limit_cone TopCat.limitCone
 
@@ -254,7 +254,7 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit
     where
   desc S :=
     { toFun := fun s => S.ι.app ⟨s.1⟩ s.2
-      continuous_to_fun := continuous_sigma fun i => map_continuous (S.ι.app ⟨i⟩) }
+      continuous_toFun := continuous_sigma fun i => map_continuous (S.ι.app ⟨i⟩) }
   uniq' := by
     intro S m h
     ext ⟨i, x⟩
@@ -347,14 +347,12 @@ def prodIsoProd (X Y : TopCat.{u}) : X ⨯ Y ≅ TopCat.of (X × Y) :=
 
 @[simp, reassoc.1]
 theorem prodIsoProd_hom_fst (X Y : TopCat.{u}) :
-    (prodIsoProd X Y).Hom ≫ prod_fst = limits.prod.fst := by
-  simpa [← iso.eq_inv_comp, prod_iso_prod]
+    (prodIsoProd X Y).Hom ≫ prodFst = Limits.prod.fst := by simpa [← iso.eq_inv_comp, prod_iso_prod]
 #align Top.prod_iso_prod_hom_fst TopCat.prodIsoProd_hom_fst
 
 @[simp, reassoc.1]
 theorem prodIsoProd_hom_snd (X Y : TopCat.{u}) :
-    (prodIsoProd X Y).Hom ≫ prod_snd = limits.prod.snd := by
-  simpa [← iso.eq_inv_comp, prod_iso_prod]
+    (prodIsoProd X Y).Hom ≫ prodSnd = Limits.prod.snd := by simpa [← iso.eq_inv_comp, prod_iso_prod]
 #align Top.prod_iso_prod_hom_snd TopCat.prodIsoProd_hom_snd
 
 @[simp]
@@ -368,12 +366,12 @@ theorem prodIsoProd_hom_apply {X Y : TopCat.{u}} (x : X ⨯ Y) :
 
 @[simp, reassoc.1, elementwise]
 theorem prodIsoProd_inv_fst (X Y : TopCat.{u}) :
-    (prodIsoProd X Y).inv ≫ limits.prod.fst = prod_fst := by simp [iso.inv_comp_eq]
+    (prodIsoProd X Y).inv ≫ Limits.prod.fst = prodFst := by simp [iso.inv_comp_eq]
 #align Top.prod_iso_prod_inv_fst TopCat.prodIsoProd_inv_fst
 
 @[simp, reassoc.1, elementwise]
 theorem prodIsoProd_inv_snd (X Y : TopCat.{u}) :
-    (prodIsoProd X Y).inv ≫ limits.prod.snd = prod_snd := by simp [iso.inv_comp_eq]
+    (prodIsoProd X Y).inv ≫ Limits.prod.snd = prodSnd := by simp [iso.inv_comp_eq]
 #align Top.prod_iso_prod_inv_snd TopCat.prodIsoProd_inv_snd
 
 theorem prod_topology {X Y : TopCat} :
@@ -542,7 +540,7 @@ theorem pullback_topology {X Y Z : TopCat.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
 
 theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     Set.range (prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) =
-      { x | (limits.prod.fst ≫ f) x = (limits.prod.snd ≫ g) x } :=
+      { x | (Limits.prod.fst ≫ f) x = (Limits.prod.snd ≫ g) x } :=
   by
   ext x
   constructor
@@ -744,7 +742,7 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {
         invFun := fun x =>
           ⟨x, by
             rw [pullback_fst_range]
-            exact ⟨_, (H (Set.mem_range_self x)).some_spec.symm⟩⟩
+            exact ⟨_, (H (Set.mem_range_self x)).choose_spec.symm⟩⟩
         left_inv := fun ⟨_, _⟩ => rfl
         right_inv := fun x => rfl }
   convert is_iso.of_iso (iso_of_homeo this)
@@ -761,7 +759,7 @@ theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (h
         invFun := fun x =>
           ⟨x, by
             rw [pullback_snd_range]
-            exact ⟨_, (H (Set.mem_range_self x)).some_spec⟩⟩
+            exact ⟨_, (H (Set.mem_range_self x)).choose_spec⟩⟩
         left_inv := fun ⟨_, _⟩ => rfl
         right_inv := fun x => rfl }
   convert is_iso.of_iso (iso_of_homeo this)
@@ -910,7 +908,7 @@ theorem binaryCofan_isColimit_iff {X Y : TopCat} (c : BinaryCofan X Y) :
               exact dif_neg hx
             continuity
             rw [embedding_subtype_coe.to_inducing.continuous_iff]
-            exact continuous_subtype_coe
+            exact continuous_subtype_val
           · change IsOpen (Set.range c.inlᶜ)
             rw [← eq_compl_iff_is_compl.mpr h₃.symm]
             exact h₂.open_range
@@ -954,7 +952,7 @@ theorem colimit_isOpen_iff (F : J ⥤ TopCat.{max v u}) (U : Set ((colimit F : _
   exact isOpen_supᵢ_iff
 #align Top.colimit_is_open_iff TopCat.colimit_isOpen_iff
 
-theorem coequalizer_isOpen_iff (F : walking_parallel_pair ⥤ TopCat.{u})
+theorem coequalizer_isOpen_iff (F : WalkingParallelPair ⥤ TopCat.{u})
     (U : Set ((colimit F : _) : Type u)) :
     IsOpen U ↔ IsOpen (colimit.ι F WalkingParallelPair.one ⁻¹' U) :=
   by
@@ -965,7 +963,7 @@ theorem coequalizer_isOpen_iff (F : walking_parallel_pair ⥤ TopCat.{u})
   · intro H j
     cases j
     · rw [← colimit.w F walking_parallel_pair_hom.left]
-      exact (F.map walking_parallel_pair_hom.left).continuous_to_fun.is_open_preimage _ H
+      exact (F.map walking_parallel_pair_hom.left).continuous_toFun.isOpen_preimage _ H
     · exact H
 #align Top.coequalizer_is_open_iff TopCat.coequalizer_isOpen_iff
 
@@ -1224,7 +1222,7 @@ theorem nonempty_sections_of_fintype_cofiltered_system {J : Type u} [Category.{w
   -- Step 1: lift everything to the `max u v w` universe.
   let J' : Type max w v u := AsSmall.{max w v} J
   let down : J' ⥤ J := as_small.down
-  let F' : J' ⥤ Type max u v w := down ⋙ F ⋙ ulift_functor.{max u w, v}
+  let F' : J' ⥤ Type max u v w := down ⋙ F ⋙ uliftFunctor.{max u w, v}
   haveI : ∀ i, Nonempty (F'.obj i) := fun i => ⟨⟨Classical.arbitrary (F.obj (down.obj i))⟩⟩
   haveI : ∀ i, Fintype (F'.obj i) := fun i => Fintype.ofEquiv (F.obj (down.obj i)) equiv.ulift.symm
   -- Step 2: apply the bootstrap theorem

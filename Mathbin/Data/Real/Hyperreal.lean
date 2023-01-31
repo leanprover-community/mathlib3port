@@ -35,7 +35,7 @@ noncomputable instance : CoeTC ℝ ℝ* :=
 
 @[simp, norm_cast]
 theorem coe_eq_coe {x y : ℝ} : (x : ℝ*) = y ↔ x = y :=
-  germ.const_inj
+  Germ.const_inj
 #align hyperreal.coe_eq_coe Hyperreal.coe_eq_coe
 
 theorem coe_ne_coe {x y : ℝ} : (x : ℝ*) ≠ y ↔ x ≠ y :=
@@ -114,12 +114,12 @@ theorem coe_sub (x y : ℝ) : ↑(x - y) = (x - y : ℝ*) :=
 
 @[simp, norm_cast]
 theorem coe_le_coe {x y : ℝ} : (x : ℝ*) ≤ y ↔ x ≤ y :=
-  germ.const_le_iff
+  Germ.const_le_iff
 #align hyperreal.coe_le_coe Hyperreal.coe_le_coe
 
 @[simp, norm_cast]
 theorem coe_lt_coe {x y : ℝ} : (x : ℝ*) < y ↔ x < y :=
-  germ.const_lt_iff
+  Germ.const_lt_iff
 #align hyperreal.coe_lt_coe Hyperreal.coe_lt_coe
 
 @[simp, norm_cast]
@@ -154,7 +154,7 @@ noncomputable def ofSeq (f : ℕ → ℝ) : ℝ* :=
 
 /-- A sample infinitesimal hyperreal-/
 noncomputable def epsilon : ℝ* :=
-  of_seq fun n => n⁻¹
+  ofSeq fun n => n⁻¹
 #align hyperreal.epsilon Hyperreal.epsilon
 
 /-- A sample infinite hyperreal-/
@@ -369,7 +369,7 @@ theorem isSt_st {x : ℝ*} (hx : st x ≠ 0) : IsSt x (st x) :=
 #align hyperreal.is_st_st Hyperreal.isSt_st
 
 theorem isSt_st' {x : ℝ*} (hx : ¬Infinite x) : IsSt x (st x) :=
-  is_st_st_of_exists_st <| exists_st_of_not_infinite hx
+  isSt_st_of_exists_st <| exists_st_of_not_infinite hx
 #align hyperreal.is_st_st' Hyperreal.isSt_st'
 
 theorem isSt_refl_real (r : ℝ) : IsSt r r := fun δ hδ =>
@@ -818,7 +818,7 @@ theorem infinitesimal_zero : Infinitesimal 0 :=
 #align hyperreal.infinitesimal_zero Hyperreal.infinitesimal_zero
 
 theorem zero_of_infinitesimal_real {r : ℝ} : Infinitesimal r → r = 0 :=
-  eq_of_is_st_real
+  eq_of_isSt_real
 #align hyperreal.zero_of_infinitesimal_real Hyperreal.zero_of_infinitesimal_real
 
 theorem zero_iff_infinitesimal_real {r : ℝ} : Infinitesimal r ↔ r = 0 :=
@@ -863,7 +863,7 @@ theorem infinitesimal_sub_isSt {x : ℝ*} {r : ℝ} (hxr : IsSt x r) : Infinites
 #align hyperreal.infinitesimal_sub_is_st Hyperreal.infinitesimal_sub_isSt
 
 theorem infinitesimal_sub_st {x : ℝ*} (hx : ¬Infinite x) : Infinitesimal (x - st x) :=
-  infinitesimal_sub_is_st <| isSt_st' hx
+  infinitesimal_sub_isSt <| isSt_st' hx
 #align hyperreal.infinitesimal_sub_st Hyperreal.infinitesimal_sub_st
 
 theorem infinitePos_iff_infinitesimal_inv_pos {x : ℝ*} :

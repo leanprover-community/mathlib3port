@@ -218,12 +218,11 @@ instance : AddGroupWithOne ℍ[R,c₁,c₂] :=
   {
     QuaternionAlgebra.addCommGroup with
     natCast := fun n => ((n : R) : ℍ[R,c₁,c₂])
-    nat_cast_zero := by simp
-    nat_cast_succ := by simp
+    natCast_zero := by simp
+    natCast_succ := by simp
     intCast := fun n => ((n : R) : ℍ[R,c₁,c₂])
-    int_cast_of_nat := fun _ => congr_arg coe (Int.cast_ofNat _)
-    int_cast_neg_succ_of_nat := fun n =>
-      show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_ofNat, coe_neg]
+    intCast_ofNat := fun _ => congr_arg coe (Int.cast_ofNat _)
+    intCast_negSucc := fun n => show ↑↑_ = -↑↑_ by rw [Int.cast_neg, Int.cast_ofNat, coe_neg]
     one := 1 }
 
 instance : Ring ℍ[R,c₁,c₂] := by
@@ -488,7 +487,7 @@ theorem conj_sub : (a - b).conj = a.conj - b.conj :=
 #align quaternion_algebra.conj_sub QuaternionAlgebra.conj_sub
 
 instance : StarRing ℍ[R,c₁,c₂] where
-  star := conj
+  unit := conj
   star_involutive := conj_conj
   star_add := conj_add
   star_mul := conj_mul

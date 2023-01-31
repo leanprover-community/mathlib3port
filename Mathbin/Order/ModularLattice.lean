@@ -419,7 +419,7 @@ instance (priority := 100) IsModularLattice.to_isLowerModularLattice : IsLowerMo
   ⟨fun a b =>
     by
     simp_rw [covby_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← is_empty_coe_sort, right_lt_sup,
-      inf_lt_left, (infIooOrderIsoIooSup _ _).symm.toEquiv.is_empty_congr]
+      inf_lt_left, (infIooOrderIsoIooSup _ _).symm.toEquiv.isEmpty_congr]
     exact id⟩
 #align is_modular_lattice.to_is_lower_modular_lattice IsModularLattice.to_isLowerModularLattice
 -/
@@ -430,7 +430,7 @@ instance (priority := 100) IsModularLattice.to_isUpperModularLattice : IsUpperMo
   ⟨fun a b =>
     by
     simp_rw [covby_iff_Ioo_eq, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
-      (infIooOrderIsoIooSup _ _).toEquiv.is_empty_congr]
+      (infIooOrderIsoIooSup _ _).toEquiv.isEmpty_congr]
     exact id⟩
 #align is_modular_lattice.to_is_upper_modular_lattice IsModularLattice.to_isUpperModularLattice
 -/

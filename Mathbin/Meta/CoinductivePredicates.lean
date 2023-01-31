@@ -278,7 +278,7 @@ hence `a_i = b_j`. We need to take care when there are `p_i` and `p_j` with `p_i
 unsafe def compact_relation : List expr → List (expr × expr) → List expr × List (expr × expr)
   | [], ps => ([], ps)
   | List.cons b bs, ps =>
-    match ps.span fun ap : expr × expr => ¬ap.2 == b with
+    match ps.spanₓ fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)
@@ -292,7 +292,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
   let params_names := params.map local_pp_name
   let u_params := u_names.map param
   let pre_info ←
-    preds.mmap fun ⟨c, is⟩ => do
+    preds.mapM fun ⟨c, is⟩ => do
         let (ls, t) ← open_pis c.local_type
         is_def_eq t q(Prop) <|>
             fail
@@ -306,11 +306,11 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
   let fs₁ := fs.map Prod.fst
   let fs₂ := fs.map Prod.snd
   let pds ←
-    (preds.zip pre_info).mmap fun ⟨⟨c, is⟩, ls, f₁, f₂⟩ => do
+    (preds.zip pre_info).mapM fun ⟨⟨c, is⟩, ls, f₁, f₂⟩ => do
         let sort u_f ← infer_type f₁ >>= infer_type
         let pred_g := fun c : expr => (const c.local_uniq_name u_params : expr).app_of_list params
         let intros ←
-          is.mmap fun i => do
+          is.mapM fun i => do
               let (args, t') ← open_pis i.local_type
               let Name.mk_string sub p ← return i.local_uniq_name
               let loc_args :=
@@ -376,7 +376,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
                 let ms ←
                   apply_core ((const n u_params).app_of_list <| ps ++ fs Prod.fst)
                       { NewGoals := new_goals.all }
-                let params ← (ms bs).enum.mfilter fun ⟨n, m, d⟩ => not <$> is_assigned m.2
+                let params ← (ms bs).enum.filterM fun ⟨n, m, d⟩ => not <$> is_assigned m.2
                 params fun ⟨n, m, d⟩ =>
                     mono d (fs Prod.snd) <|>
                       fail
@@ -484,7 +484,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
           let h ← intro `h
           let rules ← intro_lst <| rules local_pp_name
           eapply <| pd <| ps ++ fs
-          (pds <| rules shape).mmap fun ⟨pd, hr, s⟩ =>
+          (pds <| rules shape).mapM fun ⟨pd, hr, s⟩ =>
               solve1 do
                 let ls ← intro_lst <| pd local_pp_name
                 let h' ← intro `h
@@ -496,12 +496,12 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
                       1 =>
                     do
                     let hs ← elim_gen_sum n h'
-                    (hs <| pd s).mmap' fun ⟨h, r, n_bs, n_eqs⟩ =>
+                    (hs <| pd s).mapM' fun ⟨h, r, n_bs, n_eqs⟩ =>
                         solve1 do
                           let (as, h, _) ← elim_gen_prod (n_bs - if n_eqs = 0 then 1 else 0) h [] []
                           if n_eqs > 0 then do
                               let (eqs, eq', _) ← elim_gen_prod (n_eqs - 1) h [] []
-                              (eqs ++ [eq']).mmap' subst
+                              (eqs ++ [eq']).mapM' subst
                             else skip
                           eapply ((const r u_params).app_of_list <| ps ++ fs)
                           iterate assumption
@@ -544,7 +544,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
   focus1 do
     let ctxts' ← intros
     let ctxts ←
-      ctxts'.mmap fun v =>
+      ctxts'.mapM fun v =>
           local_const v.local_uniq_name v.local_pp_name v.local_binding_info <$> infer_type v
     let mvars ←
       apply_core rule
@@ -554,14 +554,14 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
       ←-- analyse relation
           List.headI <$>
           get_goals
-    let List.cons _ m_is ← return <| mvars.dropWhile fun v => v.2 ≠ g
+    let List.cons _ m_is ← return <| mvars.dropWhileₓ fun v => v.2 ≠ g
     let tgt ← target
     let (is, ty) ← open_pis tgt
     let-- construct coinduction predicate
       (bs, eqs)
       ←
       compact_relation ctxts <$>
-          (is.zip m_is).mmap fun ⟨i, m⟩ => Prod.mk i <$> instantiate_mvars m.2
+          (is.zip m_is).mapM fun ⟨i, m⟩ => Prod.mk i <$> instantiate_mvars m.2
     solve1 do
         let eqs ←
           (mk_and_lst <$> eqs fun ⟨i, m⟩ => mk_app `eq [m, i] >>= instantiate_mvars) <|> do
@@ -594,7 +594,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
           | [] => clear h
           | e :: eqs => do
             let (hs, h, ns) ← elim_gen_prod eqs h [] ns
-            (h :: hs hs.reverse : List _).mfoldl
+            (h :: hs hs.reverse : List _).foldlM
                 (fun (hs : List Name) (h : expr) => do
                   let [(_, hs', σ)] ← cases_core h hs
                   clear (h σ)
@@ -616,7 +616,7 @@ local postfix:1024 "*" => many
 unsafe def coinduction (corec_name : parse ident) (ns : parse with_ident_list)
     (revert : parse <| (tk "generalizing" *> ident*)?) : tactic Unit := do
   let rule ← mk_const corec_name
-  let locals ← mapM tactic.get_local <| revert.getOrElse []
+  let locals ← mapM tactic.get_local <| revert.getD []
   revert_lst locals
   tactic.coinduction rule ns
   skip

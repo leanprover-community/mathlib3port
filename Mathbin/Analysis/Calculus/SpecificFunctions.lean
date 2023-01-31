@@ -75,7 +75,7 @@ derivatives for `x > 0`. The `n`-th derivative is of the form `P_aux n (x) exp(-
 where `P_aux n` is computed inductively. -/
 noncomputable def pAux : ℕ → ℝ[X]
   | 0 => 1
-  | n + 1 => X ^ 2 * (P_aux n).derivative + (1 - c ↑(2 * n) * X) * P_aux n
+  | n + 1 => x ^ 2 * (P_aux n).derivative + (1 - c ↑(2 * n) * x) * P_aux n
 #align exp_neg_inv_glue.P_aux expNegInvGlue.pAux
 
 /-- Formula for the `n`-th derivative of `exp_neg_inv_glue`, as an auxiliary function `f_aux`. -/
@@ -123,7 +123,7 @@ is the `n+1`-th auxiliary function. -/
 theorem fAux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fAux n) ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
-  apply (f_aux_deriv n x (ne_of_gt hx)).congr_of_eventually_eq
+  apply (f_aux_deriv n x (ne_of_gt hx)).congr_of_eventuallyEq
   filter_upwards [lt_mem_nhds hx]with _ hy
   simp [f_aux, hy.not_le]
 #align exp_neg_inv_glue.f_aux_deriv_pos expNegInvGlue.fAux_deriv_pos
@@ -186,7 +186,7 @@ theorem fAux_hasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) 
   rcases lt_trichotomy x 0 with (hx | hx | hx)
   · have : f_aux (n + 1) x = 0 := by simp [f_aux, le_of_lt hx]
     rw [this]
-    apply (hasDerivAt_const x (0 : ℝ)).congr_of_eventually_eq
+    apply (hasDerivAt_const x (0 : ℝ)).congr_of_eventuallyEq
     filter_upwards [gt_mem_nhds hx]with _ hy
     simp [f_aux, hy.le]
   · have : f_aux (n + 1) 0 = 0 := by simp [f_aux, le_refl]
@@ -323,7 +323,7 @@ real numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is availab
 structure ContDiffBumpOfInner (c : E) where
   (R r : ℝ)
   r_pos : 0 < r
-  r_lt_R : r < R
+  r_lt_r : r < R
 #align cont_diff_bump_of_inner ContDiffBumpOfInner
 
 namespace ContDiffBumpOfInner
@@ -332,7 +332,7 @@ namespace ContDiffBumpOfInner
 Case conversion may be inaccurate. Consider using '#align cont_diff_bump_of_inner.R_pos ContDiffBumpOfInner.r_posₓ'. -/
 #print ContDiffBumpOfInner.r_pos /-
 theorem r_pos {c : E} (f : ContDiffBumpOfInner c) : 0 < f.r :=
-  f.r_pos.trans f.r_lt_R
+  f.r_pos.trans f.r_lt_r
 #align cont_diff_bump_of_inner.R_pos ContDiffBumpOfInner.r_pos
 -/
 
@@ -369,7 +369,7 @@ open Real (smoothTransition)
 open Real.smoothTransition Metric
 
 theorem one_of_mem_closedBall (hx : x ∈ closedBall c f.R) : f x = 1 :=
-  one_of_one_le <| (one_le_div (sub_pos.2 f.r_lt_R)).2 <| sub_le_sub_left hx _
+  one_of_one_le <| (one_le_div (sub_pos.2 f.r_lt_r)).2 <| sub_le_sub_left hx _
 #align cont_diff_bump_of_inner.one_of_mem_closed_ball ContDiffBumpOfInner.one_of_mem_closedBall
 
 theorem nonneg : 0 ≤ f x :=
@@ -378,7 +378,7 @@ theorem nonneg : 0 ≤ f x :=
 
 /-- A version of `cont_diff_bump_of_inner.nonneg` with `x` explicit -/
 theorem nonneg' (x : E) : 0 ≤ f x :=
-  f.Nonneg
+  f.NonNeg
 #align cont_diff_bump_of_inner.nonneg' ContDiffBumpOfInner.nonneg'
 
 theorem le_one : f x ≤ 1 :=
@@ -386,15 +386,15 @@ theorem le_one : f x ≤ 1 :=
 #align cont_diff_bump_of_inner.le_one ContDiffBumpOfInner.le_one
 
 theorem pos_of_mem_ball (hx : x ∈ ball c f.r) : 0 < f x :=
-  pos_of_pos <| div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_R)
+  pos_of_pos <| div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_r)
 #align cont_diff_bump_of_inner.pos_of_mem_ball ContDiffBumpOfInner.pos_of_mem_ball
 
 theorem lt_one_of_lt_dist (h : f.R < dist x c) : f x < 1 :=
-  lt_one_of_lt_one <| (div_lt_one (sub_pos.2 f.r_lt_R)).2 <| sub_lt_sub_left h _
+  lt_one_of_lt_one <| (div_lt_one (sub_pos.2 f.r_lt_r)).2 <| sub_lt_sub_left h _
 #align cont_diff_bump_of_inner.lt_one_of_lt_dist ContDiffBumpOfInner.lt_one_of_lt_dist
 
 theorem zero_of_le_dist (hx : f.r ≤ dist x c) : f x = 0 :=
-  zero_of_nonpos <| div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_R.le)
+  zero_of_nonpos <| div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_r.le)
 #align cont_diff_bump_of_inner.zero_of_le_dist ContDiffBumpOfInner.zero_of_le_dist
 
 theorem support_eq : support (f : E → ℝ) = Metric.ball c f.r :=
@@ -416,11 +416,11 @@ protected theorem hasCompactSupport [FiniteDimensional ℝ E] : HasCompactSuppor
 
 theorem eventuallyEq_one_of_mem_ball (h : x ∈ ball c f.R) : f =ᶠ[𝓝 x] 1 :=
   ((isOpen_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono
-    fun z hz => f.one_of_mem_closed_ball (le_of_lt hz)
+    fun z hz => f.one_of_mem_closedBall (le_of_lt hz)
 #align cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball ContDiffBumpOfInner.eventuallyEq_one_of_mem_ball
 
 theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventually_eq_one_of_mem_ball (mem_ball_self f.r_pos)
+  f.eventuallyEq_one_of_mem_ball (mem_ball_self f.r_pos)
 #align cont_diff_bump_of_inner.eventually_eq_one ContDiffBumpOfInner.eventuallyEq_one
 
 /-- `cont_diff_bump` is `𝒞ⁿ` in all its arguments. -/
@@ -435,10 +435,10 @@ protected theorem ContDiffAt.cont_diff_bump {c g : X → E} {f : ∀ x, ContDiff
       have : dist (g x) (c x) < (f x).R := by simp_rw [hx, dist_self, (f x).r_pos]
       have :=
         ContinuousAt.eventually_lt (hg.continuous_at.dist hc.continuous_at) hr.continuous_at this
-      exact eventually_of_mem this fun x hx => (f x).one_of_mem_closed_ball (mem_set_of_eq.mp hx).le
+      exact eventually_of_mem this fun x hx => (f x).one_of_mem_closedBall (mem_set_of_eq.mp hx).le
     exact cont_diff_at_const.congr_of_eventually_eq this
   · refine' real.smooth_transition.cont_diff_at.comp x _
-    refine' (hR.sub <| hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_R).ne'
+    refine' (hR.sub <| hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_r).ne'
 #align cont_diff_at.cont_diff_bump ContDiffAt.cont_diff_bump
 
 theorem ContDiff.contDiff_bump {c g : X → E} {f : ∀ x, ContDiffBumpOfInner (c x)}
@@ -478,7 +478,7 @@ theorem normed_def {μ : Measure E} (x : E) : f.normed μ x = f x / ∫ x, f x �
 #align cont_diff_bump_of_inner.normed_def ContDiffBumpOfInner.normed_def
 
 theorem nonneg_normed (x : E) : 0 ≤ f.normed μ x :=
-  div_nonneg f.Nonneg <| integral_nonneg f.nonneg'
+  div_nonneg f.NonNeg <| integral_nonneg f.nonneg'
 #align cont_diff_bump_of_inner.nonneg_normed ContDiffBumpOfInner.nonneg_normed
 
 theorem contDiff_normed {n : ℕ∞} : ContDiff ℝ n (f.normed μ) :=
@@ -540,7 +540,7 @@ theorem tendsto_support_normed_smallSets {ι} {φ : ι → ContDiffBumpOfInner c
     Tendsto (fun i => support fun x => (φ i).normed μ x) l (𝓝 c).smallSets :=
   by
   simp_rw [NormedAddCommGroup.tendsto_nhds_zero, Real.norm_eq_abs,
-    abs_eq_self.mpr (φ _).R_pos.le] at hφ
+    abs_eq_self.mpr (φ _).r_pos.le] at hφ
   rw [tendsto_small_sets_iff]
   intro t ht
   rcases metric.mem_nhds_iff.mp ht with ⟨ε, hε, ht⟩
@@ -588,7 +588,7 @@ instance (c : E) : Inhabited (ContDiffBump c) :=
   ⟨⟨default⟩⟩
 
 theorem r_pos : 0 < f.r :=
-  f.toContDiffBumpOfInner.R_pos
+  f.toContDiffBumpOfInner.r_pos
 #align cont_diff_bump.R_pos ContDiffBump.r_pos
 
 theorem coe_eq_comp : ⇑f = f.toContDiffBumpOfInner ∘ toEuclidean :=
@@ -596,11 +596,11 @@ theorem coe_eq_comp : ⇑f = f.toContDiffBumpOfInner ∘ toEuclidean :=
 #align cont_diff_bump.coe_eq_comp ContDiffBump.coe_eq_comp
 
 theorem one_of_mem_closedBall (hx : x ∈ Euclidean.closedBall c f.R) : f x = 1 :=
-  f.toContDiffBumpOfInner.one_of_mem_closed_ball hx
+  f.toContDiffBumpOfInner.one_of_mem_closedBall hx
 #align cont_diff_bump.one_of_mem_closed_ball ContDiffBump.one_of_mem_closedBall
 
 theorem nonneg : 0 ≤ f x :=
-  f.toContDiffBumpOfInner.Nonneg
+  f.toContDiffBumpOfInner.NonNeg
 #align cont_diff_bump.nonneg ContDiffBump.nonneg
 
 theorem le_one : f x ≤ 1 :=
@@ -633,11 +633,11 @@ protected theorem hasCompactSupport : HasCompactSupport f := by
 #align cont_diff_bump.has_compact_support ContDiffBump.hasCompactSupport
 
 theorem eventuallyEq_one_of_mem_ball (h : x ∈ Euclidean.ball c f.R) : f =ᶠ[𝓝 x] 1 :=
-  toEuclidean.ContinuousAt (f.toContDiffBumpOfInner.eventually_eq_one_of_mem_ball h)
+  toEuclidean.ContinuousAt (f.toContDiffBumpOfInner.eventuallyEq_one_of_mem_ball h)
 #align cont_diff_bump.eventually_eq_one_of_mem_ball ContDiffBump.eventuallyEq_one_of_mem_ball
 
 theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventually_eq_one_of_mem_ball <| Euclidean.mem_ball_self f.r_pos
+  f.eventuallyEq_one_of_mem_ball <| Euclidean.mem_ball_self f.r_pos
 #align cont_diff_bump.eventually_eq_one ContDiffBump.eventuallyEq_one
 
 protected theorem contDiff {n} : ContDiff ℝ n f :=
@@ -684,6 +684,6 @@ theorem exists_contDiff_bump_function_of_mem_nhds [NormedAddCommGroup E] [Normed
       f =ᶠ[𝓝 x] 1 ∧
         (∀ y, f y ∈ Icc (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ tsupport f ⊆ s :=
   let ⟨f, hf⟩ := ContDiffBump.exists_tsupport_subset hs
-  ⟨f, f.eventually_eq_one, fun y => ⟨f.Nonneg, f.le_one⟩, f.ContDiff, f.HasCompactSupport, hf⟩
+  ⟨f, f.eventuallyEq_one, fun y => ⟨f.NonNeg, f.le_one⟩, f.ContDiff, f.HasCompactSupport, hf⟩
 #align exists_cont_diff_bump_function_of_mem_nhds exists_contDiff_bump_function_of_mem_nhds
 

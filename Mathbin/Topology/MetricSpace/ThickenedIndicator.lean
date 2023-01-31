@@ -169,7 +169,7 @@ See `thickened_indicator_aux` for the unbundled `ℝ≥0∞`-valued function. -/
 def thickenedIndicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : α →ᵇ ℝ≥0
     where
   toFun := fun x : α => (thickenedIndicatorAux δ E x).toNnreal
-  continuous_to_fun :=
+  continuous_toFun :=
     by
     apply
       ContinuousOn.comp_continuous continuous_on_to_nnreal

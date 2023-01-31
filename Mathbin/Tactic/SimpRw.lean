@@ -51,7 +51,7 @@ by simp_rw [set.image_subset_iff, set.subset_def]
 ```
 -/
 unsafe def simp_rw (q : parse rw_rules) (l : parse location) : tactic Unit :=
-  q.rules.mmap' fun rule => do
+  q.rules.mapM' fun rule => do
     let simp_arg :=
       if rule.symm then simp_arg_type.symm_expr rule.rule else simp_arg_type.expr rule.rule
     save_info rule

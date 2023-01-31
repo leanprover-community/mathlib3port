@@ -38,7 +38,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 :=
   by
   have hx : 0 < 2 * (1 + |x|) := by positivity
-  rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iff
+  rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iffₓ
       (nhds_basis_zero_abs_sub_lt α)]
   refine' fun ε ε_pos => ⟨(ε / (2 * (1 + |x|)), 1), ⟨div_pos ε_pos hx, zero_lt_one⟩, _⟩
   suffices ∀ a b : α, |a| < ε / (2 * (1 + |x|)) → |b - x| < 1 → |a| * |b| < ε by
@@ -104,7 +104,7 @@ theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
 theorem mul_tendsto_nhds_one_nhds_one :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 :=
   by
-  rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iff
+  rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iffₓ
       (nhds_basis_Ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
   intro ε hε
   have hε' : 0 ≤ 1 - ε / 4 := by linarith
@@ -215,7 +215,7 @@ a positive constant `C` then `f * g` tends to `at_bot`. -/
 theorem Filter.Tendsto.atBot_mul {C : α} (hC : 0 < C) (hf : Tendsto f l atBot)
     (hg : Tendsto g l (𝓝 C)) : Tendsto (fun x => f x * g x) l atBot := by
   simpa [(· ∘ ·)] using
-    tendsto_neg_at_top_at_bot.comp ((tendsto_neg_at_bot_at_top.comp hf).at_top_mul hC hg)
+    tendsto_neg_at_top_at_bot.comp ((tendsto_neg_at_bot_at_top.comp hf).atTop_mul hC hg)
 #align filter.tendsto.at_bot_mul Filter.Tendsto.atBot_mul
 
 /-- In a linearly ordered field with the order topology, if `f` tends to `at_bot` and `g` tends to
@@ -223,7 +223,7 @@ a negative constant `C` then `f * g` tends to `at_top`. -/
 theorem Filter.Tendsto.atBot_mul_neg {C : α} (hC : C < 0) (hf : Tendsto f l atBot)
     (hg : Tendsto g l (𝓝 C)) : Tendsto (fun x => f x * g x) l atTop := by
   simpa [(· ∘ ·)] using
-    tendsto_neg_at_bot_at_top.comp ((tendsto_neg_at_bot_at_top.comp hf).at_top_mul_neg hC hg)
+    tendsto_neg_at_bot_at_top.comp ((tendsto_neg_at_bot_at_top.comp hf).atTop_mul_neg hC hg)
 #align filter.tendsto.at_bot_mul_neg Filter.Tendsto.atBot_mul_neg
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a positive constant `C` and
@@ -282,7 +282,7 @@ theorem Filter.Tendsto.inv_tendsto_zero (h : Tendsto f l (𝓝[>] 0)) : Tendsto 
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
 theorem tendsto_pow_neg_atTop {n : ℕ} (hn : n ≠ 0) :
     Tendsto (fun x : α => x ^ (-(n : ℤ))) atTop (𝓝 0) := by
-  simpa only [zpow_neg, zpow_ofNat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_at_top
+  simpa only [zpow_neg, zpow_ofNat] using (@tendsto_pow_at_top α _ _ hn).inv_tendsto_atTop
 #align tendsto_pow_neg_at_top tendsto_pow_neg_atTop
 
 theorem tendsto_zpow_atTop_zero {n : ℤ} (hn : n < 0) : Tendsto (fun x : α => x ^ n) atTop (𝓝 0) :=
@@ -337,7 +337,7 @@ theorem tendsto_const_mul_zpow_atTop_nhds_iff {n : ℤ} {c d : α} (hc : c ≠ 0
 -- `nnreal` instance of `has_continuous_inv₀`.
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedField.to_topologicalDivisionRing : TopologicalDivisionRing α
-    where continuous_at_inv₀ :=
+    where continuousAt_inv₀ :=
     by
     suffices ∀ {x : α}, 0 < x → ContinuousAt Inv.inv x
       by
@@ -349,7 +349,7 @@ instance (priority := 100) LinearOrderedField.to_topologicalDivisionRing : Topol
       simp [neg_inv]
     intro t ht
     rw [ContinuousAt,
-      (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
+      (nhds_basis_Ioo_pos t).tendsto_iffₓ <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by

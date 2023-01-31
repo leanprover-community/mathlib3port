@@ -42,7 +42,7 @@ unsafe def pi_instance_derive_field : tactic Unit := do
     else
       focus1 do
         let expl_arity ← mk_const Field >>= get_expl_arity
-        let xs ← (List.iota expl_arity).mmap fun _ => intro1
+        let xs ← (List.iota expl_arity).mapM fun _ => intro1
         let x ← intro1
         applyc Field
         (xs fun h =>

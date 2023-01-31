@@ -222,37 +222,37 @@ theorem not_bddBelow_iff {α : Type _} [LinearOrder α] {s : Set α} :
 #align not_bdd_below_iff not_bddBelow_iff
 
 #print BddAbove.dual /-
-theorem BddAbove.dual (h : BddAbove s) : BddBelow (of_dual ⁻¹' s) :=
+theorem BddAbove.dual (h : BddAbove s) : BddBelow (ofDual ⁻¹' s) :=
   h
 #align bdd_above.dual BddAbove.dual
 -/
 
 #print BddBelow.dual /-
-theorem BddBelow.dual (h : BddBelow s) : BddAbove (of_dual ⁻¹' s) :=
+theorem BddBelow.dual (h : BddBelow s) : BddAbove (ofDual ⁻¹' s) :=
   h
 #align bdd_below.dual BddBelow.dual
 -/
 
 #print IsLeast.dual /-
-theorem IsLeast.dual (h : IsLeast s a) : IsGreatest (of_dual ⁻¹' s) (toDual a) :=
+theorem IsLeast.dual (h : IsLeast s a) : IsGreatest (ofDual ⁻¹' s) (toDual a) :=
   h
 #align is_least.dual IsLeast.dual
 -/
 
 #print IsGreatest.dual /-
-theorem IsGreatest.dual (h : IsGreatest s a) : IsLeast (of_dual ⁻¹' s) (toDual a) :=
+theorem IsGreatest.dual (h : IsGreatest s a) : IsLeast (ofDual ⁻¹' s) (toDual a) :=
   h
 #align is_greatest.dual IsGreatest.dual
 -/
 
 #print IsLUB.dual /-
-theorem IsLUB.dual (h : IsLUB s a) : IsGLB (of_dual ⁻¹' s) (toDual a) :=
+theorem IsLUB.dual (h : IsLUB s a) : IsGLB (ofDual ⁻¹' s) (toDual a) :=
   h
 #align is_lub.dual IsLUB.dual
 -/
 
 #print IsGLB.dual /-
-theorem IsGLB.dual (h : IsGLB s a) : IsLUB (of_dual ⁻¹' s) (toDual a) :=
+theorem IsGLB.dual (h : IsGLB s a) : IsLUB (ofDual ⁻¹' s) (toDual a) :=
   h
 #align is_glb.dual IsGLB.dual
 -/
@@ -323,14 +323,14 @@ theorem lowerBounds_mono ⦃s t : Set α⦄ (hst : s ⊆ t) ⦃a b⦄ (hab : a �
 #print BddAbove.mono /-
 /-- If `s ⊆ t` and `t` is bounded above, then so is `s`. -/
 theorem BddAbove.mono ⦃s t : Set α⦄ (h : s ⊆ t) : BddAbove t → BddAbove s :=
-  nonempty.mono <| upperBounds_mono_set h
+  Nonempty.mono <| upperBounds_mono_set h
 #align bdd_above.mono BddAbove.mono
 -/
 
 #print BddBelow.mono /-
 /-- If `s ⊆ t` and `t` is bounded below, then so is `s`. -/
 theorem BddBelow.mono ⦃s t : Set α⦄ (h : s ⊆ t) : BddBelow t → BddBelow s :=
-  nonempty.mono <| lowerBounds_mono_set h
+  Nonempty.mono <| lowerBounds_mono_set h
 #align bdd_below.mono BddBelow.mono
 -/
 
@@ -425,19 +425,19 @@ theorem IsLUB.upperBounds_eq (h : IsLUB s a) : upperBounds s = Ici a :=
 
 #print IsGLB.lowerBounds_eq /-
 theorem IsGLB.lowerBounds_eq (h : IsGLB s a) : lowerBounds s = Iic a :=
-  h.dual.upper_bounds_eq
+  h.dual.upperBounds_eq
 #align is_glb.lower_bounds_eq IsGLB.lowerBounds_eq
 -/
 
 #print IsLeast.lowerBounds_eq /-
 theorem IsLeast.lowerBounds_eq (h : IsLeast s a) : lowerBounds s = Iic a :=
-  h.IsGlb.lower_bounds_eq
+  h.IsGLB.lowerBounds_eq
 #align is_least.lower_bounds_eq IsLeast.lowerBounds_eq
 -/
 
 #print IsGreatest.upperBounds_eq /-
 theorem IsGreatest.upperBounds_eq (h : IsGreatest s a) : upperBounds s = Ici a :=
-  h.IsLub.upper_bounds_eq
+  h.IsLUB.upperBounds_eq
 #align is_greatest.upper_bounds_eq IsGreatest.upperBounds_eq
 -/
 
@@ -718,7 +718,7 @@ Case conversion may be inaccurate. Consider using '#align is_least.union IsLeast
 then `min a b` is the least element of `s ∪ t`. -/
 theorem IsLeast.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsLeast s a)
     (hb : IsLeast t b) : IsLeast (s ∪ t) (min a b) :=
-  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsGlb.union hb.IsGlb).1⟩
+  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsGLB.union hb.IsGLB).1⟩
 #align is_least.union IsLeast.union
 
 /- warning: is_greatest.union -> IsGreatest.union is a dubious translation:
@@ -731,7 +731,7 @@ Case conversion may be inaccurate. Consider using '#align is_greatest.union IsGr
 then `max a b` is the greatest element of `s ∪ t`. -/
 theorem IsGreatest.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsGreatest s a)
     (hb : IsGreatest t b) : IsGreatest (s ∪ t) (max a b) :=
-  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsLub.union hb.IsLub).1⟩
+  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsLUB.union hb.IsLUB).1⟩
 #align is_greatest.union IsGreatest.union
 
 /- warning: is_lub.inter_Ici_of_mem -> IsLUB.inter_Ici_of_mem is a dubious translation:
@@ -809,25 +809,25 @@ theorem isGreatest_Iic : IsGreatest (Iic a) a :=
 
 #print isLUB_Iic /-
 theorem isLUB_Iic : IsLUB (Iic a) a :=
-  isGreatest_Iic.IsLub
+  isGreatest_Iic.IsLUB
 #align is_lub_Iic isLUB_Iic
 -/
 
 #print isGLB_Ici /-
 theorem isGLB_Ici : IsGLB (Ici a) a :=
-  isLeast_Ici.IsGlb
+  isLeast_Ici.IsGLB
 #align is_glb_Ici isGLB_Ici
 -/
 
 #print upperBounds_Iic /-
 theorem upperBounds_Iic : upperBounds (Iic a) = Ici a :=
-  isLUB_Iic.upper_bounds_eq
+  isLUB_Iic.upperBounds_eq
 #align upper_bounds_Iic upperBounds_Iic
 -/
 
 #print lowerBounds_Ici /-
 theorem lowerBounds_Ici : lowerBounds (Ici a) = Iic a :=
-  isGLB_Ici.lower_bounds_eq
+  isGLB_Ici.lowerBounds_eq
 #align lower_bounds_Ici lowerBounds_Ici
 -/
 
@@ -926,13 +926,13 @@ theorem isGLB_Ioi {a : γ} : IsGLB (Ioi a) a :=
 
 #print upperBounds_Iio /-
 theorem upperBounds_Iio {a : γ} : upperBounds (Iio a) = Ici a :=
-  isLUB_Iio.upper_bounds_eq
+  isLUB_Iio.upperBounds_eq
 #align upper_bounds_Iio upperBounds_Iio
 -/
 
 #print lowerBounds_Ioi /-
 theorem lowerBounds_Ioi {a : γ} : lowerBounds (Ioi a) = Iic a :=
-  isGLB_Ioi.lower_bounds_eq
+  isGLB_Ioi.lowerBounds_eq
 #align lower_bounds_Ioi lowerBounds_Ioi
 -/
 
@@ -957,13 +957,13 @@ theorem isLeast_singleton : IsLeast {a} a :=
 
 #print isLUB_singleton /-
 theorem isLUB_singleton : IsLUB {a} a :=
-  isGreatest_singleton.IsLub
+  isGreatest_singleton.IsLUB
 #align is_lub_singleton isLUB_singleton
 -/
 
 #print isGLB_singleton /-
 theorem isGLB_singleton : IsGLB {a} a :=
-  isLeast_singleton.IsGlb
+  isLeast_singleton.IsGLB
 #align is_glb_singleton isGLB_singleton
 -/
 
@@ -982,14 +982,14 @@ theorem bddBelow_singleton : BddBelow ({a} : Set α) :=
 #print upperBounds_singleton /-
 @[simp]
 theorem upperBounds_singleton : upperBounds {a} = Ici a :=
-  isLUB_singleton.upper_bounds_eq
+  isLUB_singleton.upperBounds_eq
 #align upper_bounds_singleton upperBounds_singleton
 -/
 
 #print lowerBounds_singleton /-
 @[simp]
 theorem lowerBounds_singleton : lowerBounds {a} = Iic a :=
-  isGLB_singleton.lower_bounds_eq
+  isGLB_singleton.lowerBounds_eq
 #align lower_bounds_singleton lowerBounds_singleton
 -/
 
@@ -1054,13 +1054,13 @@ theorem isGreatest_Icc (h : a ≤ b) : IsGreatest (Icc a b) b :=
 
 #print isLUB_Icc /-
 theorem isLUB_Icc (h : a ≤ b) : IsLUB (Icc a b) b :=
-  (isGreatest_Icc h).IsLub
+  (isGreatest_Icc h).IsLUB
 #align is_lub_Icc isLUB_Icc
 -/
 
 #print upperBounds_Icc /-
 theorem upperBounds_Icc (h : a ≤ b) : upperBounds (Icc a b) = Ici b :=
-  (isLUB_Icc h).upper_bounds_eq
+  (isLUB_Icc h).upperBounds_eq
 #align upper_bounds_Icc upperBounds_Icc
 -/
 
@@ -1072,13 +1072,13 @@ theorem isLeast_Icc (h : a ≤ b) : IsLeast (Icc a b) a :=
 
 #print isGLB_Icc /-
 theorem isGLB_Icc (h : a ≤ b) : IsGLB (Icc a b) a :=
-  (isLeast_Icc h).IsGlb
+  (isLeast_Icc h).IsGLB
 #align is_glb_Icc isGLB_Icc
 -/
 
 #print lowerBounds_Icc /-
 theorem lowerBounds_Icc (h : a ≤ b) : lowerBounds (Icc a b) = Iic a :=
-  (isGLB_Icc h).lower_bounds_eq
+  (isGLB_Icc h).lowerBounds_eq
 #align lower_bounds_Icc lowerBounds_Icc
 -/
 
@@ -1090,13 +1090,13 @@ theorem isGreatest_Ioc (h : a < b) : IsGreatest (Ioc a b) b :=
 
 #print isLUB_Ioc /-
 theorem isLUB_Ioc (h : a < b) : IsLUB (Ioc a b) b :=
-  (isGreatest_Ioc h).IsLub
+  (isGreatest_Ioc h).IsLUB
 #align is_lub_Ioc isLUB_Ioc
 -/
 
 #print upperBounds_Ioc /-
 theorem upperBounds_Ioc (h : a < b) : upperBounds (Ioc a b) = Ici b :=
-  (isLUB_Ioc h).upper_bounds_eq
+  (isLUB_Ioc h).upperBounds_eq
 #align upper_bounds_Ioc upperBounds_Ioc
 -/
 
@@ -1108,13 +1108,13 @@ theorem isLeast_Ico (h : a < b) : IsLeast (Ico a b) a :=
 
 #print isGLB_Ico /-
 theorem isGLB_Ico (h : a < b) : IsGLB (Ico a b) a :=
-  (isLeast_Ico h).IsGlb
+  (isLeast_Ico h).IsGLB
 #align is_glb_Ico isGLB_Ico
 -/
 
 #print lowerBounds_Ico /-
 theorem lowerBounds_Ico (h : a < b) : lowerBounds (Ico a b) = Iic a :=
-  (isGLB_Ico h).lower_bounds_eq
+  (isGLB_Ico h).lowerBounds_eq
 #align lower_bounds_Ico lowerBounds_Ico
 -/
 
@@ -1137,7 +1137,7 @@ theorem isGLB_Ioo {a b : γ} (h : a < b) : IsGLB (Ioo a b) a :=
 
 #print lowerBounds_Ioo /-
 theorem lowerBounds_Ioo {a b : γ} (hab : a < b) : lowerBounds (Ioo a b) = Iic a :=
-  (isGLB_Ioo hab).lower_bounds_eq
+  (isGLB_Ioo hab).lowerBounds_eq
 #align lower_bounds_Ioo lowerBounds_Ioo
 -/
 
@@ -1149,7 +1149,7 @@ theorem isGLB_Ioc {a b : γ} (hab : a < b) : IsGLB (Ioc a b) a :=
 
 #print lowerBounds_Ioc /-
 theorem lowerBounds_Ioc {a b : γ} (hab : a < b) : lowerBounds (Ioc a b) = Iic a :=
-  (isGLB_Ioc hab).lower_bounds_eq
+  (isGLB_Ioc hab).lowerBounds_eq
 #align lower_bound_Ioc lowerBounds_Ioc
 -/
 
@@ -1167,7 +1167,7 @@ theorem isLUB_Ioo {a b : γ} (hab : a < b) : IsLUB (Ioo a b) b := by
 
 #print upperBounds_Ioo /-
 theorem upperBounds_Ioo {a b : γ} (hab : a < b) : upperBounds (Ioo a b) = Ici b :=
-  (isLUB_Ioo hab).upper_bounds_eq
+  (isLUB_Ioo hab).upperBounds_eq
 #align upper_bounds_Ioo upperBounds_Ioo
 -/
 
@@ -1179,7 +1179,7 @@ theorem isLUB_Ico {a b : γ} (hab : a < b) : IsLUB (Ico a b) b := by
 
 #print upperBounds_Ico /-
 theorem upperBounds_Ico {a b : γ} (hab : a < b) : upperBounds (Ico a b) = Ici b :=
-  (isLUB_Ico hab).upper_bounds_eq
+  (isLUB_Ico hab).upperBounds_eq
 #align upper_bounds_Ico upperBounds_Ico
 -/
 
@@ -1244,7 +1244,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLUB.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_lub_univ isLUB_univₓ'. -/
 theorem isLUB_univ [OrderTop α] : IsLUB (univ : Set α) ⊤ :=
-  isGreatest_univ.IsLub
+  isGreatest_univ.IsLUB
 #align is_lub_univ isLUB_univ
 
 /- warning: order_bot.lower_bounds_univ -> OrderBot.lowerBounds_univ is a dubious translation:
@@ -1283,7 +1283,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (Set.univ.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_glb_univ isGLB_univₓ'. -/
 theorem isGLB_univ [OrderBot α] : IsGLB (univ : Set α) ⊥ :=
-  isLeast_univ.IsGlb
+  isLeast_univ.IsGLB
 #align is_glb_univ isGLB_univ
 
 #print NoMaxOrder.upperBounds_univ /-
@@ -1784,7 +1784,7 @@ theorem mem_upperBounds_image (Has : a ∈ upperBounds s) (Hat : a ∈ t) :
 
 #print MonotoneOn.mem_upperBounds_image_self /-
 theorem mem_upperBounds_image_self : a ∈ upperBounds t → a ∈ t → f a ∈ upperBounds (f '' t) :=
-  Hf.mem_upper_bounds_image subset_rfl
+  Hf.mem_upperBounds_image subset_rfl
 #align monotone_on.mem_upper_bounds_image_self MonotoneOn.mem_upperBounds_image_self
 -/
 
@@ -1797,7 +1797,7 @@ theorem mem_lowerBounds_image (Has : a ∈ lowerBounds s) (Hat : a ∈ t) :
 
 #print MonotoneOn.mem_lowerBounds_image_self /-
 theorem mem_lowerBounds_image_self : a ∈ lowerBounds t → a ∈ t → f a ∈ lowerBounds (f '' t) :=
-  Hf.mem_lower_bounds_image subset_rfl
+  Hf.mem_lowerBounds_image subset_rfl
 #align monotone_on.mem_lower_bounds_image_self MonotoneOn.mem_lowerBounds_image_self
 -/
 
@@ -1822,7 +1822,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lowerBounds_subset_lowerBounds_imageₓ'. -/
 theorem image_lowerBounds_subset_lowerBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
-  Hf.dual.image_upper_bounds_subset_upper_bounds_image Hst
+  Hf.dual.image_upperBounds_subset_upperBounds_image Hst
 #align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lowerBounds_subset_lowerBounds_image
 
 /- warning: monotone_on.map_bdd_above -> MonotoneOn.map_bddAbove is a dubious translation:
@@ -1834,7 +1834,7 @@ Case conversion may be inaccurate. Consider using '#align monotone_on.map_bdd_ab
 /-- The image under a monotone function on a set `t` of a subset which has an upper bound in `t`
   is bounded above. -/
 theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddAbove (f '' s) := fun ⟨C, hs, ht⟩ =>
-  ⟨f C, Hf.mem_upper_bounds_image Hst hs ht⟩
+  ⟨f C, Hf.mem_upperBounds_image Hst hs ht⟩
 #align monotone_on.map_bdd_above MonotoneOn.map_bddAbove
 
 /- warning: monotone_on.map_bdd_below -> MonotoneOn.map_bddBelow is a dubious translation:
@@ -1846,20 +1846,20 @@ Case conversion may be inaccurate. Consider using '#align monotone_on.map_bdd_be
 /-- The image under a monotone function on a set `t` of a subset which has a lower bound in `t`
   is bounded below. -/
 theorem map_bddBelow : (lowerBounds s ∩ t).Nonempty → BddBelow (f '' s) := fun ⟨C, hs, ht⟩ =>
-  ⟨f C, Hf.mem_lower_bounds_image Hst hs ht⟩
+  ⟨f C, Hf.mem_lowerBounds_image Hst hs ht⟩
 #align monotone_on.map_bdd_below MonotoneOn.map_bddBelow
 
 #print MonotoneOn.map_isLeast /-
 /-- A monotone map sends a least element of a set to a least element of its image. -/
 theorem map_isLeast (Ha : IsLeast t a) : IsLeast (f '' t) (f a) :=
-  ⟨mem_image_of_mem _ Ha.1, Hf.mem_lower_bounds_image_self Ha.2 Ha.1⟩
+  ⟨mem_image_of_mem _ Ha.1, Hf.mem_lowerBounds_image_self Ha.2 Ha.1⟩
 #align monotone_on.map_is_least MonotoneOn.map_isLeast
 -/
 
 #print MonotoneOn.map_isGreatest /-
 /-- A monotone map sends a greatest element of a set to a greatest element of its image. -/
 theorem map_isGreatest (Ha : IsGreatest t a) : IsGreatest (f '' t) (f a) :=
-  ⟨mem_image_of_mem _ Ha.1, Hf.mem_upper_bounds_image_self Ha.2 Ha.1⟩
+  ⟨mem_image_of_mem _ Ha.1, Hf.mem_upperBounds_image_self Ha.2 Ha.1⟩
 #align monotone_on.map_is_greatest MonotoneOn.map_isGreatest
 -/
 
@@ -1874,25 +1874,25 @@ include Hf
 
 #print AntitoneOn.mem_upperBounds_image /-
 theorem mem_upperBounds_image (Has : a ∈ lowerBounds s) : a ∈ t → f a ∈ upperBounds (f '' s) :=
-  Hf.dual_right.mem_lower_bounds_image Hst Has
+  Hf.dual_right.mem_lowerBounds_image Hst Has
 #align antitone_on.mem_upper_bounds_image AntitoneOn.mem_upperBounds_image
 -/
 
 #print AntitoneOn.mem_upperBounds_image_self /-
 theorem mem_upperBounds_image_self : a ∈ lowerBounds t → a ∈ t → f a ∈ upperBounds (f '' t) :=
-  Hf.dual_right.mem_lower_bounds_image_self
+  Hf.dual_right.mem_lowerBounds_image_self
 #align antitone_on.mem_upper_bounds_image_self AntitoneOn.mem_upperBounds_image_self
 -/
 
 #print AntitoneOn.mem_lowerBounds_image /-
 theorem mem_lowerBounds_image : a ∈ upperBounds s → a ∈ t → f a ∈ lowerBounds (f '' s) :=
-  Hf.dual_right.mem_upper_bounds_image Hst
+  Hf.dual_right.mem_upperBounds_image Hst
 #align antitone_on.mem_lower_bounds_image AntitoneOn.mem_lowerBounds_image
 -/
 
 #print AntitoneOn.mem_lowerBounds_image_self /-
 theorem mem_lowerBounds_image_self : a ∈ upperBounds t → a ∈ t → f a ∈ lowerBounds (f '' t) :=
-  Hf.dual_right.mem_upper_bounds_image_self
+  Hf.dual_right.mem_upperBounds_image_self
 #align antitone_on.mem_lower_bounds_image_self AntitoneOn.mem_lowerBounds_image_self
 -/
 
@@ -1904,7 +1904,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.image_lower_bounds_subset_upper_bounds_image AntitoneOn.image_lowerBounds_subset_upperBounds_imageₓ'. -/
 theorem image_lowerBounds_subset_upperBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ upperBounds (f '' s) :=
-  Hf.dual_right.image_lower_bounds_subset_lower_bounds_image Hst
+  Hf.dual_right.image_lowerBounds_subset_lowerBounds_image Hst
 #align antitone_on.image_lower_bounds_subset_upper_bounds_image AntitoneOn.image_lowerBounds_subset_upperBounds_image
 
 /- warning: antitone_on.image_upper_bounds_subset_lower_bounds_image -> AntitoneOn.image_upperBounds_subset_lowerBounds_image is a dubious translation:
@@ -1915,7 +1915,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.image_upper_bounds_subset_lower_bounds_image AntitoneOn.image_upperBounds_subset_lowerBounds_imageₓ'. -/
 theorem image_upperBounds_subset_lowerBounds_image :
     f '' (upperBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
-  Hf.dual_right.image_upper_bounds_subset_upper_bounds_image Hst
+  Hf.dual_right.image_upperBounds_subset_upperBounds_image Hst
 #align antitone_on.image_upper_bounds_subset_lower_bounds_image AntitoneOn.image_upperBounds_subset_lowerBounds_image
 
 /- warning: antitone_on.map_bdd_above -> AntitoneOn.map_bddAbove is a dubious translation:
@@ -1926,7 +1926,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.map_bdd_above AntitoneOn.map_bddAboveₓ'. -/
 /-- The image under an antitone function of a set which is bounded above is bounded below. -/
 theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddBelow (f '' s) :=
-  Hf.dual_right.map_bdd_above Hst
+  Hf.dual_right.map_bddAbove Hst
 #align antitone_on.map_bdd_above AntitoneOn.map_bddAbove
 
 /- warning: antitone_on.map_bdd_below -> AntitoneOn.map_bddBelow is a dubious translation:
@@ -1937,20 +1937,20 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.map_bdd_below AntitoneOn.map_bddBelowₓ'. -/
 /-- The image under an antitone function of a set which is bounded below is bounded above. -/
 theorem map_bddBelow : (lowerBounds s ∩ t).Nonempty → BddAbove (f '' s) :=
-  Hf.dual_right.map_bdd_below Hst
+  Hf.dual_right.map_bddBelow Hst
 #align antitone_on.map_bdd_below AntitoneOn.map_bddBelow
 
 #print AntitoneOn.map_isGreatest /-
 /-- An antitone map sends a greatest element of a set to a least element of its image. -/
 theorem map_isGreatest : IsGreatest t a → IsLeast (f '' t) (f a) :=
-  Hf.dual_right.map_is_greatest
+  Hf.dual_right.map_isGreatest
 #align antitone_on.map_is_greatest AntitoneOn.map_isGreatest
 -/
 
 #print AntitoneOn.map_isLeast /-
 /-- An antitone map sends a least element of a set to a greatest element of its image. -/
 theorem map_isLeast : IsLeast t a → IsGreatest (f '' t) (f a) :=
-  Hf.dual_right.map_is_least
+  Hf.dual_right.map_isLeast
 #align antitone_on.map_is_least AntitoneOn.map_isLeast
 -/
 
@@ -1984,7 +1984,7 @@ theorem image_upperBounds_subset_upperBounds_image : f '' upperBounds s ⊆ uppe
 
 #print Monotone.image_lowerBounds_subset_lowerBounds_image /-
 theorem image_lowerBounds_subset_lowerBounds_image : f '' lowerBounds s ⊆ lowerBounds (f '' s) :=
-  Hf.dual.image_upper_bounds_subset_upper_bounds_image
+  Hf.dual.image_upperBounds_subset_upperBounds_image
 #align monotone.image_lower_bounds_subset_lower_bounds_image Monotone.image_lowerBounds_subset_lowerBounds_image
 -/
 
@@ -1992,7 +1992,7 @@ theorem image_lowerBounds_subset_lowerBounds_image : f '' lowerBounds s ⊆ lowe
 /-- The image under a monotone function of a set which is bounded above is bounded above. See also
 `bdd_above.image2`. -/
 theorem map_bddAbove : BddAbove s → BddAbove (f '' s)
-  | ⟨C, hC⟩ => ⟨f C, Hf.mem_upper_bounds_image hC⟩
+  | ⟨C, hC⟩ => ⟨f C, Hf.mem_upperBounds_image hC⟩
 #align monotone.map_bdd_above Monotone.map_bddAbove
 -/
 
@@ -2000,21 +2000,21 @@ theorem map_bddAbove : BddAbove s → BddAbove (f '' s)
 /-- The image under a monotone function of a set which is bounded below is bounded below. See also
 `bdd_below.image2`. -/
 theorem map_bddBelow : BddBelow s → BddBelow (f '' s)
-  | ⟨C, hC⟩ => ⟨f C, Hf.mem_lower_bounds_image hC⟩
+  | ⟨C, hC⟩ => ⟨f C, Hf.mem_lowerBounds_image hC⟩
 #align monotone.map_bdd_below Monotone.map_bddBelow
 -/
 
 #print Monotone.map_isLeast /-
 /-- A monotone map sends a least element of a set to a least element of its image. -/
 theorem map_isLeast (Ha : IsLeast s a) : IsLeast (f '' s) (f a) :=
-  ⟨mem_image_of_mem _ Ha.1, Hf.mem_lower_bounds_image Ha.2⟩
+  ⟨mem_image_of_mem _ Ha.1, Hf.mem_lowerBounds_image Ha.2⟩
 #align monotone.map_is_least Monotone.map_isLeast
 -/
 
 #print Monotone.map_isGreatest /-
 /-- A monotone map sends a greatest element of a set to a greatest element of its image. -/
 theorem map_isGreatest (Ha : IsGreatest s a) : IsGreatest (f '' s) (f a) :=
-  ⟨mem_image_of_mem _ Ha.1, Hf.mem_upper_bounds_image Ha.2⟩
+  ⟨mem_image_of_mem _ Ha.1, Hf.mem_upperBounds_image Ha.2⟩
 #align monotone.map_is_greatest Monotone.map_isGreatest
 -/
 
@@ -2026,53 +2026,53 @@ variable [Preorder α] [Preorder β] {f : α → β} (hf : Antitone f) {a : α} 
 
 #print Antitone.mem_upperBounds_image /-
 theorem mem_upperBounds_image : a ∈ lowerBounds s → f a ∈ upperBounds (f '' s) :=
-  hf.dual_right.mem_lower_bounds_image
+  hf.dual_right.mem_lowerBounds_image
 #align antitone.mem_upper_bounds_image Antitone.mem_upperBounds_image
 -/
 
 #print Antitone.mem_lowerBounds_image /-
 theorem mem_lowerBounds_image : a ∈ upperBounds s → f a ∈ lowerBounds (f '' s) :=
-  hf.dual_right.mem_upper_bounds_image
+  hf.dual_right.mem_upperBounds_image
 #align antitone.mem_lower_bounds_image Antitone.mem_lowerBounds_image
 -/
 
 #print Antitone.image_lowerBounds_subset_upperBounds_image /-
 theorem image_lowerBounds_subset_upperBounds_image : f '' lowerBounds s ⊆ upperBounds (f '' s) :=
-  hf.dual_right.image_lower_bounds_subset_lower_bounds_image
+  hf.dual_right.image_lowerBounds_subset_lowerBounds_image
 #align antitone.image_lower_bounds_subset_upper_bounds_image Antitone.image_lowerBounds_subset_upperBounds_image
 -/
 
 #print Antitone.image_upperBounds_subset_lowerBounds_image /-
 theorem image_upperBounds_subset_lowerBounds_image : f '' upperBounds s ⊆ lowerBounds (f '' s) :=
-  hf.dual_right.image_upper_bounds_subset_upper_bounds_image
+  hf.dual_right.image_upperBounds_subset_upperBounds_image
 #align antitone.image_upper_bounds_subset_lower_bounds_image Antitone.image_upperBounds_subset_lowerBounds_image
 -/
 
 #print Antitone.map_bddAbove /-
 /-- The image under an antitone function of a set which is bounded above is bounded below. -/
 theorem map_bddAbove : BddAbove s → BddBelow (f '' s) :=
-  hf.dual_right.map_bdd_above
+  hf.dual_right.map_bddAbove
 #align antitone.map_bdd_above Antitone.map_bddAbove
 -/
 
 #print Antitone.map_bddBelow /-
 /-- The image under an antitone function of a set which is bounded below is bounded above. -/
 theorem map_bddBelow : BddBelow s → BddAbove (f '' s) :=
-  hf.dual_right.map_bdd_below
+  hf.dual_right.map_bddBelow
 #align antitone.map_bdd_below Antitone.map_bddBelow
 -/
 
 #print Antitone.map_isGreatest /-
 /-- An antitone map sends a greatest element of a set to a least element of its image. -/
 theorem map_isGreatest : IsGreatest s a → IsLeast (f '' s) (f a) :=
-  hf.dual_right.map_is_greatest
+  hf.dual_right.map_isGreatest
 #align antitone.map_is_greatest Antitone.map_isGreatest
 -/
 
 #print Antitone.map_isLeast /-
 /-- An antitone map sends a least element of a set to a greatest element of its image. -/
 theorem map_isLeast : IsLeast s a → IsGreatest (f '' s) (f a) :=
-  hf.dual_right.map_is_least
+  hf.dual_right.map_isLeast
 #align antitone.map_is_least Antitone.map_isLeast
 -/
 
@@ -2395,13 +2395,13 @@ theorem isLUB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, 
     IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by
   classical
     refine'
-      ⟨fun H a => ⟨(Function.monotone_eval a).mem_upper_bounds_image H.1, fun b hb => _⟩, fun H =>
+      ⟨fun H a => ⟨(Function.monotone_eval a).mem_upperBounds_image H.1, fun b hb => _⟩, fun H =>
         ⟨_, _⟩⟩
     · suffices : Function.update f a b ∈ upperBounds s
       exact Function.update_same a b f ▸ H.2 this a
       refine' fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
     · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
-    · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upper_bounds_image hg)
+    · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
 #align is_lub_pi isLUB_pi
 
 /- warning: is_glb_pi -> isGLB_pi is a dubious translation:

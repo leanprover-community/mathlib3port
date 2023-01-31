@@ -626,7 +626,7 @@ def ofMeasurableSpace (m : MeasurableSpace α) : DynkinSystem α
   Has := m.MeasurableSet'
   hasEmpty := m.measurable_set_empty
   HasCompl := m.measurable_set_compl
-  hasUnionNat f _ hf := m.measurable_set_Union f hf
+  hasUnionNat f _ hf := m.measurable_set_unionᵢ f hf
 #align measurable_space.dynkin_system.of_measurable_space MeasurableSpace.DynkinSystem.ofMeasurableSpace
 
 theorem ofMeasurableSpace_le_ofMeasurableSpace_iff {m₁ m₂ : MeasurableSpace α} :
@@ -676,7 +676,7 @@ def toMeasurableSpace (h_inter : ∀ s₁ s₂, d.Has s₁ → d.Has s₂ → d.
   MeasurableSet' := d.Has
   measurable_set_empty := d.hasEmpty
   measurable_set_compl s h := d.HasCompl h
-  measurable_set_Union f hf := by
+  measurable_set_unionᵢ f hf := by
     rw [← unionᵢ_disjointed]
     exact
       d.has_Union (disjoint_disjointed _) fun n =>
@@ -724,7 +724,7 @@ theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α
       have : generate s ≤ (generate s).restrictOn this :=
         generate_le _ fun s₂ hs₂ =>
           show (generate s).Has (s₂ ∩ s₁) from
-            (s₂ ∩ s₁).eq_empty_or_nonempty.elim (fun h => h.symm ▸ generate_has.empty) fun h =>
+            (s₂ ∩ s₁).eq_empty_or_nonempty.elim (fun h => h.symm ▸ GenerateHas.empty) fun h =>
               GenerateHas.basic _ <| hs _ hs₂ _ hs₁ h
       have : (generate s).Has (t₂ ∩ s₁) := this _ ht₂
       show (generate s).Has (s₁ ∩ t₂) by rwa [inter_comm]
@@ -740,7 +740,7 @@ theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α
 -/
 theorem generateFrom_eq {s : Set (Set α)} (hs : IsPiSystem s) :
     generateFrom s = (generate s).toMeasurableSpace fun t₁ t₂ => generateInter hs :=
-  le_antisymm (generate_from_le fun t ht => GenerateHas.basic t ht)
+  le_antisymm (generateFrom_le fun t ht => GenerateHas.basic t ht)
     (ofMeasurableSpace_le_ofMeasurableSpace_iff.mp <|
       by
       rw [of_measurable_space_to_measurable_space]

@@ -134,13 +134,13 @@ theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε
 theorem Filter.Tendsto.zero_smul_isBoundedUnder_le {f : ι → α} {g : ι → E} {l : Filter ι}
     (hf : Tendsto f l (𝓝 0)) (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) :
     Tendsto (fun x => f x • g x) l (𝓝 0) :=
-  hf.op_zero_is_bounded_under_le hg (· • ·) fun x y => (norm_smul x y).le
+  hf.op_zero_isBoundedUnder_le hg (· • ·) fun x y => (norm_smul x y).le
 #align filter.tendsto.zero_smul_is_bounded_under_le Filter.Tendsto.zero_smul_isBoundedUnder_le
 
 theorem Filter.IsBoundedUnder.smul_tendsto_zero {f : ι → α} {g : ι → E} {l : Filter ι}
     (hf : IsBoundedUnder (· ≤ ·) l (norm ∘ f)) (hg : Tendsto g l (𝓝 0)) :
     Tendsto (fun x => f x • g x) l (𝓝 0) :=
-  hg.op_zero_is_bounded_under_le hf (flip (· • ·)) fun x y =>
+  hg.op_zero_isBoundedUnder_le hf (flip (· • ·)) fun x y =>
     ((norm_smul y x).trans (mul_comm _ _)).le
 #align filter.is_bounded_under.smul_tendsto_zero Filter.IsBoundedUnder.smul_tendsto_zero
 
@@ -239,12 +239,12 @@ noncomputable def homeomorphUnitBall [NormedSpace ℝ E] : E ≃ₜ ball (0 : E)
     have : 0 < 1 - ‖(y : E)‖ ^ 2 := by
       nlinarith [norm_nonneg (y : E), (mem_ball_zero_iff.1 y.2 : ‖(y : E)‖ < 1)]
     field_simp [norm_smul, smul_smul, this.ne', Real.sq_sqrt this.le, ← Real.sqrt_div this.le]
-  continuous_to_fun := by
+  continuous_toFun := by
     suffices : Continuous fun x => (1 + ‖x‖ ^ 2).sqrt⁻¹;
     exact (this.smul continuous_id).subtype_mk _
     refine' Continuous.inv₀ _ fun x => real.sqrt_ne_zero'.mpr (by positivity)
     continuity
-  continuous_inv_fun :=
+  continuous_invFun :=
     by
     suffices ∀ y : ball (0 : E) 1, (1 - ‖(y : E)‖ ^ 2).sqrt ≠ 0 by continuity
     intro y

@@ -348,7 +348,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Set.BijOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e)
 Case conversion may be inaccurate. Consider using '#align local_equiv.bij_on LocalEquiv.bijOnₓ'. -/
 protected theorem bijOn : BijOn e e.source e.target :=
-  e.InvOn.BijOn e.MapsTo e.symm_maps_to
+  e.InvOn.BijOn e.MapsTo e.symm_mapsTo
 #align local_equiv.bij_on LocalEquiv.bijOn
 
 /- warning: local_equiv.surj_on -> LocalEquiv.surjOn is a dubious translation:
@@ -561,7 +561,7 @@ def restr (h : e.IsImage s t) : LocalEquiv α β
   source := e.source ∩ s
   target := e.target ∩ t
   map_source' := h.MapsTo
-  map_target' := h.symm_maps_to
+  map_target' := h.symm_mapsTo
   left_inv' := e.LeftInvOn.mono (inter_subset_left _ _)
   right_inv' := e.RightInvOn.mono (inter_subset_left _ _)
 #align local_equiv.is_image.restr LocalEquiv.IsImage.restr
@@ -762,7 +762,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.is_image_source_target_of_disjoint LocalEquiv.isImage_source_target_of_disjointₓ'. -/
 theorem isImage_source_target_of_disjoint (e' : LocalEquiv α β) (hs : Disjoint e.source e'.source)
     (ht : Disjoint e.target e'.target) : e.IsImage e'.source e'.target :=
-  is_image.of_image_eq <| by rw [hs.inter_eq, ht.inter_eq, image_empty]
+  IsImage.of_image_eq <| by rw [hs.inter_eq, ht.inter_eq, image_empty]
 #align local_equiv.is_image_source_target_of_disjoint LocalEquiv.isImage_source_target_of_disjoint
 
 /- warning: local_equiv.image_source_inter_eq' -> LocalEquiv.image_source_inter_eq' is a dubious translation:
@@ -900,7 +900,7 @@ theorem symm_image_target_eq_source : e.symm '' e.target = e.source :=
 
 #print LocalEquiv.target_subset_preimage_source /-
 theorem target_subset_preimage_source : e.target ⊆ e.symm ⁻¹' e.source :=
-  e.symm_maps_to
+  e.symm_mapsTo
 #align local_equiv.target_subset_preimage_source LocalEquiv.target_subset_preimage_source
 -/
 
@@ -1674,8 +1674,8 @@ def piecewise (e e' : LocalEquiv α β) (s : Set α) (t : Set β) [∀ x, Decida
   target := t.ite e.target e'.target
   map_source' := H.MapsTo.piecewise_ite H'.compl.MapsTo
   map_target' := H.symm.MapsTo.piecewise_ite H'.symm.compl.MapsTo
-  left_inv' := H.left_inv_on_piecewise H'
-  right_inv' := H.symm.left_inv_on_piecewise H'.symm
+  left_inv' := H.leftInvOn_piecewise H'
+  right_inv' := H.symm.leftInvOn_piecewise H'.symm
 #align local_equiv.piecewise LocalEquiv.piecewise
 -/
 
@@ -1704,8 +1704,8 @@ equalities. -/
 def disjointUnion (e e' : LocalEquiv α β) (hs : Disjoint e.source e'.source)
     (ht : Disjoint e.target e'.target) [∀ x, Decidable (x ∈ e.source)]
     [∀ y, Decidable (y ∈ e.target)] : LocalEquiv α β :=
-  (e.piecewise e' e.source e.target e.is_image_source_target <|
-        e'.is_image_source_target_of_disjoint _ hs.symm ht.symm).copy
+  (e.piecewise e' e.source e.target e.isImage_source_target <|
+        e'.isImage_source_target_of_disjoint _ hs.symm ht.symm).copy
     _ rfl _ rfl (e.source ∪ e'.source) (ite_left _ _) (e.target ∪ e'.target) (ite_left _ _)
 #align local_equiv.disjoint_union LocalEquiv.disjointUnion
 
@@ -1719,8 +1719,8 @@ theorem disjointUnion_eq_piecewise (e e' : LocalEquiv α β) (hs : Disjoint e.so
     (ht : Disjoint e.target e'.target) [∀ x, Decidable (x ∈ e.source)]
     [∀ y, Decidable (y ∈ e.target)] :
     e.disjointUnion e' hs ht =
-      e.piecewise e' e.source e.target e.is_image_source_target
-        (e'.is_image_source_target_of_disjoint _ hs.symm ht.symm) :=
+      e.piecewise e' e.source e.target e.isImage_source_target
+        (e'.isImage_source_target_of_disjoint _ hs.symm ht.symm) :=
   copy_eq _ _ _ _ _ _ _ _ _
 #align local_equiv.disjoint_union_eq_piecewise LocalEquiv.disjointUnion_eq_piecewise
 
@@ -1762,9 +1762,9 @@ noncomputable def BijOn.toLocalEquiv [Nonempty α] (f : α → β) (s : Set α) 
   source := s
   target := t
   map_source' := hf.MapsTo
-  map_target' := hf.SurjOn.maps_to_inv_fun_on
-  left_inv' := hf.inv_on_inv_fun_on.1
-  right_inv' := hf.inv_on_inv_fun_on.2
+  map_target' := hf.SurjOn.mapsTo_invFunOn
+  left_inv' := hf.invOn_invFunOn.1
+  right_inv' := hf.invOn_invFunOn.2
 #align set.bij_on.to_local_equiv Set.BijOn.toLocalEquiv
 -/
 
@@ -1773,7 +1773,7 @@ noncomputable def BijOn.toLocalEquiv [Nonempty α] (f : α → β) (s : Set α) 
 @[simp, mfld_simps]
 noncomputable def InjOn.toLocalEquiv [Nonempty α] (f : α → β) (s : Set α) (hf : InjOn f s) :
     LocalEquiv α β :=
-  hf.bij_on_image.toLocalEquiv f s (f '' s)
+  hf.bijOn_image.toLocalEquiv f s (f '' s)
 #align set.inj_on.to_local_equiv Set.InjOn.toLocalEquiv
 -/
 

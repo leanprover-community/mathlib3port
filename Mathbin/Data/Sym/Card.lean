@@ -71,7 +71,7 @@ as demonstrated by respectively erasing or appending `0`.
 -/
 protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃ Sym (Fin n.succ) k
     where
-  toFun s := s.1.erase 0 s.2
+  toFun s := s.1.eraseₓ 0 s.2
   invFun s := ⟨cons 0 s, mem_cons_self 0 s⟩
   left_inv s := by simp
   right_inv s := by simp

@@ -321,7 +321,7 @@ theorem strictMono_iterate_of_lt_map (hf : StrictMono f) (hx : x < f x) :
 form a strictly antitone sequence. -/
 theorem strictAnti_iterate_of_map_lt (hf : StrictMono f) (hx : f x < x) :
     StrictAnti fun n => (f^[n]) x :=
-  hf.dual.strict_mono_iterate_of_lt_map hx
+  hf.dual.strictMono_iterate_of_lt_map hx
 #align strict_mono.strict_anti_iterate_of_map_lt StrictMono.strictAnti_iterate_of_map_lt
 -/
 

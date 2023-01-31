@@ -250,11 +250,11 @@ def Subsequent : Pgame → Pgame → Prop :=
 #align pgame.subsequent Pgame.Subsequent
 
 instance : IsTrans _ Subsequent :=
-  trans_gen.is_trans
+  TransGen.isTrans
 
 @[trans]
 theorem Subsequent.trans {x y z} : Subsequent x y → Subsequent y z → Subsequent x z :=
-  trans_gen.trans
+  TransGen.trans
 #align pgame.subsequent.trans Pgame.Subsequent.trans
 
 theorem wf_subsequent : WellFounded Subsequent :=
@@ -474,11 +474,11 @@ theorem lf_of_le_moveLeft {x y : Pgame} {i} (h : x ≤ y.moveLeft i) : x ⧏ y :
 #align pgame.lf_of_le_move_left Pgame.lf_of_le_moveLeft
 
 theorem lf_of_le_mk {xl xr xL xR y} : mk xl xr xL xR ≤ y → ∀ i, xL i ⧏ y :=
-  move_left_lf_of_le
+  moveLeft_lf_of_le
 #align pgame.lf_of_le_mk Pgame.lf_of_le_mk
 
 theorem lf_of_mk_le {x yl yr yL yR} : x ≤ mk yl yr yL yR → ∀ j, x ⧏ yR j :=
-  lf_move_right_of_le
+  lf_moveRight_of_le
 #align pgame.lf_of_mk_le Pgame.lf_of_mk_le
 
 theorem mk_lf_of_le {xl xr y j} (xL) {xR : xr → Pgame} : xR j ≤ y → mk xl xr xL xR ⧏ y :=
@@ -495,8 +495,8 @@ private theorem le_trans_aux {x y z : Pgame}
     (h₁ : ∀ {i}, y ≤ z → z ≤ x.moveLeft i → y ≤ x.moveLeft i)
     (h₂ : ∀ {j}, z.moveRight j ≤ x → x ≤ y → z.moveRight j ≤ y) (hxy : x ≤ y) (hyz : y ≤ z) :
     x ≤ z :=
-  le_of_forall_lf (fun i => Pgame.not_le.1 fun h => (h₁ hyz h).not_gf <| hxy.move_left_lf i)
-    fun j => Pgame.not_le.1 fun h => (h₂ h hxy).not_gf <| hyz.lf_move_right j
+  le_of_forall_lf (fun i => Pgame.not_le.1 fun h => (h₁ hyz h).not_gf <| hxy.moveLeft_lf i) fun j =>
+    Pgame.not_le.1 fun h => (h₂ h hxy).not_gf <| hyz.lf_moveRight j
 #align pgame.le_trans_aux pgame.le_trans_aux
 
 instance : LT Pgame :=
@@ -586,11 +586,11 @@ alias lf_of_lf_of_lt ← lf.trans_lt
 #align pgame.lf.trans_lt Pgame.Lf.trans_lt
 
 theorem moveLeft_lf {x : Pgame} : ∀ i, x.moveLeft i ⧏ x :=
-  le_rfl.move_left_lf
+  le_rfl.moveLeft_lf
 #align pgame.move_left_lf Pgame.moveLeft_lf
 
 theorem lf_moveRight {x : Pgame} : ∀ j, x ⧏ x.moveRight j :=
-  le_rfl.lf_move_right
+  le_rfl.lf_moveRight
 #align pgame.lf_move_right Pgame.lf_moveRight
 
 theorem lf_mk {xl xr} (xL : xl → Pgame) (xR : xr → Pgame) (i) : xL i ⧏ mk xl xr xL xR :=
@@ -864,7 +864,7 @@ theorem lt_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x < y₁ ↔ x < y�
 #align pgame.lt_congr_right Pgame.lt_congr_right
 
 theorem lt_or_equiv_of_le {x y : Pgame} (h : x ≤ y) : x < y ∨ (x ≈ y) :=
-  and_or_left.mp ⟨h, (em <| y ≤ x).swap.imp_left Pgame.not_le.1⟩
+  and_or_left.mp ⟨h, (em <| y ≤ x).symm.imp_left Pgame.not_le.1⟩
 #align pgame.lt_or_equiv_of_le Pgame.lt_or_equiv_of_le
 
 theorem lf_or_equiv_or_gf (x y : Pgame) : x ⧏ y ∨ (x ≈ y) ∨ y ⧏ x :=

@@ -89,7 +89,7 @@ scoped notation:60 μ "[|" t "]" => ProbabilityTheory.cond μ t
 /-- The conditional probability measure of any finite measure on any set of positive measure
 is a probability measure. -/
 theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) :
-    is_probability_measure <| μ[|s] :=
+    IsProbabilityMeasure <| μ[|s] :=
   ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩

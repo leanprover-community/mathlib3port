@@ -75,7 +75,7 @@ theorem Equiv.Perm.decomposeFin.symm_sign {n : ℕ} (p : Fin (n + 1)) (e : Perm 
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
 theorem Finset.univ_perm_fin_succ {n : ℕ} :
-    @Finset.univ (perm <| Fin n.succ) _ =
+    @Finset.univ (Perm <| Fin n.succ) _ =
       (Finset.univ : Finset <| Fin n.succ × Perm (Fin n)).map
         Equiv.Perm.decomposeFin.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm

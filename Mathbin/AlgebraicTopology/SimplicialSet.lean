@@ -123,7 +123,7 @@ open Simplicial
 
 /-- The simplicial circle. -/
 noncomputable def s1 : SSet :=
-  limits.colimit <|
+  Limits.colimit <|
     Limits.parallelPair (standardSimplex.map <| SimplexCategory.δ 0 : Δ[0] ⟶ Δ[1])
       (standardSimplex.map <| SimplexCategory.δ 1)
 #align sSet.S1 SSet.s1

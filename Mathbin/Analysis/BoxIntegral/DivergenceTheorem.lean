@@ -50,7 +50,7 @@ open ContinuousLinearMap (lsmul)
 
 open Filter Set Finset Metric
 
-open BoxIntegral.IntegrationParams (gP GP_le)
+open BoxIntegral.IntegrationParams (gP gP_le)
 
 noncomputable section
 
@@ -206,7 +206,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
       by
       refine' eventually.and _ (eventually.and _ _)
       · exact Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, one_half_pos⟩
-      · rcases((nhdsWithin_hasBasis nhds_basis_closed_ball _).tendsto_iff nhds_basis_closed_ball).1
+      · rcases((nhdsWithin_hasBasis nhds_basis_closed_ball _).tendsto_iffₓ nhds_basis_closed_ball).1
             (Hs x hx.2) _ (half_pos <| half_pos ε0) with ⟨δ₁, δ₁0, hδ₁⟩
         filter_upwards [Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, δ₁0⟩]with δ hδ y₁ hy₁ y₂ hy₂
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=

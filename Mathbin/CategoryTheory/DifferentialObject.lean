@@ -118,8 +118,7 @@ def forget : DifferentialObject C ⥤ C where
 instance forget_faithful : Faithful (forget C) where
 #align category_theory.differential_object.forget_faithful CategoryTheory.DifferentialObject.forget_faithful
 
-instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject C)
-    where HasZero X Y := ⟨{ f := 0 }⟩
+instance hasZeroMorphisms : HasZeroMorphisms (DifferentialObject C) where Zero X Y := ⟨{ f := 0 }⟩
 #align category_theory.differential_object.has_zero_morphisms CategoryTheory.DifferentialObject.hasZeroMorphisms
 
 variable {C}

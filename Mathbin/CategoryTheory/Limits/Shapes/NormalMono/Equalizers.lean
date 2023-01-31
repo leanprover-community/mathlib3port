@@ -39,17 +39,17 @@ irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] 
   let ⟨a', ha'⟩ :=
     KernelFork.IsLimit.lift' i (kernel.ι (prod.lift f g)) <|
       calc
-        kernel.ι (prod.lift f g) ≫ f = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ limits.prod.fst :=
+        kernel.ι (prod.lift f g) ≫ f = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ Limits.prod.fst :=
           by rw [prod.lift_fst]
-        _ = (0 : kernel (prod.lift f g) ⟶ P ⨯ Q) ≫ limits.prod.fst := by rw [kernel.condition_assoc]
+        _ = (0 : kernel (prod.lift f g) ⟶ P ⨯ Q) ≫ Limits.prod.fst := by rw [kernel.condition_assoc]
         _ = 0 := zero_comp
         
   let ⟨b', hb'⟩ :=
     KernelFork.IsLimit.lift' i' (kernel.ι (prod.lift f g)) <|
       calc
-        kernel.ι (prod.lift f g) ≫ g = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ limits.prod.snd :=
+        kernel.ι (prod.lift f g) ≫ g = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ Limits.prod.snd :=
           by rw [prod.lift_snd]
-        _ = (0 : kernel (prod.lift f g) ⟶ P ⨯ Q) ≫ limits.prod.snd := by rw [kernel.condition_assoc]
+        _ = (0 : kernel (prod.lift f g) ⟶ P ⨯ Q) ≫ Limits.prod.snd := by rw [kernel.condition_assoc]
         _ = 0 := zero_comp
         
   HasLimit.mk
@@ -63,19 +63,19 @@ irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] 
             kernel.lift (prod.lift f g) (PullbackCone.snd s ≫ b) <|
               prod.hom_ext
                 (calc
-                  ((PullbackCone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.fst =
+                  ((PullbackCone.snd s ≫ b) ≫ prod.lift f g) ≫ Limits.prod.fst =
                       PullbackCone.snd s ≫ b ≫ f :=
                     by simp only [prod.lift_fst, category.assoc]
                   _ = PullbackCone.fst s ≫ a ≫ f := by rw [pullback_cone.condition_assoc]
                   _ = PullbackCone.fst s ≫ 0 := by rw [haf]
-                  _ = 0 ≫ limits.prod.fst := by rw [comp_zero, zero_comp]
+                  _ = 0 ≫ Limits.prod.fst := by rw [comp_zero, zero_comp]
                   )
                 (calc
-                  ((PullbackCone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.snd =
+                  ((PullbackCone.snd s ≫ b) ≫ prod.lift f g) ≫ Limits.prod.snd =
                       PullbackCone.snd s ≫ b ≫ g :=
                     by simp only [prod.lift_snd, category.assoc]
                   _ = PullbackCone.snd s ≫ 0 := by rw [hbg]
-                  _ = 0 ≫ limits.prod.snd := by rw [comp_zero, zero_comp]
+                  _ = 0 ≫ Limits.prod.snd := by rw [comp_zero, zero_comp]
                   ))
           (fun s =>
             (cancel_mono a).1 <| by
@@ -117,15 +117,15 @@ irreducible_def hasLimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (paral
   have huv : (pullback.fst : p f g ⟶ X) = pullback.snd :=
     calc
       (pullback.fst : p f g ⟶ X) = pullback.fst ≫ 𝟙 _ := Eq.symm <| Category.comp_id _
-      _ = pullback.fst ≫ prod.lift (𝟙 X) f ≫ limits.prod.fst := by rw [prod.lift_fst]
-      _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ limits.prod.fst := by rw [pullback.condition_assoc]
+      _ = pullback.fst ≫ prod.lift (𝟙 X) f ≫ Limits.prod.fst := by rw [prod.lift_fst]
+      _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ Limits.prod.fst := by rw [pullback.condition_assoc]
       _ = pullback.snd := by rw [prod.lift_fst, category.comp_id]
       
   have hvu : (pullback.fst : p f g ⟶ X) ≫ f = pullback.snd ≫ g :=
     calc
-      (pullback.fst : p f g ⟶ X) ≫ f = pullback.fst ≫ prod.lift (𝟙 X) f ≫ limits.prod.snd := by
+      (pullback.fst : p f g ⟶ X) ≫ f = pullback.fst ≫ prod.lift (𝟙 X) f ≫ Limits.prod.snd := by
         rw [prod.lift_snd]
-      _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ limits.prod.snd := by rw [pullback.condition_assoc]
+      _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ Limits.prod.snd := by rw [pullback.condition_assoc]
       _ = pullback.snd ≫ g := by rw [prod.lift_snd]
       
   have huu : (pullback.fst : p f g ⟶ X) ≫ f = pullback.fst ≫ g := by rw [hvu, ← huv]

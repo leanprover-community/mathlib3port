@@ -221,7 +221,7 @@ structure Comp : Type where
 #print Linarith.Comp.vars /-
 /-- `c.vars` returns the list of variables that appear in the linear expression contained in `c`. -/
 def Comp.vars : Comp → List ℕ :=
-  linexp.vars ∘ comp.coeffs
+  Linexp.vars ∘ Comp.coeffs
 #align linarith.comp.vars Linarith.Comp.vars
 -/
 
@@ -260,7 +260,7 @@ unsafe def comp.cmp : Comp → Comp → Ordering
 that is, it represents the fact `0 < 0`.
  -/
 unsafe def comp.is_contr (c : Comp) : Bool :=
-  c.coeffs.Empty ∧ c.str = ineq.lt
+  c.coeffs.Empty ∧ c.str = Ineq.lt
 #align linarith.comp.is_contr linarith.comp.is_contr
 
 unsafe instance comp.to_format : has_to_format Comp :=
@@ -434,7 +434,7 @@ open Tactic
     unsafe
   def
     parse_into_comp_and_expr
-    : expr → Option ( ineq × expr )
+    : expr → Option ( Ineq × expr )
     | q( $ ( e ) < 0 ) => ( Ineq.lt , e )
       | q( $ ( e ) ≤ 0 ) => ( Ineq.le , e )
       | q( $ ( e ) = 0 ) => ( Ineq.eq , e )
@@ -452,7 +452,7 @@ open Tactic
     unsafe
   def
     mk_single_comp_zero_pf
-    ( c : ℕ ) ( h : expr ) : tactic ( ineq × expr )
+    ( c : ℕ ) ( h : expr ) : tactic ( Ineq × expr )
     :=
       do
         let tp ← infer_type h

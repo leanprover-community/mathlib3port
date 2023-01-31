@@ -52,12 +52,12 @@ def zeroProdIso (X : C) : (0 : C) ⨯ X ≅ X :=
 #align category_theory.limits.zero_prod_iso CategoryTheory.Limits.zeroProdIso
 
 @[simp]
-theorem zeroProdIso_hom (X : C) : (zeroProdIso X).Hom = Prod.snd :=
+theorem zeroProdIso_hom (X : C) : (zeroProdIso X).Hom = prod.snd :=
   rfl
 #align category_theory.limits.zero_prod_iso_hom CategoryTheory.Limits.zeroProdIso_hom
 
 @[simp]
-theorem zeroProdIso_inv_snd (X : C) : (zeroProdIso X).inv ≫ Prod.snd = 𝟙 X :=
+theorem zeroProdIso_inv_snd (X : C) : (zeroProdIso X).inv ≫ prod.snd = 𝟙 X :=
   by
   dsimp [zero_prod_iso, binary_fan_zero_left]
   simp
@@ -83,12 +83,12 @@ def prodZeroIso (X : C) : X ⨯ (0 : C) ≅ X :=
 #align category_theory.limits.prod_zero_iso CategoryTheory.Limits.prodZeroIso
 
 @[simp]
-theorem prodZeroIso_hom (X : C) : (prodZeroIso X).Hom = Prod.fst :=
+theorem prodZeroIso_hom (X : C) : (prodZeroIso X).Hom = prod.fst :=
   rfl
 #align category_theory.limits.prod_zero_iso_hom CategoryTheory.Limits.prodZeroIso_hom
 
 @[simp]
-theorem prodZeroIso_iso_inv_snd (X : C) : (prodZeroIso X).inv ≫ Prod.fst = 𝟙 X :=
+theorem prodZeroIso_iso_inv_snd (X : C) : (prodZeroIso X).inv ≫ prod.fst = 𝟙 X :=
   by
   dsimp [prod_zero_iso, binary_fan_zero_right]
   simp
@@ -171,7 +171,7 @@ def pullbackZeroZeroIso (X Y : C) [HasBinaryProduct X Y] :
 
 @[simp]
 theorem pullbackZeroZeroIso_inv_fst (X Y : C) [HasBinaryProduct X Y] :
-    (pullbackZeroZeroIso X Y).inv ≫ pullback.fst = Prod.fst :=
+    (pullbackZeroZeroIso X Y).inv ≫ pullback.fst = prod.fst :=
   by
   dsimp [pullback_zero_zero_iso]
   simp
@@ -179,7 +179,7 @@ theorem pullbackZeroZeroIso_inv_fst (X Y : C) [HasBinaryProduct X Y] :
 
 @[simp]
 theorem pullbackZeroZeroIso_inv_snd (X Y : C) [HasBinaryProduct X Y] :
-    (pullbackZeroZeroIso X Y).inv ≫ pullback.snd = Prod.snd :=
+    (pullbackZeroZeroIso X Y).inv ≫ pullback.snd = prod.snd :=
   by
   dsimp [pullback_zero_zero_iso]
   simp
@@ -187,12 +187,12 @@ theorem pullbackZeroZeroIso_inv_snd (X Y : C) [HasBinaryProduct X Y] :
 
 @[simp]
 theorem pullbackZeroZeroIso_hom_fst (X Y : C) [HasBinaryProduct X Y] :
-    (pullbackZeroZeroIso X Y).Hom ≫ Prod.fst = pullback.fst := by simp [← iso.eq_inv_comp]
+    (pullbackZeroZeroIso X Y).Hom ≫ prod.fst = pullback.fst := by simp [← iso.eq_inv_comp]
 #align category_theory.limits.pullback_zero_zero_iso_hom_fst CategoryTheory.Limits.pullbackZeroZeroIso_hom_fst
 
 @[simp]
 theorem pullbackZeroZeroIso_hom_snd (X Y : C) [HasBinaryProduct X Y] :
-    (pullbackZeroZeroIso X Y).Hom ≫ Prod.snd = pullback.snd := by simp [← iso.eq_inv_comp]
+    (pullbackZeroZeroIso X Y).Hom ≫ prod.snd = pullback.snd := by simp [← iso.eq_inv_comp]
 #align category_theory.limits.pullback_zero_zero_iso_hom_snd CategoryTheory.Limits.pullbackZeroZeroIso_hom_snd
 
 instance hasPushout_over_zero (X Y : C) [HasBinaryCoproduct X Y] :

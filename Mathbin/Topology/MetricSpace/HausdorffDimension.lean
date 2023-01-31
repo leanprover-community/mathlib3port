@@ -236,7 +236,7 @@ alias dimH_finite ← Set.Finite.dimH_zero
 
 @[simp]
 theorem dimH_coe_finset (s : Finset X) : dimH (s : Set X) = 0 :=
-  s.finite_to_set.dimH_zero
+  s.finite_toSet.dimH_zero
 #align dimH_coe_finset dimH_coe_finset
 
 alias dimH_coe_finset ← Finset.dimH_zero
@@ -572,7 +572,7 @@ TODO: do we actually need `convex ℝ s`? -/
 theorem ContDiffOn.dimH_image_le {f : E → F} {s t : Set E} (hf : ContDiffOn ℝ 1 f s)
     (hc : Convex ℝ s) (ht : t ⊆ s) : dimH (f '' t) ≤ dimH t :=
   dimH_image_le_of_locally_lipschitz_on fun x hx =>
-    let ⟨C, u, hu, hf⟩ := (hf x (ht hx)).exists_lipschitz_on_with hc
+    let ⟨C, u, hu, hf⟩ := (hf x (ht hx)).exists_lipschitzOnWith hc
     ⟨C, u, nhdsWithin_mono _ ht hu, hf⟩
 #align cont_diff_on.dimH_image_le ContDiffOn.dimH_image_le
 

@@ -201,7 +201,7 @@ variable {P X Y Z : C} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ 
 that we have a `is_pullback fst snd f g`.
 -/
 def cone (h : IsPullback fst snd f g) : PullbackCone f g :=
-  h.to_comm_sq.Cone
+  h.to_commSq.Cone
 #align category_theory.is_pullback.cone CategoryTheory.IsPullback.cone
 
 @[simp]
@@ -331,7 +331,7 @@ variable {Z X Y P : C} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ 
 that we have a `is_pushout f g inl inr`.
 -/
 def cocone (h : IsPushout f g inl inr) : PushoutCocone f g :=
-  h.to_comm_sq.Cocone
+  h.to_commSq.Cocone
 #align category_theory.is_pushout.cocone CategoryTheory.IsPushout.cocone
 
 @[simp]
@@ -643,7 +643,7 @@ end
 theorem op (h : IsPullback fst snd f g) : IsPushout g.op f.op snd.op fst.op :=
   IsPushout.ofIsColimit
     (IsColimit.ofIsoColimit (Limits.PullbackCone.isLimitEquivIsColimitOp h.flip.Cone h.flip.IsLimit)
-      h.to_comm_sq.flip.coneOp)
+      h.to_commSq.flip.coneOp)
 #align category_theory.is_pullback.op CategoryTheory.IsPullback.op
 
 theorem unop {P X Y Z : Cᵒᵖ} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {g : Y ⟶ Z}
@@ -651,7 +651,7 @@ theorem unop {P X Y Z : Cᵒᵖ} {fst : P ⟶ X} {snd : P ⟶ Y} {f : X ⟶ Z} {
   IsPushout.ofIsColimit
     (IsColimit.ofIsoColimit
       (Limits.PullbackCone.isLimitEquivIsColimitUnop h.flip.Cone h.flip.IsLimit)
-      h.to_comm_sq.flip.coneUnop)
+      h.to_commSq.flip.coneUnop)
 #align category_theory.is_pullback.unop CategoryTheory.IsPullback.unop
 
 theorem ofVertIsIso [IsIso snd] [IsIso f] (sq : CommSq fst snd f g) : IsPullback fst snd f g :=
@@ -858,7 +858,7 @@ theorem op (h : IsPushout f g inl inr) : IsPullback inr.op inl.op g.op f.op :=
   IsPullback.ofIsLimit
     (IsLimit.ofIsoLimit
       (Limits.PushoutCocone.isColimitEquivIsLimitOp h.flip.Cocone h.flip.IsColimit)
-      h.to_comm_sq.flip.coconeOp)
+      h.to_commSq.flip.coconeOp)
 #align category_theory.is_pushout.op CategoryTheory.IsPushout.op
 
 theorem unop {Z X Y P : Cᵒᵖ} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P}
@@ -866,7 +866,7 @@ theorem unop {Z X Y P : Cᵒᵖ} {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {in
   IsPullback.ofIsLimit
     (IsLimit.ofIsoLimit
       (Limits.PushoutCocone.isColimitEquivIsLimitUnop h.flip.Cocone h.flip.IsColimit)
-      h.to_comm_sq.flip.coconeUnop)
+      h.to_commSq.flip.coconeUnop)
 #align category_theory.is_pushout.unop CategoryTheory.IsPushout.unop
 
 theorem ofHorizIsIso [IsIso f] [IsIso inr] (sq : CommSq f g inl inr) : IsPushout f g inl inr :=
@@ -919,7 +919,7 @@ variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
 theorem ofIsPullbackIsPushout (p₁ : IsPullback f g h i) (p₂ : IsPushout f g h i) :
     BicartesianSq f g h i :=
-  BicartesianSq.mk p₁.to_comm_sq ⟨p₁.IsLimit⟩ ⟨p₂.IsColimit⟩
+  BicartesianSq.mk p₁.to_commSq ⟨p₁.IsLimit⟩ ⟨p₂.IsColimit⟩
 #align category_theory.bicartesian_sq.of_is_pullback_is_pushout CategoryTheory.BicartesianSq.ofIsPullbackIsPushout
 
 theorem flip (p : BicartesianSq f g h i) : BicartesianSq g f i h :=

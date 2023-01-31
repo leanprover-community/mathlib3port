@@ -121,7 +121,7 @@ variable {α β γ : Type v}
 
 #print Functor.Comp.map_pure /-
 theorem map_pure (f : α → β) (x : α) : (f <$> pure x : Comp F G β) = pure (f x) :=
-  comp.ext <| by simp
+  Comp.ext <| by simp
 #align functor.comp.map_pure Functor.Comp.map_pure
 -/
 
@@ -132,7 +132,7 @@ but is expected to have type
   forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Applicative.{u1, u3} F] [_inst_2 : Applicative.{u2, u1} G] [_inst_3 : LawfulApplicative.{u1, u3} F _inst_1] [_inst_4 : LawfulApplicative.{u2, u1} G _inst_2] {α : Type.{u2}} {β : Type.{u2}} (f : Functor.Comp.{u1, u2, u3} F G (α -> β)) (x : α), Eq.{succ u3} (Functor.Comp.{u1, u2, u3} F G β) (Seq.seq.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.instSeqComp.{u1, u2, u3} F G _inst_1 _inst_2) α β f (fun (x._@.Mathlib.Control.Applicative._hyg.991 : Unit) => Pure.pure.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.instPureComp.{u1, u2, u3} F G _inst_1 _inst_2) α x)) (Functor.map.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.functor.{u1, u2, u3} F G (Applicative.toFunctor.{u1, u3} F _inst_1) (Applicative.toFunctor.{u2, u1} G _inst_2)) (α -> β) β (fun (g : α -> β) => g x) f)
 Case conversion may be inaccurate. Consider using '#align functor.comp.seq_pure Functor.Comp.seq_pureₓ'. -/
 theorem seq_pure (f : Comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
-  comp.ext <| by simp [(· ∘ ·), functor_norm]
+  Comp.ext <| by simp [(· ∘ ·), functor_norm]
 #align functor.comp.seq_pure Functor.Comp.seq_pure
 
 /- warning: functor.comp.seq_assoc -> Functor.Comp.seq_assoc is a dubious translation:
@@ -143,7 +143,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align functor.comp.seq_assoc Functor.Comp.seq_assocₓ'. -/
 theorem seq_assoc (x : Comp F G α) (f : Comp F G (α → β)) (g : Comp F G (β → γ)) :
     g <*> (f <*> x) = @Function.comp α β γ <$> g <*> f <*> x :=
-  comp.ext <| by simp [(· ∘ ·), functor_norm]
+  Comp.ext <| by simp [(· ∘ ·), functor_norm]
 #align functor.comp.seq_assoc Functor.Comp.seq_assoc
 
 /- warning: functor.comp.pure_seq_eq_map -> Functor.Comp.pure_seq_eq_map is a dubious translation:
@@ -153,12 +153,12 @@ but is expected to have type
   forall {F : Type.{u1} -> Type.{u3}} {G : Type.{u2} -> Type.{u1}} [_inst_1 : Applicative.{u1, u3} F] [_inst_2 : Applicative.{u2, u1} G] [_inst_3 : LawfulApplicative.{u1, u3} F _inst_1] [_inst_4 : LawfulApplicative.{u2, u1} G _inst_2] {α : Type.{u2}} {β : Type.{u2}} (f : α -> β) (x : Functor.Comp.{u1, u2, u3} F G α), Eq.{succ u3} (Functor.Comp.{u1, u2, u3} F G β) (Seq.seq.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.instSeqComp.{u1, u2, u3} F G _inst_1 _inst_2) α β (Pure.pure.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.instPureComp.{u1, u2, u3} F G _inst_1 _inst_2) (α -> β) f) (fun (x._@.Mathlib.Control.Applicative._hyg.1171 : Unit) => x)) (Functor.map.{u2, u3} (Functor.Comp.{u1, u2, u3} F G) (Functor.Comp.functor.{u1, u2, u3} F G (Applicative.toFunctor.{u1, u3} F _inst_1) (Applicative.toFunctor.{u2, u1} G _inst_2)) α β f x)
 Case conversion may be inaccurate. Consider using '#align functor.comp.pure_seq_eq_map Functor.Comp.pure_seq_eq_mapₓ'. -/
 theorem pure_seq_eq_map (f : α → β) (x : Comp F G α) : pure f <*> x = f <$> x :=
-  comp.ext <| by simp [Applicative.pure_seq_eq_map', functor_norm]
+  Comp.ext <| by simp [Applicative.pure_seq_eq_map', functor_norm]
 #align functor.comp.pure_seq_eq_map Functor.Comp.pure_seq_eq_map
 
 instance : LawfulApplicative (Comp F G)
     where
-  pure_seq_eq_map := @Comp.pure_seq_eq_map F G _ _ _ _
+  pure_seq := @Comp.pure_seq_eq_map F G _ _ _ _
   map_pure := @Comp.map_pure F G _ _ _ _
   seq_pure := @Comp.seq_pure F G _ _ _ _
   seq_assoc := @Comp.seq_assoc F G _ _ _ _

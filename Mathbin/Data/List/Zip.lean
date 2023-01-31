@@ -442,7 +442,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (l : List.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} (List.{u1} β) (List.{u2} α)) (List.unzip.{u1, u2} β α (List.map.{max u1 u2, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β) l)) (Prod.swap.{u2, u1} (List.{u2} α) (List.{u1} β) (List.unzip.{u2, u1} α β l))
 Case conversion may be inaccurate. Consider using '#align list.unzip_swap List.unzip_swapₓ'. -/
-theorem unzip_swap (l : List (α × β)) : unzip (l.map Prod.swap) = (unzip l).swap := by
+theorem unzip_swap (l : List (α × β)) : unzip (l.map Prod.swap) = (unzip l).symm := by
   simp only [unzip_eq_map, map_map] <;> constructor <;> rfl
 #align list.unzip_swap List.unzip_swap
 
@@ -706,12 +706,12 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> β -> γ) (l₁ : List.{u3} α) (l₂ : List.{u2} β) (i : Nat), Eq.{succ u1} (Option.{u1} γ) (List.get?.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l₁ l₂) i) (Option.bind.{max u2 u1, u1} (β -> γ) γ (Option.map.{u3, max u2 u1} α (β -> γ) f (List.get?.{u3} α l₁ i)) (fun (g : β -> γ) => Option.map.{u2, u1} β γ g (List.get?.{u2} β l₂ i)))
 Case conversion may be inaccurate. Consider using '#align list.nth_zip_with List.get?_zip_withₓ'. -/
 theorem get?_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i : ℕ) :
-    (zipWith f l₁ l₂).nth i = ((l₁.nth i).map f).bind fun g => (l₂.nth i).map g :=
+    (zipWith f l₁ l₂).get? i = ((l₁.get? i).map f).bind fun g => (l₂.get? i).map g :=
   by
   induction l₁ generalizing l₂ i
   · simp [zip_with, (· <*> ·)]
   · cases l₂ <;> simp only [zip_with, Seq.seq, Functor.map, nth, Option.map_none']
-    · cases (l₁_hd :: l₁_tl).nth i <;> rfl
+    · cases (l₁_hd :: l₁_tl).get? i <;> rfl
     · cases i <;> simp only [Option.map_some', nth, Option.some_bind', *]
 #align list.nth_zip_with List.get?_zip_with
 
@@ -722,7 +722,8 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : α -> β -> γ) (l₁ : List.{u3} α) (l₂ : List.{u2} β) (z : γ) (i : Nat), Iff (Eq.{succ u1} (Option.{u1} γ) (List.get?.{u1} γ (List.zipWith.{u3, u2, u1} α β γ f l₁ l₂) i) (Option.some.{u1} γ z)) (Exists.{succ u3} α (fun (x : α) => Exists.{succ u2} β (fun (y : β) => And (Eq.{succ u3} (Option.{u3} α) (List.get?.{u3} α l₁ i) (Option.some.{u3} α x)) (And (Eq.{succ u2} (Option.{u2} β) (List.get?.{u2} β l₂ i) (Option.some.{u2} β y)) (Eq.{succ u1} γ (f x y) z)))))
 Case conversion may be inaccurate. Consider using '#align list.nth_zip_with_eq_some List.get?_zip_with_eq_someₓ'. -/
 theorem get?_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α) (l₂ : List β) (z : γ) (i : ℕ) :
-    (zipWith f l₁ l₂).nth i = some z ↔ ∃ x y, l₁.nth i = some x ∧ l₂.nth i = some y ∧ f x y = z :=
+    (zipWith f l₁ l₂).get? i = some z ↔
+      ∃ x y, l₁.get? i = some x ∧ l₂.get? i = some y ∧ f x y = z :=
   by
   induction l₁ generalizing l₂ i
   · simp [zip_with]
@@ -737,7 +738,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (l₁ : List.{u2} α) (l₂ : List.{u1} β) (z : Prod.{u2, u1} α β) (i : Nat), Iff (Eq.{max (succ u2) (succ u1)} (Option.{max u2 u1} (Prod.{u2, u1} α β)) (List.get?.{max u2 u1} (Prod.{u2, u1} α β) (List.zip.{u2, u1} α β l₁ l₂) i) (Option.some.{max u2 u1} (Prod.{u2, u1} α β) z)) (And (Eq.{succ u2} (Option.{u2} α) (List.get?.{u2} α l₁ i) (Option.some.{u2} α (Prod.fst.{u2, u1} α β z))) (Eq.{succ u1} (Option.{u1} β) (List.get?.{u1} β l₂ i) (Option.some.{u1} β (Prod.snd.{u2, u1} α β z))))
 Case conversion may be inaccurate. Consider using '#align list.nth_zip_eq_some List.get?_zip_eq_someₓ'. -/
 theorem get?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : ℕ) :
-    (zip l₁ l₂).nth i = some z ↔ l₁.nth i = some z.1 ∧ l₂.nth i = some z.2 :=
+    (zip l₁ l₂).get? i = some z ↔ l₁.get? i = some z.1 ∧ l₂.get? i = some z.2 :=
   by
   cases z
   rw [zip, nth_zip_with_eq_some]; constructor
@@ -776,7 +777,7 @@ Case conversion may be inaccurate. Consider using '#align list.nth_le_zip List.n
 theorem nthLe_zip {l : List α} {l' : List β} {i : ℕ} {h : i < (zip l l').length} :
     (zip l l').nthLe i h =
       (l.nthLe i (lt_length_left_of_zip h), l'.nthLe i (lt_length_right_of_zip h)) :=
-  nth_le_zip_with
+  nthLe_zipWith
 #align list.nth_le_zip List.nthLe_zip
 
 #print List.mem_zip_inits_tails /-

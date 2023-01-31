@@ -225,7 +225,7 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h :=
 #align generalized_continued_fraction.coe_of_h_rat_eq GeneralizedContinuedFraction.coe_of_h_rat_eq
 
 theorem coe_of_s_nth_rat_eq :
-    (((of q).s.nth n).map (Pair.map coe) : Option <| Pair K) = (of v).s.nth n :=
+    (((of q).s.get? n).map (Pair.map coe) : Option <| Pair K) = (of v).s.get? n :=
   by
   simp only [of, int_fract_pair.seq1, SeqCat.map_nth, SeqCat.nth_tail]
   simp only [SeqCat.nth]
@@ -255,7 +255,7 @@ theorem of_terminates_iff_of_rat_terminates {v : K} {q : ℚ} (v_eq_q : v = (q :
     (of v).Terminates ↔ (of q).Terminates := by
   constructor <;> intro h <;> cases' h with n h <;> use n <;>
         simp only [SeqCat.TerminatedAt, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;>
-      cases (of q).s.nth n <;>
+      cases (of q).s.get? n <;>
     trivial
 #align generalized_continued_fraction.of_terminates_iff_of_rat_terminates GeneralizedContinuedFraction.of_terminates_iff_of_rat_terminates
 
@@ -356,7 +356,7 @@ theorem terminates_of_rat (q : ℚ) : (of q).Terminates :=
   Exists.elim (IntFractPair.exists_nth_stream_eq_none_of_rat q) fun n stream_nth_eq_none =>
     Exists.intro n
       (have : IntFractPair.stream q (n + 1) = none := IntFractPair.stream_isSeq q stream_nth_eq_none
-      of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.elimRight this)
+      of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.right this)
 #align generalized_continued_fraction.terminates_of_rat GeneralizedContinuedFraction.terminates_of_rat
 
 end TerminatesOfRat
@@ -370,7 +370,7 @@ theorem terminates_iff_rat (v : K) : (of v).Terminates ↔ ∃ q : ℚ, v = (q :
     fun exists_q_eq_v : ∃ q : ℚ, v = (↑q : K) =>
     Exists.elim exists_q_eq_v fun q => fun v_eq_q : v = ↑q =>
       have : (of q).Terminates := terminates_of_rat q
-      (of_terminates_iff_of_rat_terminates v_eq_q).elimRight this
+      (of_terminates_iff_of_rat_terminates v_eq_q).right this
 #align generalized_continued_fraction.terminates_iff_rat GeneralizedContinuedFraction.terminates_iff_rat
 
 end GeneralizedContinuedFraction

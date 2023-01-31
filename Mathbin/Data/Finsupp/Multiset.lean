@@ -197,7 +197,7 @@ def orderIsoMultiset : (ι →₀ ℕ) ≃o Multiset ι
 #align finsupp.order_iso_multiset Finsupp.orderIsoMultiset
 
 @[simp]
-theorem coe_orderIsoMultiset : ⇑(@orderIsoMultiset ι) = to_multiset :=
+theorem coe_orderIsoMultiset : ⇑(@orderIsoMultiset ι) = toMultiset :=
   rfl
 #align finsupp.coe_order_iso_multiset Finsupp.coe_orderIsoMultiset
 

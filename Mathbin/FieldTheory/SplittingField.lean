@@ -87,11 +87,11 @@ theorem factor_dvd_of_natDegree_ne_zero {f : K[X]} (hf : f.natDegree ≠ 0) : fa
 
 /-- Divide a polynomial f by X - C r where r is a root of f in a bigger field extension. -/
 def removeFactor (f : K[X]) : Polynomial (AdjoinRoot <| factor f) :=
-  map (AdjoinRoot.of f.factor) f /ₘ (X - c (AdjoinRoot.root f.factor))
+  map (AdjoinRoot.of f.factor) f /ₘ (x - c (AdjoinRoot.root f.factor))
 #align polynomial.remove_factor Polynomial.removeFactor
 
 theorem x_sub_c_mul_removeFactor (f : K[X]) (hf : f.natDegree ≠ 0) :
-    (X - c (AdjoinRoot.root f.factor)) * f.removeFactor = map (AdjoinRoot.of f.factor) f :=
+    (x - c (AdjoinRoot.root f.factor)) * f.removeFactor = map (AdjoinRoot.of f.factor) f :=
   let ⟨g, hg⟩ := factor_dvd_of_natDegree_ne_zero hf
   mul_divByMonic_eq_iff_isRoot.2 <| by
     rw [is_root.def, eval_map, hg, eval₂_mul, ← hg, AdjoinRoot.eval₂_root, zero_mul]
@@ -173,7 +173,7 @@ instance algebra''' {n : ℕ} {f : K[X]} :
 #align polynomial.splitting_field_aux.algebra''' Polynomial.SplittingFieldAux.algebra'''
 
 instance algebra' {n : ℕ} {f : K[X]} : Algebra (AdjoinRoot f.factor) (SplittingFieldAux n.succ f) :=
-  splitting_field_aux.algebra'''
+  SplittingFieldAux.algebra'''
 #align polynomial.splitting_field_aux.algebra' Polynomial.SplittingFieldAux.algebra'
 
 instance algebra'' {n : ℕ} {f : K[X]} : Algebra K (SplittingFieldAux n f.removeFactor) :=
@@ -189,7 +189,7 @@ instance scalar_tower' {n : ℕ} {f : K[X]} :
 
 instance scalar_tower {n : ℕ} {f : K[X]} :
     IsScalarTower K (AdjoinRoot f.factor) (SplittingFieldAux (n + 1) f) :=
-  splitting_field_aux.scalar_tower'
+  SplittingFieldAux.scalar_tower'
 #align polynomial.splitting_field_aux.scalar_tower Polynomial.SplittingFieldAux.scalar_tower
 
 theorem algebraMap_succ (n : ℕ) (f : K[X]) :

@@ -64,8 +64,8 @@ Case conversion may be inaccurate. Consider using '#align invertible_pow inverti
 instance invertiblePow (m : M) [Invertible m] (n : ℕ) : Invertible (m ^ n)
     where
   invOf := ⅟ m ^ n
-  inv_of_mul_self := by rw [← (commute_invOf m).symm.mul_pow, invOf_mul_self, one_pow]
-  mul_inv_of_self := by rw [← (commute_invOf m).mul_pow, mul_invOf_self, one_pow]
+  invOf_mul_self := by rw [← (commute_invOf m).symm.mul_pow, invOf_mul_self, one_pow]
+  mul_invOf_self := by rw [← (commute_invOf m).mul_pow, mul_invOf_self, one_pow]
 #align invertible_pow invertiblePow
 
 /- warning: inv_of_pow -> invOf_pow is a dubious translation:
@@ -81,7 +81,7 @@ theorem invOf_pow (m : M) [Invertible m] (n : ℕ) [Invertible (m ^ n)] : ⅟ (m
 #print IsUnit.pow /-
 @[to_additive]
 theorem IsUnit.pow {m : M} (n : ℕ) : IsUnit m → IsUnit (m ^ n) := fun ⟨u, hu⟩ =>
-  ⟨u ^ n, hu ▸ u.coe_pow _⟩
+  ⟨u ^ n, hu ▸ u.val_pow_eq_pow_val _⟩
 #align is_unit.pow IsUnit.pow
 #align is_add_unit.nsmul IsAddUnit.nsmul
 -/
@@ -931,7 +931,7 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a * a) (Hsq' : 0 ≤ (1 + a) * (1 + a))
         (le_add_iff_nonneg_right _).2 this
       _ = (1 + a) * (1 + a) * (1 + n * a) :=
         by
-        simp [add_mul, mul_add, bit0, mul_assoc, (n.cast_commute (_ : R)).left_comm]
+        simp [add_mul, mul_add, bit0, mul_assoc, (n.cast_commute (_ : R)).and_left_comm]
         ac_rfl
       _ ≤ (1 + a) * (1 + a) * (1 + a) ^ n := mul_le_mul_of_nonneg_left (one_add_mul_le_pow' n) Hsq'
       _ = (1 + a) ^ (n + 2) := by simp only [pow_succ, mul_assoc]
@@ -1896,7 +1896,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : Units.{u1} M _inst_1) (x : M) (n : Nat), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 u) x) (Units.val.{u1} M _inst_1 (Inv.inv.{u1} (Units.{u1} M _inst_1) (Units.instInvUnits.{u1} M _inst_1) u))) n) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 u) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n)) (Units.val.{u1} M _inst_1 (Inv.inv.{u1} (Units.{u1} M _inst_1) (Units.instInvUnits.{u1} M _inst_1) u)))
 Case conversion may be inaccurate. Consider using '#align units.conj_pow Units.conj_powₓ'. -/
 theorem conj_pow (u : Mˣ) (x : M) (n : ℕ) : (↑u * x * ↑u⁻¹) ^ n = u * x ^ n * ↑u⁻¹ :=
-  (divp_eq_iff_mul_eq.2 ((u.mk_semiconj_by x).pow_right n).Eq.symm).symm
+  (divp_eq_iff_mul_eq.2 ((u.mk_semiconjBy x).pow_right n).Eq.symm).symm
 #align units.conj_pow Units.conj_pow
 
 /- warning: units.conj_pow' -> Units.conj_pow' is a dubious translation:

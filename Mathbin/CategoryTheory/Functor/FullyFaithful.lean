@@ -389,7 +389,7 @@ instance Faithful.comp [Faithful F] [Faithful G] : Faithful (F ⋙ G)
 -/
 
 #print CategoryTheory.Faithful.of_comp /-
-theorem Faithful.of_comp [faithful <| F ⋙ G] : Faithful F :=
+theorem Faithful.of_comp [Faithful <| F ⋙ G] : Faithful F :=
   { map_injective' := fun X Y => (F ⋙ G).map_injective.of_comp }
 #align category_theory.faithful.of_comp CategoryTheory.Faithful.of_comp
 -/
@@ -514,7 +514,7 @@ instance Full.comp [Full F] [Full G] : Full (F ⋙ G)
 
 #print CategoryTheory.Full.ofCompFaithful /-
 /-- If `F ⋙ G` is full and `G` is faithful, then `F` is full. -/
-def Full.ofCompFaithful [full <| F ⋙ G] [Faithful G] : Full F
+def Full.ofCompFaithful [Full <| F ⋙ G] [Faithful G] : Full F
     where
   preimage X Y f := (F ⋙ G).preimage (G.map f)
   witness' X Y f := G.map_injective ((F ⋙ G).image_preimage _)

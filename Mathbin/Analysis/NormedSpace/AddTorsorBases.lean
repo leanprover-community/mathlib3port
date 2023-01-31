@@ -41,7 +41,7 @@ include E
 theorem isOpenMap_barycentric_coord [Nontrivial ι] (b : AffineBasis ι 𝕜 P) (i : ι) :
     IsOpenMap (b.Coord i) :=
   AffineMap.isOpenMap_linear_iff.mp <|
-    (b.Coord i).linear.is_open_map_of_finite_dimensional <|
+    (b.Coord i).linear.isOpenMap_of_finiteDimensional <|
       (b.Coord i).linear_surjective_iff.mpr (b.surjective_coord i)
 #align is_open_map_barycentric_coord isOpenMap_barycentric_coord
 
@@ -49,7 +49,7 @@ variable [FiniteDimensional 𝕜 E] (b : AffineBasis ι 𝕜 P)
 
 @[continuity]
 theorem continuous_barycentric_coord (i : ι) : Continuous (b.Coord i) :=
-  (b.Coord i).continuous_of_finite_dimensional
+  (b.Coord i).continuous_of_finiteDimensional
 #align continuous_barycentric_coord continuous_barycentric_coord
 
 theorem smooth_barycentric_coord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
@@ -144,14 +144,14 @@ theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsO
 /-- The affine span of a nonempty open set is `⊤`. -/
 theorem IsOpen.affineSpan_eq_top {u : Set P} (hu : IsOpen u) (hne : u.Nonempty) :
     affineSpan ℝ u = ⊤ :=
-  let ⟨s, hsu, hs, hs'⟩ := hu.exists_subset_affine_independent_span_eq_top hne
+  let ⟨s, hsu, hs, hs'⟩ := hu.exists_subset_affineIndependent_span_eq_top hne
   top_unique <| hs' ▸ affineSpan_mono _ hsu
 #align is_open.affine_span_eq_top IsOpen.affineSpan_eq_top
 
 theorem affineSpan_eq_top_of_nonempty_interior {s : Set V}
     (hs : (interior <| convexHull ℝ s).Nonempty) : affineSpan ℝ s = ⊤ :=
   top_unique <|
-    isOpen_interior.affine_span_eq_top hs ▸
+    isOpen_interior.affineSpan_eq_top hs ▸
       (affineSpan_mono _ interior_subset).trans_eq (affineSpan_convexHull _)
 #align affine_span_eq_top_of_nonempty_interior affineSpan_eq_top_of_nonempty_interior
 

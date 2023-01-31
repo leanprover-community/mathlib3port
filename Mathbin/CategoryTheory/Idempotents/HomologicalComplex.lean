@@ -143,14 +143,14 @@ def inverse : HomologicalComplex (Karoubi C) c ⥤ Karoubi (HomologicalComplex C
 /-- The counit isomorphism of the equivalence
 `karoubi (homological_complex C c) ≌ homological_complex (karoubi C) c`. -/
 @[simps]
-def counitIso : inverse ⋙ Functor ≅ 𝟭 (HomologicalComplex (Karoubi C) c) :=
+def counitIso : inverse ⋙ functor ≅ 𝟭 (HomologicalComplex (Karoubi C) c) :=
   eqToIso (Functor.ext (fun P => HomologicalComplex.ext (by tidy) (by tidy)) (by tidy))
 #align category_theory.idempotents.karoubi_homological_complex_equivalence.counit_iso CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.counitIso
 
 /-- The unit isomorphism of the equivalence
 `karoubi (homological_complex C c) ≌ homological_complex (karoubi C) c`. -/
 @[simps]
-def unitIso : 𝟭 (Karoubi (HomologicalComplex C c)) ≅ Functor ⋙ inverse
+def unitIso : 𝟭 (Karoubi (HomologicalComplex C c)) ≅ functor ⋙ inverse
     where
   Hom :=
     { app := fun P =>

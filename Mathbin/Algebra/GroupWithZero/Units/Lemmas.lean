@@ -128,7 +128,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_mul_cancel div_mul_cancelₓ'. -/
 @[simp]
 theorem div_mul_cancel (a : G₀) (h : b ≠ 0) : a / b * b = a :=
-  h.IsUnit.div_mul_cancel _
+  h.IsUnit.div_mul_cancelₓ _
 #align div_mul_cancel div_mul_cancel
 
 /- warning: mul_div_cancel -> mul_div_cancel is a dubious translation:
@@ -379,7 +379,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {b : G₀} (a : G₀), (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))))) b (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a b)) a)
 Case conversion may be inaccurate. Consider using '#align mul_div_cancel' mul_div_cancel'ₓ'. -/
 theorem mul_div_cancel' (a : G₀) (hb : b ≠ 0) : b * (a / b) = a :=
-  hb.IsUnit.mul_div_cancel' _
+  hb.IsUnit.mul_div_cancel'ₓ _
 #align mul_div_cancel' mul_div_cancel'
 
 /- warning: mul_div_mul_left -> mul_div_mul_left is a dubious translation:

@@ -43,7 +43,7 @@ variable {ι : Sort _} {α β : Type _}
 /-- A filter `l` has the countable intersection property if for any countable collection
 of sets `s ∈ l` their intersection belongs to `l` as well. -/
 class CountableInterFilter (l : Filter α) : Prop where
-  countable_sInter_mem' : ∀ {S : Set (Set α)} (hSc : S.Countable) (hS : ∀ s ∈ S, s ∈ l), ⋂₀ S ∈ l
+  countable_interₛ_mem' : ∀ {S : Set (Set α)} (hSc : S.Countable) (hS : ∀ s ∈ S, s ∈ l), ⋂₀ S ∈ l
 #align countable_Inter_filter CountableInterFilter
 -/
 

@@ -48,18 +48,18 @@ variable [DecidableEq α]
 
 /-- The cycle type of a permutation -/
 def cycleType (σ : Perm α) : Multiset ℕ :=
-  σ.cycleFactorsFinset.1.map (Finset.card ∘ support)
+  σ.cycleFactorsFinset.1.map (Finset.card ∘ Support)
 #align equiv.perm.cycle_type Equiv.Perm.cycleType
 
 theorem cycleType_def (σ : Perm α) :
-    σ.cycleType = σ.cycleFactorsFinset.1.map (Finset.card ∘ support) :=
+    σ.cycleType = σ.cycleFactorsFinset.1.map (Finset.card ∘ Support) :=
   rfl
 #align equiv.perm.cycle_type_def Equiv.Perm.cycleType_def
 
 theorem cycleType_eq' {σ : Perm α} (s : Finset (Perm α)) (h1 : ∀ f : Perm α, f ∈ s → f.IsCycle)
     (h2 : (s : Set (Perm α)).Pairwise Disjoint)
     (h0 : s.noncommProd id (h2.imp fun _ _ => Disjoint.commute) = σ) :
-    σ.cycleType = s.1.map (Finset.card ∘ support) :=
+    σ.cycleType = s.1.map (Finset.card ∘ Support) :=
   by
   rw [cycle_type_def]
   congr
@@ -69,7 +69,7 @@ theorem cycleType_eq' {σ : Perm α} (s : Finset (Perm α)) (h1 : ∀ f : Perm �
 
 theorem cycleType_eq {σ : Perm α} (l : List (Perm α)) (h0 : l.Prod = σ)
     (h1 : ∀ σ : Perm α, σ ∈ l → σ.IsCycle) (h2 : l.Pairwise Disjoint) :
-    σ.cycleType = l.map (Finset.card ∘ support) :=
+    σ.cycleType = l.map (Finset.card ∘ Support) :=
   by
   have hl : l.nodup := nodup_of_pairwise_disjoint_cycles h1 h2
   rw [cycle_type_eq' l.to_finset]
@@ -212,7 +212,7 @@ theorem orderOf_cycleOf_dvd_orderOf (f : Perm α) (x : α) : orderOf (cycleOf f 
 #align equiv.perm.order_of_cycle_of_dvd_order_of Equiv.Perm.orderOf_cycleOf_dvd_orderOf
 
 theorem two_dvd_card_support {σ : Perm α} (hσ : σ ^ 2 = 1) : 2 ∣ σ.Support.card :=
-  (congr_arg (Dvd.Dvd 2) σ.sum_cycle_type).mp
+  (congr_arg (Dvd.Dvd 2) σ.sum_cycleType).mp
     (Multiset.dvd_sum fun n hn => by
       rw [le_antisymm
           (Nat.le_of_dvd zero_lt_two <|
@@ -345,7 +345,7 @@ theorem mem_cycleType_iff {n : ℕ} {σ : Perm α} :
 
 theorem le_card_support_of_mem_cycleType {n : ℕ} {σ : Perm α} (h : n ∈ cycleType σ) :
     n ≤ σ.Support.card :=
-  (le_sum_of_mem h).trans (le_of_eq σ.sum_cycle_type)
+  (le_sum_of_mem h).trans (le_of_eq σ.sum_cycleType)
 #align equiv.perm.le_card_support_of_mem_cycle_type Equiv.Perm.le_card_support_of_mem_cycleType
 
 theorem cycleType_of_card_le_mem_cycleType_add_two {n : ℕ} {g : Perm α}
@@ -466,10 +466,10 @@ def vectorEquiv : Vector G n ≃ vectorsProdEqOne G (n + 1)
       ((congr_arg₂ Vector.cons
             (eq_inv_of_mul_eq_one_left
                 (by
-                  rw [← List.prod_cons, ← Vector.toList_cons, v.1.cons_head_tail]
+                  rw [← List.prod_cons, ← Vector.toList_cons, v.1.cons_head!_tail]
                   exact v.2)).symm
             rfl).trans
-        v.1.cons_head_tail)
+        v.1.cons_head!_tail)
 #align equiv.perm.vectors_prod_eq_one.vector_equiv Equiv.Perm.vectorsProdEqOne.vectorEquiv
 
 /-- Given a vector `v` of length `n` whose product is 1, make a vector of length `n - 1`,
@@ -578,7 +578,7 @@ section Partition
 variable [DecidableEq α]
 
 /-- The partition corresponding to a permutation -/
-def partition (σ : Perm α) : (Fintype.card α).partition
+def partition (σ : Perm α) : (Fintype.card α).partitionₓ
     where
   parts := σ.cycleType + replicate (Fintype.card α - σ.Support.card) 1
   parts_pos n hn := by
@@ -591,12 +591,12 @@ def partition (σ : Perm α) : (Fintype.card α).partition
 #align equiv.perm.partition Equiv.Perm.partition
 
 theorem parts_partition {σ : Perm α} :
-    σ.partition.parts = σ.cycleType + replicate (Fintype.card α - σ.Support.card) 1 :=
+    σ.partitionₓ.parts = σ.cycleType + replicate (Fintype.card α - σ.Support.card) 1 :=
   rfl
 #align equiv.perm.parts_partition Equiv.Perm.parts_partition
 
 theorem filter_parts_partition_eq_cycleType {σ : Perm α} :
-    ((partition σ).parts.filter fun n => 2 ≤ n) = σ.cycleType :=
+    ((partition σ).parts.filterₓ fun n => 2 ≤ n) = σ.cycleType :=
   by
   rw [parts_partition, filter_add, Multiset.filter_eq_self.2 fun _ => two_le_of_mem_cycle_type,
     Multiset.filter_eq_nil.2 fun a h => _, add_zero]
@@ -604,7 +604,7 @@ theorem filter_parts_partition_eq_cycleType {σ : Perm α} :
   decide
 #align equiv.perm.filter_parts_partition_eq_cycle_type Equiv.Perm.filter_parts_partition_eq_cycleType
 
-theorem partition_eq_of_isConj {σ τ : Perm α} : IsConj σ τ ↔ σ.partition = τ.partition :=
+theorem partition_eq_of_isConj {σ τ : Perm α} : IsConj σ τ ↔ σ.partitionₓ = τ.partitionₓ :=
   by
   rw [is_conj_iff_cycle_type_eq]
   refine' ⟨fun h => _, fun h => _⟩

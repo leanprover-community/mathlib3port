@@ -173,7 +173,7 @@ variable [CharZero α] {m n : ℕ}
 
 #print Nat.StrictMono_cast /-
 theorem StrictMono_cast : StrictMono (coe : ℕ → α) :=
-  mono_cast.strict_mono_of_injective cast_injective
+  mono_cast.strictMono_of_injective cast_injective
 #align nat.strict_mono_cast Nat.StrictMono_cast
 -/
 

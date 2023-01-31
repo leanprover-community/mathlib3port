@@ -152,14 +152,14 @@ theorem parallelFamily_map_left {j : J} : (parallelFamily f).map (line j) = f j 
 @[simps]
 def diagramIsoParallelFamily (F : WalkingParallelFamily J ⥤ C) :
     F ≅ parallelFamily fun j => F.map (line j) :=
-  (NatIso.ofComponents fun j => eq_to_iso <| by cases j <;> tidy) <| by tidy
+  (NatIso.ofComponents fun j => eqToIso <| by cases j <;> tidy) <| by tidy
 #align category_theory.limits.diagram_iso_parallel_family CategoryTheory.Limits.diagramIsoParallelFamily
 
 /-- `walking_parallel_pair` as a category is equivalent to a special case of
 `walking_parallel_family`.  -/
 @[simps]
 def walkingParallelFamilyEquivWalkingParallelPair :
-    WalkingParallelFamily.{w} (ULift Bool) ≌ walking_parallel_pair
+    WalkingParallelFamily.{w} (ULift Bool) ≌ WalkingParallelPair
     where
   Functor :=
     parallelFamily fun p => cond p.down WalkingParallelPairHom.left WalkingParallelPairHom.right
@@ -572,7 +572,7 @@ theorem wideEqualizer.trident_π_app_zero :
 
 @[reassoc.1]
 theorem wideEqualizer.condition (j₁ j₂ : J) : wideEqualizer.ι f ≫ f j₁ = wideEqualizer.ι f ≫ f j₂ :=
-  Trident.condition j₁ j₂ <| limit.cone <| parallelFamily f
+  Trident.condition j₁ j₂ <| Limit.cone <| parallelFamily f
 #align category_theory.limits.wide_equalizer.condition CategoryTheory.Limits.wideEqualizer.condition
 
 /-- The wide_equalizer built from `wide_equalizer.ι f` is limiting. -/
@@ -673,7 +673,7 @@ theorem wideCoequalizer.cotrident_ι_app_one :
 @[reassoc.1]
 theorem wideCoequalizer.condition (j₁ j₂ : J) :
     f j₁ ≫ wideCoequalizer.π f = f j₂ ≫ wideCoequalizer.π f :=
-  Cotrident.condition j₁ j₂ <| colimit.cocone <| parallelFamily f
+  Cotrident.condition j₁ j₂ <| Colimit.cocone <| parallelFamily f
 #align category_theory.limits.wide_coequalizer.condition CategoryTheory.Limits.wideCoequalizer.condition
 
 /-- The cotrident built from `wide_coequalizer.π f` is colimiting. -/

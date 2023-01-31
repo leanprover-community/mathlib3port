@@ -71,8 +71,8 @@ like `ℤ`-algebra of extension degree `≥ 1` and would be completely independe
 whether something is a `ℚ`-algebra or not (e.g. `ℚ[X]` would satisfy it but `ℚ` wouldn't).
 -/
 class MixedCharZero (p : ℕ) : Prop where
-  [to_char_zero : CharZero R]
-  char_p_quotient : ∃ I : Ideal R, I ≠ ⊤ ∧ CharP (R ⧸ I) p
+  [to_charZero : CharZero R]
+  charP_quotient : ∃ I : Ideal R, I ≠ ⊤ ∧ CharP (R ⧸ I) p
 #align mixed_char_zero MixedCharZero
 
 namespace MixedCharZero
@@ -223,7 +223,7 @@ noncomputable def equalCharZeroToQAlgebra (h : ∀ I : Ideal R, I ≠ ⊤ → Ch
     Algebra ℚ R :=
   haveI : Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I)) := ⟨h⟩
   RingHom.toAlgebra
-    { toFun := fun x => x.num /ₚ ↑x.pnatDenom
+    { toFun := fun x => x.num /ₚ ↑x.pnatDen
       map_zero' := by simp [divp]
       map_one' := by simp [EqualCharZero.pNat_coe_units_eq_one]
       map_mul' := by

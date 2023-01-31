@@ -266,7 +266,7 @@ instance : PartialOrder (GrothendieckTopology C) :=
 
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 instance : InfSet (GrothendieckTopology C)
-    where inf T :=
+    where infₛ T :=
     { sieves := infₛ (sieves '' T)
       top_mem' := by
         rintro X S ⟨⟨_, J, hJ, rfl⟩, rfl⟩
@@ -540,13 +540,13 @@ theorem coe_pullback {Z : C} (f : Y ⟶ X) (g : Z ⟶ Y) (S : J.cover X) :
 
 /-- The isomorphism between `S` and the pullback of `S` w.r.t. the identity. -/
 def pullbackId (S : J.cover X) : S.pullback (𝟙 X) ≅ S :=
-  eq_to_iso <| Cover.ext _ _ fun Y f => by simp
+  eqToIso <| Cover.ext _ _ fun Y f => by simp
 #align category_theory.grothendieck_topology.cover.pullback_id CategoryTheory.GrothendieckTopology.Cover.pullbackId
 
 /-- Pulling back with respect to a composition is the composition of the pullbacks. -/
 def pullbackComp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) :
     S.pullback (f ≫ g) ≅ (S.pullback g).pullback f :=
-  eq_to_iso <| Cover.ext _ _ fun Y f => by simp
+  eqToIso <| Cover.ext _ _ fun Y f => by simp
 #align category_theory.grothendieck_topology.cover.pullback_comp CategoryTheory.GrothendieckTopology.Cover.pullbackComp
 
 /-- Combine a family of covers over a cover. -/
@@ -557,7 +557,7 @@ def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : J.cover X 
 
 /-- The canonical moprhism from `S.bind T` to `T`. -/
 def bindToBase {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.y) : S.bind T ⟶ S :=
-  hom_of_le <| by
+  homOfLe <| by
     rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
     rw [← h3]
     apply sieve.downward_closed
@@ -575,19 +575,19 @@ noncomputable def Arrow.middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.c
  and `B ⟶ X` is an arrow of `S`. This is the hom `A ⟶ B`. -/
 noncomputable def Arrow.toMiddleHom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : I.y ⟶ I.middle :=
-  I.hf.some_spec.some
+  I.hf.choose_spec.some
 #align category_theory.grothendieck_topology.cover.arrow.to_middle_hom CategoryTheory.GrothendieckTopology.Cover.Arrow.toMiddleHom
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `B ⟶ X`. -/
 noncomputable def Arrow.fromMiddleHom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : I.middle ⟶ X :=
-  I.hf.some_spec.some_spec.some
+  I.hf.choose_spec.choose_spec.some
 #align category_theory.grothendieck_topology.cover.arrow.from_middle_hom CategoryTheory.GrothendieckTopology.Cover.Arrow.fromMiddleHom
 
 theorem Arrow.from_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : S I.fromMiddleHom :=
-  I.hf.some_spec.some_spec.some_spec.some
+  I.hf.choose_spec.choose_spec.choose_spec.some
 #align category_theory.grothendieck_topology.cover.arrow.from_middle_condition CategoryTheory.GrothendieckTopology.Cover.Arrow.from_middle_condition
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
@@ -599,7 +599,7 @@ noncomputable def Arrow.fromMiddle {X : C} {S : J.cover X} {T : ∀ I : S.arrow,
 
 theorem Arrow.to_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : (T I.fromMiddle) I.toMiddleHom :=
-  I.hf.some_spec.some_spec.some_spec.some_spec.1
+  I.hf.choose_spec.choose_spec.choose_spec.choose_spec.1
 #align category_theory.grothendieck_topology.cover.arrow.to_middle_condition CategoryTheory.GrothendieckTopology.Cover.Arrow.to_middle_condition
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
@@ -611,7 +611,7 @@ noncomputable def Arrow.toMiddle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J
 
 theorem Arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.y}
     (I : (S.bind T).arrow) : I.toMiddleHom ≫ I.fromMiddleHom = I.f :=
-  I.hf.some_spec.some_spec.some_spec.some_spec.2
+  I.hf.choose_spec.choose_spec.choose_spec.choose_spec.2
 #align category_theory.grothendieck_topology.cover.arrow.middle_spec CategoryTheory.GrothendieckTopology.Cover.Arrow.middle_spec
 
 -- This is used extensively in `plus.lean`, etc.

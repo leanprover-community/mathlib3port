@@ -771,7 +771,7 @@ theorem Sbtw.right_mem_image_Ioi {x y z : P} (h : Sbtw R x y z) :
 #align sbtw.right_mem_image_Ioi Sbtw.right_mem_image_Ioi
 
 theorem Sbtw.right_mem_affineSpan {x y z : P} (h : Sbtw R x y z) : z ∈ line[R, x, y] :=
-  h.Wbtw.right_mem_affine_span_of_left_ne h.left_ne
+  h.Wbtw.right_mem_affineSpan_of_left_ne h.left_ne
 #align sbtw.right_mem_affine_span Sbtw.right_mem_affineSpan
 
 theorem wbtw_iff_right_eq_or_left_mem_image_Ici {x y z : P} :
@@ -786,7 +786,7 @@ theorem Wbtw.left_mem_image_Ici_of_right_ne {x y z : P} (h : Wbtw R x y z) (hne 
 
 theorem Wbtw.left_mem_affineSpan_of_right_ne {x y z : P} (h : Wbtw R x y z) (hne : z ≠ y) :
     x ∈ line[R, z, y] :=
-  h.symm.right_mem_affine_span_of_left_ne hne
+  h.symm.right_mem_affineSpan_of_left_ne hne
 #align wbtw.left_mem_affine_span_of_right_ne Wbtw.left_mem_affineSpan_of_right_ne
 
 theorem sbtw_iff_right_ne_and_left_mem_image_IoI {x y z : P} :
@@ -800,7 +800,7 @@ theorem Sbtw.left_mem_image_Ioi {x y z : P} (h : Sbtw R x y z) :
 #align sbtw.left_mem_image_Ioi Sbtw.left_mem_image_Ioi
 
 theorem Sbtw.left_mem_affineSpan {x y z : P} (h : Sbtw R x y z) : x ∈ line[R, z, y] :=
-  h.symm.right_mem_affine_span
+  h.symm.right_mem_affineSpan
 #align sbtw.left_mem_affine_span Sbtw.left_mem_affineSpan
 
 theorem wbtw_smul_vadd_smul_vadd_of_nonneg_of_le (x : P) (v : V) {r₁ r₂ : R} (hr₁ : 0 ≤ r₁)

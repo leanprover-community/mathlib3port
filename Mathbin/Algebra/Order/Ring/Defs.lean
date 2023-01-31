@@ -970,7 +970,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u2} α] {a : α} [_inst_2 : Preorder.{u1} β] {f : β -> α}, (StrictAnti.{u1, u2} β α _inst_2 (PartialOrder.toPreorder.{u2} α (StrictOrderedSemiring.toPartialOrder.{u2} α _inst_1)) f) -> (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedSemiring.toPartialOrder.{u2} α _inst_1))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (Semiring.toMonoidWithZero.{u2} α (StrictOrderedSemiring.toSemiring.{u2} α _inst_1))))) a) -> (StrictAnti.{u1, u2} β α _inst_2 (PartialOrder.toPreorder.{u2} α (StrictOrderedSemiring.toPartialOrder.{u2} α _inst_1)) (fun (x : β) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α (StrictOrderedSemiring.toSemiring.{u2} α _inst_1))))) (f x) a))
 Case conversion may be inaccurate. Consider using '#align strict_anti.mul_const StrictAnti.mul_constₓ'. -/
 theorem StrictAnti.mul_const (hf : StrictAnti f) (ha : 0 < a) : StrictAnti fun x => f x * a :=
-  (strictMono_mul_right_of_pos ha).comp_strict_anti hf
+  (strictMono_mul_right_of_pos ha).comp_strictAnti hf
 #align strict_anti.mul_const StrictAnti.mul_const
 
 /- warning: strict_anti.const_mul -> StrictAnti.const_mul is a dubious translation:
@@ -980,7 +980,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u2} α] {a : α} [_inst_2 : Preorder.{u1} β] {f : β -> α}, (StrictAnti.{u1, u2} β α _inst_2 (PartialOrder.toPreorder.{u2} α (StrictOrderedSemiring.toPartialOrder.{u2} α _inst_1)) f) -> (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedSemiring.toPartialOrder.{u2} α _inst_1))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (Semiring.toMonoidWithZero.{u2} α (StrictOrderedSemiring.toSemiring.{u2} α _inst_1))))) a) -> (StrictAnti.{u1, u2} β α _inst_2 (PartialOrder.toPreorder.{u2} α (StrictOrderedSemiring.toPartialOrder.{u2} α _inst_1)) (fun (x : β) => HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α (StrictOrderedSemiring.toSemiring.{u2} α _inst_1))))) a (f x)))
 Case conversion may be inaccurate. Consider using '#align strict_anti.const_mul StrictAnti.const_mulₓ'. -/
 theorem StrictAnti.const_mul (hf : StrictAnti f) (ha : 0 < a) : StrictAnti fun x => a * f x :=
-  (strictMono_mul_left_of_pos ha).comp_strict_anti hf
+  (strictMono_mul_left_of_pos ha).comp_strictAnti hf
 #align strict_anti.const_mul StrictAnti.const_mul
 
 /- warning: strict_mono.mul_monotone -> StrictMono.mul_monotone is a dubious translation:
@@ -1168,7 +1168,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_mono.const_mul_of_neg StrictMono.const_mul_of_negₓ'. -/
 theorem StrictMono.const_mul_of_neg (hf : StrictMono f) (ha : a < 0) :
     StrictAnti fun x => a * f x :=
-  (strictAnti_mul_left ha).comp_strict_mono hf
+  (strictAnti_mul_left ha).comp_strictMono hf
 #align strict_mono.const_mul_of_neg StrictMono.const_mul_of_neg
 
 /- warning: strict_mono.mul_const_of_neg -> StrictMono.mul_const_of_neg is a dubious translation:
@@ -1179,7 +1179,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_mono.mul_const_of_neg StrictMono.mul_const_of_negₓ'. -/
 theorem StrictMono.mul_const_of_neg (hf : StrictMono f) (ha : a < 0) :
     StrictAnti fun x => f x * a :=
-  (strictAnti_mul_right ha).comp_strict_mono hf
+  (strictAnti_mul_right ha).comp_strictMono hf
 #align strict_mono.mul_const_of_neg StrictMono.mul_const_of_neg
 
 /- warning: strict_anti.const_mul_of_neg -> StrictAnti.const_mul_of_neg is a dubious translation:

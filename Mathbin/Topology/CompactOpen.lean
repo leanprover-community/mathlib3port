@@ -225,7 +225,7 @@ theorem compactOpen_le_induced (s : Set α) :
   simp only [induced_generateFrom_eq, ContinuousMap.compactOpen]
   apply TopologicalSpace.generateFrom_anti
   rintro b ⟨a, ⟨c, hc, u, hu, rfl⟩, rfl⟩
-  refine' ⟨coe '' c, hc.image continuous_subtype_coe, u, hu, _⟩
+  refine' ⟨coe '' c, hc.image continuous_subtype_val, u, hu, _⟩
   ext f
   simp only [compact_open.gen, mem_set_of_eq, mem_preimage, ContinuousMap.coe_restrict]
   rw [image_comp f (coe : s → α)]
@@ -407,7 +407,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 /-- The uncurried form of a continuous map `α → C(β, γ)` is a continuous map `α × β → γ`. -/
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
     Continuous (Function.uncurry fun x y => f x y) :=
-  continuous_eval'.comp <| f.Continuous.prod_map continuous_id
+  continuous_eval'.comp <| f.Continuous.Prod_map continuous_id
 #align continuous_map.continuous_uncurry_of_continuous ContinuousMap.continuous_uncurry_of_continuous
 
 /-- The uncurried form of a continuous map `α → C(β, γ)` as a continuous map `α × β → γ` (if `β` is
@@ -471,8 +471,8 @@ def continuousMapOfUnique [Unique α] : β ≃ₜ C(α, β)
     ext
     rw [Unique.eq_default a]
     rfl
-  continuous_to_fun := continuous_const'
-  continuous_inv_fun := continuous_eval'.comp (continuous_id.prod_mk continuous_const)
+  continuous_toFun := continuous_const'
+  continuous_invFun := continuous_eval'.comp (continuous_id.prod_mk continuous_const)
 #align homeomorph.continuous_map_of_unique Homeomorph.continuousMapOfUnique
 
 @[simp]

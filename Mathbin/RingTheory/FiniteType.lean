@@ -663,7 +663,7 @@ def modulePolynomialOfEndo : Module R[X] M :=
 #align module_polynomial_of_endo modulePolynomialOfEndo
 
 theorem modulePolynomialOfEndo_smul_def (n : R[X]) (a : M) :
-    @SMul.smul (modulePolynomialOfEndo f).toHasSmul n a = Polynomial.aeval f n a :=
+    @SMul.smul (modulePolynomialOfEndo f).toSMul n a = Polynomial.aeval f n a :=
   rfl
 #align module_polynomial_of_endo_smul_def modulePolynomialOfEndo_smul_def
 

@@ -376,7 +376,7 @@ theorem eqvGen_le {r : α → α → Prop} {s : Setoid α} (h : ∀ x y, r x y �
 /-- Equivalence closure of binary relations is monotone. -/
 theorem eqvGen_mono {r s : α → α → Prop} (h : ∀ x y, r x y → s x y) :
     EqvGen.Setoid r ≤ EqvGen.Setoid s :=
-  eqv_gen_le fun _ _ hr => EqvGen.rel _ _ <| h _ _ hr
+  eqvGen_le fun _ _ hr => EqvGen.rel _ _ <| h _ _ hr
 #align setoid.eqv_gen_mono Setoid.eqvGen_mono
 -/
 
@@ -582,7 +582,7 @@ theorem comap_eq {f : α → β} {r : Setoid β} : comap f r = ker (@Quotient.mk
 /-- The second isomorphism theorem for sets. -/
 noncomputable def comapQuotientEquiv (f : α → β) (r : Setoid β) :
     Quotient (comap f r) ≃ Set.range (@Quotient.mk' _ r ∘ f) :=
-  (Quotient.congrRight <| ext_iff.1 comap_eq).trans <| quotient_ker_equiv_range <| Quotient.mk' ∘ f
+  (Quotient.congrRight <| ext_iff.1 comap_eq).trans <| quotientKerEquivRange <| Quotient.mk' ∘ f
 #align setoid.comap_quotient_equiv Setoid.comapQuotientEquiv
 -/
 

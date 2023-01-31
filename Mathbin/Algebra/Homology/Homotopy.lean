@@ -259,13 +259,13 @@ def comp {C₁ C₂ C₃ : HomologicalComplex V c} {f₁ g₁ : C₁ ⟶ C₂} {
 /-- a variant of `homotopy.comp_right` useful for dealing with homotopy equivalences. -/
 @[simps]
 def compRightId {f : C ⟶ C} (h : Homotopy f (𝟙 C)) (g : C ⟶ D) : Homotopy (f ≫ g) g :=
-  (h.compRight g).trans (of_eq <| Category.id_comp _)
+  (h.compRight g).trans (ofEq <| Category.id_comp _)
 #align homotopy.comp_right_id Homotopy.compRightId
 
 /-- a variant of `homotopy.comp_left` useful for dealing with homotopy equivalences. -/
 @[simps]
 def compLeftId {f : D ⟶ D} (h : Homotopy f (𝟙 D)) (g : C ⟶ D) : Homotopy (g ≫ f) g :=
-  (h.compLeft g).trans (of_eq <| Category.comp_id _)
+  (h.compLeft g).trans (ofEq <| Category.comp_id _)
 #align homotopy.comp_left_id Homotopy.compLeftId
 
 /-!

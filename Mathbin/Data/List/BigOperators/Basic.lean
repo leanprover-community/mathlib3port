@@ -351,8 +351,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_update_nth L
 @[to_additive]
 theorem prod_set :
     ∀ (L : List M) (n : ℕ) (a : M),
-      (L.updateNth n a).Prod =
-        ((L.take n).Prod * if n < L.length then a else 1) * (L.drop (n + 1)).Prod
+      (L.set n a).Prod = ((L.take n).Prod * if n < L.length then a else 1) * (L.drop (n + 1)).Prod
   | x :: xs, 0, a => by simp [update_nth]
   | x :: xs, i + 1, a => by simp [update_nth, prod_update_nth xs i a, mul_assoc]
   | [], _, _ => by simp [update_nth, (Nat.zero_le _).not_lt, Nat.zero_le]
@@ -373,7 +372,7 @@ Instead, we write the statement in terms of `(L.nth 0).get_or_else 1`.
 -/
 @[to_additive
       "We'd like to state this as `L.head + L.tail.sum = L.sum`, but because `L.head`\nrelies on an inhabited instance to return a garbage value on the empty list, this is not possible.\nInstead, we write the statement in terms of `(L.nth 0).get_or_else 0`."]
-theorem get?_zero_mul_tail_prod (l : List M) : (l.nth 0).getOrElse 1 * l.tail.Prod = l.Prod := by
+theorem get?_zero_mul_tail_prod (l : List M) : (l.get? 0).getD 1 * l.tail.Prod = l.Prod := by
   cases l <;> simp
 #align list.nth_zero_mul_tail_prod List.get?_zero_mul_tail_prod
 #align list.nth_zero_add_tail_sum List.get?_zero_add_tail_sum
@@ -389,7 +388,7 @@ the list to be nonempty. -/
 @[to_additive
       "Same as `nth_zero_add_tail_sum`, but avoiding the `list.head` garbage complication\nby requiring the list to be nonempty."]
 theorem headI_mul_tail_prod_of_ne_nil [Inhabited M] (l : List M) (h : l ≠ []) :
-    l.head * l.tail.Prod = l.Prod := by cases l <;> [contradiction, simp]
+    l.headI * l.tail.Prod = l.Prod := by cases l <;> [contradiction, simp]
 #align list.head_mul_tail_prod_of_ne_nil List.headI_mul_tail_prod_of_ne_nil
 #align list.head_add_tail_sum_of_ne_nil List.headI_add_tail_sum_of_ne_nil
 
@@ -489,7 +488,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_le_prod' Lis
 theorem prod_le_prod' [Preorder M] [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)]
     [CovariantClass M M (· * ·) (· ≤ ·)] {l : List ι} {f g : ι → M} (h : ∀ i ∈ l, f i ≤ g i) :
     (l.map f).Prod ≤ (l.map g).Prod :=
-  forall₂.prod_le_prod' <| by simpa
+  Forall₂.prod_le_prod' <| by simpa
 #align list.prod_le_prod' List.prod_le_prod'
 #align list.sum_le_sum List.sum_le_sum
 
@@ -723,7 +722,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_update_nth' 
 /-- Alternative version of `list.prod_update_nth` when the list is over a group -/
 @[to_additive "Alternative version of `list.sum_update_nth` when the list is over a group"]
 theorem prod_set' (L : List G) (n : ℕ) (a : G) :
-    (L.updateNth n a).Prod = L.Prod * if hn : n < L.length then (L.nthLe n hn)⁻¹ * a else 1 :=
+    (L.set n a).Prod = L.Prod * if hn : n < L.length then (L.nthLe n hn)⁻¹ * a else 1 :=
   by
   refine' (prod_update_nth L n a).trans _
   split_ifs with hn hn
@@ -878,7 +877,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.prod_erase List.prod_eraseₓ'. -/
 @[simp, to_additive]
 theorem prod_erase [DecidableEq M] [CommMonoid M] {a} :
-    ∀ {l : List M}, a ∈ l → a * (l.erase a).Prod = l.Prod
+    ∀ {l : List M}, a ∈ l → a * (l.eraseₓ a).Prod = l.Prod
   | b :: l, h => by
     obtain rfl | ⟨ne, h⟩ := Decidable.List.eq_or_ne_mem_of_mem h
     · simp only [List.erase, if_pos, prod_cons]
@@ -894,7 +893,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.prod_map_erase List.prod_map_eraseₓ'. -/
 @[simp, to_additive]
 theorem prod_map_erase [DecidableEq ι] [CommMonoid M] (f : ι → M) {a} :
-    ∀ {l : List ι}, a ∈ l → f a * ((l.erase a).map f).Prod = (l.map f).Prod
+    ∀ {l : List ι}, a ∈ l → f a * ((l.eraseₓ a).map f).Prod = (l.map f).Prod
   | b :: l, h => by
     obtain rfl | ⟨ne, h⟩ := Decidable.List.eq_or_ne_mem_of_mem h
     · simp only [map, erase_cons_head, prod_cons]
@@ -934,7 +933,7 @@ If desired, we could add a class stating that `default = 0`.
 
 #print List.headI_add_tail_sum /-
 /-- This relies on `default ℕ = 0`. -/
-theorem headI_add_tail_sum (L : List ℕ) : L.head + L.tail.Sum = L.Sum :=
+theorem headI_add_tail_sum (L : List ℕ) : L.headI + L.tail.Sum = L.Sum :=
   by
   cases L
   · simp
@@ -945,14 +944,14 @@ theorem headI_add_tail_sum (L : List ℕ) : L.head + L.tail.Sum = L.Sum :=
 
 #print List.headI_le_sum /-
 /-- This relies on `default ℕ = 0`. -/
-theorem headI_le_sum (L : List ℕ) : L.head ≤ L.Sum :=
+theorem headI_le_sum (L : List ℕ) : L.headI ≤ L.Sum :=
   Nat.le.intro (headI_add_tail_sum L)
 #align list.head_le_sum List.headI_le_sum
 -/
 
 #print List.tail_sum /-
 /-- This relies on `default ℕ = 0`. -/
-theorem tail_sum (L : List ℕ) : L.tail.Sum = L.Sum - L.head := by
+theorem tail_sum (L : List ℕ) : L.tail.Sum = L.Sum - L.headI := by
   rw [← head_add_tail_sum L, add_comm, add_tsub_cancel_right]
 #align list.tail_sum List.tail_sum
 -/

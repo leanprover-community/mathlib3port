@@ -66,11 +66,11 @@ theorem gameAdd_iff {rα rβ} {x y : α × β} :
 
 theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
     GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ rα a₁ a₂ ∧ b₁ = b₂ ∨ rβ b₁ b₂ ∧ a₁ = a₂ :=
-  game_add_iff
+  gameAdd_iff
 #align prod.game_add_mk_iff Prod.gameAdd_mk_iff
 
 @[simp]
-theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.swap b.swap ↔ GameAdd rα rβ a b :=
+theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.symm b.symm ↔ GameAdd rα rβ a b :=
   fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm']
 #align prod.game_add_swap_swap Prod.gameAdd_swap_swap
 
@@ -124,7 +124,7 @@ Case conversion may be inaccurate. Consider using '#align well_founded.prod_game
   In particular, the sum of two well-founded games is well-founded. -/
 theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ) :
     WellFounded (Prod.GameAdd rα rβ) :=
-  ⟨fun ⟨a, b⟩ => (hα.apply a).prod_game_add (hβ.apply b)⟩
+  ⟨fun ⟨a, b⟩ => (hα.apply a).prod_gameAdd (hβ.apply b)⟩
 #align well_founded.prod_game_add WellFounded.prod_gameAdd
 
 namespace Prod
@@ -135,7 +135,7 @@ namespace Prod
 def GameAdd.fix {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFounded rβ)
     (IH : ∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) (a : α) (b : β) :
     C a b :=
-  @WellFounded.fix (α × β) (fun x => C x.1 x.2) _ (hα.prod_game_add hβ)
+  @WellFounded.fix (α × β) (fun x => C x.1 x.2) _ (hα.prod_gameAdd hβ)
     (fun ⟨x₁, x₂⟩ IH' => IH x₁ x₂ fun a' b' => IH' ⟨a', b'⟩) ⟨a, b⟩
 #align prod.game_add.fix Prod.GameAdd.fix
 
@@ -154,7 +154,7 @@ theorem GameAdd.induction {C : α → β → Prop} :
     WellFounded rα →
       WellFounded rβ →
         (∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) → ∀ a b, C a b :=
-  game_add.fix
+  GameAdd.fix
 #align prod.game_add.induction Prod.GameAdd.induction
 
 end Prod

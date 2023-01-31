@@ -326,13 +326,13 @@ def idealOfLe (R S : ValuationSubring K) (h : R ≤ S) : Ideal R :=
 #align valuation_subring.ideal_of_le ValuationSubring.idealOfLe
 
 instance prime_idealOfLe (R S : ValuationSubring K) (h : R ≤ S) : (idealOfLe R S h).IsPrime :=
-  (LocalRing.maximalIdeal S).comap_is_prime _
+  (LocalRing.maximalIdeal S).comap_isPrime _
 #align valuation_subring.prime_ideal_of_le ValuationSubring.prime_idealOfLe
 
 /-- The coarsening of a valuation ring associated to a prime ideal. -/
 def ofPrime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : ValuationSubring K :=
-  ofLe A (Localization.subalgebra.ofField K _ P.prime_compl_le_non_zero_divisors).toSubring
-    fun a ha => Subalgebra.algebraMap_mem _ (⟨a, ha⟩ : A)
+  ofLe A (Localization.subalgebra.ofField K _ P.primeCompl_le_nonZeroDivisors).toSubring fun a ha =>
+    Subalgebra.algebraMap_mem _ (⟨a, ha⟩ : A)
 #align valuation_subring.of_prime ValuationSubring.ofPrime
 
 instance ofPrimeAlgebra (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
@@ -776,7 +776,7 @@ def principalUnitGroupEquiv :
     where
   toFun x :=
     ⟨A.unitGroupMulEquiv ⟨_, A.principal_units_le_units x.2⟩,
-      A.coe_mem_principal_unit_group_iff.1 x.2⟩
+      A.coe_mem_principalUnitGroup_iff.1 x.2⟩
   invFun x :=
     ⟨A.unitGroupMulEquiv.symm x,
       by
@@ -829,8 +829,8 @@ theorem surjective_unitGroupToResidueFieldUnits :
 the units of the residue field of `A`. -/
 def unitsModPrincipalUnitsEquivResidueFieldUnits :
     A.unitGroup ⧸ A.principalUnitGroup.comap A.unitGroup.Subtype ≃* (LocalRing.ResidueField A)ˣ :=
-  (QuotientGroup.quotientMulEquivOfEq A.ker_unit_group_to_residue_field_units.symm).trans
-    (QuotientGroup.quotientKerEquivOfSurjective _ A.surjective_unit_group_to_residue_field_units)
+  (QuotientGroup.quotientMulEquivOfEq A.ker_unitGroupToResidueFieldUnits.symm).trans
+    (QuotientGroup.quotientKerEquivOfSurjective _ A.surjective_unitGroupToResidueFieldUnits)
 #align valuation_subring.units_mod_principal_units_equiv_residue_field_units ValuationSubring.unitsModPrincipalUnitsEquivResidueFieldUnits
 
 @[simp]
@@ -919,7 +919,7 @@ theorem mem_smul_pointwise_iff_exists (g : G) (x : K) (S : ValuationSubring K) :
 
 instance pointwise_central_scalar [MulSemiringAction Gᵐᵒᵖ K] [IsCentralScalar G K] :
     IsCentralScalar G (ValuationSubring K) :=
-  ⟨fun g S => to_subring_injective <| op_smul_eq_smul g S.to_subring⟩
+  ⟨fun g S => toSubring_injective <| op_smul_eq_smul g S.to_subring⟩
 #align valuation_subring.pointwise_central_scalar ValuationSubring.pointwise_central_scalar
 
 @[simp]

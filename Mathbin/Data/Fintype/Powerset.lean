@@ -65,7 +65,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.univ_filter_card_eq Finset.univ_filter_card_eqₓ'. -/
 @[simp]
 theorem Finset.univ_filter_card_eq (α : Type _) [Fintype α] (k : ℕ) :
-    ((Finset.univ : Finset (Finset α)).filter fun s => s.card = k) = Finset.univ.powersetLen k :=
+    ((Finset.univ : Finset (Finset α)).filterₓ fun s => s.card = k) = Finset.univ.powersetLen k :=
   by
   ext
   simp [Finset.mem_powersetLen]

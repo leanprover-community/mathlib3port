@@ -281,7 +281,7 @@ theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
     have : ∀ (a : ℕ) (ha : a ∈ s), a < succ x := fun a ha =>
       lt_of_not_ge fun hax => h ⟨a - (x + 1), by rwa [add_right_comm, add_tsub_cancel_of_le hax]⟩
     Fintype.false
-      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap
+      ⟨(((Multiset.range (succ x)).filterₓ (· ∈ s)).pmap
             (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
             (by simp [-Multiset.range_succ])).toFinset,
         by simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
@@ -352,7 +352,7 @@ theorem ofNat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = 
   | x => fun hx =>
     by
     let t : List s :=
-      ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
+      ((List.range x).filterₓ fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
       simp [List.mem_filter, Subtype.ext_iff_val, t] <;> intros <;> rfl
     have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
@@ -399,7 +399,7 @@ private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
 #align nat.subtype.to_fun_aux nat.subtype.to_fun_aux
 
-private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filter (· ∈ s)).card := by
+private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filterₓ (· ∈ s)).card := by
   rw [to_fun_aux, List.countp_eq_length_filter] <;> rfl
 #align nat.subtype.to_fun_aux_eq nat.subtype.to_fun_aux_eq
 
@@ -413,10 +413,10 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
   | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
-    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by simp
+    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filterₓ (· ∈ s) := by simp
     have h₂ :
-      (range (succ (ofNat s n))).filter (· ∈ s) =
-        insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) :=
+      (range (succ (ofNat s n))).filterₓ (· ∈ s) =
+        insert (ofNat s n) ((range (ofNat s n)).filterₓ (· ∈ s)) :=
       by
       simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>

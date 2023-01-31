@@ -697,7 +697,7 @@ theorem HasImageMap.mk {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] {sq : f
 theorem HasImageMap.transport {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
     (F : MonoFactorisation f.Hom) {F' : MonoFactorisation g.Hom} (hF' : IsImage F')
     (map : F.i ⟶ F'.i) (map_ι : map ≫ F'.m = F.m ≫ sq.right) : HasImageMap sq :=
-  has_image_map.mk <| ImageMap.transport sq F hF' map_ι
+  HasImageMap.mk <| ImageMap.transport sq F hF' map_ι
 #align category_theory.limits.has_image_map.transport CategoryTheory.Limits.HasImageMap.transport
 
 /-- Obtain an `image_map` from a `has_image_map` instance. -/
@@ -825,7 +825,7 @@ section StrongEpiMonoFactorisation
 /-- A strong epi-mono factorisation is a decomposition `f = e ≫ m` with `e` a strong epimorphism
     and `m` a monomorphism. -/
 structure StrongEpiMonoFactorisation {X Y : C} (f : X ⟶ Y) extends MonoFactorisation f where
-  [e_strong_epi : StrongEpi e]
+  [e_strongEpi : StrongEpi e]
 #align category_theory.limits.strong_epi_mono_factorisation CategoryTheory.Limits.StrongEpiMonoFactorisation
 
 attribute [instance] strong_epi_mono_factorisation.e_strong_epi
@@ -878,7 +878,7 @@ variable (C) [HasImages C]
 /-- A category has strong epi images if it has all images and `factor_thru_image f` is a strong
     epimorphism for all `f`. -/
 class HasStrongEpiImages : Prop where
-  strong_factor_thru_image : ∀ {X Y : C} (f : X ⟶ Y), StrongEpi (factorThruImage f)
+  strong_factorThruImage : ∀ {X Y : C} (f : X ⟶ Y), StrongEpi (factorThruImage f)
 #align category_theory.limits.has_strong_epi_images CategoryTheory.Limits.HasStrongEpiImages
 
 attribute [instance] has_strong_epi_images.strong_factor_thru_image
@@ -905,8 +905,8 @@ theorem strongEpi_factorThruImage_of_strongEpiMonoFactorisation {X Y : C} {f : X
     strong epi images. -/
 instance (priority := 100) hasStrongEpiImages_of_hasStrongEpiMonoFactorisations
     [HasStrongEpiMonoFactorisations C] : HasStrongEpiImages C
-    where strong_factor_thru_image X Y f :=
-    strong_epi_factor_thru_image_of_strong_epi_mono_factorisation <|
+    where strong_factorThruImage X Y f :=
+    strongEpi_factorThruImage_of_strongEpiMonoFactorisation <|
       Classical.choice <| HasStrongEpiMonoFactorisations.has_fac f
 #align category_theory.limits.has_strong_epi_images_of_has_strong_epi_mono_factorisations CategoryTheory.Limits.hasStrongEpiImages_of_hasStrongEpiMonoFactorisations
 
@@ -933,7 +933,7 @@ instance (priority := 100) hasImageMapsOfHasStrongEpiImages [HasStrongEpiImages 
     images. -/
 instance (priority := 100) hasStrongEpiImages_of_hasPullbacks_of_hasEqualizers [HasPullbacks C]
     [HasEqualizers C] : HasStrongEpiImages C
-    where strong_factor_thru_image X Y f :=
+    where strong_factorThruImage X Y f :=
     StrongEpi.mk' fun A B h h_mono x y sq =>
       CommSq.HasLift.mk'
         { l :=

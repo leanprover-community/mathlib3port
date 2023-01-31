@@ -78,7 +78,7 @@ end
       let
         n := q . num
         let
-          d := q . denom
+          d := q . den
           if d = 1 then n . to_pexpr else ` `( $ ( n . to_pexpr ) / $ ( d . to_pexpr ) )
 #align rat.to_pexpr rat.to_pexpr
 

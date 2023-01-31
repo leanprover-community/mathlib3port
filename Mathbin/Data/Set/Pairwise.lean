@@ -684,7 +684,7 @@ Case conversion may be inaccurate. Consider using '#align set.bUnion_eq_sigma_of
 noncomputable def bunionᵢEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
     (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
   (Equiv.setCongr (bunionᵢ_eq_unionᵢ _ _)).trans <|
-    Union_eq_sigma_of_disjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => Ne <| Subtype.eq Eq
+    unionEqSigmaOfDisjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => Ne <| Subtype.eq Eq
 #align set.bUnion_eq_sigma_of_disjoint Set.bunionᵢEqSigmaOfDisjoint
 
 /- warning: set.pairwise_disjoint_image_right_iff -> Set.pairwiseDisjoint_image_right_iff is a dubious translation:
@@ -784,8 +784,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pairwise.bUnion_injective Pairwise.bunionᵢ_injectiveₓ'. -/
 theorem Pairwise.bunionᵢ_injective (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i, (f i).Nonempty) :
     Injective fun s : Set ι => ⋃ i ∈ s, f i := fun s t h =>
-  ((h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) <| h.Subset).antisymm <|
-    (h₀.subset_of_bUnion_subset_bUnion fun _ _ => h₁ _) <| h.Superset
+  ((h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.Subset).antisymm <|
+    (h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.Superset
 #align pairwise.bUnion_injective Pairwise.bunionᵢ_injective
 
 end

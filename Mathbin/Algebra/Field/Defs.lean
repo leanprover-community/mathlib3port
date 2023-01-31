@@ -114,7 +114,7 @@ class DivisionRing (K : Type u) extends Ring K, DivInvMonoid K, Nontrivial K, Ra
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → a * a⁻¹ = 1
   inv_zero : (0 : K)⁻¹ = 0
   ratCast := Rat.castRec
-  rat_cast_mk :
+  ratCast_mk :
     ∀ (a : ℤ) (b : ℕ) (h1 h2),
       rat_cast ⟨a, b, h1, h2⟩ = a * b⁻¹ := by
     intros
@@ -195,7 +195,7 @@ lean 3 declaration is
 but is expected to have type
   forall {K : Type.{u1}} [_inst_1 : DivisionRing.{u1} K] (r : Rat), Eq.{succ u1} K (RatCast.ratCast.{u1} K (DivisionRing.toRatCast.{u1} K _inst_1) r) (HDiv.hDiv.{u1, u1, u1} K K K (instHDiv.{u1} K (DivisionRing.toDiv.{u1} K _inst_1)) (Int.cast.{u1} K (Ring.toIntCast.{u1} K (DivisionRing.toRing.{u1} K _inst_1)) (Rat.num r)) (Nat.cast.{u1} K (NonAssocRing.toNatCast.{u1} K (Ring.toNonAssocRing.{u1} K (DivisionRing.toRing.{u1} K _inst_1))) (Rat.den r)))
 Case conversion may be inaccurate. Consider using '#align rat.cast_def Rat.cast_defₓ'. -/
-theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.denom
+theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.den
   | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
 #align rat.cast_def Rat.cast_def
 

@@ -157,7 +157,7 @@ variable [Algebra A S]
 
 /-- `pb.minpoly_gen` is the minimal polynomial for `pb.gen`. -/
 noncomputable def minpolyGen (pb : PowerBasis A S) : A[X] :=
-  X ^ pb.dim - ∑ i : Fin pb.dim, c (pb.Basis.repr (pb.gen ^ pb.dim) i) * X ^ (i : ℕ)
+  x ^ pb.dim - ∑ i : Fin pb.dim, c (pb.Basis.repr (pb.gen ^ pb.dim) i) * x ^ (i : ℕ)
 #align power_basis.minpoly_gen PowerBasis.minpolyGen
 
 theorem aeval_minpolyGen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) = 0 :=
@@ -205,7 +205,7 @@ theorem degree_minpolyGen [Nontrivial A] (pb : PowerBasis A S) : degree (minpoly
 
 theorem natDegree_minpolyGen [Nontrivial A] (pb : PowerBasis A S) :
     natDegree (minpolyGen pb) = pb.dim :=
-  natDegree_eq_of_degree_eq_some pb.degree_minpoly_gen
+  natDegree_eq_of_degree_eq_some pb.degree_minpolyGen
 #align power_basis.nat_degree_minpoly_gen PowerBasis.natDegree_minpolyGen
 
 @[simp]
@@ -318,7 +318,7 @@ noncomputable def lift (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A p
     map_one' := by convert pb.constr_pow_algebra_map hy 1 using 2 <;> rw [RingHom.map_one]
     map_zero' := by convert pb.constr_pow_algebra_map hy 0 using 2 <;> rw [RingHom.map_zero]
     map_mul' := pb.constr_pow_mul hy
-    commutes' := pb.constr_pow_algebra_map hy }
+    commutes' := pb.constr_pow_algebraMap hy }
 #align power_basis.lift PowerBasis.lift
 
 @[simp]
@@ -346,7 +346,7 @@ noncomputable def liftEquiv (pb : PowerBasis A S) :
     where
   toFun f := ⟨f pb.gen, by rw [aeval_alg_hom_apply, minpoly.aeval, f.map_zero]⟩
   invFun y := pb.lift y y.2
-  left_inv f := pb.alg_hom_ext <| lift_gen _ _ _
+  left_inv f := pb.algHom_ext <| lift_gen _ _ _
   right_inv y := Subtype.ext <| lift_gen _ _ y.Prop
 #align power_basis.lift_equiv PowerBasis.liftEquiv
 
@@ -427,13 +427,13 @@ noncomputable def equivOfMinpoly (pb : PowerBasis A S) (pb' : PowerBasis A S')
 theorem equivOfMinpoly_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) (f : A[X]) :
     pb.equivOfMinpoly pb' h (aeval pb.gen f) = aeval pb'.gen f :=
-  pb.equiv_of_root_aeval pb' _ _ _
+  pb.equivOfRoot_aeval pb' _ _ _
 #align power_basis.equiv_of_minpoly_aeval PowerBasis.equivOfMinpoly_aeval
 
 @[simp]
 theorem equivOfMinpoly_gen (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) : pb.equivOfMinpoly pb' h pb.gen = pb'.gen :=
-  pb.equiv_of_root_gen pb' _ _
+  pb.equivOfRoot_gen pb' _ _
 #align power_basis.equiv_of_minpoly_gen PowerBasis.equivOfMinpoly_gen
 
 @[simp]
@@ -520,7 +520,7 @@ theorem equivOfRoot_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h₁ h₂) :
 @[simp]
 theorem equivOfMinpoly_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S')
     (h : minpoly A pb.gen = minpoly A (pb.map e).gen) : pb.equivOfMinpoly (pb.map e) h = e :=
-  pb.equiv_of_root_map _ _ _
+  pb.equivOfRoot_map _ _ _
 #align power_basis.equiv_of_minpoly_map PowerBasis.equivOfMinpoly_map
 
 end Map

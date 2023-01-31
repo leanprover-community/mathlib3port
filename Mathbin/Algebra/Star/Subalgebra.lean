@@ -64,7 +64,7 @@ instance {R A} [CommRing R] [StarRing R] [Ring A] [StarRing A] [Algebra R A] [St
 -- this uses the `has_star` instance `s` inherits from `star_mem_class (star_subalgebra R A) A`
 instance (s : StarSubalgebra R A) : StarRing s
     where
-  star := star
+  unit := star
   star_involutive r := Subtype.ext (star_star r)
   star_mul r₁ r₂ := Subtype.ext (star_mul r₁ r₂)
   star_add r₁ r₂ := Subtype.ext (star_add r₁ r₂)
@@ -116,7 +116,7 @@ protected def copy (S : StarSubalgebra R A) (s : Set A) (hs : s = ↑S) : StarSu
   carrier := s
   add_mem' _ _ := hs.symm ▸ S.add_mem'
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
-  algebra_map_mem' := hs.symm ▸ S.algebra_map_mem'
+  algebraMap_mem' := hs.symm ▸ S.algebraMap_mem'
   star_mem' _ := hs.symm ▸ S.star_mem'
 #align star_subalgebra.copy StarSubalgebra.copy
 
@@ -132,14 +132,14 @@ theorem copy_eq (S : StarSubalgebra R A) (s : Set A) (hs : s = ↑S) : S.copy s 
 variable (S : StarSubalgebra R A)
 
 theorem algebraMap_mem (r : R) : algebraMap R A r ∈ S :=
-  S.algebra_map_mem' r
+  S.algebraMap_mem' r
 #align star_subalgebra.algebra_map_mem StarSubalgebra.algebraMap_mem
 
 theorem rangeS_le : (algebraMap R A).srange ≤ S.toSubalgebra.toSubsemiring := fun x ⟨r, hr⟩ =>
-  hr ▸ S.algebra_map_mem r
+  hr ▸ S.algebraMap_mem r
 #align star_subalgebra.srange_le StarSubalgebra.rangeS_le
 
-theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
+theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebraMap_mem r
 #align star_subalgebra.range_subset StarSubalgebra.range_subset
 
 theorem range_le : Set.range (algebraMap R A) ≤ S :=
@@ -147,7 +147,7 @@ theorem range_le : Set.range (algebraMap R A) ≤ S :=
 #align star_subalgebra.range_le StarSubalgebra.range_le
 
 protected theorem smul_mem {x : A} (hx : x ∈ S) (r : R) : r • x ∈ S :=
-  (Algebra.smul_def r x).symm ▸ mul_mem (S.algebra_map_mem r) hx
+  (Algebra.smul_def r x).symm ▸ mul_mem (S.algebraMap_mem r) hx
 #align star_subalgebra.smul_mem StarSubalgebra.smul_mem
 
 /-- Embedding of a subalgebra into the algebra. -/
@@ -337,7 +337,7 @@ variable [Semiring B] [Algebra R B] [StarRing B] [StarModule R B]
 /-- The pointwise `star` of a subalgebra is a subalgebra. -/
 instance : InvolutiveStar (Subalgebra R A)
     where
-  star S :=
+  unit S :=
     { carrier := star S.carrier
       mul_mem' := fun x y hx hy =>
         by
@@ -349,7 +349,7 @@ instance : InvolutiveStar (Subalgebra R A)
         simp only [Set.mem_star, Subalgebra.mem_carrier] at *
         exact (star_add x y).symm ▸ add_mem hx hy
       zero_mem' := Set.mem_star.mp ((star_zero A).symm ▸ zero_mem S : star (0 : A) ∈ S)
-      algebra_map_mem' := fun r => by
+      algebraMap_mem' := fun r => by
         simpa only [Set.mem_star, Subalgebra.mem_carrier, ← algebraMap_star_comm] using
           S.algebra_map_mem (star r) }
   star_involutive S :=
@@ -435,7 +435,7 @@ def adjoin (s : Set A) : StarSubalgebra R A :=
 #align star_subalgebra.adjoin StarSubalgebra.adjoin
 
 theorem adjoin_eq_starClosure_adjoin (s : Set A) : adjoin R s = (Algebra.adjoin R s).starClosure :=
-  to_subalgebra_injective <|
+  toSubalgebra_injective <|
     show Algebra.adjoin R (s ∪ star s) = Algebra.adjoin R s ⊔ star (Algebra.adjoin R s) from
       (Subalgebra.star_adjoin_comm R s).symm ▸ Algebra.adjoin_union s (star s)
 #align star_subalgebra.adjoin_eq_star_closure_adjoin StarSubalgebra.adjoin_eq_starClosure_adjoin
@@ -744,7 +744,7 @@ def equalizer : StarSubalgebra R A
     rw [Set.mem_setOf_eq, map_mul f, map_mul g, ha, hb]
   add_mem' a b (ha : f a = g a) (hb : f b = g b) := by
     rw [Set.mem_setOf_eq, map_add f, map_add g, ha, hb]
-  algebra_map_mem' r := by simp only [Set.mem_setOf_eq, AlgHomClass.commutes]
+  algebraMap_mem' r := by simp only [Set.mem_setOf_eq, AlgHomClass.commutes]
   star_mem' a (ha : f a = g a) := by rw [Set.mem_setOf_eq, map_star f, map_star g, ha]
 #align star_alg_hom.equalizer StarAlgHom.equalizer
 

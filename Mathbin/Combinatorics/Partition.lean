@@ -86,7 +86,7 @@ without the zeros.
 -/
 def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n
     where
-  parts := l.filter (· ≠ 0)
+  parts := l.filterₓ (· ≠ 0)
   parts_pos i hi := Nat.pos_of_ne_zero <| by apply of_mem_filter hi
   parts_sum := by
     have lt : l.filter (· = 0) + l.filter (· ≠ 0) = l := filter_add_not _ l
@@ -134,12 +134,12 @@ instance (n : ℕ) : Fintype (Partition n) :=
 
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (Partition n) :=
-  Finset.univ.filter fun c => ∀ i ∈ c.parts, ¬Even i
+  Finset.univ.filterₓ fun c => ∀ i ∈ c.parts, ¬Even i
 #align nat.partition.odds Nat.Partition.odds
 
 /-- The finset of those partitions in which each part is used at most once. -/
 def distincts (n : ℕ) : Finset (Partition n) :=
-  Finset.univ.filter fun c => c.parts.Nodup
+  Finset.univ.filterₓ fun c => c.parts.Nodup
 #align nat.partition.distincts Nat.Partition.distincts
 
 /-- The finset of those partitions in which every part is odd and used at most once. -/

@@ -499,7 +499,7 @@ theorem Subset.antisymm_iff {a b : Set α} : a = b ↔ a ⊆ b ∧ b ⊆ a :=
 #print Set.eq_of_subset_of_subset /-
 -- an alternative name
 theorem eq_of_subset_of_subset {a b : Set α} : a ⊆ b → b ⊆ a → a = b :=
-  subset.antisymm
+  Subset.antisymm
 #align set.eq_of_subset_of_subset Set.eq_of_subset_of_subset
 -/
 
@@ -4011,7 +4011,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) s t) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) u (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s u) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) t u)))
 Case conversion may be inaccurate. Consider using '#align set.subset_symm_diff_union_symm_diff_left Set.subset_symmDiff_union_symmDiff_leftₓ'. -/
 theorem subset_symmDiff_union_symmDiff_left (h : Disjoint s t) : u ⊆ s ∆ u ∪ t ∆ u :=
-  h.le_symm_diff_sup_symm_diff_left
+  h.le_symmDiff_sup_symmDiff_left
 #align set.subset_symm_diff_union_symm_diff_left Set.subset_symmDiff_union_symmDiff_left
 
 /- warning: set.subset_symm_diff_union_symm_diff_right -> Set.subset_symmDiff_union_symmDiff_right is a dubious translation:
@@ -4021,7 +4021,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α} {u : Set.{u1} α}, (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) t u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s t) (symmDiff.{u1} (Set.{u1} α) (SemilatticeSup.toHasSup.{u1} (Set.{u1} α) (Lattice.toSemilatticeSup.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (Set.instSDiffSet.{u1} α) s u)))
 Case conversion may be inaccurate. Consider using '#align set.subset_symm_diff_union_symm_diff_right Set.subset_symmDiff_union_symmDiff_rightₓ'. -/
 theorem subset_symmDiff_union_symmDiff_right (h : Disjoint t u) : s ⊆ s ∆ t ∪ s ∆ u :=
-  h.le_symm_diff_sup_symm_diff_right
+  h.le_symmDiff_sup_symmDiff_right
 #align set.subset_symm_diff_union_symm_diff_right Set.subset_symmDiff_union_symmDiff_right
 
 /-! ### Powerset -/
@@ -4510,26 +4510,26 @@ theorem nontrivial_of_mem_mem_ne {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x �
 /-- Extract witnesses from s.nontrivial. This function might be used instead of case analysis on the
 argument. Note that it makes a proof depend on the classical.choice axiom. -/
 protected noncomputable def Nontrivial.choose (hs : s.Nontrivial) : α × α :=
-  (hs.some, hs.some_spec.some_spec.some)
+  (hs.some, hs.choose_spec.choose_spec.some)
 #align set.nontrivial.some Set.Nontrivial.choose
 -/
 
 #print Set.Nontrivial.choose_fst_mem /-
 protected theorem Nontrivial.choose_fst_mem (hs : s.Nontrivial) : hs.some.fst ∈ s :=
-  hs.some_spec.some
+  hs.choose_spec.some
 #align set.nontrivial.some_fst_mem Set.Nontrivial.choose_fst_mem
 -/
 
 #print Set.Nontrivial.choose_snd_mem /-
 protected theorem Nontrivial.choose_snd_mem (hs : s.Nontrivial) : hs.some.snd ∈ s :=
-  hs.some_spec.some_spec.some_spec.some
+  hs.choose_spec.choose_spec.choose_spec.some
 #align set.nontrivial.some_snd_mem Set.Nontrivial.choose_snd_mem
 -/
 
 #print Set.Nontrivial.choose_fst_ne_choose_snd /-
 protected theorem Nontrivial.choose_fst_ne_choose_snd (hs : s.Nontrivial) :
     hs.some.fst ≠ hs.some.snd :=
-  hs.some_spec.some_spec.some_spec.some_spec
+  hs.choose_spec.choose_spec.choose_spec.choose_spec
 #align set.nontrivial.some_fst_ne_some_snd Set.Nontrivial.choose_fst_ne_choose_snd
 -/
 
@@ -4736,7 +4736,7 @@ theorem nontrivial_of_nontrivial_coe (hs : Nontrivial s) : Nontrivial α :=
 #print Set.nontrivial_mono /-
 theorem nontrivial_mono {α : Type _} {s t : Set α} (hst : s ⊆ t) (hs : Nontrivial s) :
     Nontrivial t :=
-  nontrivial.coe_sort <| (nontrivial_coe_sort.1 hs).mono hst
+  Nontrivial.coe_sort <| (nontrivial_coe_sort.1 hs).mono hst
 #align set.nontrivial_mono Set.nontrivial_mono
 -/
 

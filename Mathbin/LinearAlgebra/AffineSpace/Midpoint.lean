@@ -58,13 +58,13 @@ include V'
 @[simp]
 theorem AffineMap.map_midpoint (f : P →ᵃ[R] P') (a b : P) :
     f (midpoint R a b) = midpoint R (f a) (f b) :=
-  f.apply_line_map a b _
+  f.apply_lineMap a b _
 #align affine_map.map_midpoint AffineMap.map_midpoint
 
 @[simp]
 theorem AffineEquiv.map_midpoint (f : P ≃ᵃ[R] P') (a b : P) :
     f (midpoint R a b) = midpoint R (f a) (f b) :=
-  f.apply_line_map a b _
+  f.apply_lineMap a b _
 #align affine_equiv.map_midpoint AffineEquiv.map_midpoint
 
 omit V'

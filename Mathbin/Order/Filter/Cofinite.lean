@@ -80,7 +80,7 @@ theorem hasBasis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl
 
 #print Filter.cofinite_neBot /-
 instance cofinite_neBot [Infinite α] : NeBot (@cofinite α) :=
-  hasBasis_cofinite.ne_bot_iff.2 fun s hs => hs.infinite_compl.Nonempty
+  hasBasis_cofinite.neBot_iff.2 fun s hs => hs.infinite_compl.Nonempty
 #align filter.cofinite_ne_bot Filter.cofinite_neBot
 -/
 
@@ -110,7 +110,7 @@ theorem Set.Finite.eventually_cofinite_nmem {s : Set α} (hs : s.Finite) : ∀�
 
 #print Finset.eventually_cofinite_nmem /-
 theorem Finset.eventually_cofinite_nmem (s : Finset α) : ∀ᶠ x in cofinite, x ∉ s :=
-  s.finite_to_set.eventually_cofinite_nmem
+  s.finite_toSet.eventually_cofinite_nmem
 #align finset.eventually_cofinite_nmem Finset.eventually_cofinite_nmem
 -/
 
@@ -225,7 +225,7 @@ open Filter
 
 #print Nat.cofinite_eq_atTop /-
 /-- For natural numbers the filters `cofinite` and `at_top` coincide. -/
-theorem Nat.cofinite_eq_atTop : @cofinite ℕ = at_top :=
+theorem Nat.cofinite_eq_atTop : @cofinite ℕ = atTop :=
   by
   refine' le_antisymm _ at_top_le_cofinite
   refine' at_top_basis.ge_iff.2 fun N hN => _
@@ -235,7 +235,7 @@ theorem Nat.cofinite_eq_atTop : @cofinite ℕ = at_top :=
 
 #print Nat.frequently_atTop_iff_infinite /-
 theorem Nat.frequently_atTop_iff_infinite {p : ℕ → Prop} :
-    (∃ᶠ n in at_top, p n) ↔ Set.Infinite { n | p n } := by
+    (∃ᶠ n in atTop, p n) ↔ Set.Infinite { n | p n } := by
   rw [← Nat.cofinite_eq_atTop, frequently_cofinite_iff_infinite]
 #align nat.frequently_at_top_iff_infinite Nat.frequently_atTop_iff_infinite
 -/

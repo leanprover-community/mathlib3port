@@ -293,8 +293,8 @@ instance : AddCommMonoid (M ⊗[R] N) :=
   { TensorProduct.addCommSemigroup _ _,
     TensorProduct.addZeroClass _ _ with
     nsmul := fun n v => n • v
-    nsmul_zero' := by simp [TensorProduct.zero_smul]
-    nsmul_succ' := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul] }
+    nsmul_zero := by simp [TensorProduct.zero_smul]
+    nsmul_succ := by simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul] }
 
 instance leftDistribMulAction : DistribMulAction R' (M ⊗[R] N) :=
   have : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl

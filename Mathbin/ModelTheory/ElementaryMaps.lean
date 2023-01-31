@@ -392,7 +392,7 @@ instance : SetLike (L.ElementarySubstructure M) M :=
     exact h⟩
 
 instance inducedStructure (S : L.ElementarySubstructure M) : L.Structure S :=
-  substructure.induced_Structure
+  Substructure.inducedStructure
 #align first_order.language.elementary_substructure.induced_Structure FirstOrder.Language.ElementarySubstructure.inducedStructure
 
 @[simp]

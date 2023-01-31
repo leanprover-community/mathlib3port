@@ -101,7 +101,7 @@ def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=
   {
     s.toSubsemiring.topologicalClosure with
     carrier := closure (s : Set A)
-    algebra_map_mem' := fun r => s.toSubsemiring.le_topological_closure (s.algebra_map_mem r) }
+    algebraMap_mem' := fun r => s.toSubsemiring.le_topologicalClosure (s.algebraMap_mem r) }
 #align subalgebra.topological_closure Subalgebra.topologicalClosure
 
 @[simp]

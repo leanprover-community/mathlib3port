@@ -126,7 +126,7 @@ theorem quasiSeparated_eq_diagonal_is_quasiCompact :
 #align algebraic_geometry.quasi_separated_eq_diagonal_is_quasi_compact AlgebraicGeometry.quasiSeparated_eq_diagonal_is_quasiCompact
 
 theorem quasi_compact_affineProperty_diagonal_eq :
-    QuasiCompact.affineProperty.diagonal = quasi_separated.affine_property :=
+    QuasiCompact.affineProperty.diagonal = QuasiSeparated.affineProperty :=
   by
   ext
   rw [quasi_compact_affine_property_iff_quasi_separated_space]
@@ -147,7 +147,7 @@ theorem quasiSeparated_eq_affineProperty :
 #align algebraic_geometry.quasi_separated_eq_affine_property AlgebraicGeometry.quasiSeparated_eq_affineProperty
 
 theorem QuasiSeparated.affinePropertyIsLocal : QuasiSeparated.affineProperty.IsLocal :=
-  quasi_compact_affine_property_diagonal_eq ▸ QuasiCompact.affinePropertyIsLocal.diagonal
+  quasi_compact_affineProperty_diagonal_eq ▸ QuasiCompact.affinePropertyIsLocal.diagonal
 #align algebraic_geometry.quasi_separated.affine_property_is_local AlgebraicGeometry.QuasiSeparated.affinePropertyIsLocal
 
 instance (priority := 900) quasiSeparatedOfMono {X Y : Scheme} (f : X ⟶ Y) [Mono f] :
@@ -214,7 +214,7 @@ theorem QuasiSeparated.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
           QuasiSeparated (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤), ∀ i, QuasiSeparated (f ∣_ U i)] :=
-  QuasiSeparated.isLocalAtTarget.open_cover_tfae f
+  QuasiSeparated.isLocalAtTarget.openCover_tFAE f
 #align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.openCover_tFAE
 
 theorem quasiSeparated_over_affine_iff {X Y : Scheme} (f : X ⟶ Y) [IsAffine Y] :
@@ -239,7 +239,7 @@ theorem QuasiSeparated.affine_openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.Op
 
 theorem QuasiSeparated.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
     QuasiSeparated f ↔ ∀ i, QuasiSeparated (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  QuasiSeparated.isLocalAtTarget.open_cover_iff f 𝒰
+  QuasiSeparated.isLocalAtTarget.openCover_iff f 𝒰
 #align algebraic_geometry.quasi_separated.open_cover_iff AlgebraicGeometry.QuasiSeparated.openCover_iff
 
 instance {X Y S : Scheme} (f : X ⟶ S) (g : Y ⟶ S) [QuasiSeparated g] :
@@ -277,7 +277,7 @@ instance quasiSeparatedSpace_of_isAffine (X : Scheme) [IsAffine X] :
     intro i' hi'
     change IsCompact (X.basic_open i ⊓ X.basic_open i').1
     rw [← Scheme.basic_open_mul]
-    exact ((top_is_affine_open _).basic_open_is_affine _).IsCompact
+    exact ((top_is_affine_open _).basicOpen_is_affine _).IsCompact
 #align algebraic_geometry.quasi_separated_space_of_is_affine AlgebraicGeometry.quasiSeparatedSpace_of_isAffine
 
 theorem IsAffineOpen.isQuasiSeparated {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
@@ -324,8 +324,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
     {x : X.Presheaf.obj (op <| X.basicOpen f)} (h₁ : S.1 ≤ U₁) (h₂ : S.1 ≤ U₂)
     (e₁ :
       X.Presheaf.map
-          (hom_of_le <| X.basic_open_le (X.Presheaf.map (homOfLe le_sup_left).op f) : _ ⟶ U₁).op
-          y₁ =
+          (homOfLe <| X.basicOpen_le (X.Presheaf.map (homOfLe le_sup_left).op f) : _ ⟶ U₁).op y₁ =
         X.Presheaf.map
               (homOfLe
                   (by
@@ -341,8 +340,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
             x)
     (e₂ :
       X.Presheaf.map
-          (hom_of_le <| X.basic_open_le (X.Presheaf.map (homOfLe le_sup_right).op f) : _ ⟶ U₂).op
-          y₂ =
+          (homOfLe <| X.basicOpen_le (X.Presheaf.map (homOfLe le_sup_right).op f) : _ ⟶ U₂).op y₂ =
         X.Presheaf.map
               (homOfLe
                   (by
@@ -357,9 +355,9 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
                     exact inf_le_right)).op)
             x) :
     ∃ n : ℕ,
-      X.Presheaf.map (hom_of_le <| h₁).op
+      X.Presheaf.map (homOfLe <| h₁).op
           (X.Presheaf.map (homOfLe le_sup_left).op f ^ (n + n₂) * y₁) =
-        X.Presheaf.map (hom_of_le <| h₂).op
+        X.Presheaf.map (homOfLe <| h₂).op
           (X.Presheaf.map (homOfLe le_sup_right).op f ^ (n + n₁) * y₂) :=
   by
   have :=

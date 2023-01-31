@@ -166,7 +166,7 @@ end Finset
 #print Encodable.encodableOfList /-
 /-- A listable type with decidable equality is encodable. -/
 def encodableOfList [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encodable α :=
-  ⟨fun a => indexOf a l, l.nth, fun a => indexOf_get? (H _)⟩
+  ⟨fun a => indexOf a l, l.get?, fun a => indexOf_get? (H _)⟩
 #align encodable.encodable_of_list Encodable.encodableOfList
 -/
 
@@ -297,7 +297,7 @@ def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card 
   by
   haveI : DecidableEq α := Encodable.decidableEqOfEncodable _
   trans
-  · exact ((sorted_univ_nodup α).nthLeEquivOfForallMemList _ mem_sorted_univ).symm
+  · exact ((sorted_univ_nodup α).getEquivOfForallMemList _ mem_sorted_univ).symm
   exact Equiv.cast (congr_arg _ (length_sorted_univ α))
 #align encodable.fintype_equiv_fin Encodable.fintypeEquivFin
 -/
@@ -357,7 +357,7 @@ theorem list_ofNat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil 
 @[simp]
 theorem list_ofNat_succ (v : ℕ) :
     ofNat (List α) (succ v) = ofNat α v.unpair.1 :: ofNat (List α) v.unpair.2 :=
-  of_nat_of_decode <|
+  ofNat_of_decode <|
     show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
       simp [decode_list, e]

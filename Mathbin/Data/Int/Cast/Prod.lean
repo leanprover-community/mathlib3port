@@ -27,8 +27,8 @@ instance : AddGroupWithOne (α × β) :=
   { Prod.addMonoidWithOne,
     Prod.addGroup with
     intCast := fun n => (n, n)
-    int_cast_of_nat := fun _ => by simp <;> rfl
-    int_cast_neg_succ_of_nat := fun _ => by simp <;> rfl }
+    intCast_ofNat := fun _ => by simp <;> rfl
+    intCast_negSucc := fun _ => by simp <;> rfl }
 
 /- warning: prod.fst_int_cast -> Prod.fst_intCast is a dubious translation:
 lean 3 declaration is

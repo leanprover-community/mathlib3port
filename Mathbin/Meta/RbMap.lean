@@ -34,7 +34,7 @@ unsafe instance {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
 
 /-- `filter s P` returns the subset of elements of `s` satisfying `P`. -/
 unsafe def filter {key} (s : rb_set key) (P : key → Bool) : rb_set key :=
-  s.fold s fun a m => if P a then m else m.erase a
+  s.fold s fun a m => if P a then m else m.eraseₓ a
 #align native.rb_set.filter native.rb_set.filter
 
 /-- `mfilter s P` returns the subset of elements of `s` satisfying `P`,
@@ -73,7 +73,7 @@ It does so by folding over `s2`. If `s1` is significantly smaller than `s2`,
 it may be worth it to reverse the fold.
 -/
 unsafe def sdiff {α} (s1 s2 : rb_set α) : rb_set α :=
-  s2.fold s1 fun v s => s.erase v
+  s2.fold s1 fun v s => s.eraseₓ v
 #align native.rb_set.sdiff native.rb_set.sdiff
 
 /-- `insert_list s l` inserts each element of `l` into `s`.
@@ -96,7 +96,7 @@ unsafe instance {key data : Type} [LT key] [DecidableRel ((· < ·) : key → ke
 /-- `find_def default m k` returns the value corresponding to `k` in `m`, if it exists.
 Otherwise it returns `default`. -/
 unsafe def find_def {key value} (default : value) (m : rb_map key value) (k : key) :=
-  (m.find k).getOrElse default
+  (m.find k).getD default
 #align native.rb_map.find_def native.rb_map.find_def
 
 /-- `ifind m key` returns the value corresponding to `key` in `m`, if it exists.
@@ -108,7 +108,7 @@ unsafe def ifind {key value} [Inhabited value] (m : rb_map key value) (k : key) 
 /-- `zfind m key` returns the value corresponding to `key` in `m`, if it exists.
 Otherwise it returns 0. -/
 unsafe def zfind {key value} [Zero value] (m : rb_map key value) (k : key) : value :=
-  (m.find k).getOrElse 0
+  (m.find k).getD 0
 #align native.rb_map.zfind native.rb_map.zfind
 
 /-- Returns the pointwise sum of `m1` and `m2`, treating nonexistent values as 0. -/
@@ -116,7 +116,7 @@ unsafe def add {key value} [Add value] [Zero value] [DecidableEq value] (m1 m2 :
     rb_map key value :=
   m1.fold m2 fun n v m =>
     let nv := v + m2.zfind n
-    if nv = 0 then m.erase n else m.insert n nv
+    if nv = 0 then m.eraseₓ n else m.insert n nv
 #align native.rb_map.add native.rb_map.add
 
 variable {m : Type → Type _} [Monad m]
@@ -126,13 +126,13 @@ open Function
 /-- `mfilter P s` filters `s` by the monadic predicate `P` on keys and values. -/
 unsafe def mfilter {key val} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
     (P : key → val → m Bool) (s : rb_map key val) : m (rb_map.{0, 0} key val) :=
-  rb_map.of_list <$> s.toList.mfilter (uncurry P)
+  rb_map.of_list <$> s.toList.filterM (uncurry P)
 #align native.rb_map.mfilter native.rb_map.mfilter
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 unsafe def mmap {key val val'} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
     (f : val → m val') (s : rb_map key val) : m (rb_map.{0, 0} key val') :=
-  rb_map.of_list <$> s.toList.mmap fun ⟨a, b⟩ => Prod.mk a <$> f b
+  rb_map.of_list <$> s.toList.mapM fun ⟨a, b⟩ => Prod.mk a <$> f b
 #align native.rb_map.mmap native.rb_map.mmap
 
 /-- `scale b m` multiplies every value in `m` by `b`. -/
@@ -202,7 +202,7 @@ unsafe instance : Inhabited name_set :=
 
 /-- `filter P s` returns the subset of elements of `s` satisfying `P`. -/
 unsafe def filter (P : Name → Bool) (s : name_set) : name_set :=
-  s.fold s fun a m => if P a then m else m.erase a
+  s.fold s fun a m => if P a then m else m.eraseₓ a
 #align name_set.filter name_set.filter
 
 /-- `mfilter P s` returns the subset of elements of `s` satisfying `P`,

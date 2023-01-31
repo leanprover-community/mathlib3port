@@ -81,7 +81,7 @@ def listDecode : List (Sum α (Σi, L.Functions i)) → List (Option (L.term α)
   | [] => []
   | Sum.inl a::l => some (var a)::list_decode l
   | Sum.inr ⟨n, f⟩::l =>
-    if h : ∀ i : Fin n, ((list_decode l).nth i).join.isSome then
+    if h : ∀ i : Fin n, ((list_decode l).get? i).join.isSome then
       (func f fun i => Option.get (h i))::(list_decode l).drop n
     else [none]
 #align first_order.language.term.list_decode FirstOrder.Language.Term.listDecode
@@ -109,7 +109,7 @@ theorem listDecode_encode_list (l : List (L.term α)) :
         · rw [cons_bind, List.append_assoc, ih, map_cons, l'ih, cons_append]
       have h' :
         ∀ i,
-          (list_decode (((fin_range n).bind fun i : Fin n => (ts i).listEncode) ++ l)).nth ↑i =
+          (list_decode (((fin_range n).bind fun i : Fin n => (ts i).listEncode) ++ l)).get? ↑i =
             some (some (ts i)) :=
         by
         intro i
@@ -133,7 +133,7 @@ protected def encoding : Encoding (L.term α)
     where
   Γ := Sum α (Σi, L.Functions i)
   encode := listEncode
-  decode l := (listDecode l).head'.join
+  decode l := (listDecode l).head?.join
   decode_encode t := by
     have h := list_decode_encode_list [t]
     rw [bind_singleton] at h
@@ -185,7 +185,7 @@ theorem card_sigma : (#Σn, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σi,
 #align first_order.language.term.card_sigma FirstOrder.Language.Term.card_sigma
 
 instance [Encodable α] [Encodable (Σi, L.Functions i)] : Encodable (L.term α) :=
-  Encodable.ofLeftInjection listEncode (fun l => (listDecode l).head'.join) fun t =>
+  Encodable.ofLeftInjection listEncode (fun l => (listDecode l).head?.join) fun t =>
     by
     rw [← bind_singleton list_encode, list_decode_encode_list]
     simp only [Option.join, head', List.map, Option.some_bind, id.def]
@@ -269,7 +269,7 @@ def listDecode :
     ∀ l : List (Sum (Σk, L.term (Sum α (Fin k))) (Sum (Σn, L.Relations n) ℕ)),
       (Σn, L.BoundedFormula α n) ×
         { l' : List (Sum (Σk, L.term (Sum α (Fin k))) (Sum (Σn, L.Relations n) ℕ)) //
-          l'.sizeof ≤ max 1 l.sizeof }
+          l'.sizeOf ≤ max 1 l.sizeOf }
   | Sum.inr (Sum.inr (n + 2))::l => ⟨⟨n, falsum⟩, l, le_max_of_le_right le_add_self⟩
   | Sum.inl ⟨n₁, t₁⟩::Sum.inl ⟨n₂, t₂⟩::l =>
     ⟨if h : n₁ = n₂ then ⟨n₁, equal t₁ (Eq.mp (by rw [h]) t₂)⟩ else default, l,
@@ -277,7 +277,7 @@ def listDecode :
       simp only [List.sizeof, ← add_assoc]
       exact le_max_of_le_right le_add_self⟩
   | Sum.inr (Sum.inl ⟨n, R⟩)::Sum.inr (Sum.inr k)::l =>
-    ⟨if h : ∀ i : Fin n, ((l.map Sum.getLeft).nth i).join.isSome then
+    ⟨if h : ∀ i : Fin n, ((l.map Sum.getLeft).get? i).join.isSome then
         if h' : ∀ i, (Option.get (h i)).1 = k then
           ⟨k, BoundedFormula.rel R fun i => Eq.mp (by rw [h' i]) (Option.get (h i)).2⟩
         else default
@@ -286,8 +286,8 @@ def listDecode :
   | Sum.inr (Sum.inr 0)::l =>
     have :
       (↑(list_decode l).2 :
-            List (Sum (Σk, L.term (Sum α (Fin k))) (Sum (Σn, L.Relations n) ℕ))).sizeof <
-        1 + (1 + 1) + l.sizeof :=
+            List (Sum (Σk, L.term (Sum α (Fin k))) (Sum (Σn, L.Relations n) ℕ))).sizeOf <
+        1 + (1 + 1) + l.sizeOf :=
       by
       refine' lt_of_le_of_lt (list_decode l).2.2 (max_lt _ (Nat.lt_add_of_pos_left (by decide)))
       rw [add_assoc, add_comm, Nat.lt_succ_iff, add_assoc]
@@ -306,7 +306,7 @@ def listDecode :
 
 @[simp]
 theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
-    (listDecode (l.bind fun φ => φ.2.listEncode)).1 = l.head :=
+    (listDecode (l.bind fun φ => φ.2.listEncode)).1 = l.headI :=
   by
   suffices h :
     ∀ (φ : Σn, L.bounded_formula α n) (l),
@@ -332,7 +332,7 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
                               (⟨(⟨φ_n, Rel φ_R ts⟩ : Σn, L.bounded_formula α n).fst, ts i⟩ :
                                 Σn, L.term (Sum α (Fin n))))
                           (fin_range φ_l) ++
-                        l)).nth
+                        l)).get?
                   ↑i).join =
               some ⟨_, ts i⟩ :=
           by

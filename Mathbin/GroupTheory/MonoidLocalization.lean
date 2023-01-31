@@ -293,8 +293,8 @@ instance : CommMonoid (Localization S) where
   mul_one := show ∀ x : Localization S, x * 1 = x from (r S).CommMonoid.mul_one
   one_mul := show ∀ x : Localization S, 1 * x = x from (r S).CommMonoid.one_mul
   npow := Localization.npow S
-  npow_zero' := show ∀ x : Localization S, Localization.npow S 0 x = 1 from pow_zero
-  npow_succ' :=
+  npow_zero := show ∀ x : Localization S, Localization.npow S 0 x = 1 from pow_zero
+  npow_succ :=
     show ∀ (n : ℕ) (x : Localization S), Localization.npow S n.succ x = x * Localization.npow S n x
       from fun n x => pow_succ x n
 
@@ -1142,7 +1142,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 @[to_additive]
 theorem mk'_eq_iff_mk'_eq (g : LocalizationMap S P) {x₁ x₂} {y₁ y₂ : S} :
     f.mk' x₁ y₁ = f.mk' x₂ y₂ ↔ g.mk' x₁ y₁ = g.mk' x₂ y₂ :=
-  f.eq'.trans g.eq'.symm
+  f.eq''.trans g.eq''.symm
 #align submonoid.localization_map.mk'_eq_iff_mk'_eq Submonoid.LocalizationMap.mk'_eq_iff_mk'_eq
 #align add_submonoid.localization_map.mk'_eq_iff_mk'_eq AddSubmonoid.LocalizationMap.mk'_eq_iff_mk'_eq
 
@@ -1493,7 +1493,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))} {N : Type.{u3}} [_inst_2 : CommMonoid.{u3} N] {P : Type.{u2}} [_inst_3 : CommMonoid.{u2} P] (f : Submonoid.LocalizationMap.{u1, u3} M _inst_1 S N _inst_2) (j : MonoidHom.{u3, u2} N P (Monoid.toMulOneClass.{u3} N (CommMonoid.toMonoid.{u3} N _inst_2)) (Monoid.toMulOneClass.{u2} P (CommMonoid.toMonoid.{u2} P _inst_3))), Eq.{max (succ u3) (succ u2)} (MonoidHom.{u3, u2} N P (Monoid.toMulOneClass.{u3} N (CommMonoid.toMonoid.{u3} N _inst_2)) (Monoid.toMulOneClass.{u2} P (CommMonoid.toMonoid.{u2} P _inst_3))) (Submonoid.LocalizationMap.lift.{u1, u3, u2} M _inst_1 S N _inst_2 P _inst_3 f (MonoidHom.comp.{u1, u3, u2} M N P (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)) (Monoid.toMulOneClass.{u3} N (CommMonoid.toMonoid.{u3} N _inst_2)) (Monoid.toMulOneClass.{u2} P (CommMonoid.toMonoid.{u2} P _inst_3)) j (Submonoid.LocalizationMap.toMap.{u1, u3} M _inst_1 S N _inst_2 f)) (Submonoid.LocalizationMap.isUnit_comp.{u1, u2, u3} M _inst_1 S N _inst_2 P _inst_3 f j)) j
 Case conversion may be inaccurate. Consider using '#align submonoid.localization_map.lift_of_comp Submonoid.LocalizationMap.lift_of_compₓ'. -/
 @[simp, to_additive]
-theorem lift_of_comp (j : N →* P) : f.lift (f.is_unit_comp j) = j :=
+theorem lift_of_comp (j : N →* P) : f.lift (f.isUnit_comp j) = j :=
   by
   ext
   rw [lift_spec]
@@ -2112,7 +2112,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 @[to_additive add_equiv_of_localizations_right_inv]
 theorem mulEquivOfLocalizations_right_inv (k : LocalizationMap S P) :
     f.ofMulEquivOfLocalizations (f.mulEquivOfLocalizations k) = k :=
-  to_map_injective <| f.lift_comp k.map_units
+  toMap_injective <| f.lift_comp k.map_units
 #align submonoid.localization_map.mul_equiv_of_localizations_right_inv Submonoid.LocalizationMap.mulEquivOfLocalizations_right_inv
 #align add_submonoid.localization_map.add_equiv_of_localizations_right_inv AddSubmonoid.LocalizationMap.addEquivOfLocalizations_right_inv
 
@@ -2125,7 +2125,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 @[simp, to_additive add_equiv_of_localizations_right_inv_apply]
 theorem mulEquivOfLocalizations_right_inv_apply {k : LocalizationMap S P} {x} :
     (f.ofMulEquivOfLocalizations (f.mulEquivOfLocalizations k)).toMap x = k.toMap x :=
-  ext_iff.1 (f.mul_equiv_of_localizations_right_inv k) x
+  ext_iff.1 (f.mulEquivOfLocalizations_right_inv k) x
 #align submonoid.localization_map.mul_equiv_of_localizations_right_inv_apply Submonoid.LocalizationMap.mulEquivOfLocalizations_right_inv_apply
 #align add_submonoid.localization_map.add_equiv_of_localizations_right_inv_apply AddSubmonoid.LocalizationMap.addEquivOfLocalizations_right_inv_apply
 
@@ -2372,7 +2372,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 theorem of_mulEquivOfMulEquiv_apply {k : LocalizationMap T Q} {j : M ≃* P}
     (H : S.map j.toMonoidHom = T) (x) :
     (f.ofMulEquivOfLocalizations (f.mulEquivOfMulEquiv k H)).toMap x = k.toMap (j x) :=
-  ext_iff.1 (f.mul_equiv_of_localizations_right_inv (k.ofMulEquivOfDom H)) x
+  ext_iff.1 (f.mulEquivOfLocalizations_right_inv (k.ofMulEquivOfDom H)) x
 #align submonoid.localization_map.of_mul_equiv_of_mul_equiv_apply Submonoid.LocalizationMap.of_mulEquivOfMulEquiv_apply
 #align add_submonoid.localization_map.of_add_equiv_of_add_equiv_apply AddSubmonoid.LocalizationMap.of_addEquivOfAddEquiv_apply
 
@@ -2385,7 +2385,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 @[to_additive]
 theorem of_mulEquivOfMulEquiv {k : LocalizationMap T Q} {j : M ≃* P} (H : S.map j.toMonoidHom = T) :
     (f.ofMulEquivOfLocalizations (f.mulEquivOfMulEquiv k H)).toMap = k.toMap.comp j.toMonoidHom :=
-  MonoidHom.ext <| f.of_mul_equiv_of_mul_equiv_apply H
+  MonoidHom.ext <| f.of_mulEquivOfMulEquiv_apply H
 #align submonoid.localization_map.of_mul_equiv_of_mul_equiv Submonoid.LocalizationMap.of_mulEquivOfMulEquiv
 #align add_submonoid.localization_map.of_add_equiv_of_add_equiv AddSubmonoid.LocalizationMap.of_addEquivOfAddEquiv
 
@@ -2651,7 +2651,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.away.mk_eq_monoid_of_mk' Localization.Away.mk_eq_monoidOf_mk'ₓ'. -/
 @[simp, to_additive]
 theorem Away.mk_eq_monoidOf_mk' : mk = (Away.monoidOf x).mk' :=
-  mk_eq_monoid_of_mk'
+  mk_eq_monoidOf_mk'
 #align localization.away.mk_eq_monoid_of_mk' Localization.Away.mk_eq_monoidOf_mk'
 #align add_localization.away.mk_eq_add_monoid_of_mk' addLocalization.Away.mk_eq_addMonoidOf_mk'
 

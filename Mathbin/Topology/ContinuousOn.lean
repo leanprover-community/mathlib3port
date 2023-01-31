@@ -77,7 +77,7 @@ theorem eventually_nhdsWithin_nhdsWithin {a : α} {s : Set α} {p : α → Prop}
 
 theorem nhdsWithin_eq (a : α) (s : Set α) :
     𝓝[s] a = ⨅ t ∈ { t : Set α | a ∈ t ∧ IsOpen t }, 𝓟 (t ∩ s) :=
-  ((nhds_basis_opens a).inf_principal s).eq_binfi
+  ((nhds_basis_opens a).inf_principal s).eq_binfᵢ
 #align nhds_within_eq nhdsWithin_eq
 
 theorem nhdsWithin_univ (a : α) : 𝓝[Set.univ] a = 𝓝 a := by
@@ -318,6 +318,12 @@ theorem nhdsWithin_compl_singleton_sup_pure (a : α) : 𝓝[≠] a ⊔ pure a = 
   rw [← nhdsWithin_singleton, ← nhdsWithin_union, compl_union_self, nhdsWithin_univ]
 #align nhds_within_compl_singleton_sup_pure nhdsWithin_compl_singleton_sup_pure
 
+/- warning: nhds_within_prod_eq -> nhdsWithin_prod_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_3 : TopologicalSpace.{u2} β] (a : α) (b : β) (s : Set.{u1} α) (t : Set.{u2} β), Eq.{succ (max u1 u2)} (Filter.{max u1 u2} (Prod.{u1, u2} α β)) (nhdsWithin.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_2 _inst_3) (Prod.mk.{u1, u2} α β a b) (Set.prod.{u1, u2} α β s t)) (Filter.prod.{u1, u2} α β (nhdsWithin.{u1} α _inst_2 a s) (nhdsWithin.{u2} β _inst_3 b t))
+but is expected to have type
+  forall {α : Type.{u1}} {_inst_2 : Type.{u2}} [β : TopologicalSpace.{u1} α] [_inst_3 : TopologicalSpace.{u2} _inst_2] (a : α) (b : _inst_2) (s : Set.{u1} α) (t : Set.{u2} _inst_2), Eq.{max (succ u1) (succ u2)} (Filter.{max u2 u1} (Prod.{u1, u2} α _inst_2)) (nhdsWithin.{max u2 u1} (Prod.{u1, u2} α _inst_2) (instTopologicalSpaceProd.{u1, u2} α _inst_2 β _inst_3) (Prod.mk.{u1, u2} α _inst_2 a b) (Set.prod.{u1, u2} α _inst_2 s t)) (Filter.prod.{u1, u2} α _inst_2 (nhdsWithin.{u1} α β a s) (nhdsWithin.{u2} _inst_2 _inst_3 b t))
+Case conversion may be inaccurate. Consider using '#align nhds_within_prod_eq nhdsWithin_prod_eqₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhdsWithin_prod_eq {α : Type _} [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
     (a : α) (b : β) (s : Set α) (t : Set β) : 𝓝[s ×ˢ t] (a, b) = 𝓝[s] a ×ᶠ 𝓝[t] b :=
@@ -380,12 +386,12 @@ theorem Filter.Tendsto.if_nhdsWithin {f g : α → β} {p : α → Prop} [Decida
     {s : Set α} {l : Filter β} (h₀ : Tendsto f (𝓝[s ∩ { x | p x }] a) l)
     (h₁ : Tendsto g (𝓝[s ∩ { x | ¬p x }] a) l) :
     Tendsto (fun x => if p x then f x else g x) (𝓝[s] a) l :=
-  h₀.piecewise_nhds_within h₁
+  h₀.piecewise_nhdsWithin h₁
 #align filter.tendsto.if_nhds_within Filter.Tendsto.if_nhdsWithin
 
 theorem map_nhdsWithin (f : α → β) (a : α) (s : Set α) :
     map f (𝓝[s] a) = ⨅ t ∈ { t : Set α | a ∈ t ∧ IsOpen t }, 𝓟 (f '' (t ∩ s)) :=
-  ((nhdsWithin_basis_open a s).map f).eq_binfi
+  ((nhdsWithin_basis_open a s).map f).eq_binfᵢ
 #align map_nhds_within map_nhdsWithin
 
 theorem tendsto_nhdsWithin_mono_left {f : α → β} {a : α} {s t : Set α} {l : Filter β} (hst : s ⊆ t)
@@ -426,7 +432,7 @@ theorem nhdsWithin_neBot_of_mem {s : Set α} {x : α} (hx : x ∈ s) : NeBot (�
 #align nhds_within_ne_bot_of_mem nhdsWithin_neBot_of_mem
 
 theorem IsClosed.mem_of_nhdsWithin_neBot {s : Set α} (hs : IsClosed s) {x : α}
-    (hx : ne_bot <| 𝓝[s] x) : x ∈ s := by
+    (hx : NeBot <| 𝓝[s] x) : x ∈ s := by
   simpa only [hs.closure_eq] using mem_closure_iff_nhdsWithin_neBot.2 hx
 #align is_closed.mem_of_nhds_within_ne_bot IsClosed.mem_of_nhdsWithin_neBot
 
@@ -496,7 +502,7 @@ theorem tendsto_nhdsWithin_range {a : α} {l : Filter β} {f : β → α} :
 
 theorem Filter.EventuallyEq.eq_of_nhdsWithin {s : Set α} {f g : α → β} {a : α} (h : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : f a = g a :=
-  h.self_of_nhds_within hmem
+  h.self_of_nhdsWithin hmem
 #align filter.eventually_eq.eq_of_nhds_within Filter.EventuallyEq.eq_of_nhdsWithin
 
 theorem eventually_nhdsWithin_of_eventually_nhds {α : Type _} [TopologicalSpace α] {s : Set α}
@@ -584,7 +590,7 @@ theorem ContinuousWithinAt.tendsto_nhdsWithin {f : α → β} {x : α} {s : Set 
 
 theorem ContinuousWithinAt.tendsto_nhdsWithin_image {f : α → β} {x : α} {s : Set α}
     (h : ContinuousWithinAt f s x) : Tendsto f (𝓝[s] x) (𝓝[f '' s] f x) :=
-  h.tendsto_nhds_within (mapsTo_image _ _)
+  h.tendsto_nhdsWithin (mapsTo_image _ _)
 #align continuous_within_at.tendsto_nhds_within_image ContinuousWithinAt.tendsto_nhdsWithin_image
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -612,14 +618,14 @@ theorem ContinuousWithinAt.fin_insertNth {n} {π : Fin (n + 1) → Type _}
     [∀ i, TopologicalSpace (π i)] (i : Fin (n + 1)) {f : α → π i} {a : α} {s : Set α}
     (hf : ContinuousWithinAt f s a) {g : α → ∀ j : Fin n, π (i.succAbove j)}
     (hg : ContinuousWithinAt g s a) : ContinuousWithinAt (fun a => i.insertNth (f a) (g a)) s a :=
-  hf.fin_insert_nth i hg
+  hf.fin_insertNth i hg
 #align continuous_within_at.fin_insert_nth ContinuousWithinAt.fin_insertNth
 
 theorem ContinuousOn.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, TopologicalSpace (π i)]
     (i : Fin (n + 1)) {f : α → π i} {s : Set α} (hf : ContinuousOn f s)
     {g : α → ∀ j : Fin n, π (i.succAbove j)} (hg : ContinuousOn g s) :
     ContinuousOn (fun a => i.insertNth (f a) (g a)) s := fun a ha =>
-  (hf a ha).fin_insert_nth i (hg a ha)
+  (hf a ha).fin_insertNth i (hg a ha)
 #align continuous_on.fin_insert_nth ContinuousOn.fin_insertNth
 
 theorem continuousOn_iff {f : α → β} {s : Set α} :
@@ -706,7 +712,7 @@ theorem Set.Subsingleton.continuousOn {s : Set α} (hs : s.Subsingleton) (f : α
 
 theorem nhdsWithin_le_comap {x : α} {s : Set α} {f : α → β} (ctsf : ContinuousWithinAt f s x) :
     𝓝[s] x ≤ comap f (𝓝[f '' s] f x) :=
-  ctsf.tendsto_nhds_within_image.le_comap
+  ctsf.tendsto_nhdsWithin_image.le_comap
 #align nhds_within_le_comap nhdsWithin_le_comap
 
 @[simp]
@@ -767,12 +773,12 @@ theorem Set.MapsTo.closure_of_continuousWithinAt {f : α → β} {s : Set α} {t
 
 theorem Set.MapsTo.closure_of_continuousOn {f : α → β} {s : Set α} {t : Set β} (h : MapsTo f s t)
     (hc : ContinuousOn f (closure s)) : MapsTo f (closure s) (closure t) :=
-  h.closure_of_continuous_within_at fun x hx => (hc x hx).mono subset_closure
+  h.closure_of_continuousWithinAt fun x hx => (hc x hx).mono subset_closure
 #align set.maps_to.closure_of_continuous_on Set.MapsTo.closure_of_continuousOn
 
 theorem ContinuousWithinAt.image_closure {f : α → β} {s : Set α}
     (hf : ∀ x ∈ closure s, ContinuousWithinAt f s x) : f '' closure s ⊆ closure (f '' s) :=
-  mapsTo'.1 <| (mapsTo_image f s).closure_of_continuous_within_at hf
+  mapsTo'.1 <| (mapsTo_image f s).closure_of_continuousWithinAt hf
 #align continuous_within_at.image_closure ContinuousWithinAt.image_closure
 
 theorem ContinuousOn.image_closure {f : α → β} {s : Set α} (hf : ContinuousOn f (closure s)) :
@@ -837,7 +843,7 @@ theorem IsOpenMap.continuousOn_image_of_leftInvOn {f : α → β} {s : Set α}
   by
   refine' continuousOn_iff'.2 fun t ht => ⟨f '' (t ∩ s), _, _⟩
   · rw [← image_restrict]
-    exact h _ (ht.preimage continuous_subtype_coe)
+    exact h _ (ht.preimage continuous_subtype_val)
   · rw [inter_eq_self_of_subset_left (image_subset f (inter_subset_right t s)), hleft.image_inter']
 #align is_open_map.continuous_on_image_of_left_inv_on IsOpenMap.continuousOn_image_of_leftInvOn
 
@@ -845,7 +851,7 @@ theorem IsOpenMap.continuousOn_range_of_leftInverse {f : α → β} (hf : IsOpen
     (hleft : Function.LeftInverse finv f) : ContinuousOn finv (range f) :=
   by
   rw [← image_univ]
-  exact (hf.restrict isOpen_univ).continuous_on_image_of_left_inv_on fun x _ => hleft x
+  exact (hf.restrict isOpen_univ).continuousOn_image_of_leftInvOn fun x _ => hleft x
 #align is_open_map.continuous_on_range_of_left_inverse IsOpenMap.continuousOn_range_of_leftInverse
 
 theorem ContinuousOn.congr_mono {f g : α → β} {s s₁ : Set α} (h : ContinuousOn f s)
@@ -901,7 +907,7 @@ theorem ContinuousAt.continuousOn {f : α → β} {s : Set α} (hcont : ∀ x �
 theorem ContinuousWithinAt.comp {g : β → γ} {f : α → β} {s : Set α} {t : Set β} {x : α}
     (hg : ContinuousWithinAt g t (f x)) (hf : ContinuousWithinAt f s x) (h : MapsTo f s t) :
     ContinuousWithinAt (g ∘ f) s x :=
-  hg.Tendsto.comp (hf.tendsto_nhds_within h)
+  hg.Tendsto.comp (hf.tendsto_nhdsWithin h)
 #align continuous_within_at.comp ContinuousWithinAt.comp
 
 theorem ContinuousWithinAt.comp' {g : β → γ} {f : α → β} {s : Set α} {t : Set β} {x : α}
@@ -977,12 +983,12 @@ theorem Function.LeftInverse.map_nhds_eq {f : α → β} {g : β → α} {x : β
     (h : Function.LeftInverse f g) (hf : ContinuousWithinAt f (range g) (g x))
     (hg : ContinuousAt g x) : map g (𝓝 x) = 𝓝[range g] g x := by
   simpa only [nhdsWithin_univ, image_univ] using
-    (h.left_inv_on univ).map_nhds_within_eq (h x) (by rwa [image_univ]) hg.continuous_within_at
+    (h.left_inv_on univ).map_nhdsWithin_eq (h x) (by rwa [image_univ]) hg.continuous_within_at
 #align function.left_inverse.map_nhds_eq Function.LeftInverse.map_nhds_eq
 
 theorem ContinuousWithinAt.preimage_mem_nhds_within' {f : α → β} {x : α} {s : Set α} {t : Set β}
     (h : ContinuousWithinAt f s x) (ht : t ∈ 𝓝[f '' s] f x) : f ⁻¹' t ∈ 𝓝[s] x :=
-  h.tendsto_nhds_within (mapsTo_image _ _) ht
+  h.tendsto_nhdsWithin (mapsTo_image _ _) ht
 #align continuous_within_at.preimage_mem_nhds_within' ContinuousWithinAt.preimage_mem_nhds_within'
 
 theorem Filter.EventuallyEq.congr_continuousWithinAt {f g : α → β} {s : Set α} {x : α}
@@ -993,12 +999,12 @@ theorem Filter.EventuallyEq.congr_continuousWithinAt {f g : α → β} {s : Set 
 theorem ContinuousWithinAt.congr_of_eventuallyEq {f f₁ : α → β} {s : Set α} {x : α}
     (h : ContinuousWithinAt f s x) (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
     ContinuousWithinAt f₁ s x :=
-  (h₁.congr_continuous_within_at hx).2 h
+  (h₁.congr_continuousWithinAt hx).2 h
 #align continuous_within_at.congr_of_eventually_eq ContinuousWithinAt.congr_of_eventuallyEq
 
 theorem ContinuousWithinAt.congr {f f₁ : α → β} {s : Set α} {x : α} (h : ContinuousWithinAt f s x)
     (h₁ : ∀ y ∈ s, f₁ y = f y) (hx : f₁ x = f x) : ContinuousWithinAt f₁ s x :=
-  h.congr_of_eventually_eq (mem_of_superset self_mem_nhdsWithin h₁) hx
+  h.congr_of_eventuallyEq (mem_of_superset self_mem_nhdsWithin h₁) hx
 #align continuous_within_at.congr ContinuousWithinAt.congr
 
 theorem ContinuousWithinAt.congr_mono {f g : α → β} {s s₁ : Set α} {x : α}
@@ -1152,7 +1158,7 @@ theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidab
     ContinuousOn (piecewise t f g) s := by
   intro x hx
   by_cases hx' : x ∈ frontier t
-  · exact (hpf x ⟨hx, hx'⟩).piecewise_nhds_within (hpg x ⟨hx, hx'⟩)
+  · exact (hpf x ⟨hx, hx'⟩).piecewise_nhdsWithin (hpg x ⟨hx, hx'⟩)
   · rw [← inter_univ s, ← union_compl_self t, inter_union_distrib_left] at hx⊢
     cases hx
     · apply ContinuousWithinAt.union
@@ -1313,7 +1319,7 @@ theorem continuousOn_piecewise_ite {s s' t : Set α} {f f' : α → β} [∀ x, 
 theorem frontier_inter_open_inter {s t : Set α} (ht : IsOpen t) :
     frontier (s ∩ t) ∩ t = frontier s ∩ t := by
   simp only [← Subtype.preimage_coe_eq_preimage_coe_iff,
-    ht.is_open_map_subtype_coe.preimage_frontier_eq_frontier_preimage continuous_subtype_coe,
+    ht.is_open_map_subtype_coe.preimage_frontier_eq_frontier_preimage continuous_subtype_val,
     Subtype.preimage_coe_inter_self]
 #align frontier_inter_open_inter frontier_inter_open_inter
 
@@ -1327,12 +1333,12 @@ theorem continuousWithinAt_fst {s : Set (α × β)} {p : α × β} : ContinuousW
 
 theorem ContinuousOn.fst {f : α → β × γ} {s : Set α} (hf : ContinuousOn f s) :
     ContinuousOn (fun x => (f x).1) s :=
-  continuous_fst.comp_continuous_on hf
+  continuous_fst.comp_continuousOn hf
 #align continuous_on.fst ContinuousOn.fst
 
 theorem ContinuousWithinAt.fst {f : α → β × γ} {s : Set α} {a : α} (h : ContinuousWithinAt f s a) :
     ContinuousWithinAt (fun x => (f x).fst) s a :=
-  continuousAt_fst.comp_continuous_within_at h
+  continuousAt_fst.comp_continuousWithinAt h
 #align continuous_within_at.fst ContinuousWithinAt.fst
 
 theorem continuousOn_snd {s : Set (α × β)} : ContinuousOn Prod.snd s :=
@@ -1345,12 +1351,12 @@ theorem continuousWithinAt_snd {s : Set (α × β)} {p : α × β} : ContinuousW
 
 theorem ContinuousOn.snd {f : α → β × γ} {s : Set α} (hf : ContinuousOn f s) :
     ContinuousOn (fun x => (f x).2) s :=
-  continuous_snd.comp_continuous_on hf
+  continuous_snd.comp_continuousOn hf
 #align continuous_on.snd ContinuousOn.snd
 
 theorem ContinuousWithinAt.snd {f : α → β × γ} {s : Set α} {a : α} (h : ContinuousWithinAt f s a) :
     ContinuousWithinAt (fun x => (f x).snd) s a :=
-  continuousAt_snd.comp_continuous_within_at h
+  continuousAt_snd.comp_continuousWithinAt h
 #align continuous_within_at.snd ContinuousWithinAt.snd
 
 theorem continuousWithinAt_prod_iff {f : α → β × γ} {s : Set α} {x : α} :

@@ -45,7 +45,7 @@ theorem coe_nodup {l : List α} : @Nodup α l ↔ l.Nodup :=
 #print Multiset.nodup_zero /-
 @[simp]
 theorem nodup_zero : @Nodup α 0 :=
-  pairwise.nil
+  Pairwise.nil
 #align multiset.nodup_zero Multiset.nodup_zero
 -/
 
@@ -225,7 +225,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.nodup_map_iff_inj_on Multiset.nodup_map_iff_inj_onₓ'. -/
 theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : Nodup s) :
     Nodup (map f s) ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
-  ⟨inj_on_of_nodup_map, fun h => d.map_on h⟩
+  ⟨inj_on_of_nodup_map, fun h => d.map_onₓ h⟩
 #align multiset.nodup_map_iff_inj_on Multiset.nodup_map_iff_inj_on
 
 #print Multiset.Nodup.filter /-
@@ -260,25 +260,25 @@ instance nodupDecidable [DecidableEq α] (s : Multiset α) : Decidable (Nodup s)
 
 #print Multiset.Nodup.erase_eq_filter /-
 theorem Nodup.erase_eq_filter [DecidableEq α] (a : α) {s} :
-    Nodup s → s.erase a = filter (· ≠ a) s :=
+    Nodup s → s.eraseₓ a = filter (· ≠ a) s :=
   Quot.inductionOn s fun l d => congr_arg coe <| d.erase_eq_filter a
 #align multiset.nodup.erase_eq_filter Multiset.Nodup.erase_eq_filter
 -/
 
 #print Multiset.Nodup.erase /-
-theorem Nodup.erase [DecidableEq α] (a : α) {l} : Nodup l → Nodup (l.erase a) :=
+theorem Nodup.erase [DecidableEq α] (a : α) {l} : Nodup l → Nodup (l.eraseₓ a) :=
   nodup_of_le (erase_le _ _)
 #align multiset.nodup.erase Multiset.Nodup.erase
 -/
 
 #print Multiset.Nodup.mem_erase_iff /-
 theorem Nodup.mem_erase_iff [DecidableEq α] {a b : α} {l} (d : Nodup l) :
-    a ∈ l.erase b ↔ a ≠ b ∧ a ∈ l := by rw [d.erase_eq_filter b, mem_filter, and_comm']
+    a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by rw [d.erase_eq_filter b, mem_filter, and_comm']
 #align multiset.nodup.mem_erase_iff Multiset.Nodup.mem_erase_iff
 -/
 
 #print Multiset.Nodup.not_mem_erase /-
-theorem Nodup.not_mem_erase [DecidableEq α] {a : α} {s} (h : Nodup s) : a ∉ s.erase a := fun ha =>
+theorem Nodup.not_mem_erase [DecidableEq α] {a : α} {s} (h : Nodup s) : a ∉ s.eraseₓ a := fun ha =>
   (h.mem_erase_iff.1 ha).1 rfl
 #align multiset.nodup.not_mem_erase Multiset.Nodup.not_mem_erase
 -/

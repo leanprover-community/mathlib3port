@@ -127,20 +127,20 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
         lt_of_lt_of_le this nB_ineq
       solve_by_elim [mul_pos]
     suffices : 1 < ε * (B * nB)
-    exact (div_lt_iff zero_lt_mul_conts).elimRight this
+    exact (div_lt_iff zero_lt_mul_conts).right this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
     have one_lt_ε_mul_N : 1 < ε * n :=
       by
-      have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).elimLeft one_div_ε_lt_N'
+      have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).left one_div_ε_lt_N'
       have : (N' : K) ≤ N := by exact_mod_cast le_max_left _ _
       have : ε * N' ≤ ε * n :=
-        (mul_le_mul_left ε_pos).elimRight (le_trans this (by exact_mod_cast n_ge_N))
+        (mul_le_mul_left ε_pos).right (le_trans this (by exact_mod_cast n_ge_N))
       exact lt_of_lt_of_le one_lt_ε_mul_N' this
     suffices : ε * n ≤ ε * (B * nB)
     exact lt_of_lt_of_le one_lt_ε_mul_N this
     -- cancel `ε`
     suffices : (n : K) ≤ B * nB
-    exact (mul_le_mul_left ε_pos).elimRight this
+    exact (mul_le_mul_left ε_pos).right this
     show (n : K) ≤ B * nB
     calc
       (n : K) ≤ fib n := by exact_mod_cast le_fib_self <| le_trans (le_max_right N' 5) n_ge_N

@@ -42,24 +42,24 @@ variable [HasBinaryProducts C] [HasPullbacks C]
 
 /-- Define the equalizing object -/
 @[reducible]
-def constructEqualizer (F : walking_parallel_pair ⥤ C) : C :=
+def constructEqualizer (F : WalkingParallelPair ⥤ C) : C :=
   pullback (prod.lift (𝟙 _) (F.map WalkingParallelPairHom.left))
     (prod.lift (𝟙 _) (F.map WalkingParallelPairHom.right))
 #align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.construct_equalizer CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.constructEqualizer
 
 /-- Define the equalizing morphism -/
-abbrev pullbackFst (F : walking_parallel_pair ⥤ C) :
+abbrev pullbackFst (F : WalkingParallelPair ⥤ C) :
     constructEqualizer F ⟶ F.obj WalkingParallelPair.zero :=
   pullback.fst
 #align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.pullback_fst CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.pullbackFst
 
-theorem pullbackFst_eq_pullback_snd (F : walking_parallel_pair ⥤ C) :
-    pullbackFst F = pullback.snd := by convert pullback.condition =≫ limits.prod.fst <;> simp
+theorem pullbackFst_eq_pullback_snd (F : WalkingParallelPair ⥤ C) : pullbackFst F = pullback.snd :=
+  by convert pullback.condition =≫ limits.prod.fst <;> simp
 #align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.pullback_fst_eq_pullback_snd CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.pullbackFst_eq_pullback_snd
 
 /-- Define the equalizing cone -/
 @[reducible]
-def equalizerCone (F : walking_parallel_pair ⥤ C) : Cone F :=
+def equalizerCone (F : WalkingParallelPair ⥤ C) : Cone F :=
   Cone.ofFork
     (Fork.ofι (pullbackFst F)
       (by
@@ -68,7 +68,7 @@ def equalizerCone (F : walking_parallel_pair ⥤ C) : Cone F :=
 #align category_theory.limits.has_equalizers_of_has_pullbacks_and_binary_products.equalizer_cone CategoryTheory.Limits.HasEqualizersOfHasPullbacksAndBinaryProducts.equalizerCone
 
 /-- Show the equalizing cone is a limit -/
-def equalizerConeIsLimit (F : walking_parallel_pair ⥤ C) : IsLimit (equalizerCone F)
+def equalizerConeIsLimit (F : WalkingParallelPair ⥤ C) : IsLimit (equalizerCone F)
     where
   lift := by
     intro c; apply pullback.lift (c.π.app _) (c.π.app _)
@@ -146,24 +146,24 @@ variable [HasBinaryCoproducts C] [HasPushouts C]
 
 /-- Define the equalizing object -/
 @[reducible]
-def constructCoequalizer (F : walking_parallel_pair ⥤ C) : C :=
+def constructCoequalizer (F : WalkingParallelPair ⥤ C) : C :=
   pushout (coprod.desc (𝟙 _) (F.map WalkingParallelPairHom.left))
     (coprod.desc (𝟙 _) (F.map WalkingParallelPairHom.right))
 #align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.construct_coequalizer CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.constructCoequalizer
 
 /-- Define the equalizing morphism -/
-abbrev pushoutInl (F : walking_parallel_pair ⥤ C) :
+abbrev pushoutInl (F : WalkingParallelPair ⥤ C) :
     F.obj WalkingParallelPair.one ⟶ constructCoequalizer F :=
   pushout.inl
 #align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.pushout_inl CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.pushoutInl
 
-theorem pushoutInl_eq_pushout_inr (F : walking_parallel_pair ⥤ C) : pushoutInl F = pushout.inr := by
+theorem pushoutInl_eq_pushout_inr (F : WalkingParallelPair ⥤ C) : pushoutInl F = pushout.inr := by
   convert limits.coprod.inl ≫= pushout.condition <;> simp
 #align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.pushout_inl_eq_pushout_inr CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.pushoutInl_eq_pushout_inr
 
 /-- Define the equalizing cocone -/
 @[reducible]
-def coequalizerCocone (F : walking_parallel_pair ⥤ C) : Cocone F :=
+def coequalizerCocone (F : WalkingParallelPair ⥤ C) : Cocone F :=
   Cocone.ofCofork
     (Cofork.ofπ (pushoutInl F)
       (by
@@ -172,7 +172,7 @@ def coequalizerCocone (F : walking_parallel_pair ⥤ C) : Cocone F :=
 #align category_theory.limits.has_coequalizers_of_has_pushouts_and_binary_coproducts.coequalizer_cocone CategoryTheory.Limits.HasCoequalizersOfHasPushoutsAndBinaryCoproducts.coequalizerCocone
 
 /-- Show the equalizing cocone is a colimit -/
-def coequalizerCoconeIsColimit (F : walking_parallel_pair ⥤ C) : IsColimit (coequalizerCocone F)
+def coequalizerCoconeIsColimit (F : WalkingParallelPair ⥤ C) : IsColimit (coequalizerCocone F)
     where
   desc := by
     intro c; apply pushout.desc (c.ι.app _) (c.ι.app _)

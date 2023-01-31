@@ -135,7 +135,7 @@ unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
 #align tactic.parse_config tactic.parse_config
 
 /-- translate a `pexpr` into a `dsimp` configuration -/
-unsafe def parse_dsimp_config : Option pexpr → tactic (dsimp_config × format)
+unsafe def parse_dsimp_config : Option pexpr → tactic (DsimpConfig × format)
   | none => pure ({ }, "")
   | some cfg => do
     let e ← to_expr ``(($(cfg) : simp_config_ext))
@@ -213,8 +213,8 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
   let args ←
     if slow then do
         let simp_set ← attribute.get_instances `simp
-        let simp_set ← simp_set.mfilter <| has_attribute' `_refl_lemma
-        let simp_set ← simp_set.mmap <| resolve_name' >=> pure ∘ simp_arg_type.expr
+        let simp_set ← simp_set.filterM <| has_attribute' `_refl_lemma
+        let simp_set ← simp_set.mapM <| resolve_name' >=> pure ∘ simp_arg_type.expr
         pure <| args ++ simp_set
       else pure args
   let g ←
@@ -223,9 +223,9 @@ unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
         tac no_dflt args
         instantiate_mvars g
   let vs := g.list_constant'
-  let vs ← vs.mfilter is_simp_lemma
-  let vs ← vs.mmap strip_prefix
-  let vs ← vs.mmap prepend_root_if_needed
+  let vs ← vs.filterM is_simp_lemma
+  let vs ← vs.mapM strip_prefix
+  let vs ← vs.mapM prepend_root_if_needed
   with_local_goals' [v] (filter_simp_set tac args <| vs name.to_simp_args) >>= mk_suggestion
   tac no_dflt args
 #align tactic.squeeze_simp_core tactic.squeeze_simp_core

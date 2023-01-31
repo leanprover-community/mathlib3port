@@ -621,7 +621,7 @@ abbrev Dart.snd (d : G.Dart) : V :=
 #align simple_graph.dart.snd SimpleGraph.Dart.snd
 
 theorem Dart.toProd_injective : Function.Injective (Dart.toProd : G.Dart → V × V) :=
-  dart.ext
+  Dart.ext
 #align simple_graph.dart.to_prod_injective SimpleGraph.Dart.toProd_injective
 
 instance Dart.fintype [Fintype V] [DecidableRel G.Adj] : Fintype G.Dart :=
@@ -650,11 +650,11 @@ theorem Dart.edge_mem (d : G.Dart) : d.edge ∈ G.edgeSet :=
 /-- The dart with reversed orientation from a given dart. -/
 @[simps]
 def Dart.symm (d : G.Dart) : G.Dart :=
-  ⟨d.toProd.swap, G.symm d.is_adj⟩
+  ⟨d.toProd.symm, G.symm d.is_adj⟩
 #align simple_graph.dart.symm SimpleGraph.Dart.symm
 
 @[simp]
-theorem Dart.symm_mk {p : V × V} (h : G.Adj p.1 p.2) : (Dart.mk p h).symm = Dart.mk p.swap h.symm :=
+theorem Dart.symm_mk {p : V × V} (h : G.Adj p.1 p.2) : (Dart.mk p h).symm = Dart.mk p.symm h.symm :=
   rfl
 #align simple_graph.dart.symm_mk SimpleGraph.Dart.symm_mk
 
@@ -664,7 +664,7 @@ theorem Dart.edge_symm (d : G.Dart) : d.symm.edge = d.edge :=
 #align simple_graph.dart.edge_symm SimpleGraph.Dart.edge_symm
 
 @[simp]
-theorem Dart.edge_comp_symm : dart.edge ∘ dart.symm = (Dart.edge : G.Dart → Sym2 V) :=
+theorem Dart.edge_comp_symm : Dart.edge ∘ Dart.symm = (Dart.edge : G.Dart → Sym2 V) :=
   funext Dart.edge_symm
 #align simple_graph.dart.edge_comp_symm SimpleGraph.Dart.edge_comp_symm
 
@@ -675,11 +675,11 @@ theorem Dart.symm_symm (d : G.Dart) : d.symm.symm = d :=
 
 @[simp]
 theorem Dart.symm_involutive : Function.Involutive (Dart.symm : G.Dart → G.Dart) :=
-  dart.symm_symm
+  Dart.symm_symm
 #align simple_graph.dart.symm_involutive SimpleGraph.Dart.symm_involutive
 
 theorem Dart.symm_ne (d : G.Dart) : d.symm ≠ d :=
-  ne_of_apply_ne (Prod.snd ∘ dart.to_prod) d.is_adj.Ne
+  ne_of_apply_ne (Prod.snd ∘ Dart.toProd) d.is_adj.Ne
 #align simple_graph.dart.symm_ne SimpleGraph.Dart.symm_ne
 
 theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d₁ = d₂ ∨ d₁ = d₂.symm :=
@@ -689,7 +689,7 @@ theorem dart_edge_eq_iff : ∀ d₁ d₂ : G.Dart, d₁.edge = d₂.edge ↔ d�
 #align simple_graph.dart_edge_eq_iff SimpleGraph.dart_edge_eq_iff
 
 theorem dart_edge_eq_mk'_iff :
-    ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.swap :=
+    ∀ {d : G.Dart} {p : V × V}, d.edge = ⟦p⟧ ↔ d.toProd = p ∨ d.toProd = p.symm :=
   by
   rintro ⟨p, h⟩
   apply Sym2.mk''_eq_mk''_iff
@@ -1361,7 +1361,7 @@ theorem mem_incidenceFinset [DecidableEq V] (e : Sym2 V) :
 #align simple_graph.mem_incidence_finset SimpleGraph.mem_incidenceFinset
 
 theorem incidenceFinset_eq_filter [DecidableEq V] [Fintype G.edgeSet] :
-    G.incidenceFinset v = G.edgeFinset.filter (Membership.Mem v) :=
+    G.incidenceFinset v = G.edgeFinset.filterₓ (Membership.Mem v) :=
   by
   ext e
   refine' Sym2.ind (fun x y => _) e
@@ -1415,7 +1415,7 @@ instance neighborSetFintype [DecidableRel G.Adj] (v : V) : Fintype (G.neighborSe
 #align simple_graph.neighbor_set_fintype SimpleGraph.neighborSetFintype
 
 theorem neighborFinset_eq_filter {v : V} [DecidableRel G.Adj] :
-    G.neighborFinset v = Finset.univ.filter (G.Adj v) :=
+    G.neighborFinset v = Finset.univ.filterₓ (G.Adj v) :=
   by
   ext
   simp
@@ -1564,7 +1564,7 @@ theorem card_commonNeighbors_le_degree_right [DecidableRel G.Adj] (v w : V) :
 
 theorem card_commonNeighbors_lt_card_verts [DecidableRel G.Adj] (v w : V) :
     Fintype.card (G.commonNeighbors v w) < Fintype.card V :=
-  Nat.lt_of_le_of_lt (G.card_common_neighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
+  Nat.lt_of_le_of_lt (G.card_commonNeighbors_le_degree_left _ _) (G.degree_lt_card_verts v)
 #align simple_graph.card_common_neighbors_lt_card_verts SimpleGraph.card_commonNeighbors_lt_card_verts
 
 /-- If the condition `G.adj v w` fails, then `card_common_neighbors_le_degree` is
@@ -1659,13 +1659,13 @@ theorem apply_mem_neighborSet {v w : V} (h : w ∈ G.neighborSet v) : f w ∈ G'
 The underlying map on edges is given by `sym2.map`. -/
 @[simps]
 def mapEdgeSet (e : G.edgeSet) : G'.edgeSet :=
-  ⟨Sym2.map f e, f.map_mem_edge_set e.property⟩
+  ⟨Sym2.map f e, f.map_mem_edgeSet e.property⟩
 #align simple_graph.hom.map_edge_set SimpleGraph.Hom.mapEdgeSet
 
 /-- The map between neighbor sets induced by a homomorphism. -/
 @[simps]
 def mapNeighborSet (v : V) (w : G.neighborSet v) : G'.neighborSet (f v) :=
-  ⟨f w, f.apply_mem_neighbor_set w.property⟩
+  ⟨f w, f.apply_mem_neighborSet w.property⟩
 #align simple_graph.hom.map_neighbor_set SimpleGraph.Hom.mapNeighborSet
 
 /-- The map between darts induced by a homomorphism. -/
@@ -1763,7 +1763,7 @@ def mapEdgeSet : G.edgeSet ↪ G'.edgeSet
 @[simps]
 def mapNeighborSet (v : V) : G.neighborSet v ↪ G'.neighborSet (f v)
     where
-  toFun w := ⟨f w, f.apply_mem_neighbor_set_iff.mpr w.2⟩
+  toFun w := ⟨f w, f.apply_mem_neighborSet_iff.mpr w.2⟩
   inj' := by
     rintro ⟨w₁, h₁⟩ ⟨w₂, h₂⟩ h
     rw [Subtype.mk_eq_mk] at h⊢
@@ -1880,7 +1880,7 @@ def mapEdgeSet : G.edgeSet ≃ G'.edgeSet
 @[simps]
 def mapNeighborSet (v : V) : G.neighborSet v ≃ G'.neighborSet (f v)
     where
-  toFun w := ⟨f w, f.apply_mem_neighbor_set_iff.mpr w.2⟩
+  toFun w := ⟨f w, f.apply_mem_neighborSet_iff.mpr w.2⟩
   invFun w :=
     ⟨f.symm w, by
       convert f.symm.apply_mem_neighbor_set_iff.mpr w.2

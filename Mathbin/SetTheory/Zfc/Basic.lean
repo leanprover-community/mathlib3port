@@ -494,7 +494,7 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.toSet) :=
+theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
   by
   ext
   simp
@@ -1082,7 +1082,7 @@ theorem sUnion_singleton {x : SetCat.{u}} : ⋃₀ ({x} : SetCat) = x :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.toSet) :=
+theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSet) :=
   by
   ext
   simp
@@ -1215,7 +1215,7 @@ def image (f : SetCat → SetCat) [H : Definable 1 f] : SetCat → SetCat :=
   let r := @Definable.resp 1 f _
   Resp.eval 1
     ⟨image r.1, fun x y e =>
-      mem.ext fun z =>
+      Mem.ext fun z =>
         Iff.trans (mem_image r.2) <|
           Iff.trans
               ⟨fun ⟨w, h1, h2⟩ => ⟨w, (mem.congr_right e).1 h1, h2⟩, fun ⟨w, h1, h2⟩ =>

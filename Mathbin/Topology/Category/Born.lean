@@ -30,7 +30,7 @@ def Born :=
 namespace Born
 
 instance : CoeSort Born (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : Born) : Bornology X :=
   X.str

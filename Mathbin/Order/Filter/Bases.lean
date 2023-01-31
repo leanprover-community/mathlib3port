@@ -194,12 +194,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (B : FilterBasis.{u1} α) {U : Set.{u1} α}, Iff (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (FilterBasis.filter.{u1} α B)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (FilterBasis.{u1} α) (instMembershipSetFilterBasis.{u1} α) s B) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s U)))
 Case conversion may be inaccurate. Consider using '#align filter_basis.mem_filter_iff FilterBasis.mem_filter_iffₓ'. -/
-theorem mem_filter_iff (B : FilterBasis α) {U : Set α} : U ∈ B.filter ↔ ∃ s ∈ B, s ⊆ U :=
+theorem mem_filter_iff (B : FilterBasis α) {U : Set α} : U ∈ B.filterₓ ↔ ∃ s ∈ B, s ⊆ U :=
   Iff.rfl
 #align filter_basis.mem_filter_iff FilterBasis.mem_filter_iff
 
 #print FilterBasis.mem_filter_of_mem /-
-theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ B.filter := fun U_in =>
+theorem mem_filter_of_mem (B : FilterBasis α) {U : Set α} : U ∈ B → U ∈ B.filterₓ := fun U_in =>
   ⟨U, U_in, Subset.refl _⟩
 #align filter_basis.mem_filter_of_mem FilterBasis.mem_filter_of_mem
 -/
@@ -210,7 +210,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (B : FilterBasis.{u1} α), Eq.{succ u1} (Filter.{u1} α) (FilterBasis.filter.{u1} α B) (infᵢ.{u1, succ u1} (Filter.{u1} α) (CompleteLattice.toInfSet.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)) (Set.Elem.{u1} (Set.{u1} α) (FilterBasis.sets.{u1} α B)) (fun (s : Set.Elem.{u1} (Set.{u1} α) (FilterBasis.sets.{u1} α B)) => Filter.principal.{u1} α (Subtype.val.{succ u1} (Set.{u1} α) (fun (x : Set.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) x (FilterBasis.sets.{u1} α B)) s)))
 Case conversion may be inaccurate. Consider using '#align filter_basis.eq_infi_principal FilterBasis.eq_infᵢ_principalₓ'. -/
-theorem eq_infᵢ_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, 𝓟 s :=
+theorem eq_infᵢ_principal (B : FilterBasis α) : B.filterₓ = ⨅ s : B.sets, 𝓟 s :=
   by
   have : Directed (· ≥ ·) fun s : B.sets => 𝓟 (s : Set α) :=
     by
@@ -224,7 +224,7 @@ theorem eq_infᵢ_principal (B : FilterBasis α) : B.filter = ⨅ s : B.sets, �
 #align filter_basis.eq_infi_principal FilterBasis.eq_infᵢ_principal
 
 #print FilterBasis.generate /-
-protected theorem generate (B : FilterBasis α) : generate B.sets = B.filter :=
+protected theorem generate (B : FilterBasis α) : generate B.sets = B.filterₓ :=
   by
   apply le_antisymm
   · intro U U_in
@@ -246,7 +246,7 @@ variable {p : ι → Prop} {s : ι → Set α}
 #print Filter.IsBasis.filter /-
 /-- Constructs a filter from an indexed family of sets satisfying `is_basis`. -/
 protected def filter (h : IsBasis p s) : Filter α :=
-  h.FilterBasis.filter
+  h.FilterBasis.filterₓ
 #align filter.is_basis.filter Filter.IsBasis.filter
 -/
 
@@ -257,7 +257,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} (h : Filter.IsBasis.{u2, u1} α ι p s) {U : Set.{u2} α}, Iff (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) U (Filter.IsBasis.filter.{u2, u1} α ι p s h)) (Exists.{u1} ι (fun (i : ι) => And (p i) (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (s i) U)))
 Case conversion may be inaccurate. Consider using '#align filter.is_basis.mem_filter_iff Filter.IsBasis.mem_filter_iffₓ'. -/
 protected theorem mem_filter_iff (h : IsBasis p s) {U : Set α} :
-    U ∈ h.filter ↔ ∃ i, p i ∧ s i ⊆ U :=
+    U ∈ h.filterₓ ↔ ∃ i, p i ∧ s i ⊆ U :=
   by
   erw [h.filter_basis.mem_filter_iff]
   simp only [mem_filter_basis_iff h, exists_prop]
@@ -273,7 +273,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} (h : Filter.IsBasis.{u2, u1} α ι p s), Eq.{succ u2} (Filter.{u2} α) (Filter.IsBasis.filter.{u2, u1} α ι p s h) (Filter.generate.{u2} α (setOf.{u2} (Set.{u2} α) (fun (U : Set.{u2} α) => Exists.{u1} ι (fun (i : ι) => And (p i) (Eq.{succ u2} (Set.{u2} α) (s i) U)))))
 Case conversion may be inaccurate. Consider using '#align filter.is_basis.filter_eq_generate Filter.IsBasis.filter_eq_generateₓ'. -/
-theorem filter_eq_generate (h : IsBasis p s) : h.filter = generate { U | ∃ i, p i ∧ s i = U } := by
+theorem filter_eq_generate (h : IsBasis p s) : h.filterₓ = generate { U | ∃ i, p i ∧ s i = U } := by
   erw [h.filter_basis.generate] <;> rfl
 #align filter.is_basis.filter_eq_generate Filter.IsBasis.filter_eq_generate
 
@@ -303,7 +303,7 @@ theorem hasBasis_generate (s : Set (Set α)) :
 /-- The smallest filter basis containing a given collection of sets. -/
 def FilterBasis.ofSets (s : Set (Set α)) : FilterBasis α
     where
-  sets := sInter '' { t | Set.Finite t ∧ t ⊆ s }
+  sets := interₛ '' { t | Set.Finite t ∧ t ⊆ s }
   Nonempty := ⟨univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, interₛ_empty⟩⟩
   inter_sets := by
     rintro _ _ ⟨a, ⟨fina, suba⟩, rfl⟩ ⟨b, ⟨finb, subb⟩, rfl⟩
@@ -361,7 +361,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} (h : Filter.IsBasis.{u2, u1} α ι p s), Filter.HasBasis.{u2, u1} α ι (Filter.IsBasis.filter.{u2, u1} α ι p s h) p s
 Case conversion may be inaccurate. Consider using '#align filter.is_basis.has_basis Filter.IsBasis.hasBasisₓ'. -/
-protected theorem IsBasis.hasBasis (h : IsBasis p s) : HasBasis h.filter p s :=
+protected theorem IsBasis.hasBasis (h : IsBasis p s) : HasBasis h.filterₓ p s :=
   ⟨fun t => by simp only [h.mem_filter_iff, exists_prop]⟩
 #align filter.is_basis.has_basis Filter.IsBasis.hasBasis
 
@@ -388,7 +388,7 @@ theorem HasBasis.mem_of_mem (hl : l.HasBasis p s) (hi : p i) : s i ∈ l :=
 #print Filter.HasBasis.index /-
 /-- Index of a basis set such that `s i ⊆ t` as an element of `subtype p`. -/
 noncomputable def HasBasis.index (h : l.HasBasis p s) (t : Set α) (ht : t ∈ l) : { i : ι // p i } :=
-  ⟨(h.mem_iff.1 ht).some, (h.mem_iff.1 ht).some_spec.fst⟩
+  ⟨(h.mem_iff.1 ht).some, (h.mem_iff.1 ht).choose_spec.fst⟩
 #align filter.has_basis.index Filter.HasBasis.index
 -/
 
@@ -419,7 +419,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} {t : Set.{u2} α} (h : Filter.HasBasis.{u2, u1} α ι l p s) (ht : Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) t l), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (s (Subtype.val.{u1} ι (fun (i : ι) => p i) (Filter.HasBasis.index.{u2, u1} α ι l p s h t ht))) t
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.set_index_subset Filter.HasBasis.set_index_subsetₓ'. -/
 theorem HasBasis.set_index_subset (h : l.HasBasis p s) (ht : t ∈ l) : s (h.index t ht) ⊆ t :=
-  (h.mem_iff.1 ht).some_spec.snd
+  (h.mem_iff.1 ht).choose_spec.snd
 #align filter.has_basis.set_index_subset Filter.HasBasis.set_index_subset
 
 /- warning: filter.has_basis.is_basis -> Filter.HasBasis.isBasis is a dubious translation:
@@ -442,7 +442,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)} (h : Filter.HasBasis.{u2, u1} α ι l p s), Eq.{succ u2} (Filter.{u2} α) (Filter.IsBasis.filter.{u2, u1} α ι p s (Filter.HasBasis.isBasis.{u1, u2} α ι l p s h)) l
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.filter_eq Filter.HasBasis.filter_eqₓ'. -/
-theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filter = l :=
+theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filterₓ = l :=
   by
   ext U
   simp [h.mem_iff, is_basis.mem_filter_iff]
@@ -460,20 +460,20 @@ theorem HasBasis.eq_generate (h : l.HasBasis p s) : l = generate { U | ∃ i, p 
 
 #print Filter.generate_eq_generate_inter /-
 theorem generate_eq_generate_inter (s : Set (Set α)) :
-    generate s = generate (sInter '' { t | Set.Finite t ∧ t ⊆ s }) := by
+    generate s = generate (interₛ '' { t | Set.Finite t ∧ t ⊆ s }) := by
   erw [(filter_basis.of_sets s).generate, ← (has_basis_generate s).filter_eq] <;> rfl
 #align filter.generate_eq_generate_inter Filter.generate_eq_generate_inter
 -/
 
 #print Filter.ofSets_filter_eq_generate /-
-theorem ofSets_filter_eq_generate (s : Set (Set α)) : (FilterBasis.ofSets s).filter = generate s :=
+theorem ofSets_filter_eq_generate (s : Set (Set α)) : (FilterBasis.ofSets s).filterₓ = generate s :=
   by rw [← (filter_basis.of_sets s).generate, generate_eq_generate_inter s] <;> rfl
 #align filter.of_sets_filter_eq_generate Filter.ofSets_filter_eq_generate
 -/
 
 #print FilterBasis.hasBasis /-
 protected theorem FilterBasis.hasBasis {α : Type _} (B : FilterBasis α) :
-    HasBasis B.filter (fun s : Set α => s ∈ B) id :=
+    HasBasis B.filterₓ (fun s : Set α => s ∈ B) id :=
   ⟨fun t => B.mem_filter_iff⟩
 #align filter_basis.has_basis FilterBasis.hasBasis
 -/
@@ -577,14 +577,14 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.eq_bo
 theorem HasBasis.eq_bot_iff (hl : l.HasBasis p s) : l = ⊥ ↔ ∃ i, p i ∧ s i = ∅ :=
   not_iff_not.1 <|
     neBot_iff.symm.trans <|
-      hl.ne_bot_iff.trans <| by simp only [not_exists, not_and, nonempty_iff_ne_empty]
+      hl.neBot_iff.trans <| by simp only [not_exists, not_and, nonempty_iff_ne_empty]
 #align filter.has_basis.eq_bot_iff Filter.HasBasis.eq_bot_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print Filter.generate_neBot_iff /-
 theorem generate_neBot_iff {s : Set (Set α)} :
     NeBot (generate s) ↔ ∀ (t) (_ : t ⊆ s), t.Finite → (⋂₀ t).Nonempty :=
-  (hasBasis_generate s).ne_bot_iff.trans <| by simp only [← and_imp, and_comm']
+  (hasBasis_generate s).neBot_iff.trans <| by simp only [← and_imp, and_comm']
 #align filter.generate_ne_bot_iff Filter.generate_neBot_iff
 -/
 
@@ -595,7 +595,7 @@ theorem basis_sets (l : Filter α) : l.HasBasis (fun s : Set α => s ∈ l) id :
 -/
 
 #print Filter.asBasis_filter /-
-theorem asBasis_filter (f : Filter α) : f.asBasis.filter = f := by
+theorem asBasis_filter (f : Filter α) : f.asBasis.filterₓ = f := by
   ext t <;> exact exists_mem_subset_iff
 #align filter.as_basis_filter Filter.asBasis_filter
 -/
@@ -732,7 +732,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.inf F
 theorem HasBasis.inf {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p' : ι' → Prop}
     {s' : ι' → Set α} (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     (l ⊓ l').HasBasis (fun i : ι × ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∩ s' i.2 :=
-  (hl.inf' hl').to_has_basis (fun i hi => ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩) fun i hi =>
+  (hl.inf' hl').to_hasBasis (fun i hi => ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩) fun i hi =>
     ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩
 #align filter.has_basis.inf Filter.HasBasis.inf
 
@@ -892,7 +892,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.sup F
 theorem HasBasis.sup {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p' : ι' → Prop}
     {s' : ι' → Set α} (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     (l ⊔ l').HasBasis (fun i : ι × ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∪ s' i.2 :=
-  (hl.sup' hl').to_has_basis (fun i hi => ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩) fun i hi =>
+  (hl.sup' hl').to_hasBasis (fun i hi => ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩) fun i hi =>
     ⟨⟨i.1, i.2⟩, hi, Subset.rfl⟩
 #align filter.has_basis.sup Filter.HasBasis.sup
 
@@ -965,7 +965,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.inf_basis_ne_bot_iff Filter.HasBasis.inf_basis_neBot_iffₓ'. -/
 theorem HasBasis.inf_basis_neBot_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
     NeBot (l ⊓ l') ↔ ∀ ⦃i⦄ (hi : p i) ⦃i'⦄ (hi' : p' i'), (s i ∩ s' i').Nonempty :=
-  (hl.inf' hl').ne_bot_iff.trans <| by simp [@forall_swap _ ι']
+  (hl.inf' hl').neBot_iff.trans <| by simp [@forall_swap _ ι']
 #align filter.has_basis.inf_basis_ne_bot_iff Filter.HasBasis.inf_basis_neBot_iff
 
 /- warning: filter.has_basis.inf_ne_bot_iff -> Filter.HasBasis.inf_neBot_iff is a dubious translation:
@@ -976,7 +976,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.inf_ne_bot_iff Filter.HasBasis.inf_neBot_iffₓ'. -/
 theorem HasBasis.inf_neBot_iff (hl : l.HasBasis p s) :
     NeBot (l ⊓ l') ↔ ∀ ⦃i⦄ (hi : p i) ⦃s'⦄ (hs' : s' ∈ l'), (s i ∩ s').Nonempty :=
-  hl.inf_basis_ne_bot_iff l'.basis_sets
+  hl.inf_basis_neBot_iff l'.basis_sets
 #align filter.has_basis.inf_ne_bot_iff Filter.HasBasis.inf_neBot_iff
 
 /- warning: filter.has_basis.inf_principal_ne_bot_iff -> Filter.HasBasis.inf_principal_neBot_iff is a dubious translation:
@@ -987,7 +987,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.inf_principal_ne_bot_iff Filter.HasBasis.inf_principal_neBot_iffₓ'. -/
 theorem HasBasis.inf_principal_neBot_iff (hl : l.HasBasis p s) {t : Set α} :
     NeBot (l ⊓ 𝓟 t) ↔ ∀ ⦃i⦄ (hi : p i), (s i ∩ t).Nonempty :=
-  (hl.inf_principal t).ne_bot_iff
+  (hl.inf_principal t).neBot_iff
 #align filter.has_basis.inf_principal_ne_bot_iff Filter.HasBasis.inf_principal_neBot_iff
 
 theorem HasBasis.disjoint_iff (hl : l.HasBasis p s) (hl' : l'.HasBasis p' s') :
@@ -1042,7 +1042,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.inf_ne_bot_iff Filter.inf_neBot_iffₓ'. -/
 theorem inf_neBot_iff :
     NeBot (l ⊓ l') ↔ ∀ ⦃s : Set α⦄ (hs : s ∈ l) ⦃s'⦄ (hs' : s' ∈ l'), (s ∩ s').Nonempty :=
-  l.basis_sets.inf_ne_bot_iff
+  l.basis_sets.inf_neBot_iff
 #align filter.inf_ne_bot_iff Filter.inf_neBot_iff
 
 /- warning: filter.inf_principal_ne_bot_iff -> Filter.inf_principal_neBot_iff is a dubious translation:
@@ -1052,7 +1052,7 @@ but is expected to have type
   forall {α : Type.{u1}} {l : Filter.{u1} α} {s : Set.{u1} α}, Iff (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l (Filter.principal.{u1} α s))) (forall (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U l) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) U s)))
 Case conversion may be inaccurate. Consider using '#align filter.inf_principal_ne_bot_iff Filter.inf_principal_neBot_iffₓ'. -/
 theorem inf_principal_neBot_iff {s : Set α} : NeBot (l ⊓ 𝓟 s) ↔ ∀ U ∈ l, (U ∩ s).Nonempty :=
-  l.basis_sets.inf_principal_ne_bot_iff
+  l.basis_sets.inf_principal_neBot_iff
 #align filter.inf_principal_ne_bot_iff Filter.inf_principal_neBot_iff
 
 /- warning: filter.mem_iff_inf_principal_compl -> Filter.mem_iff_inf_principal_compl is a dubious translation:
@@ -1151,7 +1151,7 @@ theorem HasBasis.disjoint_iff_left (h : l.HasBasis p s) :
 
 theorem HasBasis.disjoint_iff_right (h : l.HasBasis p s) :
     Disjoint l' l ↔ ∃ (i : _)(hi : p i), s iᶜ ∈ l' :=
-  disjoint_comm.trans h.disjoint_iff_left
+  disjoint_comm.trans h.disjoint_iff_leftₓ
 #align filter.has_basis.disjoint_iff_right Filter.HasBasis.disjoint_iff_rightₓ
 
 /- warning: filter.le_iff_forall_inf_principal_compl -> Filter.le_iff_forall_inf_principal_compl is a dubious translation:
@@ -1195,7 +1195,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Eq.{succ u2} (Filter.{u2} α) l (infᵢ.{u2, u1} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) ι (fun (i : ι) => infᵢ.{u2, 0} (Filter.{u2} α) (CompleteLattice.toInfSet.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α)) (p i) (fun (_x : p i) => Filter.principal.{u2} α (s i)))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.eq_binfi Filter.HasBasis.eq_binfᵢₓ'. -/
 theorem HasBasis.eq_binfᵢ (h : l.HasBasis p s) : l = ⨅ (i) (_ : p i), 𝓟 (s i) :=
-  eq_binfi_of_mem_iff_exists_mem fun t => by simp only [h.mem_iff, mem_principal]
+  eq_binfᵢ_of_mem_iff_exists_mem fun t => by simp only [h.mem_iff, mem_principal]
 #align filter.has_basis.eq_binfi Filter.HasBasis.eq_binfᵢ
 
 /- warning: filter.has_basis.eq_infi -> Filter.HasBasis.eq_infᵢ is a dubious translation:
@@ -1336,7 +1336,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.bInter_mem Filter.HasBasis.bInter_memₓ'. -/
 protected theorem HasBasis.bInter_mem {f : Set α → Set β} (h : HasBasis l p s) (hf : Monotone f) :
     (⋂ t ∈ l, f t) = ⋂ (i) (hi : p i), f (s i) :=
-  h.binfi_mem hf
+  h.binfᵢ_mem hf
 #align filter.has_basis.bInter_mem Filter.HasBasis.bInter_mem
 
 /- warning: filter.has_basis.sInter_sets -> Filter.HasBasis.interₛ_sets is a dubious translation:
@@ -1379,7 +1379,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_antitone_basis.map Filter.HasAntitoneBasis.mapₓ'. -/
 theorem HasAntitoneBasis.map {l : Filter α} {s : ι'' → Set α} {m : α → β}
     (hf : HasAntitoneBasis l s) : HasAntitoneBasis (map m l) fun n => m '' s n :=
-  ⟨HasBasis.map _ hf.to_has_basis, fun i j hij => image_subset _ <| hf.2 hij⟩
+  ⟨HasBasis.map _ hf.to_hasBasis, fun i j hij => image_subset _ <| hf.2 hij⟩
 #align filter.has_antitone_basis.map Filter.HasAntitoneBasis.map
 
 end SameType
@@ -1392,7 +1392,7 @@ variable {la : Filter α} {pa : ι → Prop} {sa : ι → Set α} {lb : Filter �
 theorem HasBasis.tendsto_left_iff (hla : la.HasBasis pa sa) :
     Tendsto f la lb ↔ ∀ t ∈ lb, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t :=
   by
-  simp only [tendsto, (hla.map f).le_iff, image_subset_iff]
+  simp only [tendsto, (hla.map f).le_iffₓ, image_subset_iff]
   rfl
 #align filter.has_basis.tendsto_left_iff Filter.HasBasis.tendsto_left_iffₓ
 
@@ -1414,7 +1414,7 @@ theorem HasBasis.tendsto_iff (hla : la.HasBasis pa sa) (hlb : lb.HasBasis pb sb)
 
 theorem Tendsto.basis_left (H : Tendsto f la lb) (hla : la.HasBasis pa sa) :
     ∀ t ∈ lb, ∃ (i : _)(hi : pa i), MapsTo f (sa i) t :=
-  hla.tendsto_left_iff.1 H
+  hla.tendsto_left_iffₓ.1 H
 #align filter.tendsto.basis_left Filter.Tendsto.basis_leftₓ
 
 /- warning: filter.tendsto.basis_right -> Filter.Tendsto.basis_right is a dubious translation:
@@ -1431,7 +1431,7 @@ theorem Tendsto.basis_right (H : Tendsto f la lb) (hlb : lb.HasBasis pb sb) :
 theorem Tendsto.basis_both (H : Tendsto f la lb) (hla : la.HasBasis pa sa)
     (hlb : lb.HasBasis pb sb) :
     ∀ (ib) (hib : pb ib), ∃ (ia : _)(hia : pa ia), ∀ x ∈ sa ia, f x ∈ sb ib :=
-  (hla.tendsto_iff hlb).1 H
+  (hla.tendsto_iffₓ hlb).1 H
 #align filter.tendsto.basis_both Filter.Tendsto.basis_bothₓ
 
 /- warning: filter.has_basis.prod_pprod -> Filter.HasBasis.prod_pprod is a dubious translation:
@@ -1636,7 +1636,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.isCountablyGeneratedₓ'. -/
 theorem HasCountableBasis.isCountablyGenerated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
     (h : f.HasCountableBasis p s) : f.IsCountablyGenerated :=
-  ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.Countable.image s, h.to_has_basis.eq_generate⟩⟩
+  ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.Countable.image s, h.to_hasBasis.eq_generate⟩⟩
 #align filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.isCountablyGenerated
 
 /- warning: filter.antitone_seq_of_seq -> Filter.antitone_seq_of_seq is a dubious translation:
@@ -1709,21 +1709,21 @@ section IsCountablyGenerated
 #print Filter.HasAntitoneBasis.mem_iff /-
 protected theorem HasAntitoneBasis.mem_iff [Preorder ι] {l : Filter α} {s : ι → Set α}
     (hs : l.HasAntitoneBasis s) {t : Set α} : t ∈ l ↔ ∃ i, s i ⊆ t :=
-  hs.to_has_basis.mem_iff.trans <| by simp only [exists_prop, true_and_iff]
+  hs.to_hasBasis.mem_iff.trans <| by simp only [exists_prop, true_and_iff]
 #align filter.has_antitone_basis.mem_iff Filter.HasAntitoneBasis.mem_iff
 -/
 
 #print Filter.HasAntitoneBasis.mem /-
 protected theorem HasAntitoneBasis.mem [Preorder ι] {l : Filter α} {s : ι → Set α}
     (hs : l.HasAntitoneBasis s) (i : ι) : s i ∈ l :=
-  hs.to_has_basis.mem_of_mem trivial
+  hs.to_hasBasis.mem_of_mem trivial
 #align filter.has_antitone_basis.mem Filter.HasAntitoneBasis.mem
 -/
 
 #print Filter.HasAntitoneBasis.hasBasis_ge /-
 theorem HasAntitoneBasis.hasBasis_ge [Preorder ι] [IsDirected ι (· ≤ ·)] {l : Filter α}
     {s : ι → Set α} (hs : l.HasAntitoneBasis s) (i : ι) : l.HasBasis (fun j => i ≤ j) s :=
-  hs.1.to_has_basis (fun j _ => (exists_ge_ge i j).imp fun k hk => ⟨hk.1, hs.2 hk.2⟩) fun j hj =>
+  hs.1.to_hasBasis (fun j _ => (exists_ge_ge i j).imp fun k hk => ⟨hk.1, hs.2 hk.2⟩) fun j hj =>
     ⟨j, trivial, Subset.rfl⟩
 #align filter.has_antitone_basis.has_basis_ge Filter.HasAntitoneBasis.hasBasis_ge
 -/
@@ -1809,7 +1809,7 @@ instance Inf.isCountablyGenerated (f g : Filter α) [IsCountablyGenerated f]
 instance map.isCountablyGenerated (l : Filter α) [l.IsCountablyGenerated] (f : α → β) :
     (map f l).IsCountablyGenerated :=
   let ⟨x, hxl⟩ := l.exists_antitone_basis
-  HasCountableBasis.isCountablyGenerated ⟨hxl.map.to_has_basis, to_countable _⟩
+  HasCountableBasis.isCountablyGenerated ⟨hxl.map.to_hasBasis, to_countable _⟩
 #align filter.map.is_countably_generated Filter.map.isCountablyGenerated
 -/
 
@@ -1817,7 +1817,7 @@ instance map.isCountablyGenerated (l : Filter α) [l.IsCountablyGenerated] (f : 
 instance comap.isCountablyGenerated (l : Filter β) [l.IsCountablyGenerated] (f : α → β) :
     (comap f l).IsCountablyGenerated :=
   let ⟨x, hxl⟩ := l.exists_antitone_basis
-  HasCountableBasis.isCountablyGenerated ⟨hxl.to_has_basis.comap _, to_countable _⟩
+  HasCountableBasis.isCountablyGenerated ⟨hxl.to_hasBasis.comap _, to_countable _⟩
 #align filter.comap.is_countably_generated Filter.comap.isCountablyGenerated
 -/
 
@@ -1951,8 +1951,7 @@ instance infᵢ.isCountablyGenerated {ι : Sort _} [Countable ι] (f : ι → Fi
   by
   choose s hs using fun i => exists_antitone_basis (f i)
   rw [← plift.down_surjective.infi_comp]
-  refine'
-    has_countable_basis.is_countably_generated ⟨has_basis_infi fun n => (hs _).to_has_basis, _⟩
+  refine' has_countable_basis.is_countably_generated ⟨has_basis_infi fun n => (hs _).to_hasBasis, _⟩
   refine' (countable_range <| Sigma.map (coe : Finset (PLift ι) → Set (PLift ι)) fun _ => id).mono _
   rintro ⟨I, f⟩ ⟨hI, -⟩
   lift I to Finset (PLift ι) using hI

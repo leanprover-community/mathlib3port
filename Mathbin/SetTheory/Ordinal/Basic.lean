@@ -738,10 +738,10 @@ theorem lift_type_lt {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWel
           (RelIso.preimage Equiv.ulift.{max u w} s) _ <;>
     exact
       ⟨fun ⟨f⟩ =>
-        ⟨(f.equivLt (RelIso.preimage Equiv.ulift r).symm).ltLe
+        ⟨(f.equivLT (RelIso.preimage Equiv.ulift r).symm).ltLe
             (InitialSeg.ofIso (RelIso.preimage Equiv.ulift s))⟩,
         fun ⟨f⟩ =>
-        ⟨(f.equivLt (RelIso.preimage Equiv.ulift r)).ltLe
+        ⟨(f.equivLT (RelIso.preimage Equiv.ulift r)).ltLe
             (InitialSeg.ofIso (RelIso.preimage Equiv.ulift s).symm)⟩⟩
 #align ordinal.lift_type_lt Ordinal.lift_type_lt
 
@@ -1249,7 +1249,7 @@ theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
 /-- Principal segment version of the lift operation on ordinals, embedding `ordinal.{u}` in
   `ordinal.{v}` as a principal segment when `u < v`. -/
 def lift.principalSeg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· < ·) (· < ·) :=
-  ⟨↑lift.initial_seg.{u, max (u + 1) v}, univ.{u, v},
+  ⟨↑lift.initialSeg.{u, max (u + 1) v}, univ.{u, v},
     by
     refine' fun b => induction_on b _; intro β s _
     rw [univ, ← lift_umax]; constructor <;> intro h
@@ -1384,7 +1384,7 @@ theorem lt_ord_succ_card (o : Ordinal) : o < (succ o.card).ord :=
 
 @[mono]
 theorem ord_strictMono : StrictMono ord :=
-  gciOrdCard.strict_mono_l
+  gciOrdCard.strictMono_l
 #align cardinal.ord_strict_mono Cardinal.ord_strictMono
 
 @[mono]

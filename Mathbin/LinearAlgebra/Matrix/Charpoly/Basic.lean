@@ -53,7 +53,7 @@ def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
 #align charmatrix charmatrix
 
 theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
-    charmatrix M i j = X * (1 : Matrix n n R[X]) i j - c (M i j) :=
+    charmatrix M i j = x * (1 : Matrix n n R[X]) i j - c (M i j) :=
   rfl
 #align charmatrix_apply charmatrix_apply
 
@@ -71,7 +71,7 @@ theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
 
-theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - c M :=
+theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = x - c M :=
   by
   ext (k i j)
   simp only [matPolyEquiv_coeff_apply, coeff_sub, Pi.sub_apply]

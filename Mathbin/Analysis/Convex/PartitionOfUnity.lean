@@ -39,7 +39,7 @@ variable {ι X E : Type _} [TopologicalSpace X] [AddCommGroup E] [Module ℝ E]
 theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnity ι X s)
     {g : ι → X → E} {t : Set E} {x : X} (hx : x ∈ s) (hg : ∀ i, f i x ≠ 0 → g i x ∈ t)
     (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
-  ht.finsum_mem (fun i => f.Nonneg _ _) (f.sum_eq_one hx) hg
+  ht.finsum_mem (fun i => f.NonNeg _ _) (f.sum_eq_one hx) hg
 #align partition_of_unity.finsum_smul_mem_convex PartitionOfUnity.finsum_smul_mem_convex
 
 variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [HasContinuousAdd E]

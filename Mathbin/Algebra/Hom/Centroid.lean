@@ -170,7 +170,7 @@ def toEnd (f : CentroidHom α) : AddMonoid.End α :=
 
 #print CentroidHom.toEnd_injective /-
 theorem toEnd_injective : Injective (CentroidHom.toEnd : CentroidHom α → AddMonoid.End α) :=
-  coe_to_add_monoid_hom_injective
+  coe_toAddMonoidHom_injective
 #align centroid_hom.to_End_injective CentroidHom.toEnd_injective
 -/
 

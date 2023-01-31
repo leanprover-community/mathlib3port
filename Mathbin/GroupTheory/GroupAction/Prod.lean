@@ -97,7 +97,7 @@ but is expected to have type
   forall {M : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u2} M β] (a : M) (x : Prod.{u3, u2} α β), Eq.{max (succ u3) (succ u2)} (Prod.{u2, u3} β α) (Prod.swap.{u3, u2} α β (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Prod.{u3, u2} α β) (Prod.{u3, u2} α β) (instHSMul.{u1, max u3 u2} M (Prod.{u3, u2} α β) (Prod.smul.{u1, u3, u2} M α β _inst_1 _inst_2)) a x)) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Prod.{u2, u3} β α) (Prod.{u2, u3} β α) (instHSMul.{u1, max u3 u2} M (Prod.{u2, u3} β α) (Prod.smul.{u1, u2, u3} M β α _inst_2 _inst_1)) a (Prod.swap.{u3, u2} α β x))
 Case conversion may be inaccurate. Consider using '#align prod.smul_swap Prod.smul_swapₓ'. -/
 @[simp, to_additive]
-theorem smul_swap : (a • x).swap = a • x.swap :=
+theorem smul_swap : (a • x).symm = a • x.symm :=
   rfl
 #align prod.smul_swap Prod.smul_swap
 #align prod.vadd_swap Prod.vadd_swap
@@ -189,7 +189,7 @@ but is expected to have type
   forall {E : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_5 : Pow.{u3, u1} α E] [_inst_6 : Pow.{u2, u1} β E] (p : Prod.{u3, u2} α β) (c : E), Eq.{max (succ u3) (succ u2)} (Prod.{u2, u3} β α) (Prod.swap.{u3, u2} α β (HPow.hPow.{max u3 u2, u1, max u3 u2} (Prod.{u3, u2} α β) E (Prod.{u3, u2} α β) (instHPow.{max u3 u2, u1} (Prod.{u3, u2} α β) E (Prod.pow.{u1, u3, u2} E α β _inst_5 _inst_6)) p c)) (HPow.hPow.{max u3 u2, u1, max u3 u2} (Prod.{u2, u3} β α) E (Prod.{u2, u3} β α) (instHPow.{max u3 u2, u1} (Prod.{u2, u3} β α) E (Prod.pow.{u1, u2, u3} E β α _inst_6 _inst_5)) (Prod.swap.{u3, u2} α β p) c)
 Case conversion may be inaccurate. Consider using '#align prod.pow_swap Prod.pow_swapₓ'. -/
 @[simp, to_additive smul_swap, to_additive_reorder 6]
-theorem pow_swap (p : α × β) (c : E) : (p ^ c).swap = p.swap ^ c :=
+theorem pow_swap (p : α × β) (c : E) : (p ^ c).symm = p.symm ^ c :=
   rfl
 #align prod.pow_swap Prod.pow_swap
 #align prod.smul_swap Prod.smul_swap

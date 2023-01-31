@@ -63,7 +63,7 @@ class HasReverse where
 #print Quiver.reverse /-
 /-- Reverse the direction of an arrow. -/
 def reverse {V} [Quiver.{v + 1} V] [HasReverse V] {a b : V} : (a ⟶ b) → (b ⟶ a) :=
-  has_reverse.reverse'
+  HasReverse.reverse'
 #align quiver.reverse Quiver.reverse
 -/
 
@@ -153,11 +153,11 @@ instance Prefunctor.mapReverseId : (Prefunctor.id U).MapReverse where map_revers
 end MapReverse
 
 instance : HasReverse (Symmetrify V) :=
-  ⟨fun a b e => e.swap⟩
+  ⟨fun a b e => e.symm⟩
 
 instance : HasInvolutiveReverse (Symmetrify V)
     where
-  reverse' _ _ e := e.swap
+  reverse' _ _ e := e.symm
   inv' _ _ e := congr_fun Sum.swap_swap_eq e
 
 /- warning: quiver.symmetrify_reverse -> Quiver.symmetrify_reverse is a dubious translation:
@@ -167,7 +167,7 @@ but is expected to have type
   forall {V : Type.{u1}} [_inst_2 : Quiver.{succ u2, u1} V] {a : Quiver.Symmetrify.{u1} V} {b : Quiver.Symmetrify.{u1} V} (e : Quiver.Hom.{succ u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_2) a b), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_2) b a) (Quiver.reverse.{u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_2) (Quiver.instHasReverseSymmetrifySymmetrifyQuiver.{u2, u1} V _inst_2) a b e) (Sum.swap.{u2, u2} (Quiver.Hom.{succ u2, u1} V _inst_2 a b) (Quiver.Hom.{succ u2, u1} V _inst_2 b a) e)
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify_reverse Quiver.symmetrify_reverseₓ'. -/
 @[simp]
-theorem symmetrify_reverse {a b : Symmetrify V} (e : a ⟶ b) : reverse e = e.swap :=
+theorem symmetrify_reverse {a b : Symmetrify V} (e : a ⟶ b) : reverse e = e.symm :=
   rfl
 #align quiver.symmetrify_reverse Quiver.symmetrify_reverse
 

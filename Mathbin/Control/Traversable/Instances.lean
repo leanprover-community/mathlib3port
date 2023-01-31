@@ -52,7 +52,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align option.comp_traverse Option.comp_traverseₓ'. -/
 @[nolint unused_arguments]
 theorem Option.comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Option α) :
-    Option.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x =
+    Option.traverse (Comp.mk ∘ (· <$> ·) f ∘ g) x =
       Comp.mk (Option.traverse f <$> Option.traverse g x) :=
   by cases x <;> simp! [functor_norm] <;> rfl
 #align option.comp_traverse Option.comp_traverse
@@ -119,7 +119,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.comp_traverse List.comp_traverseₓ'. -/
 @[nolint unused_arguments]
 protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : List α) :
-    List.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (List.traverse f <$> List.traverse g x) :=
+    List.traverse (Comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (List.traverse f <$> List.traverse g x) :=
   by induction x <;> simp! [*, functor_norm] <;> rfl
 #align list.comp_traverse List.comp_traverse
 
@@ -255,7 +255,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.comp_traverse Sum.comp_traverseₓ'. -/
 @[nolint unused_arguments]
 protected theorem comp_traverse {α β γ} (f : β → F γ) (g : α → G β) (x : Sum σ α) :
-    Sum.traverse (comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Sum.traverse f <$> Sum.traverse g x) := by
+    Sum.traverse (Comp.mk ∘ (· <$> ·) f ∘ g) x = Comp.mk (Sum.traverse f <$> Sum.traverse g x) := by
   cases x <;> simp! [Sum.traverse, map_id, functor_norm] <;> rfl
 #align sum.comp_traverse Sum.comp_traverse
 

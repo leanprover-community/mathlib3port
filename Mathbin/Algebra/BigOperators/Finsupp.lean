@@ -500,7 +500,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u4}} {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : DecidableEq.{succ u4} β] [_inst_5 : Zero.{u3} M] [_inst_6 : AddCommMonoid.{u2} N] {f : Finsupp.{u1, u3} α M _inst_5} {g : α -> M -> (Finsupp.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6)))}, HasSubset.Subset.{u4} (Finset.{u4} β) (Finset.instHasSubsetFinset.{u4} β) (Finsupp.support.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6)) (Finsupp.sum.{u1, u3, max u4 u2} α M (Finsupp.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6))) _inst_5 (Finsupp.addCommMonoid.{u4, u2} β N _inst_6) f g)) (Finset.bunionᵢ.{u1, u4} α β (fun (a : β) (b : β) => _inst_4 a b) (Finsupp.support.{u1, u3} α M _inst_5 f) (fun (a : α) => Finsupp.support.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6)) (g a (FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Finsupp.{u1, u3} α M _inst_5) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u1, u3} α M _inst_5) f a))))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_sum Finsupp.support_sumₓ'. -/
 theorem support_sum [DecidableEq β] [Zero M] [AddCommMonoid N] {f : α →₀ M} {g : α → M → β →₀ N} :
-    (f.Sum g).support ⊆ f.support.bUnion fun a => (g a (f a)).support :=
+    (f.Sum g).support ⊆ f.support.bunionᵢ fun a => (g a (f a)).support :=
   by
   have : ∀ c, (f.Sum fun a b => g a b c) ≠ 0 → ∃ a, f a ≠ 0 ∧ ¬(g a (f a)) c = 0 := fun a₁ h =>
     let ⟨a, ha, Ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
@@ -515,7 +515,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {M : Type.{u2}} [_inst_4 : DecidableEq.{succ u3} β] [_inst_5 : AddCommMonoid.{u2} M] {s : Finset.{u1} α} {f : α -> (Finsupp.{u3, u2} β M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_5)))}, HasSubset.Subset.{u3} (Finset.{u3} β) (Finset.instHasSubsetFinset.{u3} β) (Finsupp.support.{u3, u2} β M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_5)) (Finset.sum.{max u3 u2, u1} (Finsupp.{u3, u2} β M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_5))) α (Finsupp.addCommMonoid.{u3, u2} β M _inst_5) s f)) (Finset.bunionᵢ.{u1, u3} α β (fun (a : β) (b : β) => _inst_4 a b) s (fun (x : α) => Finsupp.support.{u3, u2} β M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_5)) (f x)))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_finset_sum Finsupp.support_finset_sumₓ'. -/
 theorem support_finset_sum [DecidableEq β] [AddCommMonoid M] {s : Finset α} {f : α → β →₀ M} :
-    (Finset.sum s f).support ⊆ s.bUnion fun x => (f x).support :=
+    (Finset.sum s f).support ⊆ s.bunionᵢ fun x => (f x).support :=
   by
   rw [← Finset.sup_eq_bunionᵢ]
   induction' s using Finset.cons_induction_on with a s ha ih
@@ -863,7 +863,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.support_sum_eq
 theorem support_sum_eq_bunionᵢ {α : Type _} {ι : Type _} {M : Type _} [DecidableEq α]
     [AddCommMonoid M] {g : ι → α →₀ M} (s : Finset ι)
     (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).support (g i₂).support) :
-    (∑ i in s, g i).support = s.bUnion fun i => (g i).support := by
+    (∑ i in s, g i).support = s.bunionᵢ fun i => (g i).support := by
   classical
     apply Finset.induction_on s
     · simp

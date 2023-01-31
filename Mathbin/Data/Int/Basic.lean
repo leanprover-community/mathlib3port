@@ -53,11 +53,11 @@ instance : CommRing ℤ where
   right_distrib := Int.add_mul
   mul_comm := Int.mul_comm
   natCast := Int.ofNat
-  nat_cast_zero := rfl
-  nat_cast_succ n := rfl
+  natCast_zero := rfl
+  natCast_succ n := rfl
   intCast n := n
-  int_cast_of_nat n := rfl
-  int_cast_neg_succ_of_nat n := rfl
+  intCast_ofNat n := rfl
+  intCast_negSucc n := rfl
   zsmul := (· * ·)
   zsmul_zero' := Int.zero_mul
   zsmul_succ' n x := by

@@ -175,7 +175,7 @@ theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ :=
 
 #print Sym2.mk''_prod_swap_eq /-
 @[simp]
-theorem mk''_prod_swap_eq {p : α × α} : ⟦p.swap⟧ = ⟦p⟧ :=
+theorem mk''_prod_swap_eq {p : α × α} : ⟦p.symm⟧ = ⟦p⟧ :=
   by
   cases p
   exact eq_swap
@@ -208,7 +208,7 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 -/
 
 #print Sym2.mk''_eq_mk''_iff /-
-theorem mk''_eq_mk''_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap :=
+theorem mk''_eq_mk''_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.symm :=
   by
   cases p
   cases q
@@ -990,7 +990,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_quotient_mk''_isDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk''_isDiag [DecidableEq α] (s : Finset α) :
-    ((s ×ˢ s).image Quotient.mk').filter IsDiag = s.diag.image Quotient.mk' :=
+    ((s ×ˢ s).image Quotient.mk').filterₓ IsDiag = s.diag.image Quotient.mk' :=
   by
   ext z
   induction z using Quotient.inductionOn
@@ -1013,7 +1013,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_quotient_mk''_not_isDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
-    (((s ×ˢ s).image Quotient.mk').filter fun a : Sym2 α => ¬a.IsDiag) =
+    (((s ×ˢ s).image Quotient.mk').filterₓ fun a : Sym2 α => ¬a.IsDiag) =
       s.offDiag.image Quotient.mk' :=
   by
   ext z

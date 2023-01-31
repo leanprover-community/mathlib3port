@@ -519,14 +519,14 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} γ] {f : α -> β -> γ} {s : Finset.{u2} α} {t : Finset.{u1} β}, Eq.{succ u3} (Finset.{u3} γ) (Finset.bunionᵢ.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_3 a b) s (fun (a : α) => Finset.image.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_3 a b) (f a) t)) (Finset.image₂.{u2, u1, u3} α β γ (fun (a : γ) (b : γ) => _inst_3 a b) f s t)
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_image_left Finset.bunionᵢ_image_leftₓ'. -/
-theorem bunionᵢ_image_left : (s.bUnion fun a => t.image <| f a) = image₂ f s t :=
+theorem bunionᵢ_image_left : (s.bunionᵢ fun a => t.image <| f a) = image₂ f s t :=
   coe_injective <| by
     push_cast
     exact Set.unionᵢ_image_left _
 #align finset.bUnion_image_left Finset.bunionᵢ_image_left
 
 #print Finset.bunionᵢ_image_right /-
-theorem bunionᵢ_image_right : (t.bUnion fun b => s.image fun a => f a b) = image₂ f s t :=
+theorem bunionᵢ_image_right : (t.bunionᵢ fun b => s.image fun a => f a b) = image₂ f s t :=
   coe_injective <| by
     push_cast
     exact Set.unionᵢ_image_right _

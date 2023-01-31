@@ -200,8 +200,8 @@ instance bicategory : Bicategory (FreeBicategory B)
   comp a b c := Hom.comp
   homCategory := FreeBicategory.homCategory
   whiskerLeft a b c f g h η := Quot.map (Hom₂.whisker_left f) (Rel.whisker_left f g h) η
-  whisker_left_id' a b c f g := Quot.sound (Rel.whisker_left_id f g)
-  whisker_left_comp' := by
+  whiskerLeft_id' a b c f g := Quot.sound (Rel.whisker_left_id f g)
+  whiskerLeft_comp' := by
     rintro a b c f g h i ⟨η⟩ ⟨θ⟩
     exact Quot.sound (rel.whisker_left_comp f η θ)
   id_whisker_left' := by
@@ -215,10 +215,10 @@ instance bicategory : Bicategory (FreeBicategory B)
   comp_whisker_right' := by
     rintro a b c f g h ⟨η⟩ ⟨θ⟩ i
     exact Quot.sound (rel.comp_whisker_right i η θ)
-  whisker_right_id' := by
+  whiskerRight_id' := by
     rintro a b f g ⟨η⟩
     exact Quot.sound (rel.whisker_right_id η)
-  whisker_right_comp' := by
+  whiskerRight_comp' := by
     rintro a b c d f f' ⟨η⟩ g h
     exact Quot.sound (rel.whisker_right_comp g h η)
   whisker_assoc' := by
@@ -394,7 +394,7 @@ def lift : Pseudofunctor (FreeBicategory B) C
     where
   obj := F.obj
   map a b := liftHom F
-  map₂ a b f g := Quot.lift (liftHom₂ F) fun η θ H => liftHom₂_congr F H
+  zipWith a b f g := Quot.lift (liftHom₂ F) fun η θ H => liftHom₂_congr F H
   map_id a := Iso.refl _
   map_comp a b c f g := Iso.refl _
 #align category_theory.free_bicategory.lift CategoryTheory.FreeBicategory.lift

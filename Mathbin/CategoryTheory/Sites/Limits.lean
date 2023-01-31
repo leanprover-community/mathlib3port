@@ -148,7 +148,7 @@ theorem isSheaf_of_isLimit (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPreshea
 #align category_theory.Sheaf.is_sheaf_of_is_limit CategoryTheory.Sheaf.isSheaf_of_isLimit
 
 instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
-  creates_limit_of_reflects_iso fun E hE =>
+  createsLimitOfReflectsIso fun E hE =>
     { liftedCone :=
         ⟨⟨E.x, is_sheaf_of_is_limit _ _ hE⟩,
           ⟨fun t => ⟨E.π.app _⟩, fun u v e => Sheaf.Hom.ext _ _ <| E.π.naturality _⟩⟩

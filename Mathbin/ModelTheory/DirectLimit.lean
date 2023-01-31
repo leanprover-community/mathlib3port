@@ -236,7 +236,7 @@ noncomputable instance prestructure : L.Prestructure (DirectLimit.setoid G f)
 
 /-- The `L.Structure` on a direct limit of `L.Structure`s. -/
 noncomputable instance structure : L.Structure (DirectLimit G f) :=
-  language.quotient_structure
+  Language.quotientStructure
 #align first_order.language.direct_limit.Structure FirstOrder.Language.DirectLimit.structure
 
 @[simp]

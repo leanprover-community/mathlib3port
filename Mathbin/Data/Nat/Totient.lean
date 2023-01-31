@@ -33,7 +33,7 @@ namespace Nat
 /-- Euler's totient function. This counts the number of naturals strictly less than `n` which are
 coprime with `n`. -/
 def totient (n : ℕ) : ℕ :=
-  ((range n).filter n.coprime).card
+  ((range n).filterₓ n.coprime).card
 #align nat.totient Nat.totient
 
 -- mathport name: nat.totient
@@ -48,7 +48,7 @@ theorem totient_zero : φ 0 = 0 :=
 theorem totient_one : φ 1 = 1 := by simp [totient]
 #align nat.totient_one Nat.totient_one
 
-theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filter n.coprime).card :=
+theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filterₓ n.coprime).card :=
   rfl
 #align nat.totient_eq_card_coprime Nat.totient_eq_card_coprime
 
@@ -78,14 +78,14 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
 #align nat.totient_pos Nat.totient_pos
 
 theorem filter_coprime_Ico_eq_totient (a n : ℕ) :
-    ((Ico n (n + a)).filter (coprime a)).card = totient a :=
+    ((Ico n (n + a)).filterₓ (coprime a)).card = totient a :=
   by
   rw [totient, filter_Ico_card_eq_of_periodic, count_eq_card_filter_range]
   exact periodic_coprime a
 #align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_Ico_eq_totient
 
 theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
-    ((Ico k (k + n)).filter (coprime a)).card ≤ totient a * (n / a + 1) :=
+    ((Ico k (k + n)).filterₓ (coprime a)).card ≤ totient a * (n / a + 1) :=
   by
   conv_lhs => rw [← Nat.mod_add_div n a]
   induction' n / a with i ih
@@ -192,7 +192,7 @@ theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n :=
   exact sum_congr rfl fun x hx => totient_div_of_dvd (dvd_of_mem_divisors hx)
 #align nat.sum_totient Nat.sum_totient
 
-theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ m) = n :=
+theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filterₓ (· ∣ n), φ m) = n :=
   by
   convert sum_totient _ using 1
   simp only [Nat.divisors, sum_filter, range_eq_Ico]
@@ -202,7 +202,7 @@ theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filter (· ∣ n), φ 
 /-- When `p` is prime, then the totient of `p ^ (n + 1)` is `p ^ n * (p - 1)` -/
 theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n + 1)) = p ^ n * (p - 1) :=
   calc
-    φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filter (coprime (p ^ (n + 1)))).card :=
+    φ (p ^ (n + 1)) = ((range (p ^ (n + 1))).filterₓ (coprime (p ^ (n + 1)))).card :=
       totient_eq_card_coprime _
     _ = (range (p ^ (n + 1)) \ (range (p ^ n)).image (· * p)).card :=
       congr_arg card

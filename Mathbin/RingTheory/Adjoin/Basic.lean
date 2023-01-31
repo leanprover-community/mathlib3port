@@ -72,11 +72,11 @@ theorem adjoin_eq (S : Subalgebra R A) : adjoin R ↑S = S :=
 
 theorem adjoin_unionᵢ {α : Type _} (s : α → Set A) :
     adjoin R (Set.unionᵢ s) = ⨆ i : α, adjoin R (s i) :=
-  (@Algebra.gc R A _ _ _).l_supr
+  (@Algebra.gc R A _ _ _).l_supᵢ
 #align algebra.adjoin_Union Algebra.adjoin_unionᵢ
 
 theorem adjoin_attach_bunionᵢ [DecidableEq A] {α : Type _} {s : Finset α} (f : s → Finset A) :
-    adjoin R (s.attach.bUnion f : Set A) = ⨆ x, adjoin R (f x) := by simpa [adjoin_Union]
+    adjoin R (s.attach.bunionᵢ f : Set A) = ⨆ x, adjoin R (f x) := by simpa [adjoin_Union]
 #align algebra.adjoin_attach_bUnion Algebra.adjoin_attach_bunionᵢ
 
 @[elab_as_elim]
@@ -87,7 +87,7 @@ theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : �
     { carrier := p
       mul_mem' := Hmul
       add_mem' := Hadd
-      algebra_map_mem' := Halg }
+      algebraMap_mem' := Halg }
   adjoin_le (show s ≤ S from Hs) h
 #align algebra.adjoin_induction Algebra.adjoin_induction
 

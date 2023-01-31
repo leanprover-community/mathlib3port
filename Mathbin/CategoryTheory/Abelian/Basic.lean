@@ -275,7 +275,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- An abelian category has finite biproducts. -/
 instance (priority := 100) hasFiniteBiproducts : HasFiniteBiproducts C :=
-  limits.has_finite_biproducts.of_has_finite_products
+  Limits.HasFiniteBiproducts.ofHasFiniteProducts
 #align category_theory.abelian.has_finite_biproducts CategoryTheory.Abelian.hasFiniteBiproducts
 
 instance (priority := 100) hasBinaryBiproducts : HasBinaryBiproducts C :=
@@ -283,7 +283,7 @@ instance (priority := 100) hasBinaryBiproducts : HasBinaryBiproducts C :=
 #align category_theory.abelian.has_binary_biproducts CategoryTheory.Abelian.hasBinaryBiproducts
 
 instance (priority := 100) hasZeroObject : HasZeroObject C :=
-  has_zero_object_of_has_initial_object
+  hasZeroObject_of_hasInitial_object
 #align category_theory.abelian.has_zero_object CategoryTheory.Abelian.hasZeroObject
 
 section ToNonPreadditiveAbelian
@@ -361,7 +361,7 @@ def imageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f
   m := image.ι f
   m_mono := by infer_instance
   e := Abelian.factorThruImage f
-  e_strong_epi := strongEpi_of_epi _
+  e_strongEpi := strongEpi_of_epi _
 #align category_theory.abelian.image_strong_epi_mono_factorisation CategoryTheory.Abelian.imageStrongEpiMonoFactorisation
 
 /-- Factoring through the coimage is a strong epi-mono factorisation. -/
@@ -372,7 +372,7 @@ def coimageStrongEpiMonoFactorisation : StrongEpiMonoFactorisation f
   m := Abelian.factorThruCoimage f
   m_mono := by infer_instance
   e := coimage.π f
-  e_strong_epi := strongEpi_of_epi _
+  e_strongEpi := strongEpi_of_epi _
 #align category_theory.abelian.coimage_strong_epi_mono_factorisation CategoryTheory.Abelian.coimageStrongEpiMonoFactorisation
 
 end Factor
@@ -381,7 +381,7 @@ section HasStrongEpiMonoFactorisations
 
 /-- An abelian category has strong epi-mono factorisations. -/
 instance (priority := 100) : HasStrongEpiMonoFactorisations C :=
-  has_strong_epi_mono_factorisations.mk fun X Y f => imageStrongEpiMonoFactorisation f
+  HasStrongEpiMonoFactorisations.mk fun X Y f => imageStrongEpiMonoFactorisation f
 
 -- In particular, this means that it has well-behaved images.
 example : HasImages C := by infer_instance
@@ -512,7 +512,7 @@ end CokernelOfKernel
 section
 
 instance (priority := 100) hasEqualizers : HasEqualizers C :=
-  preadditive.has_equalizers_of_has_kernels
+  Preadditive.hasEqualizers_of_hasKernels
 #align category_theory.abelian.has_equalizers CategoryTheory.Abelian.hasEqualizers
 
 /-- Any abelian category has pullbacks -/
@@ -525,7 +525,7 @@ end
 section
 
 instance (priority := 100) hasCoequalizers : HasCoequalizers C :=
-  preadditive.has_coequalizers_of_has_cokernels
+  Preadditive.hasCoequalizers_of_hasCokernels
 #align category_theory.abelian.has_coequalizers CategoryTheory.Abelian.hasCoequalizers
 
 /-- Any abelian category has pushouts -/
@@ -534,11 +534,11 @@ instance (priority := 100) hasPushouts : HasPushouts C :=
 #align category_theory.abelian.has_pushouts CategoryTheory.Abelian.hasPushouts
 
 instance (priority := 100) hasFiniteLimits : HasFiniteLimits C :=
-  limits.has_finite_limits_of_has_equalizers_and_finite_products
+  Limits.hasFiniteLimitsOfHasEqualizersAndFiniteProducts
 #align category_theory.abelian.has_finite_limits CategoryTheory.Abelian.hasFiniteLimits
 
 instance (priority := 100) hasFiniteColimits : HasFiniteColimits C :=
-  limits.has_finite_colimits_of_has_coequalizers_and_finite_coproducts
+  Limits.hasFiniteColimitsOfHasCoequalizersAndFiniteCoproducts
 #align category_theory.abelian.has_finite_colimits CategoryTheory.Abelian.hasFiniteColimits
 
 end

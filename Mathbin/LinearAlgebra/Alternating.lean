@@ -356,7 +356,7 @@ instance : Module S (AlternatingMap R M N ι)
   zero_smul f := ext fun x => zero_smul _ _
 
 instance [NoZeroSMulDivisors S N] : NoZeroSMulDivisors S (AlternatingMap R M N ι) :=
-  coe_injective.NoZeroSmulDivisors _ rfl coeFn_smul
+  coe_injective.NoZeroSMulDivisors _ rfl coeFn_smul
 
 end Module
 
@@ -1164,8 +1164,8 @@ def curryLeft {n : ℕ} (f : AlternatingMap R' M'' N'' (Fin n.succ)) :
       map_eq_zero_of_eq' := fun v i j hv hij =>
         f.map_eq_zero_of_eq _ (by rwa [Matrix.cons_val_succ, Matrix.cons_val_succ])
           ((Fin.succ_injective _).Ne hij) }
-  map_add' m₁ m₂ := ext fun v => f.map_vec_cons_add _ _ _
-  map_smul' r m := ext fun v => f.map_vec_cons_smul _ _ _
+  map_add' m₁ m₂ := ext fun v => f.map_vecCons_add _ _ _
+  map_smul' r m := ext fun v => f.map_vecCons_smul _ _ _
 #align alternating_map.curry_left AlternatingMap.curryLeft
 
 @[simp]

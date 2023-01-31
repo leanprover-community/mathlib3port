@@ -56,7 +56,7 @@ unsafe def aux_attr : user_attribute (name_map Name) Name
   parser := failed
   cache_cfg :=
     ⟨fun ns =>
-      ns.mfoldl
+      ns.foldlM
         (fun dict n' => do
           let n :=
             match n' with
@@ -86,7 +86,7 @@ unsafe def ignore_args_attr : user_attribute (name_map <| List ℕ) (List ℕ)
     "Auxiliary attribute for `to_additive` stating that certain arguments are not additivized."
   cache_cfg :=
     ⟨fun ns =>
-      ns.mfoldl
+      ns.foldlM
         (fun dict n => do
           let param ← ignore_args_attr.get_param_untyped n
           -- see Note [user attribute parameters]
@@ -127,7 +127,7 @@ unsafe def relevant_arg_attr : user_attribute (name_map ℕ) ℕ
       "multiplicative structure."
   cache_cfg :=
     ⟨fun ns =>
-      ns.mfoldl
+      ns.foldlM
         (fun dict n => do
           let param ← relevant_arg_attr.get_param_untyped n
           -- see Note [user attribute parameters]
@@ -155,7 +155,7 @@ unsafe def reorder_attr : user_attribute (name_map <| List ℕ) (List ℕ)
   descr := "Auxiliary attribute for `to_additive` that stores arguments that need to be reordered."
   cache_cfg :=
     ⟨fun ns =>
-      ns.mfoldl
+      ns.foldlM
         (fun dict n => do
           let param ← reorder_attr.get_param_untyped n
           -- see Note [user attribute parameters]
@@ -179,12 +179,12 @@ unsafe def first_multiplicative_arg (nm : Name) : tactic ℕ := do
   let d ← get_decl nm
   let (es, _) := d.type.pi_binders
   let l ←
-    es.mmapWithIndex fun n bi => do
+    es.mapIdxM fun n bi => do
         let tgt := bi.type.pi_codomain
         let n_bi := bi.type.pi_binders.fst.length
         let tt ← has_attribute' `to_additive tgt.get_app_fn.const_name |
           return none
-        let n2 := tgt.get_app_args.head.get_app_fn.match_var.map fun m => n + n_bi - m
+        let n2 := tgt.get_app_args.headI.get_app_fn.match_var.map fun m => n + n_bi - m
         return <| n2
   let l := l.reduceOption
   return <| if l = [] then 1 else l min l
@@ -338,7 +338,7 @@ private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ)
   let src_fields ← f src
   let tgt_fields ← f tgt
   guard (src_fields = tgt_fields) <|> fail ("Failed to map fields of " ++ src)
-  (src_fields tgt_fields).mmap' fun names =>
+  (src_fields tgt_fields).mapM' fun names =>
       guard (names = names) <|> aux_attr (src names) (tgt names) tt prio
 #align to_additive.proceed_fields_aux to_additive.proceed_fields_aux
 
@@ -347,10 +347,10 @@ so that future uses of `to_additive` will map them to the corresponding `tgt` fi
 unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : Tactic :=
   let aux := proceed_fields_aux src tgt prio
   do
-  ((aux fun n => pure <| List.map Name.toString <| (env n).getOrElse []) >>
+  ((aux fun n => pure <| List.map Name.toString <| (env n).getD []) >>
         aux fun n => (List.map fun x : Name => "to_" ++ x) <$> get_tagged_ancestors n) >>
       aux fun n =>
-        (env n).mmap fun cs =>
+        (env n).mapM fun cs =>
           match cs with
           | Name.mk_string s pre => (guard (pre = n) <|> fail "Bad constructor name") >> pure s
           | _ => fail "Bad constructor name"

@@ -494,8 +494,8 @@ theorem exists_null_frontiers_thickening (μ : Measure Ω) [SigmaFinite μ] (s :
   ·
     exact
       tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds Rs_lim
-        (fun n => (obs n).some_spec.some.1.le) fun n => (obs n).some_spec.some.2.le
-  · exact fun n => ⟨(obs n).some_spec.some.1, (obs n).some_spec.some_spec⟩
+        (fun n => (obs n).choose_spec.some.1.le) fun n => (obs n).choose_spec.some.2.le
+  · exact fun n => ⟨(obs n).choose_spec.some.1, (obs n).choose_spec.choose_spec⟩
 #align measure_theory.exists_null_frontiers_thickening MeasureTheory.exists_null_frontiers_thickening
 
 end LimitBorelImpliesLimsupClosedLe

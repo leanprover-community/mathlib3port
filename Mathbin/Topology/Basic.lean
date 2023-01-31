@@ -75,9 +75,9 @@ universe u v w
 @[protect_proj]
 class TopologicalSpace (α : Type u) where
   IsOpen : Set α → Prop
-  is_open_univ : IsOpen univ
-  is_open_inter : ∀ s t, IsOpen s → IsOpen t → IsOpen (s ∩ t)
-  is_open_sUnion : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀ s)
+  isOpen_univ : IsOpen univ
+  isOpen_inter : ∀ s t, IsOpen s → IsOpen t → IsOpen (s ∩ t)
+  isOpen_unionₛ : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀ s)
 #align topological_space TopologicalSpace
 -/
 
@@ -96,9 +96,9 @@ def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ 
     (union_mem : ∀ (A) (_ : A ∈ T) (B) (_ : B ∈ T), A ∪ B ∈ T) : TopologicalSpace α
     where
   IsOpen X := Xᶜ ∈ T
-  is_open_univ := by simp [empty_mem]
-  is_open_inter s t hs ht := by simpa only [compl_inter] using union_mem (sᶜ) hs (tᶜ) ht
-  is_open_sUnion s hs := by
+  isOpen_univ := by simp [empty_mem]
+  isOpen_inter s t hs ht := by simpa only [compl_inter] using union_mem (sᶜ) hs (tᶜ) ht
+  isOpen_unionₛ s hs := by
     rw [Set.compl_unionₛ] <;>
       exact sInter_mem (compl '' s) fun z ⟨y, hy, hz⟩ => by simpa [hz.symm] using hs y hy
 #align topological_space.of_closed TopologicalSpace.ofClosed
@@ -273,7 +273,7 @@ theorem IsOpen.and : IsOpen { a | p₁ a } → IsOpen { a | p₂ a } → IsOpen 
 #print IsClosed /-
 /-- A set is closed if its complement is open -/
 class IsClosed (s : Set α) : Prop where
-  is_open_compl : IsOpen (sᶜ)
+  isOpen_compl : IsOpen (sᶜ)
 #align is_closed IsClosed
 -/
 
@@ -288,7 +288,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_compl_iff isOpen_compl_iffₓ'. -/
 @[simp]
 theorem isOpen_compl_iff {s : Set α} : IsOpen (sᶜ) ↔ IsClosed s :=
-  ⟨fun h => ⟨h⟩, fun h => h.is_open_compl⟩
+  ⟨fun h => ⟨h⟩, fun h => h.isOpen_compl⟩
 #align is_open_compl_iff isOpen_compl_iff
 
 #print isClosed_empty /-
@@ -465,7 +465,7 @@ theorem isOpen_interior {s : Set α} : IsOpen (interior s) :=
 
 #print interior_subset /-
 theorem interior_subset {s : Set α} : interior s ⊆ s :=
-  sUnion_subset fun t ⟨h₁, h₂⟩ => h₂
+  unionₛ_subset fun t ⟨h₁, h₂⟩ => h₂
 #align interior_subset interior_subset
 -/
 
@@ -615,7 +615,7 @@ theorem isOpen_iff_forall_mem_open : IsOpen s ↔ ∀ x ∈ s, ∃ (t : _)(_ : t
 
 #print interior_interᵢ_subset /-
 theorem interior_interᵢ_subset (s : ι → Set α) : interior (⋂ i, s i) ⊆ ⋂ i, interior (s i) :=
-  subset_Inter fun i => interior_mono <| interᵢ_subset _ _
+  subset_interᵢ fun i => interior_mono <| interᵢ_subset _ _
 #align interior_Inter_subset interior_interᵢ_subset
 -/
 
@@ -629,7 +629,7 @@ Case conversion may be inaccurate. Consider using '#align interior_Inter₂_subs
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem interior_Inter₂_subset (p : ι → Sort _) (s : ∀ i, p i → Set α) :
     interior (⋂ (i) (j), s i j) ⊆ ⋂ (i) (j), interior (s i j) :=
-  (interior_interᵢ_subset _).trans <| Inter_mono fun i => interior_interᵢ_subset _
+  (interior_interᵢ_subset _).trans <| interᵢ_mono fun i => interior_interᵢ_subset _
 #align interior_Inter₂_subset interior_Inter₂_subset
 
 #print interior_interₛ_subset /-
@@ -662,7 +662,7 @@ theorem isClosed_closure {s : Set α} : IsClosed (closure s) :=
 
 #print subset_closure /-
 theorem subset_closure {s : Set α} : s ⊆ closure s :=
-  subset_sInter fun t ⟨h₁, h₂⟩ => h₂
+  subset_interₛ fun t ⟨h₁, h₂⟩ => h₂
 #align subset_closure subset_closure
 -/
 
@@ -686,7 +686,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align disjoint.closure_left Disjoint.closure_leftₓ'. -/
 theorem Disjoint.closure_left {s t : Set α} (hd : Disjoint s t) (ht : IsOpen t) :
     Disjoint (closure s) t :=
-  disjoint_compl_left.mono_left <| closure_minimal hd.subset_compl_right ht.is_closed_compl
+  disjoint_compl_left.mono_left <| closure_minimal hd.subset_compl_right ht.isClosed_compl
 #align disjoint.closure_left Disjoint.closure_left
 
 /- warning: disjoint.closure_right -> Disjoint.closure_right is a dubious translation:
@@ -917,7 +917,7 @@ theorem mem_closure_iff {s : Set α} {a : α} :
       closure_minimal this (isClosed_compl_iff.2 oo) h ao,
     fun H c ⟨h₁, h₂⟩ =>
     by_contradiction fun nc =>
-      let ⟨x, hc, hs⟩ := H _ h₁.is_open_compl nc
+      let ⟨x, hc, hs⟩ := H _ h₁.isOpen_compl nc
       hc (h₂ hs)⟩
 #align mem_closure_iff mem_closure_iff
 
@@ -1485,7 +1485,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align map_nhds map_nhdsₓ'. -/
 theorem map_nhds {a : α} {f : α → β} :
     map f (𝓝 a) = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 (image f s) :=
-  ((nhds_basis_opens a).map f).eq_binfi
+  ((nhds_basis_opens a).map f).eq_binfᵢ
 #align map_nhds map_nhds
 
 #print mem_of_mem_nhds /-
@@ -1521,7 +1521,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {a : α} {s : Set.{u1} α}, (IsClosed.{u1} α _inst_1 s) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (nhds.{u1} α _inst_1 a))
 Case conversion may be inaccurate. Consider using '#align is_closed.compl_mem_nhds IsClosed.compl_mem_nhdsₓ'. -/
 theorem IsClosed.compl_mem_nhds {a : α} {s : Set α} (hs : IsClosed s) (ha : a ∉ s) : sᶜ ∈ 𝓝 a :=
-  hs.is_open_compl.mem_nhds (mem_compl ha)
+  hs.isOpen_compl.mem_nhds (mem_compl ha)
 #align is_closed.compl_mem_nhds IsClosed.compl_mem_nhds
 
 #print IsOpen.eventually_mem /-
@@ -1676,7 +1676,7 @@ theorem tendsto_nhds {f : β → α} {l : Filter β} {a : α} :
 #print tendsto_atTop_nhds /-
 theorem tendsto_atTop_nhds [Nonempty β] [SemilatticeSup β] {f : β → α} {a : α} :
     Tendsto f atTop (𝓝 a) ↔ ∀ U : Set α, a ∈ U → IsOpen U → ∃ N, ∀ n, N ≤ n → f n ∈ U :=
-  (atTop_basis.tendsto_iff (nhds_basis_opens a)).trans <| by
+  (atTop_basis.tendsto_iffₓ (nhds_basis_opens a)).trans <| by
     simp only [and_imp, exists_prop, true_and_iff, mem_Ici, ge_iff_le]
 #align tendsto_at_top_nhds tendsto_atTop_nhds
 -/
@@ -1783,7 +1783,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.clust
 theorem Filter.HasBasis.clusterPt_iff {ιa ιF} {pa : ιa → Prop} {sa : ιa → Set α} {pF : ιF → Prop}
     {sF : ιF → Set α} {F : Filter α} (ha : (𝓝 a).HasBasis pa sa) (hF : F.HasBasis pF sF) :
     ClusterPt a F ↔ ∀ ⦃i⦄ (hi : pa i) ⦃j⦄ (hj : pF j), (sa i ∩ sF j).Nonempty :=
-  ha.inf_basis_ne_bot_iff hF
+  ha.inf_basis_neBot_iff hF
 #align filter.has_basis.cluster_pt_iff Filter.HasBasis.clusterPt_iff
 
 /- warning: cluster_pt_iff -> clusterPt_iff is a dubious translation:
@@ -1794,7 +1794,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cluster_pt_iff clusterPt_iffₓ'. -/
 theorem clusterPt_iff {x : α} {F : Filter α} :
     ClusterPt x F ↔ ∀ ⦃U : Set α⦄ (hU : U ∈ 𝓝 x) ⦃V⦄ (hV : V ∈ F), (U ∩ V).Nonempty :=
-  inf_ne_bot_iff
+  inf_neBot_iff
 #align cluster_pt_iff clusterPt_iff
 
 /- warning: cluster_pt_principal_iff -> clusterPt_principal_iff is a dubious translation:
@@ -1807,7 +1807,7 @@ Case conversion may be inaccurate. Consider using '#align cluster_pt_principal_i
 set. See also `mem_closure_iff_cluster_pt`. -/
 theorem clusterPt_principal_iff {x : α} {s : Set α} :
     ClusterPt x (𝓟 s) ↔ ∀ U ∈ 𝓝 x, (U ∩ s).Nonempty :=
-  inf_principal_ne_bot_iff
+  inf_principal_neBot_iff
 #align cluster_pt_principal_iff clusterPt_principal_iff
 
 #print clusterPt_principal_iff_frequently /-
@@ -1885,7 +1885,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {f : Ultrafilter.{u1} α}, Iff (ClusterPt.{u1} α _inst_1 x (Ultrafilter.toFilter.{u1} α f)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) (nhds.{u1} α _inst_1 x))
 Case conversion may be inaccurate. Consider using '#align ultrafilter.cluster_pt_iff Ultrafilter.clusterPt_iffₓ'. -/
 theorem Ultrafilter.clusterPt_iff {x : α} {f : Ultrafilter α} : ClusterPt x f ↔ ↑f ≤ 𝓝 x :=
-  ⟨f.le_of_inf_ne_bot', fun h => ClusterPt.of_le_nhds h⟩
+  ⟨f.le_of_inf_neBot', fun h => ClusterPt.of_le_nhds h⟩
 #align ultrafilter.cluster_pt_iff Ultrafilter.clusterPt_iff
 
 #print MapClusterPt /-
@@ -2249,7 +2249,7 @@ Case conversion may be inaccurate. Consider using '#align mem_closure_iff_nhds_b
 theorem mem_closure_iff_nhds_basis' {a : α} {p : ι → Prop} {s : ι → Set α} (h : (𝓝 a).HasBasis p s)
     {t : Set α} : a ∈ closure t ↔ ∀ i, p i → (s i ∩ t).Nonempty :=
   mem_closure_iff_clusterPt.trans <|
-    (h.cluster_pt_iff (hasBasis_principal _)).trans <| by simp only [exists_prop, forall_const]
+    (h.clusterPt_iff (hasBasis_principal _)).trans <| by simp only [exists_prop, forall_const]
 #align mem_closure_iff_nhds_basis' mem_closure_iff_nhds_basis'
 
 /- warning: mem_closure_iff_nhds_basis -> mem_closure_iff_nhds_basis is a dubious translation:
@@ -2567,7 +2567,7 @@ open Topology
 /-- A function between topological spaces is continuous if the preimage
   of every open set is open. Registered as a structure to make sure it is not unfolded by Lean. -/
 structure Continuous (f : α → β) : Prop where
-  is_open_preimage : ∀ s, IsOpen s → IsOpen (f ⁻¹' s)
+  isOpen_preimage : ∀ s, IsOpen s → IsOpen (f ⁻¹' s)
 #align continuous Continuous
 -/
 
@@ -2578,7 +2578,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {_inst_1 : TopologicalSpace.{u2} α} {_inst_2 : TopologicalSpace.{u1} β} {f : α -> β}, Iff (Continuous.{u2, u1} α β _inst_1 _inst_2 f) (forall (s : Set.{u1} β), (IsOpen.{u1} β _inst_2 s) -> (IsOpen.{u2} α _inst_1 (Set.preimage.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align continuous_def continuous_defₓ'. -/
 theorem continuous_def {f : α → β} : Continuous f ↔ ∀ s, IsOpen s → IsOpen (f ⁻¹' s) :=
-  ⟨fun hf s hs => hf.is_open_preimage s hs, fun h => ⟨h⟩⟩
+  ⟨fun hf s hs => hf.isOpen_preimage s hs, fun h => ⟨h⟩⟩
 #align continuous_def continuous_def
 
 /- warning: is_open.preimage -> IsOpen.preimage is a dubious translation:
@@ -2589,7 +2589,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open.preimage IsOpen.preimageₓ'. -/
 theorem IsOpen.preimage {f : α → β} (hf : Continuous f) {s : Set β} (h : IsOpen s) :
     IsOpen (f ⁻¹' s) :=
-  hf.is_open_preimage s h
+  hf.isOpen_preimage s h
 #align is_open.preimage IsOpen.preimage
 
 /- warning: continuous.congr -> Continuous.congr is a dubious translation:
@@ -2730,7 +2730,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (x : α), Filter.Tendsto.{u2, u1} α β f (nhds.{u2} α _inst_1 x) (nhds.{u1} β _inst_2 (f x)))
 Case conversion may be inaccurate. Consider using '#align continuous.tendsto Continuous.tendstoₓ'. -/
 theorem Continuous.tendsto {f : α → β} (hf : Continuous f) (x) : Tendsto f (𝓝 x) (𝓝 (f x)) :=
-  ((nhds_basis_opens x).tendsto_iff <| nhds_basis_opens <| f x).2 fun t ⟨hxt, ht⟩ =>
+  ((nhds_basis_opens x).tendsto_iffₓ <| nhds_basis_opens <| f x).2 fun t ⟨hxt, ht⟩ =>
     ⟨f ⁻¹' t, ⟨hxt, ht.Preimage hf⟩, Subset.refl _⟩
 #align continuous.tendsto Continuous.tendsto
 
@@ -2830,7 +2830,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, Iff (Continuous.{u2, u1} α β _inst_1 _inst_2 f) (forall (s : Set.{u1} β), (IsClosed.{u1} β _inst_2 s) -> (IsClosed.{u2} α _inst_1 (Set.preimage.{u2, u1} α β f s)))
 Case conversion may be inaccurate. Consider using '#align continuous_iff_is_closed continuous_iff_isClosedₓ'. -/
 theorem continuous_iff_isClosed {f : α → β} : Continuous f ↔ ∀ s, IsClosed s → IsClosed (f ⁻¹' s) :=
-  ⟨fun hf s hs => by simpa using (continuous_def.1 hf (sᶜ) hs.is_open_compl).is_closed_compl,
+  ⟨fun hf s hs => by simpa using (continuous_def.1 hf (sᶜ) hs.is_open_compl).isClosed_compl,
     fun hf =>
     continuous_def.2 fun s => by rw [← isClosed_compl_iff, ← isClosed_compl_iff] <;> exact hf _⟩
 #align continuous_iff_is_closed continuous_iff_isClosed

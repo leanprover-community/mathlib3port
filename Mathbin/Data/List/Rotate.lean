@@ -365,13 +365,13 @@ theorem nthLe_rotate' (l : List α) (n k : ℕ) (hk : k < l.length) :
 -/
 
 theorem get?_rotate {l : List α} {n m : ℕ} (hml : m < l.length) :
-    (l.rotate n).nth m = l.nth ((m + n) % l.length) :=
+    (l.rotate n).get? m = l.get? ((m + n) % l.length) :=
   by
   rw [nth_le_nth, nth_le_nth (Nat.mod_lt _ _), nth_le_rotate]
   rwa [length_rotate]
 #align list.nth_rotate List.get?_rotate
 
-theorem head?_rotate {l : List α} {n : ℕ} (h : n < l.length) : head? (l.rotate n) = l.nth n := by
+theorem head?_rotate {l : List α} {n : ℕ} (h : n < l.length) : head? (l.rotate n) = l.get? n := by
   rw [← nth_zero, nth_rotate (n.zero_le.trans_lt h), zero_add, Nat.mod_eq_of_lt h]
 #align list.head'_rotate List.head?_rotate
 

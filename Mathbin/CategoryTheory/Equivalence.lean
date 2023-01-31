@@ -86,7 +86,7 @@ structure Equivalence (C : Type u₁) [Category.{v₁} C] (D : Type u₂) [Categ
   inverse : D ⥤ C
   unitIso : 𝟭 C ≅ Functor ⋙ inverse
   counitIso : inverse ⋙ Functor ≅ 𝟭 D
-  functor_unit_iso_comp' :
+  functor_unitIso_comp' :
     ∀ X : C,
       Functor.map ((unit_iso.Hom : 𝟭 C ⟶ Functor ⋙ inverse).app X) ≫
           counit_iso.Hom.app (Functor.obj X) =
@@ -152,7 +152,7 @@ theorem equivalence_mk'_counitInv (functor inverse unit_iso counit_iso f) :
 @[simp]
 theorem functor_unit_comp (e : C ≌ D) (X : C) :
     e.Functor.map (e.Unit.app X) ≫ e.counit.app (e.Functor.obj X) = 𝟙 (e.Functor.obj X) :=
-  e.functor_unit_iso_comp X
+  e.functor_unitIso_comp X
 #align category_theory.equivalence.functor_unit_comp CategoryTheory.Equivalence.functor_unit_comp
 
 @[simp]
@@ -295,7 +295,7 @@ instance : Inhabited (C ≌ C) :=
 /-- Equivalence of categories is symmetric. -/
 @[symm, simps]
 def symm (e : C ≌ D) : D ≌ C :=
-  ⟨e.inverse, e.Functor, e.counitIso.symm, e.unitIso.symm, e.inverse_counit_inv_comp⟩
+  ⟨e.inverse, e.Functor, e.counitIso.symm, e.unitIso.symm, e.inverse_counitInv_comp⟩
 #align category_theory.equivalence.symm CategoryTheory.Equivalence.symm
 
 variable {E : Type u₃} [Category.{v₃} E]
@@ -315,7 +315,7 @@ def trans (e : C ≌ D) (f : D ≌ E) : C ≌ E
   -- We wouldn't have needed to give this proof if we'd used `equivalence.mk`,
   -- but we choose to avoid using that here, for the sake of good structure projection `simp`
   -- lemmas.
-  functor_unit_iso_comp' X := by
+  functor_unitIso_comp' X := by
     dsimp
     rw [← f.functor.map_comp_assoc, e.functor.map_comp, ← counit_inv_app_functor, fun_inv_map,
       iso.inv_hom_id_app_assoc, assoc, iso.inv_hom_id_app, counit_app_functor, ← functor.map_comp]
@@ -465,7 +465,7 @@ instance : Pow (C ≌ C) ℤ :=
   ⟨pow⟩
 
 @[simp]
-theorem pow_zero (e : C ≌ C) : e ^ (0 : ℤ) = equivalence.refl :=
+theorem pow_zero (e : C ≌ C) : e ^ (0 : ℤ) = Equivalence.refl :=
   rfl
 #align category_theory.equivalence.pow_zero CategoryTheory.Equivalence.pow_zero
 
@@ -490,7 +490,7 @@ class IsEquivalence (F : C ⥤ D) where mk' ::
   inverse : D ⥤ C
   unitIso : 𝟭 C ≅ F ⋙ inverse
   counitIso : inverse ⋙ F ≅ 𝟭 D
-  functor_unit_iso_comp' :
+  functor_unitIso_comp' :
     ∀ X : C,
       F.map ((unit_iso.Hom : 𝟭 C ⟶ F ⋙ inverse).app X) ≫ counit_iso.Hom.app (F.obj X) =
         𝟙 (F.obj X) := by
@@ -560,7 +560,7 @@ theorem asEquivalence_unit {F : C ⥤ D} [h : IsEquivalence F] :
 
 @[simp]
 theorem asEquivalence_counit {F : C ⥤ D} [IsEquivalence F] :
-    F.asEquivalence.counitIso = is_equivalence.counit_iso :=
+    F.asEquivalence.counitIso = IsEquivalence.counitIso :=
   rfl
 #align category_theory.functor.as_equivalence_counit CategoryTheory.Functor.asEquivalence_counit
 
@@ -632,7 +632,7 @@ def ofIso {F G : C ⥤ D} (e : F ≅ G) (hF : IsEquivalence F) : IsEquivalence G
   inverse := hF.inverse
   unitIso := hF.unitIso ≪≫ NatIso.hcomp e (Iso.refl hF.inverse)
   counitIso := NatIso.hcomp (Iso.refl hF.inverse) e.symm ≪≫ hF.counitIso
-  functor_unit_iso_comp' X := by
+  functor_unitIso_comp' X := by
     dsimp [nat_iso.hcomp]
     erw [id_comp, F.map_id, comp_id]
     apply (cancel_epi (e.hom.app X)).mp
@@ -765,7 +765,7 @@ theorem inverse_map_inj_iff (e : C ≌ D) {X Y : D} (f g : X ⟶ Y) :
 #align category_theory.equivalence.inverse_map_inj_iff CategoryTheory.Equivalence.inverse_map_inj_iff
 
 instance essSurj_inducedFunctor {C' : Type _} (e : C' ≃ D) : EssSurj (inducedFunctor e)
-    where mem_ess_image Y := ⟨e.symm Y, by simp⟩
+    where mem_essImage Y := ⟨e.symm Y, by simp⟩
 #align category_theory.equivalence.ess_surj_induced_functor CategoryTheory.Equivalence.essSurj_inducedFunctor
 
 noncomputable instance inducedFunctorOfEquiv {C' : Type _} (e : C' ≃ D) :

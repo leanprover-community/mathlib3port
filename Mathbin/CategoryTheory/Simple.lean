@@ -53,7 +53,7 @@ variable [HasZeroMorphisms C]
 
 /-- An object is simple if monomorphisms into it are (exclusively) either isomorphisms or zero. -/
 class Simple (X : C) : Prop where
-  mono_is_iso_iff_nonzero : ∀ {Y : C} (f : Y ⟶ X) [Mono f], IsIso f ↔ f ≠ 0
+  mono_isIso_iff_nonzero : ∀ {Y : C} (f : Y ⟶ X) [Mono f], IsIso f ↔ f ≠ 0
 #align category_theory.simple CategoryTheory.Simple
 
 /-- A nonzero monomorphism to a simple object is an isomorphism. -/
@@ -63,7 +63,7 @@ theorem isIso_of_mono_of_nonzero {X Y : C} [Simple Y] {f : X ⟶ Y} [Mono f] (w 
 
 theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
   {
-    mono_is_iso_iff_nonzero := fun Z f m => by
+    mono_isIso_iff_nonzero := fun Z f m => by
       skip
       haveI : mono (f ≫ i.hom) := mono_comp _ _
       constructor

@@ -56,7 +56,7 @@ unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr)
   let (_, args') ←
     mapAccumLM
         (fun (x : List expr) (y : Bool × expr) =>
-          if y.1 then pure (x.tail, x.head)
+          if y.1 then pure (x.tail, x.headI)
           else Prod.mk rec_call <$> map_field n g.app_fn f α β y.2)
         rec_call args₁
   let constr ← mk_const c
@@ -98,7 +98,7 @@ unsafe def mk_mapp' (fn : expr) (args : List expr) : tactic expr := do
 unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) (tgt : expr) :
     tactic Unit := do
   let e ← get_env
-  ((e n).enumFrom 1).mmap' fun ⟨i, c⟩ => do
+  ((e n).enumFrom 1).mapM' fun ⟨i, c⟩ => do
       mk_meta_var tgt >>= set_goals ∘ pure
       let vs ← intro_lst <| vs expr.local_pp_name
       let [α, β, f] ← tactic.intro_lst [`α, `β, `f] >>= mmap instantiate_mvars
@@ -221,7 +221,7 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
                         if
                           y . 1
                           then
-                          pure ( x . tail , Sum.inr x . head )
+                          pure ( x . tail , Sum.inr x . headI )
                           else
                           Prod.mk x <$> traverse_field n appl_inst g . app_fn f α y . 2
                     )
@@ -233,7 +233,7 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
           let ( vars_intro , r ) ← seq_apply_constructor constr' ( args₀ . map Sum.inl ++ args' )
           let gs ← get_goals
           set_goals [ v ]
-          let vs ← vars_intro . mmap id
+          let vs ← vars_intro . mapM id
           tactic.exact ( constr vs )
           done
           set_goals gs
@@ -264,7 +264,7 @@ open Applicative
 unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List expr) (tgt : expr) :
     tactic Unit := do
   let e ← get_env
-  ((e n).enumFrom 1).mmap' fun ⟨i, c⟩ => do
+  ((e n).enumFrom 1).mapM' fun ⟨i, c⟩ => do
       mk_meta_var tgt >>= set_goals ∘ pure
       let vs ← intro_lst <| vs expr.local_pp_name
       let [m, appl_inst, α, β, f] ←
@@ -327,11 +327,11 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
   -- where `p ...` are the inductive parameter types of `n`
   tgt : expr := expr.const n ls
   let ⟨params, _⟩ ← open_pis (decl.type.instantiate_univ_params (decl.univ_params.zip ls))
-  let params := params.init
+  let params := params.dropLast
   let tgt := tgt.mk_app params
   let tgt ← mk_inst cls tgt
   let tgt ←
-    params.enum.mfoldr
+    params.enum.foldrM
         (fun ⟨i, param⟩ tgt => do
           let tgt ←
             (-- add typeclass hypothesis for each inductive parameter
@@ -358,7 +358,7 @@ open Interactive
 unsafe def get_equations_of (n : Name) : tactic (List pexpr) := do
   let e ← get_env
   let pre := .str n "equations"
-  let x := e.fold [] fun d xs => if pre.isPrefixOf d.to_name then d.to_name :: xs else xs
+  let x := e.fold [] fun d xs => if pre.isPrefixOfₓ d.to_name then d.to_name :: xs else xs
   x resolve_name
 #align tactic.interactive.get_equations_of tactic.interactive.get_equations_of
 

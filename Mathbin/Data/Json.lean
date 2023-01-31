@@ -130,7 +130,7 @@ unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap 
     let json.object l ← success j |
       exception fun _ => f! "object expected, got {j.typename}"
     let l ←
-      l.mmap fun x : String × json => do
+      l.mapM fun x : String × json => do
           let x2 ← of_json α x.2
           pure (x.1, x2)
     l
@@ -194,7 +194,7 @@ unsafe def json_serializable.field_starter (j : json) : exceptional (List (Strin
 /-- Check a field exists and is unique -/
 unsafe def json_serializable.field_get (l : List (String × json)) (s : String) :
     exceptional (Option json × List (String × json)) :=
-  let (p, n) := l.partition fun x => Prod.fst x = s
+  let (p, n) := l.partitionₓ fun x => Prod.fst x = s
   match p with
   | [] => pure (none, n)
   | [x] => pure (some x.2, n)
@@ -226,7 +226,7 @@ unsafe def get_constructor_and_projections (t : expr) :
   let some fields ← pure (env.structure_fields I) |
     throwError"Not a structure"
   let projs ←
-    fields.mmap fun f => do
+    fields.mapM fun f => do
         let d ← get_decl (I ++ f)
         let a := @expr.const true (I ++ f) <| d.univ_params.map level.param
         pure (f, a args)
@@ -316,7 +316,7 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
           get_local
           `x
     let (projs : List (Option expr)) ←
-      fields.mmap fun ⟨f, a⟩ => do
+      fields.mapM fun ⟨f, a⟩ => do
           let x_e := a.app x
           let t ← infer_type x_e
           let s ← infer_type t
@@ -333,7 +333,7 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
         tactic.clear
     let json_fields
       ←-- check fields are present
-            fields.mmap
+            fields.mapM
           fun ⟨f, e⟩ => do
           let t ← infer_type e
           let s ← infer_type t

@@ -287,7 +287,7 @@ theorem mem_ofSet_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
 @[simp]
 theorem ofSet_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α} :
     ofSet s b = some a ↔ a = b ∧ a ∈ s :=
-  mem_of_set_iff
+  mem_ofSet_iff
 #align pequiv.of_set_eq_some_iff PEquiv.ofSet_eq_some_iff
 -/
 
@@ -295,7 +295,7 @@ theorem ofSet_eq_some_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a b : α}
 @[simp]
 theorem ofSet_eq_some_self_iff {s : Set α} {h : DecidablePred (· ∈ s)} {a : α} :
     ofSet s a = some a ↔ a ∈ s :=
-  mem_of_set_self_iff
+  mem_ofSet_self_iff
 #align pequiv.of_set_eq_some_self_iff PEquiv.ofSet_eq_some_self_iff
 -/
 
@@ -586,7 +586,7 @@ def toPEquiv (f : α ≃ β) : α ≃. β where
 
 #print Equiv.toPEquiv_refl /-
 @[simp]
-theorem toPEquiv_refl : (Equiv.refl α).toPequiv = PEquiv.refl α :=
+theorem toPEquiv_refl : (Equiv.refl α).toPEquiv = PEquiv.refl α :=
   rfl
 #align equiv.to_pequiv_refl Equiv.toPEquiv_refl
 -/
@@ -598,7 +598,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (f : Equiv.{succ u3, succ u2} α β) (g : Equiv.{succ u2, succ u1} β γ), Eq.{max (succ u3) (succ u1)} (PEquiv.{u3, u1} α γ) (Equiv.toPEquiv.{u3, u1} α γ (Equiv.trans.{succ u3, succ u2, succ u1} α β γ f g)) (PEquiv.trans.{u3, u2, u1} α β γ (Equiv.toPEquiv.{u3, u2} α β f) (Equiv.toPEquiv.{u2, u1} β γ g))
 Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_trans Equiv.toPEquiv_transₓ'. -/
 theorem toPEquiv_trans (f : α ≃ β) (g : β ≃ γ) :
-    (f.trans g).toPequiv = f.toPequiv.trans g.toPequiv :=
+    (f.trans g).toPEquiv = f.toPEquiv.trans g.toPEquiv :=
   rfl
 #align equiv.to_pequiv_trans Equiv.toPEquiv_trans
 
@@ -608,7 +608,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β), Eq.{max (succ u2) (succ u1)} (PEquiv.{u1, u2} β α) (Equiv.toPEquiv.{u1, u2} β α (Equiv.symm.{succ u2, succ u1} α β f)) (PEquiv.symm.{u2, u1} α β (Equiv.toPEquiv.{u2, u1} α β f))
 Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_symm Equiv.toPEquiv_symmₓ'. -/
-theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPequiv = f.toPequiv.symm :=
+theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPEquiv = f.toPEquiv.symm :=
   rfl
 #align equiv.to_pequiv_symm Equiv.toPEquiv_symm
 
@@ -618,7 +618,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u1} β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (PEquiv.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.PEquiv._hyg.659 : α) => Option.{u1} β) _x) (PEquiv.instFunLikePEquivOption.{u2, u1} α β) (Equiv.toPEquiv.{u2, u1} α β f) x) (Option.some.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) f x))
 Case conversion may be inaccurate. Consider using '#align equiv.to_pequiv_apply Equiv.toPEquiv_applyₓ'. -/
-theorem toPEquiv_apply (f : α ≃ β) (x : α) : f.toPequiv x = some (f x) :=
+theorem toPEquiv_apply (f : α ≃ β) (x : α) : f.toPEquiv x = some (f x) :=
   rfl
 #align equiv.to_pequiv_apply Equiv.toPEquiv_apply
 

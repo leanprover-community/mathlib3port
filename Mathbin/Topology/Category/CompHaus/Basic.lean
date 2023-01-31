@@ -142,10 +142,10 @@ noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHaus.{u}) :
     where
   toFun f :=
     { toFun := f ∘ stoneCechUnit
-      continuous_to_fun := f.2.comp (@continuous_stoneCechUnit X _) }
+      continuous_toFun := f.2.comp (@continuous_stoneCechUnit X _) }
   invFun f :=
     { toFun := stoneCechExtend f.2
-      continuous_to_fun := continuous_stoneCechExtend f.2 }
+      continuous_toFun := continuous_stoneCechExtend f.2 }
   left_inv := by
     rintro ⟨f : StoneCech X ⟶ Y, hf : Continuous f⟩
     ext (x : StoneCech X)

@@ -108,8 +108,8 @@ def Iso.mk {α β : BoundedOrderCat.{u}} (e : α ≃o β) : α ≅ β
 @[simps Functor inverse]
 def dualEquiv : BoundedOrderCat ≌ BoundedOrderCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoundedOrder.dual_equiv BoundedOrderCat.dualEquiv
 
 end BoundedOrderCat

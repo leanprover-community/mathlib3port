@@ -263,7 +263,7 @@ include V
 
 /-- The circumsphere of a simplex. -/
 def circumsphere {n : ℕ} (s : Simplex ℝ P n) : Sphere P :=
-  s.Independent.exists_unique_dist_eq.some
+  s.Independent.existsUnique_dist_eq.some
 #align affine.simplex.circumsphere Affine.Simplex.circumsphere
 
 /-- The property satisfied by the circumsphere. -/
@@ -273,7 +273,7 @@ theorem circumsphere_unique_dist_eq {n : ℕ} (s : Simplex ℝ P n) :
       ∀ cs : Sphere P,
         cs.center ∈ affineSpan ℝ (Set.range s.points) ∧ Set.range s.points ⊆ cs →
           cs = s.circumsphere :=
-  s.Independent.exists_unique_dist_eq.some_spec
+  s.Independent.existsUnique_dist_eq.choose_spec
 #align affine.simplex.circumsphere_unique_dist_eq Affine.Simplex.circumsphere_unique_dist_eq
 
 /-- The circumcenter of a simplex. -/

@@ -133,7 +133,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     intro t ht
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr has_deriv_within_at.sub, \",\", expr has_deriv_within_at.add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
-    · refine' (hf _ _).comp_has_deriv_within_at _ _
+    · refine' (hf _ _).comp_hasDerivWithinAt _ _
       · exact xt_mem t ht
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr has_deriv_at.has_deriv_within_at, \",\", expr has_deriv_at.const_add, \",\", expr has_deriv_at.smul_const, \",\", expr has_deriv_at_mul_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"

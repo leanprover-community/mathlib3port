@@ -237,7 +237,7 @@ theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ 
 #align finset.sym_fill_mem Finset.sym_fill_mem
 
 theorem sym_filterNe_mem (a : α) (h : m ∈ s.Sym n) :
-    (m.filter_ne a).2 ∈ (s.erase a).Sym (n - (m.filter_ne a).1) :=
+    (m.filter_ne a).2 ∈ (s.eraseₓ a).Sym (n - (m.filter_ne a).1) :=
   mem_sym_iff.2 fun b H =>
     mem_erase.2 <| (Multiset.mem_filter.1 H).symm.imp Ne.symm <| mem_sym_iff.1 h b
 #align finset.sym_filter_ne_mem Finset.sym_filterNe_mem
@@ -250,7 +250,7 @@ def symInsertEquiv (h : a ∉ s) : (insert a s).Sym n ≃ Σi : Fin (n + 1), s.S
     where
   toFun m := ⟨_, (m.1.filter_ne a).2, by convert sym_filter_ne_mem a m.2 <;> rw [erase_insert h]⟩
   invFun m := ⟨m.2.1.fill a m.1, sym_fill_mem a m.2.2⟩
-  left_inv m := Subtype.ext <| m.1.fill_filter_ne a
+  left_inv m := Subtype.ext <| m.1.fill_filterNe a
   right_inv := fun ⟨i, m, hm⟩ =>
     by
     refine' (_ : id.injective).sigma_map (fun i => _) _

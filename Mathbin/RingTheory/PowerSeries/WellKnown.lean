@@ -47,7 +47,7 @@ theorem constantCoeff_invUnitsSub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 
 #align power_series.constant_coeff_inv_units_sub PowerSeries.constantCoeff_invUnitsSub
 
 @[simp]
-theorem invUnitsSub_mul_x (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u - 1 :=
+theorem invUnitsSub_mul_x (u : Rˣ) : invUnitsSub u * x = invUnitsSub u * c R u - 1 :=
   by
   ext (_ | n)
   · simp
@@ -55,7 +55,7 @@ theorem invUnitsSub_mul_x (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * c R u 
 #align power_series.inv_units_sub_mul_X PowerSeries.invUnitsSub_mul_x
 
 @[simp]
-theorem invUnitsSub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - X) = 1 := by
+theorem invUnitsSub_mul_sub (u : Rˣ) : invUnitsSub u * (c R u - x) = 1 := by
   simp [mul_sub, sub_sub_cancel]
 #align power_series.inv_units_sub_mul_sub PowerSeries.invUnitsSub_mul_sub
 

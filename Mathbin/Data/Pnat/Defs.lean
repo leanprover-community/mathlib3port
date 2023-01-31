@@ -97,14 +97,14 @@ theorem succPNat_coe (n : ℕ) : (succPNat n : ℕ) = succ n :=
 
 #print Nat.natPred_succPNat /-
 @[simp]
-theorem natPred_succPNat (n : ℕ) : n.succPnat.natPred = n :=
+theorem natPred_succPNat (n : ℕ) : n.succPNat.natPred = n :=
   rfl
 #align nat.nat_pred_succ_pnat Nat.natPred_succPNat
 -/
 
 #print PNat.succPNat_natPred /-
 @[simp]
-theorem PNat.succPNat_natPred (n : ℕ+) : n.natPred.succPnat = n :=
+theorem PNat.succPNat_natPred (n : ℕ+) : n.natPred.succPNat = n :=
   Subtype.eq <| succ_pred_eq_of_pos n.2
 #align pnat.succ_pnat_nat_pred PNat.succPNat_natPred
 -/
@@ -203,14 +203,14 @@ instance NeZero.pnat {a : ℕ+} : NeZero (a : ℕ) :=
 -/
 
 #print PNat.toPNat'_coe /-
-theorem toPNat'_coe {n : ℕ} : 0 < n → (n.toPnat' : ℕ) = n :=
+theorem toPNat'_coe {n : ℕ} : 0 < n → (n.toPNat' : ℕ) = n :=
   succ_pred_eq_of_pos
 #align pnat.to_pnat'_coe PNat.toPNat'_coe
 -/
 
 #print PNat.coe_toPNat' /-
 @[simp]
-theorem coe_toPNat' (n : ℕ+) : (n : ℕ).toPnat' = n :=
+theorem coe_toPNat' (n : ℕ+) : (n : ℕ).toPNat' = n :=
   eq (toPNat'_coe n.Pos)
 #align pnat.coe_to_pnat' PNat.coe_toPNat'
 -/

@@ -94,11 +94,11 @@ def AlephIdx.initialSeg : @InitialSeg Cardinal Ordinal (· < ·) (· < ·) :=
   `aleph_idx ℵ₁ = ω + 1` and so on.)
   For an upgraded version stating that the range is everything, see `aleph_idx.rel_iso`. -/
 def alephIdx : Cardinal → Ordinal :=
-  aleph_idx.initial_seg
+  AlephIdx.initialSeg
 #align cardinal.aleph_idx Cardinal.alephIdx
 
 @[simp]
-theorem alephIdx.initialSeg_coe : (AlephIdx.initialSeg : Cardinal → Ordinal) = aleph_idx :=
+theorem alephIdx.initialSeg_coe : (AlephIdx.initialSeg : Cardinal → Ordinal) = alephIdx :=
   rfl
 #align cardinal.aleph_idx.initial_seg_coe Cardinal.alephIdx.initialSeg_coe
 
@@ -113,7 +113,7 @@ theorem alephIdx_le {a b} : alephIdx a ≤ alephIdx b ↔ a ≤ b := by
 #align cardinal.aleph_idx_le Cardinal.alephIdx_le
 
 theorem alephIdx.init {a b} : b < alephIdx a → ∃ c, alephIdx c = b :=
-  AlephIdx.initialSeg.init _ _
+  AlephIdx.initialSeg.dropLast _ _
 #align cardinal.aleph_idx.init Cardinal.alephIdx.init
 
 /-- The `aleph'` index function, which gives the ordinal index of a cardinal.
@@ -139,7 +139,7 @@ def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
 #align cardinal.aleph_idx.rel_iso Cardinal.alephIdx.relIso
 
 @[simp]
-theorem alephIdx.relIso_coe : (alephIdx.relIso : Cardinal → Ordinal) = aleph_idx :=
+theorem alephIdx.relIso_coe : (alephIdx.relIso : Cardinal → Ordinal) = alephIdx :=
   rfl
 #align cardinal.aleph_idx.rel_iso_coe Cardinal.alephIdx.relIso_coe
 
@@ -167,7 +167,7 @@ def Aleph'.relIso :=
   index, and is the inverse of `aleph_idx`.
   `aleph' n = n`, `aleph' ω = ω`, `aleph' (ω + 1) = succ ℵ₀`, etc. -/
 def aleph' : Ordinal → Cardinal :=
-  aleph'.rel_iso
+  Aleph'.relIso
 #align cardinal.aleph' Cardinal.aleph'
 
 @[simp]
@@ -313,12 +313,12 @@ theorem aleph_pos (o : Ordinal) : 0 < aleph o :=
 
 @[simp]
 theorem aleph_toNat (o : Ordinal) : (aleph o).toNat = 0 :=
-  to_nat_apply_of_aleph_0_le <| aleph0_le_aleph o
+  toNat_apply_of_aleph0_le <| aleph0_le_aleph o
 #align cardinal.aleph_to_nat Cardinal.aleph_toNat
 
 @[simp]
 theorem aleph_toPartEnat (o : Ordinal) : (aleph o).toPartEnat = ⊤ :=
-  to_part_enat_apply_of_aleph_0_le <| aleph0_le_aleph o
+  toPartEnat_apply_of_aleph0_le <| aleph0_le_aleph o
 #align cardinal.aleph_to_part_enat Cardinal.aleph_toPartEnat
 
 instance nonempty_out_aleph (o : Ordinal) : Nonempty (aleph o).ord.out.α :=
@@ -328,7 +328,7 @@ instance nonempty_out_aleph (o : Ordinal) : Nonempty (aleph o).ord.out.α :=
 #align cardinal.nonempty_out_aleph Cardinal.nonempty_out_aleph
 
 theorem ord_aleph_isLimit (o : Ordinal) : IsLimit (aleph o).ord :=
-  ord_is_limit <| aleph0_le_aleph _
+  ord_isLimit <| aleph0_le_aleph _
 #align cardinal.ord_aleph_is_limit Cardinal.ord_aleph_isLimit
 
 instance (o : Ordinal) : NoMaxOrder (aleph o).ord.out.α :=
@@ -428,7 +428,7 @@ def beth (o : Ordinal.{u}) : Cardinal.{u} :=
 #align cardinal.beth Cardinal.beth
 
 @[simp]
-theorem beth_zero : beth 0 = aleph_0 :=
+theorem beth_zero : beth 0 = aleph0 :=
   limitRecOn_zero _ _ _
 #align cardinal.beth_zero Cardinal.beth_zero
 
@@ -886,7 +886,7 @@ theorem principal_add_aleph (o : Ordinal) : Ordinal.Principal (· + ·) (aleph o
   principal_add_ord <| aleph0_le_aleph o
 #align cardinal.principal_add_aleph Cardinal.principal_add_aleph
 
-theorem add_right_inj_of_lt_aleph0 {α β γ : Cardinal} (γ₀ : γ < aleph_0) : α + γ = β + γ ↔ α = β :=
+theorem add_right_inj_of_lt_aleph0 {α β γ : Cardinal} (γ₀ : γ < aleph0) : α + γ = β + γ ↔ α = β :=
   ⟨fun h => Cardinal.eq_of_add_eq_add_right h γ₀, fun h => congr_fun (congr_arg (· + ·) h) γ⟩
 #align cardinal.add_right_inj_of_lt_aleph_0 Cardinal.add_right_inj_of_lt_aleph0
 
@@ -1169,7 +1169,7 @@ theorem mk_bounded_subset_le {α : Type u} (s : Set α) (c : Cardinal.{u}) :
     (#{ t : Set α // t ⊆ s ∧ (#t) ≤ c }) ≤ max (#s) ℵ₀ ^ c :=
   by
   refine' le_trans _ (mk_bounded_set_le s c)
-  refine' ⟨embedding.cod_restrict _ _ _⟩
+  refine' ⟨Embedding.codRestrict _ _ _⟩
   use fun t => coe ⁻¹' t.1
   · rintro ⟨t, ht1, ht2⟩ ⟨t', h1t', h2t'⟩ h
     apply Subtype.eq

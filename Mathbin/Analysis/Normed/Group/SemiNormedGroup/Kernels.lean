@@ -46,7 +46,7 @@ def cokernelCocone {X Y : SemiNormedGroup₁.{u}} (f : X ⟶ Y) : Cofork f 0 :=
       ext
       simp only [comp_apply, limits.zero_comp, NormedAddGroupHom.zero_apply,
         SemiNormedGroup₁.mkHom_apply, SemiNormedGroup₁.zero_apply, ← NormedAddGroupHom.mem_ker,
-        f.1.range.ker_normed_mk, f.1.mem_range]
+        f.1.range.ker_normedMk, f.1.mem_range]
       use x
       rfl)
 #align SemiNormedGroup₁.cokernel_cocone SemiNormedGroup₁.cokernelCocone

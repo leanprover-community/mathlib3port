@@ -193,7 +193,7 @@ variable [Inhabited α]
 elements `default`. -/
 def takeI : ∀ n, List α → List α
   | 0, l => []
-  | n + 1, l => l.head :: take' n l.tail
+  | n + 1, l => l.headI :: take' n l.tail
 #align list.take' List.takeI
 -/
 
@@ -341,7 +341,7 @@ variable {m : Type → Type v} [Monad m]
 #print List.findM? /-
 /-- A variant of `mbfind'` with more restrictive universe levels. -/
 def findM? {α} (p : α → m Bool) (xs : List α) : m (Option α) :=
-  xs.mbfind' (Functor.map ULift.up ∘ p)
+  xs.findM?' (Functor.map ULift.up ∘ p)
 #align list.mbfind List.findM?
 -/
 
@@ -476,7 +476,7 @@ variable {m : Type v → Type w} [Monad m]
 #print List.foldlIdxM /-
 /-- Monadic variant of `foldl_with_index`. -/
 def foldlIdxM {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) : m β :=
-  as.foldlWithIndex
+  as.foldlIdx
     (fun i ma b => do
       let a ← ma
       f i a b)
@@ -487,7 +487,7 @@ def foldlIdxM {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) :
 #print List.foldrIdxM /-
 /-- Monadic variant of `foldr_with_index`. -/
 def foldrIdxM {α β} (f : ℕ → α → β → m β) (b : β) (as : List α) : m β :=
-  as.foldrWithIndex
+  as.foldrIdx
     (fun i a mb => do
       let b ← mb
       f i a b)
@@ -1180,7 +1180,7 @@ def filterMapM {m : Type → Type v} [Monad m] {α β} (f : α → m (Option β)
   | [] => return []
   | h :: t => do
     let b ← f h
-    let t' ← t.mmapFilter
+    let t' ← t.filterMapM
     return <|
         match b with
         | none => t'
@@ -1204,8 +1204,8 @@ def mapDiagM {m} [Monad m] {α β : Type u} (f : α → α → m β) : List α �
   | [] => return []
   | h :: t => do
     let v ← f h h
-    let l ← t.mmap (f h)
-    let t ← t.mmapUpperTriangle
+    let l ← t.mapM (f h)
+    let t ← t.mapDiagM
     return <| v :: l ++ t
 #align list.mmap_upper_triangle List.mapDiagM
 
@@ -1219,7 +1219,7 @@ Example: suppose `l = [1, 2, 3]`. `mmap'_diag f l` will evaluate, in this order,
 -/
 def mapDiagM' {m} [Monad m] {α} (f : α → α → m Unit) : List α → m Unit
   | [] => return ()
-  | h :: t => (f h h >> t.mmap' (f h)) >> t.mmap'Diag
+  | h :: t => (f h h >> t.mapM' (f h)) >> t.mapDiagM'
 #align list.mmap'_diag List.mapDiagM'
 -/
 
@@ -1595,7 +1595,7 @@ Example: if `f : ℕ → list ℕ → β`, `list.map_with_complement f [1, 2, 3]
 `[f 1 [2, 3], f 2 [1, 3], f 3 [1, 2]]`.
 -/
 def mapWithComplement {α β} (f : α → List α → β) : List α → List β :=
-  map_with_prefix_suffix fun pref a suff => f a (pref ++ suff)
+  mapWithPrefixSuffix fun pref a suff => f a (pref ++ suff)
 #align list.map_with_complement List.mapWithComplement
 -/
 

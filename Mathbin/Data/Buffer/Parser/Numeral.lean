@@ -50,7 +50,7 @@ variable (α : Type) [Zero α] [One α] [Add α]
 /-- Parse a string of digits as a numeral while casting it to target type `α`.
 -/
 def numeral : Parser α :=
-  Nat.binCast <$> Nat deriving Mono, Bounded, Prog
+  Nat.binCast <$> nat deriving Mono, Bounded, Prog
 #align parser.numeral Parser.numeral
 
 /-- Parse a string of digits as a numeral while casting it to target type `α`,
@@ -117,7 +117,7 @@ def numeral.char.ofFintype [Fintype α] (fromc : Char) : Parser α := do
 Large numbers may cause performance issues, so don't run this parser on untrusted input.
 -/
 def int : Parser Int :=
-  coe <$> Nat <|> ch '-' >> Neg.neg <$> coe <$> Nat
+  coe <$> nat <|> ch '-' >> Neg.neg <$> coe <$> nat
 #align parser.int Parser.int
 
 /-- Matches an rational number, like `43/1` or `-2/3`.
@@ -126,7 +126,7 @@ and that both a numerator and denominator are provided (e.g. will not match `43`
 Large numbers may cause performance issues, so don't run this parser on untrusted input.
 -/
 def rat : Parser Rat :=
-  (fun x y => ↑x / ↑y) <$> Int <*> (ch '/' >> Nat)
+  (fun x y => ↑x / ↑y) <$> int <*> (ch '/' >> nat)
 #align parser.rat Parser.rat
 
 end Parser

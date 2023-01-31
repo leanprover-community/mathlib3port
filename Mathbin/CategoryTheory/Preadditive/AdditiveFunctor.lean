@@ -55,7 +55,7 @@ variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D
 
 @[simp]
 theorem map_add {X Y : C} {f g : X ⟶ Y} : F.map (f + g) = F.map f + F.map g :=
-  functor.additive.map_add'
+  Functor.Additive.map_add'
 #align category_theory.functor.map_add CategoryTheory.Functor.map_add
 
 /-- `F.map_add_hom` is an additive homomorphism whose underlying function is `F.map`. -/

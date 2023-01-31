@@ -58,7 +58,7 @@ end
 -/
 unsafe def by_contra' (h : parse (parser.optional ident))
     (t : parse (parser.optional (tk ":" *> texpr))) : tactic Unit := do
-  let h := h.getOrElse `this
+  let h := h.getD `this
   let tgt ← target
   mk_mapp `classical.by_contradiction [some tgt] >>= tactic.eapply
   let h₁ ← tactic.intro h

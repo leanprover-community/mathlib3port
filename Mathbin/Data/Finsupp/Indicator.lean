@@ -44,7 +44,7 @@ def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α
   support :=
     haveI := Classical.decEq α
     (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map (embedding.subtype _)
-  mem_support_to_fun i := by
+  mem_support_toFun i := by
     letI := Classical.decEq α
     rw [mem_map, dite_ne_right_iff]
     exact

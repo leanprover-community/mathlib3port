@@ -48,7 +48,7 @@ for a version giving an equivalence when there is decidable equality. -/
 @[simps]
 def getBijectionOfForallMemList (l : List α) (nd : l.Nodup) (h : ∀ x : α, x ∈ l) :
     { f : Fin l.length → α // Function.Bijective f } :=
-  ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext <| (nd.nth_le_inj_iff _ _).1 h, fun x =>
+  ⟨fun i => l.nthLe i i.property, fun i j h => Fin.ext <| (nd.nthLe_inj_iff _ _).1 h, fun x =>
     let ⟨i, hi, hl⟩ := List.mem_iff_nthLe.1 (h x)
     ⟨⟨i, hi⟩, hl⟩⟩
 #align list.nodup.nth_le_bijection_of_forall_mem_list List.Nodup.getBijectionOfForallMemList
@@ -98,7 +98,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α}, (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.263 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.265 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.263 x._@.Mathlib.Data.List.NodupEquivFin._hyg.265) l) -> (Monotone.{0, u1} (Fin (List.length.{u1} α l)) α (PartialOrder.toPreorder.{0} (Fin (List.length.{u1} α l)) (Fin.instPartialOrderFin (List.length.{u1} α l))) _inst_1 (List.get.{u1} α l))
 Case conversion may be inaccurate. Consider using '#align list.sorted.nth_le_mono List.Sorted.get_monoₓ'. -/
 theorem get_mono (h : l.Sorted (· ≤ ·)) : Monotone fun i : Fin l.length => l.nthLe i i.2 :=
-  fun i j => h.rel_nth_le_of_le _ _
+  fun i j => h.rel_nthLe_of_le _ _
 #align list.sorted.nth_le_mono List.Sorted.get_mono
 
 /- warning: list.sorted.nth_le_strict_mono -> List.Sorted.get_strictMono is a dubious translation:
@@ -108,7 +108,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α}, (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.298 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.300 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.298 x._@.Mathlib.Data.List.NodupEquivFin._hyg.300) l) -> (StrictMono.{0, u1} (Fin (List.length.{u1} α l)) α (PartialOrder.toPreorder.{0} (Fin (List.length.{u1} α l)) (Fin.instPartialOrderFin (List.length.{u1} α l))) _inst_1 (List.get.{u1} α l))
 Case conversion may be inaccurate. Consider using '#align list.sorted.nth_le_strict_mono List.Sorted.get_strictMonoₓ'. -/
 theorem get_strictMono (h : l.Sorted (· < ·)) : StrictMono fun i : Fin l.length => l.nthLe i i.2 :=
-  fun i j => h.rel_nth_le_of_lt _ _
+  fun i j => h.rel_nthLe_of_lt _ _
 #align list.sorted.nth_le_strict_mono List.Sorted.get_strictMono
 
 variable [DecidableEq α]
@@ -118,8 +118,8 @@ variable [DecidableEq α]
 `fin (length l)` and the set of elements of `l`. -/
 def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l }
     where
-  toEquiv := H.Nodup.nthLeEquiv l
-  map_rel_iff' i j := H.nth_le_strict_mono.le_iff_le
+  toEquiv := H.Nodup.getEquiv l
+  map_rel_iff' i j := H.get_strictMono.le_iff_le
 #align list.sorted.nth_le_iso List.Sorted.getIso
 -/
 
@@ -132,7 +132,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] (H : List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.456 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.458 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.456 x._@.Mathlib.Data.List.NodupEquivFin._hyg.458) l) {i : Fin (List.length.{u1} α l)}, Eq.{succ u1} α (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l) (FunLike.coe.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l))) (Fin (List.length.{u1} α l)) (fun (_x : Fin (List.length.{u1} α l)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin (List.length.{u1} α l)) => Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) _x) (EmbeddingLike.toFunLike.{succ u1, 1, succ u1} (Function.Embedding.{1, succ u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l))) (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Function.instEmbeddingLikeEmbedding.{1, succ u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)))) (RelEmbedding.toEmbedding.{0, u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (fun (a : Fin (List.length.{u1} α l)) (b : Fin (List.length.{u1} α l)) => LE.le.{0} (Fin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l)) a b) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) => LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{0, u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Fin (List.length.{u1} α l)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Fin (List.length.{u1} α l)) => LE.le.{0} (Fin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) => LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (List.Sorted.getIso.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) l H))) i)) (List.get.{u1} α l i)
 Case conversion may be inaccurate. Consider using '#align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_getIso_applyₓ'. -/
 @[simp]
-theorem coe_getIso_apply : (H.nthLeIso l i : α) = nthLe l i i.2 :=
+theorem coe_getIso_apply : (H.getIso l i : α) = nthLe l i i.2 :=
   rfl
 #align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_getIso_apply
 
@@ -143,7 +143,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {l : List.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] (H : List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.NodupEquivFin._hyg.513 : α) (x._@.Mathlib.Data.List.NodupEquivFin._hyg.515 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) x._@.Mathlib.Data.List.NodupEquivFin._hyg.513 x._@.Mathlib.Data.List.NodupEquivFin._hyg.515) l) {x : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)}, Eq.{1} Nat (Fin.val (List.length.{u1} α l) (FunLike.coe.{succ u1, succ u1, 1} (Function.Embedding.{succ u1, 1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Fin (List.length.{u1} α l))) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (fun (_x : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) => Fin (List.length.{u1} α l)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, 1} (Function.Embedding.{succ u1, 1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Fin (List.length.{u1} α l))) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Fin (List.length.{u1} α l)) (Function.instEmbeddingLikeEmbedding.{succ u1, 1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Fin (List.length.{u1} α l)))) (RelEmbedding.toEmbedding.{u1, 0} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Fin (List.length.{u1} α l)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) => LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Fin (List.length.{u1} α l)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Fin (List.length.{u1} α l)) => LE.le.{0} (Fin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u1, 0} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Fin (List.length.{u1} α l)) (fun (a : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (b : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) => LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) a b) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Fin (List.length.{u1} α l)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Fin (List.length.{u1} α l)) => LE.le.{0} (Fin (List.length.{u1} α l)) (instLEFin (List.length.{u1} α l)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (OrderIso.symm.{0, u1} (Fin (List.length.{u1} α l)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (instLEFin (List.length.{u1} α l)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α _inst_1) (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l)) (List.Sorted.getIso.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) l H)))) x)) (List.indexOf.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l) x) l)
 Case conversion may be inaccurate. Consider using '#align list.sorted.coe_nth_le_iso_symm_apply List.Sorted.coe_getIso_symm_applyₓ'. -/
 @[simp]
-theorem coe_getIso_symm_apply : ((H.nthLeIso l).symm x : ℕ) = indexOf (↑x) l :=
+theorem coe_getIso_symm_apply : ((H.getIso l).symm x : ℕ) = indexOf (↑x) l :=
   rfl
 #align list.sorted.coe_nth_le_iso_symm_apply List.Sorted.coe_getIso_symm_apply
 
@@ -162,7 +162,7 @@ any element of `l` found at index `ix` can be found at index `f ix` in `l'`,
 then `sublist l l'`.
 -/
 theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
-    (hf : ∀ ix : ℕ, l.nth ix = l'.nth (f ix)) : l <+ l' :=
+    (hf : ∀ ix : ℕ, l.get? ix = l'.get? (f ix)) : l <+ l' :=
   by
   induction' l with hd tl IH generalizing l' f
   · simp
@@ -172,7 +172,7 @@ theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
   let f' : ℕ ↪o ℕ :=
     OrderEmbedding.ofMapLeIff (fun i => f (i + 1) - (f 0 + 1)) fun a b => by
       simp [tsub_le_tsub_iff_right, Nat.succ_le_iff, Nat.lt_succ_iff]
-  have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).nth (f' ix) :=
+  have : ∀ ix, tl.nth ix = (l'.drop (f 0 + 1)).get? (f' ix) :=
     by
     intro ix
     simp [List.get?_drop, add_tsub_cancel_of_le, Nat.succ_le_iff, ← hf]
@@ -193,7 +193,7 @@ there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 -/
 theorem sublist_iff_exists_orderEmbedding_get?_eq {l l' : List α} :
-    l <+ l' ↔ ∃ f : ℕ ↪o ℕ, ∀ ix : ℕ, l.nth ix = l'.nth (f ix) :=
+    l <+ l' ↔ ∃ f : ℕ ↪o ℕ, ∀ ix : ℕ, l.get? ix = l'.get? (f ix) :=
   by
   constructor
   · intro H

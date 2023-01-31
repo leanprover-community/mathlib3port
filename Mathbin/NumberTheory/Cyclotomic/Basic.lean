@@ -328,7 +328,7 @@ theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : M
       have : { b : B | b ^ (n : ℕ) = 1 } = (nth_roots n (1 : B)).toFinset :=
         Set.ext fun x => ⟨fun h => by simpa using h, fun h => by simpa using h⟩
       rw [this]
-      exact (nth_roots (↑n) 1).toFinset.finite_to_set
+      exact (nth_roots (↑n) 1).toFinset.finite_toSet
     · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hb
       refine' ⟨X ^ (n : ℕ) - 1, ⟨monic_X_pow_sub_C _ n.pos.ne.symm, by simp [hb]⟩⟩
 #align is_cyclotomic_extension.finite_of_singleton IsCyclotomicExtension.finite_of_singleton
@@ -357,11 +357,11 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
 
 /-- A cyclotomic finite extension of a number field is a number field. -/
 theorem numberField [h : NumberField K] [Finite S] [IsCyclotomicExtension S K L] : NumberField L :=
-  { to_char_zero := charZero_of_injective_algebraMap (algebraMap K L).Injective
-    to_finite_dimensional :=
+  { to_charZero := charZero_of_injective_algebraMap (algebraMap K L).Injective
+    to_finiteDimensional :=
       @Module.Finite.trans _ K L _ _ _ _
         (@algebraRat L _ (charZero_of_injective_algebraMap (algebraMap K L).Injective)) _ _
-        h.to_finite_dimensional (Finite S K L) }
+        h.to_finiteDimensional (Finite S K L) }
 #align is_cyclotomic_extension.number_field IsCyclotomicExtension.numberField
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.numberField
@@ -462,7 +462,7 @@ variable {n S}
 
 /-- A cyclotomic extension splits `X ^ n - 1` if `n ∈ S`.-/
 theorem splits_x_pow_sub_one [H : IsCyclotomicExtension S K L] (hS : n ∈ S) :
-    Splits (algebraMap K L) (X ^ (n : ℕ) - 1) :=
+    Splits (algebraMap K L) (x ^ (n : ℕ) - 1) :=
   by
   rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_one, Polynomial.map_pow,
     Polynomial.map_x]
@@ -486,7 +486,7 @@ section Singleton
 variable [IsCyclotomicExtension {n} K L]
 
 /-- If `is_cyclotomic_extension {n} K L`, then `L` is the splitting field of `X ^ n - 1`. -/
-theorem splitting_field_x_pow_sub_one : IsSplittingField K L (X ^ (n : ℕ) - 1) :=
+theorem splitting_field_x_pow_sub_one : IsSplittingField K L (x ^ (n : ℕ) - 1) :=
   { Splits := splits_x_pow_sub_one K L (mem_singleton n)
     adjoin_roots := by
       rw [← ((iff_adjoin_eq_top {n} K L).1 inferInstance).2]
@@ -611,7 +611,7 @@ def algebraBase : Algebra A (CyclotomicRing n A K) :=
 attribute [local instance] CyclotomicRing.algebraBase
 
 instance : NoZeroSMulDivisors A (CyclotomicRing n A K) :=
-  (adjoin A _).no_zero_smul_divisors_bot
+  (adjoin A _).noZeroSMulDivisors_bot
 
 theorem algebraBase_injective : Function.Injective <| algebraMap A (CyclotomicRing n A K) :=
   NoZeroSMulDivisors.algebraMap_injective _ _

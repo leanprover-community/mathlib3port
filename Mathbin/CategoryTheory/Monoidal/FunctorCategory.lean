@@ -104,11 +104,11 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D)
       by
       dsimp
       rw [associator_naturality]
-  left_unitor_naturality' F G α := by
+  leftUnitor_naturality' F G α := by
     ext X
     dsimp
     rw [left_unitor_naturality]
-  right_unitor_naturality' F G α := by
+  rightUnitor_naturality' F G α := by
     ext X
     dsimp
     rw [right_unitor_naturality]

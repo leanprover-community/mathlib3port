@@ -165,7 +165,7 @@ def land : Num → Num → Num
 def ldiff : Num → Num → Num
   | 0, q => 0
   | p, 0 => p
-  | Pos p, Pos q => p.ldiff q
+  | Pos p, Pos q => p.ldiff' q
 #align num.ldiff Num.ldiff
 -/
 
@@ -174,7 +174,7 @@ def ldiff : Num → Num → Num
 def lxor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => p.lxor q
+  | Pos p, Pos q => p.lxor' q
 #align num.lxor Num.lxor
 -/
 
@@ -425,7 +425,7 @@ open NzsNum
 /-- The `head` of a `snum` is the boolean value of its LSB. -/
 def head : SNum → Bool
   | zero z => z
-  | nz p => p.head
+  | nz p => p.headI
 #align snum.head SNum.head
 -/
 
@@ -468,7 +468,7 @@ def testBit : Nat → SNum → Bool
 #print SNum.succ /-
 /-- The successor of a `snum` (i.e. the operation adding one). -/
 def succ : SNum → SNum :=
-  rec' (fun b => cond b 0 1) fun b p succp => cond b (ff::succp) (tt::p)
+  rec' (fun b => cond b 0 1) fun b p succp => cond b (false::succp) (true::p)
 #align snum.succ SNum.succ
 -/
 
@@ -479,7 +479,7 @@ def succ : SNum → SNum :=
 #print SNum.pred /-
 /-- The predecessor of a `snum` (i.e. the operation of removing one). -/
 def pred : SNum → SNum :=
-  rec' (fun b => cond b (~1) (~0)) fun b p predp => cond b (ff::p) (tt::predp)
+  rec' (fun b => cond b (~1) (~0)) fun b p predp => cond b (false::p) (true::predp)
 #align snum.pred SNum.pred
 -/
 

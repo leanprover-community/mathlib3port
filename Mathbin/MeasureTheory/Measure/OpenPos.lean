@@ -124,7 +124,7 @@ variable (μ)
 
 theorem Continuous.ae_eq_iff_eq {f g : X → Y} (hf : Continuous f) (hg : Continuous g) :
     f =ᵐ[μ] g ↔ f = g :=
-  ⟨fun h => eq_of_ae_eq h hf hg, fun h => h ▸ eventually_eq.rfl⟩
+  ⟨fun h => eq_of_ae_eq h hf hg, fun h => h ▸ EventuallyEq.rfl⟩
 #align continuous.ae_eq_iff_eq Continuous.ae_eq_iff_eq
 
 end Basic

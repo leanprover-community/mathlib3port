@@ -339,7 +339,7 @@ See also the stronger version `submodule.smith_normal_form`.
 -/
 noncomputable def Submodule.basisOfPid {ι : Type _} [Finite ι] (b : Basis ι R M)
     (N : Submodule R M) : Σn : ℕ, Basis (Fin n) R N :=
-  ⟨_, (N.nonempty_basis_of_pid b).some_spec.some⟩
+  ⟨_, (N.nonempty_basis_of_pid b).choose_spec.some⟩
 #align submodule.basis_of_pid Submodule.basisOfPid
 
 theorem Submodule.basisOfPid_bot {ι : Type _} [Finite ι] (b : Basis ι R M) :
@@ -432,7 +432,7 @@ noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree' [Module.Finite R M] [NoZeroSMulDivisors R M] :
     Σn : ℕ, Basis (Fin n) R M :=
-  Module.freeOfFiniteTypeTorsionFree Module.Finite.exists_fin.some_spec.some_spec
+  Module.freeOfFiniteTypeTorsionFree Module.Finite.exists_fin.choose_spec.choose_spec
 #align module.free_of_finite_type_torsion_free' Module.freeOfFiniteTypeTorsionFree'
 
 section SmithNormal
@@ -593,7 +593,7 @@ see `ideal.smith_coeffs` for the entries of the diagonal matrix
 and `ideal.self_basis_def` for the proof that the inclusion map forms a square diagonal matrix.
 -/
 noncomputable def Ideal.selfBasis (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : Basis ι R I :=
-  (Ideal.exists_smith_normal_form b I hI).some_spec.some_spec.some
+  (Ideal.exists_smith_normal_form b I hI).choose_spec.choose_spec.some
 #align ideal.self_basis Ideal.selfBasis
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
@@ -605,7 +605,7 @@ see `ideal.self_basis` for the basis on `I`,
 and `ideal.self_basis_def` for the proof that the inclusion map forms a square diagonal matrix.
 -/
 noncomputable def Ideal.smithCoeffs (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : ι → R :=
-  (Ideal.exists_smith_normal_form b I hI).some_spec.some
+  (Ideal.exists_smith_normal_form b I hI).choose_spec.some
 #align ideal.smith_coeffs Ideal.smithCoeffs
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
@@ -616,7 +616,7 @@ matrix.
 @[simp]
 theorem Ideal.selfBasis_def (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) :
     ∀ i, (Ideal.selfBasis b I hI i : S) = Ideal.smithCoeffs b I hI i • Ideal.ringBasis b I hI i :=
-  (Ideal.exists_smith_normal_form b I hI).some_spec.some_spec.some_spec
+  (Ideal.exists_smith_normal_form b I hI).choose_spec.choose_spec.choose_spec
 #align ideal.self_basis_def Ideal.selfBasis_def
 
 @[simp]

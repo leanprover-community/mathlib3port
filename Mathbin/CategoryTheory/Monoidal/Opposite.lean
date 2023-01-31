@@ -185,11 +185,11 @@ instance monoidalCategoryOp : MonoidalCategory Cᵒᵖ
     intros
     apply Quiver.Hom.unop_inj
     simp
-  left_unitor_naturality' := by
+  leftUnitor_naturality' := by
     intros
     apply Quiver.Hom.unop_inj
     simp
-  right_unitor_naturality' := by
+  rightUnitor_naturality' := by
     intros
     apply Quiver.Hom.unop_inj
     simp
@@ -227,11 +227,11 @@ instance monoidalCategoryMop : MonoidalCategory Cᴹᵒᵖ
     intros
     apply unmop_inj
     simp
-  left_unitor_naturality' := by
+  leftUnitor_naturality' := by
     intros
     apply unmop_inj
     simp
-  right_unitor_naturality' := by
+  rightUnitor_naturality' := by
     intros
     apply unmop_inj
     simp

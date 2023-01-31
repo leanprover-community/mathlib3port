@@ -288,7 +288,7 @@ alias boundedSpace_val_set_iff ↔ _ Bornology.IsBounded.boundedSpace_val
 #align bornology.is_bounded.bounded_space_coe Bornology.IsBounded.boundedSpace_val
 
 instance [BoundedSpace α] {p : α → Prop} : BoundedSpace (Subtype p) :=
-  (IsBounded.all { x | p x }).bounded_space_subtype
+  (IsBounded.all { x | p x }).boundedSpace_subtype
 
 /-!
 ### `additive`, `multiplicative`

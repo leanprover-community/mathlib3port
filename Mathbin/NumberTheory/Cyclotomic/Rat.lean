@@ -148,7 +148,7 @@ theorem cyclotomicRing_isIntegralClosure_of_prime_pow :
     · exact NeZero.charZero
   have hζ := zeta_spec (p ^ k) ℚ (CyclotomicField (p ^ k) ℚ)
   refine' ⟨IsFractionRing.injective _ _, fun x => ⟨fun h => ⟨⟨x, _⟩, rfl⟩, _⟩⟩
-  · have := (is_integral_closure_adjoin_singleton_of_prime_pow hζ).is_integral_iff
+  · have := (is_integral_closure_adjoin_singleton_of_prime_pow hζ).isIntegral_iff
     obtain ⟨y, rfl⟩ := this.1 h
     convert adjoin_mono _ y.2
     · simp only [eq_iff_true_of_subsingleton]
@@ -192,7 +192,7 @@ noncomputable def IsPrimitiveRoot.adjoinEquivRingOfIntegers
 /-- The ring of integers of a `p ^ k`-th cyclotomic extension of `ℚ` is a cyclotomic extension. -/
 instance IsCyclotomicExtension.ringOfIntegers [IsCyclotomicExtension {p ^ k} ℚ K] :
     IsCyclotomicExtension {p ^ k} ℤ (𝓞 K) :=
-  let _ := (zeta_spec (p ^ k) ℚ K).adjoin_is_cyclotomic_extension ℤ
+  let _ := (zeta_spec (p ^ k) ℚ K).adjoin_isCyclotomicExtension ℤ
   IsCyclotomicExtension.equiv _ ℤ _ (zeta_spec (p ^ k) ℚ K).adjoinEquivRingOfIntegers
 #align is_cyclotomic_extension.ring_of_integers IsCyclotomicExtension.ringOfIntegers
 
@@ -231,7 +231,7 @@ noncomputable def IsPrimitiveRoot.adjoinEquivRingOfIntegers' [hcycl : IsCyclotom
 /-- The ring of integers of a `p`-th cyclotomic extension of `ℚ` is a cyclotomic extension. -/
 instance IsCyclotomicExtension.ring_of_integers' [IsCyclotomicExtension {p} ℚ K] :
     IsCyclotomicExtension {p} ℤ (𝓞 K) :=
-  let _ := (zeta_spec p ℚ K).adjoin_is_cyclotomic_extension ℤ
+  let _ := (zeta_spec p ℚ K).adjoin_isCyclotomicExtension ℤ
   IsCyclotomicExtension.equiv _ ℤ _ (zeta_spec p ℚ K).adjoinEquivRingOfIntegers'
 #align is_cyclotomic_extension.ring_of_integers' IsCyclotomicExtension.ring_of_integers'
 
@@ -272,7 +272,7 @@ extension of `ℚ`. -/
 noncomputable def subOneIntegralPowerBasis [IsCyclotomicExtension {p ^ k} ℚ K]
     (hζ : IsPrimitiveRoot ζ ↑(p ^ k)) : PowerBasis ℤ (𝓞 K) :=
   PowerBasis.ofGenMemAdjoin' hζ.integralPowerBasis
-    (is_integral_of_mem_ring_of_integers <|
+    (isIntegral_of_mem_ringOfIntegers <|
       Subalgebra.sub_mem _ (hζ.IsIntegral (p ^ k).Pos) (Subalgebra.one_mem _))
     (by
       simp only [integral_power_basis_gen]

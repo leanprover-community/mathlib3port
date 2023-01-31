@@ -257,8 +257,7 @@ theorem div_div_div_eq_div : ∀ {a b c : ℕ} (dvd : b ∣ a) (dvd2 : a ∣ c),
 /-- If a small natural number is divisible by a larger natural number,
 the small number is zero. -/
 theorem eq_zero_of_dvd_of_lt {a b : ℕ} (w : a ∣ b) (h : b < a) : b = 0 :=
-  Nat.eq_zero_of_dvd_of_div_eq_zero w
-    ((Nat.div_eq_zero_iff (lt_of_le_of_lt (zero_le b) h)).elimRight h)
+  Nat.eq_zero_of_dvd_of_div_eq_zero w ((Nat.div_eq_zero_iff (lt_of_le_of_lt (zero_le b) h)).right h)
 #align nat.eq_zero_of_dvd_of_lt Nat.eq_zero_of_dvd_of_lt
 -/
 

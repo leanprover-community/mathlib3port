@@ -107,7 +107,7 @@ theorem Filtration.adapted_natural [MetrizableSpace β] [mβ : MeasurableSpace �
   intro i
   refine' strongly_measurable.mono _ (le_supᵢ₂_of_le i (le_refl i) le_rfl)
   rw [stronglyMeasurable_iff_measurable_separable]
-  exact ⟨measurable_iff_comap_le.2 le_rfl, (hum i).is_separable_range⟩
+  exact ⟨measurable_iff_comap_le.2 le_rfl, (hum i).isSeparable_range⟩
 #align measure_theory.filtration.adapted_natural MeasureTheory.Filtration.adapted_natural
 
 /-- Progressively measurable process. A sequence of functions `u` is said to be progressively
@@ -232,7 +232,7 @@ See `prog_measurable.adapted` for the reverse direction, which is true more gene
 theorem Adapted.progMeasurable_of_discrete [TopologicalSpace ι] [DiscreteTopology ι]
     [SecondCountableTopology ι] [MeasurableSpace ι] [OpensMeasurableSpace ι]
     [PseudoMetrizableSpace β] (h : Adapted f u) : ProgMeasurable f u :=
-  h.prog_measurable_of_continuous fun _ => continuous_of_discreteTopology
+  h.progMeasurable_of_continuous fun _ => continuous_of_discreteTopology
 #align measure_theory.adapted.prog_measurable_of_discrete MeasureTheory.Adapted.progMeasurable_of_discrete
 
 -- this dot notation will make more sense once we have a more general definition for predictable

@@ -58,7 +58,7 @@ def free : Type u ⥤ ModuleCat R
 def adj : free R ⊣ forget (ModuleCat.{u} R) :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X M => (Finsupp.lift M R X).toEquiv.symm
-      hom_equiv_naturality_left_symm' := fun _ _ M f g =>
+      homEquiv_naturality_left_symm' := fun _ _ M f g =>
         Finsupp.lhom_ext' fun x =>
           LinearMap.ext_ring
             (Finsupp.sum_mapDomain_index_addMonoidHom fun y => (smulAddHom R M).flip (g y)).symm }
@@ -177,10 +177,10 @@ def monoidalFree : MonoidalFunctor (Type u) (ModuleCat.{u} R) :=
   {
     LaxMonoidalFunctor.of
       (free R).obj with
-    ε_is_iso := by
+    ε_isIso := by
       dsimp
       infer_instance
-    μ_is_iso := fun X Y => by
+    μ_isIso := fun X Y => by
       dsimp
       infer_instance }
 #align Module.monoidal_free ModuleCat.monoidalFree

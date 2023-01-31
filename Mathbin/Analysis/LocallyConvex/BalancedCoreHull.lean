@@ -76,7 +76,7 @@ def balancedHull (s : Set E) :=
 variable {𝕜}
 
 theorem balancedCore_subset (s : Set E) : balancedCore 𝕜 s ⊆ s :=
-  sUnion_subset fun t ht => ht.2
+  unionₛ_subset fun t ht => ht.2
 #align balanced_core_subset balancedCore_subset
 
 theorem balancedCore_empty : balancedCore 𝕜 (∅ : Set E) = ∅ :=
@@ -107,11 +107,11 @@ theorem Balanced.subset_core_of_subset (hs : Balanced 𝕜 s) (h : s ⊆ t) : s 
 #align balanced.subset_core_of_subset Balanced.subset_core_of_subset
 
 theorem mem_balancedCoreAux_iff : x ∈ balancedCoreAux 𝕜 s ↔ ∀ r : 𝕜, 1 ≤ ‖r‖ → x ∈ r • s :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align mem_balanced_core_aux_iff mem_balancedCoreAux_iff
 
 theorem mem_balancedHull_iff : x ∈ balancedHull 𝕜 s ↔ ∃ (r : 𝕜)(hr : ‖r‖ ≤ 1), x ∈ r • s :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align mem_balanced_hull_iff mem_balancedHull_iff
 
 /-- The balanced hull of `s` is minimal in the sense that it is contained in any balanced superset
@@ -284,7 +284,7 @@ theorem nhds_basis_closed_balanced [RegularSpace E] :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ IsClosed s ∧ Balanced 𝕜 s) id :=
   by
   refine'
-    (closed_nhds_basis 0).to_has_basis (fun s hs => _) fun s hs => ⟨s, ⟨hs.1, hs.2.1⟩, rfl.subset⟩
+    (closed_nhds_basis 0).to_hasBasis (fun s hs => _) fun s hs => ⟨s, ⟨hs.1, hs.2.1⟩, rfl.subset⟩
   refine' ⟨balancedCore 𝕜 s, ⟨balancedCore_mem_nhds_zero hs.1, _⟩, balancedCore_subset s⟩
   exact ⟨hs.2.balancedCore, balancedCore_balanced s⟩
 #align nhds_basis_closed_balanced nhds_basis_closed_balanced

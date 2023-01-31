@@ -204,7 +204,7 @@ theorem compExactValue_correctness_of_stream_eq_some :
       ac_rfl
 #align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some
 
-open GeneralizedContinuedFraction (of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none)
+open GeneralizedContinuedFraction (of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none)
 
 /-- The convergent of `generalized_continued_fraction.of v` at step `n - 1` is exactly `v` if the
 `int_fract_pair.stream` of the corresponding continued fraction terminated at step `n`. -/
@@ -242,7 +242,7 @@ exactly `v`.
 theorem of_correctness_of_terminatedAt (terminated_at_n : (of v).TerminatedAt n) :
     v = (of v).convergents n :=
   have : IntFractPair.stream v (n + 1) = none :=
-    of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.elimLeft terminated_at_n
+    of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.left terminated_at_n
   of_correctness_of_nth_stream_eq_none this
 #align generalized_continued_fraction.of_correctness_of_terminated_at GeneralizedContinuedFraction.of_correctness_of_terminatedAt
 
@@ -261,7 +261,7 @@ open Filter
 be `v`.
 -/
 theorem of_correctness_atTop_of_terminates (terminates : (of v).Terminates) :
-    ∀ᶠ n in at_top, v = (of v).convergents n :=
+    ∀ᶠ n in atTop, v = (of v).convergents n :=
   by
   rw [eventually_at_top]
   obtain ⟨n, terminated_at_n⟩ : ∃ n, (of v).TerminatedAt n

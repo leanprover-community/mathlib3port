@@ -64,9 +64,9 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   obtain ⟨S, hS, h⟩ := hB.open_eq_sUnion hU.1
   clear hB
   let j : S → J := fun s => (hS s.2).some
-  let V : ∀ s : S, Set (F.obj (j s)) := fun s => (hS s.2).some_spec.some
+  let V : ∀ s : S, Set (F.obj (j s)) := fun s => (hS s.2).choose_spec.some
   have hV : ∀ s : S, IsClopen (V s) ∧ s.1 = C.π.app (j s) ⁻¹' V s := fun s =>
-    (hS s.2).some_spec.some_spec
+    (hS s.2).choose_spec.choose_spec
   -- Since `U` is also closed, hence compact, it is covered by finitely many of the
   -- clopens constructed in the previous step.
   have := hU.2.IsCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) _ _

@@ -157,7 +157,7 @@ theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
 
 @[to_additive]
 instance : InvolutiveInv (Submonoid G) :=
-  SetLike.coe_injective.HasInvolutiveInv _ fun _ => rfl
+  SetLike.coe_injective.InvolutiveInv _ fun _ => rfl
 
 @[simp, to_additive]
 theorem inv_le_inv (S T : Submonoid G) : S⁻¹ ≤ T⁻¹ ↔ S ≤ T :=
@@ -217,13 +217,13 @@ theorem inv_top : (⊤ : Submonoid G)⁻¹ = ⊤ :=
 
 @[simp, to_additive]
 theorem inv_infᵢ {ι : Sort _} (S : ι → Submonoid G) : (⨅ i, S i)⁻¹ = ⨅ i, (S i)⁻¹ :=
-  (invOrderIso : Submonoid G ≃o Submonoid G).map_infi _
+  (invOrderIso : Submonoid G ≃o Submonoid G).map_infᵢ _
 #align submonoid.inv_infi Submonoid.inv_infᵢ
 #align add_submonoid.neg_infi AddSubmonoid.neg_infi
 
 @[simp, to_additive]
 theorem inv_supᵢ {ι : Sort _} (S : ι → Submonoid G) : (⨆ i, S i)⁻¹ = ⨆ i, (S i)⁻¹ :=
-  (invOrderIso : Submonoid G ≃o Submonoid G).map_supr _
+  (invOrderIso : Submonoid G ≃o Submonoid G).map_supᵢ _
 #align submonoid.inv_supr Submonoid.inv_supᵢ
 #align add_submonoid.neg_supr AddSubmonoid.neg_supᵢ
 

@@ -47,7 +47,7 @@ protected irreducible_def lim :=
 #align subadditive.lim Subadditive.lim
 
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
-    h.lim ≤ u n / n := by
+    h.limUnder ≤ u n / n := by
   rw [Subadditive.lim]
   apply cinfₛ_le _ _
   · rcases hbdd with ⟨c, hc⟩
@@ -71,7 +71,7 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
 #align subadditive.apply_mul_add_le Subadditive.apply_mul_add_le
 
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) :
-    ∀ᶠ p in at_top, u p / p < L :=
+    ∀ᶠ p in atTop, u p / p < L :=
   by
   have I : ∀ i : ℕ, 0 < i → (i : ℝ) ≠ 0 := by
     intro i hi
@@ -123,7 +123,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
-    Tendsto (fun n => u n / n) atTop (𝓝 h.lim) :=
+    Tendsto (fun n => u n / n) atTop (𝓝 h.limUnder) :=
   by
   refine' tendsto_order.2 ⟨fun l hl => _, fun L hL => _⟩
   ·

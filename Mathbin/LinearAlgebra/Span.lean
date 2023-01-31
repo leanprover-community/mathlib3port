@@ -58,7 +58,7 @@ end
 variable {s t : Set M}
 
 theorem mem_span : x ∈ span R s ↔ ∀ p : Submodule R M, s ⊆ p → x ∈ p :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align submodule.mem_span Submodule.mem_span
 
 theorem subset_span : s ⊆ span R s := fun x h => mem_span.2 fun p hp => hp h
@@ -241,18 +241,18 @@ theorem span_union (s t : Set M) : span R (s ∪ t) = span R s ⊔ span R t :=
 #align submodule.span_union Submodule.span_union
 
 theorem span_unionᵢ {ι} (s : ι → Set M) : span R (⋃ i, s i) = ⨆ i, span R (s i) :=
-  (Submodule.gi R M).gc.l_supr
+  (Submodule.gi R M).gc.l_supᵢ
 #align submodule.span_Union Submodule.span_unionᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem span_Union₂ {ι} {κ : ι → Sort _} (s : ∀ i, κ i → Set M) :
     span R (⋃ (i) (j), s i j) = ⨆ (i) (j), span R (s i j) :=
-  (Submodule.gi R M).gc.l_supr₂
+  (Submodule.gi R M).gc.l_supᵢ₂
 #align submodule.span_Union₂ Submodule.span_Union₂
 
 theorem span_attach_bunionᵢ [DecidableEq M] {α : Type _} (s : Finset α) (f : s → Finset M) :
-    span R (s.attach.bUnion f : Set M) = ⨆ x, span R (f x) := by simpa [span_Union]
+    span R (s.attach.bunionᵢ f : Set M) = ⨆ x, span R (f x) := by simpa [span_Union]
 #align submodule.span_attach_bUnion Submodule.span_attach_bunionᵢ
 
 theorem sup_span : p ⊔ span R s = span R (p ∪ s) := by rw [Submodule.span_union, p.span_eq]
@@ -614,7 +614,7 @@ theorem not_mem_span_of_apply_not_mem_span_image [RingHomSurjective σ₁₂] (f
 
 theorem supᵢ_span {ι : Sort _} (p : ι → Set M) : (⨆ i, span R (p i)) = span R (⋃ i, p i) :=
   le_antisymm (supᵢ_le fun i => span_mono <| subset_unionᵢ _ i) <|
-    span_le.mpr <| Union_subset fun i m hm => mem_supᵢ_of_mem i <| subset_span hm
+    span_le.mpr <| unionᵢ_subset fun i m hm => mem_supᵢ_of_mem i <| subset_span hm
 #align submodule.supr_span Submodule.supᵢ_span
 
 theorem supᵢ_eq_span {ι : Sort _} (p : ι → Submodule R M) : (⨆ i, p i) = span R (⋃ i, ↑(p i)) := by

@@ -998,7 +998,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.has_mul Subgr
 /-- A subgroup of a group inherits a multiplication. -/
 @[to_additive "An `add_subgroup` of an `add_group` inherits an addition."]
 instance mul : Mul H :=
-  H.toSubmonoid.HasMul
+  H.toSubmonoid.Mul
 #align subgroup.has_mul Subgroup.mul
 #align add_subgroup.has_add AddSubgroup.add
 
@@ -1011,7 +1011,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.has_one Subgr
 /-- A subgroup of a group inherits a 1. -/
 @[to_additive "An `add_subgroup` of an `add_group` inherits a zero."]
 instance one : One H :=
-  H.toSubmonoid.HasOne
+  H.toSubmonoid.One
 #align subgroup.has_one Subgroup.one
 #align add_subgroup.has_zero AddSubgroup.zero
 
@@ -1768,7 +1768,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.mem_closure Subgroup.mem_closureₓ'. -/
 @[to_additive]
 theorem mem_closure {x : G} : x ∈ closure k ↔ ∀ K : Subgroup G, k ⊆ K → x ∈ K :=
-  mem_Inf
+  mem_infₛ
 #align subgroup.mem_closure Subgroup.mem_closure
 #align add_subgroup.mem_closure AddSubgroup.mem_closure
 
@@ -2021,7 +2021,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.closure_Union Subgroup.closure_unionᵢₓ'. -/
 @[to_additive]
 theorem closure_unionᵢ {ι} (s : ι → Set G) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Subgroup.gi G).gc.l_supr
+  (Subgroup.gi G).gc.l_supᵢ
 #align subgroup.closure_Union Subgroup.closure_unionᵢ
 #align add_subgroup.closure_Union AddSubgroup.closure_unionᵢ
 
@@ -2459,7 +2459,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.map_supr Subg
 @[to_additive]
 theorem map_supᵢ {ι : Sort _} (f : G →* N) (s : ι → Subgroup G) :
     (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supr
+  (gc_map_comap f).l_supᵢ
 #align subgroup.map_supr Subgroup.map_supᵢ
 #align add_subgroup.map_supr AddSubgroup.map_supᵢ
 
@@ -2510,7 +2510,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.comap_infi Su
 @[to_additive]
 theorem comap_infᵢ {ι : Sort _} (f : G →* N) (s : ι → Subgroup N) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infi
+  (gc_map_comap f).u_infᵢ
 #align subgroup.comap_infi Subgroup.comap_infᵢ
 #align add_subgroup.comap_infi AddSubgroup.comap_infᵢ
 
@@ -3856,7 +3856,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.subgroup_of_is_commutative Subgroup.subgroupOf_isCommutativeₓ'. -/
 @[to_additive]
 instance subgroupOf_isCommutative [H.IsCommutative] : (H.subgroupOf K).IsCommutative :=
-  H.comap_injective_is_commutative Subtype.coe_injective
+  H.comap_injective_isCommutative Subtype.coe_injective
 #align subgroup.subgroup_of_is_commutative Subgroup.subgroupOf_isCommutative
 #align add_subgroup.add_subgroup_of_is_commutative AddSubgroup.addSubgroupOf_isCommutative
 
@@ -4149,7 +4149,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.normal_le_normal_core Subgroup.normal_le_normalCoreₓ'. -/
 theorem normal_le_normalCore {H : Subgroup G} {N : Subgroup G} [hN : N.Normal] :
     N ≤ H.normalCore ↔ N ≤ H :=
-  ⟨ge_trans H.normal_core_le, fun h_le n hn g => h_le (hN.conj_mem n hn g)⟩
+  ⟨ge_trans H.normalCore_le, fun h_le n hn g => h_le (hN.conj_mem n hn g)⟩
 #align subgroup.normal_le_normal_core Subgroup.normal_le_normalCore
 
 /- warning: subgroup.normal_core_mono -> Subgroup.normalCore_mono is a dubious translation:
@@ -4159,7 +4159,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) H K) -> (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Subgroup.normalCore.{u1} G _inst_1 H) (Subgroup.normalCore.{u1} G _inst_1 K))
 Case conversion may be inaccurate. Consider using '#align subgroup.normal_core_mono Subgroup.normalCore_monoₓ'. -/
 theorem normalCore_mono {H K : Subgroup G} (h : H ≤ K) : H.normalCore ≤ K.normalCore :=
-  normal_le_normalCore.mpr (H.normal_core_le.trans h)
+  normal_le_normalCore.mpr (H.normalCore_le.trans h)
 #align subgroup.normal_core_mono Subgroup.normalCore_mono
 
 /- warning: subgroup.normal_core_eq_supr -> Subgroup.normalCore_eq_supᵢ is a dubious translation:
@@ -4172,21 +4172,21 @@ theorem normalCore_eq_supᵢ (H : Subgroup G) :
     H.normalCore = ⨆ (N : Subgroup G) (_ : Normal N) (hs : N ≤ H), N :=
   le_antisymm
     (le_supᵢ_of_le H.normalCore
-      (le_supᵢ_of_le H.normal_core_normal (le_supᵢ_of_le H.normal_core_le le_rfl)))
+      (le_supᵢ_of_le H.normalCore_normal (le_supᵢ_of_le H.normalCore_le le_rfl)))
     (supᵢ_le fun N => supᵢ_le fun hN => supᵢ_le normal_le_normal_core.mpr)
 #align subgroup.normal_core_eq_supr Subgroup.normalCore_eq_supᵢ
 
 #print Subgroup.normalCore_eq_self /-
 @[simp]
 theorem normalCore_eq_self (H : Subgroup G) [H.Normal] : H.normalCore = H :=
-  le_antisymm H.normal_core_le (normal_le_normalCore.mpr le_rfl)
+  le_antisymm H.normalCore_le (normal_le_normalCore.mpr le_rfl)
 #align subgroup.normal_core_eq_self Subgroup.normalCore_eq_self
 -/
 
 #print Subgroup.normalCore_idempotent /-
 @[simp]
 theorem normalCore_idempotent (H : Subgroup G) : H.normalCore.normalCore = H.normalCore :=
-  H.normalCore.normal_core_eq_self
+  H.normalCore.normalCore_eq_self
 #align subgroup.normal_core_idempotent Subgroup.normalCore_idempotent
 -/
 
@@ -4303,7 +4303,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.subtype_comp_range_restrict MonoidHom.subtype_comp_rangeRestrictₓ'. -/
 @[to_additive]
 theorem subtype_comp_rangeRestrict (f : G →* N) : f.range.Subtype.comp f.range_restrict = f :=
-  ext <| f.coe_range_restrict
+  ext <| f.coe_rangeRestrict
 #align monoid_hom.subtype_comp_range_restrict MonoidHom.subtype_comp_rangeRestrict
 #align add_monoid_hom.subtype_comp_range_restrict AddMonoidHom.subtype_comp_rangeRestrict
 
@@ -4795,7 +4795,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_of_eq_on_dense MonoidHom.eq_of_eqOn_denseₓ'. -/
 @[to_additive]
 theorem eq_of_eqOn_dense {s : Set G} (hs : closure s = ⊤) {f g : G →* M} (h : s.EqOn f g) : f = g :=
-  eq_of_eq_on_top <| hs ▸ eqOn_closure h
+  eq_of_eqOn_top <| hs ▸ eqOn_closure h
 #align monoid_hom.eq_of_eq_on_dense MonoidHom.eq_of_eqOn_dense
 #align add_monoid_hom.eq_of_eq_on_dense AddMonoidHom.eq_of_eqOn_dense
 
@@ -5500,7 +5500,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.lift_of_rig
 theorem liftOfRightInverse_comp_apply (hf : Function.RightInverse f_inv f)
     (g : { g : G₁ →* G₃ // f.ker ≤ g.ker }) (x : G₁) :
     (f.liftOfRightInverse f_inv hf g) (f x) = g x :=
-  f.lift_of_right_inverse_aux_comp_apply f_inv hf g.1 g.2 x
+  f.liftOfRightInverseAux_comp_apply f_inv hf g.1 g.2 x
 #align monoid_hom.lift_of_right_inverse_comp_apply MonoidHom.liftOfRightInverse_comp_apply
 #align add_monoid_hom.lift_of_right_inverse_comp_apply AddMonoidHom.liftOfRightInverse_comp_apply
 
@@ -5513,7 +5513,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.lift_of_rig
 @[simp, to_additive]
 theorem liftOfRightInverse_comp (hf : Function.RightInverse f_inv f)
     (g : { g : G₁ →* G₃ // f.ker ≤ g.ker }) : (f.liftOfRightInverse f_inv hf g).comp f = g :=
-  MonoidHom.ext <| f.lift_of_right_inverse_comp_apply f_inv hf g
+  MonoidHom.ext <| f.liftOfRightInverse_comp_apply f_inv hf g
 #align monoid_hom.lift_of_right_inverse_comp MonoidHom.liftOfRightInverse_comp
 #align add_monoid_hom.lift_of_right_inverse_comp AddMonoidHom.liftOfRightInverse_comp
 
@@ -5619,7 +5619,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.subgroup_ma
 @[to_additive]
 theorem subgroupMap_surjective (f : G →* G') (H : Subgroup G) :
     Function.Surjective (f.subgroupMap H) :=
-  f.submonoid_map_surjective H.toSubmonoid
+  f.submonoidMap_surjective H.toSubmonoid
 #align monoid_hom.subgroup_map_surjective MonoidHom.subgroupMap_surjective
 #align add_monoid_hom.add_subgroup_map_surjective AddMonoidHom.addSubgroupMap_surjective
 

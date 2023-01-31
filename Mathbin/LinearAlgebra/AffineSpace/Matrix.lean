@@ -136,8 +136,8 @@ theorem toMatrix_mul_toMatrix : b.toMatrix b₂.points ⬝ b₂.toMatrix b.point
 theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂.points) :=
   ⟨{  val := b.toMatrix b₂.points
       inv := b₂.toMatrix b.points
-      val_inv := b.to_matrix_mul_to_matrix b₂
-      inv_val := b₂.to_matrix_mul_to_matrix b }, rfl⟩
+      val_inv := b.toMatrix_mul_toMatrix b₂
+      inv_val := b₂.toMatrix_mul_toMatrix b }, rfl⟩
 #align affine_basis.is_unit_to_matrix AffineBasis.isUnit_toMatrix
 
 theorem isUnit_toMatrix_iff [Nontrivial k] (p : ι → P) :

@@ -121,7 +121,7 @@ structure Bimod (A B : Mon_ C) where
   left_assoc' : (A.mul ⊗ 𝟙 X) ≫ act_left = (α_ A.x A.x X).Hom ≫ (𝟙 A.x ⊗ act_left) ≫ act_left := by
     obviously
   actRight : X ⊗ B.x ⟶ X
-  act_right_one' : (𝟙 X ⊗ B.one) ≫ act_right = (ρ_ X).Hom := by obviously
+  actRight_one' : (𝟙 X ⊗ B.one) ≫ act_right = (ρ_ X).Hom := by obviously
   right_assoc' :
     (𝟙 X ⊗ B.mul) ≫ act_right = (α_ X B.x B.x).inv ≫ (act_right ⊗ 𝟙 B.x) ≫ act_right := by obviously
   middle_assoc' :
@@ -444,7 +444,7 @@ noncomputable def tensorBimod {X Y Z : Mon_ C} (M : Bimod X Y) (N : Bimod Y Z) :
   actLeft := TensorBimod.actLeft M N
   actRight := TensorBimod.actRight M N
   one_act_left' := TensorBimod.one_act_left' M N
-  act_right_one' := TensorBimod.actRight_one' M N
+  actRight_one' := TensorBimod.actRight_one' M N
   left_assoc' := TensorBimod.left_assoc' M N
   right_assoc' := TensorBimod.right_assoc' M N
   middle_assoc' := TensorBimod.middle_assoc' M N
@@ -1099,14 +1099,14 @@ noncomputable def monBicategory : Bicategory (Mon_ C)
   associator _ _ _ _ L M N := associatorBimod L M N
   leftUnitor _ _ M := leftUnitorBimod M
   rightUnitor _ _ M := rightUnitorBimod M
-  whisker_left_id' _ _ _ _ _ := tensor_id
-  whisker_left_comp' _ _ _ M _ _ _ f g := whisker_left_comp_bimod M f g
+  whiskerLeft_id' _ _ _ _ _ := tensor_id
+  whiskerLeft_comp' _ _ _ M _ _ _ f g := whisker_left_comp_bimod M f g
   id_whisker_left' _ _ _ _ f := id_whisker_left_bimod f
   comp_whisker_left' _ _ _ _ M N _ _ f := comp_whisker_left_bimod M N f
   id_whisker_right' _ _ _ _ _ := tensor_id
   comp_whisker_right' _ _ _ _ _ _ f g Q := comp_whisker_right_bimod f g Q
-  whisker_right_id' _ _ _ _ f := whisker_right_id_bimod f
-  whisker_right_comp' _ _ _ _ _ _ f N P := whisker_right_comp_bimod f N P
+  whiskerRight_id' _ _ _ _ f := whisker_right_id_bimod f
+  whiskerRight_comp' _ _ _ _ _ _ f N P := whisker_right_comp_bimod f N P
   whisker_assoc' _ _ _ _ M _ _ f P := whisker_assoc_bimod M f P
   whisker_exchange' _ _ _ _ _ _ _ f g := whisker_exchange_bimod f g
   pentagon' _ _ _ _ _ M N P Q := pentagon_bimod M N P Q

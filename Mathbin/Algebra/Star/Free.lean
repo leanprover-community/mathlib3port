@@ -28,7 +28,7 @@ variable {α : Type _}
 
 instance : StarSemigroup (FreeMonoid α)
     where
-  star := List.reverse
+  unit := List.reverse
   star_involutive := List.reverse_reverse
   star_mul := List.reverse_append
 
@@ -52,7 +52,7 @@ variable {R : Type _} [CommSemiring R] {X : Type _}
 /-- The star ring formed by reversing the elements of products -/
 instance : StarRing (FreeAlgebra R X)
     where
-  star := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R)
+  unit := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R)
   star_involutive x := by
     unfold Star.star
     simp only [Function.comp_apply]

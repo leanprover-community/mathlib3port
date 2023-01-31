@@ -112,7 +112,7 @@ Case conversion may be inaccurate. Consider using '#align filter.frequently_smal
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem frequently_smallSets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
-  l.has_basis_small_sets.frequently_iff
+  l.hasBasis_smallSets.frequently_iff
 #align filter.frequently_small_sets Filter.frequently_smallSets
 
 #print Filter.frequently_smallSets_mem /-
@@ -263,7 +263,7 @@ alias eventually_small_sets_forall ↔ eventually.of_small_sets eventually.small
 #print Filter.eventually_smallSets_subset /-
 @[simp]
 theorem eventually_smallSets_subset {s : Set α} : (∀ᶠ t in l.smallSets, t ⊆ s) ↔ s ∈ l :=
-  eventually_small_sets_forall
+  eventually_smallSets_forall
 #align filter.eventually_small_sets_subset Filter.eventually_smallSets_subset
 -/
 

@@ -322,7 +322,7 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
     (config : linear_combination_config := { }) : tactic Unit := do
   let q(@Eq $(ext) _ _) ← target |
     fail "linear_combination can only be used to prove equality goals"
-  let h_eqs ← h_eqs_names.mmap to_expr
+  let h_eqs ← h_eqs_names.mapM to_expr
   let hsum ← make_sum_of_hyps ext h_eqs coeffs
   let hsum_on_left ← move_to_left_side hsum
   move_target_to_left_side
@@ -441,7 +441,7 @@ by linear_combination 3 * h a b + hqc
 unsafe def _root_.tactic.interactive.linear_combination
     (input : parse (as_linear_combo false [] <$> texpr)?) (_ : parse (tk "with")?)
     (config : linear_combination_config := { }) : tactic Unit :=
-  let (h_eqs_names, coeffs) := List.unzip (input.getOrElse [])
+  let (h_eqs_names, coeffs) := List.unzip (input.getD [])
   linear_combination h_eqs_names coeffs config
 #align tactic.interactive.linear_combination tactic.interactive.linear_combination
 

@@ -94,19 +94,19 @@ variable {𝕜 s f}
 
 open OrderDual (toDual ofDual)
 
-theorem ConvexOn.dual (hf : ConvexOn 𝕜 s f) : ConcaveOn 𝕜 s (to_dual ∘ f) :=
+theorem ConvexOn.dual (hf : ConvexOn 𝕜 s f) : ConcaveOn 𝕜 s (toDual ∘ f) :=
   hf
 #align convex_on.dual ConvexOn.dual
 
-theorem ConcaveOn.dual (hf : ConcaveOn 𝕜 s f) : ConvexOn 𝕜 s (to_dual ∘ f) :=
+theorem ConcaveOn.dual (hf : ConcaveOn 𝕜 s f) : ConvexOn 𝕜 s (toDual ∘ f) :=
   hf
 #align concave_on.dual ConcaveOn.dual
 
-theorem StrictConvexOn.dual (hf : StrictConvexOn 𝕜 s f) : StrictConcaveOn 𝕜 s (to_dual ∘ f) :=
+theorem StrictConvexOn.dual (hf : StrictConvexOn 𝕜 s f) : StrictConcaveOn 𝕜 s (toDual ∘ f) :=
   hf
 #align strict_convex_on.dual StrictConvexOn.dual
 
-theorem StrictConcaveOn.dual (hf : StrictConcaveOn 𝕜 s f) : StrictConvexOn 𝕜 s (to_dual ∘ f) :=
+theorem StrictConcaveOn.dual (hf : StrictConcaveOn 𝕜 s f) : StrictConvexOn 𝕜 s (toDual ∘ f) :=
   hf
 #align strict_concave_on.dual StrictConcaveOn.dual
 
@@ -531,7 +531,7 @@ theorem ConvexOn.comp_linearMap {f : F → β} {s : Set F} (hf : ConvexOn 𝕜 s
 /-- If `g` is concave on `s`, so is `(g ∘ f)` on `f ⁻¹' s` for a linear `f`. -/
 theorem ConcaveOn.comp_linearMap {f : F → β} {s : Set F} (hf : ConcaveOn 𝕜 s f) (g : E →ₗ[𝕜] F) :
     ConcaveOn 𝕜 (g ⁻¹' s) (f ∘ g) :=
-  hf.dual.comp_linear_map g
+  hf.dual.comp_linearMap g
 #align concave_on.comp_linear_map ConcaveOn.comp_linearMap
 
 end Module
@@ -558,7 +558,7 @@ theorem StrictConvexOn.add_convexOn (hf : StrictConvexOn 𝕜 s f) (hg : ConvexO
 
 theorem ConvexOn.add_strictConvexOn (hf : ConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) :
     StrictConvexOn 𝕜 s (f + g) :=
-  add_comm g f ▸ hg.add_convex_on hf
+  add_comm g f ▸ hg.add_convexOn hf
 #align convex_on.add_strict_convex_on ConvexOn.add_strictConvexOn
 
 theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) :
@@ -573,12 +573,12 @@ theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn �
 
 theorem StrictConcaveOn.add_concaveOn (hf : StrictConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) :
     StrictConcaveOn 𝕜 s (f + g) :=
-  hf.dual.add_convex_on hg.dual
+  hf.dual.add_convexOn hg.dual
 #align strict_concave_on.add_concave_on StrictConcaveOn.add_concaveOn
 
 theorem ConcaveOn.add_strictConcaveOn (hf : ConcaveOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) :
     StrictConcaveOn 𝕜 s (f + g) :=
-  hf.dual.add_strict_convex_on hg.dual
+  hf.dual.add_strictConvexOn hg.dual
 #align concave_on.add_strict_concave_on ConcaveOn.add_strictConcaveOn
 
 theorem StrictConcaveOn.add (hf : StrictConcaveOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) :
@@ -624,13 +624,13 @@ theorem ConvexOn.openSegment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p 
 theorem ConcaveOn.openSegment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f) (p q : E × β)
     (hp : p.1 ∈ s ∧ p.2 < f p.1) (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) :
     openSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
-  hf.dual.open_segment_subset_strict_epigraph p q hp hq
+  hf.dual.openSegment_subset_strict_epigraph p q hp hq
 #align concave_on.open_segment_subset_strict_hypograph ConcaveOn.openSegment_subset_strict_hypograph
 
 theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) :
     Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
   convex_iff_openSegment_subset.mpr fun p hp q hq =>
-    hf.open_segment_subset_strict_epigraph p q hp ⟨hq.1, hq.2.le⟩
+    hf.openSegment_subset_strict_epigraph p q hp ⟨hq.1, hq.2.le⟩
 #align convex_on.convex_strict_epigraph ConvexOn.convex_strict_epigraph
 
 theorem ConcaveOn.convex_strict_hypograph (hf : ConcaveOn 𝕜 s f) :
@@ -760,7 +760,7 @@ theorem StrictConvexOn.lt_on_openSegment (hf : StrictConvexOn 𝕜 s f) {x y z :
 endpoints. -/
 theorem StrictConcaveOn.lt_on_openSegment (hf : StrictConcaveOn 𝕜 s f) {x y z : E} (hx : x ∈ s)
     (hy : y ∈ s) (hxy : x ≠ y) (hz : z ∈ openSegment 𝕜 x y) : min (f x) (f y) < f z :=
-  hf.dual.lt_on_open_segment hx hy hxy hz
+  hf.dual.lt_on_openSegment hx hy hxy hz
 #align strict_concave_on.lt_on_open_segment StrictConcaveOn.lt_on_openSegment
 
 end LinearOrderedAddCommMonoid
@@ -977,22 +977,22 @@ theorem StrictConcaveOn.sub (hf : StrictConcaveOn 𝕜 s f) (hg : StrictConvexOn
 
 theorem ConvexOn.sub_strictConcaveOn (hf : ConvexOn 𝕜 s f) (hg : StrictConcaveOn 𝕜 s g) :
     StrictConvexOn 𝕜 s (f - g) :=
-  (sub_eq_add_neg f g).symm ▸ hf.add_strict_convex_on hg.neg
+  (sub_eq_add_neg f g).symm ▸ hf.add_strictConvexOn hg.neg
 #align convex_on.sub_strict_concave_on ConvexOn.sub_strictConcaveOn
 
 theorem ConcaveOn.sub_strictConvexOn (hf : ConcaveOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) :
     StrictConcaveOn 𝕜 s (f - g) :=
-  (sub_eq_add_neg f g).symm ▸ hf.add_strict_concave_on hg.neg
+  (sub_eq_add_neg f g).symm ▸ hf.add_strictConcaveOn hg.neg
 #align concave_on.sub_strict_convex_on ConcaveOn.sub_strictConvexOn
 
 theorem StrictConvexOn.sub_concaveOn (hf : StrictConvexOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) :
     StrictConvexOn 𝕜 s (f - g) :=
-  (sub_eq_add_neg f g).symm ▸ hf.add_convex_on hg.neg
+  (sub_eq_add_neg f g).symm ▸ hf.add_convexOn hg.neg
 #align strict_convex_on.sub_concave_on StrictConvexOn.sub_concaveOn
 
 theorem StrictConcaveOn.sub_convexOn (hf : StrictConcaveOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) :
     StrictConcaveOn 𝕜 s (f - g) :=
-  (sub_eq_add_neg f g).symm ▸ hf.add_concave_on hg.neg
+  (sub_eq_add_neg f g).symm ▸ hf.add_concaveOn hg.neg
 #align strict_concave_on.sub_convex_on StrictConcaveOn.sub_convexOn
 
 end OrderedAddCommGroup
@@ -1095,7 +1095,7 @@ theorem ConvexOn.comp_affineMap {f : F → β} (g : E →ᵃ[𝕜] F) {s : Set F
 /-- If a function is concave on `s`, it remains concave when precomposed by an affine map. -/
 theorem ConcaveOn.comp_affineMap {f : F → β} (g : E →ᵃ[𝕜] F) {s : Set F} (hf : ConcaveOn 𝕜 s f) :
     ConcaveOn 𝕜 (g ⁻¹' s) (f ∘ g) :=
-  hf.dual.comp_affine_map g
+  hf.dual.comp_affineMap g
 #align concave_on.comp_affine_map ConcaveOn.comp_affineMap
 
 end Module

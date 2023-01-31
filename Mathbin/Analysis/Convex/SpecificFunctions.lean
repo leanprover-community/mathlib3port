@@ -122,7 +122,7 @@ theorem Nnreal.pow_sum_div_card_le_sum_pow {α : Type _} (s : Finset α) (f : α
 #align nnreal.pow_sum_div_card_le_sum_pow Nnreal.pow_sum_div_card_le_sum_pow
 
 theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCommRing β] {f : α → β}
-    [DecidablePred fun x => f x ≤ 0] {s : Finset α} (h0 : Even (s.filter fun x => f x ≤ 0).card) :
+    [DecidablePred fun x => f x ≤ 0] {s : Finset α} (h0 : Even (s.filterₓ fun x => f x ≤ 0).card) :
     0 ≤ ∏ x in s, f x :=
   calc
     0 ≤ ∏ x in s, (if f x ≤ 0 then (-1 : β) else 1) * f x :=

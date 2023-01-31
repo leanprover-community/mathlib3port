@@ -126,7 +126,7 @@ theorem finite_unionᵢ_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s 
 @[simp]
 theorem finset_unionᵢ_left_iff {ι : Type _} {I : Finset ι} {s : ι → Set X} {t : Set X} :
     IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t :=
-  finite_unionᵢ_left_iff I.finite_to_set
+  finite_unionᵢ_left_iff I.finite_toSet
 #align is_metric_separated.finset_Union_left_iff IsMetricSeparated.finset_unionᵢ_left_iff
 
 alias finset_Union_left_iff ↔ _ finset_Union_left
@@ -135,7 +135,7 @@ alias finset_Union_left_iff ↔ _ finset_Union_left
 @[simp]
 theorem finset_unionᵢ_right_iff {ι : Type _} {I : Finset ι} {s : Set X} {t : ι → Set X} :
     IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, IsMetricSeparated s (t i) :=
-  finite_unionᵢ_right_iff I.finite_to_set
+  finite_unionᵢ_right_iff I.finite_toSet
 #align is_metric_separated.finset_Union_right_iff IsMetricSeparated.finset_unionᵢ_right_iff
 
 alias finset_Union_right_iff ↔ _ finset_Union_right

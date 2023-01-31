@@ -67,7 +67,7 @@ def properDivisors : Finset ℕ :=
 /-- `divisors_antidiagonal n` is the `finset` of pairs `(x,y)` such that `x * y = n`.
   As a special case, `divisors_antidiagonal 0 = ∅`. -/
 def divisorsAntidiagonal : Finset (ℕ × ℕ) :=
-  (Ico 1 (n + 1) ×ˢ Ico 1 (n + 1)).filter fun x => x.fst * x.snd = n
+  (Ico 1 (n + 1) ×ˢ Ico 1 (n + 1)).filterₓ fun x => x.fst * x.snd = n
 #align nat.divisors_antidiagonal Nat.divisorsAntidiagonal
 -/
 
@@ -80,7 +80,7 @@ but is expected to have type
   forall {n : Nat}, (Ne.{1} Nat n (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Dvd.dvd.{0} Nat Nat.instDvdNat _x n) (fun (a : Nat) => Nat.decidable_dvd a n) (Finset.range (Nat.succ n))) (Nat.divisors n))
 Case conversion may be inaccurate. Consider using '#align nat.filter_dvd_eq_divisors Nat.filter_dvd_eq_divisorsₓ'. -/
 @[simp]
-theorem filter_dvd_eq_divisors (h : n ≠ 0) : (Finset.range n.succ).filter (· ∣ n) = n.divisors :=
+theorem filter_dvd_eq_divisors (h : n ≠ 0) : (Finset.range n.succ).filterₓ (· ∣ n) = n.divisors :=
   by
   ext
   simp only [divisors, mem_filter, mem_range, mem_Ico, and_congr_left_iff, iff_and_self]
@@ -95,7 +95,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.filter_dvd_eq_proper_divisors Nat.filter_dvd_eq_properDivisorsₓ'. -/
 @[simp]
 theorem filter_dvd_eq_properDivisors (h : n ≠ 0) :
-    (Finset.range n).filter (· ∣ n) = n.properDivisors :=
+    (Finset.range n).filterₓ (· ∣ n) = n.properDivisors :=
   by
   ext
   simp only [proper_divisors, mem_filter, mem_range, mem_Ico, and_congr_left_iff, iff_and_self]
@@ -297,7 +297,7 @@ theorem divisorsAntidiagonal_one : divisorsAntidiagonal 1 = {(1, 1)} :=
 #print Nat.swap_mem_divisorsAntidiagonal /-
 @[simp]
 theorem swap_mem_divisorsAntidiagonal {x : ℕ × ℕ} :
-    x.swap ∈ divisorsAntidiagonal n ↔ x ∈ divisorsAntidiagonal n := by
+    x.symm ∈ divisorsAntidiagonal n ↔ x ∈ divisorsAntidiagonal n := by
   rw [mem_divisors_antidiagonal, mem_divisors_antidiagonal, mul_comm, Prod.swap]
 #align nat.swap_mem_divisors_antidiagonal Nat.swap_mem_divisorsAntidiagonal
 -/
@@ -626,7 +626,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.prime_divisors_eq_to_filter_divisors_prime Nat.prime_divisors_eq_to_filter_divisors_primeₓ'. -/
 /-- The factors of `n` are the prime divisors -/
 theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
-    n.factors.toFinset = (divisors n).filter Prime :=
+    n.factors.toFinset = (divisors n).filterₓ Prime :=
   by
   rcases n.eq_zero_or_pos with (rfl | hn)
   · simp

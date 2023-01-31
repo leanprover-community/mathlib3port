@@ -41,7 +41,7 @@ This definition uses `fraction_ring R` to denote `Frac(R)`. See `is_integrally_c
 if you want to choose another field of fractions for `R`.
 -/
 class IsIntegrallyClosed (R : Type _) [CommRing R] [IsDomain R] : Prop where
-  algebra_map_eq_of_integral :
+  algebraMap_eq_of_integral :
     ∀ {x : FractionRing R}, IsIntegral R x → ∃ y, algebraMap R (FractionRing R) y = x
 #align is_integrally_closed IsIntegrallyClosed
 
@@ -156,7 +156,7 @@ theorem mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) {g : K[X]} (hg :
   have :=
     mem_lift_of_splits_of_roots_mem_range (integralClosure R g.splitting_field)
       ((splits_id_iff_splits _).2 <| splitting_field.splits g) (hg.map _) fun a ha =>
-      (set_like.ext_iff.mp (integralClosure R g.splitting_field).range_algebra_map _).mpr <|
+      (set_like.ext_iff.mp (integralClosure R g.splitting_field).range_algebraMap _).mpr <|
         roots_mem_integralClosure hf _
   · rw [lifts_iff_coeff_lifts, ← RingHom.coe_range, Subalgebra.range_algebraMap] at this
     refine' (lifts_iff_coeff_lifts _).2 fun n => _
@@ -199,7 +199,7 @@ variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
     `g * (C g.leading_coeff⁻¹)` has coefficients in `R` -/
 theorem eq_map_mul_c_of_dvd [IsIntegrallyClosed R] {f : R[X]} (hf : f.Monic) {g : K[X]}
     (hg : g ∣ f.map (algebraMap R K)) :
-    ∃ g' : R[X], g'.map (algebraMap R K) * (C <| leadingCoeff g) = g :=
+    ∃ g' : R[X], g'.map (algebraMap R K) * (c <| leadingCoeff g) = g :=
   by
   have g_ne_0 : g ≠ 0 := ne_zero_of_dvd_ne_zero (monic.ne_zero <| hf.map (algebraMap R K)) hg
   suffices lem : ∃ g' : R[X], g'.map (algebraMap R K) = g * C g.leading_coeff⁻¹

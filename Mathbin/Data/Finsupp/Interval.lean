@@ -49,8 +49,7 @@ def rangeSingleton (f : ι →₀ α) : ι →₀ Finset α
     where
   toFun i := {f i}
   support := f.support
-  mem_support_to_fun i :=
-    by
+  mem_support_toFun i := by
     rw [← not_iff_not, not_mem_support_iff, not_ne_iff]
     exact singleton_injective.eq_iff.symm
 #align finsupp.range_singleton Finsupp.rangeSingleton
@@ -73,7 +72,7 @@ def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α
   support :=
     haveI := Classical.decEq ι
     f.support ∪ g.support
-  mem_support_to_fun i :=
+  mem_support_toFun i :=
     by
     rw [mem_union, ← not_iff_not, not_or, not_mem_support_iff, not_mem_support_iff, not_ne_iff]
     exact Icc_eq_singleton_iff.symm

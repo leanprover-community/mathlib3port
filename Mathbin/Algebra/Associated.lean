@@ -260,7 +260,7 @@ monoid allows us to reuse irreducible for associated elements.
 -/
 structure Irreducible [Monoid α] (p : α) : Prop where
   not_unit : ¬IsUnit p
-  is_unit_or_is_unit' : ∀ a b, p = a * b → IsUnit a ∨ IsUnit b
+  isUnit_or_is_unit' : ∀ a b, p = a * b → IsUnit a ∨ IsUnit b
 #align irreducible Irreducible
 -/
 
@@ -284,7 +284,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align irreducible.is_unit_or_is_unit Irreducible.isUnit_or_isUnitₓ'. -/
 theorem isUnit_or_isUnit [Monoid α] {p : α} (hp : Irreducible p) {a b : α} (h : p = a * b) :
     IsUnit a ∨ IsUnit b :=
-  hp.is_unit_or_is_unit' a b h
+  hp.isUnit_or_is_unit' a b h
 #align irreducible.is_unit_or_is_unit Irreducible.isUnit_or_isUnit
 
 end Irreducible
@@ -416,7 +416,7 @@ theorem irreducible_units_mul (a : αˣ) (b : α) : Irreducible (↑a * b) ↔ I
   · rw [← a.is_unit_units_mul]
     apply h
     rw [mul_assoc, ← HAB]
-  · rw [← a⁻¹.is_unit_units_mul]
+  · rw [← a⁻¹.isUnit_units_mul]
     apply h
     rw [mul_assoc, ← HAB, Units.inv_mul_cancel_left]
 #align irreducible_units_mul irreducible_units_mul
@@ -471,7 +471,7 @@ theorem irreducible_mul_iff {a b : α} :
     Irreducible (a * b) ↔ Irreducible a ∧ IsUnit b ∨ Irreducible b ∧ IsUnit a :=
   by
   constructor
-  · refine' fun h => Or.imp (fun h' => ⟨_, h'⟩) (fun h' => ⟨_, h'⟩) (h.is_unit_or_is_unit rfl).symm
+  · refine' fun h => Or.imp (fun h' => ⟨_, h'⟩) (fun h' => ⟨_, h'⟩) (h.isUnit_or_isUnit rfl).symm
     · rwa [irreducible_mul_isUnit h'] at h
     · rwa [irreducible_isUnit_mul h'] at h
   · rintro (⟨ha, hb⟩ | ⟨hb, ha⟩)
@@ -963,7 +963,7 @@ theorem Associated.ne_zero_iff [MonoidWithZero α] {a b : α} (h : a ~ᵤ b) : a
 #print Associated.prime /-
 protected theorem Associated.prime [CommMonoidWithZero α] {p q : α} (h : p ~ᵤ q) (hp : Prime p) :
     Prime q :=
-  ⟨h.ne_zero_iff.1 hp.NeZero,
+  ⟨h.neZero_iff.1 hp.NeZero,
     let ⟨u, hu⟩ := h
     ⟨fun ⟨v, hv⟩ => hp.not_unit ⟨v * u⁻¹, by simp [hv, hu.symm]⟩,
       hu ▸ by
@@ -1031,7 +1031,7 @@ protected theorem Associated.irreducible [Monoid α] {p q : α} (h : p ~ᵤ q) (
         p = p * u * (u⁻¹ : αˣ) := by simp
         _ = _ := by rw [hu] <;> simp [hab, mul_assoc]
         
-    (hp.is_unit_or_is_unit hpab).elim Or.inl fun ⟨v, hv⟩ => Or.inr ⟨v * u, by simp [hv]⟩⟩
+    (hp.isUnit_or_isUnit hpab).elim Or.inl fun ⟨v, hv⟩ => Or.inr ⟨v * u, by simp [hv]⟩⟩
 #align associated.irreducible Associated.irreducible
 -/
 
@@ -1828,7 +1828,7 @@ theorem DvdNotUnit.isUnit_of_irreducible_right [CommMonoidWithZero α] {p q : α
 #print not_irreducible_of_not_unit_dvdNotUnit /-
 theorem not_irreducible_of_not_unit_dvdNotUnit [CommMonoidWithZero α] {p q : α} (hp : ¬IsUnit p)
     (h : DvdNotUnit p q) : ¬Irreducible q :=
-  mt h.is_unit_of_irreducible_right hp
+  mt h.isUnit_of_irreducible_right hp
 #align not_irreducible_of_not_unit_dvd_not_unit not_irreducible_of_not_unit_dvdNotUnit
 -/
 

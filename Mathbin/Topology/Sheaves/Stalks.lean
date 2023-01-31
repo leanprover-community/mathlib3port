@@ -502,11 +502,11 @@ instance stalkFunctor_preserves_mono (x : X) :
 #align Top.presheaf.stalk_functor_preserves_mono TopCat.Presheaf.stalkFunctor_preserves_mono
 
 theorem stalk_mono_of_mono {F G : Sheaf C X} (f : F ⟶ G) [Mono f] :
-    ∀ x, mono <| (stalkFunctor C x).map f.1 := fun x => by
+    ∀ x, Mono <| (stalkFunctor C x).map f.1 := fun x => by
   convert functor.map_mono (Sheaf.forget.{v} C X ⋙ stalk_functor C x) f
 #align Top.presheaf.stalk_mono_of_mono TopCat.Presheaf.stalk_mono_of_mono
 
-theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, mono <| (stalkFunctor C x).map f.1] :
+theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, Mono <| (stalkFunctor C x).map f.1] :
     Mono f :=
   (Sheaf.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
     (NatTrans.mono_iff_mono_app _ _).mpr fun U =>
@@ -633,7 +633,7 @@ theorem isIso_iff_stalkFunctor_map_iso {F G : Sheaf C X} (f : F ⟶ G) :
   constructor
   · intro h x
     skip
-    exact @functor.map_is_iso _ _ _ _ _ _ (stalk_functor C x) f.1 ((sheaf.forget C X).map_is_iso f)
+    exact @functor.map_is_iso _ _ _ _ _ _ (stalk_functor C x) f.1 ((sheaf.forget C X).map_isIso f)
   · intro h
     exact is_iso_of_stalk_functor_map_iso f
 #align Top.presheaf.is_iso_iff_stalk_functor_map_iso TopCat.Presheaf.isIso_iff_stalkFunctor_map_iso

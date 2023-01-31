@@ -88,7 +88,7 @@ We give them some help by expressing the lemmas first non-categorically, then us
 `convert _aux using 1` to have the elaborator work as little as possible. -/
 
 
-open TensorProduct (assoc map)
+open TensorProduct (and_assoc map)
 
 private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMonoid X₁] [AddCommMonoid X₂]
     [AddCommMonoid X₃] [Module R X₁] [Module R X₂] [Module R X₃] {Y₁ Y₂ Y₃ : Type _}
@@ -188,8 +188,8 @@ instance monoidalCategory : MonoidalCategory (ModuleCat.{u} R)
   tensor_id' M N := tensor_id M N
   tensor_comp' M N K M' N' K' f g h := tensor_comp f g h
   associator_naturality' M N K M' N' K' f g h := associator_naturality f g h
-  left_unitor_naturality' M N f := leftUnitor_naturality f
-  right_unitor_naturality' M N f := rightUnitor_naturality f
+  leftUnitor_naturality' M N f := leftUnitor_naturality f
+  rightUnitor_naturality' M N f := rightUnitor_naturality f
   pentagon' M N K L := pentagon M N K L
   triangle' M N := triangle M N
 #align Module.monoidal_category ModuleCat.monoidalCategory

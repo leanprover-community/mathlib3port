@@ -169,15 +169,14 @@ but is expected to have type
   forall {E : Sort.{u3}} {α : Sort.{u1}} {β : Sort.{u2}} [iE : EquivLike.{u3, u1, u2} E α β], Function.Injective.{u3, imax u2 u1} E (β -> α) (EquivLike.inv.{u3, u1, u2} E α β iE)
 Case conversion may be inaccurate. Consider using '#align equiv_like.inv_injective EquivLike.inv_injectiveₓ'. -/
 theorem inv_injective : Function.Injective (EquivLike.inv : E → β → α) := fun e g h =>
-  coe_injective' e g ((right_inv e).eq_right_inverse (h.symm ▸ left_inv g)) h
+  coe_injective' e g ((right_inv e).eq_rightInverse (h.symm ▸ left_inv g)) h
 #align equiv_like.inv_injective EquivLike.inv_injective
 
 #print EquivLike.toEmbeddingLike /-
 instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β
     where
   coe := (coe : E → α → β)
-  coe_injective' e g h :=
-    coe_injective' e g h ((left_inv e).eq_right_inverse (h.symm ▸ right_inv g))
+  coe_injective' e g h := coe_injective' e g h ((left_inv e).eq_rightInverse (h.symm ▸ right_inv g))
   injective' e := (left_inv e).Injective
 #align equiv_like.to_embedding_like EquivLike.toEmbeddingLike
 -/

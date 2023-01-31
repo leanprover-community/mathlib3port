@@ -38,8 +38,8 @@ number field, ring of integers
 /-- A number field is a field which has characteristic zero and is finite
 dimensional over ℚ. -/
 class NumberField (K : Type _) [Field K] : Prop where
-  [to_char_zero : CharZero K]
-  [to_finite_dimensional : FiniteDimensional ℚ K]
+  [to_charZero : CharZero K]
+  [to_finiteDimensional : FiniteDimensional ℚ K]
 #align number_field NumberField
 
 open Function
@@ -147,8 +147,7 @@ theorem not_isField [NumberField K] : ¬IsField (𝓞 K) :=
     RingHom.injective_int (algebraMap ℤ (𝓞 K))
   intro hf
   exact
-    Int.not_isField
-      (((IsIntegralClosure.isIntegral_algebra ℤ K).is_field_iff_is_field h_inj).mpr hf)
+    Int.not_isField (((IsIntegralClosure.isIntegral_algebra ℤ K).isField_iff_isField h_inj).mpr hf)
 #align number_field.ring_of_integers.not_is_field NumberField.ringOfIntegers.not_isField
 
 instance [NumberField K] : IsDedekindDomain (𝓞 K) :=
@@ -164,8 +163,8 @@ open NumberField
 
 instance numberField : NumberField ℚ
     where
-  to_char_zero := inferInstance
-  to_finite_dimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
+  to_charZero := inferInstance
+  to_finiteDimensional :=-- The vector space structure of `ℚ` over itself can arise in multiple ways:
   -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
   -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
   -- Show that these coincide:
@@ -191,8 +190,8 @@ attribute [-instance] algebraRat
 is a number field. -/
 instance {f : ℚ[X]} [hf : Fact (Irreducible f)] : NumberField (AdjoinRoot f)
     where
-  to_char_zero := charZero_of_injective_algebraMap (algebraMap ℚ _).Injective
-  to_finite_dimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
+  to_charZero := charZero_of_injective_algebraMap (algebraMap ℚ _).Injective
+  to_finiteDimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
 
 end
 

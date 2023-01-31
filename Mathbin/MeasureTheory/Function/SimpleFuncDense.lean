@@ -169,7 +169,7 @@ theorem tendsto_approxOn {f : β → α} (hf : Measurable f) {s : Set α} {y₀ 
   refine' tendsto_nearest_pt (closure_minimal _ isClosed_closure hx)
   simp only [Nat.range_casesOn, closure_union, range_comp coe]
   exact
-    subset.trans (image_closure_subset_closure_image continuous_subtype_coe)
+    subset.trans (image_closure_subset_closure_image continuous_subtype_val)
       (subset_union_right _ _)
 #align measure_theory.simple_func.tendsto_approx_on MeasureTheory.SimpleFunc.tendsto_approxOn
 

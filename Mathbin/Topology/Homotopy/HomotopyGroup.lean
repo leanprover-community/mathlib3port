@@ -183,7 +183,7 @@ local notation "π" => HomotopyGroup
 /-- The 0-dimensional generalized loops based at `x` are in 1-1 correspondence with `X`. -/
 def genLoopZeroEquiv : GenLoop 0 x ≃ X where
   toFun f := f 0
-  invFun x := ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0⟩
+  invFun x := ⟨ContinuousMap.const _ x, fun _ ⟨f0, _⟩ => f0.elim0ₓ⟩
   left_inv f := by
     ext1
     exact congr_arg f (Subsingleton.elim _ _)
@@ -205,7 +205,7 @@ def pi0EquivPathComponents : π 0 x ≃ ZerothHomotopy X :=
         ⟨{  toFun := fun t0 => H t0.fst
             map_zero_left' := fun _ => by convert H.source
             map_one_left' := fun _ => by convert H.target
-            prop' := fun _ _ ⟨i, _⟩ => i.elim0 }⟩])
+            prop' := fun _ _ ⟨i, _⟩ => i.elim0ₓ }⟩])
 #align pi0_equiv_path_components pi0EquivPathComponents
 
 /-- The 1-dimensional generalized loops based at `x` are in 1-1 correspondence with
@@ -220,7 +220,7 @@ def genLoopOneEquivPathSelf : GenLoop 1 x ≃ Path x x
         exact p.1.2⟩
       (p.boundary (fun _ => 0) ⟨0, Or.inl rfl⟩) (p.boundary (fun _ => 1) ⟨1, Or.inr rfl⟩)
   invFun p :=
-    { toFun := fun c => p c.head
+    { toFun := fun c => p c.headI
       boundary :=
         by
         rintro y ⟨i, iH | iH⟩ <;> cases Unique.eq_default i <;> apply (congr_arg p iH).trans

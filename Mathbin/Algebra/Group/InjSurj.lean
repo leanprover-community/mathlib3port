@@ -164,8 +164,8 @@ protected def monoid [Monoid M₂] (f : M₁ → M₂) (hf : Injective f) (one :
   { hf.Semigroup f mul,
     hf.MulOneClass f one mul with
     npow := fun n x => x ^ n
-    npow_zero' := fun x => hf <| by erw [npow, one, pow_zero]
-    npow_succ' := fun n x => hf <| by erw [npow, pow_succ, mul, npow] }
+    npow_zero := fun x => hf <| by erw [npow, one, pow_zero]
+    npow_succ := fun n x => hf <| by erw [npow, pow_succ, mul, npow] }
 #align function.injective.monoid Function.Injective.monoid
 #align function.injective.add_monoid Function.Injective.addMonoid
 
@@ -185,8 +185,8 @@ protected def addMonoidWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMul �
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₁ :=
   { hf.AddMonoid f zero add nsmul with
     natCast := coe
-    nat_cast_zero := hf (by erw [nat_cast, Nat.cast_zero, zero])
-    nat_cast_succ := fun n => hf (by erw [nat_cast, Nat.cast_succ, add, one, nat_cast])
+    natCast_zero := hf (by erw [nat_cast, Nat.cast_zero, zero])
+    natCast_succ := fun n => hf (by erw [nat_cast, Nat.cast_succ, add, one, nat_cast])
     one := 1 }
 #align function.injective.add_monoid_with_one Function.Injective.addMonoidWithOne
 
@@ -361,7 +361,7 @@ protected def divisionMonoid [DivisionMonoid M₂] (f : M₁ → M₂) (hf : Inj
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivisionMonoid M₁ :=
   { hf.DivInvMonoid f one mul inv div npow zpow,
-    hf.HasInvolutiveInv f
+    hf.InvolutiveInv f
       inv with
     mul_inv_rev := fun x y => hf <| by erw [inv, mul, mul_inv_rev, mul, inv, inv]
     inv_eq_of_mul := fun x y h =>
@@ -431,8 +431,8 @@ protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMul ℕ
     hf.AddMonoidWithOne f zero one add nsmul
       nat_cast with
     intCast := coe
-    int_cast_of_nat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_ofNat])
-    int_cast_neg_succ_of_nat := fun n =>
+    intCast_ofNat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_ofNat])
+    intCast_negSucc := fun n =>
       hf (by erw [int_cast, neg, nat_cast, Int.cast_neg, Int.cast_ofNat]) }
 #align function.injective.add_group_with_one Function.Injective.addGroupWithOne
 
@@ -559,8 +559,8 @@ protected def monoid [Monoid M₁] (f : M₁ → M₂) (hf : Surjective f) (one 
   { hf.Semigroup f mul,
     hf.MulOneClass f one mul with
     npow := fun n x => x ^ n
-    npow_zero' := hf.forall.2 fun x => by erw [← npow, pow_zero, ← one]
-    npow_succ' := fun n => hf.forall.2 fun x => by erw [← npow, pow_succ, ← npow, ← mul] }
+    npow_zero := hf.forall.2 fun x => by erw [← npow, pow_zero, ← one]
+    npow_succ := fun n => hf.forall.2 fun x => by erw [← npow, pow_succ, ← npow, ← mul] }
 #align function.surjective.monoid Function.Surjective.monoid
 #align function.surjective.add_monoid Function.Surjective.addMonoid
 
@@ -580,10 +580,10 @@ protected def addMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [SMul �
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₂ :=
   { hf.AddMonoid f zero add nsmul with
     natCast := coe
-    nat_cast_zero := by
+    natCast_zero := by
       rw [← nat_cast, Nat.cast_zero, zero]
       rfl
-    nat_cast_succ := fun n =>
+    natCast_succ := fun n =>
       by
       rw [← nat_cast, Nat.cast_succ, add, one, nat_cast]
       rfl
@@ -711,8 +711,8 @@ protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂
     hf.AddGroup f zero add neg sub nsmul
       zsmul with
     intCast := coe
-    int_cast_of_nat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast]
-    int_cast_neg_succ_of_nat := fun n =>
+    intCast_ofNat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast]
+    intCast_negSucc := fun n =>
       by
       rw [← int_cast, Int.cast_neg, Int.cast_ofNat, neg, nat_cast]
       rfl }

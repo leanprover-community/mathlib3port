@@ -443,7 +443,7 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
   -- Namely, choose a representative `b' i : S` for each `b i : S / pS`.
   let b' : ι → S := fun i => (Ideal.Quotient.mk_surjective (b i)).some
   have b_eq_b' : ⇑b = (Submodule.mkq _).restrictScalars R ∘ b' :=
-    funext fun i => (Ideal.Quotient.mk_surjective (b i)).some_spec.symm
+    funext fun i => (Ideal.Quotient.mk_surjective (b i)).choose_spec.symm
   -- We claim `b'` is a basis for `Frac(S)` over `Frac(R)` because it is linear independent
   -- and spans the whole of `Frac(S)`.
   let b'' : ι → L := algebraMap S L ∘ b'

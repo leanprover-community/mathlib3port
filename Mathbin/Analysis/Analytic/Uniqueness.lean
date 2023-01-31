@@ -105,7 +105,7 @@ theorem eqOn_of_preconnected_of_eventuallyEq {f g : E → F} {U : Set E} (hf : A
     EqOn f g U := by
   have hfg' : f - g =ᶠ[𝓝 z₀] 0 := hfg.mono fun z h => by simp [h]
   simpa [sub_eq_zero] using fun z hz =>
-    (hf.sub hg).eq_on_zero_of_preconnected_of_eventually_eq_zero hU h₀ hfg' hz
+    (hf.sub hg).eqOn_zero_of_preconnected_of_eventuallyEq_zero hU h₀ hfg' hz
 #align analytic_on.eq_on_of_preconnected_of_eventually_eq AnalyticOn.eqOn_of_preconnected_of_eventuallyEq
 
 end AnalyticOn

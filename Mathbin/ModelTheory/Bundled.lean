@@ -85,18 +85,18 @@ attribute [instance] Model.struc Model.is_model Model.nonempty'
 
 namespace Model
 
-instance : CoeSort T.Model (Type w) :=
+instance : CoeSort T.ModelCat (Type w) :=
   ⟨ModelCat.Carrier⟩
 
 @[simp]
-theorem carrier_eq_coe (M : T.Model) : M.carrier = M :=
+theorem carrier_eq_coe (M : T.ModelCat) : M.carrier = M :=
   rfl
 #align first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.Theory.ModelCat.carrier_eq_coe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The object in the category of R-algebras associated to a type equipped with the appropriate
 typeclasses. -/
-def of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : T.Model :=
+def of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : T.ModelCat :=
   ⟨M⟩
 #align first_order.language.Theory.Model.of FirstOrder.Language.Theory.ModelCat.of
 
@@ -106,7 +106,7 @@ theorem coe_of (M : Type w) [L.Structure M] [M ⊨ T] [Nonempty M] : (of T M : T
   rfl
 #align first_order.language.Theory.Model.coe_of FirstOrder.Language.Theory.ModelCat.coe_of
 
-instance (M : T.Model) : Nonempty M :=
+instance (M : T.ModelCat) : Nonempty M :=
   inferInstance
 
 section Inhabited
@@ -147,7 +147,7 @@ def ulift (M : ModelCat.{u, v, w} T) : ModelCat.{u, v, max w w'} T :=
 
 /-- The reduct of any model of `φ.on_Theory T` is a model of `T`. -/
 @[simps]
-def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).Model) : T.Model
+def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).ModelCat) : T.ModelCat
     where
   carrier := M
   struc := φ.reduct M
@@ -161,34 +161,34 @@ def reduct {L' : Language} (φ : L →ᴸ L') (M : (φ.onTheory T).Model) : T.Mo
 noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.Injective)
     [∀ (n) (f : L'.Functions n), Decidable (f ∈ Set.range fun f : L.Functions n => φ.onFunction f)]
     [∀ (n) (r : L'.Relations n), Decidable (r ∈ Set.range fun r : L.Relations n => φ.onRelation r)]
-    (M : T.Model) [Inhabited M] : (φ.onTheory T).Model
+    (M : T.ModelCat) [Inhabited M] : (φ.onTheory T).ModelCat
     where
   carrier := M
   struc := φ.defaultExpansion M
   nonempty' := M.nonempty'
   is_model :=
-    (@Lhom.onTheory_model L L' M _ (φ.defaultExpansion M) φ (h.is_expansion_on_default M) T).2
+    (@Lhom.onTheory_model L L' M _ (φ.defaultExpansion M) φ (h.isExpansionOn_default M) T).2
       M.is_model
 #align first_order.language.Theory.Model.default_expansion FirstOrder.Language.Theory.ModelCat.defaultExpansion
 
-instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L.Structure M :=
+instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.ModelCat) : L.Structure M :=
   (Lhom.sumInl : L →ᴸ L.Sum L').reduct M
 #align first_order.language.Theory.Model.left_Structure FirstOrder.Language.Theory.ModelCat.leftStructure
 
-instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.Model) : L'.Structure M :=
+instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.ModelCat) : L'.Structure M :=
   (Lhom.sumInr : L' →ᴸ L.Sum L').reduct M
 #align first_order.language.Theory.Model.right_Structure FirstOrder.Language.Theory.ModelCat.rightStructure
 
 /-- A model of a theory is also a model of any subtheory. -/
 @[simps]
-def subtheoryModel (M : T.Model) {T' : L.Theory} (h : T' ⊆ T) : T'.Model
+def subtheoryModel (M : T.ModelCat) {T' : L.Theory} (h : T' ⊆ T) : T'.ModelCat
     where
   carrier := M
   is_model := ⟨fun φ hφ => realize_sentence_of_mem T (h hφ)⟩
 #align first_order.language.Theory.Model.subtheory_Model FirstOrder.Language.Theory.ModelCat.subtheoryModel
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance subtheoryModel_models (M : T.Model) {T' : L.Theory} (h : T' ⊆ T) :
+instance subtheoryModel_models (M : T.ModelCat) {T' : L.Theory} (h : T' ⊆ T) :
     M.subtheoryModel h ⊨ T :=
   M.is_model
 #align first_order.language.Theory.Model.subtheory_Model_models FirstOrder.Language.Theory.ModelCat.subtheoryModel_models
@@ -199,7 +199,7 @@ variable {T}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Bundles `M ⊨ T` as a `T.Model`. -/
-def Model.bundled {M : Type w} [LM : L.Structure M] [ne : Nonempty M] (h : M ⊨ T) : T.Model :=
+def Model.bundled {M : Type w} [LM : L.Structure M] [ne : Nonempty M] (h : M ⊨ T) : T.ModelCat :=
   @ModelCat.of L T M LM h Ne
 #align first_order.language.Theory.model.bundled FirstOrder.Language.Theory.Model.bundled
 
@@ -212,20 +212,20 @@ theorem coe_of {M : Type w} [L.Structure M] [Nonempty M] (h : M ⊨ T) : (h.Bund
 end Theory
 
 /-- A structure that is elementarily equivalent to a model, bundled as a model. -/
-def ElementarilyEquivalent.toModel {M : T.Model} {N : Type _} [LN : L.Structure N] (h : M ≅[L] N) :
-    T.Model where
+def ElementarilyEquivalent.toModel {M : T.ModelCat} {N : Type _} [LN : L.Structure N]
+    (h : M ≅[L] N) : T.ModelCat where
   carrier := N
   struc := LN
   nonempty' := h.Nonempty
-  is_model := h.Theory_model
+  is_model := h.theory_model
 #align first_order.language.elementarily_equivalent.to_Model FirstOrder.Language.ElementarilyEquivalent.toModel
 
 /-- An elementary substructure of a bundled model as a bundled model. -/
-def ElementarySubstructure.toModel {M : T.Model} (S : L.ElementarySubstructure M) : T.Model :=
+def ElementarySubstructure.toModel {M : T.ModelCat} (S : L.ElementarySubstructure M) : T.ModelCat :=
   S.ElementarilyEquivalent.symm.toModel T
 #align first_order.language.elementary_substructure.to_Model FirstOrder.Language.ElementarySubstructure.toModel
 
-instance {M : T.Model} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=
+instance {M : T.ModelCat} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=
   h
 
 end Language

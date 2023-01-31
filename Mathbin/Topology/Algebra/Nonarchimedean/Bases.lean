@@ -213,7 +213,7 @@ theorem toRing_subgroups_basis (hB : SubmodulesRingBasis B) :
 
 /-- The topology associated to a basis of submodules in an algebra. -/
 def topology [Nonempty ι] (hB : SubmodulesRingBasis B) : TopologicalSpace A :=
-  hB.to_ring_subgroups_basis.topology
+  hB.toRing_subgroups_basis.topology
 #align submodules_ring_basis.topology SubmodulesRingBasis.topology
 
 end SubmodulesRingBasis

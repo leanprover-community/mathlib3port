@@ -103,7 +103,7 @@ theorem mul_pluennecke_petridis (C : Finset α)
   set A' := A ∩ (A * C / {x}) with hA'
   set C' := insert x C with hC'
   have h₀ : A' * {x} = A * {x} ∩ (A * C) := by
-    rw [hA', inter_mul_singleton, (is_unit_singleton x).div_mul_cancel]
+    rw [hA', inter_mul_singleton, (is_unit_singleton x).div_mul_cancelₓ]
   have h₁ : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x}) :=
     by
     rw [hC', insert_eq, union_comm, mul_union]
@@ -134,7 +134,7 @@ theorem mul_pluennecke_petridis (C : Finset α)
 -- Auxiliary lemma for Ruzsa's triangle sum inequality, and the Plünnecke-Ruzsa inequality.
 @[to_additive]
 private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
-    (h : ∀ A' ∈ B.powerset.erase ∅, ((A * C).card : ℚ≥0) / ↑A.card ≤ (A' * C).card / ↑A'.card) :
+    (h : ∀ A' ∈ B.powerset.eraseₓ ∅, ((A * C).card : ℚ≥0) / ↑A.card ≤ (A' * C).card / ↑A'.card) :
     ∀ (A') (_ : A' ⊆ A), (A * C).card * A'.card ≤ (A' * C).card * A.card :=
   by
   rintro A' hAA'

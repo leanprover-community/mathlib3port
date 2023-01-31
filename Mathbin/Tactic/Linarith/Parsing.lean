@@ -117,7 +117,7 @@ local notation "exmap" => List (expr × ℕ)
 If `e` appears with index `k` in `map`, it returns the singleton sum `var k`.
 Otherwise it updates `map`, adding `e` with index `n`, and returns the singleton sum `var n`.
 -/
-unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tactic (exmap × Sum) :=
+unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tactic (exmap × sum) :=
   (do
       let (_, k) ← m.find_defeq red e
       return (m, var k)) <|>
@@ -139,7 +139,7 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
     unsafe
   def
     linear_form_of_expr
-    ( red : Transparency ) : exmap → expr → tactic ( exmap × Sum )
+    ( red : Transparency ) : exmap → expr → tactic ( exmap × sum )
     |
         m , e @ q( $ ( e1 ) * $ ( e2 ) )
         =>
@@ -207,7 +207,7 @@ into a `comp` object.
 Both of these are updated during processing and returned.
 -/
 unsafe def to_comp (red : Transparency) (e : expr) (e_map : exmap) (monom_map : rb_map monom ℕ) :
-    tactic (comp × exmap × rb_map monom ℕ) := do
+    tactic (Comp × exmap × rb_map monom ℕ) := do
   let (iq, e) ← parse_into_comp_and_expr e
   let (m', comp') ← linear_form_of_expr red e_map e
   let ⟨nm, mm'⟩ := sum_to_lf comp' monom_map
@@ -234,7 +234,7 @@ It also returns the largest variable index that appears in comparisons in `c`.
 -/
 unsafe def linear_forms_and_max_var (red : Transparency) (pfs : List expr) :
     tactic (List Comp × ℕ) := do
-  let pftps ← pfs.mmap infer_type
+  let pftps ← pfs.mapM infer_type
   let (l, _, map) ← to_comp_fold red [] pftps mk_rb_map
   return (l, map - 1)
 #align linarith.linear_forms_and_max_var linarith.linear_forms_and_max_var

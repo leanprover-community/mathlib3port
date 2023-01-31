@@ -129,7 +129,7 @@ theorem mem_support_seq_iff : b ∈ (seq q p).support ↔ ∃ f ∈ q.support, b
 end Seq
 
 instance : LawfulFunctor Pmf where
-  map_const_eq α β := rfl
+  mapConst_eq α β := rfl
   id_map α := bind_pure
   comp_map α β γ g h x := (map_comp _ _ _).symm
 
@@ -237,7 +237,7 @@ section normalize
 /-- Given a `f` with non-zero and non-infinite sum, get a `pmf` by normalizing `f` by its `tsum` -/
 def normalize (f : α → ℝ≥0∞) (hf0 : tsum f ≠ 0) (hf : tsum f ≠ ∞) : Pmf α :=
   ⟨fun a => f a * (∑' x, f x)⁻¹,
-    Ennreal.summable.has_sum_iff.2 (Ennreal.tsum_mul_right.trans (Ennreal.mul_inv_cancel hf0 hf))⟩
+    Ennreal.summable.hasSum_iff.2 (Ennreal.tsum_mul_right.trans (Ennreal.mul_inv_cancel hf0 hf))⟩
 #align pmf.normalize Pmf.normalize
 
 variable {f : α → ℝ≥0∞} (hf0 : tsum f ≠ 0) (hf : tsum f ≠ ∞)
@@ -267,28 +267,29 @@ def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
 
 @[simp]
-theorem filter_apply (a : α) : (p.filter s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ :=
-  by rw [Filter, normalize_apply]
+theorem filter_apply (a : α) :
+    (p.filterₓ s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ := by
+  rw [Filter, normalize_apply]
 #align pmf.filter_apply Pmf.filter_apply
 
-theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filter s h) a = 0 := by
+theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filterₓ s h) a = 0 := by
   rw [filter_apply, set.indicator_apply_eq_zero.mpr fun ha' => absurd ha' ha, zero_mul]
 #align pmf.filter_apply_eq_zero_of_not_mem Pmf.filter_apply_eq_zero_of_not_mem
 
-theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).support ↔ a ∈ s ∧ a ∈ p.support :=
+theorem mem_support_filter_iff {a : α} : a ∈ (p.filterₓ s h).support ↔ a ∈ s ∧ a ∈ p.support :=
   (mem_support_normalize_iff _ _ _).trans Set.indicator_apply_ne_zero
 #align pmf.mem_support_filter_iff Pmf.mem_support_filter_iff
 
 @[simp]
-theorem support_filter : (p.filter s h).support = s ∩ p.support :=
+theorem support_filter : (p.filterₓ s h).support = s ∩ p.support :=
   Set.ext fun x => mem_support_filter_iff _
 #align pmf.support_filter Pmf.support_filter
 
-theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.support := by
+theorem filter_apply_eq_zero_iff (a : α) : (p.filterₓ s h) a = 0 ↔ a ∉ s ∨ a ∉ p.support := by
   erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_or]
 #align pmf.filter_apply_eq_zero_iff Pmf.filter_apply_eq_zero_iff
 
-theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.support := by
+theorem filter_apply_ne_zero_iff (a : α) : (p.filterₓ s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.support := by
   rw [Ne.def, filter_apply_eq_zero_iff, not_or, Classical.not_not, Classical.not_not]
 #align pmf.filter_apply_ne_zero_iff Pmf.filter_apply_ne_zero_iff
 

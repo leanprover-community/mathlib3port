@@ -121,7 +121,7 @@ alias nhdsSet_eq_principal_iff ↔ _ IsOpen.nhdsSet_eq
 #print nhdsSet_interior /-
 @[simp]
 theorem nhdsSet_interior : 𝓝ˢ (interior s) = 𝓟 (interior s) :=
-  isOpen_interior.nhds_set_eq
+  isOpen_interior.nhdsSet_eq
 #align nhds_set_interior nhdsSet_interior
 -/
 
@@ -222,7 +222,7 @@ theorem union_mem_nhdsSet (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ 
 provided that `f` maps `s` to `t`.  -/
 theorem Continuous.tendsto_nhdsSet {f : α → β} {t : Set β} (hf : Continuous f)
     (hst : MapsTo f s t) : Tendsto f (𝓝ˢ s) (𝓝ˢ t) :=
-  ((hasBasis_nhdsSet s).tendsto_iff (hasBasis_nhdsSet t)).mpr fun U hU =>
+  ((hasBasis_nhdsSet s).tendsto_iffₓ (hasBasis_nhdsSet t)).mpr fun U hU =>
     ⟨f ⁻¹' U, ⟨hU.1.Preimage hf, hst.mono Subset.rfl hU.2⟩, fun x => id⟩
 #align continuous.tendsto_nhds_set Continuous.tendsto_nhdsSet
 -/

@@ -116,7 +116,7 @@ theorem le_def {x y : Onote} : x ≤ y ↔ repr x ≤ repr y :=
 @[simp]
 def ofNat : ℕ → Onote
   | 0 => 0
-  | Nat.succ n => oadd 0 n.succPnat 0
+  | Nat.succ n => oadd 0 n.succPNat 0
 #align onote.of_nat Onote.ofNat
 
 @[simp]
@@ -238,7 +238,7 @@ theorem NFBelow.lt {e n a b} (h : NFBelow (oadd e n a) b) : repr e < b := by
 theorem nFBelow_zero : ∀ {o}, NFBelow o 0 ↔ o = 0
   | 0 => ⟨fun _ => rfl, fun _ => NFBelow.zero⟩
   | oadd e n a =>
-    ⟨fun h => (not_le_of_lt h.lt).elim (Ordinal.zero_le _), fun e => e.symm ▸ NF_below.zero⟩
+    ⟨fun h => (not_le_of_lt h.lt).elim (Ordinal.zero_le _), fun e => e.symm ▸ NFBelow.zero⟩
 #align onote.NF_below_zero Onote.nFBelow_zero
 
 theorem NF.zero_of_zero {e n a} (h : NF (oadd e n a)) (e0 : e = 0) : a = 0 := by
@@ -416,7 +416,7 @@ def sub : Onote → Onote → Onote
     | Ordering.eq =>
       match (n₁ : ℕ) - n₂ with
       | 0 => if n₁ = n₂ then sub a₁ a₂ else 0
-      | Nat.succ k => oadd e₁ k.succPnat a₁
+      | Nat.succ k => oadd e₁ k.succPNat a₁
 #align onote.sub Onote.sub
 
 instance : Sub Onote :=
@@ -638,14 +638,14 @@ def scale (x : Onote) : Onote → Onote
 def mulNat : Onote → ℕ → Onote
   | 0, m => 0
   | _, 0 => 0
-  | oadd e n a, m + 1 => oadd e (n * m.succPnat) a
+  | oadd e n a, m + 1 => oadd e (n * m.succPNat) a
 #align onote.mul_nat Onote.mulNat
 
 /-- Auxiliary definition to compute the ordinal notation for the ordinal
 exponentiation in `opow` -/
 def opowAux (e a0 a : Onote) : ℕ → ℕ → Onote
   | _, 0 => 0
-  | 0, m + 1 => oadd e m.succPnat 0
+  | 0, m + 1 => oadd e m.succPNat 0
   | k + 1, m => scale (e + mulNat a0 k) a + opow_aux k m
 #align onote.opow_aux Onote.opowAux
 
@@ -657,7 +657,7 @@ def opow (o₁ o₂ : Onote) : Onote :=
   | (0, 1) => 1
   | (0, m + 1) =>
     let (b', k) := split' o₂
-    oadd b' (@Pow.pow ℕ+ _ _ m.succPnat k) 0
+    oadd b' (@Pow.pow ℕ+ _ _ m.succPNat k) 0
   | (a@(oadd a0 _ _), m) =>
     match split o₂ with
     | (b, 0) => oadd (a0 * b) 1 0
@@ -964,11 +964,11 @@ def fundamentalSequence : Onote → Sum (Option Onote) (ℕ → Onote)
     | Sum.inl none =>
       match fundamental_sequence a, m.natPred with
       | Sum.inl none, 0 => Sum.inl (some zero)
-      | Sum.inl none, m + 1 => Sum.inl (some (oadd zero m.succPnat zero))
-      | Sum.inl (some a'), 0 => Sum.inr fun i => oadd a' i.succPnat zero
-      | Sum.inl (some a'), m + 1 => Sum.inr fun i => oadd a m.succPnat (oadd a' i.succPnat zero)
+      | Sum.inl none, m + 1 => Sum.inl (some (oadd zero m.succPNat zero))
+      | Sum.inl (some a'), 0 => Sum.inr fun i => oadd a' i.succPNat zero
+      | Sum.inl (some a'), m + 1 => Sum.inr fun i => oadd a m.succPNat (oadd a' i.succPNat zero)
       | Sum.inr f, 0 => Sum.inr fun i => oadd (f i) 1 zero
-      | Sum.inr f, m + 1 => Sum.inr fun i => oadd a m.succPnat (oadd (f i) 1 zero)
+      | Sum.inr f, m + 1 => Sum.inr fun i => oadd a m.succPNat (oadd (f i) 1 zero)
 #align onote.fundamental_sequence Onote.fundamentalSequence
 
 private theorem exists_lt_add {α} [hα : Nonempty α] {o : Ordinal} {f : α → Ordinal}
@@ -1168,7 +1168,7 @@ theorem fastGrowingε₀_one : fastGrowingε₀ 1 = 2 := by
 
 theorem fastGrowingε₀_two : fastGrowingε₀ 2 = 2048 := by
   norm_num [fast_growing_ε₀, show oadd 0 1 0 = 1 from rfl, @fast_growing_limit (oadd 1 1 0) _ rfl,
-    show oadd 0 (2 : Nat).succPnat 0 = 3 from rfl, @fast_growing_succ 3 2 rfl]
+    show oadd 0 (2 : Nat).succPNat 0 = 3 from rfl, @fast_growing_succ 3 2 rfl]
 #align onote.fast_growing_ε₀_two Onote.fastGrowingε₀_two
 
 end Onote

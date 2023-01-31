@@ -87,7 +87,7 @@ instance : MeasurableSpace (NullMeasurableSpace α μ)
   MeasurableSet' s := ∃ t, MeasurableSet t ∧ s =ᵐ[μ] t
   measurable_set_empty := ⟨∅, MeasurableSet.empty, ae_eq_refl _⟩
   measurable_set_compl := fun s ⟨t, htm, hts⟩ => ⟨tᶜ, htm.compl, hts.compl⟩
-  measurable_set_Union s hs := by
+  measurable_set_unionᵢ s hs := by
     choose t htm hts using hs
     exact ⟨⋃ i, t i, MeasurableSet.unionᵢ htm, EventuallyEq.countable_unionᵢ hts⟩
 
@@ -212,7 +212,7 @@ protected theorem inter (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t 
 @[simp]
 protected theorem diff (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ) :
     NullMeasurableSet (s \ t) μ :=
-  hs.diff ht
+  hs.diffₓ ht
 #align measure_theory.null_measurable_set.diff MeasureTheory.NullMeasurableSet.diff
 
 @[simp]
@@ -259,7 +259,7 @@ theorem compl_toMeasurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurab
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _)(_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
   ⟨toMeasurable μ (sᶜ)ᶜ, compl_subset_comm.2 <| subset_toMeasurable _ _,
-    (measurableSet_toMeasurable _ _).compl, h.compl_to_measurable_compl_ae_eq⟩
+    (measurableSet_toMeasurable _ _).compl, h.compl_toMeasurable_compl_ae_eq⟩
 #align measure_theory.null_measurable_set.exists_measurable_subset_ae_eq MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq
 
 end NullMeasurableSet
@@ -277,7 +277,7 @@ theorem exists_subordinate_pairwise_disjoint [Countable ι] {s : ι → Set α}
   rcases exists_null_pairwise_disjoint_diff hd with ⟨u, hum, hu₀, hud⟩
   exact
     ⟨fun i => t i \ u i, fun i => (diff_subset _ _).trans (ht_sub _), fun i =>
-      (ht_eq _).symm.trans (diff_null_ae_eq_self (hu₀ i)).symm, fun i => (htm i).diff (hum i),
+      (ht_eq _).symm.trans (diff_null_ae_eq_self (hu₀ i)).symm, fun i => (htm i).diffₓ (hum i),
       hud.mono fun i j h =>
         h.mono (diff_subset_diff_left (ht_sub i)) (diff_subset_diff_left (ht_sub j))⟩
 #align measure_theory.exists_subordinate_pairwise_disjoint MeasureTheory.exists_subordinate_pairwise_disjoint
@@ -407,7 +407,7 @@ theorem Set.Finite.nullMeasurableSetBInter {f : ι → Set α} {s : Set ι} (hs 
 
 theorem Finset.nullMeasurableSetBInter {f : ι → Set α} (s : Finset ι)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
-  s.finite_to_set.nullMeasurableSetBInter h
+  s.finite_toSet.nullMeasurableSetBInter h
 #align finset.null_measurable_set_bInter Finset.nullMeasurableSetBInter
 
 theorem Set.Finite.nullMeasurableSetSInter {s : Set (Set α)} (hs : s.Finite)
@@ -480,8 +480,8 @@ theorem measurableSet_of_null [μ.IsComplete] (hs : μ s = 0) : MeasurableSet s 
 theorem NullMeasurableSet.measurable_of_complete (hs : NullMeasurableSet s μ) [μ.IsComplete] :
     MeasurableSet s :=
   diff_diff_cancel_left (subset_toMeasurable μ s) ▸
-    (measurableSet_toMeasurable _ _).diff
-      (measurableSet_of_null (ae_le_set.1 hs.to_measurable_ae_eq.le))
+    (measurableSet_toMeasurable _ _).diffₓ
+      (measurableSet_of_null (ae_le_set.1 hs.toMeasurable_ae_eq.le))
 #align measure_theory.null_measurable_set.measurable_of_complete MeasureTheory.NullMeasurableSet.measurable_of_complete
 
 theorem NullMeasurable.measurable_of_complete [μ.IsComplete] {m1 : MeasurableSpace β} {f : α → β}
@@ -500,7 +500,7 @@ def completion {_ : MeasurableSpace α} (μ : Measure α) :
     @MeasureTheory.Measure (NullMeasurableSpace α μ) _
     where
   toOuterMeasure := μ.toOuterMeasure
-  m_Union s hs hd := measure_Union₀ (hd.mono fun i j h => h.AeDisjoint) hs
+  m_unionᵢ s hs hd := measure_Union₀ (hd.mono fun i j h => h.AeDisjoint) hs
   trimmed := by
     refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
     rw [outer_measure.trim_eq_infi]; simp only [to_outer_measure_apply]

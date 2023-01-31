@@ -445,7 +445,7 @@ theorem IsNormal.inj {f} (H : IsNormal f) {a b} : f a = f b ↔ a = b := by
 #align ordinal.is_normal.inj Ordinal.IsNormal.inj
 
 theorem IsNormal.self_le {f} (H : IsNormal f) (a) : a ≤ f a :=
-  lt_wf.self_le_of_strict_mono H.StrictMono a
+  lt_wf.self_le_of_strictMono H.StrictMono a
 #align ordinal.is_normal.self_le Ordinal.IsNormal.self_le
 
 theorem IsNormal.le_set {f o} (H : IsNormal f) (p : Set Ordinal) (p0 : p.Nonempty) (b)

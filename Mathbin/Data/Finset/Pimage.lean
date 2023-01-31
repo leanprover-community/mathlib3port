@@ -61,7 +61,7 @@ variable [DecidableEq β] {f g : α →. β} [∀ x, Decidable (f x).Dom] [∀ x
 
 /-- Image of `s : finset α` under a partially defined function `f : α →. β`. -/
 def pimage (f : α →. β) [∀ x, Decidable (f x).Dom] (s : Finset α) : Finset β :=
-  s.bUnion fun x => (f x).toFinset
+  s.bunionᵢ fun x => (f x).toFinset
 #align finset.pimage Finset.pimage
 
 @[simp]

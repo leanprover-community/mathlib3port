@@ -341,7 +341,7 @@ theorem sub_singleton_eq (a : A) (r : R) : σ a - {r} = σ (a - ↑ₐ r) := by
 open Polynomial
 
 theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp : p ≠ 0)
-    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => X - c x) p.roots).Prod)) :
+    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => x - c x) p.roots).Prod)) :
     ∃ k : R, k ∈ σ a ∧ eval k p = 0 :=
   by
   rw [← Multiset.prod_toList, AlgHom.map_list_prod] at h
@@ -459,7 +459,7 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
     apply `exists_mem_of_not_is_unit_aeval_prod`. -/
   have p_a_eq : aeval a (C k - p) = ↑ₐ k - aeval a p := by
     simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
-  rw [mem_iff, ← p_a_eq, hprod, aeval_mul, ((Commute.all _ _).map (aeval a)).is_unit_mul_iff,
+  rw [mem_iff, ← p_a_eq, hprod, aeval_mul, ((Commute.all _ _).map (aeval a)).isUnit_mul_iff,
     aeval_C] at hk
   replace hk := exists_mem_of_not_is_unit_aeval_prod h_ne (not_and.mp hk lead_unit)
   rcases hk with ⟨r, r_mem, r_ev⟩

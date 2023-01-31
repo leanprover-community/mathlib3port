@@ -39,7 +39,7 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
     remainder := (· % ·)
     quotient_mul_add_remainder_eq := fun a b => Int.div_add_mod _ _
     R := fun a b => a.natAbs < b.natAbs
-    r_well_founded := measure_wf fun a => Int.natAbs a
+    r_wellFounded := measure_wf fun a => Int.natAbs a
     remainder_lt := fun a b b0 =>
       Int.ofNat_lt.1 <|
         by
@@ -67,7 +67,7 @@ instance (priority := 100) Field.toEuclideanDomain {K : Type _} [Field K] : Eucl
     quotient_mul_add_remainder_eq := fun a b => by
       classical by_cases b = 0 <;> simp [h, mul_div_cancel']
     R := fun a b => a = 0 ∧ b ≠ 0
-    r_well_founded :=
+    r_wellFounded :=
       WellFounded.intro fun a =>
         Acc.intro _ fun b ⟨hb, hna⟩ => Acc.intro _ fun c ⟨hc, hnb⟩ => False.elim <| hnb hb
     remainder_lt := fun a b hnb => by simp [hnb]

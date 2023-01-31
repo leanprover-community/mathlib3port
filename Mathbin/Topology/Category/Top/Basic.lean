@@ -42,7 +42,7 @@ instance bundledHom : BundledHom @ContinuousMap :=
 deriving instance LargeCategory, ConcreteCategory for TopCat
 
 instance : CoeSort TopCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance topologicalSpaceUnbundled (x : TopCat) : TopologicalSpace x :=
   x.str
@@ -80,7 +80,7 @@ def discrete : Type u ⥤ TopCat.{u} where
   obj X := ⟨X, ⊥⟩
   map X Y f :=
     { toFun := f
-      continuous_to_fun := continuous_bot }
+      continuous_toFun := continuous_bot }
 #align Top.discrete TopCat.discrete
 
 instance {X : Type u} : DiscreteTopology (discrete.obj X) :=
@@ -91,7 +91,7 @@ def trivial : Type u ⥤ TopCat.{u} where
   obj X := ⟨X, ⊤⟩
   map X Y f :=
     { toFun := f
-      continuous_to_fun := continuous_top }
+      continuous_toFun := continuous_top }
 #align Top.trivial TopCat.trivial
 
 /-- Any homeomorphisms induces an isomorphism in `Top`. -/
@@ -110,8 +110,8 @@ def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : X ≃ₜ Y
   invFun := f.inv
   left_inv x := by simp
   right_inv x := by simp
-  continuous_to_fun := f.Hom.Continuous
-  continuous_inv_fun := f.inv.Continuous
+  continuous_toFun := f.Hom.Continuous
+  continuous_invFun := f.inv.Continuous
 #align Top.homeo_of_iso TopCat.homeoOfIso
 
 @[simp]

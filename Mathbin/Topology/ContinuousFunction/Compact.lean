@@ -93,7 +93,7 @@ isometric to `C(α, β)`.
 @[simps (config := { fullyApplied := false }) toEquiv apply symm_apply]
 def isometryEquivBoundedOfCompact : C(α, β) ≃ᵢ (α →ᵇ β)
     where
-  isometry_to_fun x y := rfl
+  isometry_toFun x y := rfl
   toEquiv := equivBoundedOfCompact α β
 #align continuous_map.isometry_equiv_bounded_of_compact ContinuousMap.isometryEquivBoundedOfCompact
 
@@ -151,7 +151,7 @@ instance [CompleteSpace β] : CompleteSpace C(α, β) :=
 /-- See also `continuous_map.continuous_eval'` -/
 @[continuity]
 theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
-  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).Continuous.prod_map continuous_id)
+  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).Continuous.Prod_map continuous_id)
 #align continuous_map.continuous_eval ContinuousMap.continuous_eval
 
 /-- See also `continuous_map.continuous_eval_const` -/
@@ -242,7 +242,7 @@ theorem neg_norm_le_apply (f : C(α, ℝ)) (x : α) : -‖f‖ ≤ f x :=
 #align continuous_map.neg_norm_le_apply ContinuousMap.neg_norm_le_apply
 
 theorem norm_eq_supᵢ_norm : ‖f‖ = ⨆ x : α, ‖f x‖ :=
-  (mkOfCompact f).norm_eq_supr_norm
+  (mkOfCompact f).norm_eq_supᵢ_norm
 #align continuous_map.norm_eq_supr_norm ContinuousMap.norm_eq_supᵢ_norm
 
 end
@@ -436,7 +436,7 @@ def compRightContinuousMap {X Y : Type _} (T : Type _) [TopologicalSpace X] [Com
     [TopologicalSpace Y] [CompactSpace Y] [MetricSpace T] (f : C(X, Y)) : C(C(Y, T), C(X, T))
     where
   toFun g := g.comp f
-  continuous_to_fun := by
+  continuous_toFun := by
     refine' metric.continuous_iff.mpr _
     intro g ε ε_pos
     refine' ⟨ε, ε_pos, fun g' h => _⟩

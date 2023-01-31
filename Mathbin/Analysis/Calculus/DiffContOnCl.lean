@@ -50,7 +50,7 @@ theorem IsClosed.diffContOnCl_iff (hs : IsClosed s) : DiffContOnCl 𝕜 f s ↔ 
 #align is_closed.diff_cont_on_cl_iff IsClosed.diffContOnCl_iff
 
 theorem diffContOnCl_univ : DiffContOnCl 𝕜 f univ ↔ Differentiable 𝕜 f :=
-  isClosed_univ.diff_cont_on_cl_iff.trans differentiableOn_univ
+  isClosed_univ.diffContOnCl_iff.trans differentiableOn_univ
 #align diff_cont_on_cl_univ diffContOnCl_univ
 
 theorem diffContOnCl_const {c : F} : DiffContOnCl 𝕜 (fun x : E => c) s :=
@@ -61,7 +61,7 @@ namespace DiffContOnCl
 
 theorem comp {g : G → E} {t : Set G} (hf : DiffContOnCl 𝕜 f s) (hg : DiffContOnCl 𝕜 g t)
     (h : MapsTo g t s) : DiffContOnCl 𝕜 (f ∘ g) t :=
-  ⟨hf.1.comp hg.1 h, hf.2.comp hg.2 <| h.closure_of_continuous_on hg.2⟩
+  ⟨hf.1.comp hg.1 h, hf.2.comp hg.2 <| h.closure_of_continuousOn hg.2⟩
 #align diff_cont_on_cl.comp DiffContOnCl.comp
 
 theorem continuousOn_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnCl 𝕜 f (ball x r)) :
@@ -76,7 +76,7 @@ theorem continuousOn_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnC
 
 theorem mk_ball {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (ball x r))
     (hc : ContinuousOn f (closedBall x r)) : DiffContOnCl 𝕜 f (ball x r) :=
-  ⟨hd, hc.mono <| closure_ball_subset_closed_ball⟩
+  ⟨hd, hc.mono <| closure_ball_subset_closedBall⟩
 #align diff_cont_on_cl.mk_ball DiffContOnCl.mk_ball
 
 protected theorem differentiableAt (h : DiffContOnCl 𝕜 f s) (hs : IsOpen s) (hx : x ∈ s) :

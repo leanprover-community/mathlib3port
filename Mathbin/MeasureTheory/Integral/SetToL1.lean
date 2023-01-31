@@ -327,7 +327,7 @@ theorem setToSimpleFunc_zero_apply {m : MeasurableSpace α} (T : Set α → F �
 #align measure_theory.simple_func.set_to_simple_func_zero_apply MeasureTheory.SimpleFunc.setToSimpleFunc_zero_apply
 
 theorem setToSimpleFunc_eq_sum_filter {m : MeasurableSpace α} (T : Set α → F →L[ℝ] F')
-    (f : α →ₛ F) : setToSimpleFunc T f = ∑ x in f.range.filter fun x => x ≠ 0, (T (f ⁻¹' {x})) x :=
+    (f : α →ₛ F) : setToSimpleFunc T f = ∑ x in f.range.filterₓ fun x => x ≠ 0, (T (f ⁻¹' {x})) x :=
   by
   symm
   refine' sum_filter_of_ne fun x hx => mt fun hx0 => _
@@ -1585,7 +1585,7 @@ theorem setToFun_measure_zero' (hT : DominatedFinMeasAdditive μ T C)
 
 theorem setToFun_toL1 (hT : DominatedFinMeasAdditive μ T C) (hf : Integrable f μ) :
     setToFun μ T hT (hf.toL1 f) = setToFun μ T hT f :=
-  setToFun_congr_ae hT hf.coe_fn_to_L1
+  setToFun_congr_ae hT hf.coeFn_toL1
 #align measure_theory.set_to_fun_to_L1 MeasureTheory.setToFun_toL1
 
 theorem setToFun_indicator_const (hT : DominatedFinMeasAdditive μ T C) {s : Set α}
@@ -1939,7 +1939,7 @@ theorem tendsto_setToFun_of_dominated_convergence (hT : DominatedFinMeasAdditive
   congr 1
   refine' lintegral_congr_ae _
   rw [← integrable.to_L1_sub]
-  refine' ((fs_int n).sub f_int).coe_fn_to_L1.mono fun x hx => _
+  refine' ((fs_int n).sub f_int).coeFn_toL1.mono fun x hx => _
   dsimp only
   rw [hx, ofReal_norm_eq_coe_nnnorm, Pi.sub_apply]
 #align measure_theory.tendsto_set_to_fun_of_dominated_convergence MeasureTheory.tendsto_setToFun_of_dominated_convergence

@@ -71,9 +71,9 @@ instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianS
   intro p hp
   obtain ⟨⟨_, u, hu, rfl⟩, hu'⟩ := hp
   obtain ⟨U, hU, hU'⟩ :=
-    WellFounded.wellFounded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_coe⟩ ⁻¹' p)
+    WellFounded.wellFounded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_val⟩ ⁻¹' p)
       ⟨⟨u, hu⟩, hu'⟩
-  refine' ⟨opens.comap ⟨_, continuous_subtype_coe⟩ U, hU, _⟩
+  refine' ⟨opens.comap ⟨_, continuous_subtype_val⟩ U, hU, _⟩
   rintro ⟨_, x, hx, rfl⟩ hx' hx''
   refine' le_antisymm (Set.preimage_mono (_ : (⟨x, hx⟩ : opens α) ≤ U)) hx''
   refine' sup_eq_right.mp (hU' (⟨x, hx⟩ ⊔ U) _ le_sup_right)

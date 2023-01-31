@@ -92,12 +92,12 @@ noncomputable def Basis.algebraMapCoeffs : Basis ι A M :=
 #align basis.algebra_map_coeffs Basis.algebraMapCoeffs
 
 theorem Basis.algebraMapCoeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
-  b.map_coeffs_apply _ _ _
+  b.mapCoeffs_apply _ _ _
 #align basis.algebra_map_coeffs_apply Basis.algebraMapCoeffs_apply
 
 @[simp]
 theorem Basis.coe_algebraMapCoeffs : (b.algebraMapCoeffs A h : ι → M) = b :=
-  b.coe_map_coeffs _ _
+  b.coe_mapCoeffs _ _
 #align basis.coe_algebra_map_coeffs Basis.coe_algebraMapCoeffs
 
 end AlgebraMapCoeffs
@@ -180,7 +180,7 @@ variable [CommRing R] [Ring S] [Algebra R S]
 
 theorem Basis.algebraMap_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S]
     (b : Basis ι R S) : Function.Injective (algebraMap R S) :=
-  have : NoZeroSMulDivisors R S := b.NoZeroSmulDivisors
+  have : NoZeroSMulDivisors R S := b.NoZeroSMulDivisors
   NoZeroSMulDivisors.algebraMap_injective R S
 #align basis.algebra_map_injective Basis.algebraMap_injective
 

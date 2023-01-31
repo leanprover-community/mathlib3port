@@ -211,8 +211,8 @@ instance (r : R → R → Prop) : Semiring (RingQuot r)
   zero := 0
   one := 1
   natCast := natCast r
-  nat_cast_zero := by simp [Nat.cast, nat_cast, ← zero_quot]
-  nat_cast_succ := by simp [Nat.cast, nat_cast, ← one_quot, add_quot]
+  natCast_zero := by simp [Nat.cast, nat_cast, ← zero_quot]
+  natCast_succ := by simp [Nat.cast, nat_cast, ← one_quot, add_quot]
   add_assoc := by
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp [add_quot, add_assoc]
@@ -247,17 +247,17 @@ instance (r : R → R → Prop) : Semiring (RingQuot r)
     rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟩⟩
     simp [mul_quot, add_quot, right_distrib]
   npow n x := x ^ n
-  npow_zero' := by
+  npow_zero := by
     rintro ⟨⟨⟩⟩
     simp [pow_quot, ← one_quot]
-  npow_succ' := by
+  npow_succ := by
     rintro n ⟨⟨⟩⟩
     simp [pow_quot, mul_quot, pow_succ]
   nsmul := (· • ·)
-  nsmul_zero' := by
+  nsmul_zero := by
     rintro ⟨⟨⟩⟩
     simp [smul_quot, ← zero_quot]
-  nsmul_succ' := by
+  nsmul_succ := by
     rintro n ⟨⟨⟩⟩
     simp [smul_quot, add_quot, add_mul, add_comm]
 
@@ -507,7 +507,7 @@ theorem star'_quot (hr : ∀ a b, r a b → r (star a) (star b)) {a} :
 def starRing {R : Type u₁} [Semiring R] [StarRing R] (r : R → R → Prop)
     (hr : ∀ a b, r a b → r (star a) (star b)) : StarRing (RingQuot r)
     where
-  star := star' r hr
+  unit := star' r hr
   star_involutive := by
     rintro ⟨⟨⟩⟩
     simp [star'_quot]

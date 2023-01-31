@@ -100,7 +100,7 @@ variable {f g : M → G} {s : Set M} {x : M} {n : ℕ∞}
 @[to_additive]
 theorem ContMdiffWithinAt.mul (hf : ContMdiffWithinAt I' I n f s x)
     (hg : ContMdiffWithinAt I' I n g s x) : ContMdiffWithinAt I' I n (f * g) s x :=
-  ((smooth_mul I).SmoothAt.of_le le_top).comp_cont_mdiff_within_at x (hf.prod_mk hg)
+  ((smooth_mul I).SmoothAt.of_le le_top).comp_contMdiffWithinAt x (hf.prod_mk hg)
 #align cont_mdiff_within_at.mul ContMdiffWithinAt.mul
 #align cont_mdiff_within_at.add ContMdiffWithinAt.add
 
@@ -266,7 +266,7 @@ structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWit
   (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [AddMonoid G] [HasSmoothAdd I G]
   (G' : Type _) [TopologicalSpace G'] [ChartedSpace H' G'] [AddMonoid G']
   [HasSmoothAdd I' G'] extends G →+ G' where
-  smooth_to_fun : Smooth I I' to_fun
+  smooth_toFun : Smooth I I' to_fun
 #align smooth_add_monoid_morphism SmoothAddMonoidMorphism
 
 /-- Morphism of smooth monoids. -/
@@ -274,13 +274,13 @@ structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWit
 structure SmoothMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H')
   (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [HasSmoothMul I G] (G' : Type _)
   [TopologicalSpace G'] [ChartedSpace H' G'] [Monoid G'] [HasSmoothMul I' G'] extends G →* G' where
-  smooth_to_fun : Smooth I I' to_fun
+  smooth_toFun : Smooth I I' to_fun
 #align smooth_monoid_morphism SmoothMonoidMorphism
 #align smooth_add_monoid_morphism SmoothAddMonoidMorphism
 
 @[to_additive]
 instance : One (SmoothMonoidMorphism I I' G G') :=
-  ⟨{  smooth_to_fun := smooth_const
+  ⟨{  smooth_toFun := smooth_const
       toMonoidHom := 1 }⟩
 
 @[to_additive]
@@ -425,7 +425,7 @@ theorem contMdiff_finprod (h : ∀ i, ContMdiff I' I n (f i))
   by
   intro x
   rcases finprod_eventually_eq_prod hfin x with ⟨s, hs⟩
-  exact (contMdiff_finset_prod (fun i hi => h i) x).congr_of_eventually_eq hs
+  exact (contMdiff_finset_prod (fun i hi => h i) x).congr_of_eventuallyEq hs
 #align cont_mdiff_finprod contMdiff_finprod
 #align cont_mdiff_finsum cont_mdiff_finsum
 

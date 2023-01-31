@@ -134,14 +134,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.disj_Union_map_sigma_mk Finset.disjUnionᵢ_map_sigma_mkₓ'. -/
 @[simp]
 theorem disjUnionᵢ_map_sigma_mk :
-    s.disjUnion (fun i => (t i).map (Embedding.sigmaMk i)) pairwiseDisjoint_map_sigmaMk =
+    s.disjUnionₓ (fun i => (t i).map (Embedding.sigmaMk i)) pairwiseDisjoint_map_sigmaMk =
       s.Sigma t :=
   rfl
 #align finset.disj_Union_map_sigma_mk Finset.disjUnionᵢ_map_sigma_mk
 
 #print Finset.sigma_eq_bunionᵢ /-
 theorem sigma_eq_bunionᵢ [DecidableEq (Σi, α i)] (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    s.Sigma t = s.bUnion fun i => (t i).map <| Embedding.sigmaMk i :=
+    s.Sigma t = s.bunionᵢ fun i => (t i).map <| Embedding.sigmaMk i :=
   by
   ext ⟨x, y⟩
   simp [and_left_comm]

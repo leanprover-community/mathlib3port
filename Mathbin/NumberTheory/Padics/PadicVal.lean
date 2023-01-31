@@ -153,7 +153,7 @@ end padicValInt
 /-- `padic_val_rat` defines the valuation of a rational `q` to be the valuation of `q.num` minus the
 valuation of `q.denom`. If `q = 0` or `p = 1`, then `padic_val_rat p q` defaults to `0`. -/
 def padicValRat (p : ℕ) (q : ℚ) : ℤ :=
-  padicValInt p q.num - padicValNat p q.denom
+  padicValInt p q.num - padicValNat p q.den
 #align padic_val_rat padicValRat
 
 namespace padicValRat
@@ -192,7 +192,7 @@ theorem of_int_multiplicity {z : ℤ} (hp : p ≠ 1) (hz : z ≠ 0) :
 theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
     padicValRat p q =
       (multiplicity (p : ℤ) q.num).get (finite_int_iff.2 ⟨hp, Rat.num_ne_zero_of_ne_zero hq⟩) -
-        (multiplicity p q.denom).get
+        (multiplicity p q.den).get
           (by
             rw [← finite_iff_dom, finite_nat_iff]
             exact ⟨hp, q.pos⟩) :=
@@ -289,9 +289,9 @@ protected theorem defn (p : ℕ) [hp : Fact p.Prime] {q : ℚ} {n d : ℤ} (hqz 
 protected theorem mul {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
     padicValRat p (q * r) = padicValRat p q + padicValRat p r :=
   by
-  have : q * r = q.num * r.num /. (q.denom * r.denom) := by rw_mod_cast [Rat.mul_num_den]
-  have hq' : q.num /. q.denom ≠ 0 := by rw [Rat.num_den] <;> exact hq
-  have hr' : r.num /. r.denom ≠ 0 := by rw [Rat.num_den] <;> exact hr
+  have : q * r = q.num * r.num /. (q.den * r.den) := by rw_mod_cast [Rat.mul_num_den]
+  have hq' : q.num /. q.den ≠ 0 := by rw [Rat.num_den] <;> exact hq
+  have hr' : r.num /. r.den ≠ 0 := by rw [Rat.num_den] <;> exact hr
   have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.1 hp.1
   rw [padicValRat.defn p (mul_ne_zero hq hr) this]
   conv_rhs =>
@@ -352,12 +352,11 @@ theorem le_padicValRat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
     if hr : r = 0 then by simp [hr]
     else by
       have hqn : q.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hq
-      have hqd : (q.denom : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
+      have hqd : (q.den : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
       have hrn : r.num ≠ 0 := Rat.num_ne_zero_of_ne_zero hr
-      have hrd : (r.denom : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
-      have hqreq : q + r = (q.num * r.denom + q.denom * r.num) /. (q.denom * r.denom) :=
-        Rat.add_num_den _ _
-      have hqrd : q.num * r.denom + q.denom * r.num ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq
+      have hrd : (r.den : ℤ) ≠ 0 := by exact_mod_cast Rat.den_nz _
+      have hqreq : q + r = (q.num * r.den + q.den * r.num) /. (q.den * r.den) := Rat.add_num_den _ _
+      have hqrd : q.num * r.den + q.den * r.num ≠ 0 := Rat.mk_num_ne_zero_of_ne_zero hqr hqreq
       conv_lhs => rw [← @Rat.num_den q]
       rw [hqreq, padic_val_rat_le_padic_val_rat_iff hqn hqrd hqd (mul_ne_zero hqd hrd), ←
         multiplicity_le_multiplicity_iff, mul_left_comm,
@@ -520,7 +519,7 @@ theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
 #align range_pow_padic_val_nat_subset_divisors range_pow_padicValNat_subset_divisors
 
 theorem range_pow_padicValNat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
-    ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors.erase 1 :=
+    ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors.eraseₓ 1 :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp

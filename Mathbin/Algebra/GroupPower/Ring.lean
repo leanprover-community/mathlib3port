@@ -194,7 +194,7 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
 theorem Ring.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
   | 0 => by rw [pow_zero, pow_zero, Ring.inverse_one]
   | n + 1 => by
-    rw [pow_succ, pow_succ', Ring.mul_inverse_rev' ((Commute.refl r).pow_left n), Ring.inverse_pow]
+    rw [pow_succ, pow_succ', Ring.mul_inverse_rev' ((Commute.refl r).pow_leftₓ n), Ring.inverse_pow]
 #align ring.inverse_pow Ring.inverse_pow
 -/
 
@@ -339,7 +339,7 @@ Case conversion may be inaccurate. Consider using '#align neg_one_pow_eq_or neg_
 theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
   | 0 => Or.inl (pow_zero _)
   | n + 1 =>
-    (neg_one_pow_eq_or n).swap.imp (fun h => by rw [pow_succ, h, neg_one_mul, neg_neg]) fun h => by
+    (neg_one_pow_eq_or n).symm.imp (fun h => by rw [pow_succ, h, neg_one_mul, neg_neg]) fun h => by
       rw [pow_succ, h, mul_one]
 #align neg_one_pow_eq_or neg_one_pow_eq_or
 

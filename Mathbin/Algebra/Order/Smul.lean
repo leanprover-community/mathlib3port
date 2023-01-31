@@ -229,7 +229,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align smul_lower_bounds_subset_lower_bounds_smul smul_lowerBounds_subset_lowerBounds_smulₓ'. -/
 theorem smul_lowerBounds_subset_lowerBounds_smul (hc : 0 ≤ c) :
     c • lowerBounds s ⊆ lowerBounds (c • s) :=
-  (monotone_smul_left hc).image_lower_bounds_subset_lower_bounds_image
+  (monotone_smul_left hc).image_lowerBounds_subset_lowerBounds_image
 #align smul_lower_bounds_subset_lower_bounds_smul smul_lowerBounds_subset_lowerBounds_smul
 
 /- warning: smul_upper_bounds_subset_upper_bounds_smul -> smul_upperBounds_subset_upperBounds_smul is a dubious translation:
@@ -240,7 +240,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align smul_upper_bounds_subset_upper_bounds_smul smul_upperBounds_subset_upperBounds_smulₓ'. -/
 theorem smul_upperBounds_subset_upperBounds_smul (hc : 0 ≤ c) :
     c • upperBounds s ⊆ upperBounds (c • s) :=
-  (monotone_smul_left hc).image_upper_bounds_subset_upper_bounds_image
+  (monotone_smul_left hc).image_upperBounds_subset_upperBounds_image
 #align smul_upper_bounds_subset_upper_bounds_smul smul_upperBounds_subset_upperBounds_smul
 
 /- warning: bdd_below.smul_of_nonneg -> BddBelow.smul_of_nonneg is a dubious translation:
@@ -250,7 +250,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} R] [_inst_2 : OrderedAddCommMonoid.{u2} M] [_inst_3 : SMulWithZero.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2)))] [_inst_4 : OrderedSMul.{u1, u2} R M _inst_1 _inst_2 _inst_3] {s : Set.{u2} M} {c : R}, (BddBelow.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_2)) s) -> (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))))) c) -> (BddBelow.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_2)) (HSMul.hSMul.{u1, u2, u2} R (Set.{u2} M) (Set.{u2} M) (instHSMul.{u1, u2} R (Set.{u2} M) (Set.smulSet.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) _inst_3)))) c s))
 Case conversion may be inaccurate. Consider using '#align bdd_below.smul_of_nonneg BddBelow.smul_of_nonnegₓ'. -/
 theorem BddBelow.smul_of_nonneg (hs : BddBelow s) (hc : 0 ≤ c) : BddBelow (c • s) :=
-  (monotone_smul_left hc).map_bdd_below hs
+  (monotone_smul_left hc).map_bddBelow hs
 #align bdd_below.smul_of_nonneg BddBelow.smul_of_nonneg
 
 /- warning: bdd_above.smul_of_nonneg -> BddAbove.smul_of_nonneg is a dubious translation:
@@ -260,7 +260,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} R] [_inst_2 : OrderedAddCommMonoid.{u2} M] [_inst_3 : SMulWithZero.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2)))] [_inst_4 : OrderedSMul.{u1, u2} R M _inst_1 _inst_2 _inst_3] {s : Set.{u2} M} {c : R}, (BddAbove.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_2)) s) -> (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))))) c) -> (BddAbove.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_2)) (HSMul.hSMul.{u1, u2, u2} R (Set.{u2} M) (Set.{u2} M) (instHSMul.{u1, u2} R (Set.{u2} M) (Set.smulSet.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) _inst_3)))) c s))
 Case conversion may be inaccurate. Consider using '#align bdd_above.smul_of_nonneg BddAbove.smul_of_nonnegₓ'. -/
 theorem BddAbove.smul_of_nonneg (hs : BddAbove s) (hc : 0 ≤ c) : BddAbove (c • s) :=
-  (monotone_smul_left hc).map_bdd_above hs
+  (monotone_smul_left hc).map_bddAbove hs
 #align bdd_above.smul_of_nonneg BddAbove.smul_of_nonneg
 
 end OrderedSMul
@@ -467,7 +467,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_bounds_smul_of_pos lowerBounds_smul_of_posₓ'. -/
 @[simp]
 theorem lowerBounds_smul_of_pos (hc : 0 < c) : lowerBounds (c • s) = c • lowerBounds s :=
-  (OrderIso.smulLeft _ hc).lower_bounds_image
+  (OrderIso.smulLeft _ hc).lowerBounds_image
 #align lower_bounds_smul_of_pos lowerBounds_smul_of_pos
 
 /- warning: upper_bounds_smul_of_pos -> upperBounds_smul_of_pos is a dubious translation:
@@ -478,7 +478,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_bounds_smul_of_pos upperBounds_smul_of_posₓ'. -/
 @[simp]
 theorem upperBounds_smul_of_pos (hc : 0 < c) : upperBounds (c • s) = c • upperBounds s :=
-  (OrderIso.smulLeft _ hc).upper_bounds_image
+  (OrderIso.smulLeft _ hc).upperBounds_image
 #align upper_bounds_smul_of_pos upperBounds_smul_of_pos
 
 /- warning: bdd_below_smul_iff_of_pos -> bddBelow_smul_iff_of_pos is a dubious translation:
@@ -489,7 +489,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bdd_below_smul_iff_of_pos bddBelow_smul_iff_of_posₓ'. -/
 @[simp]
 theorem bddBelow_smul_iff_of_pos (hc : 0 < c) : BddBelow (c • s) ↔ BddBelow s :=
-  (OrderIso.smulLeft _ hc).bdd_below_image
+  (OrderIso.smulLeft _ hc).bddBelow_image
 #align bdd_below_smul_iff_of_pos bddBelow_smul_iff_of_pos
 
 /- warning: bdd_above_smul_iff_of_pos -> bddAbove_smul_iff_of_pos is a dubious translation:
@@ -500,7 +500,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bdd_above_smul_iff_of_pos bddAbove_smul_iff_of_posₓ'. -/
 @[simp]
 theorem bddAbove_smul_iff_of_pos (hc : 0 < c) : BddAbove (c • s) ↔ BddAbove s :=
-  (OrderIso.smulLeft _ hc).bdd_above_image
+  (OrderIso.smulLeft _ hc).bddAbove_image
 #align bdd_above_smul_iff_of_pos bddAbove_smul_iff_of_pos
 
 end LinearOrderedSemifield

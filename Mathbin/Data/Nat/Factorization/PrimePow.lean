@@ -41,7 +41,7 @@ theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
 
 theorem isPrimePow_iff_minFac_pow_factorization_eq {n : ℕ} (hn : n ≠ 1) :
     IsPrimePow n ↔ n.minFac ^ n.factorization n.minFac = n :=
-  ⟨fun h => h.min_fac_pow_factorization_eq, fun h => isPrimePow_of_minFac_pow_factorization_eq h hn⟩
+  ⟨fun h => h.minFac_pow_factorization_eq, fun h => isPrimePow_of_minFac_pow_factorization_eq h hn⟩
 #align is_prime_pow_iff_min_fac_pow_factorization_eq isPrimePow_iff_minFac_pow_factorization_eq
 
 theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
@@ -152,7 +152,7 @@ theorem Nat.coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.coprime a b) (hn
 #align nat.coprime.is_prime_pow_dvd_mul Nat.coprime.isPrimePow_dvd_mul
 
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.coprime b) :
-    (a * b).divisors.filter IsPrimePow = (a.divisors ∪ b.divisors).filter IsPrimePow :=
+    (a * b).divisors.filterₓ IsPrimePow = (a.divisors ∪ b.divisors).filterₓ IsPrimePow :=
   by
   rcases eq_or_ne a 0 with (rfl | ha)
   · simp only [Nat.coprime_zero_left] at hab

@@ -57,7 +57,7 @@ theorem free_map_coe {α β : Type u} {f : α → β} : ⇑(free.map f) = rename
 def adj : free ⊣ forget CommRingCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X R => homEquiv
-      hom_equiv_naturality_left_symm' := fun _ _ Y f g =>
+      homEquiv_naturality_left_symm' := fun _ _ Y f g =>
         RingHom.ext fun x => eval₂_cast_comp f (Int.castRingHom Y) g x }
 #align CommRing.adj CommRingCat.adj
 

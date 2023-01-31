@@ -225,7 +225,7 @@ theorem mul_inv (t : TransvectionStruct n R) : t.toMatrix ⬝ t.inv.toMatrix = 1
 #align matrix.transvection_struct.mul_inv Matrix.TransvectionStruct.mul_inv
 
 theorem reverse_inv_prod_mul_prod (L : List (TransvectionStruct n R)) :
-    (L.reverse.map (to_matrix ∘ transvection_struct.inv)).Prod ⬝ (L.map toMatrix).Prod = 1 :=
+    (L.reverse.map (toMatrix ∘ TransvectionStruct.inv)).Prod ⬝ (L.map toMatrix).Prod = 1 :=
   by
   induction' L with t L IH
   · simp
@@ -238,7 +238,7 @@ theorem reverse_inv_prod_mul_prod (L : List (TransvectionStruct n R)) :
 #align matrix.transvection_struct.reverse_inv_prod_mul_prod Matrix.TransvectionStruct.reverse_inv_prod_mul_prod
 
 theorem prod_mul_reverse_inv_prod (L : List (TransvectionStruct n R)) :
-    (L.map toMatrix).Prod ⬝ (L.reverse.map (to_matrix ∘ transvection_struct.inv)).Prod = 1 :=
+    (L.map toMatrix).Prod ⬝ (L.reverse.map (toMatrix ∘ TransvectionStruct.inv)).Prod = 1 :=
   by
   induction' L with t L IH
   · simp
@@ -282,7 +282,7 @@ theorem toMatrix_sumInl (t : TransvectionStruct n R) :
 @[simp]
 theorem sumInl_toMatrix_prod_mul [Fintype n] [Fintype p] (M : Matrix n n R)
     (L : List (TransvectionStruct n R)) (N : Matrix p p R) :
-    (L.map (to_matrix ∘ sumInl p)).Prod ⬝ fromBlocks M 0 0 N =
+    (L.map (toMatrix ∘ sumInl p)).Prod ⬝ fromBlocks M 0 0 N =
       fromBlocks ((L.map toMatrix).Prod ⬝ M) 0 0 N :=
   by
   induction' L with t L IH
@@ -293,7 +293,7 @@ theorem sumInl_toMatrix_prod_mul [Fintype n] [Fintype p] (M : Matrix n n R)
 @[simp]
 theorem mul_sumInl_toMatrix_prod [Fintype n] [Fintype p] (M : Matrix n n R)
     (L : List (TransvectionStruct n R)) (N : Matrix p p R) :
-    fromBlocks M 0 0 N ⬝ (L.map (to_matrix ∘ sumInl p)).Prod =
+    fromBlocks M 0 0 N ⬝ (L.map (toMatrix ∘ sumInl p)).Prod =
       fromBlocks (M ⬝ (L.map toMatrix).Prod) 0 0 N :=
   by
   induction' L with t L IH generalizing M N
@@ -327,7 +327,7 @@ theorem toMatrix_reindexEquiv (e : n ≃ p) (t : TransvectionStruct n R) :
 #align matrix.transvection_struct.to_matrix_reindex_equiv Matrix.TransvectionStruct.toMatrix_reindexEquiv
 
 theorem toMatrix_reindexEquiv_prod (e : n ≃ p) (L : List (TransvectionStruct n R)) :
-    (L.map (to_matrix ∘ reindexEquiv e)).Prod = reindexAlgEquiv R e (L.map toMatrix).Prod :=
+    (L.map (toMatrix ∘ reindexEquiv e)).Prod = reindexAlgEquiv R e (L.map toMatrix).Prod :=
   by
   induction' L with t L IH
   · simp
@@ -451,7 +451,7 @@ theorem mul_listTransvecRow_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk :
   · have hkr : k < r := hk
     let k' : Fin r := ⟨k, hkr⟩
     have :
-      (list_transvec_row M).nth k =
+      (list_transvec_row M).get? k =
         ↑(transvection (inr Unit.unit) (inl k')
             (-M (inr Unit.unit) (inl k') / M (inr Unit.unit) (inr Unit.unit))) :=
       by
@@ -492,7 +492,7 @@ theorem mul_listTransvecRow_last_row (hM : M (inr unit) (inr unit) ≠ 0) (i : F
   · have hnr : n < r := hk
     let n' : Fin r := ⟨n, hnr⟩
     have A :
-      (list_transvec_row M).nth n =
+      (list_transvec_row M).get? n =
         ↑(transvection (inr Unit.unit) (inl n')
             (-M (inr Unit.unit) (inl n') / M (inr Unit.unit) (inr Unit.unit))) :=
       by

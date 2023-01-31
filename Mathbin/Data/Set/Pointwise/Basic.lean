@@ -263,7 +263,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Inter_inv Set.interᵢ_invₓ'. -/
 @[simp, to_additive]
 theorem interᵢ_inv (s : ι → Set α) : (⋂ i, s i)⁻¹ = ⋂ i, (s i)⁻¹ :=
-  preimage_Inter
+  preimage_interᵢ
 #align set.Inter_inv Set.interᵢ_inv
 #align set.Inter_neg Set.interᵢ_neg
 
@@ -275,7 +275,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Union_inv Set.unionᵢ_invₓ'. -/
 @[simp, to_additive]
 theorem unionᵢ_inv (s : ι → Set α) : (⋃ i, s i)⁻¹ = ⋃ i, (s i)⁻¹ :=
-  preimage_Union
+  preimage_unionᵢ
 #align set.Union_inv Set.unionᵢ_inv
 #align set.Union_neg Set.unionᵢ_neg
 
@@ -517,7 +517,7 @@ theorem mul_nonempty : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 #print Set.Nonempty.mul /-
 @[to_additive]
 theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
-  nonempty.image2
+  Nonempty.image2
 #align set.nonempty.mul Set.Nonempty.mul
 #align set.nonempty.add Set.Nonempty.add
 -/
@@ -525,7 +525,7 @@ theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
 #print Set.Nonempty.of_mul_left /-
 @[to_additive]
 theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
-  nonempty.of_image2_left
+  Nonempty.of_image2_left
 #align set.nonempty.of_mul_left Set.Nonempty.of_mul_left
 #align set.nonempty.of_add_left Set.Nonempty.of_add_left
 -/
@@ -533,7 +533,7 @@ theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
 #print Set.Nonempty.of_mul_right /-
 @[to_additive]
 theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
-  nonempty.of_image2_right
+  Nonempty.of_image2_right
 #align set.nonempty.of_mul_right Set.Nonempty.of_mul_right
 #align set.nonempty.of_add_right Set.Nonempty.of_add_right
 -/
@@ -893,7 +893,7 @@ theorem div_nonempty : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 #print Set.Nonempty.div /-
 @[to_additive]
 theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
-  nonempty.image2
+  Nonempty.image2
 #align set.nonempty.div Set.Nonempty.div
 #align set.nonempty.sub Set.Nonempty.sub
 -/
@@ -901,7 +901,7 @@ theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
 #print Set.Nonempty.of_div_left /-
 @[to_additive]
 theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
-  nonempty.of_image2_left
+  Nonempty.of_image2_left
 #align set.nonempty.of_div_left Set.Nonempty.of_div_left
 #align set.nonempty.of_sub_left Set.Nonempty.of_sub_left
 -/
@@ -909,7 +909,7 @@ theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
 #print Set.Nonempty.of_div_right /-
 @[to_additive]
 theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
-  nonempty.of_image2_right
+  Nonempty.of_image2_right
 #align set.nonempty.of_div_right Set.Nonempty.of_div_right
 #align set.nonempty.of_sub_right Set.Nonempty.of_sub_right
 -/

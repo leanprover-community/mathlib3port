@@ -108,7 +108,7 @@ open Sum PUnit
 This is useful when considering the associated polynomial endofunctor.
 -/
 @[simps]
-def NatαEquivPUnitSumPUnit : nat_α ≃ Sum PUnit.{u + 1} PUnit
+def NatαEquivPUnitSumPUnit : Natα ≃ Sum PUnit.{u + 1} PUnit
     where
   toFun c :=
     match c with

@@ -38,13 +38,13 @@ theorem map_coe_nnreal : WithTop.map (coe : ℕ → ℝ≥0) = (coe : ℕ∞ →
 /-- Coercion `ℕ∞ → ℝ≥0∞` as an `order_embedding`. -/
 @[simps (config := { fullyApplied := false })]
 def toEnnrealOrderEmbedding : ℕ∞ ↪o ℝ≥0∞ :=
-  Nat.castOrderEmbedding.with_top_map
+  Nat.castOrderEmbedding.withTop_map
 #align enat.to_ennreal_order_embedding ENat.toEnnrealOrderEmbedding
 
 /-- Coercion `ℕ∞ → ℝ≥0∞` as a ring homomorphism. -/
 @[simps (config := { fullyApplied := false })]
 def toEnnrealRingHom : ℕ∞ →+* ℝ≥0∞ :=
-  (Nat.castRingHom ℝ≥0).with_top_map Nat.cast_injective
+  (Nat.castRingHom ℝ≥0).withTop_map Nat.cast_injective
 #align enat.to_ennreal_ring_hom ENat.toEnnrealRingHom
 
 @[simp, norm_cast]

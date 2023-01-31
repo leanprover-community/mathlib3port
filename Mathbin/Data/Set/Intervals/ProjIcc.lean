@@ -240,6 +240,6 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_mono.strict_mono_on_Icc_extend StrictMono.strictMonoOn_IccExtendₓ'. -/
 theorem StrictMono.strictMonoOn_IccExtend (hf : StrictMono f) :
     StrictMonoOn (IccExtend h f) (Icc a b) :=
-  hf.comp_strict_mono_on (strictMonoOn_projIcc h)
+  hf.comp_strictMonoOn (strictMonoOn_projIcc h)
 #align strict_mono.strict_mono_on_Icc_extend StrictMono.strictMonoOn_IccExtend
 

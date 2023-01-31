@@ -58,7 +58,7 @@ theorem p_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
   · unfold P
     simp only [add_right_eq_self, comp_add, HomologicalComplex.comp_f,
       HomologicalComplex.add_f_apply, comp_id]
-    exact (higher_faces_vanish.of_P q n).comp_Hσ_eq_zero (nat.succ_le_iff.mp hqn)
+    exact (higher_faces_vanish.of_P q n).comp_hσ_eq_zero (nat.succ_le_iff.mp hqn)
 #align algebraic_topology.dold_kan.P_is_eventually_constant AlgebraicTopology.DoldKan.p_is_eventually_constant
 
 theorem q_is_eventually_constant {q n : ℕ} (hqn : n ≤ q) :
@@ -75,7 +75,7 @@ def pInfty : K[X] ⟶ K[X] :=
 
 /-- The endomorphism `Q_infty : K[X] ⟶ K[X]` obtained from the `Q q` by passing to the limit. -/
 def qInfty : K[X] ⟶ K[X] :=
-  𝟙 _ - P_infty
+  𝟙 _ - pInfty
 #align algebraic_topology.dold_kan.Q_infty AlgebraicTopology.DoldKan.qInfty
 
 @[simp]
@@ -116,7 +116,7 @@ theorem pInfty_f_idem (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ pInfty.f n = p
 #align algebraic_topology.dold_kan.P_infty_f_idem AlgebraicTopology.DoldKan.pInfty_f_idem
 
 @[simp, reassoc.1]
-theorem pInfty_idem : (pInfty : K[X] ⟶ _) ≫ P_infty = P_infty :=
+theorem pInfty_idem : (pInfty : K[X] ⟶ _) ≫ pInfty = pInfty :=
   by
   ext n
   exact P_infty_f_idem n
@@ -128,7 +128,7 @@ theorem qInfty_f_idem (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ qInfty.f n = q
 #align algebraic_topology.dold_kan.Q_infty_f_idem AlgebraicTopology.DoldKan.qInfty_f_idem
 
 @[simp, reassoc.1]
-theorem qInfty_idem : (qInfty : K[X] ⟶ _) ≫ Q_infty = Q_infty :=
+theorem qInfty_idem : (qInfty : K[X] ⟶ _) ≫ qInfty = qInfty :=
   by
   ext n
   exact Q_infty_f_idem n
@@ -143,7 +143,7 @@ theorem pInfty_f_comp_qInfty_f (n : ℕ) : (pInfty.f n : X _[n] ⟶ _) ≫ qInft
 #align algebraic_topology.dold_kan.P_infty_f_comp_Q_infty_f AlgebraicTopology.DoldKan.pInfty_f_comp_qInfty_f
 
 @[simp, reassoc.1]
-theorem pInfty_comp_qInfty : (pInfty : K[X] ⟶ _) ≫ Q_infty = 0 :=
+theorem pInfty_comp_qInfty : (pInfty : K[X] ⟶ _) ≫ qInfty = 0 :=
   by
   ext n
   apply P_infty_f_comp_Q_infty_f
@@ -158,14 +158,14 @@ theorem qInfty_f_comp_pInfty_f (n : ℕ) : (qInfty.f n : X _[n] ⟶ _) ≫ pInft
 #align algebraic_topology.dold_kan.Q_infty_f_comp_P_infty_f AlgebraicTopology.DoldKan.qInfty_f_comp_pInfty_f
 
 @[simp, reassoc.1]
-theorem qInfty_comp_pInfty : (qInfty : K[X] ⟶ _) ≫ P_infty = 0 :=
+theorem qInfty_comp_pInfty : (qInfty : K[X] ⟶ _) ≫ pInfty = 0 :=
   by
   ext n
   apply Q_infty_f_comp_P_infty_f
 #align algebraic_topology.dold_kan.Q_infty_comp_P_infty AlgebraicTopology.DoldKan.qInfty_comp_pInfty
 
 @[simp]
-theorem pInfty_add_qInfty : (pInfty : K[X] ⟶ _) + Q_infty = 𝟙 _ :=
+theorem pInfty_add_qInfty : (pInfty : K[X] ⟶ _) + qInfty = 𝟙 _ :=
   by
   dsimp only [Q_infty]
   simp only [add_sub_cancel'_right]

@@ -247,7 +247,7 @@ but is expected to have type
   forall {R : Type.{u4}} {R' : Type.{u2}} {S : Type.{u3}} {S' : Type.{u1}} {T : Type.{u5}} [_inst_1 : NonUnitalNonAssocSemiring.{u4} R] [_inst_2 : NonUnitalNonAssocSemiring.{u3} S] [_inst_3 : NonUnitalNonAssocSemiring.{u2} R'] [_inst_4 : NonUnitalNonAssocSemiring.{u1} S'] [_inst_5 : NonUnitalNonAssocSemiring.{u5} T] (f : NonUnitalRingHom.{u5, u4} T R _inst_5 _inst_1) (g : NonUnitalRingHom.{u5, u3} T S _inst_5 _inst_2) (f' : NonUnitalRingHom.{u4, u2} R R' _inst_1 _inst_3) (g' : NonUnitalRingHom.{u3, u1} S S' _inst_2 _inst_4), Eq.{max (max (succ u2) (succ u1)) (succ u5)} (NonUnitalRingHom.{u5, max u2 u1} T (Prod.{u2, u1} R' S') _inst_5 (Prod.instNonUnitalNonAssocSemiringProd.{u2, u1} R' S' _inst_3 _inst_4)) (NonUnitalRingHom.comp.{u5, max u4 u3, max u2 u1} T (Prod.{u4, u3} R S) (Prod.{u2, u1} R' S') _inst_5 (Prod.instNonUnitalNonAssocSemiringProd.{u4, u3} R S _inst_1 _inst_2) (Prod.instNonUnitalNonAssocSemiringProd.{u2, u1} R' S' _inst_3 _inst_4) (NonUnitalRingHom.prodMap.{u4, u2, u3, u1} R R' S S' _inst_1 _inst_2 _inst_3 _inst_4 f' g') (NonUnitalRingHom.prod.{u5, u4, u3} T R S _inst_5 _inst_1 _inst_2 f g)) (NonUnitalRingHom.prod.{u5, u2, u1} T R' S' _inst_5 _inst_3 _inst_4 (NonUnitalRingHom.comp.{u5, u4, u2} T R R' _inst_5 _inst_1 _inst_3 f' f) (NonUnitalRingHom.comp.{u5, u3, u1} T S S' _inst_5 _inst_2 _inst_4 g' g))
 Case conversion may be inaccurate. Consider using '#align non_unital_ring_hom.prod_comp_prod_map NonUnitalRingHom.prod_comp_prodMapₓ'. -/
 theorem prod_comp_prodMap (f : T →ₙ+* R) (g : T →ₙ+* S) (f' : R →ₙ+* R') (g' : S →ₙ+* S') :
-    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 #align non_unital_ring_hom.prod_comp_prod_map NonUnitalRingHom.prod_comp_prodMap
 
@@ -412,7 +412,7 @@ but is expected to have type
   forall {R : Type.{u4}} {R' : Type.{u2}} {S : Type.{u3}} {S' : Type.{u1}} {T : Type.{u5}} [_inst_1 : NonAssocSemiring.{u4} R] [_inst_2 : NonAssocSemiring.{u3} S] [_inst_3 : NonAssocSemiring.{u2} R'] [_inst_4 : NonAssocSemiring.{u1} S'] [_inst_5 : NonAssocSemiring.{u5} T] (f : RingHom.{u5, u4} T R _inst_5 _inst_1) (g : RingHom.{u5, u3} T S _inst_5 _inst_2) (f' : RingHom.{u4, u2} R R' _inst_1 _inst_3) (g' : RingHom.{u3, u1} S S' _inst_2 _inst_4), Eq.{max (max (succ u2) (succ u1)) (succ u5)} (RingHom.{u5, max u2 u1} T (Prod.{u2, u1} R' S') _inst_5 (Prod.instNonAssocSemiringProd.{u2, u1} R' S' _inst_3 _inst_4)) (RingHom.comp.{u5, max u4 u3, max u2 u1} T (Prod.{u4, u3} R S) (Prod.{u2, u1} R' S') _inst_5 (Prod.instNonAssocSemiringProd.{u4, u3} R S _inst_1 _inst_2) (Prod.instNonAssocSemiringProd.{u2, u1} R' S' _inst_3 _inst_4) (RingHom.prodMap.{u4, u2, u3, u1} R R' S S' _inst_1 _inst_2 _inst_3 _inst_4 f' g') (RingHom.prod.{u5, u4, u3} T R S _inst_5 _inst_1 _inst_2 f g)) (RingHom.prod.{u5, u2, u1} T R' S' _inst_5 _inst_3 _inst_4 (RingHom.comp.{u5, u4, u2} T R R' _inst_5 _inst_1 _inst_3 f' f) (RingHom.comp.{u5, u3, u1} T S S' _inst_5 _inst_2 _inst_4 g' g))
 Case conversion may be inaccurate. Consider using '#align ring_hom.prod_comp_prod_map RingHom.prod_comp_prodMapₓ'. -/
 theorem prod_comp_prodMap (f : T →+* R) (g : T →+* S) (f' : R →+* R') (g' : S →+* S') :
-    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 #align ring_hom.prod_comp_prod_map RingHom.prod_comp_prodMap
 

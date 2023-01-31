@@ -106,7 +106,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
   have h8 : (sphere z₀ r).Nonempty := normed_space.sphere_nonempty.mpr hr.le
   have h9 : ContinuousOn (fun x => ‖f x - f z₀‖) (sphere z₀ r) :=
     continuous_norm.comp_continuous_on
-      ((h6.sub_const (f z₀)).continuous_on_ball.mono sphere_subset_closed_ball)
+      ((h6.sub_const (f z₀)).continuousOn_ball.mono sphere_subset_closed_ball)
   obtain ⟨x, hx, hfx⟩ := (isCompact_sphere z₀ r).exists_forall_le h8 h9
   refine' ⟨‖f x - f z₀‖ / 2, half_pos (norm_sub_pos_iff.mpr (h7 x hx)), _⟩
   exact

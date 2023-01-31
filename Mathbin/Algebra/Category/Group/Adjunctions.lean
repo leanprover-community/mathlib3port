@@ -73,7 +73,7 @@ theorem free_map_coe {α β : Type u} {f : α → β} (x : FreeAbelianGroup α) 
 def adj : free ⊣ forget AddCommGroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeAbelianGroup.lift.symm
-      hom_equiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm' := by
         intros
         ext
         rfl }
@@ -114,7 +114,7 @@ def free : Type u ⥤ GroupCat where
 def adj : free ⊣ forget GroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeGroup.lift.symm
-      hom_equiv_naturality_left_symm' := fun X Y G f g =>
+      homEquiv_naturality_left_symm' := fun X Y G f g =>
         by
         ext1
         rfl }
@@ -155,7 +155,7 @@ def abelianize : GroupCat.{u} ⥤ CommGroupCat.{u}
 def abelianizeAdj : abelianize ⊣ forget₂ CommGroupCat.{u} GroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun G A => Abelianization.lift.symm
-      hom_equiv_naturality_left_symm' := fun G H A f g =>
+      homEquiv_naturality_left_symm' := fun G H A f g =>
         by
         ext1
         rfl }
@@ -187,8 +187,8 @@ def GroupCat.forget₂MonAdj : forget₂ GroupCat Mon ⊣ Mon.units.{u}
   counit :=
     { app := fun X => Units.coeHom X
       naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
-  hom_equiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
-  hom_equiv_counit' X Y f := MonoidHom.ext fun _ => rfl
+  homEquiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
+  homEquiv_counit' X Y f := MonoidHom.ext fun _ => rfl
 #align Group.forget₂_Mon_adj GroupCat.forget₂MonAdj
 
 instance : IsRightAdjoint Mon.units.{u} :=
@@ -218,8 +218,8 @@ def CommGroupCat.forget₂CommMonAdj : forget₂ CommGroupCat CommMon ⊣ CommMo
   counit :=
     { app := fun X => Units.coeHom X
       naturality' := fun X Y f => MonoidHom.ext fun x => rfl }
-  hom_equiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
-  hom_equiv_counit' X Y f := MonoidHom.ext fun _ => rfl
+  homEquiv_unit' X Y f := MonoidHom.ext fun _ => Units.ext rfl
+  homEquiv_counit' X Y f := MonoidHom.ext fun _ => rfl
 #align CommGroup.forget₂_CommMon_adj CommGroupCat.forget₂CommMonAdj
 
 instance : IsRightAdjoint CommMon.units.{u} :=

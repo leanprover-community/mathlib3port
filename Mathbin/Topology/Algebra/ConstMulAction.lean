@@ -232,8 +232,8 @@ theorem continuous_const_smul_iff (c : G) : (Continuous fun x => c • f x) ↔ 
 def Homeomorph.smul (γ : G) : α ≃ₜ α
     where
   toEquiv := MulAction.toPerm γ
-  continuous_to_fun := continuous_const_smul γ
-  continuous_inv_fun := continuous_const_smul γ⁻¹
+  continuous_toFun := continuous_const_smul γ
+  continuous_invFun := continuous_const_smul γ⁻¹
 #align homeomorph.smul Homeomorph.smul
 #align homeomorph.vadd Homeomorph.vadd
 

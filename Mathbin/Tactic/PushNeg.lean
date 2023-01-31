@@ -232,7 +232,7 @@ open Interactive (parse loc.ns loc.wildcard)
 
 open Interactive.Types (location texpr)
 
-open Lean.Parser (tk ident many)
+open Lean.Parser (tk ident anyM)
 
 open Interactive.Loc
 
@@ -269,7 +269,7 @@ using say `push_neg at h h' ⊢` as usual.
 -/
 unsafe def tactic.interactive.push_neg : parse location → tactic Unit
   | loc.ns loc_l =>
-    loc_l.mmap' fun l =>
+    loc_l.mapM' fun l =>
       match l with
       | some h => do
         push_neg_at_hyp h
@@ -321,7 +321,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
         (
             ( ( get_local h >>= revert ) >> tactic.interactive.contrapose none )
               >>
-              intro ( h' . getOrElse h )
+              intro ( h' . getD h )
             )
           >>
           skip

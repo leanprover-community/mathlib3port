@@ -213,7 +213,7 @@ theorem gLPos.coe_neg_apply (g : gLPos n R) (i j : n) :
 #align matrix.GL_pos.coe_neg_apply Matrix.gLPos.coe_neg_apply
 
 instance : HasDistribNeg (gLPos n R) :=
-  Subtype.coe_injective.HasDistribNeg _ gLPos.coe_neg_GL (gLPos n R).coe_mul
+  Subtype.coe_injective.HasDistribNeg _ gLPos.coe_neg_GL (gLPos n R).val_mul
 
 end Neg
 
@@ -232,12 +232,12 @@ def toGLPos : SpecialLinearGroup n R →* gLPos n R
 instance : Coe (SpecialLinearGroup n R) (gLPos n R) :=
   ⟨toGLPos⟩
 
-theorem coe_eq_toGLPos : (coe : SpecialLinearGroup n R → gLPos n R) = to_GL_pos :=
+theorem coe_eq_toGLPos : (coe : SpecialLinearGroup n R → gLPos n R) = toGLPos :=
   rfl
 #align matrix.special_linear_group.coe_eq_to_GL_pos Matrix.SpecialLinearGroup.coe_eq_toGLPos
 
 theorem toGLPos_injective : Function.Injective (toGLPos : SpecialLinearGroup n R → gLPos n R) :=
-  (show Function.Injective ((coe : gLPos n R → Matrix n n R) ∘ to_GL_pos) from
+  (show Function.Injective ((coe : gLPos n R → Matrix n n R) ∘ toGLPos) from
       Subtype.coe_injective).of_comp
 #align matrix.special_linear_group.to_GL_pos_injective Matrix.SpecialLinearGroup.toGLPos_injective
 

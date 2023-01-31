@@ -164,7 +164,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (x : Prod.{u2, u1} α β), Eq.{max (succ u1) (succ u2)} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Prod.{u2, u1} α β) => Prod.{u1, u2} β α) x) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α)) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Prod.{u2, u1} α β) => Prod.{u1, u2} β α) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α)) (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α)) (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Equiv.instEquivLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α)))) (Equiv.prodComm.{u2, u1} α β) x) (Prod.swap.{u2, u1} α β x)
 Case conversion may be inaccurate. Consider using '#align equiv.prod_comm_apply Equiv.prodComm_applyₓ'. -/
 @[simp]
-theorem prodComm_apply {α β : Type _} (x : α × β) : prodComm α β x = x.swap :=
+theorem prodComm_apply {α β : Type _} (x : α × β) : prodComm α β x = x.symm :=
   rfl
 #align equiv.prod_comm_apply Equiv.prodComm_apply
 
@@ -1005,7 +1005,7 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {φ : α -> β -> Sort.{u1}}, Eq.{max (max 1 (imax u3 u2 u1)) (imax u2 u3 u1)} (Equiv.{imax u2 u3 u1, imax u3 u2 u1} (forall (b : β) (a : α), φ a b) (forall (a : α) (b : β), φ a b)) (Equiv.symm.{imax u3 u2 u1, imax u2 u3 u1} (forall (a : α) (b : β), φ a b) (forall (b : β) (a : α), φ a b) (Equiv.piComm.{u3, u2, u1} α β φ)) (Equiv.piComm.{u2, u3, u1} β α (Function.swap.{u3, u2, succ u1} α β (fun (ᾰ : α) (ᾰ : β) => Sort.{u1}) φ))
 Case conversion may be inaccurate. Consider using '#align equiv.Pi_comm_symm Equiv.piComm_symmₓ'. -/
 @[simp]
-theorem piComm_symm {α β} {φ : α → β → Sort _} : (piComm φ).symm = (Pi_comm <| swap φ) :=
+theorem piComm_symm {α β} {φ : α → β → Sort _} : (piComm φ).symm = (piComm <| swap φ) :=
   rfl
 #align equiv.Pi_comm_symm Equiv.piComm_symm
 
@@ -1595,7 +1595,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}}, (Equiv.{u2, u1} α β) -> (forall [_inst_1 : IsEmpty.{u1} β], IsEmpty.{u2} α)
 Case conversion may be inaccurate. Consider using '#align equiv.is_empty Equiv.isEmptyₓ'. -/
 protected theorem isEmpty (e : α ≃ β) [IsEmpty β] : IsEmpty α :=
-  e.is_empty_congr.mpr ‹_›
+  e.isEmpty_congr.mpr ‹_›
 #align equiv.is_empty Equiv.isEmpty
 
 section
@@ -1736,7 +1736,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.subtype_subtype_
 @[simps]
 def subtypeSubtypeEquivSubtypeInter {α : Type u} (p q : α → Prop) :
     { x : Subtype p // q x.1 } ≃ Subtype fun x => p x ∧ q x :=
-  (subtypeSubtypeEquivSubtypeExists p _).trans <| subtype_equiv_right fun x => exists_prop
+  (subtypeSubtypeEquivSubtypeExists p _).trans <| subtypeEquivRight fun x => exists_prop
 #align equiv.subtype_subtype_equiv_subtype_inter Equiv.subtypeSubtypeEquivSubtypeInter
 
 /- warning: equiv.subtype_subtype_equiv_subtype -> Equiv.subtypeSubtypeEquivSubtype is a dubious translation:
@@ -1750,7 +1750,7 @@ then we can drop the latter. -/
 @[simps]
 def subtypeSubtypeEquivSubtype {α : Type u} {p q : α → Prop} (h : ∀ {x}, q x → p x) :
     { x : Subtype p // q x.1 } ≃ Subtype q :=
-  (subtypeSubtypeEquivSubtypeInter p _).trans <| subtype_equiv_right fun x => and_iff_right_of_imp h
+  (subtypeSubtypeEquivSubtypeInter p _).trans <| subtypeEquivRight fun x => and_iff_right_of_imp h
 #align equiv.subtype_subtype_equiv_subtype Equiv.subtypeSubtypeEquivSubtype
 
 #print Equiv.subtypeUnivEquiv /-
@@ -1785,7 +1785,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.sigma_subtype_eq
 if the fiber is empty outside of the subset -/
 def sigmaSubtypeEquivOfSubset {α : Type u} (p : α → Type v) (q : α → Prop) (h : ∀ x, p x → q x) :
     (Σx : Subtype q, p x) ≃ Σx : α, p x :=
-  (subtypeSigmaEquiv p q).symm.trans <| subtype_univ_equiv fun x => h x.1 x.2
+  (subtypeSigmaEquiv p q).symm.trans <| subtypeUnivEquiv fun x => h x.1 x.2
 #align equiv.sigma_subtype_equiv_of_subset Equiv.sigmaSubtypeEquivOfSubset
 
 #print Equiv.sigmaSubtypeFiberEquiv /-
@@ -1974,7 +1974,7 @@ def subtypeEquivCodomain (f : { x' // x' ≠ x } → Y) : { g : X → Y // g ∘
           (show Unique { x' // x' = x } from
             { default := ⟨x, rfl⟩
               uniq := fun ⟨x', h⟩ => Subtype.val_injective h })
-          (subtype_equiv_right fun a => Classical.not_not)
+          (subtypeEquivRight fun a => Classical.not_not)
 #align equiv.subtype_equiv_codomain Equiv.subtypeEquivCodomain
 
 /- warning: equiv.coe_subtype_equiv_codomain -> Equiv.coe_subtypeEquivCodomain is a dubious translation:
@@ -2699,10 +2699,10 @@ theorem semiconj₂_conj : Semiconj₂ e f (e.arrowCongr e.conj f) := fun x y =>
 #align equiv.semiconj₂_conj Equiv.semiconj₂_conj
 
 instance [IsAssociative α₁ f] : IsAssociative β₁ (e.arrowCongr (e.arrowCongr e) f) :=
-  (e.semiconj₂_conj f).is_associative_right e.Surjective
+  (e.semiconj₂_conj f).isAssociative_right e.Surjective
 
 instance [IsIdempotent α₁ f] : IsIdempotent β₁ (e.arrowCongr (e.arrowCongr e) f) :=
-  (e.semiconj₂_conj f).is_idempotent_right e.Surjective
+  (e.semiconj₂_conj f).isIdempotent_right e.Surjective
 
 instance [IsLeftCancel α₁ f] : IsLeftCancel β₁ (e.arrowCongr (e.arrowCongr e) f) :=
   ⟨e.Surjective.forall₃.2 fun x y z => by simpa using @IsLeftCancel.left_cancel _ f _ x y z⟩

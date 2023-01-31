@@ -72,7 +72,7 @@ theorem Icc_add_bij : BijOn (· + d) (Icc a b) (Icc (a + d) (b + d)) :=
   by
   rw [← Ici_inter_Iic, ← Ici_inter_Iic]
   exact
-    (Ici_add_bij a d).inter_maps_to (fun x hx => add_le_add_right hx _) fun x hx =>
+    (Ici_add_bij a d).inter_mapsTo (fun x hx => add_le_add_right hx _) fun x hx =>
       le_of_add_le_add_right hx.2
 #align set.Icc_add_bij Set.Icc_add_bij
 
@@ -86,7 +86,7 @@ theorem Ioo_add_bij : BijOn (· + d) (Ioo a b) (Ioo (a + d) (b + d)) :=
   by
   rw [← Ioi_inter_Iio, ← Ioi_inter_Iio]
   exact
-    (Ioi_add_bij a d).inter_maps_to (fun x hx => add_lt_add_right hx _) fun x hx =>
+    (Ioi_add_bij a d).inter_mapsTo (fun x hx => add_lt_add_right hx _) fun x hx =>
       lt_of_add_lt_add_right hx.2
 #align set.Ioo_add_bij Set.Ioo_add_bij
 
@@ -100,7 +100,7 @@ theorem Ioc_add_bij : BijOn (· + d) (Ioc a b) (Ioc (a + d) (b + d)) :=
   by
   rw [← Ioi_inter_Iic, ← Ioi_inter_Iic]
   exact
-    (Ioi_add_bij a d).inter_maps_to (fun x hx => add_le_add_right hx _) fun x hx =>
+    (Ioi_add_bij a d).inter_mapsTo (fun x hx => add_le_add_right hx _) fun x hx =>
       le_of_add_le_add_right hx.2
 #align set.Ioc_add_bij Set.Ioc_add_bij
 
@@ -114,7 +114,7 @@ theorem Ico_add_bij : BijOn (· + d) (Ico a b) (Ico (a + d) (b + d)) :=
   by
   rw [← Ici_inter_Iio, ← Ici_inter_Iio]
   exact
-    (Ici_add_bij a d).inter_maps_to (fun x hx => add_lt_add_right hx _) fun x hx =>
+    (Ici_add_bij a d).inter_mapsTo (fun x hx => add_lt_add_right hx _) fun x hx =>
       lt_of_add_lt_add_right hx.2
 #align set.Ico_add_bij Set.Ico_add_bij
 

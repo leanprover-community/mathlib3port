@@ -118,7 +118,7 @@ variable {G}
 /-- Pattern to get `walk.nil` with the vertex as an explicit argument. -/
 @[match_pattern]
 abbrev nil' (u : V) : G.Walk u u :=
-  walk.nil
+  Walk.nil
 #align simple_graph.walk.nil' SimpleGraph.Walk.nil'
 
 /-- Pattern to get `walk.cons` with the vertices as explicit arguments. -/
@@ -151,7 +151,7 @@ theorem copy_copy {u v u' v' u'' v''} (p : G.Walk u v) (hu : u = u') (hv : v = v
 #align simple_graph.walk.copy_copy SimpleGraph.Walk.copy_copy
 
 @[simp]
-theorem copy_nil {u u'} (hu : u = u') : (Walk.nil : G.Walk u u).copy hu hu = walk.nil :=
+theorem copy_nil {u u'} (hu : u = u') : (Walk.nil : G.Walk u u).copy hu hu = Walk.nil :=
   by
   subst_vars
   rfl
@@ -228,7 +228,7 @@ theorem getVert_of_length_le {u v} (w : G.Walk u v) {i : ℕ} (hi : w.length ≤
 
 @[simp]
 theorem getVert_length {u v} (w : G.Walk u v) : w.getVert w.length = v :=
-  w.get_vert_of_length_le rfl.le
+  w.getVert_of_length_le rfl.le
 #align simple_graph.walk.get_vert_length SimpleGraph.Walk.getVert_length
 
 theorem adj_getVert_succ {u v} (w : G.Walk u v) {i : ℕ} (hi : i < w.length) :
@@ -607,7 +607,7 @@ theorem map_fst_darts_append {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst +
   by induction p <;> simp! [*]
 #align simple_graph.walk.map_fst_darts_append SimpleGraph.Walk.map_fst_darts_append
 
-theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.support.init := by
+theorem map_fst_darts {u v : V} (p : G.Walk u v) : p.darts.map Dart.fst = p.support.dropLast := by
   simpa! using congr_arg List.dropLast (map_fst_darts_append p)
 #align simple_graph.walk.map_fst_darts SimpleGraph.Walk.map_fst_darts
 
@@ -1050,12 +1050,12 @@ theorem darts_dropUntil_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.support
 
 theorem edges_takeUntil_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) :
     (p.takeUntil u h).edges ⊆ p.edges :=
-  List.map_subset _ (p.darts_take_until_subset h)
+  List.map_subset _ (p.darts_takeUntil_subset h)
 #align simple_graph.walk.edges_take_until_subset SimpleGraph.Walk.edges_takeUntil_subset
 
 theorem edges_dropUntil_subset {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) :
     (p.dropUntil u h).edges ⊆ p.edges :=
-  List.map_subset _ (p.darts_drop_until_subset h)
+  List.map_subset _ (p.darts_dropUntil_subset h)
 #align simple_graph.walk.edges_drop_until_subset SimpleGraph.Walk.edges_dropUntil_subset
 
 theorem length_takeUntil_le {u v w : V} (p : G.Walk v w) (h : u ∈ p.support) :
@@ -1210,7 +1210,7 @@ theorem nodup_support {u v : V} (p : G.Path u v) : (p : G.Walk u v).support.Nodu
   (Walk.isPath_def _).mp p.property
 #align simple_graph.path.nodup_support SimpleGraph.Path.nodup_support
 
-theorem loop_eq {v : V} (p : G.Path v v) : p = path.nil :=
+theorem loop_eq {v : V} (p : G.Path v v) : p = Path.nil :=
   by
   obtain ⟨_ | _, this⟩ := p
   · rfl
@@ -1280,7 +1280,7 @@ theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.leng
 
 /-- Given a walk, produces a path with the same endpoints using `simple_graph.walk.bypass`. -/
 def toPath {u v : V} (p : G.Walk u v) : G.Path u v :=
-  ⟨p.bypass, p.bypass_is_path⟩
+  ⟨p.bypass, p.bypass_isPath⟩
 #align simple_graph.walk.to_path SimpleGraph.Walk.toPath
 
 theorem support_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.support ⊆ p.support :=
@@ -1567,7 +1567,7 @@ def transfer :
 variable {u v w : V} (p : G.Walk u v) (q : G.Walk v w) {H : SimpleGraph V}
   (hp : ∀ e, e ∈ p.edges → e ∈ H.edgeSet) (hq : ∀ e, e ∈ q.edges → e ∈ H.edgeSet)
 
-theorem transfer_self : p.transfer G p.edges_subset_edge_set = p := by
+theorem transfer_self : p.transfer G p.edges_subset_edgeSet = p := by
   induction p <;> simp only [*, transfer, eq_self_iff_true, heq_iff_eq, and_self_iff]
 #align simple_graph.walk.transfer_self SimpleGraph.Walk.transfer_self
 
@@ -1672,7 +1672,7 @@ def toDeleteEdges (s : Set (Sym2 V)) {v w : V} (p : G.Walk v w) (hp : ∀ e, e �
 
 @[simp]
 theorem toDeleteEdges_nil (s : Set (Sym2 V)) {v : V} (hp) :
-    (Walk.nil : G.Walk v v).toDeleteEdges s hp = walk.nil :=
+    (Walk.nil : G.Walk v v).toDeleteEdges s hp = Walk.nil :=
   rfl
 #align simple_graph.walk.to_delete_edges_nil SimpleGraph.Walk.toDeleteEdges_nil
 
@@ -1694,7 +1694,7 @@ abbrev toDeleteEdge {v w : V} (e : Sym2 V) (p : G.Walk v w) (hp : e ∉ p.edges)
 
 @[simp]
 theorem map_toDeleteEdges_eq (s : Set (Sym2 V)) {v w : V} {p : G.Walk v w} (hp) :
-    Walk.map (Hom.mapSpanningSubgraphs (G.delete_edges_le s)) (p.toDeleteEdges s hp) = p := by
+    Walk.map (Hom.mapSpanningSubgraphs (G.deleteEdges_le s)) (p.toDeleteEdges s hp) = p := by
   rw [← transfer_eq_map_of_le, transfer_transfer, transfer_self]
 #align simple_graph.walk.map_to_delete_edges_eq SimpleGraph.Walk.map_toDeleteEdges_eq
 
@@ -2004,7 +2004,7 @@ theorem mem_verts_toSubgraph (p : G.Walk u v) : w ∈ p.toSubgraph.verts ↔ w �
 
 @[simp]
 theorem verts_toSubgraph (p : G.Walk u v) : p.toSubgraph.verts = { w | w ∈ p.support } :=
-  Set.ext fun _ => p.mem_verts_to_subgraph
+  Set.ext fun _ => p.mem_verts_toSubgraph
 #align simple_graph.walk.verts_to_subgraph SimpleGraph.Walk.verts_toSubgraph
 
 theorem mem_edges_toSubgraph (p : G.Walk u v) {e : Sym2 V} :
@@ -2013,7 +2013,7 @@ theorem mem_edges_toSubgraph (p : G.Walk u v) {e : Sym2 V} :
 
 @[simp]
 theorem edgeSet_toSubgraph (p : G.Walk u v) : p.toSubgraph.edgeSet = { e | e ∈ p.edges } :=
-  Set.ext fun _ => p.mem_edges_to_subgraph
+  Set.ext fun _ => p.mem_edges_toSubgraph
 #align simple_graph.walk.edge_set_to_subgraph SimpleGraph.Walk.edgeSet_toSubgraph
 
 @[simp]
@@ -2110,7 +2110,7 @@ def finsetWalkLength : ∀ (n : ℕ) (u v : V), Finset (G.Walk u v)
       exact {walk.nil}
     else ∅
   | n + 1, u, v =>
-    Finset.univ.bUnion fun w : G.neighborSet u =>
+    Finset.univ.bunionᵢ fun w : G.neighborSet u =>
       (finset_walk_length n w v).map ⟨fun p => Walk.cons w.property p, fun p q => by simp⟩
 #align simple_graph.finset_walk_length SimpleGraph.finsetWalkLength
 
@@ -2137,7 +2137,7 @@ variable {G}
 
 theorem Walk.mem_finsetWalkLength_iff_length_eq {n : ℕ} {u v : V} (p : G.Walk u v) :
     p ∈ G.finsetWalkLength n u v ↔ p.length = n :=
-  Set.ext_iff.mp (G.coe_finset_walk_length_eq n u v) p
+  Set.ext_iff.mp (G.coe_finsetWalkLength_eq n u v) p
 #align simple_graph.walk.mem_finset_walk_length_iff_length_eq SimpleGraph.Walk.mem_finsetWalkLength_iff_length_eq
 
 variable (G)
@@ -2164,7 +2164,7 @@ theorem card_set_walk_length_eq (u v : V) (n : ℕ) :
 
 instance fintypeSetPathLength (u v : V) (n : ℕ) :
     Fintype { p : G.Walk u v | p.IsPath ∧ p.length = n } :=
-  Fintype.ofFinset ((G.finsetWalkLength n u v).filter Walk.IsPath) <| by
+  Fintype.ofFinset ((G.finsetWalkLength n u v).filterₓ Walk.IsPath) <| by
     simp [walk.mem_finset_walk_length_iff_length_eq, and_comm']
 #align simple_graph.fintype_set_path_length SimpleGraph.fintypeSetPathLength
 

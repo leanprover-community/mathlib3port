@@ -63,20 +63,20 @@ def swap : TwoPointing α :=
 -/
 
 #print TwoPointing.swap_fst /-
-theorem swap_fst : p.swap.fst = p.snd :=
+theorem swap_fst : p.symm.fst = p.snd :=
   rfl
 #align two_pointing.swap_fst TwoPointing.swap_fst
 -/
 
 #print TwoPointing.swap_snd /-
-theorem swap_snd : p.swap.snd = p.fst :=
+theorem swap_snd : p.symm.snd = p.fst :=
   rfl
 #align two_pointing.swap_snd TwoPointing.swap_snd
 -/
 
 #print TwoPointing.swap_swap /-
 @[simp]
-theorem swap_swap : p.swap.swap = p := by ext <;> rfl
+theorem swap_swap : p.symm.symm = p := by ext <;> rfl
 #align two_pointing.swap_swap TwoPointing.swap_swap
 -/
 
@@ -206,14 +206,14 @@ protected def bool : TwoPointing Bool :=
 
 #print TwoPointing.bool_fst /-
 @[simp]
-theorem bool_fst : TwoPointing.bool.fst = ff :=
+theorem bool_fst : TwoPointing.bool.fst = false :=
   rfl
 #align two_pointing.bool_fst TwoPointing.bool_fst
 -/
 
 #print TwoPointing.bool_snd /-
 @[simp]
-theorem bool_snd : TwoPointing.bool.snd = tt :=
+theorem bool_snd : TwoPointing.bool.snd = true :=
   rfl
 #align two_pointing.bool_snd TwoPointing.bool_snd
 -/

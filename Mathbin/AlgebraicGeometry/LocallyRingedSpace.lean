@@ -159,7 +159,7 @@ instance : Faithful forgetToSheafedSpace where
 /-- The forgetful functor from `LocallyRingedSpace` to `Top`. -/
 @[simps]
 def forgetToTop : LocallyRingedSpace ⥤ TopCat :=
-  forget_to_SheafedSpace ⋙ SheafedSpace.forget _
+  forgetToSheafedSpace ⋙ SheafedSpace.forget _
 #align algebraic_geometry.LocallyRingedSpace.forget_to_Top AlgebraicGeometry.LocallyRingedSpace.forgetToTop
 
 @[simp]
@@ -218,7 +218,7 @@ instance : ReflectsIsomorphisms forgetToSheafedSpace
           hom.ext _ _ (is_iso.hom_inv_id _), hom.ext _ _ (is_iso.inv_hom_id _)⟩ }
 
 instance is_sheafedSpace_iso {X Y : LocallyRingedSpace} (f : X ⟶ Y) [IsIso f] : IsIso f.1 :=
-  LocallyRingedSpace.forgetToSheafedSpace.map_is_iso f
+  LocallyRingedSpace.forgetToSheafedSpace.map_isIso f
 #align algebraic_geometry.LocallyRingedSpace.is_SheafedSpace_iso AlgebraicGeometry.LocallyRingedSpace.is_sheafedSpace_iso
 
 /-- The restriction of a locally ringed space along an open embedding.
@@ -286,7 +286,7 @@ theorem preimage_basicOpen {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens Y
   · rintro ⟨⟨y, hyU⟩, hy : IsUnit _, rfl : y = _⟩
     erw [RingedSpace.mem_basic_open _ _ ⟨x, show x ∈ (opens.map f.1.base).obj U from hyU⟩]
     rw [← PresheafedSpace.stalk_map_germ_apply]
-    exact (PresheafedSpace.stalk_map f.1 _).is_unit_map hy
+    exact (PresheafedSpace.stalk_map f.1 _).isUnit_map hy
   · rintro ⟨y, hy : IsUnit _, rfl⟩
     erw [RingedSpace.mem_basic_open _ _ ⟨f.1.base y.1, y.2⟩]
     rw [← PresheafedSpace.stalk_map_germ_apply] at hy

@@ -115,9 +115,9 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
 #align stirling.log_stirling_seq_diff_has_sum Stirling.log_stirlingSeq_diff_hasSum
 
 /-- The sequence `log ∘ stirling_seq ∘ succ` is monotone decreasing -/
-theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirling_seq ∘ succ) :=
+theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirlingSeq ∘ succ) :=
   antitone_nat_of_succ_le fun n =>
-    sub_nonneg.mp <| (log_stirlingSeq_diff_hasSum n).Nonneg fun m => by positivity
+    sub_nonneg.mp <| (log_stirlingSeq_diff_hasSum n).NonNeg fun m => by positivity
 #align stirling.log_stirling_seq'_antitone Stirling.log_stirling_seq'_antitone
 
 /-- We have a bound for successive elements in the sequence `log (stirling_seq k)`.
@@ -221,7 +221,7 @@ theorem stirling_seq'_bounded_by_pos_constant : ∃ a, 0 < a ∧ ∀ n : ℕ, a 
 #align stirling.stirling_seq'_bounded_by_pos_constant Stirling.stirling_seq'_bounded_by_pos_constant
 
 /-- The sequence `stirling_seq ∘ succ` is monotone decreasing -/
-theorem stirling_seq'_antitone : Antitone (stirling_seq ∘ succ) := fun n m h =>
+theorem stirling_seq'_antitone : Antitone (stirlingSeq ∘ succ) := fun n m h =>
   (log_le_log (stirling_seq'_pos m) (stirling_seq'_pos n)).mp (log_stirling_seq'_antitone h)
 #align stirling.stirling_seq'_antitone Stirling.stirling_seq'_antitone
 

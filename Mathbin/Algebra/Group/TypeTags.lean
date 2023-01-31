@@ -71,14 +71,14 @@ def toMul : Additive α ≃ α :=
 
 #print Additive.ofMul_symm_eq /-
 @[simp]
-theorem ofMul_symm_eq : (@ofMul α).symm = to_mul :=
+theorem ofMul_symm_eq : (@ofMul α).symm = toMul :=
   rfl
 #align additive.of_mul_symm_eq Additive.ofMul_symm_eq
 -/
 
 #print Additive.toMul_symm_eq /-
 @[simp]
-theorem toMul_symm_eq : (@toMul α).symm = of_mul :=
+theorem toMul_symm_eq : (@toMul α).symm = ofMul :=
   rfl
 #align additive.to_mul_symm_eq Additive.toMul_symm_eq
 -/
@@ -103,14 +103,14 @@ def toAdd : Multiplicative α ≃ α :=
 
 #print Multiplicative.ofAdd_symm_eq /-
 @[simp]
-theorem ofAdd_symm_eq : (@ofAdd α).symm = to_add :=
+theorem ofAdd_symm_eq : (@ofAdd α).symm = toAdd :=
   rfl
 #align multiplicative.of_add_symm_eq Multiplicative.ofAdd_symm_eq
 -/
 
 #print Multiplicative.toAdd_symm_eq /-
 @[simp]
-theorem toAdd_symm_eq : (@toAdd α).symm = of_add :=
+theorem toAdd_symm_eq : (@toAdd α).symm = ofAdd :=
   rfl
 #align multiplicative.to_add_symm_eq Multiplicative.toAdd_symm_eq
 -/
@@ -313,8 +313,8 @@ instance [h : Monoid α] : AddMonoid (Additive α) :=
     zero := 0
     add := (· + ·)
     nsmul := @Monoid.npow α h
-    nsmul_zero' := Monoid.npow_zero
-    nsmul_succ' := Monoid.npow_succ }
+    nsmul_zero := Monoid.npow_zero
+    nsmul_succ := Monoid.npow_succ }
 
 instance [h : AddMonoid α] : Monoid (Multiplicative α) :=
   { Multiplicative.mulOneClass,
@@ -322,8 +322,8 @@ instance [h : AddMonoid α] : Monoid (Multiplicative α) :=
     one := 1
     mul := (· * ·)
     npow := @AddMonoid.nsmul α h
-    npow_zero' := AddMonoid.nsmul_zero
-    npow_succ' := AddMonoid.nsmul_succ }
+    npow_zero := AddMonoid.nsmul_zero
+    npow_succ := AddMonoid.nsmul_succ }
 
 instance [LeftCancelMonoid α] : AddLeftCancelMonoid (Additive α) :=
   { Additive.addMonoid,

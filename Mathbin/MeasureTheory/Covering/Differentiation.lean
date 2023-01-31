@@ -982,7 +982,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) / μ a) (v.filterAt x) (𝓝 0) :=
   by
   have I : integrable (hf.1.mk f) μ := hf.congr hf.1.ae_eq_mk
-  filter_upwards [v.ae_tendsto_lintegral_nnnorm_sub_div' I hf.1.strongly_measurable_mk,
+  filter_upwards [v.ae_tendsto_lintegral_nnnorm_sub_div' I hf.1.stronglyMeasurable_mk,
     hf.1.ae_eq_mk]with x hx h'x
   apply hx.congr _
   intro a

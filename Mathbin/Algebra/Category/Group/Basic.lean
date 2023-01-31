@@ -49,7 +49,7 @@ attribute [to_additive] GroupCat.largeCategory GroupCat.concreteCategory
 
 @[to_additive]
 instance : CoeSort GroupCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `Group` from the underlying type and typeclass. -/
 @[to_additive]
@@ -149,7 +149,7 @@ attribute [to_additive] CommGroupCat.largeCategory CommGroupCat.concreteCategory
 
 @[to_additive]
 instance : CoeSort CommGroupCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `CommGroup` from the underlying type and typeclass. -/
 @[to_additive]

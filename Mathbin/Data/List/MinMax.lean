@@ -110,7 +110,7 @@ variable [Preorder β] [@DecidableRel β (· < ·)] {f : α → β} {l : List α
 that there is no `b ∈ l` with `f a < f b`. If `a`, `b` are such that `f a = f b`, it returns
 whichever of `a` or `b` comes first in the list. `argmax f []` = none`. -/
 def argmax (f : α → β) (l : List α) : Option α :=
-  l.foldl (arg_aux fun b c => f c < f b) none
+  l.foldl (argAux fun b c => f c < f b) none
 #align list.argmax List.argmax
 -/
 
@@ -119,7 +119,7 @@ def argmax (f : α → β) (l : List α) : Option α :=
 that there is no `b ∈ l` with `f b < f a`. If `a`, `b` are such that `f a = f b`, it returns
 whichever of `a` or `b` comes first in the list. `argmin f []` = none`. -/
 def argmin (f : α → β) (l : List α) :=
-  l.foldl (arg_aux fun b c => f b < f c) none
+  l.foldl (argAux fun b c => f b < f c) none
 #align list.argmin List.argmin
 -/
 
@@ -322,7 +322,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u1} β] {f : α -> β} [_inst_2 : DecidableEq.{succ u2} α] {l : List.{u2} α} {m : α}, (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) m (List.argmax.{u2, u1} α β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1))))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_1 a b) f l)) -> (forall {a : α}, (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f m) (f a)) -> (LE.le.{0} Nat instLENat (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) m l) (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a l)))
 Case conversion may be inaccurate. Consider using '#align list.index_of_argmax List.index_of_argmaxₓ'. -/
 theorem index_of_argmax :
-    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
+    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a
   | [], m, _, _, _, _ => by simp
   | hd :: tl, m, hm, a, ha, ham =>
     by
@@ -349,7 +349,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u1} β] {f : α -> β} [_inst_2 : DecidableEq.{succ u2} α] {l : List.{u2} α} {m : α}, (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) m (List.argmin.{u2, u1} α β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1))))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_1 a b) f l)) -> (forall {a : α}, (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f a) (f m)) -> (LE.le.{0} Nat instLENat (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) m l) (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a l)))
 Case conversion may be inaccurate. Consider using '#align list.index_of_argmin List.index_of_argminₓ'. -/
 theorem index_of_argmin :
-    ∀ {l : List α} {m : α}, m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
+    ∀ {l : List α} {m : α},
+      m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
   @index_of_argmax _ βᵒᵈ _ _ _
 #align list.index_of_argmin List.index_of_argmin
 
@@ -361,7 +362,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.mem_argmax_iff List.mem_argmax_iffₓ'. -/
 theorem mem_argmax_iff :
     m ∈ argmax f l ↔
-      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
+      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a :=
   ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_of_mem_argmax ha hm, fun _ => index_of_argmax hm⟩,
     by
     rintro ⟨hml, ham, hma⟩
@@ -381,7 +382,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.argmax_eq_some_iff List.argmax_eq_some_iffₓ'. -/
 theorem argmax_eq_some_iff :
     argmax f l = some m ↔
-      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
+      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a :=
   mem_argmax_iff
 #align list.argmax_eq_some_iff List.argmax_eq_some_iff
 
@@ -393,7 +394,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.mem_argmin_iff List.mem_argmin_iffₓ'. -/
 theorem mem_argmin_iff :
     m ∈ argmin f l ↔
-      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
+      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
   @mem_argmax_iff _ βᵒᵈ _ _ _ _ _
 #align list.mem_argmin_iff List.mem_argmin_iff
 
@@ -405,7 +406,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.argmin_eq_some_iff List.argmin_eq_some_iffₓ'. -/
 theorem argmin_eq_some_iff :
     argmin f l = some m ↔
-      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
+      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
   mem_argmin_iff
 #align list.argmin_eq_some_iff List.argmin_eq_some_iff
 

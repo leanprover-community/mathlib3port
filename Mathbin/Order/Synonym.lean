@@ -72,14 +72,14 @@ def ofDual : αᵒᵈ ≃ α :=
 
 #print OrderDual.toDual_symm_eq /-
 @[simp]
-theorem toDual_symm_eq : (@toDual α).symm = of_dual :=
+theorem toDual_symm_eq : (@toDual α).symm = ofDual :=
   rfl
 #align order_dual.to_dual_symm_eq OrderDual.toDual_symm_eq
 -/
 
 #print OrderDual.ofDual_symm_eq /-
 @[simp]
-theorem ofDual_symm_eq : (@ofDual α).symm = to_dual :=
+theorem ofDual_symm_eq : (@ofDual α).symm = toDual :=
   rfl
 #align order_dual.of_dual_symm_eq OrderDual.ofDual_symm_eq
 -/

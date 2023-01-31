@@ -207,7 +207,7 @@ noncomputable def multinomial (m : Multiset α) : ℕ :=
 #align multiset.multinomial Multiset.multinomial
 
 theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
-    m.multinomial = m.card.choose (m.count a) * (m.filter ((· ≠ ·) a)).multinomial :=
+    m.multinomial = m.card.choose (m.count a) * (m.filterₓ ((· ≠ ·) a)).multinomial :=
   by
   dsimp only [multinomial]
   convert Finsupp.multinomial_update a _

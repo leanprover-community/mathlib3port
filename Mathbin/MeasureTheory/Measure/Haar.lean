@@ -93,7 +93,7 @@ namespace Haar
   It is defined to be 0 if no finite number of translates cover `K`. -/
 @[to_additive add_index "additive version of `measure_theory.measure.haar.index`"]
 def index (K V : Set G) : ℕ :=
-  Inf <| Finset.card '' { t : Finset G | K ⊆ ⋃ g ∈ t, (fun h => g * h) ⁻¹' V }
+  infₛ <| Finset.card '' { t : Finset G | K ⊆ ⋃ g ∈ t, (fun h => g * h) ⁻¹' V }
 #align measure_theory.measure.haar.index MeasureTheory.Measure.Haar.index
 #align measure_theory.measure.haar.add_index MeasureTheory.Measure.Haar.addIndex
 
@@ -759,7 +759,7 @@ instance isHaarMeasureHaarMeasure (K₀ : PositiveCompacts G) : IsHaarMeasure (h
 @[reducible,
   to_additive "`add_haar` is some choice of a Haar measure, on a locally compact\nadditive group."]
 def haar [LocallyCompactSpace G] : Measure G :=
-  haar_measure <| Classical.arbitrary _
+  haarMeasure <| Classical.arbitrary _
 #align measure_theory.measure.haar MeasureTheory.Measure.haar
 #align measure_theory.measure.add_haar MeasureTheory.Measure.add_haar
 

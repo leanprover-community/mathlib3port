@@ -39,10 +39,10 @@ variable {R : Type _} [Semiring R] (k m n : ℕ) (u v w : R)
 
 /-- Shorthand for a trinomial -/
 noncomputable def trinomial :=
-  c u * X ^ k + c v * X ^ m + c w * X ^ n
+  c u * x ^ k + c v * x ^ m + c w * x ^ n
 #align polynomial.trinomial Polynomial.trinomial
 
-theorem trinomial_def : trinomial k m n u v w = c u * X ^ k + c v * X ^ m + c w * X ^ n :=
+theorem trinomial_def : trinomial k m n u v w = c u * x ^ k + c v * x ^ m + c w * x ^ n :=
   rfl
 #align polynomial.trinomial_def Polynomial.trinomial_def
 
@@ -174,11 +174,11 @@ theorem coeff_isUnit (hp : p.IsUnitTrinomial) {k : ℕ} (hk : k ∈ p.support) :
 #align polynomial.is_unit_trinomial.coeff_is_unit Polynomial.IsUnitTrinomial.coeff_isUnit
 
 theorem leadingCoeff_isUnit (hp : p.IsUnitTrinomial) : IsUnit p.leadingCoeff :=
-  hp.coeff_is_unit (natDegree_mem_support_of_nonzero hp.NeZero)
+  hp.coeff_isUnit (natDegree_mem_support_of_nonzero hp.NeZero)
 #align polynomial.is_unit_trinomial.leading_coeff_is_unit Polynomial.IsUnitTrinomial.leadingCoeff_isUnit
 
 theorem trailingCoeff_isUnit (hp : p.IsUnitTrinomial) : IsUnit p.trailingCoeff :=
-  hp.coeff_is_unit (natTrailingDegree_mem_support_of_nonzero hp.NeZero)
+  hp.coeff_isUnit (natTrailingDegree_mem_support_of_nonzero hp.NeZero)
 #align polynomial.is_unit_trinomial.trailing_coeff_is_unit Polynomial.IsUnitTrinomial.trailingCoeff_isUnit
 
 end IsUnitTrinomial
@@ -186,7 +186,7 @@ end IsUnitTrinomial
 theorem isUnitTrinomial_iff :
     p.IsUnitTrinomial ↔ p.support.card = 3 ∧ ∀ k ∈ p.support, IsUnit (p.coeff k) :=
   by
-  refine' ⟨fun hp => ⟨hp.card_support_eq_three, fun k => hp.coeff_is_unit⟩, fun hp => _⟩
+  refine' ⟨fun hp => ⟨hp.card_support_eq_three, fun k => hp.coeff_isUnit⟩, fun hp => _⟩
   obtain ⟨k, m, n, hkm, hmn, x, y, z, hx, hy, hz, rfl⟩ := card_support_eq_three.mp hp.1
   rw [support_trinomial hkm hmn hx hy hz] at hp
   replace hx := hp.2 k (mem_insert_self k {m, n})
@@ -231,7 +231,7 @@ namespace IsUnitTrinomial
 
 theorem irreducible_aux1 {k m n : ℕ} (hkm : k < m) (hmn : m < n) (u v w : Units ℤ)
     (hp : p = trinomial k m n u v w) :
-    c ↑v * (c ↑u * X ^ (m + n) + c ↑w * X ^ (n - m + k + n)) =
+    c ↑v * (c ↑u * x ^ (m + n) + c ↑w * x ^ (n - m + k + n)) =
       ⟨Finsupp.filter (Set.Ioo (k + n) (n + n)) (p * p.mirror).toFinsupp⟩ :=
   by
   have key : n - m + k < n := by rwa [← lt_tsub_iff_right, tsub_lt_tsub_iff_left_of_le hmn.le]
@@ -351,7 +351,7 @@ theorem irreducible_of_coprime (hp : p.IsUnitTrinomial)
 /-- A unit trinomial is irreducible if it is coprime with its mirror -/
 theorem irreducible_of_isCoprime (hp : p.IsUnitTrinomial) (h : IsCoprime p p.mirror) :
     Irreducible p :=
-  irreducible_of_coprime hp fun q => h.is_unit_of_dvd'
+  irreducible_of_coprime hp fun q => h.isUnit_of_dvd'
 #align polynomial.is_unit_trinomial.irreducible_of_is_coprime Polynomial.IsUnitTrinomial.irreducible_of_isCoprime
 
 /-- A unit trinomial is irreducible if it has no complex roots in common with its mirror -/

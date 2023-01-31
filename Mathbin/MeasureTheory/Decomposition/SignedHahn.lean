@@ -423,7 +423,7 @@ theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives :=
       refine' nonpos_of_restrict_le_zero _ (restrict_le_zero_subset _ _ (Set.diff_subset _ _) this)
       exact MeasurableSet.unionᵢ hmeas
     · infer_instance
-    · exact (MeasurableSet.unionᵢ hmeas).diff (hmeas n)
+    · exact (MeasurableSet.unionᵢ hmeas).diffₓ (hmeas n)
   rcases exists_nat_gt (-s A) with ⟨n, hn⟩
   exact lt_irrefl _ ((neg_lt.1 hn).trans_le (hfalse n))
 #align measure_theory.signed_measure.bdd_below_measure_of_negatives MeasureTheory.SignedMeasure.bddBelow_measureOfNegatives
@@ -456,7 +456,7 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
           nonpos_of_restrict_le_zero _ (restrict_le_zero_subset _ _ (Set.diff_subset _ _) this)
         exact MeasurableSet.unionᵢ hB₁
       · infer_instance
-      · exact (MeasurableSet.unionᵢ hB₁).diff (hB₁ n)
+      · exact (MeasurableSet.unionᵢ hB₁).diffₓ (hB₁ n)
     · exact cinfₛ_le bdd_below_measure_of_negatives ⟨A, ⟨hA₁, hA₂⟩, rfl⟩
   refine' ⟨Aᶜ, hA₁.compl, _, (compl_compl A).symm ▸ hA₂⟩
   rw [restrict_le_restrict_iff _ _ hA₁.compl]

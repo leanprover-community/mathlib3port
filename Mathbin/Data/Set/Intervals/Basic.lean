@@ -306,56 +306,56 @@ theorem right_mem_Iic : a ∈ Iic a := by simp
 
 #print Set.dual_Ici /-
 @[simp]
-theorem dual_Ici : Ici (toDual a) = of_dual ⁻¹' Iic a :=
+theorem dual_Ici : Ici (toDual a) = ofDual ⁻¹' Iic a :=
   rfl
 #align set.dual_Ici Set.dual_Ici
 -/
 
 #print Set.dual_Iic /-
 @[simp]
-theorem dual_Iic : Iic (toDual a) = of_dual ⁻¹' Ici a :=
+theorem dual_Iic : Iic (toDual a) = ofDual ⁻¹' Ici a :=
   rfl
 #align set.dual_Iic Set.dual_Iic
 -/
 
 #print Set.dual_Ioi /-
 @[simp]
-theorem dual_Ioi : Ioi (toDual a) = of_dual ⁻¹' Iio a :=
+theorem dual_Ioi : Ioi (toDual a) = ofDual ⁻¹' Iio a :=
   rfl
 #align set.dual_Ioi Set.dual_Ioi
 -/
 
 #print Set.dual_Iio /-
 @[simp]
-theorem dual_Iio : Iio (toDual a) = of_dual ⁻¹' Ioi a :=
+theorem dual_Iio : Iio (toDual a) = ofDual ⁻¹' Ioi a :=
   rfl
 #align set.dual_Iio Set.dual_Iio
 -/
 
 #print Set.dual_Icc /-
 @[simp]
-theorem dual_Icc : Icc (toDual a) (toDual b) = of_dual ⁻¹' Icc b a :=
+theorem dual_Icc : Icc (toDual a) (toDual b) = ofDual ⁻¹' Icc b a :=
   Set.ext fun x => and_comm' _ _
 #align set.dual_Icc Set.dual_Icc
 -/
 
 #print Set.dual_Ioc /-
 @[simp]
-theorem dual_Ioc : Ioc (toDual a) (toDual b) = of_dual ⁻¹' Ico b a :=
+theorem dual_Ioc : Ioc (toDual a) (toDual b) = ofDual ⁻¹' Ico b a :=
   Set.ext fun x => and_comm' _ _
 #align set.dual_Ioc Set.dual_Ioc
 -/
 
 #print Set.dual_Ico /-
 @[simp]
-theorem dual_Ico : Ico (toDual a) (toDual b) = of_dual ⁻¹' Ioc b a :=
+theorem dual_Ico : Ico (toDual a) (toDual b) = ofDual ⁻¹' Ioc b a :=
   Set.ext fun x => and_comm' _ _
 #align set.dual_Ico Set.dual_Ico
 -/
 
 #print Set.dual_Ioo /-
 @[simp]
-theorem dual_Ioo : Ioo (toDual a) (toDual b) = of_dual ⁻¹' Ioo b a :=
+theorem dual_Ioo : Ioo (toDual a) (toDual b) = ofDual ⁻¹' Ioo b a :=
   Set.ext fun x => and_comm' _ _
 #align set.dual_Ioo Set.dual_Ioo
 -/

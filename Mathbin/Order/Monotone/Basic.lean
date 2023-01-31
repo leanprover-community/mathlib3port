@@ -152,162 +152,162 @@ variable [Preorder α] [Preorder β] {f : α → β} {s : Set α}
 
 #print monotone_comp_ofDual_iff /-
 @[simp]
-theorem monotone_comp_ofDual_iff : Monotone (f ∘ of_dual) ↔ Antitone f :=
+theorem monotone_comp_ofDual_iff : Monotone (f ∘ ofDual) ↔ Antitone f :=
   forall_swap
 #align monotone_comp_of_dual_iff monotone_comp_ofDual_iff
 -/
 
 #print antitone_comp_ofDual_iff /-
 @[simp]
-theorem antitone_comp_ofDual_iff : Antitone (f ∘ of_dual) ↔ Monotone f :=
+theorem antitone_comp_ofDual_iff : Antitone (f ∘ ofDual) ↔ Monotone f :=
   forall_swap
 #align antitone_comp_of_dual_iff antitone_comp_ofDual_iff
 -/
 
 #print monotone_toDual_comp_iff /-
 @[simp]
-theorem monotone_toDual_comp_iff : Monotone (to_dual ∘ f) ↔ Antitone f :=
+theorem monotone_toDual_comp_iff : Monotone (toDual ∘ f) ↔ Antitone f :=
   Iff.rfl
 #align monotone_to_dual_comp_iff monotone_toDual_comp_iff
 -/
 
 #print antitone_toDual_comp_iff /-
 @[simp]
-theorem antitone_toDual_comp_iff : Antitone (to_dual ∘ f) ↔ Monotone f :=
+theorem antitone_toDual_comp_iff : Antitone (toDual ∘ f) ↔ Monotone f :=
   Iff.rfl
 #align antitone_to_dual_comp_iff antitone_toDual_comp_iff
 -/
 
 #print monotoneOn_comp_ofDual_iff /-
 @[simp]
-theorem monotoneOn_comp_ofDual_iff : MonotoneOn (f ∘ of_dual) s ↔ AntitoneOn f s :=
+theorem monotoneOn_comp_ofDual_iff : MonotoneOn (f ∘ ofDual) s ↔ AntitoneOn f s :=
   forall₂_swap
 #align monotone_on_comp_of_dual_iff monotoneOn_comp_ofDual_iff
 -/
 
 #print antitoneOn_comp_ofDual_iff /-
 @[simp]
-theorem antitoneOn_comp_ofDual_iff : AntitoneOn (f ∘ of_dual) s ↔ MonotoneOn f s :=
+theorem antitoneOn_comp_ofDual_iff : AntitoneOn (f ∘ ofDual) s ↔ MonotoneOn f s :=
   forall₂_swap
 #align antitone_on_comp_of_dual_iff antitoneOn_comp_ofDual_iff
 -/
 
 #print monotoneOn_toDual_comp_iff /-
 @[simp]
-theorem monotoneOn_toDual_comp_iff : MonotoneOn (to_dual ∘ f) s ↔ AntitoneOn f s :=
+theorem monotoneOn_toDual_comp_iff : MonotoneOn (toDual ∘ f) s ↔ AntitoneOn f s :=
   Iff.rfl
 #align monotone_on_to_dual_comp_iff monotoneOn_toDual_comp_iff
 -/
 
 #print antitoneOn_toDual_comp_iff /-
 @[simp]
-theorem antitoneOn_toDual_comp_iff : AntitoneOn (to_dual ∘ f) s ↔ MonotoneOn f s :=
+theorem antitoneOn_toDual_comp_iff : AntitoneOn (toDual ∘ f) s ↔ MonotoneOn f s :=
   Iff.rfl
 #align antitone_on_to_dual_comp_iff antitoneOn_toDual_comp_iff
 -/
 
 #print strictMono_comp_ofDual_iff /-
 @[simp]
-theorem strictMono_comp_ofDual_iff : StrictMono (f ∘ of_dual) ↔ StrictAnti f :=
+theorem strictMono_comp_ofDual_iff : StrictMono (f ∘ ofDual) ↔ StrictAnti f :=
   forall_swap
 #align strict_mono_comp_of_dual_iff strictMono_comp_ofDual_iff
 -/
 
 #print strictAnti_comp_ofDual_iff /-
 @[simp]
-theorem strictAnti_comp_ofDual_iff : StrictAnti (f ∘ of_dual) ↔ StrictMono f :=
+theorem strictAnti_comp_ofDual_iff : StrictAnti (f ∘ ofDual) ↔ StrictMono f :=
   forall_swap
 #align strict_anti_comp_of_dual_iff strictAnti_comp_ofDual_iff
 -/
 
 #print strictMono_toDual_comp_iff /-
 @[simp]
-theorem strictMono_toDual_comp_iff : StrictMono (to_dual ∘ f) ↔ StrictAnti f :=
+theorem strictMono_toDual_comp_iff : StrictMono (toDual ∘ f) ↔ StrictAnti f :=
   Iff.rfl
 #align strict_mono_to_dual_comp_iff strictMono_toDual_comp_iff
 -/
 
 #print strictAnti_toDual_comp_iff /-
 @[simp]
-theorem strictAnti_toDual_comp_iff : StrictAnti (to_dual ∘ f) ↔ StrictMono f :=
+theorem strictAnti_toDual_comp_iff : StrictAnti (toDual ∘ f) ↔ StrictMono f :=
   Iff.rfl
 #align strict_anti_to_dual_comp_iff strictAnti_toDual_comp_iff
 -/
 
 #print strictMonoOn_comp_ofDual_iff /-
 @[simp]
-theorem strictMonoOn_comp_ofDual_iff : StrictMonoOn (f ∘ of_dual) s ↔ StrictAntiOn f s :=
+theorem strictMonoOn_comp_ofDual_iff : StrictMonoOn (f ∘ ofDual) s ↔ StrictAntiOn f s :=
   forall₂_swap
 #align strict_mono_on_comp_of_dual_iff strictMonoOn_comp_ofDual_iff
 -/
 
 #print strictAntiOn_comp_ofDual_iff /-
 @[simp]
-theorem strictAntiOn_comp_ofDual_iff : StrictAntiOn (f ∘ of_dual) s ↔ StrictMonoOn f s :=
+theorem strictAntiOn_comp_ofDual_iff : StrictAntiOn (f ∘ ofDual) s ↔ StrictMonoOn f s :=
   forall₂_swap
 #align strict_anti_on_comp_of_dual_iff strictAntiOn_comp_ofDual_iff
 -/
 
 #print strictMonoOn_toDual_comp_iff /-
 @[simp]
-theorem strictMonoOn_toDual_comp_iff : StrictMonoOn (to_dual ∘ f) s ↔ StrictAntiOn f s :=
+theorem strictMonoOn_toDual_comp_iff : StrictMonoOn (toDual ∘ f) s ↔ StrictAntiOn f s :=
   Iff.rfl
 #align strict_mono_on_to_dual_comp_iff strictMonoOn_toDual_comp_iff
 -/
 
 #print strictAntiOn_toDual_comp_iff /-
 @[simp]
-theorem strictAntiOn_toDual_comp_iff : StrictAntiOn (to_dual ∘ f) s ↔ StrictMonoOn f s :=
+theorem strictAntiOn_toDual_comp_iff : StrictAntiOn (toDual ∘ f) s ↔ StrictMonoOn f s :=
   Iff.rfl
 #align strict_anti_on_to_dual_comp_iff strictAntiOn_toDual_comp_iff
 -/
 
 #print Monotone.dual /-
-protected theorem Monotone.dual (hf : Monotone f) : Monotone (to_dual ∘ f ∘ of_dual) :=
+protected theorem Monotone.dual (hf : Monotone f) : Monotone (toDual ∘ f ∘ ofDual) :=
   swap hf
 #align monotone.dual Monotone.dual
 -/
 
 #print Antitone.dual /-
-protected theorem Antitone.dual (hf : Antitone f) : Antitone (to_dual ∘ f ∘ of_dual) :=
+protected theorem Antitone.dual (hf : Antitone f) : Antitone (toDual ∘ f ∘ ofDual) :=
   swap hf
 #align antitone.dual Antitone.dual
 -/
 
 #print MonotoneOn.dual /-
-protected theorem MonotoneOn.dual (hf : MonotoneOn f s) : MonotoneOn (to_dual ∘ f ∘ of_dual) s :=
+protected theorem MonotoneOn.dual (hf : MonotoneOn f s) : MonotoneOn (toDual ∘ f ∘ ofDual) s :=
   swap₂ hf
 #align monotone_on.dual MonotoneOn.dual
 -/
 
 #print AntitoneOn.dual /-
-protected theorem AntitoneOn.dual (hf : AntitoneOn f s) : AntitoneOn (to_dual ∘ f ∘ of_dual) s :=
+protected theorem AntitoneOn.dual (hf : AntitoneOn f s) : AntitoneOn (toDual ∘ f ∘ ofDual) s :=
   swap₂ hf
 #align antitone_on.dual AntitoneOn.dual
 -/
 
 #print StrictMono.dual /-
-protected theorem StrictMono.dual (hf : StrictMono f) : StrictMono (to_dual ∘ f ∘ of_dual) :=
+protected theorem StrictMono.dual (hf : StrictMono f) : StrictMono (toDual ∘ f ∘ ofDual) :=
   swap hf
 #align strict_mono.dual StrictMono.dual
 -/
 
 #print StrictAnti.dual /-
-protected theorem StrictAnti.dual (hf : StrictAnti f) : StrictAnti (to_dual ∘ f ∘ of_dual) :=
+protected theorem StrictAnti.dual (hf : StrictAnti f) : StrictAnti (toDual ∘ f ∘ ofDual) :=
   swap hf
 #align strict_anti.dual StrictAnti.dual
 -/
 
 #print StrictMonoOn.dual /-
 protected theorem StrictMonoOn.dual (hf : StrictMonoOn f s) :
-    StrictMonoOn (to_dual ∘ f ∘ of_dual) s :=
+    StrictMonoOn (toDual ∘ f ∘ ofDual) s :=
   swap₂ hf
 #align strict_mono_on.dual StrictMonoOn.dual
 -/
 
 #print StrictAntiOn.dual /-
 protected theorem StrictAntiOn.dual (hf : StrictAntiOn f s) :
-    StrictAntiOn (to_dual ∘ f ∘ of_dual) s :=
+    StrictAntiOn (toDual ∘ f ∘ ofDual) s :=
   swap₂ hf
 #align strict_anti_on.dual StrictAntiOn.dual
 -/
@@ -717,7 +717,7 @@ variable [Preorder α] [Preorder β] {f g : α → β} {a : α}
 theorem StrictMono.isMax_of_apply (hf : StrictMono f) (ha : IsMax (f a)) : IsMax a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMax_iff.1 h
-    (hf hb).not_is_max ha
+    (hf hb).not_isMax ha
 #align strict_mono.is_max_of_apply StrictMono.isMax_of_apply
 -/
 
@@ -725,7 +725,7 @@ theorem StrictMono.isMax_of_apply (hf : StrictMono f) (ha : IsMax (f a)) : IsMax
 theorem StrictMono.isMin_of_apply (hf : StrictMono f) (ha : IsMin (f a)) : IsMin a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMin_iff.1 h
-    (hf hb).not_is_min ha
+    (hf hb).not_isMin ha
 #align strict_mono.is_min_of_apply StrictMono.isMin_of_apply
 -/
 
@@ -733,7 +733,7 @@ theorem StrictMono.isMin_of_apply (hf : StrictMono f) (ha : IsMin (f a)) : IsMin
 theorem StrictAnti.isMax_of_apply (hf : StrictAnti f) (ha : IsMin (f a)) : IsMax a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMax_iff.1 h
-    (hf hb).not_is_min ha
+    (hf hb).not_isMin ha
 #align strict_anti.is_max_of_apply StrictAnti.isMax_of_apply
 -/
 
@@ -741,7 +741,7 @@ theorem StrictAnti.isMax_of_apply (hf : StrictAnti f) (ha : IsMin (f a)) : IsMax
 theorem StrictAnti.isMin_of_apply (hf : StrictAnti f) (ha : IsMax (f a)) : IsMin a :=
   of_not_not fun h =>
     let ⟨b, hb⟩ := not_isMin_iff.1 h
-    (hf hb).not_is_max ha
+    (hf hb).not_isMax ha
 #align strict_anti.is_min_of_apply StrictAnti.isMin_of_apply
 -/
 
@@ -1128,13 +1128,13 @@ variable [PartialOrder β] {f : α → β}
 
 #print Monotone.strictMono_iff_injective /-
 theorem Monotone.strictMono_iff_injective (hf : Monotone f) : StrictMono f ↔ Injective f :=
-  ⟨fun h => h.Injective, hf.strict_mono_of_injective⟩
+  ⟨fun h => h.Injective, hf.strictMono_of_injective⟩
 #align monotone.strict_mono_iff_injective Monotone.strictMono_iff_injective
 -/
 
 #print Antitone.strictAnti_iff_injective /-
 theorem Antitone.strictAnti_iff_injective (hf : Antitone f) : StrictAnti f ↔ Injective f :=
-  ⟨fun h => h.Injective, hf.strict_anti_of_injective⟩
+  ⟨fun h => h.Injective, hf.strictAnti_of_injective⟩
 #align antitone.strict_anti_iff_injective Antitone.strictAnti_iff_injective
 -/
 

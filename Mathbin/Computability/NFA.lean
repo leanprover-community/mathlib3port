@@ -52,7 +52,7 @@ def stepSet (S : Set σ) (a : α) : Set σ :=
 #align NFA.step_set NFA.stepSet
 
 theorem mem_stepSet (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.step t a :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align NFA.mem_step_set NFA.mem_stepSet
 
 @[simp]

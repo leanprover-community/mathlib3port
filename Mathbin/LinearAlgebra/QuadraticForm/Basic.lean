@@ -135,7 +135,7 @@ end Polar
 For a more familiar constructor when `R` is a ring, see `quadratic_form.of_polar`. -/
 structure QuadraticForm (R : Type u) (M : Type v) [Semiring R] [AddCommMonoid M] [Module R M] where
   toFun : M → R
-  to_fun_smul : ∀ (a : R) (x : M), to_fun (a • x) = a * a * to_fun x
+  toFun_smul : ∀ (a : R) (x : M), to_fun (a • x) = a * a * to_fun x
   exists_companion' : ∃ B : BilinForm R M, ∀ x y, to_fun (x + y) = to_fun x + to_fun y + B x y
 #align quadratic_form QuadraticForm
 
@@ -189,7 +189,7 @@ equalities. -/
 protected def copy (Q : QuadraticForm R M) (Q' : M → R) (h : Q' = ⇑Q) : QuadraticForm R M
     where
   toFun := Q'
-  to_fun_smul := h.symm ▸ Q.to_fun_smul
+  toFun_smul := h.symm ▸ Q.toFun_smul
   exists_companion' := h.symm ▸ Q.exists_companion'
 #align quadratic_form.copy QuadraticForm.copy
 
@@ -211,7 +211,7 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 variable (Q : QuadraticForm R M)
 
 theorem map_smul (a : R) (x : M) : Q (a • x) = a * a * Q x :=
-  Q.to_fun_smul a x
+  Q.toFun_smul a x
 #align quadratic_form.map_smul QuadraticForm.map_smul
 
 theorem exists_companion : ∃ B : BilinForm R M, ∀ x y, Q (x + y) = Q x + Q y + B x y :=
@@ -350,7 +350,7 @@ def ofPolar (to_fun : M → R) (to_fun_smul : ∀ (a : R) (x : M), to_fun (a •
     (polar_smul_left : ∀ (a : R) (x y : M), polar to_fun (a • x) y = a • polar to_fun x y) :
     QuadraticForm R M :=
   { toFun
-    to_fun_smul
+    toFun_smul
     exists_companion' :=
       ⟨{  bilin := polar to_fun
           bilin_add_left := polar_add_left
@@ -383,7 +383,7 @@ When `R` is commutative, this provides an `R`-action via `algebra.id`. -/
 instance : SMul S (QuadraticForm R M) :=
   ⟨fun a Q =>
     { toFun := a • Q
-      to_fun_smul := fun b x => by rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm]
+      toFun_smul := fun b x => by rw [Pi.smul_apply, map_smul, Pi.smul_apply, mul_smul_comm]
       exists_companion' :=
         let ⟨B, h⟩ := Q.exists_companion
         ⟨a • B, by simp [h]⟩ }⟩
@@ -402,7 +402,7 @@ end SMul
 
 instance : Zero (QuadraticForm R M) :=
   ⟨{  toFun := fun x => 0
-      to_fun_smul := fun a x => by simp only [mul_zero]
+      toFun_smul := fun a x => by simp only [mul_zero]
       exists_companion' := ⟨0, fun x y => by simp only [add_zero, BilinForm.zero_apply]⟩ }⟩
 
 @[simp]
@@ -421,7 +421,7 @@ instance : Inhabited (QuadraticForm R M) :=
 instance : Add (QuadraticForm R M) :=
   ⟨fun Q Q' =>
     { toFun := Q + Q'
-      to_fun_smul := fun a x => by simp only [Pi.add_apply, map_smul, mul_add]
+      toFun_smul := fun a x => by simp only [Pi.add_apply, map_smul, mul_add]
       exists_companion' :=
         let ⟨B, h⟩ := Q.exists_companion
         let ⟨B', h'⟩ := Q'.exists_companion
@@ -504,7 +504,7 @@ variable [Ring R] [AddCommGroup M] [Module R M]
 instance : Neg (QuadraticForm R M) :=
   ⟨fun Q =>
     { toFun := -Q
-      to_fun_smul := fun a x => by simp only [Pi.neg_apply, map_smul, mul_neg]
+      toFun_smul := fun a x => by simp only [Pi.neg_apply, map_smul, mul_neg]
       exists_companion' :=
         let ⟨B, h⟩ := Q.exists_companion
         ⟨-B, fun x y => by simp_rw [Pi.neg_apply, h, BilinForm.neg_apply, neg_add]⟩ }⟩
@@ -548,7 +548,7 @@ variable {N : Type v} [AddCommMonoid N] [Module R N]
 def comp (Q : QuadraticForm R N) (f : M →ₗ[R] N) : QuadraticForm R M
     where
   toFun x := Q (f x)
-  to_fun_smul a x := by simp only [map_smul, f.map_smul]
+  toFun_smul a x := by simp only [map_smul, f.map_smul]
   exists_companion' :=
     let ⟨B, h⟩ := Q.exists_companion
     ⟨B.comp f f, fun x y => by simp_rw [f.map_add, h, BilinForm.comp_apply]⟩
@@ -565,7 +565,7 @@ def LinearMap.compQuadraticForm {S : Type _} [CommSemiring S] [Algebra S R] [Mod
     [IsScalarTower S R M] (f : R →ₗ[S] S) (Q : QuadraticForm R M) : QuadraticForm S M
     where
   toFun x := f (Q x)
-  to_fun_smul b x := by rw [Q.map_smul_of_tower b x, f.map_smul, smul_eq_mul]
+  toFun_smul b x := by rw [Q.map_smul_of_tower b x, f.map_smul, smul_eq_mul]
   exists_companion' :=
     let ⟨B, h⟩ := Q.exists_companion
     ⟨f.compBilinForm B, fun x y => by simp_rw [h, f.map_add, LinearMap.compBilinForm_apply]⟩
@@ -581,7 +581,7 @@ variable [CommSemiring R] [AddCommMonoid M] [Module R M]
 def linMulLin (f g : M →ₗ[R] R) : QuadraticForm R M
     where
   toFun := f * g
-  to_fun_smul a x :=
+  toFun_smul a x :=
     by
     simp only [smul_eq_mul, RingHom.id_apply, Pi.mul_apply, LinearMap.map_smulₛₗ]
     ring
@@ -661,7 +661,7 @@ variable {B : BilinForm R M}
 def toQuadraticForm (B : BilinForm R M) : QuadraticForm R M
     where
   toFun x := B x x
-  to_fun_smul a x := by simp only [mul_assoc, smul_right, smul_left]
+  toFun_smul a x := by simp only [mul_assoc, smul_right, smul_left]
   exists_companion' := ⟨B + BilinForm.flipHom ℕ B, fun x y => by simp [add_add_add_comm, add_comm]⟩
 #align bilin_form.to_quadratic_form BilinForm.toQuadraticForm
 
@@ -777,7 +777,7 @@ def associatedHom : QuadraticForm R M →ₗ[S] BilinForm R M
     where
   toFun Q :=
     ((· • ·) : Submonoid.center R → BilinForm R M → BilinForm R M)
-      ⟨⅟ 2, fun x => (Commute.one_right x).bit0_right.inv_of_right⟩ Q.polarBilin
+      ⟨⅟ 2, fun x => (Commute.one_right x).bit0_right.invOf_right⟩ Q.polarBilin
   map_add' Q Q' := by
     ext
     simp only [BilinForm.add_apply, BilinForm.smul_apply, coe_fn_mk, polar_bilin_apply, polar_add,
@@ -972,7 +972,7 @@ theorem posDefOfNonneg {Q : QuadraticForm R₂ M} (h : ∀ x, 0 ≤ Q x) (h0 : Q
 #align quadratic_form.pos_def_of_nonneg QuadraticForm.posDefOfNonneg
 
 theorem posDef_iff_nonneg {Q : QuadraticForm R₂ M} : PosDef Q ↔ (∀ x, 0 ≤ Q x) ∧ Q.Anisotropic :=
-  ⟨fun h => ⟨h.Nonneg, h.Anisotropic⟩, fun ⟨n, a⟩ => posDefOfNonneg n a⟩
+  ⟨fun h => ⟨h.NonNeg, h.Anisotropic⟩, fun ⟨n, a⟩ => posDefOfNonneg n a⟩
 #align quadratic_form.pos_def_iff_nonneg QuadraticForm.posDef_iff_nonneg
 
 theorem PosDef.add (Q Q' : QuadraticForm R₂ M) (hQ : PosDef Q) (hQ' : PosDef Q') :
@@ -1111,7 +1111,7 @@ variable [FiniteDimensional K V]
 /-- Given a symmetric bilinear form `B` on some vector space `V` over a field `K`
 in which `2` is invertible, there exists an orthogonal basis with respect to `B`. -/
 theorem exists_orthogonal_basis [hK : Invertible (2 : K)] {B : BilinForm K V} (hB₂ : B.IsSymm) :
-    ∃ v : Basis (Fin (finrank K V)) K V, B.IsOrtho v :=
+    ∃ v : Basis (Fin (finrank K V)) K V, B.IsOrthoCat v :=
   by
   induction' hd : finrank K V with d ih generalizing V
   · exact ⟨basisOfFinrankZero hd, fun _ _ _ => zero_left _⟩
@@ -1204,7 +1204,7 @@ theorem weightedSumSquares_apply [Monoid S] [DistribMulAction S R₁] [SMulCommC
 /-- On an orthogonal basis, the basis representation of `Q` is just a sum of squares. -/
 theorem basisRepr_eq_of_isOrthoCat {R₁ M} [CommRing R₁] [AddCommGroup M] [Module R₁ M]
     [Invertible (2 : R₁)] (Q : QuadraticForm R₁ M) (v : Basis ι R₁ M)
-    (hv₂ : (associated Q).IsOrtho v) : Q.basis_repr v = weightedSumSquares _ fun i => Q (v i) :=
+    (hv₂ : (associated Q).IsOrthoCat v) : Q.basis_repr v = weightedSumSquares _ fun i => Q (v i) :=
   by
   ext w
   rw [basis_repr_apply, ← @associated_eq_self_apply R₁, sum_left, weighted_sum_squares_apply]

@@ -2070,7 +2070,7 @@ This is useful for constructing an `ordered_add_commm_group`
 by choosing a positive cone in an exisiting `add_comm_group`. -/
 @[nolint has_nonempty_instance]
 structure PositiveCone (α : Type _) [AddCommGroup α] where
-  Nonneg : α → Prop
+  NonNeg : α → Prop
   Pos : α → Prop := fun a => nonneg a ∧ ¬nonneg (-a)
   pos_iff : ∀ a, Pos a ↔ nonneg a ∧ ¬nonneg (-a) := by
     run_tac
@@ -2105,7 +2105,7 @@ open AddCommGroup
 designating a positive cone in an existing `add_comm_group`. -/
 def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : PositiveCone α) : OrderedAddCommGroup α :=
   { ‹AddCommGroup α› with
-    le := fun a b => C.Nonneg (b - a)
+    le := fun a b => C.NonNeg (b - a)
     lt := fun a b => C.Pos (b - a)
     lt_iff_le_not_le := fun a b => by simp <;> rw [C.pos_iff] <;> simp
     le_refl := fun a => by simp [C.zero_nonneg]

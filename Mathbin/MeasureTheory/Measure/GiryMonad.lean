@@ -95,7 +95,7 @@ theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) :
   simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
   refine' measurable_supᵢ fun n => Finset.measurable_sum _ fun i _ => _
   refine' Measurable.const_mul _ _
-  exact measurable_coe ((simple_func.eapprox f n).measurable_set_preimage _)
+  exact measurable_coe ((simple_func.eapprox f n).measurableSet_preimage _)
 #align measure_theory.measure.measurable_lintegral MeasureTheory.Measure.measurable_lintegral
 
 /-- Monadic join on `measure` in the category of measurable spaces and measurable

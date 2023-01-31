@@ -38,7 +38,7 @@ def LatticeCat :=
 namespace LatticeCat
 
 instance : CoeSort LatticeCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : LatticeCat) : Lattice X :=
   X.str
@@ -101,8 +101,8 @@ def dual : LatticeCat ⥤ LatticeCat where
 @[simps Functor inverse]
 def dualEquiv : LatticeCat ≌ LatticeCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Lattice.dual_equiv LatticeCat.dualEquiv
 
 end LatticeCat

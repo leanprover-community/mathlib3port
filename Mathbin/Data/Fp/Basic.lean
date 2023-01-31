@@ -136,7 +136,7 @@ def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
 #align fp.div_nat_lt_two_pow Fp.divNatLtTwoPow
 
 -- TODO(Mario): Prove these and drop 'meta'
-unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : float × Bool :=
+unsafe def of_pos_rat_dn (n : ℕ+) (d : ℕ+) : Float × Bool :=
   by
   let e₁ : ℤ := n.1.size - d.1.size - prec
   cases' h₁ : Int.shift2 d.1 n.1 (e₁ + prec) with d₁ n₁
@@ -169,26 +169,26 @@ unsafe def next_dn_pos (e m) (v : ValidFinite e m) : Float :=
 
 unsafe def next_up : Float → Float
   | float.finite ff e m f => next_up_pos e m f
-  | float.finite tt e m f => float.neg <| next_dn_pos e m f
+  | float.finite tt e m f => Float.neg <| next_dn_pos e m f
   | f => f
 #align fp.next_up fp.next_up
 
 unsafe def next_dn : Float → Float
   | float.finite ff e m f => next_dn_pos e m f
-  | float.finite tt e m f => float.neg <| next_up_pos e m f
+  | float.finite tt e m f => Float.neg <| next_up_pos e m f
   | f => f
 #align fp.next_dn fp.next_dn
 
 unsafe def of_rat_up : ℚ → Float
   | ⟨0, _, _, _⟩ => Float.zero false
   | ⟨Nat.succ n, d, h, _⟩ =>
-    let (f, exact) := of_pos_rat_dn n.succPnat ⟨d, h⟩
+    let (f, exact) := of_pos_rat_dn n.succPNat ⟨d, h⟩
     if exact then f else next_up f
-  | ⟨-[n+1], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPnat ⟨d, h⟩).1
+  | ⟨-[n+1], d, h, _⟩ => Float.neg (of_pos_rat_dn n.succPNat ⟨d, h⟩).1
 #align fp.of_rat_up fp.of_rat_up
 
 unsafe def of_rat_dn (r : ℚ) : Float :=
-  float.neg <| of_rat_up (-r)
+  Float.neg <| of_rat_up (-r)
 #align fp.of_rat_dn fp.of_rat_dn
 
 unsafe def of_rat : Rmode → ℚ → Float

@@ -84,7 +84,7 @@ but is expected to have type
   forall {n : Type.{u1}} {α : Nat} (a : n) (v : Vector.{u1} n α), Eq.{succ u1} n (Vector.head.{u1} n α (Vector.cons.{u1} n α a v)) a
 Case conversion may be inaccurate. Consider using '#align vector.cons_head Vector.head_consₓ'. -/
 @[simp]
-theorem head_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).head = a
+theorem head_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).headI = a
   | ⟨_, _⟩ => rfl
 #align vector.cons_head Vector.head_cons
 
@@ -102,7 +102,7 @@ theorem tail_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).tail = v
 
 #print Vector.eq_cons_iff /-
 theorem eq_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) :
-    v = a ::ᵥ v' ↔ v.head = a ∧ v.tail = v' :=
+    v = a ::ᵥ v' ↔ v.headI = a ∧ v.tail = v' :=
   ⟨fun h => h.symm ▸ ⟨head_cons a v', tail_cons a v'⟩, fun h =>
     trans (cons_head_tail v).symm (by rw [h.1, h.2])⟩
 #align vector.eq_cons_iff Vector.eq_cons_iff
@@ -110,13 +110,13 @@ theorem eq_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) :
 
 #print Vector.ne_cons_iff /-
 theorem ne_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) :
-    v ≠ a ::ᵥ v' ↔ v.head ≠ a ∨ v.tail ≠ v' := by rw [Ne.def, eq_cons_iff a v v', not_and_or]
+    v ≠ a ::ᵥ v' ↔ v.headI ≠ a ∨ v.tail ≠ v' := by rw [Ne.def, eq_cons_iff a v v', not_and_or]
 #align vector.ne_cons_iff Vector.ne_cons_iff
 -/
 
 #print Vector.exists_eq_cons /-
 theorem exists_eq_cons (v : Vector α n.succ) : ∃ (a : α)(as : Vector α n), v = a ::ᵥ as :=
-  ⟨v.head, v.tail, (eq_cons_iff v.head v v.tail).2 ⟨rfl, rfl⟩⟩
+  ⟨v.headI, v.tail, (eq_cons_iff v.headI v v.tail).2 ⟨rfl, rfl⟩⟩
 #align vector.exists_eq_cons Vector.exists_eq_cons
 -/
 
@@ -157,7 +157,7 @@ theorem toList_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).t
 
 #print Vector.head_map /-
 @[simp]
-theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).head = f v.head :=
+theorem head_map {β : Type _} (v : Vector α (n + 1)) (f : α → β) : (v.map f).headI = f v.headI :=
   by
   obtain ⟨a, v', h⟩ := Vector.exists_eq_cons v
   rw [h, map_cons, head_cons, head_cons]
@@ -184,7 +184,7 @@ theorem get_eq_get :
 Case conversion may be inaccurate. Consider using '#align vector.nth_replicate Vector.get_replicateₓ'. -/
 #print Vector.get_replicate /-
 @[simp]
-theorem get_replicate (a : α) (i : Fin n) : (Vector.replicate n a).nth i = a :=
+theorem get_replicate (a : α) (i : Fin n) : (Vector.replicate n a).get? i = a :=
   List.nthLe_replicate _ _
 #align vector.nth_replicate Vector.get_replicate
 -/
@@ -192,7 +192,7 @@ theorem get_replicate (a : α) (i : Fin n) : (Vector.replicate n a).nth i = a :=
 #print Vector.get_map /-
 @[simp]
 theorem get_map {β : Type _} (v : Vector α n) (f : α → β) (i : Fin n) :
-    (v.map f).nth i = f (v.nth i) := by simp [nth_eq_nth_le]
+    (v.map f).get? i = f (v.get? i) := by simp [nth_eq_nth_le]
 #align vector.nth_map Vector.get_map
 -/
 
@@ -222,8 +222,9 @@ def Equiv.vectorEquivFin (α : Type _) (n : ℕ) : Vector α n ≃ (Fin n → α
 -/
 
 #print Vector.get_tail /-
-theorem get_tail (x : Vector α n) (i) : x.tail.nth i = x.nth ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ :=
-  by rcases x with ⟨_ | _, h⟩ <;> rfl
+theorem get_tail (x : Vector α n) (i) :
+    x.tail.get? i = x.get? ⟨i.1 + 1, lt_tsub_iff_right.mp i.2⟩ := by
+  rcases x with ⟨_ | _, h⟩ <;> rfl
 #align vector.nth_tail Vector.get_tail
 -/
 
@@ -279,7 +280,7 @@ theorem toList_empty (v : Vector α 0) : v.toList = [] :=
 /-- The list that makes up a `vector` made up of a single element,
 retrieved via `to_list`, is equal to the list of that single element. -/
 @[simp]
-theorem toList_singleton (v : Vector α 1) : v.toList = [v.head] :=
+theorem toList_singleton (v : Vector α 1) : v.toList = [v.headI] :=
   by
   rw [← v.cons_head_tail]
   simp only [to_list_cons, to_list_nil, cons_head, eq_self_iff_true, and_self_iff, singleton_tail]
@@ -288,7 +289,7 @@ theorem toList_singleton (v : Vector α 1) : v.toList = [v.head] :=
 
 #print Vector.empty_toList_eq_ff /-
 @[simp]
-theorem empty_toList_eq_ff (v : Vector α (n + 1)) : v.toList.Empty = ff :=
+theorem empty_toList_eq_ff (v : Vector α (n + 1)) : v.toList.Empty = false :=
   match v with
   | ⟨a :: as, _⟩ => rfl
 #align vector.empty_to_list_eq_ff Vector.empty_toList_eq_ff
@@ -309,7 +310,7 @@ theorem map_id {n : ℕ} (v : Vector α n) : Vector.map id v = v :=
 -/
 
 #print Vector.nodup_iff_injective_get /-
-theorem nodup_iff_injective_get {v : Vector α n} : v.toList.Nodup ↔ Function.Injective v.nth :=
+theorem nodup_iff_injective_get {v : Vector α n} : v.toList.Nodup ↔ Function.Injective v.get? :=
   by
   cases' v with l hl
   subst hl
@@ -329,7 +330,7 @@ theorem nodup_iff_injective_get {v : Vector α n} : v.toList.Nodup ↔ Function.
 -/
 
 #print Vector.head?_toList /-
-theorem head?_toList : ∀ v : Vector α n.succ, (toList v).head' = some (head v)
+theorem head?_toList : ∀ v : Vector α n.succ, (toList v).head? = some (head v)
   | ⟨a :: l, e⟩ => rfl
 #align vector.head'_to_list Vector.head?_toList
 -/
@@ -408,20 +409,20 @@ theorem get_cons_succ (a : α) (v : Vector α n) (i : Fin n) : get (a ::ᵥ v) i
 #print Vector.last /-
 /-- The last element of a `vector`, given that the vector is at least one element. -/
 def last (v : Vector α (n + 1)) : α :=
-  v.nth (Fin.last n)
+  v.get? (Fin.last n)
 #align vector.last Vector.last
 -/
 
 #print Vector.last_def /-
 /-- The last element of a `vector`, given that the vector is at least one element. -/
-theorem last_def {v : Vector α (n + 1)} : v.last = v.nth (Fin.last n) :=
+theorem last_def {v : Vector α (n + 1)} : v.getLast = v.get? (Fin.last n) :=
   rfl
 #align vector.last_def Vector.last_def
 -/
 
 #print Vector.reverse_get_zero /-
 /-- The `last` element of a vector is the `head` of the `reverse` vector. -/
-theorem reverse_get_zero {v : Vector α (n + 1)} : v.reverse.head = v.last :=
+theorem reverse_get_zero {v : Vector α (n + 1)} : v.reverse.headI = v.getLast :=
   by
   have : 0 = v.to_list.length - 1 - n := by
     simp only [Nat.add_succ_sub_one, add_zero, to_list_length, tsub_self, List.length_reverse]
@@ -504,7 +505,7 @@ Case conversion may be inaccurate. Consider using '#align vector.scanl_singleton
 and the mapped `f b x : β` as the last value.
 -/
 @[simp]
-theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.head ::ᵥ nil :=
+theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.headI ::ᵥ nil :=
   by
   rw [← cons_head_tail v]
   simp only [scanl_cons, scanl_nil, cons_head, singleton_tail]
@@ -515,7 +516,7 @@ theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.head ::�
 retrieved via `head`, is the starting value `b : β`.
 -/
 @[simp]
-theorem scanl_head : (scanl f b v).head = b :=
+theorem scanl_head : (scanl f b v).headI = b :=
   by
   cases n
   · have : v = nil := by simp only [eq_iff_true_of_subsingleton]
@@ -541,7 +542,7 @@ This lemma is the `nth` version of `scanl_cons`.
 -/
 @[simp]
 theorem scanl_get (i : Fin n) :
-    (scanl f b v).nth i.succ = f ((scanl f b v).nth i.cast_succ) (v.nth i) :=
+    (scanl f b v).get? i.succ = f ((scanl f b v).get? i.cast_succ) (v.get? i) :=
   by
   cases n
   · exact finZeroElim i
@@ -587,7 +588,7 @@ returning a vector inside the monad. -/
 def mmap {m} [Monad m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α n → m (Vector β n)
   | 0, xs => pure nil
   | n + 1, xs => do
-    let h' ← f xs.head
+    let h' ← f xs.headI
     let t' ← @mmap n xs.tail
     pure (h' ::ᵥ t')
 #align vector.mmap Vector.mmap
@@ -791,28 +792,27 @@ section UpdateNth
 #print Vector.set /-
 /-- `update_nth v n a` replaces the `n`th element of `v` with `a` -/
 def set (v : Vector α n) (i : Fin n) (a : α) : Vector α n :=
-  ⟨v.1.updateNth i.1 a, by rw [List.length_set, v.2]⟩
+  ⟨v.1.set i.1 a, by rw [List.length_set, v.2]⟩
 #align vector.update_nth Vector.set
 -/
 
 #print Vector.toList_set /-
 @[simp]
-theorem toList_set (v : Vector α n) (i : Fin n) (a : α) :
-    (v.updateNth i a).toList = v.toList.updateNth i a :=
+theorem toList_set (v : Vector α n) (i : Fin n) (a : α) : (v.set i a).toList = v.toList.set i a :=
   rfl
 #align vector.to_list_update_nth Vector.toList_set
 -/
 
 #print Vector.get_set_same /-
 @[simp]
-theorem get_set_same (v : Vector α n) (i : Fin n) (a : α) : (v.updateNth i a).nth i = a := by
+theorem get_set_same (v : Vector α n) (i : Fin n) (a : α) : (v.set i a).get? i = a := by
   cases v <;> cases i <;> simp [Vector.set, Vector.get_eq_get]
 #align vector.nth_update_nth_same Vector.get_set_same
 -/
 
 #print Vector.get_set_of_ne /-
 theorem get_set_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) :
-    (v.updateNth i a).nth j = v.nth j := by
+    (v.set i a).get? j = v.get? j := by
   cases v <;> cases i <;> cases j <;>
     simp [Vector.set, Vector.get_eq_get, List.nthLe_set_of_ne (Fin.vne_of_ne h)]
 #align vector.nth_update_nth_of_ne Vector.get_set_of_ne
@@ -825,7 +825,7 @@ but is expected to have type
   forall {n : Nat} {α : Type.{u1}} {v : Vector.{u1} α n} {i : Fin n} {j : Fin n} (a : α), Eq.{succ u1} α (Vector.get.{u1} α n (Vector.set.{u1} n α v i a) j) (ite.{succ u1} α (Eq.{1} (Fin n) i j) (instDecidableEqFin n i j) a (Vector.get.{u1} α n v j))
 Case conversion may be inaccurate. Consider using '#align vector.nth_update_nth_eq_if Vector.get_set_eq_ifₓ'. -/
 theorem get_set_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
-    (v.updateNth i a).nth j = if i = j then a else v.nth j := by
+    (v.set i a).get? j = if i = j then a else v.get? j := by
   split_ifs <;> try simp [*] <;> try rw [nth_update_nth_of_ne] <;> assumption
 #align vector.nth_update_nth_eq_if Vector.get_set_eq_if
 
@@ -837,7 +837,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.prod_update_nth Vector.prod_setₓ'. -/
 @[to_additive]
 theorem prod_set [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
-    (v.updateNth i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod :=
+    (v.set i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod :=
   by
   refine' (List.prod_set v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
@@ -853,7 +853,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.prod_update_nth' Vector.prod_set'ₓ'. -/
 @[to_additive]
 theorem prod_set' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
-    (v.updateNth i a).toList.Prod = v.toList.Prod * (v.nth i)⁻¹ * a :=
+    (v.set i a).toList.Prod = v.toList.Prod * (v.get? i)⁻¹ * a :=
   by
   refine' (List.prod_set' v.to_list i a).trans _
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
@@ -938,7 +938,7 @@ Case conversion may be inaccurate. Consider using '#align vector.comp_traverse V
 @[nolint unused_arguments]
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
     ∀ x : Vector α n,
-      Vector.traverse (comp.mk ∘ Functor.map f ∘ g) x =
+      Vector.traverse (Comp.mk ∘ Functor.map f ∘ g) x =
         Comp.mk (Vector.traverse f <$> Vector.traverse g x) :=
   by
   rintro ⟨x, rfl⟩ <;> dsimp [Vector.traverse, cast] <;> induction' x with x xs <;>

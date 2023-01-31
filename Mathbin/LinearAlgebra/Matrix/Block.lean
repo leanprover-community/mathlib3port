@@ -75,13 +75,13 @@ theorem blockTriangular_reindex_iff {b : n → α} {e : m ≃ n} :
 #align matrix.block_triangular_reindex_iff Matrix.blockTriangular_reindex_iff
 
 protected theorem BlockTriangular.transpose :
-    M.BlockTriangular b → Mᵀ.BlockTriangular (to_dual ∘ b) :=
+    M.BlockTriangular b → Mᵀ.BlockTriangular (toDual ∘ b) :=
   swap
 #align matrix.block_triangular.transpose Matrix.BlockTriangular.transpose
 
 @[simp]
 protected theorem blockTriangular_transpose_iff {b : m → αᵒᵈ} :
-    Mᵀ.BlockTriangular b ↔ M.BlockTriangular (of_dual ∘ b) :=
+    Mᵀ.BlockTriangular b ↔ M.BlockTriangular (ofDual ∘ b) :=
   forall_swap
 #align matrix.block_triangular_transpose_iff Matrix.blockTriangular_transpose_iff
 
@@ -214,7 +214,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : Bl
   · simp
   let k := (univ.image b).max' (univ_nonempty.image _)
   rw [two_block_triangular_det' M fun i => b i = k]
-  · have : univ.image b = insert k ((univ.image b).erase k) :=
+  · have : univ.image b = insert k ((univ.image b).eraseₓ k) :=
       by
       rw [insert_erase]
       apply max'_mem
@@ -222,7 +222,7 @@ protected theorem BlockTriangular.det [DecidableEq α] [LinearOrder α] (hM : Bl
     refine' congr_arg _ _
     let b' := fun i : { a // b a ≠ k } => b ↑i
     have h' : block_triangular (M.to_square_block_prop fun i => b i ≠ k) b' := hM.submatrix
-    have hb' : image b' univ = (image b univ).erase k := by
+    have hb' : image b' univ = (image b univ).eraseₓ k := by
       convert image_subtype_ne_univ_eq_image_erase k b
     rw [ih _ (erase_ssubset <| max'_mem _ _) h' hb']
     refine' Finset.prod_congr rfl fun l hl => _
@@ -288,7 +288,7 @@ theorem BlockTriangular.inv_toBlock [LinearOrder α] [Invertible M] (hM : BlockT
     (k : α) :
     (M.toBlock (fun i => b i < k) fun i => b i < k)⁻¹ =
       M⁻¹.toBlock (fun i => b i < k) fun i => b i < k :=
-  inv_eq_left_inv <| hM.to_block_inverse_mul_to_block_eq_one k
+  inv_eq_left_inv <| hM.toBlock_inverse_mul_toBlock_eq_one k
 #align matrix.block_triangular.inv_to_block Matrix.BlockTriangular.inv_toBlock
 
 /-- An upper-left subblock of an invertible block-triangular matrix is invertible. -/

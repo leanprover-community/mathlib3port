@@ -378,7 +378,7 @@ theorem MulSalemSpencer.le_mulRothNumber (hs : MulSalemSpencer (s : Set α)) (h 
 @[to_additive]
 theorem MulSalemSpencer.roth_number_eq (hs : MulSalemSpencer (s : Set α)) :
     mulRothNumber s = s.card :=
-  (mulRothNumber_le _).antisymm <| hs.le_mul_roth_number <| Subset.refl _
+  (mulRothNumber_le _).antisymm <| hs.le_mulRothNumber <| Subset.refl _
 #align mul_salem_spencer.roth_number_eq MulSalemSpencer.roth_number_eq
 #align add_salem_spencer.roth_number_eq AddSalemSpencer.roth_number_eq
 
@@ -406,8 +406,8 @@ theorem mulRothNumber_union_le (s t : Finset α) :
     _ = (u ∩ s ∪ u ∩ t).card := by rw [← inter_distrib_left, (inter_eq_left_iff_subset _ _).2 hus]
     _ ≤ (u ∩ s).card + (u ∩ t).card := card_union_le _ _
     _ ≤ mulRothNumber s + mulRothNumber t :=
-      add_le_add ((hu.mono <| inter_subset_left _ _).le_mul_roth_number <| inter_subset_right _ _)
-        ((hu.mono <| inter_subset_left _ _).le_mul_roth_number <| inter_subset_right _ _)
+      add_le_add ((hu.mono <| inter_subset_left _ _).le_mulRothNumber <| inter_subset_right _ _)
+        ((hu.mono <| inter_subset_left _ _).le_mulRothNumber <| inter_subset_right _ _)
     
 #align mul_roth_number_union_le mulRothNumber_union_le
 #align add_roth_number_union_le add_roth_number_union_le
@@ -454,7 +454,7 @@ theorem mulRothNumber_map_mul_left :
     obtain ⟨u, hus, rfl⟩ := hus
     rw [coe_map] at hu
     rw [← hcard, card_map]
-    exact (mulSalemSpencer_mul_left_iff.1 hu).le_mul_roth_number hus
+    exact (mulSalemSpencer_mul_left_iff.1 hu).le_mulRothNumber hus
   · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec s
     have h : MulSalemSpencer (u.map <| mulLeftEmbedding a : Set α) :=
       by
@@ -546,7 +546,7 @@ theorem rothNumberNat_isOWith_id :
 #align roth_number_nat_is_O_with_id rothNumberNat_isOWith_id
 
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
-theorem rothNumberNat_isO_id : (fun N => (rothNumberNat N : ℝ)) =O[at_top] fun N => (N : ℝ) :=
+theorem rothNumberNat_isO_id : (fun N => (rothNumberNat N : ℝ)) =O[atTop] fun N => (N : ℝ) :=
   rothNumberNat_isOWith_id.IsO
 #align roth_number_nat_is_O_id rothNumberNat_isO_id
 

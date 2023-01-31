@@ -149,7 +149,7 @@ theorem IntegrableOn.congrFun (h : IntegrableOn f s μ) (hst : EqOn f g s) (hs :
 #align measure_theory.integrable_on.congr_fun MeasureTheory.IntegrableOn.congrFun
 
 theorem Integrable.integrableOn (h : Integrable f μ) : IntegrableOn f s μ :=
-  h.monoMeasure <| measure.restrict_le_self
+  h.monoMeasure <| Measure.restrict_le_self
 #align measure_theory.integrable.integrable_on MeasureTheory.Integrable.integrableOn
 
 theorem Integrable.integrableOn' (h : Integrable f (μ.restrict s)) : IntegrableOn f s μ :=
@@ -206,7 +206,7 @@ theorem integrableOn_finite_bUnion {s : Set β} (hs : s.Finite) {t : β → Set 
 @[simp]
 theorem integrableOn_finset_unionᵢ {s : Finset β} {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ :=
-  integrableOn_finite_bUnion s.finite_to_set
+  integrableOn_finite_bUnion s.finite_toSet
 #align measure_theory.integrable_on_finset_Union MeasureTheory.integrableOn_finset_unionᵢ
 
 @[simp]
@@ -374,7 +374,7 @@ theorem Measure.FiniteAtFilter.integrableAtFilter {l : Filter α} [IsMeasurablyG
   by
   obtain ⟨C, hC⟩ : ∃ C, ∀ᶠ s in l.small_sets, ∀ x ∈ s, ‖f x‖ ≤ C
   exact hf.imp fun C hC => eventually_small_sets.2 ⟨_, hC, fun t => id⟩
-  rcases(hfm.eventually.and (hμ.eventually.and hC)).exists_measurable_mem_of_small_sets with
+  rcases(hfm.eventually.and (hμ.eventually.and hC)).exists_measurable_mem_of_smallSets with
     ⟨s, hsl, hsm, hfm, hμ, hC⟩
   refine' ⟨s, hsl, ⟨hfm, has_finite_integral_restrict_of_bounded hμ _⟩⟩
   exact C
@@ -386,7 +386,7 @@ theorem Measure.FiniteAtFilter.integrableAtFilterOfTendstoAe {l : Filter α}
     [IsMeasurablyGenerated l] (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {b}
     (hf : Tendsto f (l ⊓ μ.ae) (𝓝 b)) : IntegrableAtFilter f l μ :=
   (hμ.inf_of_left.IntegrableAtFilter (hfm.filter_mono inf_le_left)
-      hf.norm.is_bounded_under_le).ofInfAe
+      hf.norm.isBoundedUnder_le).ofInfAe
 #align measure_theory.measure.finite_at_filter.integrable_at_filter_of_tendsto_ae MeasureTheory.Measure.FiniteAtFilter.integrableAtFilterOfTendstoAe
 
 alias measure.finite_at_filter.integrable_at_filter_of_tendsto_ae ←
@@ -396,7 +396,7 @@ alias measure.finite_at_filter.integrable_at_filter_of_tendsto_ae ←
 theorem Measure.FiniteAtFilter.integrableAtFilterOfTendsto {l : Filter α} [IsMeasurablyGenerated l]
     (hfm : StronglyMeasurableAtFilter f l μ) (hμ : μ.FiniteAtFilter l) {b}
     (hf : Tendsto f l (𝓝 b)) : IntegrableAtFilter f l μ :=
-  hμ.IntegrableAtFilter hfm hf.norm.is_bounded_under_le
+  hμ.IntegrableAtFilter hfm hf.norm.isBoundedUnder_le
 #align measure_theory.measure.finite_at_filter.integrable_at_filter_of_tendsto MeasureTheory.Measure.FiniteAtFilter.integrableAtFilterOfTendsto
 
 alias measure.finite_at_filter.integrable_at_filter_of_tendsto ←
@@ -436,7 +436,7 @@ theorem ContinuousOn.aeMeasurable [TopologicalSpace α] [OpensMeasurableSpace α
   obtain ⟨u, u_open, hu⟩ : ∃ u : Set α, IsOpen u ∧ f ⁻¹' t ∩ s = u ∩ s :=
     _root_.continuous_on_iff'.1 hf t ht
   rw [piecewise_preimage, Set.ite, hu]
-  exact (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diff hs)
+  exact (u_open.measurable_set.inter hs).union ((measurable_const ht.measurable_set).diffₓ hs)
 #align continuous_on.ae_measurable ContinuousOn.aeMeasurable
 
 /-- A function which is continuous on a separable set `s` is almost everywhere strongly measurable

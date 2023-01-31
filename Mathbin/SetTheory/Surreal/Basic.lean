@@ -239,7 +239,7 @@ theorem moveLeft_lt {x : Pgame} (o : Numeric x) (i) : x.moveLeft i < x :=
 #align pgame.numeric.move_left_lt Pgame.Numeric.moveLeft_lt
 
 theorem moveLeft_le {x : Pgame} (o : Numeric x) (i) : x.moveLeft i ≤ x :=
-  (o.move_left_lt i).le
+  (o.moveLeft_lt i).le
 #align pgame.numeric.move_left_le Pgame.Numeric.moveLeft_le
 
 theorem lt_moveRight {x : Pgame} (o : Numeric x) (j) : x < x.moveRight j :=
@@ -247,7 +247,7 @@ theorem lt_moveRight {x : Pgame} (o : Numeric x) (j) : x < x.moveRight j :=
 #align pgame.numeric.lt_move_right Pgame.Numeric.lt_moveRight
 
 theorem le_moveRight {x : Pgame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
-  (o.lt_move_right j).le
+  (o.lt_moveRight j).le
 #align pgame.numeric.le_move_right Pgame.Numeric.le_moveRight
 
 theorem add : ∀ {x y : Pgame} (ox : Numeric x) (oy : Numeric y), Numeric (x + y)

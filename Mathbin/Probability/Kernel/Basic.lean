@@ -128,7 +128,7 @@ noncomputable def IsFiniteKernel.bound (κ : kernel α β) [h : IsFiniteKernel �
 
 theorem IsFiniteKernel.bound_lt_top (κ : kernel α β) [h : IsFiniteKernel κ] :
     IsFiniteKernel.bound κ < ∞ :=
-  h.exists_univ_le.some_spec.1
+  h.exists_univ_le.choose_spec.1
 #align probability_theory.is_finite_kernel.bound_lt_top ProbabilityTheory.IsFiniteKernel.bound_lt_top
 
 theorem IsFiniteKernel.bound_ne_top (κ : kernel α β) [h : IsFiniteKernel κ] :
@@ -138,7 +138,7 @@ theorem IsFiniteKernel.bound_ne_top (κ : kernel α β) [h : IsFiniteKernel κ] 
 
 theorem kernel.measure_le_bound (κ : kernel α β) [h : IsFiniteKernel κ] (a : α) (s : Set β) :
     κ a s ≤ IsFiniteKernel.bound κ :=
-  (measure_mono (Set.subset_univ s)).trans (h.exists_univ_le.some_spec.2 a)
+  (measure_mono (Set.subset_univ s)).trans (h.exists_univ_le.choose_spec.2 a)
 #align probability_theory.kernel.measure_le_bound ProbabilityTheory.kernel.measure_le_bound
 
 instance isFiniteKernelZero (α β : Type _) {mα : MeasurableSpace α} {mβ : MeasurableSpace β} :
@@ -276,7 +276,7 @@ noncomputable def seq (κ : kernel α β) [h : IsSFiniteKernel κ] : ℕ → ker
 #align probability_theory.kernel.seq ProbabilityTheory.kernel.seq
 
 theorem kernel_sum_seq (κ : kernel α β) [h : IsSFiniteKernel κ] : kernel.sum (seq κ) = κ :=
-  h.tsum_finite.some_spec.2.symm
+  h.tsum_finite.choose_spec.2.symm
 #align probability_theory.kernel.kernel_sum_seq ProbabilityTheory.kernel.kernel_sum_seq
 
 theorem measure_sum_seq (κ : kernel α β) [h : IsSFiniteKernel κ] (a : α) :
@@ -285,7 +285,7 @@ theorem measure_sum_seq (κ : kernel α β) [h : IsSFiniteKernel κ] (a : α) :
 
 instance isFiniteKernelSeq (κ : kernel α β) [h : IsSFiniteKernel κ] (n : ℕ) :
     IsFiniteKernel (kernel.seq κ n) :=
-  h.tsum_finite.some_spec.1 n
+  h.tsum_finite.choose_spec.1 n
 #align probability_theory.kernel.is_finite_kernel_seq ProbabilityTheory.kernel.isFiniteKernelSeq
 
 instance IsSFiniteKernel.add (κ η : kernel α β) [IsSFiniteKernel κ] [IsSFiniteKernel η] :

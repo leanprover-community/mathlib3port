@@ -154,7 +154,7 @@ theorem overProductOfWidePullback [HasLimitsOfShape (WidePullbackShape J) C] {B 
 
 /-- Given a pullback in `C`, construct a binary product in `C/B`. -/
 theorem over_binary_product_of_pullback [HasPullbacks C] {B : C} : HasBinaryProducts (Over B) :=
-  over_product_of_wide_pullback
+  overProductOfWidePullback
 #align category_theory.over.construct_products.over_binary_product_of_pullback CategoryTheory.Over.ConstructProducts.over_binary_product_of_pullback
 
 /-- Given all wide pullbacks in `C`, construct products in `C/B`. -/

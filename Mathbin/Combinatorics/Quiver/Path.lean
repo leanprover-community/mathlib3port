@@ -53,7 +53,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} (p : Quiver.Path.{u1, u2} V _inst_1 a b) (e : Quiver.Hom.{u1, u2} V _inst_1 b a), Ne.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a a) (Quiver.Path.nil.{u1, u2} V _inst_1 a) (Quiver.Path.cons.{u1, u2} V _inst_1 a b a p e)
 Case conversion may be inaccurate. Consider using '#align quiver.path.nil_ne_cons Quiver.Path.nil_ne_consₓ'. -/
-theorem nil_ne_cons (p : Path a b) (e : b ⟶ a) : path.nil ≠ p.cons e :=
+theorem nil_ne_cons (p : Path a b) (e : b ⟶ a) : Path.nil ≠ p.cons e :=
   fun.
 #align quiver.path.nil_ne_cons Quiver.Path.nil_ne_cons
 
@@ -63,7 +63,7 @@ lean 3 declaration is
 but is expected to have type
   forall {V : Type.{u2}} [_inst_1 : Quiver.{u1, u2} V] {a : V} {b : V} (p : Quiver.Path.{u1, u2} V _inst_1 a b) (e : Quiver.Hom.{u1, u2} V _inst_1 b a), Ne.{max (succ u2) u1} (Quiver.Path.{u1, u2} V _inst_1 a a) (Quiver.Path.cons.{u1, u2} V _inst_1 a b a p e) (Quiver.Path.nil.{u1, u2} V _inst_1 a)
 Case conversion may be inaccurate. Consider using '#align quiver.path.cons_ne_nil Quiver.Path.cons_ne_nilₓ'. -/
-theorem cons_ne_nil (p : Path a b) (e : b ⟶ a) : p.cons e ≠ path.nil :=
+theorem cons_ne_nil (p : Path a b) (e : b ⟶ a) : p.cons e ≠ Path.nil :=
   fun.
 #align quiver.path.cons_ne_nil Quiver.Path.cons_ne_nil
 
@@ -322,7 +322,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.path.to_list_chain_nonempty Quiver.Path.toList_chain_nonemptyₓ'. -/
 theorem toList_chain_nonempty : ∀ {b} (p : Path a b), p.toList.Chain (fun x y => Nonempty (y ⟶ x)) b
   | b, nil => List.Chain.nil
-  | b, cons p f => p.to_list_chain_nonempty.cons ⟨f⟩
+  | b, cons p f => p.toList_chain_nonempty.cons ⟨f⟩
 #align quiver.path.to_list_chain_nonempty Quiver.Path.toList_chain_nonempty
 
 variable [∀ a b : V, Subsingleton (a ⟶ b)]
@@ -375,7 +375,7 @@ def mapPath {a : V} : ∀ {b : V}, Path a b → Path (F.obj a) (F.obj b)
 
 #print Prefunctor.mapPath_nil /-
 @[simp]
-theorem mapPath_nil (a : V) : F.mapPath (Path.nil : Path a a) = path.nil :=
+theorem mapPath_nil (a : V) : F.mapPath (Path.nil : Path a a) = Path.nil :=
   rfl
 #align prefunctor.map_path_nil Prefunctor.mapPath_nil
 -/

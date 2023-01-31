@@ -32,11 +32,11 @@ class MonadCont (m : Type u → Type v) where
 open MonadCont
 
 class IsLawfulMonadCont (m : Type u → Type v) [Monad m] [MonadCont m] extends LawfulMonad m where
-  call_cc_bind_right {α ω γ} (cmd : m α) (next : Label ω m γ → α → m ω) :
+  callCc_bind_right {α ω γ} (cmd : m α) (next : Label ω m γ → α → m ω) :
     (callCc fun f => cmd >>= next f) = cmd >>= fun x => callCc fun f => next f x
-  call_cc_bind_left {α} (β) (x : α) (dead : Label α m β → β → m α) :
+  callCc_bind_left {α} (β) (x : α) (dead : Label α m β → β → m α) :
     (callCc fun f : Label α m β => goto f x >>= dead f) = pure x
-  call_cc_dummy {α β} (dummy : m α) : (callCc fun f : Label α m β => dummy) = dummy
+  callCc_dummy {α β} (dummy : m α) : (callCc fun f : Label α m β => dummy) = dummy
 #align is_lawful_monad_cont IsLawfulMonadCont
 
 export IsLawfulMonadCont ()
@@ -104,7 +104,7 @@ def monadLift [Monad m] {α} : m α → ContT r m α := fun x f => x >>= f
 instance [Monad m] : HasMonadLift m (ContT r m) where monadLift α := ContT.monadLift
 
 theorem monadLift_bind [Monad m] [LawfulMonad m] {α β} (x : m α) (f : α → m β) :
-    (monadLift (x >>= f) : ContT r m β) = monadLift x >>= monad_lift ∘ f :=
+    (monadLift (x >>= f) : ContT r m β) = monadLift x >>= monadLift ∘ f :=
   by
   ext
   simp only [monad_lift, HasMonadLift.monadLift, (· ∘ ·), (· >>= ·), bind_assoc, id.def, run,
@@ -115,9 +115,9 @@ instance : MonadCont (ContT r m) where callCc α β f g := f ⟨fun x h => g x�
 
 instance : IsLawfulMonadCont (ContT r m)
     where
-  call_cc_bind_right := by intros <;> ext <;> rfl
-  call_cc_bind_left := by intros <;> ext <;> rfl
-  call_cc_dummy := by intros <;> ext <;> rfl
+  callCc_bind_right := by intros <;> ext <;> rfl
+  callCc_bind_left := by intros <;> ext <;> rfl
+  callCc_dummy := by intros <;> ext <;> rfl
 
 instance (ε) [MonadExcept ε m] : MonadExcept ε (ContT r m)
     where
@@ -132,7 +132,7 @@ end ContT
 variable {m : Type u → Type v} [Monad m]
 
 def ExceptT.mkLabel {α β ε} : Label (Except.{u, u} ε α) m β → Label α (ExceptT ε m) β
-  | ⟨f⟩ => ⟨fun a => monad_lift <| f (Except.ok a)⟩
+  | ⟨f⟩ => ⟨fun a => monadLift <| f (Except.ok a)⟩
 #align except_t.mk_label ExceptTₓ.mkLabel
 
 theorem ExceptT.goto_mkLabel {α β ε : Type _} (x : Label (Except.{u, u} ε α) m β) (i : α) :
@@ -141,33 +141,33 @@ theorem ExceptT.goto_mkLabel {α β ε : Type _} (x : Label (Except.{u, u} ε α
 
 def ExceptT.callCc {ε} [MonadCont m] {α β : Type _} (f : Label α (ExceptT ε m) β → ExceptT ε m α) :
     ExceptT ε m α :=
-  ExceptT.mk (call_cc fun x : Label _ m β => ExceptT.run <| f (ExceptT.mkLabel x) : m (Except ε α))
+  ExceptT.mk (callCc fun x : Label _ m β => ExceptT.run <| f (ExceptT.mkLabel x) : m (Except ε α))
 #align except_t.call_cc ExceptTₓ.callCc
 
 instance {ε} [MonadCont m] : MonadCont (ExceptT ε m) where callCc α β := ExceptT.callCc
 
 instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT ε m)
     where
-  call_cc_bind_right := by
+  callCc_bind_right := by
     intros
     simp [call_cc, ExceptT.callCc, call_cc_bind_right]
     ext
     dsimp
     congr with ⟨⟩ <;> simp [ExceptT.bindCont, @call_cc_dummy m _]
-  call_cc_bind_left := by
+  callCc_bind_left := by
     intros
     simp [call_cc, ExceptT.callCc, call_cc_bind_right, ExceptT.goto_mkLabel, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext
     rfl
-  call_cc_dummy := by
+  callCc_dummy := by
     intros
     simp [call_cc, ExceptT.callCc, @call_cc_dummy m _]
     ext
     rfl
 
 def OptionT.mkLabel {α β} : Label (Option.{u} α) m β → Label α (OptionT m) β
-  | ⟨f⟩ => ⟨fun a => monad_lift <| f (some a)⟩
+  | ⟨f⟩ => ⟨fun a => monadLift <| f (some a)⟩
 #align option_t.mk_label OptionTₓ.mkLabel
 
 theorem OptionT.goto_mkLabel {α β : Type _} (x : Label (Option.{u} α) m β) (i : α) :
@@ -176,26 +176,26 @@ theorem OptionT.goto_mkLabel {α β : Type _} (x : Label (Option.{u} α) m β) (
 
 def OptionT.callCc [MonadCont m] {α β : Type _} (f : Label α (OptionT m) β → OptionT m α) :
     OptionT m α :=
-  OptionT.mk (call_cc fun x : Label _ m β => OptionT.run <| f (OptionT.mkLabel x) : m (Option α))
+  OptionT.mk (callCc fun x : Label _ m β => OptionT.run <| f (OptionT.mkLabel x) : m (Option α))
 #align option_t.call_cc OptionTₓ.callCc
 
 instance [MonadCont m] : MonadCont (OptionT m) where callCc α β := OptionT.callCc
 
 instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionT m)
     where
-  call_cc_bind_right := by
+  callCc_bind_right := by
     intros
     simp [call_cc, OptionT.callCc, call_cc_bind_right]
     ext
     dsimp
     congr with ⟨⟩ <;> simp [OptionT.bindCont, @call_cc_dummy m _]
-  call_cc_bind_left := by
+  callCc_bind_left := by
     intros
     simp [call_cc, OptionT.callCc, call_cc_bind_right, OptionT.goto_mkLabel, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext
     rfl
-  call_cc_dummy := by
+  callCc_dummy := by
     intros
     simp [call_cc, OptionT.callCc, @call_cc_dummy m _]
     ext
@@ -208,7 +208,7 @@ but is expected to have type
   forall {m : Type.{u2} -> Type.{u3}} [_inst_1 : Monad.{u2, u3} m] {α : Type.{u1}} {β : Type.{u2}} {ω : Type.{u2}} [_inst_2 : One.{u2} ω], (MonadCont.Label.{u2, u3, max u1 u2} (Prod.{u1, u2} α ω) m β) -> (MonadCont.Label.{u2, max u2 u3, u1} α (WriterTₓ.{u2, u3} ω m) β)
 Case conversion may be inaccurate. Consider using '#align writer_t.mk_label WriterTₓ.mkLabelₓ'. -/
 def WriterT.mkLabel {α β ω} [One ω] : Label (α × ω) m β → Label α (WriterT ω m) β
-  | ⟨f⟩ => ⟨fun a => monad_lift <| f (a, 1)⟩
+  | ⟨f⟩ => ⟨fun a => monadLift <| f (a, 1)⟩
 #align writer_t.mk_label WriterTₓ.mkLabel
 
 theorem WriterT.goto_mkLabel {α β ω : Type _} [One ω] (x : Label (α × ω) m β) (i : α) :
@@ -246,19 +246,19 @@ instance {σ} [MonadCont m] : MonadCont (StateT σ m) where callCc α β := Stat
 
 instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateT σ m)
     where
-  call_cc_bind_right := by
+  callCc_bind_right := by
     intros
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind]
     ext
     dsimp
     congr with ⟨x₀, x₁⟩
     rfl
-  call_cc_bind_left := by
+  callCc_bind_left := by
     intros
     simp [call_cc, StateT.callCc, call_cc_bind_left, (· >>= ·), StateT.bind, StateT.goto_mkLabel]
     ext
     rfl
-  call_cc_dummy := by
+  callCc_dummy := by
     intros
     simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind, @call_cc_dummy m _]
     ext
@@ -271,7 +271,7 @@ but is expected to have type
   forall {m : Type.{u2} -> Type.{u3}} [_inst_1 : Monad.{u2, u3} m] {α : Type.{u1}} {β : Type.{u2}} (ρ : Type.{u2}), (MonadCont.Label.{u2, u3, u1} α m β) -> (MonadCont.Label.{u2, max u2 u3, u1} α (ReaderTₓ.{u2, u3} ρ m) β)
 Case conversion may be inaccurate. Consider using '#align reader_t.mk_label ReaderTₓ.mkLabelₓ'. -/
 def ReaderT.mkLabel {α β} (ρ) : Label α m β → Label α (ReaderT ρ m) β
-  | ⟨f⟩ => ⟨monad_lift ∘ f⟩
+  | ⟨f⟩ => ⟨monadLift ∘ f⟩
 #align reader_t.mk_label ReaderTₓ.mkLabel
 
 theorem ReaderT.goto_mkLabel {α ρ β} (x : Label α m β) (i : α) :
@@ -287,17 +287,17 @@ instance {ρ} [MonadCont m] : MonadCont (ReaderT ρ m) where callCc α β := Rea
 
 instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT ρ m)
     where
-  call_cc_bind_right := by
+  callCc_bind_right := by
     intros
     simp [call_cc, ReaderT.callCc, call_cc_bind_right]
     ext
     rfl
-  call_cc_bind_left := by
+  callCc_bind_left := by
     intros
     simp [call_cc, ReaderT.callCc, call_cc_bind_left, ReaderT.goto_mkLabel]
     ext
     rfl
-  call_cc_dummy := by
+  callCc_dummy := by
     intros
     simp [call_cc, ReaderT.callCc, @call_cc_dummy m _]
     ext

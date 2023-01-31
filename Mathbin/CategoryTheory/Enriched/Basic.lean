@@ -69,7 +69,7 @@ class EnrichedCategory (C : Type u₁) where
   comp : ∀ X Y Z, «expr ⟶[] » X Y ⊗ «expr ⟶[] » Y Z ⟶ «expr ⟶[] » X Z
   id_comp : ∀ X Y, (λ_ («expr ⟶[] » X Y)).inv ≫ (id X ⊗ 𝟙 _) ≫ comp X X Y = 𝟙 _ := by obviously
   comp_id : ∀ X Y, (ρ_ («expr ⟶[] » X Y)).inv ≫ (𝟙 _ ⊗ id Y) ≫ comp X Y Y = 𝟙 _ := by obviously
-  assoc :
+  and_assoc :
     ∀ W X Y Z,
       (α_ _ _ _).inv ≫ (comp W X Y ⊗ 𝟙 _) ≫ comp W Y Z = (𝟙 _ ⊗ comp X Y Z) ≫ comp W X Z := by
     obviously
@@ -141,7 +141,7 @@ instance (F : LaxMonoidalFunctor V W) : EnrichedCategory W (TransportEnrichment 
     rw [id_tensor_comp, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
       F.to_functor.map_id, F.right_unitality_inv_assoc, ← F.to_functor.map_comp, ←
       F.to_functor.map_comp, e_comp_id, F.to_functor.map_id]
-  assoc P Q R S := by
+  and_assoc P Q R S := by
     rw [comp_tensor_id, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
       F.to_functor.map_id, ← F.associativity_inv_assoc, ← F.to_functor.map_comp, ←
       F.to_functor.map_comp, e_assoc, id_tensor_comp, category.assoc, ← F.to_functor.map_id,
@@ -174,7 +174,7 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : Enr
   comp_id X Y := by
     ext
     simp
-  assoc W X Y Z := by
+  and_assoc W X Y Z := by
     ext ⟨f, g, h⟩
     simp
 #align category_theory.enriched_category_Type_of_category CategoryTheory.enrichedCategoryTypeOfCategory

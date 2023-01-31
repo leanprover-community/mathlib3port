@@ -119,7 +119,7 @@ instance Bourbaki.uniformSpace : UniformSpace Bourbakiℝ :=
 
 /-- Bourbaki reals packaged as a completion of Q using the general theory. -/
 def bourbakiPkg : AbstractCompletion Q :=
-  completion.cpkg
+  Completion.cpkg
 #align compare_reals.Bourbaki_pkg CompareReals.bourbakiPkg
 
 /-- The uniform bijection between Bourbaki and Cauchy reals. -/
@@ -128,11 +128,11 @@ noncomputable def compareEquiv : Bourbakiℝ ≃ᵤ ℝ :=
 #align compare_reals.compare_equiv CompareReals.compareEquiv
 
 theorem compare_uc : UniformContinuous compareEquiv :=
-  bourbakiPkg.uniform_continuous_compare_equiv _
+  bourbakiPkg.uniformContinuous_compareEquiv _
 #align compare_reals.compare_uc CompareReals.compare_uc
 
 theorem compare_uc_symm : UniformContinuous compareEquiv.symm :=
-  bourbakiPkg.uniform_continuous_compare_equiv_symm _
+  bourbakiPkg.uniformContinuous_compareEquiv_symm _
 #align compare_reals.compare_uc_symm CompareReals.compare_uc_symm
 
 end CompareReals

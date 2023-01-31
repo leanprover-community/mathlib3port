@@ -46,7 +46,7 @@ theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ�
 
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
-  ⟨fun i => ∑ j in Finset.univ.filter fun k => f k = i, g j,
+  ⟨fun i => ∑ j in Finset.univ.filterₓ fun k => f k = i, g j,
     by
     simp only [[anonymous], Finset.sum_congr, to_Top_obj, Set.mem_setOf]
     rw [← Finset.sum_bunionᵢ]
@@ -66,7 +66,7 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
 
 @[simp]
 theorem coe_toTopMap {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i : y) :
-    toTopMap f g i = ∑ j in Finset.univ.filter fun k => f k = i, g j :=
+    toTopMap f g i = ∑ j in Finset.univ.filterₓ fun k => f k = i, g j :=
   rfl
 #align simplex_category.coe_to_Top_map SimplexCategory.coe_toTopMap
 

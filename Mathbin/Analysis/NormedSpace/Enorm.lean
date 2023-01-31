@@ -64,7 +64,7 @@ theorem coeFn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → ℝ
 
 @[ext]
 theorem ext {e₁ e₂ : Enorm 𝕜 V} (h : ∀ x, e₁ x = e₂ x) : e₁ = e₂ :=
-  coe_fn_injective <| funext h
+  coeFn_injective <| funext h
 #align enorm.ext Enorm.ext
 
 theorem ext_iff {e₁ e₂ : Enorm 𝕜 V} : e₁ = e₂ ↔ ∀ x, e₁ x = e₂ x :=

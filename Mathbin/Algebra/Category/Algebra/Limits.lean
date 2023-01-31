@@ -55,7 +55,7 @@ def sectionsSubalgebra (F : J ⥤ AlgebraCat.{max v w} R) : Subalgebra R (∀ j,
   {
     SemiRing.sectionsSubsemiring
       (F ⋙ forget₂ (AlgebraCat R) RingCat.{max v w} ⋙ forget₂ RingCat SemiRing.{max v w}) with
-    algebra_map_mem' := fun r j j' f => (F.map f).commutes r }
+    algebraMap_mem' := fun r j j' f => (F.map f).commutes r }
 #align Algebra.sections_subalgebra AlgebraCat.sectionsSubalgebra
 
 instance limitSemiring (F : J ⥤ AlgebraCat.{max v w} R) :

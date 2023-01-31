@@ -105,7 +105,7 @@ section
 variable (K L : Type _) [Field K] [CommSemiring L] [Nontrivial L] [Algebra K L]
 
 theorem Algebra.charP_iff (p : ℕ) : CharP K p ↔ CharP L p :=
-  (algebraMap K L).char_p_iff_char_p p
+  (algebraMap K L).charP_iff_charP p
 #align algebra.char_p_iff Algebra.charP_iff
 
 theorem Algebra.ringChar_eq : ringChar K = ringChar L :=

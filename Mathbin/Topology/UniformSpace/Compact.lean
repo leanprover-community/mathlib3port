@@ -94,7 +94,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     where
   uniformity := 𝓝ˢ (diagonal γ)
   refl := principal_le_nhdsSet
-  symm := continuous_swap.tendsto_nhds_set fun x => Eq.symm
+  symm := continuous_swap.tendsto_nhdsSet fun x => Eq.symm
   comp :=
     by
     /-
@@ -131,7 +131,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- We set U₃ := (V₁ ∪ V₂)ᶜ so that W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃ is an open
     -- neighborhood of Δ.
     let U₃ := (V₁ ∪ V₂)ᶜ
-    have U₃_op : IsOpen U₃ := (V₁_cl.union V₂_cl).is_open_compl
+    have U₃_op : IsOpen U₃ := (V₁_cl.union V₂_cl).isOpen_compl
     let W := U₁ ×ˢ U₁ ∪ U₂ ×ˢ U₂ ∪ U₃ ×ˢ U₃
     have W_in : W ∈ 𝓝Δ := by
       rw [mem_nhdsSet_iff_forall]
@@ -162,7 +162,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     -- Hence w ∈ U₁ ∩ U₂ which is empty.
     -- So we have a contradiction
     exact hU₁₂.le_bot ⟨uw_in.2, wv_in.1⟩
-  is_open_uniformity :=
+  isOpen_uniformity :=
     by
     -- Here we need to prove the topology induced by the constructed uniformity is the
     -- topology we started with.
@@ -188,7 +188,7 @@ continuous. -/
 theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α → β}
     (h : Continuous f) : UniformContinuous f :=
   have : Tendsto (Prod.map f f) (𝓝ˢ (diagonal α)) (𝓝ˢ (diagonal β)) :=
-    (h.prod_map h).tendsto_nhds_set mapsTo_prod_map_diagonal
+    (h.Prod_map h).tendsto_nhdsSet mapsTo_prod_map_diagonal
   (this.mono_left nhdsSet_diagonal_eq_uniformity.ge).mono_right nhdsSet_diagonal_le_uniformity
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuous
 

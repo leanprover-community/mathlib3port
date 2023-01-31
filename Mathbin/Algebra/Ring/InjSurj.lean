@@ -310,7 +310,7 @@ preserves `-` and `*` to a type which has distributive negation. -/
 @[reducible]
 protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α) (hf : Injective f)
     (neg : ∀ a, f (-a) = -f a) (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
-  { hf.HasInvolutiveNeg _ neg,
+  { hf.InvolutiveNeg _ neg,
     ‹Mul β› with
     neg_mul := fun x y => hf <| by erw [neg, mul, neg, neg_mul, mul]
     mul_neg := fun x y => hf <| by erw [neg, mul, neg, mul_neg, mul] }
@@ -328,7 +328,7 @@ preserves `-` and `*` from a type which has distributive negation. -/
 @[reducible]
 protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β) (hf : Surjective f)
     (neg : ∀ a, f (-a) = -f a) (mul : ∀ a b, f (a * b) = f a * f b) : HasDistribNeg β :=
-  { hf.HasInvolutiveNeg _ neg,
+  { hf.InvolutiveNeg _ neg,
     ‹Mul
         β› with
     neg_mul :=

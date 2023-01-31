@@ -54,12 +54,12 @@ theorem opRingEquiv_op_c (a : R) : opRingEquiv R (op (c a)) = c (op a) :=
 #align polynomial.op_ring_equiv_op_C Polynomial.opRingEquiv_op_c
 
 @[simp]
-theorem opRingEquiv_op_x : opRingEquiv R (op (x : R[X])) = X :=
+theorem opRingEquiv_op_x : opRingEquiv R (op (x : R[X])) = x :=
   opRingEquiv_op_monomial 1 1
 #align polynomial.op_ring_equiv_op_X Polynomial.opRingEquiv_op_x
 
 theorem opRingEquiv_op_c_mul_x_pow (r : R) (n : ℕ) :
-    opRingEquiv R (op (c r * X ^ n : R[X])) = c (op r) * X ^ n := by
+    opRingEquiv R (op (c r * x ^ n : R[X])) = c (op r) * x ^ n := by
   simp only [X_pow_mul, op_mul, op_pow, map_mul, map_pow, op_ring_equiv_op_X, op_ring_equiv_op_C]
 #align polynomial.op_ring_equiv_op_C_mul_X_pow Polynomial.opRingEquiv_op_c_mul_x_pow
 
@@ -84,7 +84,7 @@ theorem opRingEquiv_symm_x : (opRingEquiv R).symm (x : Rᵐᵒᵖ[X]) = op x :=
 #align polynomial.op_ring_equiv_symm_X Polynomial.opRingEquiv_symm_x
 
 theorem opRingEquiv_symm_c_mul_x_pow (r : Rᵐᵒᵖ) (n : ℕ) :
-    (opRingEquiv R).symm (c r * X ^ n : Rᵐᵒᵖ[X]) = op (c (unop r) * X ^ n) := by
+    (opRingEquiv R).symm (c r * x ^ n : Rᵐᵒᵖ[X]) = op (c (unop r) * x ^ n) := by
   rw [C_mul_X_pow_eq_monomial, op_ring_equiv_symm_monomial, ← C_mul_X_pow_eq_monomial]
 #align polynomial.op_ring_equiv_symm_C_mul_X_pow Polynomial.opRingEquiv_symm_c_mul_x_pow
 

@@ -84,7 +84,7 @@ variable {D : Type u₃} [Quiver.{v₃ + 1} D] [∀ a b : D, Quiver.{w₃ + 1} (
 structure PrelaxFunctor (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)]
   (C : Type u₂) [Quiver.{v₂ + 1} C] [∀ a b : C, Quiver.{w₂ + 1} (a ⟶ b)] extends
   Prefunctor B C where
-  map₂ {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
+  zipWith {a b : B} {f g : a ⟶ b} : (f ⟶ g) → (map f ⟶ map g)
 #align category_theory.prelax_functor CategoryTheory.PrelaxFunctor
 
 /-- The prefunctor between the underlying quivers. -/
@@ -116,7 +116,7 @@ theorem to_prefunctor_map : @Prefunctor.map B _ C _ F = @map _ _ _ _ _ _ F :=
 /-- The identity prelax functor. -/
 @[simps]
 def id (B : Type u₁) [Quiver.{v₁ + 1} B] [∀ a b : B, Quiver.{w₁ + 1} (a ⟶ b)] : PrelaxFunctor B B :=
-  { Prefunctor.id B with map₂ := fun a b f g η => η }
+  { Prefunctor.id B with zipWith := fun a b f g η => η }
 #align category_theory.prelax_functor.id CategoryTheory.PrelaxFunctor.id
 
 instance : Inhabited (PrelaxFunctor B B) :=
@@ -125,7 +125,7 @@ instance : Inhabited (PrelaxFunctor B B) :=
 /-- Composition of prelax functors. -/
 @[simps]
 def comp (F : PrelaxFunctor B C) (G : PrelaxFunctor C D) : PrelaxFunctor B D :=
-  { (F : Prefunctor B C).comp ↑G with map₂ := fun a b f g η => G.map₂ (F.map₂ η) }
+  { (F : Prefunctor B C).comp ↑G with zipWith := fun a b f g η => G.zipWith (F.zipWith η) }
 #align category_theory.prelax_functor.comp CategoryTheory.PrelaxFunctor.comp
 
 end PrelaxFunctor
@@ -169,11 +169,11 @@ structure OplaxFunctor (B : Type u₁) [Bicategory.{w₁, v₁} B] (C : Type u�
   [Bicategory.{w₂, v₂} C] extends PrelaxFunctor B C where
   map_id (a : B) : map (𝟙 a) ⟶ 𝟙 (obj a)
   map_comp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : map (f ≫ g) ⟶ map f ≫ map g
-  map_comp_naturality_left' :
+  mapComp_naturality_left' :
     ∀ {a b c : B} {f f' : a ⟶ b} (η : f ⟶ f') (g : b ⟶ c),
       map₂ (η ▷ g) ≫ map_comp f' g = map_comp f g ≫ map₂ η ▷ map g := by
     obviously
-  map_comp_naturality_right' :
+  mapComp_naturality_right' :
     ∀ {a b c : B} (f : a ⟶ b) {g g' : b ⟶ c} (η : g ⟶ g'),
       map₂ (f ◁ η) ≫ map_comp f g' = map_comp f g ≫ map f ◁ map₂ η := by
     obviously
@@ -255,7 +255,7 @@ theorem to_prelaxFunctor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ 
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b)
     where
   obj f := F.map f
-  map f g η := F.map₂ η
+  map f g η := F.zipWith η
 #align category_theory.oplax_functor.map_functor CategoryTheory.OplaxFunctor.mapFunctor
 
 /-- The identity oplax functor. -/
@@ -278,12 +278,12 @@ def comp (F : OplaxFunctor B C) (G : OplaxFunctor C D) : OplaxFunctor B D :=
     map_id := fun a => (G.mapFunctor _ _).map (F.map_id a) ≫ G.map_id (F.obj a)
     map_comp := fun a b c f g =>
       (G.mapFunctor _ _).map (F.map_comp f g) ≫ G.map_comp (F.map f) (F.map g)
-    map_comp_naturality_left' := fun a b c f f' η g =>
+    mapComp_naturality_left' := fun a b c f f' η g =>
       by
       dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_left, map₂_comp_assoc, map_comp_naturality_left,
         assoc]
-    map_comp_naturality_right' := fun a b c f g g' η =>
+    mapComp_naturality_right' := fun a b c f g g' η =>
       by
       dsimp
       rw [← map₂_comp_assoc, map_comp_naturality_right, map₂_comp_assoc, map_comp_naturality_right,
@@ -311,8 +311,8 @@ See `pseudofunctor.mk_of_oplax`.
 structure PseudoCore (F : OplaxFunctor B C) where
   mapIdIso (a : B) : F.map (𝟙 a) ≅ 𝟙 (F.obj a)
   mapCompIso {a b c : B} (f : a ⟶ b) (g : b ⟶ c) : F.map (f ≫ g) ≅ F.map f ≫ F.map g
-  map_id_iso_hom' : ∀ {a : B}, (map_id_iso a).Hom = F.map_id a := by obviously
-  map_comp_iso_hom' :
+  mapIdIso_hom' : ∀ {a : B}, (map_id_iso a).Hom = F.map_id a := by obviously
+  mapCompIso_hom' :
     ∀ {a b c : B} (f : a ⟶ b) (g : b ⟶ c), (map_comp_iso f g).Hom = F.map_comp f g := by obviously
 #align category_theory.oplax_functor.pseudo_core CategoryTheory.OplaxFunctor.PseudoCore
 

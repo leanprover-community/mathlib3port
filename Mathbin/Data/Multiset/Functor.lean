@@ -148,7 +148,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.comp_traverse Multiset.comp_traverseₓ'. -/
 theorem comp_traverse {G H : Type _ → Type _} [Applicative G] [Applicative H] [CommApplicative G]
     [CommApplicative H] {α β γ : Type _} (g : α → G β) (h : β → H γ) (x : Multiset α) :
-    traverse (comp.mk ∘ Functor.map h ∘ g) x = Comp.mk (Functor.map (traverse h) (traverse g x)) :=
+    traverse (Comp.mk ∘ Functor.map h ∘ g) x = Comp.mk (Functor.map (traverse h) (traverse g x)) :=
   Quotient.inductionOn x
     (by
       intro <;> simp [traverse, comp_traverse, functor_norm] <;>

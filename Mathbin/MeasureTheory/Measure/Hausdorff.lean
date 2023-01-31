@@ -265,7 +265,7 @@ measures. We also prove basic lemmas about `map`/`comap` of these measures.
 `m : set X → ℝ≥0∞`, returns the maximal outer measure `μ` such that `μ s ≤ m s`
 for any set `s` of diameter at most `r`.-/
 def MkMetric'.pre (m : Set X → ℝ≥0∞) (r : ℝ≥0∞) : OuterMeasure X :=
-  bounded_by <| extend fun s (hs : diam s ≤ r) => m s
+  boundedBy <| extend fun s (hs : diam s ≤ r) => m s
 #align measure_theory.outer_measure.mk_metric'.pre MeasureTheory.OuterMeasure.MkMetric'.pre
 
 /-- Given a function `m : set X → ℝ≥0∞`, `mk_metric' m` is the supremum of `mk_metric'.pre m r`
@@ -938,7 +938,7 @@ variable {K : ℝ≥0} {f : X → Y}
 by the factor of `K ^ d`.-/
 theorem hausdorffMeasure_image_le (h : LipschitzWith K f) {d : ℝ} (hd : 0 ≤ d) (s : Set X) :
     μH[d] (f '' s) ≤ K ^ d * μH[d] s :=
-  (h.LipschitzOnWith s).hausdorff_measure_image_le hd
+  (h.LipschitzOnWith s).hausdorffMeasure_image_le hd
 #align lipschitz_with.hausdorff_measure_image_le LipschitzWith.hausdorffMeasure_image_le
 
 end LipschitzWith
@@ -990,7 +990,7 @@ theorem le_hausdorffMeasure_image (hf : AntilipschitzWith K f) (hd : 0 ≤ d) (s
     μH[d] s ≤ K ^ d * μH[d] (f '' s) :=
   calc
     μH[d] s ≤ μH[d] (f ⁻¹' (f '' s)) := measure_mono (subset_preimage_image _ _)
-    _ ≤ K ^ d * μH[d] (f '' s) := hf.hausdorff_measure_preimage_le hd (f '' s)
+    _ ≤ K ^ d * μH[d] (f '' s) := hf.hausdorffMeasure_preimage_le hd (f '' s)
     
 #align antilipschitz_with.le_hausdorff_measure_image AntilipschitzWith.le_hausdorffMeasure_image
 
@@ -1031,7 +1031,7 @@ namespace IsometryEquiv
 
 @[simp]
 theorem hausdorffMeasure_image (e : X ≃ᵢ Y) (d : ℝ) (s : Set X) : μH[d] (e '' s) = μH[d] s :=
-  e.Isometry.hausdorff_measure_image (Or.inr e.Surjective) s
+  e.Isometry.hausdorffMeasure_image (Or.inr e.Surjective) s
 #align isometry_equiv.hausdorff_measure_image IsometryEquiv.hausdorffMeasure_image
 
 @[simp]

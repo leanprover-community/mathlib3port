@@ -46,12 +46,12 @@ open Set
 
 open BigOperators Pointwise
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`well_founded_submodule_lt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`wellFounded_submodule_lt] [] -/
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/
 class IsArtinian (R M) [Semiring R] [AddCommMonoid M] [Module R M] : Prop where
-  well_founded_submodule_lt : WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop)
+  wellFounded_submodule_lt : WellFounded ((· < ·) : Submodule R M → Submodule R M → Prop)
 #align is_artinian IsArtinian
 
 section
@@ -420,7 +420,7 @@ theorem Function.Surjective.isArtinianRing {R} [Ring R] {S} [Ring S] {F} [RingHo
 
 instance isArtinianRing_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsArtinianRing R] :
     IsArtinianRing f.range :=
-  f.range_restrict_surjective.IsArtinianRing
+  f.rangeRestrict_surjective.IsArtinianRing
 #align is_artinian_ring_range isArtinianRing_range
 
 namespace IsArtinianRing

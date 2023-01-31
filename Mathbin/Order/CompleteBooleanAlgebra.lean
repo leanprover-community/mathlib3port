@@ -54,7 +54,7 @@ variable {α : Type u} {β : Type v} {ι : Sort w} {κ : ι → Sort _}
 #print Order.Frame /-
 /-- A frame, aka complete Heyting algebra, is a complete lattice whose `⊓` distributes over `⨆`. -/
 class Order.Frame (α : Type _) extends CompleteLattice α where
-  inf_Sup_le_supr_inf (a : α) (s : Set α) : a ⊓ Sup s ≤ ⨆ b ∈ s, a ⊓ b
+  inf_sup_le_supᵢ_inf (a : α) (s : Set α) : a ⊓ Sup s ≤ ⨆ b ∈ s, a ⊓ b
 #align order.frame Order.Frame
 -/
 
@@ -62,7 +62,7 @@ class Order.Frame (α : Type _) extends CompleteLattice α where
 /-- A coframe, aka complete Brouwer algebra or complete co-Heyting algebra, is a complete lattice
 whose `⊔` distributes over `⨅`. -/
 class Order.Coframe (α : Type _) extends CompleteLattice α where
-  infi_sup_le_sup_Inf (a : α) (s : Set α) : (⨅ b ∈ s, a ⊔ b) ≤ a ⊔ Inf s
+  infᵢ_sup_le_sup_inf (a : α) (s : Set α) : (⨅ b ∈ s, a ⊔ b) ≤ a ⊔ Inf s
 #align order.coframe Order.Coframe
 -/
 
@@ -72,7 +72,7 @@ open Order
 /-- A completely distributive lattice is a complete lattice whose `⊔` and `⊓` respectively
 distribute over `⨅` and `⨆`. -/
 class CompleteDistribLattice (α : Type _) extends Frame α where
-  infi_sup_le_sup_Inf : ∀ a s, (⨅ b ∈ s, a ⊔ b) ≤ a ⊔ Inf s
+  infᵢ_sup_le_sup_inf : ∀ a s, (⨅ b ∈ s, a ⊔ b) ≤ a ⊔ Inf s
 #align complete_distrib_lattice CompleteDistribLattice
 -/
 
@@ -90,7 +90,7 @@ variable [Frame α] {s t : Set α} {a b : α}
 
 #print OrderDual.coframe /-
 instance OrderDual.coframe : Coframe αᵒᵈ :=
-  { OrderDual.completeLattice α with infi_sup_le_sup_Inf := Frame.inf_sup_le_supᵢ_inf }
+  { OrderDual.completeLattice α with infᵢ_sup_le_sup_inf := Frame.inf_sup_le_supᵢ_inf }
 #align order_dual.coframe OrderDual.coframe
 -/
 
@@ -180,7 +180,7 @@ theorem bsupᵢ_inf_bsupᵢ {ι ι' : Type _} {f : ι → α} {g : ι' → α} {
     ((⨆ i ∈ s, f i) ⊓ ⨆ j ∈ t, g j) = ⨆ p ∈ s ×ˢ t, f (p : ι × ι').1 ⊓ g p.2 :=
   by
   simp only [supᵢ_subtype', supᵢ_inf_supᵢ]
-  exact (Equiv.surjective _).supr_congr (Equiv.Set.prod s t).symm fun x => rfl
+  exact (Equiv.surjective _).supᵢ_congr (Equiv.Set.prod s t).symm fun x => rfl
 #align bsupr_inf_bsupr bsupᵢ_inf_bsupᵢ
 
 /- warning: Sup_inf_Sup -> supₛ_inf_supₛ is a dubious translation:
@@ -286,7 +286,7 @@ theorem supᵢ_inf_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (swap 
 #print Pi.frame /-
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
   { Pi.completeLattice with
-    inf_Sup_le_supr_inf := fun a s i => by
+    inf_sup_le_supᵢ_inf := fun a s i => by
       simp only [CompleteLattice.sup, supₛ_apply, supᵢ_apply, Pi.inf_apply, inf_supᵢ_eq, ←
         supᵢ_subtype''] }
 #align pi.frame Pi.frame
@@ -308,7 +308,7 @@ variable [Coframe α] {s t : Set α} {a b : α}
 
 #print OrderDual.frame /-
 instance OrderDual.frame : Frame αᵒᵈ :=
-  { OrderDual.completeLattice α with inf_Sup_le_supr_inf := Coframe.infᵢ_sup_le_sup_inf }
+  { OrderDual.completeLattice α with inf_sup_le_supᵢ_inf := Coframe.infᵢ_sup_le_sup_inf }
 #align order_dual.frame OrderDual.frame
 -/
 
@@ -435,8 +435,8 @@ theorem infᵢ_sup_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (· �
 #print Pi.coframe /-
 instance Pi.coframe {ι : Type _} {π : ι → Type _} [∀ i, Coframe (π i)] : Coframe (∀ i, π i) :=
   { Pi.completeLattice with
-    inf := infₛ
-    infi_sup_le_sup_Inf := fun a s i => by
+    infₛ := infₛ
+    infᵢ_sup_le_sup_inf := fun a s i => by
       simp only [← sup_infᵢ_eq, infₛ_apply, ← infᵢ_subtype'', infᵢ_apply, Pi.sup_apply] }
 #align pi.coframe Pi.coframe
 -/
@@ -485,9 +485,9 @@ instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _}
 instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { Prop.booleanAlgebra,
     Prop.completeLattice with
-    infi_sup_le_sup_Inf := fun p s =>
+    infᵢ_sup_le_sup_inf := fun p s =>
       Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infᵢ_Prop_eq, sup_Prop_eq]
-    inf_Sup_le_supr_inf := fun p s =>
+    inf_sup_le_supᵢ_inf := fun p s =>
       Iff.mp <| by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, supᵢ_Prop_eq] }
 #align Prop.complete_boolean_algebra Prop.completeBooleanAlgebra
 -/
@@ -574,7 +574,7 @@ protected def Function.Injective.frame [HasSup α] [HasInf α] [SupSet α] [InfS
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_Sup : ∀ s, f (supₛ s) = ⨆ a ∈ s, f a)
     (map_Inf : ∀ s, f (infₛ s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : Frame α :=
   { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
-    inf_Sup_le_supr_inf := fun a s => by
+    inf_sup_le_supᵢ_inf := fun a s => by
       change f (a ⊓ Sup s) ≤ f _
       rw [← supₛ_image, map_inf, map_Sup s, inf_supᵢ₂_eq]
       simp_rw [← map_inf]
@@ -596,7 +596,7 @@ protected def Function.Injective.coframe [HasSup α] [HasInf α] [SupSet α] [In
     (map_Inf : ∀ s, f (infₛ s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) :
     Coframe α :=
   { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
-    infi_sup_le_sup_Inf := fun a s => by
+    infᵢ_sup_le_sup_inf := fun a s => by
       change f _ ≤ f (a ⊔ Inf s)
       rw [← infₛ_image, map_sup, map_Inf s, sup_infᵢ₂_eq]
       simp_rw [← map_sup]
@@ -650,21 +650,21 @@ variable (s : Set PUnit.{u + 1}) (x y : PUnit.{u + 1})
 instance : CompleteBooleanAlgebra PUnit := by
   refine_struct
         { PUnit.booleanAlgebra with
-          sup := fun _ => star
-          inf := fun _ => star } <;>
+          supₛ := fun _ => star
+          infₛ := fun _ => star } <;>
       intros <;>
     first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
 
 #print PUnit.supₛ_eq /-
 @[simp]
-theorem supₛ_eq : supₛ s = star :=
+theorem supₛ_eq : supₛ s = unit :=
   rfl
 #align punit.Sup_eq PUnit.supₛ_eq
 -/
 
 #print PUnit.infₛ_eq /-
 @[simp]
-theorem infₛ_eq : infₛ s = star :=
+theorem infₛ_eq : infₛ s = unit :=
   rfl
 #align punit.Inf_eq PUnit.infₛ_eq
 -/

@@ -253,7 +253,7 @@ theorem Chain'.iff_mem : ∀ {l : List α}, Chain' R l ↔ Chain' (fun x y => x 
   | [] => Iff.rfl
   | x :: l =>
     ⟨fun h => (Chain.iff_mem.1 h).imp fun a b ⟨h₁, h₂, h₃⟩ => ⟨h₁, Or.inr h₂, h₃⟩,
-      chain'.imp fun a b h => h.2.2⟩
+      Chain'.imp fun a b h => h.2.2⟩
 #align list.chain'.iff_mem List.Chain'.iff_mem
 -/
 
@@ -267,7 +267,7 @@ theorem chain'_nil : Chain' R [] :=
 #print List.chain'_singleton /-
 @[simp]
 theorem chain'_singleton (a : α) : Chain' R [a] :=
-  chain.nil
+  Chain.nil
 #align list.chain'_singleton List.chain'_singleton
 -/
 
@@ -376,7 +376,7 @@ theorem Chain'.rel_head? {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head?
 -/
 
 #print List.Chain'.cons' /-
-theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀ y ∈ l.head', R x y) → Chain' R (x :: l)
+theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀ y ∈ l.head?, R x y) → Chain' R (x :: l)
   | [], _, _ => chain'_singleton x
   | a :: l, hl, H => hl.cons <| H _ rfl
 #align list.chain'.cons' List.Chain'.cons'
@@ -384,14 +384,14 @@ theorem Chain'.cons' {x} : ∀ {l : List α}, Chain' R l → (∀ y ∈ l.head',
 
 #print List.chain'_cons' /-
 theorem chain'_cons' {x l} : Chain' R (x :: l) ↔ (∀ y ∈ head? l, R x y) ∧ Chain' R l :=
-  ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
+  ⟨fun h => ⟨h.rel_head?, h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 #align list.chain'_cons' List.chain'_cons'
 -/
 
 #print List.chain'_append /-
 theorem chain'_append :
     ∀ {l₁ l₂ : List α},
-      Chain' R (l₁ ++ l₂) ↔ Chain' R l₁ ∧ Chain' R l₂ ∧ ∀ x ∈ l₁.last', ∀ y ∈ l₂.head', R x y
+      Chain' R (l₁ ++ l₂) ↔ Chain' R l₁ ∧ Chain' R l₂ ∧ ∀ x ∈ l₁.getLast?, ∀ y ∈ l₂.head?, R x y
   | [], l => by simp
   | [a], l => by simp [chain'_cons', and_comm']
   | a :: b :: l₁, l₂ => by
@@ -402,7 +402,7 @@ theorem chain'_append :
 
 #print List.Chain'.append /-
 theorem Chain'.append (h₁ : Chain' R l₁) (h₂ : Chain' R l₂)
-    (h : ∀ x ∈ l₁.last', ∀ y ∈ l₂.head', R x y) : Chain' R (l₁ ++ l₂) :=
+    (h : ∀ x ∈ l₁.getLast?, ∀ y ∈ l₂.head?, R x y) : Chain' R (l₁ ++ l₂) :=
   chain'_append.2 ⟨h₁, h₂, h⟩
 #align list.chain'.append List.Chain'.append
 -/
@@ -446,8 +446,8 @@ theorem Chain'.drop (h : Chain' R l) (n : ℕ) : Chain' R (drop n l) :=
 -/
 
 #print List.Chain'.init /-
-theorem Chain'.init (h : Chain' R l) : Chain' R l.init :=
-  h.prefix l.init_prefix
+theorem Chain'.init (h : Chain' R l) : Chain' R l.dropLast :=
+  h.prefix l.dropLast_prefix
 #align list.chain'.init List.Chain'.init
 -/
 
@@ -466,7 +466,7 @@ theorem chain'_pair {x y} : Chain' R [x, y] ↔ R x y := by
 #print List.Chain'.imp_head /-
 theorem Chain'.imp_head {x y} (h : ∀ {z}, R x z → R y z) {l} (hl : Chain' R (x :: l)) :
     Chain' R (y :: l) :=
-  hl.tail.cons' fun z hz => h <| hl.rel_head' hz
+  hl.tail.cons' fun z hz => h <| hl.rel_head? hz
 #align list.chain'.imp_head List.Chain'.imp_head
 -/
 

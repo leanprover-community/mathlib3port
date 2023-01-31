@@ -41,7 +41,7 @@ theorem setOf_liouvilleWith_subset_aux :
         (fun x : ℝ => x + m) ⁻¹'
           ⋃ n > (0 : ℕ),
             { x : ℝ |
-              ∃ᶠ b : ℕ in at_top,
+              ∃ᶠ b : ℕ in atTop,
                 ∃ a ∈ Finset.Icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
   by
   rintro x ⟨p, hp, hxp⟩

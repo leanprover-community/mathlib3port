@@ -200,7 +200,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_eq_one' Set.mulIndicator_eq_one'ₓ'. -/
 @[simp, to_additive]
 theorem mulIndicator_eq_one' : mulIndicator s f = 1 ↔ Disjoint (mulSupport f) s :=
-  mul_indicator_eq_one
+  mulIndicator_eq_one
 #align set.mul_indicator_eq_one' Set.mulIndicator_eq_one'
 #align set.indicator_eq_zero' Set.indicator_eq_zero'
 
@@ -887,7 +887,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_comp
 @[to_additive indicator_compl']
 theorem mulIndicator_compl (s : Set α) (f : α → G) :
     mulIndicator (sᶜ) f = f * (mulIndicator s f)⁻¹ :=
-  eq_mul_inv_of_mul_eq <| s.mul_indicator_compl_mul_self f
+  eq_mul_inv_of_mul_eq <| s.mulIndicator_compl_mul_self f
 #align set.mul_indicator_compl Set.mulIndicator_compl
 #align set.indicator_compl' Set.indicator_compl'
 
@@ -996,7 +996,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_mul_indica
 @[to_additive]
 theorem Finset.prod_mulIndicator_eq_prod_filter (s : Finset ι) (f : ι → α → M) (t : ι → Set α)
     (g : ι → α) [DecidablePred fun i => g i ∈ t i] :
-    (∏ i in s, mulIndicator (t i) (f i) (g i)) = ∏ i in s.filter fun i => g i ∈ t i, f i (g i) :=
+    (∏ i in s, mulIndicator (t i) (f i) (g i)) = ∏ i in s.filterₓ fun i => g i ∈ t i, f i (g i) :=
   by
   refine' (Finset.prod_filter_mul_prod_filter_not s (fun i => g i ∈ t i) _).symm.trans _
   refine' Eq.trans _ (mul_one _)
@@ -1383,7 +1383,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_self Set.mulIndicator_le_selfₓ'. -/
 @[to_additive]
 theorem mulIndicator_le_self (s : Set α) (f : α → M) : mulIndicator s f ≤ f :=
-  mul_indicator_le_self' fun _ _ => one_le _
+  mulIndicator_le_self' fun _ _ => one_le _
 #align set.mul_indicator_le_self Set.mulIndicator_le_self
 #align set.indicator_le_self Set.indicator_le_self
 

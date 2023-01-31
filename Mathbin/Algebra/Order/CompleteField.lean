@@ -187,7 +187,7 @@ variable (α β γ) [LinearOrderedField α] [ConditionallyCompleteLinearOrderedF
 linear ordered field, defined by taking the Sup in the codomain of all the rationals less than the
 input. -/
 def inducedMap (x : α) : β :=
-  Sup <| cutMap β x
+  supₛ <| cutMap β x
 #align linear_ordered_field.induced_map LinearOrderedField.inducedMap
 
 variable [Archimedean α]

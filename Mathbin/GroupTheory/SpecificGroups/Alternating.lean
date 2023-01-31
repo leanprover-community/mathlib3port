@@ -178,7 +178,7 @@ theorem closure_three_cycles_eq_alternating :
   at least 5 elements is the entire alternating group if it contains a 3-cycle. -/
 theorem IsThreeCycle.alternating_normalClosure (h5 : 5 ≤ Fintype.card α) {f : Perm α}
     (hf : IsThreeCycle f) :
-    normalClosure ({⟨f, hf.mem_alternating_group⟩} : Set (alternatingGroup α)) = ⊤ :=
+    normalClosure ({⟨f, hf.mem_alternatingGroup⟩} : Set (alternatingGroup α)) = ⊤ :=
   eq_top_iff.2
     (by
       have hi : Function.Injective (alternatingGroup α).Subtype := Subtype.coe_injective
@@ -203,7 +203,7 @@ theorem isThreeCycle_sq_of_three_mem_cycleType_five {g : Perm (Fin 5)} (h : 3 �
   rw [hd.commute.eq, ← mul_assoc g']
   suffices hg' : orderOf g' ∣ 2
   · rw [← pow_two, orderOf_dvd_iff_pow_eq_one.1 hg', one_mul]
-    exact (card_support_eq_three_iff.1 h3).is_three_cycle_sq
+    exact (card_support_eq_three_iff.1 h3).isThreeCycle_sq
   rw [← lcm_cycle_type, Multiset.lcm_dvd]
   intro n hn
   rw [le_antisymm (two_le_of_mem_cycle_type hn) (le_trans (le_card_support_of_mem_cycle_type hn) _)]
@@ -332,7 +332,7 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
       -- This means that it is conjugate to $(04)(13)$, whose normal closure is $A_5$.
       rw [Ne.def, Subtype.ext_iff] at g1
       exact
-        (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normal_closure_eq_top_of
+        (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normalClosure_eq_top_of
           normal_closure_swap_mul_swap_five
     push_neg  at h2
     obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycle_type ∧ n ≠ 2 := h2
@@ -349,7 +349,7 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     · -- If `n = 3`, then `g` has a 3-cycle in its decomposition, so `g^2` is a 3-cycle.
       -- `g^2` is in the normal closure of `g`, so that normal closure must be $A_5$.
       rw [eq_top_iff, ←
-        (is_three_cycle_sq_of_three_mem_cycle_type_five ng).alternating_normal_closure
+        (is_three_cycle_sq_of_three_mem_cycle_type_five ng).alternating_normalClosure
           (by rw [card_fin])]
       refine' normal_closure_le_normal _
       rw [Set.singleton_subset_iff, SetLike.mem_coe]
@@ -361,8 +361,7 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
       rw [sign_of_cycle_type, cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng]
       decide
     · -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `fin_rotate 5`.
-      refine'
-        (is_conj_iff_cycle_type_eq.2 _).normal_closure_eq_top_of normal_closure_fin_rotate_five
+      refine' (is_conj_iff_cycle_type_eq.2 _).normalClosure_eq_top_of normal_closure_fin_rotate_five
       rw [cycle_type_of_card_le_mem_cycle_type_add_two (by decide) ng, cycleType_finRotate]⟩
 #align alternating_group.is_simple_group_five alternatingGroup.isSimpleGroup_five
 

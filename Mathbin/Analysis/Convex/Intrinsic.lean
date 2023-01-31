@@ -173,15 +173,15 @@ theorem intrinsicClosure_mono (h : s ⊆ t) : intrinsicClosure 𝕜 s ⊆ intrin
 
 theorem interior_subset_intrinsicInterior : interior s ⊆ intrinsicInterior 𝕜 s := fun x hx =>
   ⟨⟨x, subset_affineSpan _ _ <| interior_subset hx⟩,
-    preimage_interior_subset_interior_preimage continuous_subtype_coe hx, rfl⟩
+    preimage_interior_subset_interior_preimage continuous_subtype_val hx, rfl⟩
 #align interior_subset_intrinsic_interior interior_subset_intrinsicInterior
 
 theorem intrinsicClosure_subset_closure : intrinsicClosure 𝕜 s ⊆ closure s :=
-  image_subset_iff.2 <| continuous_subtype_coe.closure_preimage_subset _
+  image_subset_iff.2 <| continuous_subtype_val.closure_preimage_subset _
 #align intrinsic_closure_subset_closure intrinsicClosure_subset_closure
 
 theorem intrinsicFrontier_subset_frontier : intrinsicFrontier 𝕜 s ⊆ frontier s :=
-  image_subset_iff.2 <| continuous_subtype_coe.frontier_preimage_subset _
+  image_subset_iff.2 <| continuous_subtype_val.frontier_preimage_subset _
 #align intrinsic_frontier_subset_frontier intrinsicFrontier_subset_frontier
 
 theorem intrinsicClosure_subset_affineSpan : intrinsicClosure 𝕜 s ⊆ affineSpan 𝕜 s :=
@@ -216,12 +216,12 @@ theorem intrinsicFrontier_union_intrinsicInterior (s : Set P) :
 
 theorem isClosed_intrinsicClosure (hs : IsClosed (affineSpan 𝕜 s : Set P)) :
     IsClosed (intrinsicClosure 𝕜 s) :=
-  (closedEmbedding_subtype_coe hs).IsClosedMap _ isClosed_closure
+  (closedEmbedding_subtype_val hs).IsClosedMap _ isClosed_closure
 #align is_closed_intrinsic_closure isClosed_intrinsicClosure
 
 theorem isClosed_intrinsicFrontier (hs : IsClosed (affineSpan 𝕜 s : Set P)) :
     IsClosed (intrinsicFrontier 𝕜 s) :=
-  (closedEmbedding_subtype_coe hs).IsClosedMap _ isClosed_frontier
+  (closedEmbedding_subtype_val hs).IsClosedMap _ isClosed_frontier
 #align is_closed_intrinsic_frontier isClosed_intrinsicFrontier
 
 @[simp]
@@ -327,7 +327,7 @@ theorem intrinsicClosure_eq_closure : intrinsicClosure 𝕜 s = closure s :=
     obtain ⟨z, hz₁, hz₂⟩ := h _ (continuous_induced_dom.is_open_preimage t ht) hx
     exact ⟨z, hz₁, hz₂⟩
   · by_contra hc
-    obtain ⟨z, hz₁, hz₂⟩ := h _ (affineSpan 𝕜 s).closed_of_finite_dimensional.is_open_compl hc
+    obtain ⟨z, hz₁, hz₂⟩ := h _ (affineSpan 𝕜 s).closed_of_finiteDimensional.isOpen_compl hc
     exact hz₁ (subset_affineSpan 𝕜 s hz₂)
   · rintro _ ⟨t, ht, rfl⟩ hx
     obtain ⟨y, hyt, hys⟩ := h _ ht hx

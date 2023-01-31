@@ -75,7 +75,7 @@ theorem adicBasis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • 
 
 /-- The adic ring filter basis associated to an ideal `I` is made of powers of `I`. -/
 def ringFilterBasis (I : Ideal R) :=
-  I.adicBasis.to_ring_subgroups_basis.toRingFilterBasis
+  I.adicBasis.toRing_subgroups_basis.toRingFilterBasis
 #align ideal.ring_filter_basis Ideal.ringFilterBasis
 
 /-- The adic topology associated to an ideal `I`. This topology admits powers of `I` as a basis of
@@ -85,7 +85,7 @@ def adicTopology (I : Ideal R) : TopologicalSpace R :=
 #align ideal.adic_topology Ideal.adicTopology
 
 theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adicTopology :=
-  I.adicBasis.to_ring_subgroups_basis.nonarchimedean
+  I.adicBasis.toRing_subgroups_basis.nonarchimedean
 #align ideal.nonarchimedean Ideal.nonarchimedean
 
 /-- For the `I`-adic topology, the neighborhoods of zero has basis given by the powers of `I`. -/

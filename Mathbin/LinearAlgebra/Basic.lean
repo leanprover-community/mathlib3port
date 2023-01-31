@@ -922,7 +922,7 @@ theorem map_sup (f : F) : map f (p ⊔ p') = map f p ⊔ map f p' :=
 @[simp]
 theorem map_supᵢ {ι : Sort _} (f : F) (p : ι → Submodule R M) :
     map f (⨆ i, p i) = ⨆ i, map f (p i) :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supᵢ
 #align submodule.map_supr Submodule.map_supᵢ
 
 end
@@ -942,7 +942,7 @@ theorem comap_inf (f : F) : comap f (q ⊓ q') = comap f q ⊓ comap f q' :=
 @[simp]
 theorem comap_infᵢ [RingHomSurjective σ₁₂] {ι : Sort _} (f : F) (p : ι → Submodule R₂ M₂) :
     comap f (⨅ i, p i) = ⨅ i, comap f (p i) :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infi
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infᵢ
 #align submodule.comap_infi Submodule.comap_infᵢ
 
 omit sc
@@ -999,7 +999,7 @@ theorem map_sup_comap_of_surjective (p q : Submodule R₂ M₂) :
 
 theorem map_supᵢ_comap_of_sujective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
     (⨆ i, (S i).comap f).map f = supᵢ S :=
-  (giMapComap hf).l_supr_u _
+  (giMapComap hf).l_supᵢ_u _
 #align submodule.map_supr_comap_of_sujective Submodule.map_supᵢ_comap_of_sujective
 
 theorem map_inf_comap_of_surjective (p q : Submodule R₂ M₂) :
@@ -1009,7 +1009,7 @@ theorem map_inf_comap_of_surjective (p q : Submodule R₂ M₂) :
 
 theorem map_infᵢ_comap_of_surjective {ι : Sort _} (S : ι → Submodule R₂ M₂) :
     (⨅ i, (S i).comap f).map f = infᵢ S :=
-  (giMapComap hf).l_infi_u _
+  (giMapComap hf).l_infᵢ_u _
 #align submodule.map_infi_comap_of_surjective Submodule.map_infᵢ_comap_of_surjective
 
 theorem comap_le_comap_iff_of_surjective (p q : Submodule R₂ M₂) : p.comap f ≤ q.comap f ↔ p ≤ q :=
@@ -1017,7 +1017,7 @@ theorem comap_le_comap_iff_of_surjective (p q : Submodule R₂ M₂) : p.comap f
 #align submodule.comap_le_comap_iff_of_surjective Submodule.comap_le_comap_iff_of_surjective
 
 theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
-  (giMapComap hf).strict_mono_u
+  (giMapComap hf).strictMono_u
 #align submodule.comap_strict_mono_of_surjective Submodule.comap_strictMono_of_surjective
 
 end GaloisInsertion
@@ -1051,7 +1051,7 @@ theorem comap_inf_map_of_injective (p q : Submodule R M) : (p.map f ⊓ q.map f)
 
 theorem comap_infᵢ_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
     (⨅ i, (S i).map f).comap f = infᵢ S :=
-  (gciMapComap hf).u_infi_l _
+  (gciMapComap hf).u_infᵢ_l _
 #align submodule.comap_infi_map_of_injective Submodule.comap_infᵢ_map_of_injective
 
 theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f ⊔ q.map f).comap f = p ⊔ q :=
@@ -1060,7 +1060,7 @@ theorem comap_sup_map_of_injective (p q : Submodule R M) : (p.map f ⊔ q.map f)
 
 theorem comap_supᵢ_map_of_injective {ι : Sort _} (S : ι → Submodule R M) :
     (⨆ i, (S i).map f).comap f = supᵢ S :=
-  (gciMapComap hf).u_supr_l _
+  (gciMapComap hf).u_supᵢ_l _
 #align submodule.comap_supr_map_of_injective Submodule.comap_supᵢ_map_of_injective
 
 theorem map_le_map_iff_of_injective (p q : Submodule R M) : p.map f ≤ q.map f ↔ p ≤ q :=
@@ -1068,7 +1068,7 @@ theorem map_le_map_iff_of_injective (p q : Submodule R M) : p.map f ≤ q.map f 
 #align submodule.map_le_map_iff_of_injective Submodule.map_le_map_iff_of_injective
 
 theorem map_strictMono_of_injective : StrictMono (map f) :=
-  (gciMapComap hf).strict_mono_l
+  (gciMapComap hf).strictMono_l
 #align submodule.map_strict_mono_of_injective Submodule.map_strictMono_of_injective
 
 end GaloisCoinsertion
@@ -1256,7 +1256,7 @@ variable [∀ i, AddZeroClass (γ i)]
 @[simp]
 theorem map_dfinsupp_sumAddHom (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ i} {g : ∀ i, γ i →+ M} :
     f (sumAddHom g t) = sumAddHom (fun i => f.toAddMonoidHom.comp (g i)) t :=
-  f.toAddMonoidHom.map_dfinsupp_sum_add_hom _ _
+  f.toAddMonoidHom.map_dfinsupp_sumAddHom _ _
 #align linear_map.map_dfinsupp_sum_add_hom LinearMap.map_dfinsupp_sumAddHom
 
 end SumAddHom
@@ -1362,7 +1362,7 @@ theorem range_neg {R : Type _} {R₂ : Type _} {M : Type _} {M₂ : Type _} [Sem
 /-- A linear map version of `add_monoid_hom.eq_locus` -/
 def eqLocus (f g : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
   {
-    f.toAddMonoidHom.eqMlocus
+    f.toAddMonoidHom.eqLocus
       g.toAddMonoidHom with
     carrier := { x | f x = g x }
     smul_mem' := fun r x (hx : _ = _) =>
@@ -1375,7 +1375,7 @@ theorem mem_eqLocus {x : M} {f g : M →ₛₗ[τ₁₂] M₂} : x ∈ f.eqLocus
 #align linear_map.mem_eq_locus LinearMap.mem_eqLocus
 
 theorem eqLocus_toAddSubmonoid (f g : M →ₛₗ[τ₁₂] M₂) :
-    (f.eqLocus g).toAddSubmonoid = (f : M →+ M₂).eqMlocus g :=
+    (f.eqLocus g).toAddSubmonoid = (f : M →+ M₂).eqLocus g :=
   rfl
 #align linear_map.eq_locus_to_add_submonoid LinearMap.eqLocus_toAddSubmonoid
 
@@ -2126,7 +2126,7 @@ theorem map_dfinsupp_sum [∀ i, Zero (γ i)] [∀ (i) (x : γ i), Decidable (x 
 theorem map_dfinsupp_sumAddHom [∀ i, AddZeroClass (γ i)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀ i, γ i)
     (g : ∀ i, γ i →+ M) :
     f (sumAddHom g t) = sumAddHom (fun i => f.toAddEquiv.toAddMonoidHom.comp (g i)) t :=
-  f.toAddEquiv.map_dfinsupp_sum_add_hom _ _
+  f.toAddEquiv.map_dfinsupp_sumAddHom _ _
 #align linear_equiv.map_dfinsupp_sum_add_hom LinearEquiv.map_dfinsupp_sumAddHom
 
 end Dfinsupp
@@ -2408,7 +2408,7 @@ variable (f)
 between `M` and `f.range`. See also `linear_map.of_left_inverse`. -/
 noncomputable def ofInjective [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] (h : Injective f) :
     M ≃ₛₗ[σ₁₂] f.range :=
-  of_left_inverse <| Classical.choose_spec h.HasLeftInverse
+  ofLeftInverse <| Classical.choose_spec h.HasLeftInverse
 #align linear_equiv.of_injective LinearEquiv.ofInjective
 
 @[simp]
@@ -2620,7 +2620,7 @@ open _Root_.LinearMap
 /-- Multiplying by a nonzero element `a` of the field `K` is a linear equivalence. -/
 @[simps]
 def smulOfNeZero (a : K) (ha : a ≠ 0) : M ≃ₗ[K] M :=
-  smul_of_unit <| Units.mk0 a ha
+  smulOfUnit <| Units.mk0 a ha
 #align linear_equiv.smul_of_ne_zero LinearEquiv.smulOfNeZero
 
 end Field

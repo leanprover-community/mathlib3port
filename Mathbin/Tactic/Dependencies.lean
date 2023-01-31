@@ -570,7 +570,7 @@ context.
 -/
 unsafe def reverse_dependencies_of_hyp_name_set (hs : name_set) : tactic (List expr) := do
   let ctx ← local_context
-  let ctx := ctx.after fun h => hs.contains h.local_uniq_name
+  let ctx := ctx.afterₓ fun h => hs.contains h.local_uniq_name
   reverse_dependencies_of_hyp_name_set_aux hs ctx [] hs
 #align tactic.reverse_dependencies_of_hyp_name_set tactic.reverse_dependencies_of_hyp_name_set
 
@@ -609,7 +609,7 @@ they appear in the context.
 -/
 unsafe def reverse_dependencies_of_hyp_name_set_inclusive (hs : name_set) : tactic (List expr) := do
   let ctx ← local_context
-  let ctx := ctx.dropWhile fun h => ¬hs.contains h.local_uniq_name
+  let ctx := ctx.dropWhileₓ fun h => ¬hs.contains h.local_uniq_name
   reverse_dependencies_of_hyp_name_set_inclusive_aux ctx [] hs
 #align tactic.reverse_dependencies_of_hyp_name_set_inclusive tactic.reverse_dependencies_of_hyp_name_set_inclusive
 
@@ -641,7 +641,7 @@ guaranteed to store the correct type (see `tactic.update_type`).
 -/
 unsafe def revert_name_set (hs : name_set) : tactic (ℕ × List expr) := do
   let to_revert ← reverse_dependencies_of_hyp_name_set_inclusive hs
-  let to_revert_with_types ← to_revert.mmap update_type
+  let to_revert_with_types ← to_revert.mapM update_type
   let num_reverted ← revert_lst to_revert
   pure (num_reverted, to_revert_with_types)
 #align tactic.revert_name_set tactic.revert_name_set

@@ -178,7 +178,7 @@ but is expected to have type
   forall {t : Type.{u1} -> Type.{u1}} {t' : Type.{u1} -> Type.{u1}} (eqv : forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (t α) (t' α)) [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {F : Type.{u1} -> Type.{u1}} {G : Type.{u1} -> Type.{u1}} [_inst_3 : Applicative.{u1, u1} F] [_inst_4 : Applicative.{u1, u1} G] [_inst_5 : LawfulApplicative.{u1, u1} F _inst_3] [_inst_6 : LawfulApplicative.{u1, u1} G _inst_4] {α : Type.{u1}} {β : Type.{u1}} {γ : Type.{u1}} (f : β -> (F γ)) (g : α -> (G β)) (x : t' α), Eq.{succ u1} (Functor.Comp.{u1, u1, u1} G F (t' γ)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 (Functor.Comp.{u1, u1, u1} G F) (Functor.Comp.instApplicativeComp.{u1, u1, u1} G F _inst_4 _inst_3) α γ (Function.comp.{succ u1, succ u1, succ u1} α (G (F γ)) (Functor.Comp.{u1, u1, u1} G F γ) (Functor.Comp.mk.{u1, u1, u1} G F γ) (Function.comp.{succ u1, succ u1, succ u1} α (G β) (G (F γ)) (Functor.map.{u1, u1} G (Applicative.toFunctor.{u1, u1} G _inst_4) β (F γ) f) g)) x) (Functor.Comp.mk.{u1, u1, u1} G F (t' γ) (Functor.map.{u1, u1} G (Applicative.toFunctor.{u1, u1} G _inst_4) (t' β) (F (t' γ)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 F _inst_3 β γ f) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 G _inst_4 α β g x)))
 Case conversion may be inaccurate. Consider using '#align equiv.comp_traverse Equiv.comp_traverseₓ'. -/
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) (x : t' α) :
-    Equiv.traverse eqv (comp.mk ∘ Functor.map f ∘ g) x =
+    Equiv.traverse eqv (Comp.mk ∘ Functor.map f ∘ g) x =
       Comp.mk (Equiv.traverse eqv f <$> Equiv.traverse eqv g x) :=
   by simp [Equiv.traverse, comp_traverse, functor_norm] <;> congr <;> ext <;> simp
 #align equiv.comp_traverse Equiv.comp_traverse
@@ -196,7 +196,7 @@ equivalences to `t'`, with the traversable functor structure given by
 `equiv.traversable`. -/
 protected def isLawfulTraversable : @IsLawfulTraversable t' (Equiv.traversable eqv)
     where
-  to_is_lawful_functor := @Equiv.lawfulFunctor _ _ eqv _ _
+  to_lawfulFunctor := @Equiv.lawfulFunctor _ _ eqv _ _
   id_traverse := @Equiv.id_traverse _ _
   comp_traverse := @Equiv.comp_traverse _ _
   traverse_eq_map_id := @Equiv.traverse_eq_map_id _ _
@@ -220,7 +220,7 @@ protected def isLawfulTraversable' [_i : Traversable t']
   by
   -- we can't use the same approach as for `is_lawful_functor'` because
     -- h₂ needs a `is_lawful_applicative` assumption
-    refine' { to_is_lawful_functor := Equiv.lawfulFunctor' eqv @h₀ @h₁.. } <;>
+    refine' { to_lawfulFunctor := Equiv.lawfulFunctor' eqv @h₀ @h₁.. } <;>
     intros
   · rw [h₂, Equiv.id_traverse]
     infer_instance

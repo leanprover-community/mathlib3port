@@ -92,11 +92,11 @@ include q q'
 
 instance : Mvqpf (Comp F G)
     where
-  p := Mvpfunctor.comp (p F) fun i => P <| G i
-  abs α := comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
+  p := Mvpfunctor.comp (p F) fun i => p <| G i
+  abs α := Comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
   repr α :=
     Mvpfunctor.comp.mk ∘
-      repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ comp.get
+      repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ Comp.get
   abs_repr := by
     intros
     simp [(· ∘ ·), MvFunctor.map_map, (· ⊚ ·), abs_repr]

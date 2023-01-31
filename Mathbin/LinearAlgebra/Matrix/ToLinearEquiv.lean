@@ -71,7 +71,7 @@ theorem toLinearEquiv'_apply (P : Matrix n n R) (h : Invertible P) :
 @[simp]
 theorem toLinearEquiv'_symm_apply (P : Matrix n n R) (h : Invertible P) :
     (↑(P.toLinearEquiv' h).symm : Module.End R (n → R)) = P⁻¹.toLin' :=
-  show (⅟ P).toLin' = _ from congr_arg _ P.inv_of_eq_nonsing_inv
+  show (⅟ P).toLin' = _ from congr_arg _ P.invOf_eq_nonsing_inv
 #align matrix.to_linear_equiv'_symm_apply Matrix.toLinearEquiv'_symm_apply
 
 end ToLinearEquiv'

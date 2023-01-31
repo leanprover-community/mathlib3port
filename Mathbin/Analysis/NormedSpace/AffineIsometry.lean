@@ -102,7 +102,7 @@ theorem coeFn_injective : @Injective (P →ᵃⁱ[𝕜] P₂) (P → P₂) coeFn
 
 @[ext]
 theorem ext {f g : P →ᵃⁱ[𝕜] P₂} (h : ∀ x, f x = g x) : f = g :=
-  coe_fn_injective <| funext h
+  coeFn_injective <| funext h
 #align affine_isometry.ext AffineIsometry.ext
 
 omit V V₂
@@ -149,7 +149,7 @@ theorem map_vadd (p : P) (v : V) : f (v +ᵥ p) = f.LinearIsometry v +ᵥ f p :=
 
 @[simp]
 theorem map_vsub (p1 p2 : P) : f.LinearIsometry (p1 -ᵥ p2) = f p1 -ᵥ f p2 :=
-  f.toAffineMap.linear_map_vsub p1 p2
+  f.toAffineMap.linearMap_vsub p1 p2
 #align affine_isometry.map_vsub AffineIsometry.map_vsub
 
 @[simp]
@@ -225,7 +225,7 @@ def id : P →ᵃⁱ[𝕜] P :=
 #align affine_isometry.id AffineIsometry.id
 
 @[simp]
-theorem coe_id : ⇑(id : P →ᵃⁱ[𝕜] P) = _root_.id :=
+theorem coe_id : ⇑(id : P →ᵃⁱ[𝕜] P) = id :=
   rfl
 #align affine_isometry.coe_id AffineIsometry.coe_id
 
@@ -283,7 +283,7 @@ instance : Monoid (P →ᵃⁱ[𝕜] P) where
   mul_one := comp_id
 
 @[simp]
-theorem coe_one : ⇑(1 : P →ᵃⁱ[𝕜] P) = _root_.id :=
+theorem coe_one : ⇑(1 : P →ᵃⁱ[𝕜] P) = id :=
   rfl
 #align affine_isometry.coe_one AffineIsometry.coe_one
 
@@ -382,7 +382,7 @@ theorem toAffineEquiv_injective : Injective (toAffineEquiv : (P ≃ᵃⁱ[𝕜] 
 
 @[ext]
 theorem ext {e e' : P ≃ᵃⁱ[𝕜] P₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_affine_equiv_injective <| AffineEquiv.ext h
+  toAffineEquiv_injective <| AffineEquiv.ext h
 #align affine_isometry_equiv.ext AffineIsometryEquiv.ext
 
 omit V V₂
@@ -726,7 +726,7 @@ variable {α : Type _} [TopologicalSpace α]
 
 @[simp]
 theorem comp_continuousOn_iff {f : α → P} {s : Set α} : ContinuousOn (e ∘ f) s ↔ ContinuousOn f s :=
-  e.Isometry.comp_continuous_on_iff
+  e.Isometry.comp_continuousOn_iff
 #align affine_isometry_equiv.comp_continuous_on_iff AffineIsometryEquiv.comp_continuousOn_iff
 
 @[simp]
@@ -855,7 +855,7 @@ theorem pointReflection_involutive (x : P) : Function.Involutive (pointReflectio
 
 @[simp]
 theorem pointReflection_symm (x : P) : (pointReflection 𝕜 x).symm = pointReflection 𝕜 x :=
-  to_affine_equiv_injective <| AffineEquiv.pointReflection_symm 𝕜 x
+  toAffineEquiv_injective <| AffineEquiv.pointReflection_symm 𝕜 x
 #align affine_isometry_equiv.point_reflection_symm AffineIsometryEquiv.pointReflection_symm
 
 @[simp]

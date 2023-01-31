@@ -174,13 +174,13 @@ For higher-dimensional versions requiring that the function vanishes in a neighb
 see `eq_on_zero_of_preconnected_of_eventually_eq_zero`. -/
 theorem eqOn_zero_of_preconnected_of_frequently_eq_zero (hf : AnalyticOn 𝕜 f U)
     (hU : IsPreconnected U) (h₀ : z₀ ∈ U) (hfw : ∃ᶠ z in 𝓝[≠] z₀, f z = 0) : EqOn f 0 U :=
-  hf.eq_on_zero_of_preconnected_of_eventually_eq_zero hU h₀
+  hf.eqOn_zero_of_preconnected_of_eventuallyEq_zero hU h₀
     ((hf z₀ h₀).frequently_zero_iff_eventually_zero.1 hfw)
 #align analytic_on.eq_on_zero_of_preconnected_of_frequently_eq_zero AnalyticOn.eqOn_zero_of_preconnected_of_frequently_eq_zero
 
 theorem eqOn_zero_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hU : IsPreconnected U)
     (h₀ : z₀ ∈ U) (hfz₀ : z₀ ∈ closure ({ z | f z = 0 } \ {z₀})) : EqOn f 0 U :=
-  hf.eq_on_zero_of_preconnected_of_frequently_eq_zero hU h₀
+  hf.eqOn_zero_of_preconnected_of_frequently_eq_zero hU h₀
     (mem_closure_ne_iff_frequently_within.mp hfz₀)
 #align analytic_on.eq_on_zero_of_preconnected_of_mem_closure AnalyticOn.eqOn_zero_of_preconnected_of_mem_closure
 
@@ -195,13 +195,13 @@ theorem eqOn_of_preconnected_of_frequently_eq (hf : AnalyticOn 𝕜 f U) (hg : A
   have hfg' : ∃ᶠ z in 𝓝[≠] z₀, (f - g) z = 0 :=
     hfg.mono fun z h => by rw [Pi.sub_apply, h, sub_self]
   simpa [sub_eq_zero] using fun z hz =>
-    (hf.sub hg).eq_on_zero_of_preconnected_of_frequently_eq_zero hU h₀ hfg' hz
+    (hf.sub hg).eqOn_zero_of_preconnected_of_frequently_eq_zero hU h₀ hfg' hz
 #align analytic_on.eq_on_of_preconnected_of_frequently_eq AnalyticOn.eqOn_of_preconnected_of_frequently_eq
 
 theorem eqOn_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hg : AnalyticOn 𝕜 g U)
     (hU : IsPreconnected U) (h₀ : z₀ ∈ U) (hfg : z₀ ∈ closure ({ z | f z = g z } \ {z₀})) :
     EqOn f g U :=
-  hf.eq_on_of_preconnected_of_frequently_eq hg hU h₀ (mem_closure_ne_iff_frequently_within.mp hfg)
+  hf.eqOn_of_preconnected_of_frequently_eq hg hU h₀ (mem_closure_ne_iff_frequently_within.mp hfg)
 #align analytic_on.eq_on_of_preconnected_of_mem_closure AnalyticOn.eqOn_of_preconnected_of_mem_closure
 
 end AnalyticOn

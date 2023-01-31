@@ -80,7 +80,7 @@ protected theorem eq' {x y : M} : (mk x : M ⧸ p) = mk y ↔ -x + y ∈ p :=
 #align submodule.quotient.eq' Submodule.Quotient.eq'
 
 protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
-  p.trans (leftRel_apply.symm.trans p.quotient_rel_r_def)
+  p.trans (leftRel_apply.symm.trans p.quotientRel_r_def)
 #align submodule.quotient.eq Submodule.Quotient.eq
 
 instance : Zero (M ⧸ p) :=

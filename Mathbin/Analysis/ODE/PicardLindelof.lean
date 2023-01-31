@@ -102,7 +102,7 @@ theorem tMin_le_tMax : v.tMin ≤ v.tMax :=
 #align picard_lindelof.t_min_le_t_max PicardLindelof.tMin_le_tMax
 
 protected theorem nonempty_Icc : (Icc v.tMin v.tMax).Nonempty :=
-  nonempty_Icc.2 v.t_min_le_t_max
+  nonempty_Icc.2 v.tMin_le_tMax
 #align picard_lindelof.nonempty_Icc PicardLindelof.nonempty_Icc
 
 protected theorem lipschitzOnWith {t} (ht : t ∈ Icc v.tMin v.tMax) :
@@ -146,7 +146,7 @@ theorem dist_t₀_le (t : Icc v.tMin v.tMax) : dist t v.t₀ ≤ v.tDist :=
 /-- Projection $ℝ → [t_{\min}, t_{\max}]$ sending $(-∞, t_{\min}]$ to $t_{\min}$ and $[t_{\max}, ∞)$
 to $t_{\max}$. -/
 def proj : ℝ → Icc v.tMin v.tMax :=
-  projIcc v.tMin v.tMax v.t_min_le_t_max
+  projIcc v.tMin v.tMax v.tMin_le_tMax
 #align picard_lindelof.proj PicardLindelof.proj
 
 theorem proj_coe (t : Icc v.tMin v.tMax) : v.proj t = t :=
@@ -248,7 +248,7 @@ theorem continuous_vComp : Continuous f.vComp :=
 #align picard_lindelof.fun_space.continuous_v_comp PicardLindelof.FunSpace.continuous_vComp
 
 theorem norm_vComp_le (t : ℝ) : ‖f.vComp t‖ ≤ v.c :=
-  v.norm_le (v.proj t).2 <| f.mem_closed_ball _
+  v.norm_le (v.proj t).2 <| f.mem_closedBall _
 #align picard_lindelof.fun_space.norm_v_comp_le PicardLindelof.FunSpace.norm_vComp_le
 
 theorem dist_apply_le_dist (f₁ f₂ : FunSpace v) (t : Icc v.tMin v.tMax) :
@@ -275,7 +275,7 @@ instance [CompleteSpace E] : CompleteSpace v.FunSpace :=
   exact this.preimage ContinuousMap.continuous_coe
 
 theorem intervalIntegrableVComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
-  f.continuous_v_comp.IntervalIntegrable _ _
+  f.continuous_vComp.IntervalIntegrable _ _
 #align picard_lindelof.fun_space.interval_integrable_v_comp PicardLindelof.FunSpace.intervalIntegrableVComp
 
 variable [CompleteSpace E]
@@ -385,7 +385,7 @@ theorem exists_contracting_iterate :
 
 theorem exists_fixed : ∃ f : v.FunSpace, f.next = f :=
   let ⟨N, K, hK⟩ := exists_contracting_iterate v
-  ⟨_, hK.is_fixed_pt_fixed_point_iterate⟩
+  ⟨_, hK.isFixedPt_fixedPoint_iterate⟩
 #align picard_lindelof.exists_fixed PicardLindelof.exists_fixed
 
 end
@@ -442,7 +442,7 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
   obtain ⟨r, hr : 0 < r, hball⟩ := metric.mem_nhds_iff.mp (inter_sets (𝓝 x₀) hs hs')
   have hr' := (half_pos hr).le
   obtain ⟨C, hC⟩ :=
-    (is_compact_closed_ball x₀ (r / 2)).bdd_above_image
+    (is_compact_closed_ball x₀ (r / 2)).bddAbove_image
       (-- uses proper_space E
         hv.continuous_on.norm.mono
         (subset_inter_iff.mp ((closed_ball_subset_ball (half_lt_self hr)).trans hball)).left)

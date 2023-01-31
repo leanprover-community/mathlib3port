@@ -220,8 +220,8 @@ instance : AddCommMonoid (LocalizedModule S M)
   zero_add := zero_add'
   add_zero := add_zero'
   nsmul := (· • ·)
-  nsmul_zero' := nsmul_zero'
-  nsmul_succ' := nsmul_succ'
+  nsmul_zero := nsmul_zero'
+  nsmul_succ := nsmul_succ'
   add_comm := add_comm'
 
 instance {M : Type _} [AddCommGroup M] [Module R M] : AddCommGroup (LocalizedModule S M) :=

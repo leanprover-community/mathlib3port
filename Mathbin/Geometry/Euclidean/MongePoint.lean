@@ -102,7 +102,7 @@ theorem mongePoint_eq_smul_vsub_vadd_circumcenter {n : ℕ} (s : Simplex ℝ P n
 theorem mongePoint_mem_affineSpan {n : ℕ} (s : Simplex ℝ P n) :
     s.mongePoint ∈ affineSpan ℝ (Set.range s.points) :=
   smul_vsub_vadd_mem _ _ (centroid_mem_affineSpan_of_card_eq_add_one ℝ _ (card_fin (n + 1)))
-    s.circumcenter_mem_affine_span s.circumcenter_mem_affine_span
+    s.circumcenter_mem_affineSpan s.circumcenter_mem_affineSpan
 #align affine.simplex.monge_point_mem_affine_span Affine.Simplex.mongePoint_mem_affineSpan
 
 /-- Two simplices with the same points have the same Monge point. -/
@@ -361,14 +361,14 @@ theorem eq_mongePoint_of_forall_mem_mongePlane {n : ℕ} {s : Simplex ℝ P (n +
 /-- An altitude of a simplex is the line that passes through a vertex
 and is orthogonal to the opposite face. -/
 def altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) : AffineSubspace ℝ P :=
-  mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ ⊓
+  mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.eraseₓ i))).directionᗮ ⊓
     affineSpan ℝ (Set.range s.points)
 #align affine.simplex.altitude Affine.Simplex.altitude
 
 /-- The definition of an altitude. -/
 theorem altitude_def {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
     s.altitude i =
-      mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.erase i))).directionᗮ ⊓
+      mk' (s.points i) (affineSpan ℝ (s.points '' ↑(univ.eraseₓ i))).directionᗮ ⊓
         affineSpan ℝ (Set.range s.points) :=
   rfl
 #align affine.simplex.altitude_def Affine.Simplex.altitude_def
@@ -382,7 +382,7 @@ theorem mem_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
 /-- The direction of an altitude. -/
 theorem direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2)) :
     (s.altitude i).direction =
-      (vectorSpan ℝ (s.points '' ↑(Finset.univ.erase i)))ᗮ ⊓ vectorSpan ℝ (Set.range s.points) :=
+      (vectorSpan ℝ (s.points '' ↑(Finset.univ.eraseₓ i)))ᗮ ⊓ vectorSpan ℝ (Set.range s.points) :=
   by
   rw [altitude_def,
     direction_inf_of_mem (self_mem_mk' (s.points i) _) (mem_affineSpan ℝ (Set.mem_range_self _)),
@@ -393,7 +393,7 @@ theorem direction_altitude {n : ℕ} (s : Simplex ℝ P (n + 1)) (i : Fin (n + 2
 orthogonal to an altitude. -/
 theorem vectorSpan_le_altitude_direction_orthogonal {n : ℕ} (s : Simplex ℝ P (n + 1))
     (i : Fin (n + 2)) :
-    vectorSpan ℝ (s.points '' ↑(Finset.univ.erase i)) ≤ (s.altitude i).directionᗮ :=
+    vectorSpan ℝ (s.points '' ↑(Finset.univ.eraseₓ i)) ≤ (s.altitude i).directionᗮ :=
   by
   rw [direction_altitude]
   exact
@@ -436,7 +436,7 @@ theorem affineSpan_pair_eq_altitude_iff {n : ℕ} (s : Simplex ℝ P (n + 1)) (i
     line[ℝ, p, s.points i] = s.altitude i ↔
       p ≠ s.points i ∧
         p ∈ affineSpan ℝ (Set.range s.points) ∧
-          p -ᵥ s.points i ∈ (affineSpan ℝ (s.points '' ↑(Finset.univ.erase i))).directionᗮ :=
+          p -ᵥ s.points i ∈ (affineSpan ℝ (s.points '' ↑(Finset.univ.eraseₓ i))).directionᗮ :=
   by
   rw [eq_iff_direction_eq_of_mem (mem_affineSpan ℝ (Set.mem_insert_of_mem _ (Set.mem_singleton _)))
       (s.mem_altitude _),
@@ -502,7 +502,7 @@ theorem orthocenter_eq_smul_vsub_vadd_circumcenter (t : Triangle ℝ P) :
 /-- The orthocenter lies in the affine span. -/
 theorem orthocenter_mem_affineSpan (t : Triangle ℝ P) :
     t.orthocenter ∈ affineSpan ℝ (Set.range t.points) :=
-  t.monge_point_mem_affine_span
+  t.mongePoint_mem_affineSpan
 #align affine.triangle.orthocenter_mem_affine_span Affine.Triangle.orthocenter_mem_affineSpan
 
 /-- Two triangles with the same points have the same orthocenter. -/

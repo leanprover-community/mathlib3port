@@ -183,8 +183,8 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
           
       -- Finally, we glue `Hgt` and `Hle`
       have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
-        (finite_le_nat _).bUnion' fun i hi =>
-          (Hle i hi).Finite.bUnion' fun _ _ => finite_singleton _
+        (finite_le_nat _).bunionᵢ' fun i hi =>
+          (Hle i hi).Finite.bunionᵢ' fun _ _ => finite_singleton _
       refine' this.subset fun I hI => _
       simp only [mem_Union]
       refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩

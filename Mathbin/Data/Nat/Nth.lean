@@ -155,7 +155,7 @@ theorem nth_mem_of_infinite_aux (hp : (setOf p).Infinite) (n : ℕ) :
   convert_to (setOf p \ s).Nonempty
   · ext i
     simp
-  refine' (hp.diff <| (Set.finite_lt_nat _).bUnion _).Nonempty
+  refine' (hp.diff <| (Set.finite_lt_nat _).bunionᵢ _).Nonempty
   exact fun k h => Set.finite_le_nat _
 #align nat.nth_mem_of_infinite_aux Nat.nth_mem_of_infinite_aux
 
@@ -253,7 +253,8 @@ theorem count_nth_of_lt_card_finite {n : ℕ} (hp : (setOf p).Finite) (hlt : n <
 #align nat.count_nth_of_lt_card_finite Nat.count_nth_of_lt_card_finite
 
 theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : ℕ) :
-    (Finset.range (nth p k.succ)).filter p = insert (nth p k) ((Finset.range (nth p k)).filter p) :=
+    (Finset.range (nth p k.succ)).filterₓ p =
+      insert (nth p k) ((Finset.range (nth p k)).filterₓ p) :=
   by
   ext a
   simp_rw [mem_insert, mem_filter, mem_range]

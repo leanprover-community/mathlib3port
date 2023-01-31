@@ -78,7 +78,7 @@ theorem ofFn_eq_pmap {α n} {f : Fin n → α} :
 
 #print List.ofFn_id /-
 theorem ofFn_id (n) : ofFn id = finRange n :=
-  of_fn_eq_pmap
+  ofFn_eq_pmap
 #align list.of_fn_id List.ofFn_id
 -/
 

@@ -414,7 +414,7 @@ theorem mulPdfIntegrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUnif
       Filter.EventuallyEq.mul (ae_eq_refl _) (Filter.EventuallyEq.fun_comp this.symm Ennreal.toReal)
   refine'
     ⟨ae_strongly_measurable_id.mul
-        (measurable_pdf X ℙ).AeMeasurable.ennreal_to_real.AeStronglyMeasurable,
+        (measurable_pdf X ℙ).AeMeasurable.ennreal_toReal.AeStronglyMeasurable,
       _⟩
   refine' has_finite_integral_mul huX _
   set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind

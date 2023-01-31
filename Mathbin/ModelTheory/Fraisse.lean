@@ -313,7 +313,7 @@ namespace IsFraisseLimit
 /-- If a class has a Fraïssé limit, it must be Fraïssé. -/
 theorem isFraisse [Countable (Σl, L.Functions l)] [Countable M] (h : IsFraisseLimit K M) :
     IsFraisse K :=
-  (congr rfl h.age).mp h.ultrahomogeneous.age_is_fraisse
+  (congr rfl h.age).mp h.ultrahomogeneous.age_isFraisse
 #align first_order.language.is_fraisse_limit.is_fraisse FirstOrder.Language.IsFraisseLimit.isFraisse
 
 end IsFraisseLimit

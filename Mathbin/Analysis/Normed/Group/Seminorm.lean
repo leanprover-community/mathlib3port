@@ -414,7 +414,7 @@ noncomputable instance : HasInf (GroupSeminorm E) :=
           rw [mul_div_mul_comm, add_add_add_comm]
           exact add_le_add (map_mul_le_add p _ _) (map_mul_le_add q _ _)
       inv' := fun x =>
-        (inv_surjective.infi_comp _).symm.trans <| by
+        (inv_surjective.infᵢ_comp _).symm.trans <| by
           simp_rw [map_inv_eq_map p, ← inv_div', map_inv_eq_map q] }⟩
 
 @[simp, to_additive]

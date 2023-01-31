@@ -131,7 +131,7 @@ theorem Finset.centerMass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀ i ∈
 #align finset.center_mass_subset Finset.centerMass_subset
 
 theorem Finset.centerMass_filter_ne_zero :
-    (t.filter fun i => w i ≠ 0).centerMass w z = t.centerMass w z :=
+    (t.filterₓ fun i => w i ≠ 0).centerMass w z = t.centerMass w z :=
   Finset.centerMass_subset z (filter_subset _ _) fun i hit hit' => by
     simpa only [hit, mem_filter, true_and_iff, Ne.def, Classical.not_not] using hit'
 #align finset.center_mass_filter_ne_zero Finset.centerMass_filter_ne_zero
@@ -242,14 +242,14 @@ theorem convex_iff_sum_mem :
 theorem Finset.centerMass_mem_convexHull (t : Finset ι) {w : ι → R} (hw₀ : ∀ i ∈ t, 0 ≤ w i)
     (hws : 0 < ∑ i in t, w i) {z : ι → E} (hz : ∀ i ∈ t, z i ∈ s) :
     t.centerMass w z ∈ convexHull R s :=
-  (convex_convexHull R s).center_mass_mem hw₀ hws fun i hi => subset_convexHull R s <| hz i hi
+  (convex_convexHull R s).centerMass_mem hw₀ hws fun i hi => subset_convexHull R s <| hz i hi
 #align finset.center_mass_mem_convex_hull Finset.centerMass_mem_convexHull
 
 /-- A refinement of `finset.center_mass_mem_convex_hull` when the indexed family is a `finset` of
 the space. -/
 theorem Finset.centerMass_id_mem_convexHull (t : Finset E) {w : E → R} (hw₀ : ∀ i ∈ t, 0 ≤ w i)
     (hws : 0 < ∑ i in t, w i) : t.centerMass w id ∈ convexHull R (t : Set E) :=
-  t.center_mass_mem_convex_hull hw₀ hws fun i => mem_coe.2
+  t.centerMass_mem_convexHull hw₀ hws fun i => mem_coe.2
 #align finset.center_mass_id_mem_convex_hull Finset.centerMass_id_mem_convexHull
 
 theorem affineCombination_eq_centerMass {ι : Type _} {t : Finset ι} {p : ι → E} {w : ι → R}
@@ -274,7 +274,7 @@ theorem affineCombination_mem_convexHull {s : Finset ι} {v : ι → E} {w : ι 
 @[simp]
 theorem Finset.centroid_eq_centerMass (s : Finset ι) (hs : s.Nonempty) (p : ι → E) :
     s.centroid R p = s.centerMass (s.centroidWeights R) p :=
-  affineCombination_eq_centerMass (s.sum_centroid_weights_eq_one_of_nonempty R hs)
+  affineCombination_eq_centerMass (s.sum_centroidWeights_eq_one_of_nonempty R hs)
 #align finset.centroid_eq_center_mass Finset.centroid_eq_centerMass
 
 theorem Finset.centroid_mem_convexHull (s : Finset E) (hs : s.Nonempty) :

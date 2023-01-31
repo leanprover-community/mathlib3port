@@ -276,7 +276,7 @@ theorem flip_isSpecial : (flip u).IsSpecial ↔ u.IsSpecial :=
 -/
 
 #print PNat.XgcdType.flip_v /-
-theorem flip_v : (flip u).V = u.V.swap := by
+theorem flip_v : (flip u).V = u.V.symm := by
   dsimp [v]
   ext
   · simp only
@@ -404,7 +404,7 @@ theorem step_isSpecial (hs : u.IsSpecial) : u.step.IsSpecial :=
 
 #print PNat.XgcdType.step_v /-
 /-- The reduction step does not change the product vector. -/
-theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.swap :=
+theorem step_v (hr : u.R ≠ 0) : u.step.V = u.V.symm :=
   by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
   let hr : u.r - 1 + 1 = u.r := (add_comm _ 1).trans (add_tsub_cancel_of_le (Nat.pos_of_ne_zero hr))
@@ -468,7 +468,7 @@ theorem reduce_isReduced : ∀ u : XgcdType, u.reduce.IsReduced
 
 #print PNat.XgcdType.reduce_isReduced' /-
 theorem reduce_isReduced' (u : XgcdType) : u.reduce.IsReduced' :=
-  (isReduced_iff _).mp u.reduce_reduced
+  (isReduced_iff _).mp u.reduce_isReduced
 #align pnat.xgcd_type.reduce_reduced' PNat.XgcdType.reduce_isReduced'
 -/
 
@@ -488,7 +488,7 @@ theorem reduce_isSpecial : ∀ u : XgcdType, u.IsSpecial → u.reduce.IsSpecial
 
 #print PNat.XgcdType.reduce_isSpecial' /-
 theorem reduce_isSpecial' (u : XgcdType) (hs : u.IsSpecial) : u.reduce.IsSpecial' :=
-  (isSpecial_iff _).mp (u.reduce_special hs)
+  (isSpecial_iff _).mp (u.reduce_isSpecial hs)
 #align pnat.xgcd_type.reduce_special' PNat.XgcdType.reduce_isSpecial'
 -/
 

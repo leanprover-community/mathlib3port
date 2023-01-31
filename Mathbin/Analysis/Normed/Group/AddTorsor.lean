@@ -107,7 +107,7 @@ addition/subtraction of `x : P`. -/
 def IsometryEquiv.vaddConst (x : P) : V ≃ᵢ P
     where
   toEquiv := Equiv.vaddConst x
-  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_right _ _ _
+  isometry_toFun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_right _ _ _
 #align isometry_equiv.vadd_const IsometryEquiv.vaddConst
 
 section
@@ -119,7 +119,7 @@ variable (P)
 def IsometryEquiv.constVadd (x : V) : P ≃ᵢ P
     where
   toEquiv := Equiv.constVadd P x
-  isometry_to_fun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_left _ _ _
+  isometry_toFun := Isometry.of_dist_eq fun _ _ => dist_vadd_cancel_left _ _ _
 #align isometry_equiv.const_vadd IsometryEquiv.constVadd
 
 end
@@ -135,7 +135,7 @@ subtraction from `x : P`. -/
 def IsometryEquiv.constVsub (x : P) : P ≃ᵢ V
     where
   toEquiv := Equiv.constVsub x
-  isometry_to_fun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
+  isometry_toFun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
 #align isometry_equiv.const_vsub IsometryEquiv.constVsub
 
 @[simp]
@@ -155,7 +155,7 @@ theorem vadd_ball (x : V) (y : P) (r : ℝ) : x +ᵥ Metric.ball y r = Metric.ba
 @[simp]
 theorem vadd_closedBall (x : V) (y : P) (r : ℝ) :
     x +ᵥ Metric.closedBall y r = Metric.closedBall (x +ᵥ y) r :=
-  (IsometryEquiv.constVadd P x).image_closed_ball y r
+  (IsometryEquiv.constVadd P x).image_closedBall y r
 #align vadd_closed_ball vadd_closedBall
 
 @[simp]

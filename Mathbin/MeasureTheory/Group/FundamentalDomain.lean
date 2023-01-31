@@ -369,7 +369,7 @@ protected theorem aeStronglyMeasurable_on_iff {β : Type _} [TopologicalSpace β
     AeStronglyMeasurable f (μ.restrict s) ↔ AeStronglyMeasurable f (μ.restrict t) :=
   calc
     AeStronglyMeasurable f (μ.restrict s) ↔
-        AeStronglyMeasurable f (measure.sum fun g : G => μ.restrict (g • t ∩ s)) :=
+        AeStronglyMeasurable f (Measure.sum fun g : G => μ.restrict (g • t ∩ s)) :=
       by
       simp only [← ht.restrict_restrict,
         ht.sum_restrict_of_ac restrict_le_self.absolutely_continuous]
@@ -383,7 +383,7 @@ protected theorem aeStronglyMeasurable_on_iff {β : Type _} [TopologicalSpace β
       refine' forall_congr' fun g => _
       have he : MeasurableEmbedding ((· • ·) g⁻¹ : α → α) := measurableEmbedding_const_smul _
       rw [← image_smul, ←
-        ((measure_preserving_smul g⁻¹ μ).restrictImageEmb he _).ae_strongly_measurable_comp_iff he]
+        ((measure_preserving_smul g⁻¹ μ).restrictImageEmb he _).aeStronglyMeasurable_comp_iff he]
       simp only [(· ∘ ·), hf]
     _ ↔ AeStronglyMeasurable f (μ.restrict t) := by
       simp only [← aeStronglyMeasurable_sum_measure_iff, ← hs.restrict_restrict,
@@ -406,7 +406,7 @@ protected theorem hasFiniteIntegral_on_iff (hs : IsFundamentalDomain G s μ)
 @[to_additive]
 protected theorem integrableOn_iff (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDomain G t μ)
     {f : α → E} (hf : ∀ (g : G) (x), f (g • x) = f x) : IntegrableOn f s μ ↔ IntegrableOn f t μ :=
-  and_congr (hs.ae_strongly_measurable_on_iff ht hf) (hs.has_finite_integral_on_iff ht hf)
+  and_congr (hs.aeStronglyMeasurable_on_iff ht hf) (hs.hasFiniteIntegral_on_iff ht hf)
 #align measure_theory.is_fundamental_domain.integrable_on_iff MeasureTheory.IsFundamentalDomain.integrableOn_iff
 #align measure_theory.is_add_fundamental_domain.integrable_on_iff MeasureTheory.IsAddFundamentalDomain.integrable_on_iff
 
@@ -455,7 +455,7 @@ theorem measure_le_of_pairwise_disjoint (hs : IsFundamentalDomain G s μ)
     μ t = ∑' g : G, μ (g • t ∩ s) := hs.measure_eq_tsum t
     _ = μ (⋃ g : G, g • t ∩ s) :=
       Eq.symm <| measure_Union₀ hd fun g => (ht.smul _).inter hs.NullMeasurableSet
-    _ ≤ μ s := measure_mono (Union_subset fun g => inter_subset_right _ _)
+    _ ≤ μ s := measure_mono (unionᵢ_subset fun g => inter_subset_right _ _)
     
 #align measure_theory.is_fundamental_domain.measure_le_of_pairwise_disjoint MeasureTheory.IsFundamentalDomain.measure_le_of_pairwise_disjoint
 #align measure_theory.is_add_fundamental_domain.measure_le_of_pairwise_disjoint MeasureTheory.IsAddFundamentalDomain.measure_le_of_pairwise_disjoint
@@ -624,14 +624,14 @@ variable [Countable G] [MeasurableSpace G] [MeasurableSpace α] [HasMeasurableSm
 @[to_additive MeasureTheory.NullMeasurableSet.add_fundamental_frontier]
 protected theorem NullMeasurableSet.fundamentalFrontier (hs : NullMeasurableSet s μ) :
     NullMeasurableSet (fundamentalFrontier G s) μ :=
-  hs.inter <| null_measurable_set.Union fun g => null_measurable_set.Union fun hg => hs.smul _
+  hs.inter <| NullMeasurableSet.union fun g => NullMeasurableSet.union fun hg => hs.smul _
 #align measure_theory.null_measurable_set.fundamental_frontier MeasureTheory.NullMeasurableSet.fundamentalFrontier
 #align measure_theory.null_measurable_set.add_fundamental_frontier MeasureTheory.NullMeasurableSet.add_fundamental_frontier
 
 @[to_additive MeasureTheory.NullMeasurableSet.add_fundamental_interior]
 protected theorem NullMeasurableSet.fundamentalInterior (hs : NullMeasurableSet s μ) :
     NullMeasurableSet (fundamentalInterior G s) μ :=
-  hs.diff <| null_measurable_set.Union fun g => null_measurable_set.Union fun hg => hs.smul _
+  hs.diffₓ <| NullMeasurableSet.union fun g => NullMeasurableSet.union fun hg => hs.smul _
 #align measure_theory.null_measurable_set.fundamental_interior MeasureTheory.NullMeasurableSet.fundamentalInterior
 #align measure_theory.null_measurable_set.add_fundamental_interior MeasureTheory.NullMeasurableSet.add_fundamental_interior
 
@@ -656,7 +656,7 @@ theorem measure_fundamentalFrontier : μ (fundamentalFrontier G s) = 0 := by
 
 @[to_additive MeasureTheory.IsAddFundamentalDomain.measure_add_fundamental_interior]
 theorem measure_fundamentalInterior : μ (fundamentalInterior G s) = μ s :=
-  measure_diff_null' hs.measure_fundamental_frontier
+  measure_diff_null' hs.measure_fundamentalFrontier
 #align measure_theory.is_fundamental_domain.measure_fundamental_interior MeasureTheory.IsFundamentalDomain.measure_fundamentalInterior
 #align measure_theory.is_add_fundamental_domain.measure_add_fundamental_interior MeasureTheory.IsAddFundamentalDomain.measure_add_fundamental_interior
 

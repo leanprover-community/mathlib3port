@@ -51,13 +51,13 @@ theorem mem_antidiagonal {f : α →₀ ℕ} {p : (α →₀ ℕ) × (α →₀ 
 #align finsupp.mem_antidiagonal Finsupp.mem_antidiagonal
 
 theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α →₀ ℕ)} :
-    f.swap ∈ antidiagonal n ↔ f ∈ antidiagonal n := by
+    f.symm ∈ antidiagonal n ↔ f ∈ antidiagonal n := by
   simp only [mem_antidiagonal, add_comm, Prod.swap]
 #align finsupp.swap_mem_antidiagonal Finsupp.swap_mem_antidiagonal
 
 theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
-    ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ :=
+    ((antidiagonal f).filterₓ fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ :=
   by
   ext ⟨a, b⟩
   suffices a = g → (a + b = f ↔ g ≤ f ∧ b = f - g) by
@@ -72,7 +72,7 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
 
 theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.2 = g)] :
-    ((antidiagonal f).filter fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ :=
+    ((antidiagonal f).filterₓ fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ :=
   by
   ext ⟨a, b⟩
   suffices b = g → (a + b = f ↔ g ≤ f ∧ a = f - g) by
@@ -94,9 +94,9 @@ theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) 
 theorem prod_antidiagonal_swap {M : Type _} [CommMonoid M] (n : α →₀ ℕ)
     (f : (α →₀ ℕ) → (α →₀ ℕ) → M) :
     (∏ p in antidiagonal n, f p.1 p.2) = ∏ p in antidiagonal n, f p.2 p.1 :=
-  Finset.prod_bij (fun p hp => p.swap) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
+  Finset.prod_bij (fun p hp => p.symm) (fun p => swap_mem_antidiagonal.2) (fun p hp => rfl)
     (fun p₁ p₂ _ _ h => Prod.swap_injective h) fun p hp =>
-    ⟨p.swap, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
+    ⟨p.symm, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 #align finsupp.prod_antidiagonal_swap Finsupp.prod_antidiagonal_swap
 #align finsupp.sum_antidiagonal_swap Finsupp.sum_antidiagonal_swap
 

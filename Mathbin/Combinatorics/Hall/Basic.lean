@@ -79,7 +79,7 @@ def hallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
 theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
-    (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) :
+    (h : ∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) (ι' : Finset ι) :
     Nonempty (hallMatchingsOn t ι') := by
   classical
     refine' ⟨Classical.indefiniteDescription _ _⟩
@@ -128,7 +128,7 @@ which has the additional constraint that `ι` is a `fintype`.
 -/
 theorem Finset.all_card_le_bunionᵢ_card_iff_exists_injective {ι : Type u} {α : Type v}
     [DecidableEq α] (t : ι → Finset α) :
-    (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔
+    (∀ s : Finset ι, s.card ≤ (s.bunionᵢ t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by
   constructor
@@ -198,7 +198,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
   by
   let r' a := (Rel.image r {a}).toFinset
-  have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.bUnion r').card :=
+  have h : ∀ A : Finset α, Fintype.card (Rel.image r A) = (A.bunionᵢ r').card :=
     by
     intro A
     rw [← Set.toFinset_card]
@@ -220,12 +220,12 @@ rather than `rel.image`.
 -/
 theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : Type v} [Fintype β]
     (r : α → β → Prop) [∀ a, DecidablePred (r a)] :
-    (∀ A : Finset α, A.card ≤ (univ.filter fun b : β => ∃ a ∈ A, r a b).card) ↔
+    (∀ A : Finset α, A.card ≤ (univ.filterₓ fun b : β => ∃ a ∈ A, r a b).card) ↔
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
   by
   haveI := Classical.decEq β
   let r' a := univ.filter fun b => r a b
-  have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.bUnion r' :=
+  have h : ∀ A : Finset α, (univ.filter fun b : β => ∃ a ∈ A, r a b) = A.bunionᵢ r' :=
     by
     intro A
     ext b

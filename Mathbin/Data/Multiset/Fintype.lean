@@ -110,7 +110,7 @@ protected theorem Multiset.exists_coe (p : m → Prop) :
 
 instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
   Fintype.ofFinset
-    (m.toFinset.bUnion fun x => (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩)
+    (m.toFinset.bunionᵢ fun x => (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩)
     (by
       rintro ⟨x, i⟩
       simp only [Finset.mem_bunionᵢ, Multiset.mem_toFinset, Finset.mem_map, Finset.mem_range,
@@ -132,7 +132,7 @@ theorem Multiset.mem_toEnumFinset (m : Multiset α) (p : α × ℕ) :
 #align multiset.mem_to_enum_finset Multiset.mem_toEnumFinset
 
 theorem Multiset.mem_of_mem_toEnumFinset {p : α × ℕ} (h : p ∈ m.toEnumFinset) : p.1 ∈ m :=
-  Multiset.count_pos.mp <| pos_of_gt <| (m.mem_to_enum_finset p).mp h
+  Multiset.count_pos.mp <| pos_of_gt <| (m.mem_toEnumFinset p).mp h
 #align multiset.mem_of_mem_to_enum_finset Multiset.mem_of_mem_toEnumFinset
 
 @[mono]
@@ -215,7 +215,7 @@ theorem Multiset.map_univ_coeEmbedding (m : Multiset α) :
 #align multiset.map_univ_coe_embedding Multiset.map_univ_coeEmbedding
 
 theorem Multiset.toEnumFinset_filter_eq (m : Multiset α) (x : α) :
-    (m.toEnumFinset.filter fun p => x = p.1) =
+    (m.toEnumFinset.filterₓ fun p => x = p.1) =
       (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩ :=
   by
   ext ⟨y, i⟩

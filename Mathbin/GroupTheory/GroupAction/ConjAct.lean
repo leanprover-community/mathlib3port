@@ -132,7 +132,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G], Eq.{succ u1} (MulEquiv.{u1, u1} G (ConjAct.{u1} G) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} (ConjAct.{u1} G) (Monoid.toMulOneClass.{u1} (ConjAct.{u1} G) (DivInvMonoid.toMonoid.{u1} (ConjAct.{u1} G) (ConjAct.instDivInvMonoidConjAct.{u1} G _inst_1))))) (MulEquiv.symm.{u1, u1} (ConjAct.{u1} G) G (MulOneClass.toMul.{u1} (ConjAct.{u1} G) (Monoid.toMulOneClass.{u1} (ConjAct.{u1} G) (DivInvMonoid.toMonoid.{u1} (ConjAct.{u1} G) (ConjAct.instDivInvMonoidConjAct.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) (ConjAct.ofConjAct.{u1} G _inst_1)) (ConjAct.toConjAct.{u1} G _inst_1)
 Case conversion may be inaccurate. Consider using '#align conj_act.of_mul_symm_eq ConjAct.of_mul_symm_eqₓ'. -/
 @[simp]
-theorem of_mul_symm_eq : (@ofConjAct G _).symm = to_conj_act :=
+theorem of_mul_symm_eq : (@ofConjAct G _).symm = toConjAct :=
   rfl
 #align conj_act.of_mul_symm_eq ConjAct.of_mul_symm_eq
 
@@ -143,7 +143,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : DivInvMonoid.{u1} G], Eq.{succ u1} (MulEquiv.{u1, u1} (ConjAct.{u1} G) G (MulOneClass.toMul.{u1} (ConjAct.{u1} G) (Monoid.toMulOneClass.{u1} (ConjAct.{u1} G) (DivInvMonoid.toMonoid.{u1} (ConjAct.{u1} G) (ConjAct.instDivInvMonoidConjAct.{u1} G _inst_1)))) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1)))) (MulEquiv.symm.{u1, u1} G (ConjAct.{u1} G) (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G _inst_1))) (MulOneClass.toMul.{u1} (ConjAct.{u1} G) (Monoid.toMulOneClass.{u1} (ConjAct.{u1} G) (DivInvMonoid.toMonoid.{u1} (ConjAct.{u1} G) (ConjAct.instDivInvMonoidConjAct.{u1} G _inst_1)))) (ConjAct.toConjAct.{u1} G _inst_1)) (ConjAct.ofConjAct.{u1} G _inst_1)
 Case conversion may be inaccurate. Consider using '#align conj_act.to_mul_symm_eq ConjAct.to_mul_symm_eqₓ'. -/
 @[simp]
-theorem to_mul_symm_eq : (@toConjAct G _).symm = of_conj_act :=
+theorem to_mul_symm_eq : (@toConjAct G _).symm = ofConjAct :=
   rfl
 #align conj_act.to_mul_symm_eq ConjAct.to_mul_symm_eq
 

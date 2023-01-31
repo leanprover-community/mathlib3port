@@ -182,7 +182,7 @@ theorem pow_left (h : Commute a b) (n : ℕ) : Commute (a ^ n) b :=
 
 @[simp, to_additive]
 theorem pow_pow (h : Commute a b) (m n : ℕ) : Commute (a ^ m) (b ^ n) :=
-  (h.pow_left m).pow_right n
+  (h.pow_leftₓ m).pow_right n
 #align commute.pow_pow Commute.pow_powₓ
 #align add_commute.nsmul_nsmul AddCommute.nsmul_nsmulₓ
 
@@ -200,12 +200,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.pow_self Commute.pow_selfₓ'. -/
 @[simp, to_additive]
 theorem pow_self (a : M) (n : ℕ) : Commute (a ^ n) a :=
-  (Commute.refl a).pow_left n
+  (Commute.refl a).pow_leftₓ n
 #align commute.pow_self Commute.pow_self
 
 @[simp, to_additive]
 theorem pow_pow_self (a : M) (m n : ℕ) : Commute (a ^ m) (a ^ n) :=
-  (Commute.refl a).pow_pow m n
+  (Commute.refl a).pow_powₓ m n
 #align commute.pow_pow_self Commute.pow_pow_selfₓ
 #align add_commute.nsmul_nsmul_self AddCommute.nsmul_nsmul_selfₓ
 
@@ -360,7 +360,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit_mul_self_iff isUnit_mul_self_iffₓ'. -/
 @[simp, to_additive]
 theorem isUnit_mul_self_iff : IsUnit (a * a) ↔ IsUnit a :=
-  (Commute.refl a).is_unit_mul_iff.trans (and_self_iff _)
+  (Commute.refl a).isUnit_mul_iff.trans (and_self_iff _)
 #align is_unit_mul_self_iff isUnit_mul_self_iff
 #align is_add_unit_add_self_iff isAddUnit_add_self_iff
 

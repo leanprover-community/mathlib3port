@@ -159,14 +159,14 @@ instance : Lattice ℕ :=
 noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
   { (inferInstance : OrderBot ℕ), (LinearOrder.toLattice : Lattice ℕ),
     (inferInstance : LinearOrder ℕ) with
-    sup := supₛ
-    inf := infₛ
+    supₛ := supₛ
+    infₛ := infₛ
     le_cSup := fun s a hb ha => by rw [Sup_def hb] <;> revert a ha <;> exact @Nat.find_spec _ _ hb
     cSup_le := fun s a hs ha => by rw [Sup_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
     le_cInf := fun s a hs hb => by
       rw [Inf_def hs] <;> exact hb (@Nat.find_spec (fun n => n ∈ s) _ _)
     cInf_le := fun s a hb ha => by rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
-    cSup_empty :=
+    supₛ_empty :=
       by
       simp only [Sup_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false,
         not_false_iff, exists_const]

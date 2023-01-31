@@ -632,7 +632,7 @@ def continuousSubalgebra : Subalgebra R (α → A) :=
     continuousSubsemiring α
       A with
     carrier := { f : α → A | Continuous f }
-    algebra_map_mem' := fun r => (continuous_const : Continuous fun x : α => algebraMap R A r) }
+    algebraMap_mem' := fun r => (continuous_const : Continuous fun x : α => algebraMap R A r) }
 #align continuous_subalgebra continuousSubalgebra
 
 end Subtype
@@ -918,7 +918,7 @@ section Star
 
 variable [Star β] [HasContinuousStar β]
 
-instance : Star C(α, β) where star f := starContinuousMap.comp f
+instance : Star C(α, β) where unit f := starContinuousMap.comp f
 
 @[simp]
 theorem coe_star (f : C(α, β)) : ⇑(star f) = star f :=

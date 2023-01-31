@@ -134,7 +134,7 @@ then it goes to +∞. -/
 theorem tendsto_atTop_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (hc : 1 < c)
     (hu : ∀ n, c * v n ≤ v (n + 1)) : Tendsto v atTop atTop :=
   (tendsto_atTop_mono fun n => geom_le (zero_le_one.trans hc.le) n fun k hk => hu k) <|
-    (tendsto_pow_atTop_atTop_of_one_lt hc).at_top_mul_const h₀
+    (tendsto_pow_atTop_atTop_of_one_lt hc).atTop_mul_const h₀
 #align tendsto_at_top_of_geom_le tendsto_atTop_of_geom_le
 
 theorem Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) :
@@ -580,7 +580,7 @@ section
 
 theorem tendsto_nat_floor_atTop {α : Type _} [LinearOrderedSemiring α] [FloorSemiring α] :
     Tendsto (fun x : α => ⌊x⌋₊) atTop atTop :=
-  Nat.floor_mono.tendsto_at_top_at_top fun x => ⟨max 0 (x + 1), by simp [Nat.le_floor_iff]⟩
+  Nat.floor_mono.tendsto_atTop_atTop fun x => ⟨max 0 (x + 1), by simp [Nat.le_floor_iff]⟩
 #align tendsto_nat_floor_at_top tendsto_nat_floor_atTop
 
 variable {R : Type _} [TopologicalSpace R] [LinearOrderedField R] [OrderTopology R] [FloorRing R]

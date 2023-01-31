@@ -190,7 +190,7 @@ theorem coeff_pow_of_natDegree_le (pn : p.natDegree ≤ n) : (p ^ m).coeff (n * 
 
 theorem coeff_add_eq_left_of_lt (qn : q.natDegree < n) : (p + q).coeff n = p.coeff n :=
   (coeff_add _ _ _).trans <|
-    (congr_arg _ <| coeff_eq_zero_of_nat_degree_lt <| qn).trans <| add_zero _
+    (congr_arg _ <| coeff_eq_zero_of_natDegree_lt <| qn).trans <| add_zero _
 #align polynomial.coeff_add_eq_left_of_lt Polynomial.coeff_add_eq_left_of_lt
 
 theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.coeff n :=
@@ -226,7 +226,7 @@ theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
 #align polynomial.degree_sum_eq_of_disjoint Polynomial.degree_sum_eq_of_disjoint
 
 theorem natDegree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
-    (h : Set.Pairwise { i | i ∈ s ∧ f i ≠ 0 } (Ne on nat_degree ∘ f)) :
+    (h : Set.Pairwise { i | i ∈ s ∧ f i ≠ 0 } (Ne on natDegree ∘ f)) :
     natDegree (s.Sum f) = s.sup fun i => natDegree (f i) :=
   by
   by_cases H : ∃ x ∈ s, f x ≠ 0

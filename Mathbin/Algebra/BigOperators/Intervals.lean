@@ -204,7 +204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.prod_range_sub_prod_range Finset.prod_range_sub_prod_rangeₓ'. -/
 @[to_additive]
 theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
-    ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filter fun k => n ≤ k, f k :=
+    ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filterₓ fun k => n ≤ k, f k :=
   by
   rw [← prod_Ico_eq_div f hnm]
   congr

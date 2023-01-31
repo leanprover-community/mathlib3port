@@ -63,7 +63,7 @@ theorem not_mem_mkRbtree : ∀ a : α, a ∉ mkRbtree α lt := by
   simp [Membership.Mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
 #align rbtree.not_mem_mk_rbtree Rbtree.not_mem_mkRbtree
 
-theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.Empty = tt → a ∉ t := by
+theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.Empty = true → a ∉ t := by
   cases' t with n p <;> cases n <;>
     simp [Empty, Membership.Mem, Rbtree.Mem, Rbnode.Mem, false_imp_iff]
 #align rbtree.not_mem_of_empty Rbtree.not_mem_of_empty
@@ -178,7 +178,7 @@ theorem find_eq_find_of_eqv [IsStrictWeakOrder α lt] {a b : α} (t : Rbtree α 
 #align rbtree.find_eq_find_of_eqv Rbtree.find_eq_find_of_eqv
 
 theorem contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) :
-    a ∈ t ↔ t.contains a = tt := by
+    a ∈ t ↔ t.contains a = true := by
   have h := find_correct a t
   simp [h, contains]; apply Iff.intro
   · intro h'

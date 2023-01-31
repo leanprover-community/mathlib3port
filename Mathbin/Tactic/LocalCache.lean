@@ -34,7 +34,7 @@ unsafe def load_data (dn : Name) : tactic α := do
 
 unsafe def poke_data (dn : Name) : tactic Bool := do
   let e ← tactic.get_env
-  return (e dn).toBool
+  return (e dn).decide
 #align tactic.local_cache.internal.poke_data tactic.local_cache.internal.poke_data
 
 unsafe def run_once_under_name {α : Type} [reflected _ α] [has_reflect α] (t : tactic α)
@@ -119,7 +119,7 @@ def rADIX := by apply_normed 2 ^ 64
 
 def hashByte (seed : ℕ) (c : Char) : ℕ :=
   let n : ℕ := c.toNat
-  seed.lxor n * FNV_PRIME % RADIX
+  seed.lxor' n * fNVPRIME % rADIX
 #align tactic.local_cache.internal.def_local.hash_byte Tactic.LocalCache.Internal.DefLocal.hashByte
 
 def hashString (s : String) : ℕ :=

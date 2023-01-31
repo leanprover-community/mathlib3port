@@ -30,7 +30,7 @@ namespace CategoryTheory.Limits
     pullback of `f` and `g` exists: It is given by composing the equalizer with the projections. -/
 theorem hasLimitCospanOfHasLimitPairOfHasLimitParallelPair {C : Type u} [𝒞 : Category.{v} C]
     {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (pair X Y)]
-    [HasLimit (parallelPair (Prod.fst ≫ f) (Prod.snd ≫ g))] : HasLimit (cospan f g) :=
+    [HasLimit (parallelPair (prod.fst ≫ f) (prod.snd ≫ g))] : HasLimit (cospan f g) :=
   let π₁ : X ⨯ Y ⟶ X := prod.fst
   let π₂ : X ⨯ Y ⟶ Y := prod.snd
   let e := equalizer.ι (π₁ ≫ f) (π₂ ≫ g)

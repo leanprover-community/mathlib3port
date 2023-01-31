@@ -338,7 +338,7 @@ def id : L₁ →ₗ⁅R⁆ L₁ :=
 #align lie_hom.id LieHom.id
 
 @[simp]
-theorem coe_id : ((id : L₁ →ₗ⁅R⁆ L₁) : L₁ → L₁) = _root_.id :=
+theorem coe_id : ((id : L₁ →ₗ⁅R⁆ L₁) : L₁ → L₁) = id :=
   rfl
 #align lie_hom.coe_id LieHom.coe_id
 
@@ -364,7 +364,7 @@ instance : One (L₁ →ₗ⁅R⁆ L₁) :=
   ⟨id⟩
 
 @[simp]
-theorem coe_one : ((1 : L₁ →ₗ⁅R⁆ L₁) : L₁ → L₁) = _root_.id :=
+theorem coe_one : ((1 : L₁ →ₗ⁅R⁆ L₁) : L₁ → L₁) = id :=
   rfl
 #align lie_hom.coe_one LieHom.coe_one
 
@@ -758,7 +758,7 @@ def id : M →ₗ⁅R,L⁆ M :=
 #align lie_module_hom.id LieModuleHom.id
 
 @[simp]
-theorem coe_id : ((id : M →ₗ⁅R,L⁆ M) : M → M) = _root_.id :=
+theorem coe_id : ((id : M →ₗ⁅R,L⁆ M) : M → M) = id :=
   rfl
 #align lie_module_hom.coe_id LieModuleHom.coe_id
 

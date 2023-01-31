@@ -285,7 +285,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff_erase_mem Finset.mem_upShadow_iff_erase_memₓ'. -/
 /-- `t` is in the upper shadow of `𝒜` iff we can remove an element from it so that the resulting
 finset is in `𝒜`. -/
-theorem mem_upShadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.erase a ∈ 𝒜 :=
+theorem mem_upShadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.eraseₓ a ∈ 𝒜 :=
   by
   refine' mem_up_shadow_iff.trans ⟨_, _⟩
   · rintro ⟨s, hs, a, ha, rfl⟩

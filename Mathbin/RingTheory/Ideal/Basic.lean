@@ -140,7 +140,7 @@ theorem span_unionᵢ {ι} (s : ι → Set α) : span (⋃ i, s i) = ⨆ i, span
 #align ideal.span_Union Ideal.span_unionᵢ
 
 theorem mem_span {s : Set α} (x) : x ∈ span s ↔ ∀ p : Ideal α, s ⊆ p → x ∈ p :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align ideal.mem_span Ideal.mem_span
 
 theorem subset_span {s : Set α} : s ⊆ span s :=
@@ -548,7 +548,7 @@ theorem IsMaximal.isPrime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsMaximal.is_prime' (I : Ideal α) : ∀ [H : I.IsMaximal], I.IsPrime :=
-  is_maximal.is_prime
+  IsMaximal.isPrime
 #align ideal.is_maximal.is_prime' Ideal.IsMaximal.is_prime'
 
 theorem span_singleton_lt_span_singleton [CommRing β] [IsDomain β] {x y : β} :
@@ -870,7 +870,7 @@ theorem one_not_mem_nonunits [Monoid α] : (1 : α) ∉ nonunits α :=
 #align one_not_mem_nonunits one_not_mem_nonunits
 
 theorem coe_subset_nonunits [Semiring α] {I : Ideal α} (h : I ≠ ⊤) : (I : Set α) ⊆ nonunits α :=
-  fun x hx hu => h <| I.eq_top_of_is_unit_mem hx hu
+  fun x hx hu => h <| I.eq_top_of_isUnit_mem hx hu
 #align coe_subset_nonunits coe_subset_nonunits
 
 theorem exists_max_ideal_of_mem_nonunits [CommSemiring α] (h : a ∈ nonunits α) :

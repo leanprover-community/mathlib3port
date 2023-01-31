@@ -1031,7 +1031,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.exists_image_iff Set.exists_image_iffₓ'. -/
 theorem exists_image_iff (f : α → β) (x : Set α) (P : β → Prop) :
     (∃ a : f '' x, P a) ↔ ∃ a : x, P (f a) :=
-  ⟨fun ⟨a, h⟩ => ⟨⟨_, a.Prop.some_spec.1⟩, a.Prop.some_spec.2.symm ▸ h⟩, fun ⟨a, h⟩ =>
+  ⟨fun ⟨a, h⟩ => ⟨⟨_, a.Prop.choose_spec.1⟩, a.Prop.choose_spec.2.symm ▸ h⟩, fun ⟨a, h⟩ =>
     ⟨⟨_, _, a.Prop, rfl⟩, h⟩⟩
 #align set.exists_image_iff Set.exists_image_iff
 
@@ -1948,7 +1948,7 @@ noncomputable def rangeSplitting (f : α → β) : range f → α := fun x => x.
 #print Set.apply_rangeSplitting /-
 -- This can not be a `@[simp]` lemma because the head of the left hand side is a variable.
 theorem apply_rangeSplitting (f : α → β) (x : range f) : f (rangeSplitting f x) = x :=
-  x.2.some_spec
+  x.2.choose_spec
 #align set.apply_range_splitting Set.apply_rangeSplitting
 -/
 
@@ -1987,8 +1987,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.right_inverse_range_splitting Set.rightInverse_rangeSplittingₓ'. -/
 theorem rightInverse_rangeSplitting {f : α → β} (h : Injective f) :
     RightInverse (rangeFactorization f) (rangeSplitting f) :=
-  (leftInverse_rangeSplitting f).right_inverse_of_injective fun x y hxy =>
-    h <| Subtype.ext_iff.1 hxy
+  (leftInverse_rangeSplitting f).rightInverse_of_injective fun x y hxy => h <| Subtype.ext_iff.1 hxy
 #align set.right_inverse_range_splitting Set.rightInverse_rangeSplitting
 
 /- warning: set.preimage_range_splitting -> Set.preimage_rangeSplitting is a dubious translation:

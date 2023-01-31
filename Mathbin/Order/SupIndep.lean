@@ -119,7 +119,7 @@ theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDis
 #print Finset.supIndep_iff_disjoint_erase /-
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
-    s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.erase i).sup f) :=
+    s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.eraseₓ i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
     (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
 #align finset.sup_indep_iff_disjoint_erase Finset.supIndep_iff_disjoint_erase
@@ -139,7 +139,7 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
       rw [Finset.erase_insert, Finset.sup_singleton]
       simpa using hij
     · convert h.symm using 1
-      have : ({i, k} : Finset ι).erase k = {i} := by
+      have : ({i, k} : Finset ι).eraseₓ k = {i} := by
         ext
         rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_left, Ne.def,
           not_and_self_iff, or_false_iff, and_iff_right_of_imp]
@@ -246,7 +246,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup_indep.bUnio
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.bunionᵢ [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
-    (s.bUnion g).SupIndep f := by
+    (s.bunionᵢ g).SupIndep f := by
   rw [← sup_eq_bUnion]
   exact hs.sup hg
 #align finset.sup_indep.bUnion Finset.SupIndep.bunionᵢ
@@ -445,7 +445,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {ι : Sort.{u3}} {ι' : Sort.{u2}} {t : ι -> α} {f : ι' -> ι}, (CompleteLattice.Independent.{u2, u1} ι' α _inst_1 (Function.comp.{u2, u3, succ u1} ι' ι α t f)) -> (Function.Surjective.{u2, u3} ι' ι f) -> (CompleteLattice.Independent.{u3, u1} ι α _inst_1 t)
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent.comp' CompleteLattice.Independent.comp'ₓ'. -/
-theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : independent <| t ∘ f)
+theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : Independent <| t ∘ f)
     (hf : Surjective f) : Independent t := by
   intro i
   obtain ⟨i', rfl⟩ := hf i
@@ -454,7 +454,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
 #align complete_lattice.independent.comp' CompleteLattice.Independent.comp'
 
 #print CompleteLattice.Independent.setIndependent_range /-
-theorem Independent.setIndependent_range (ht : Independent t) : set_independent <| range t :=
+theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <| range t :=
   by
   rw [set_independent_iff]
   rw [← coe_comp_range_factorization t] at ht
@@ -506,7 +506,7 @@ Case conversion may be inaccurate. Consider using '#align complete_lattice.indep
 another indepedendent indexed family. -/
 theorem Independent.map_orderIso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β]
     (f : α ≃o β) {a : ι → α} (ha : Independent a) : Independent (f ∘ a) := fun i =>
-  ((ha i).map_order_iso f).mono_right (f.Monotone.le_map_supr₂ _)
+  ((ha i).map_orderIso f).mono_right (f.Monotone.le_map_supᵢ₂ _)
 #align complete_lattice.independent.map_order_iso CompleteLattice.Independent.map_orderIso
 
 /- warning: complete_lattice.independent_map_order_iso_iff -> CompleteLattice.independent_map_orderIso_iff is a dubious translation:
@@ -520,8 +520,8 @@ theorem independent_map_orderIso_iff {ι : Sort _} {α β : Type _} [CompleteLat
     [CompleteLattice β] (f : α ≃o β) {a : ι → α} : Independent (f ∘ a) ↔ Independent a :=
   ⟨fun h =>
     have hf : f.symm ∘ f ∘ a = a := congr_arg (· ∘ a) f.left_inv.comp_eq_id
-    hf ▸ h.map_order_iso f.symm,
-    fun h => h.map_order_iso f⟩
+    hf ▸ h.map_orderIso f.symm,
+    fun h => h.map_orderIso f⟩
 #align complete_lattice.independent_map_order_iso_iff CompleteLattice.independent_map_orderIso_iff
 
 /- warning: complete_lattice.independent.disjoint_bsupr -> CompleteLattice.Independent.disjoint_bsupᵢ is a dubious translation:

@@ -48,7 +48,7 @@ def Meas : Type (u + 1) :=
 namespace Meas
 
 instance : CoeSort Meas (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : Meas) : MeasurableSpace X :=
   X.str

@@ -96,7 +96,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_finite.comp_injective LocallyFinite.comp_injectiveₓ'. -/
 theorem comp_injective {g : ι' → ι} (hf : LocallyFinite f) (hg : Injective g) :
     LocallyFinite (f ∘ g) :=
-  hf.comp_inj_on (hg.InjOn _)
+  hf.comp_injOn (hg.InjOn _)
 #align locally_finite.comp_injective LocallyFinite.comp_injective
 
 /- warning: locally_finite_iff_small_sets -> locallyFinite_iff_smallSets is a dubious translation:
@@ -132,7 +132,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basisₓ'. -/
 theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop} {s : ι' → Set X}
     {x : X} (hb : (𝓝 x).HasBasis p s) : ∃ (i : _)(hi : p i), { j | (f j ∩ s i).Nonempty }.Finite :=
-  let ⟨i, hpi, hi⟩ := hb.smallSets.eventually_iff.mp (hf.eventually_small_sets x)
+  let ⟨i, hpi, hi⟩ := hb.smallSets.eventually_iff.mp (hf.eventually_smallSets x)
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
 
@@ -162,7 +162,7 @@ theorem isClosed_unionᵢ (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f i)) : 
   by
   simp only [← isOpen_compl_iff, compl_Union, isOpen_iff_mem_nhds, mem_Inter]
   intro a ha
-  replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).is_open_compl.mem_nhds (ha i)
+  replace ha : ∀ i, f iᶜ ∈ 𝓝 a := fun i => (hc i).isOpen_compl.mem_nhds (ha i)
   rcases hf a with ⟨t, h_nhds, h_fin⟩
   have : (t ∩ ⋂ i ∈ { i | (f i ∩ t).Nonempty }, f iᶜ) ∈ 𝓝 a :=
     inter_mem h_nhds ((bInter_mem h_fin).2 fun i _ => ha i)
@@ -180,9 +180,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_finite.closure_Union LocallyFinite.closure_unionᵢₓ'. -/
 theorem closure_unionᵢ (h : LocallyFinite f) : closure (⋃ i, f i) = ⋃ i, closure (f i) :=
   Subset.antisymm
-    (closure_minimal (Union_mono fun _ => subset_closure) <|
-      h.closure.is_closed_Union fun _ => isClosed_closure)
-    (Union_subset fun i => closure_mono <| subset_unionᵢ _ _)
+    (closure_minimal (unionᵢ_mono fun _ => subset_closure) <|
+      h.closure.isClosed_unionᵢ fun _ => isClosed_closure)
+    (unionᵢ_subset fun i => closure_mono <| subset_unionᵢ _ _)
 #align locally_finite.closure_Union LocallyFinite.closure_unionᵢ
 
 /- warning: locally_finite.Inter_compl_mem_nhds -> LocallyFinite.interᵢ_compl_mem_nhds is a dubious translation:
@@ -199,7 +199,7 @@ theorem interᵢ_compl_mem_nhds (hf : LocallyFinite f) (hc : ∀ i, IsClosed (f 
   refine' IsOpen.mem_nhds _ (mem_Inter₂.2 fun i => id)
   suffices IsClosed (⋃ i : { i // x ∉ f i }, f i) by
     rwa [← isOpen_compl_iff, compl_Union, Inter_subtype] at this
-  exact (hf.comp_injective Subtype.coe_injective).is_closed_Union fun i => hc _
+  exact (hf.comp_injective Subtype.coe_injective).isClosed_unionᵢ fun i => hc _
 #align locally_finite.Inter_compl_mem_nhds LocallyFinite.interᵢ_compl_mem_nhds
 
 #print LocallyFinite.exists_forall_eventually_eq_prod /-
@@ -211,7 +211,7 @@ interval `[N, +∞)` and a neighbourhood of `x`.
 We formulate the conclusion in terms of the product of filter `filter.at_top` and `𝓝 x`. -/
 theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x : X, π x}
     (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
-    ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ p : ℕ × X in at_top ×ᶠ 𝓝 x, f p.1 p.2 = F p.2 :=
+    ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ p : ℕ × X in atTop ×ᶠ 𝓝 x, f p.1 p.2 = F p.2 :=
   by
   choose U hUx hU using hf
   choose N hN using fun x => (hU x).BddAbove
@@ -237,7 +237,7 @@ function `F : Π a, β a` such that for any `x`, for sufficiently large values o
 `f n y = F y` in a neighbourhood of `x`. -/
 theorem exists_forall_eventually_atTop_eventually_eq' {π : X → Sort _} {f : ℕ → ∀ x : X, π x}
     (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
-    ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ n : ℕ in at_top, ∀ᶠ y : X in 𝓝 x, f n y = F y :=
+    ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ n : ℕ in atTop, ∀ᶠ y : X in 𝓝 x, f n y = F y :=
   hf.exists_forall_eventually_eq_prod.imp fun F hF x => (hF x).curry
 #align locally_finite.exists_forall_eventually_at_top_eventually_eq' LocallyFinite.exists_forall_eventually_atTop_eventually_eq'
 -/
@@ -249,8 +249,8 @@ function `F :  α → β` such that for any `x`, for sufficiently large values o
 `f n =ᶠ[𝓝 x] F`. -/
 theorem exists_forall_eventually_atTop_eventuallyEq {f : ℕ → X → α}
     (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
-    ∃ F : X → α, ∀ x, ∀ᶠ n : ℕ in at_top, f n =ᶠ[𝓝 x] F :=
-  hf.exists_forall_eventually_at_top_eventually_eq'
+    ∃ F : X → α, ∀ x, ∀ᶠ n : ℕ in atTop, f n =ᶠ[𝓝 x] F :=
+  hf.exists_forall_eventually_atTop_eventually_eq'
 #align locally_finite.exists_forall_eventually_at_top_eventually_eq LocallyFinite.exists_forall_eventually_atTop_eventuallyEq
 -/
 
@@ -311,7 +311,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_finite_option locallyFinite_optionₓ'. -/
 theorem locallyFinite_option {f : Option ι → Set X} : LocallyFinite f ↔ LocallyFinite (f ∘ some) :=
   by
-  simp only [← (Equiv.optionEquivSumPUnit.{u} ι).symm.locally_finite_comp_iff, locallyFinite_sum,
+  simp only [← (Equiv.optionEquivSumPUnit.{u} ι).symm.locallyFinite_comp_iff, locallyFinite_sum,
     locallyFinite_of_finite, and_true_iff]
   rfl
 #align locally_finite_option locallyFinite_option

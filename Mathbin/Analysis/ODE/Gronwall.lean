@@ -150,7 +150,7 @@ theorem norm_le_gronwallBound_of_norm_deriv_right_le {f f' : ℝ → E} {δ K ε
     (hf : ContinuousOn f (Icc a b)) (hf' : ∀ x ∈ Ico a b, HasDerivWithinAt f (f' x) (Ici x) x)
     (ha : ‖f a‖ ≤ δ) (bound : ∀ x ∈ Ico a b, ‖f' x‖ ≤ K * ‖f x‖ + ε) :
     ∀ x ∈ Icc a b, ‖f x‖ ≤ gronwallBound δ K ε (x - a) :=
-  le_gronwallBound_of_liminf_deriv_right_le (continuous_norm.comp_continuous_on hf)
+  le_gronwallBound_of_liminf_deriv_right_le (continuous_norm.comp_continuousOn hf)
     (fun x hx r hr => (hf' x hx).liminf_right_slope_norm_le hr) ha bound
 #align norm_le_gronwall_bound_of_norm_deriv_right_le norm_le_gronwallBound_of_norm_deriv_right_le
 

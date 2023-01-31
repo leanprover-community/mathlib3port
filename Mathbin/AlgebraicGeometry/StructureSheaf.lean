@@ -793,7 +793,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R
     dsimp at hc
     convert hc using 1 <;> ring
   let n := fun p : ι × ι => (exists_power p.1 p.2).some
-  have n_spec := fun p : ι × ι => (exists_power p.fst p.snd).some_spec
+  have n_spec := fun p : ι × ι => (exists_power p.fst p.snd).choose_spec
   -- We need one power `(h i * h j) ^ N` that works for *all* pairs `(i,j)`
   -- Since there are only finitely many indices involved, we can pick the supremum.
   let N := (t ×ˢ t).sup n
@@ -1115,14 +1115,14 @@ def comap (f : R →+* S) (U : Opens (PrimeSpectrum.top R)) (V : Opens (PrimeSpe
     Subtype.ext <|
       funext fun p =>
         by
-        rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).coe_zero,
+        rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).val_zero,
           Pi.zero_apply, RingHom.map_zero]
         rfl
   map_add' s t :=
     Subtype.ext <|
       funext fun p =>
         by
-        rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).coe_add,
+        rw [Subtype.coe_mk, Subtype.val_eq_coe, comap_fun, (sections_subring R (op U)).val_add,
           Pi.add_apply, RingHom.map_add]
         rfl
   map_mul' s t :=

@@ -32,7 +32,7 @@ variable {f : I → Type v}
 -- The family of types already equipped with instances
 namespace Pi
 
-instance [∀ i, Star (f i)] : Star (∀ i, f i) where star x i := star (x i)
+instance [∀ i, Star (f i)] : Star (∀ i, f i) where unit x i := star (x i)
 
 #print Pi.star_apply /-
 @[simp]

@@ -39,7 +39,7 @@ variable {F} {proj : Z → B}
 
 protected theorem proj_eq (h : IsHomeomorphicTrivialFiberBundle F proj) :
     ∃ e : Z ≃ₜ B × F, proj = Prod.fst ∘ e :=
-  ⟨h.some, (funext h.some_spec).symm⟩
+  ⟨h.some, (funext h.choose_spec).symm⟩
 #align is_homeomorphic_trivial_fiber_bundle.proj_eq IsHomeomorphicTrivialFiberBundle.proj_eq
 
 /-- The projection from a trivial fiber bundle to its base is surjective. -/
@@ -66,7 +66,7 @@ protected theorem isOpenMap_proj (h : IsHomeomorphicTrivialFiberBundle F proj) :
 /-- The projection from a trivial fiber bundle to its base is open. -/
 protected theorem quotientMap_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
     QuotientMap proj :=
-  h.is_open_map_proj.to_quotient_map h.continuous_proj h.surjective_proj
+  h.isOpenMap_proj.to_quotientMap h.continuous_proj h.surjective_proj
 #align is_homeomorphic_trivial_fiber_bundle.quotient_map_proj IsHomeomorphicTrivialFiberBundle.quotientMap_proj
 
 end IsHomeomorphicTrivialFiberBundle

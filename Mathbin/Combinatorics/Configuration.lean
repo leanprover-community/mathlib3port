@@ -76,13 +76,13 @@ class Nondegenerate : Prop where
 /-- A nondegenerate configuration in which every pair of lines has an intersection point. -/
 class HasPoints extends Nondegenerate P L where
   mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
-  mk_point_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
+  mkPoint_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
 #align configuration.has_points Configuration.HasPoints
 
 /-- A nondegenerate configuration in which every pair of points has a line through them. -/
 class HasLines extends Nondegenerate P L where
   mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
-  mk_line_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
+  mkLine_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
 #align configuration.has_lines Configuration.HasLines
 
 open Nondegenerate HasPoints HasLines
@@ -96,12 +96,12 @@ instance [Nondegenerate P L] : Nondegenerate (Dual L) (Dual P)
 instance [HasPoints P L] : HasLines (Dual L) (Dual P)
     where
   mkLine := @mkPoint P L _ _
-  mk_line_ax _ _ := mkPoint_ax
+  mkLine_ax _ _ := mkPoint_ax
 
 instance [HasLines P L] : HasPoints (Dual L) (Dual P)
     where
   mkPoint := @mkLine P L _ _
-  mk_point_ax _ _ := mkLine_ax
+  mkPoint_ax _ _ := mkLine_ax
 
 theorem HasPoints.existsUnique_point [HasPoints P L] (l₁ l₂ : L) (hl : l₁ ≠ l₂) :
     ∃! p, p ∈ l₁ ∧ p ∈ l₂ :=
@@ -122,7 +122,7 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     (h : Fintype.card L ≤ Fintype.card P) : ∃ f : L → P, Function.Injective f ∧ ∀ l, f l ∉ l := by
   classical
     let t : L → Finset P := fun l => Set.toFinset { p | p ∉ l }
-    suffices ∀ s : Finset L, s.card ≤ (s.bUnion t).card
+    suffices ∀ s : Finset L, s.card ≤ (s.bunionᵢ t).card
       by
       -- Hall's marriage theorem
       obtain ⟨f, hf1, hf2⟩ := (Finset.all_card_le_bunionᵢ_card_iff_exists_injective t).mp this
@@ -348,7 +348,7 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L]
       obtain ⟨q, hq⟩ := key' ⟨l₁, hl₁⟩
       exact ⟨q, (congr_arg _ (subtype.ext_iff.mp hq)).mp (mk_line_ax (this q)).2, q.2⟩
   { mkPoint := fun l₁ l₂ hl => Classical.choose (this l₁ l₂ hl)
-    mk_point_ax := fun l₁ l₂ hl => Classical.choose_spec (this l₁ l₂ hl) }
+    mkPoint_ax := fun l₁ l₂ hl => Classical.choose_spec (this l₁ l₂ hl) }
 #align configuration.has_lines.has_points Configuration.HasLines.hasPoints
 
 /-- If a nondegenerate configuration has a unique point on any two lines, and if `|P| = |L|`,
@@ -357,7 +357,7 @@ noncomputable def HasPoints.hasLines [HasPoints P L] [Fintype P] [Fintype L]
     (h : Fintype.card P = Fintype.card L) : HasLines P L :=
   let this := @HasLines.hasPoints (Dual L) (Dual P) _ _ _ _ h.symm
   { mkLine := fun _ _ => this.mkPoint
-    mk_line_ax := fun _ _ => this.mk_point_ax }
+    mkLine_ax := fun _ _ => this.mkPoint_ax }
 #align configuration.has_points.has_lines Configuration.HasPoints.hasLines
 
 variable (P L)
@@ -367,9 +367,9 @@ variable (P L)
   and which has three points in general position. -/
 class ProjectivePlane extends Nondegenerate P L where
   mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
-  mk_point_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
+  mkPoint_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
   mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
-  mk_line_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
+  mkLine_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
   exists_config :
     ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L),
       p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
@@ -392,9 +392,9 @@ variable [ProjectivePlane P L]
 instance : ProjectivePlane (Dual L) (Dual P) :=
   { Dual.nondegenerate P L with
     mkLine := @mkPoint P L _ _
-    mk_line_ax := fun _ _ => mkPoint_ax
+    mkLine_ax := fun _ _ => mkPoint_ax
     mkPoint := @mkLine P L _ _
-    mk_point_ax := fun _ _ => mkLine_ax
+    mkPoint_ax := fun _ _ => mkLine_ax
     exists_config :=
       by
       obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, h₁₂, h₁₃, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ :=

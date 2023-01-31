@@ -152,7 +152,7 @@ subobject class.
 
 /-- An intermediate field contains the image of the smaller field. -/
 theorem algebraMap_mem (x : K) : algebraMap K L x ∈ S :=
-  S.algebra_map_mem' x
+  S.algebraMap_mem' x
 #align intermediate_field.algebra_map_mem IntermediateField.algebraMap_mem
 
 /-- An intermediate field is closed under scalar multiplication. -/
@@ -336,7 +336,7 @@ theorem toIntermediateField'_toSubalgebra (S : IntermediateField K L) :
 /-- Turn a subfield of `L` containing the image of `K` into an intermediate field -/
 def Subfield.toIntermediateField (S : Subfield L) (algebra_map_mem : ∀ x, algebraMap K L x ∈ S) :
     IntermediateField K L :=
-  { S with algebra_map_mem' := algebra_map_mem }
+  { S with algebraMap_mem' := algebra_map_mem }
 #align subfield.to_intermediate_field Subfield.toIntermediateField
 
 namespace IntermediateField
@@ -408,7 +408,7 @@ instance isScalarTower_mid {R : Type _} [Semiring R] [Algebra L R] [Algebra K R]
 
 /-- Specialize `is_scalar_tower_mid` to the common case where the top field is `L` -/
 instance isScalarTower_mid' : IsScalarTower K S L :=
-  S.is_scalar_tower_mid
+  S.isScalarTower_mid
 #align intermediate_field.is_scalar_tower_mid' IntermediateField.isScalarTower_mid'
 
 /-- If `f : L →+* L'` fixes `K`, `S.map f` is the intermediate field between `L'` and `K`
@@ -684,7 +684,7 @@ theorem toSubalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E :=
 
 theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E)
     (h_finrank : finrank K E ≤ finrank K F) : F = E :=
-  to_subalgebra_injective <|
+  toSubalgebra_injective <|
     Subalgebra.toSubmodule.Injective <| eq_of_le_of_finrank_le h_le h_finrank
 #align intermediate_field.eq_of_le_of_finrank_le IntermediateField.eq_of_le_of_finrank_le
 

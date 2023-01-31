@@ -195,7 +195,7 @@ def karoubiUniversal₁ : C ⥤ Karoubi D ≌ Karoubi C ⥤ Karoubi D
   inverse := (whiskeringLeft C (Karoubi C) (Karoubi D)).obj (toKaroubi C)
   unitIso := (functorExtension₁CompWhiskeringLeftToKaroubiIso C D).symm
   counitIso := KaroubiUniversal₁.counitIso C D
-  functor_unit_iso_comp' F := by
+  functor_unitIso_comp' F := by
     ext P
     dsimp [functor_extension₁.map, karoubi_universal₁.counit_iso]
     simpa only [comp_f, eq_to_hom_app, eq_to_hom_f, eq_to_hom_refl, comp_id, hom_ext, F.map_comp,

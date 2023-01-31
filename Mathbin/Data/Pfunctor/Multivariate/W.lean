@@ -60,22 +60,23 @@ open MvFunctor
 variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 
 /-- A path from the root of a tree to one of its node -/
-inductive WPath : P.last.W → Fin2 n → Type u
-  | root (a : P.A) (f : P.last.B a → P.last.W) (i : Fin2 n) (c : P.drop.B a i) : W_path ⟨a, f⟩ i
+inductive WPath : P.getLast.W → Fin2 n → Type u
   |
-  child (a : P.A) (f : P.last.B a → P.last.W) (i : Fin2 n) (j : P.last.B a) (c : W_path (f j) i) :
-    W_path ⟨a, f⟩ i
+  root (a : P.A) (f : P.getLast.B a → P.getLast.W) (i : Fin2 n) (c : P.drop.B a i) : W_path ⟨a, f⟩ i
+  |
+  child (a : P.A) (f : P.getLast.B a → P.getLast.W) (i : Fin2 n) (j : P.getLast.B a)
+    (c : W_path (f j) i) : W_path ⟨a, f⟩ i
 #align mvpfunctor.W_path Mvpfunctor.WPath
 
-instance WPath.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)] :
+instance WPath.inhabited (x : P.getLast.W) {i} [I : Inhabited (P.drop.B x.headI i)] :
     Inhabited (WPath P x i) :=
   ⟨match x, I with
     | ⟨a, f⟩, I => WPath.root a f i (@default _ I)⟩
 #align mvpfunctor.W_path.inhabited Mvpfunctor.WPath.inhabited
 
 /-- Specialized destructor on `W_path` -/
-def wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
-    (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α :=
+def wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W} (g' : P.drop.B a ⟹ α)
+    (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) : P.WPath ⟨a, f⟩ ⟹ α :=
   by
   intro i x; cases x
   case root _ _ i c => exact g' i c
@@ -83,34 +84,35 @@ def wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : 
 #align mvpfunctor.W_path_cases_on Mvpfunctor.wPathCasesOn
 
 /-- Specialized destructor on `W_path` -/
-def wPathDestLeft {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
-    P.drop.B a ⟹ α := fun i c => h i (WPath.root a f i c)
+def wPathDestLeft {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
+    (h : P.WPath ⟨a, f⟩ ⟹ α) : P.drop.B a ⟹ α := fun i c => h i (WPath.root a f i c)
 #align mvpfunctor.W_path_dest_left Mvpfunctor.wPathDestLeft
 
 /-- Specialized destructor on `W_path` -/
-def wPathDestRight {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.WPath ⟨a, f⟩ ⟹ α) :
-    ∀ j : P.last.B a, P.WPath (f j) ⟹ α := fun j i c => h i (WPath.child a f i j c)
+def wPathDestRight {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
+    (h : P.WPath ⟨a, f⟩ ⟹ α) : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α := fun j i c =>
+  h i (WPath.child a f i j c)
 #align mvpfunctor.W_path_dest_right Mvpfunctor.wPathDestRight
 
-theorem wPathDestLeft_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W}
-    (g' : P.drop.B a ⟹ α) (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
+theorem wPathDestLeft_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
+    (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     P.wPathDestLeft (P.wPathCasesOn g' g) = g' :=
   rfl
 #align mvpfunctor.W_path_dest_left_W_path_cases_on Mvpfunctor.wPathDestLeft_wPathCasesOn
 
-theorem wPathDestRight_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W}
-    (g' : P.drop.B a ⟹ α) (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
+theorem wPathDestRight_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
+    (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     P.wPathDestRight (P.wPathCasesOn g' g) = g :=
   rfl
 #align mvpfunctor.W_path_dest_right_W_path_cases_on Mvpfunctor.wPathDestRight_wPathCasesOn
 
-theorem wPathCasesOn_eta {α : TypeVec n} {a : P.A} {f : P.last.B a → P.last.W}
+theorem wPathCasesOn_eta {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (h : P.WPath ⟨a, f⟩ ⟹ α) : P.wPathCasesOn (P.wPathDestLeft h) (P.wPathDestRight h) = h := by
   ext (i x) <;> cases x <;> rfl
 #align mvpfunctor.W_path_cases_on_eta Mvpfunctor.wPathCasesOn_eta
 
-theorem comp_wPathCasesOn {α β : TypeVec n} (h : α ⟹ β) {a : P.A} {f : P.last.B a → P.last.W}
-    (g' : P.drop.B a ⟹ α) (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
+theorem comp_wPathCasesOn {α β : TypeVec n} (h : α ⟹ β) {a : P.A} {f : P.getLast.B a → P.getLast.W}
+    (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     h ⊚ P.wPathCasesOn g' g = P.wPathCasesOn (h ⊚ g') fun i => h ⊚ g i := by
   ext (i x) <;> cases x <;> rfl
 #align mvpfunctor.comp_W_path_cases_on Mvpfunctor.comp_wPathCasesOn
@@ -120,7 +122,7 @@ tree whereas, for a given `a : A`, `B a` is a valid path in tree `a` so
 that `Wp.obj α` is made of a tree and a function from its valid paths to
 the values it contains  -/
 def wp : Mvpfunctor n where
-  A := P.last.W
+  A := P.getLast.W
   B := P.WPath
 #align mvpfunctor.Wp Mvpfunctor.wp
 
@@ -139,7 +141,8 @@ First, describe operations on `W` as a polynomial functor.
 
 
 /-- Constructor for `Wp` -/
-def wpMk {α : TypeVec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) : P.W α :=
+def wpMk {α : TypeVec n} (a : P.A) (f : P.getLast.B a → P.getLast.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) :
+    P.W α :=
   ⟨⟨a, f⟩, f'⟩
 #align mvpfunctor.Wp_mk Mvpfunctor.wpMk
 
@@ -151,24 +154,26 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mvpfunctor.Wp_rec Mvpfunctor.wpRecₓ'. -/
 /-- Recursor for `Wp` -/
 def wpRec {α : TypeVec n} {C : Type _}
-    (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
-    ∀ (x : P.last.W) (f' : P.WPath x ⟹ α), C
+    (g :
+      ∀ (a : P.A) (f : P.getLast.B a → P.getLast.W), P.WPath ⟨a, f⟩ ⟹ α → (P.getLast.B a → C) → C) :
+    ∀ (x : P.getLast.W) (f' : P.WPath x ⟹ α), C
   | ⟨a, f⟩, f' => g a f f' fun i => Wp_rec (f i) (P.wPathDestRight f' i)
 #align mvpfunctor.Wp_rec Mvpfunctor.wpRec
 
 theorem wpRec_eq {α : TypeVec n} {C : Type _}
-    (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.WPath ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C)
-    (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) :
+    (g :
+      ∀ (a : P.A) (f : P.getLast.B a → P.getLast.W), P.WPath ⟨a, f⟩ ⟹ α → (P.getLast.B a → C) → C)
+    (a : P.A) (f : P.getLast.B a → P.getLast.W) (f' : P.WPath ⟨a, f⟩ ⟹ α) :
     P.wpRec g ⟨a, f⟩ f' = g a f f' fun i => P.wpRec g (f i) (P.wPathDestRight f' i) :=
   rfl
 #align mvpfunctor.Wp_rec_eq Mvpfunctor.wpRec_eq
 
 -- Note: we could replace Prop by Type* and obtain a dependent recursor
-theorem Wp_ind {α : TypeVec n} {C : ∀ x : P.last.W, P.WPath x ⟹ α → Prop}
+theorem Wp_ind {α : TypeVec n} {C : ∀ x : P.getLast.W, P.WPath x ⟹ α → Prop}
     (ih :
-      ∀ (a : P.A) (f : P.last.B a → P.last.W) (f' : P.WPath ⟨a, f⟩ ⟹ α),
-        (∀ i : P.last.B a, C (f i) (P.wPathDestRight f' i)) → C ⟨a, f⟩ f') :
-    ∀ (x : P.last.W) (f' : P.WPath x ⟹ α), C x f'
+      ∀ (a : P.A) (f : P.getLast.B a → P.getLast.W) (f' : P.WPath ⟨a, f⟩ ⟹ α),
+        (∀ i : P.getLast.B a, C (f i) (P.wPathDestRight f' i)) → C ⟨a, f⟩ f') :
+    ∀ (x : P.getLast.W) (f' : P.WPath x ⟹ α), C x f'
   | ⟨a, f⟩, f' => ih a f f' fun i => Wp_ind _ _
 #align mvpfunctor.Wp_ind Mvpfunctor.Wp_ind
 
@@ -181,8 +186,8 @@ Now think of W as defined inductively by the data ⟨a, f', f⟩ where
 
 
 /-- Constructor for `W` -/
-def wMk {α : TypeVec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) : P.W α :=
-  let g : P.last.B a → P.last.W := fun i => (f i).fst
+def wMk {α : TypeVec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.getLast.B a → P.W α) : P.W α :=
+  let g : P.getLast.B a → P.getLast.W := fun i => (f i).fst
   let g' : P.WPath ⟨a, g⟩ ⟹ α := P.wPathCasesOn f' fun i => (f i).snd
   ⟨⟨a, g⟩, g'⟩
 #align mvpfunctor.W_mk Mvpfunctor.wMk
@@ -195,17 +200,18 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mvpfunctor.W_rec Mvpfunctor.wRecₓ'. -/
 /-- Recursor for `W` -/
 def wRec {α : TypeVec n} {C : Type _}
-    (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) : P.W α → C
+    (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.getLast.B a → P.W α) → (P.getLast.B a → C) → C) : P.W α → C
   | ⟨a, f'⟩ =>
-    let g' (a : P.A) (f : P.last.B a → P.last.W) (h : P.WPath ⟨a, f⟩ ⟹ α) (h' : P.last.B a → C) :
-      C := g a (P.wPathDestLeft h) (fun i => ⟨f i, P.wPathDestRight h i⟩) h'
+    let g' (a : P.A) (f : P.getLast.B a → P.getLast.W) (h : P.WPath ⟨a, f⟩ ⟹ α)
+      (h' : P.getLast.B a → C) : C :=
+      g a (P.wPathDestLeft h) (fun i => ⟨f i, P.wPathDestRight h i⟩) h'
     P.wpRec g' a f'
 #align mvpfunctor.W_rec Mvpfunctor.wRec
 
 /-- Defining equation for the recursor of `W` -/
 theorem wRec_eq {α : TypeVec n} {C : Type _}
-    (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A)
-    (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
+    (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.getLast.B a → P.W α) → (P.getLast.B a → C) → C) (a : P.A)
+    (f' : P.drop.B a ⟹ α) (f : P.getLast.B a → P.W α) :
     P.wRec g (P.wMk a f' f) = g a f' f fun i => P.wRec g (f i) :=
   by
   rw [W_mk, W_rec]; dsimp; rw [Wp_rec_eq]
@@ -216,7 +222,7 @@ theorem wRec_eq {α : TypeVec n} {C : Type _}
 /-- Induction principle for `W` -/
 theorem w_ind {α : TypeVec n} {C : P.W α → Prop}
     (ih :
-      ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α),
+      ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.getLast.B a → P.W α),
         (∀ i, C (f i)) → C (P.wMk a f' f)) :
     ∀ x, C x := by
   intro x; cases' x with a f
@@ -230,23 +236,23 @@ theorem w_ind {α : TypeVec n} {C : P.W α → Prop}
 #align mvpfunctor.W_ind Mvpfunctor.w_ind
 
 theorem w_cases {α : TypeVec n} {C : P.W α → Prop}
-    (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α), C (P.wMk a f' f)) :
+    (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.getLast.B a → P.W α), C (P.wMk a f' f)) :
     ∀ x, C x :=
-  P.W_ind fun a f' f ih' => ih a f' f
+  P.w_ind fun a f' f ih' => ih a f' f
 #align mvpfunctor.W_cases Mvpfunctor.w_cases
 
 /-- W-types are functorial -/
 def wMap {α β : TypeVec n} (g : α ⟹ β) : P.W α → P.W β := fun x => g <$$> x
 #align mvpfunctor.W_map Mvpfunctor.wMap
 
-theorem wMk_eq {α : TypeVec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.drop.B a ⟹ α)
-    (g : ∀ j : P.last.B a, P.WPath (f j) ⟹ α) :
+theorem wMk_eq {α : TypeVec n} (a : P.A) (f : P.getLast.B a → P.getLast.W) (g' : P.drop.B a ⟹ α)
+    (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     (P.wMk a g' fun i => ⟨f i, g i⟩) = ⟨⟨a, f⟩, P.wPathCasesOn g' g⟩ :=
   rfl
 #align mvpfunctor.W_mk_eq Mvpfunctor.wMk_eq
 
 theorem w_map_wMk {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a ⟹ α)
-    (f : P.last.B a → P.W α) : g <$$> P.wMk a f' f = P.wMk a (g ⊚ f') fun i => g <$$> f i :=
+    (f : P.getLast.B a → P.W α) : g <$$> P.wMk a f' f = P.wMk a (g ⊚ f') fun i => g <$$> f i :=
   by
   show _ = P.W_mk a (g ⊚ f') (MvFunctor.map g ∘ f)
   have : MvFunctor.map g ∘ f = fun i => ⟨(f i).fst, g ⊚ (f i).snd⟩ :=
@@ -273,13 +279,13 @@ theorem w_map_wMk {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f' : P.drop.B a
 /-- Constructor of a value of `P.obj (α ::: β)` from components.
 Useful to avoid complicated type annotation -/
 @[reducible]
-def objAppend1 {α : TypeVec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → β) :
-    P.Obj (α ::: β) :=
+def objAppend1 {α : TypeVec n} {β : Type _} (a : P.A) (f' : P.drop.B a ⟹ α)
+    (f : P.getLast.B a → β) : P.Obj (α ::: β) :=
   ⟨a, splitFun f' f⟩
 #align mvpfunctor.obj_append1 Mvpfunctor.objAppend1
 
 theorem map_objAppend1 {α γ : TypeVec n} (g : α ⟹ γ) (a : P.A) (f' : P.drop.B a ⟹ α)
-    (f : P.last.B a → P.W α) :
+    (f : P.getLast.B a → P.W α) :
     appendFun g (P.wMap g) <$$> P.objAppend1 a f' f =
       P.objAppend1 a (g ⊚ f') fun x => P.wMap g (f x) :=
   by rw [obj_append1, obj_append1, map_eq, append_fun, ← split_fun_comp] <;> rfl
@@ -303,7 +309,7 @@ def wDest' {α : TypeVec.{u} n} : P.W α → P.Obj (α.append1 (P.W α)) :=
   P.wRec fun a f' f _ => ⟨a, splitFun f' f⟩
 #align mvpfunctor.W_dest' Mvpfunctor.wDest'
 
-theorem wDest'_wMk {α : TypeVec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α) :
+theorem wDest'_wMk {α : TypeVec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.getLast.B a → P.W α) :
     P.wDest' (P.wMk a f' f) = ⟨a, splitFun f' f⟩ := by rw [W_dest', W_rec_eq]
 #align mvpfunctor.W_dest'_W_mk Mvpfunctor.wDest'_wMk
 

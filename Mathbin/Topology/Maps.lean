@@ -625,7 +625,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (x : α), Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) (Set.range.{u1, succ u2} β α f) (nhds.{u1} β _inst_2 (f x)))
 Case conversion may be inaccurate. Consider using '#align is_open_map.range_mem_nhds IsOpenMap.range_mem_nhdsₓ'. -/
 theorem range_mem_nhds (hf : IsOpenMap f) (x : α) : range f ∈ 𝓝 (f x) :=
-  hf.is_open_range.mem_nhds <| mem_range_self _
+  hf.isOpen_range.mem_nhds <| mem_range_self _
 #align is_open_map.range_mem_nhds IsOpenMap.range_mem_nhds
 
 /- warning: is_open_map.maps_to_interior -> IsOpenMap.mapsTo_interior is a dubious translation:
@@ -648,7 +648,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_map.image_interior_subset IsOpenMap.image_interior_subsetₓ'. -/
 theorem image_interior_subset (hf : IsOpenMap f) (s : Set α) :
     f '' interior s ⊆ interior (f '' s) :=
-  (hf.maps_to_interior (mapsTo_image f s)).image_subset
+  (hf.mapsTo_interior (mapsTo_image f s)).image_subset
 #align is_open_map.image_interior_subset IsOpenMap.image_interior_subset
 
 /- warning: is_open_map.nhds_le -> IsOpenMap.nhds_le is a dubious translation:
@@ -716,7 +716,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_map.interior_preimage_subset_preimage_interior IsOpenMap.interior_preimage_subset_preimage_interiorₓ'. -/
 theorem interior_preimage_subset_preimage_interior (hf : IsOpenMap f) {s : Set β} :
     interior (f ⁻¹' s) ⊆ f ⁻¹' interior s :=
-  hf.maps_to_interior (mapsTo_preimage _ _)
+  hf.mapsTo_interior (mapsTo_preimage _ _)
 #align is_open_map.interior_preimage_subset_preimage_interior IsOpenMap.interior_preimage_subset_preimage_interior
 
 /- warning: is_open_map.preimage_interior_eq_interior_preimage -> IsOpenMap.preimage_interior_eq_interior_preimage is a dubious translation:
@@ -1023,7 +1023,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding_of_embedding_open openEmbedding_of_embedding_openₓ'. -/
 theorem openEmbedding_of_embedding_open {f : α → β} (h₁ : Embedding f) (h₂ : IsOpenMap f) :
     OpenEmbedding f :=
-  ⟨h₁, h₂.is_open_range⟩
+  ⟨h₁, h₂.isOpen_range⟩
 #align open_embedding_of_embedding_open openEmbedding_of_embedding_open
 
 /- warning: open_embedding_iff_embedding_open -> openEmbedding_iff_embedding_open is a dubious translation:
@@ -1065,7 +1065,7 @@ theorem openEmbedding_iff_continuous_injective_open {f : α → β} :
 
 #print openEmbedding_id /-
 theorem openEmbedding_id : OpenEmbedding (@id α) :=
-  ⟨embedding_id, IsOpenMap.id.is_open_range⟩
+  ⟨embedding_id, IsOpenMap.id.isOpen_range⟩
 #align open_embedding_id openEmbedding_id
 -/
 
@@ -1077,7 +1077,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding.comp OpenEmbedding.compₓ'. -/
 theorem OpenEmbedding.comp {g : β → γ} {f : α → β} (hg : OpenEmbedding g) (hf : OpenEmbedding f) :
     OpenEmbedding (g ∘ f) :=
-  ⟨hg.1.comp hf.1, (hg.IsOpenMap.comp hf.IsOpenMap).is_open_range⟩
+  ⟨hg.1.comp hf.1, (hg.IsOpenMap.comp hf.IsOpenMap).isOpen_range⟩
 #align open_embedding.comp OpenEmbedding.comp
 
 /- warning: open_embedding.is_open_map_iff -> OpenEmbedding.isOpenMap_iff is a dubious translation:

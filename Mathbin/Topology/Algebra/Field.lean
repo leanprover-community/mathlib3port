@@ -50,7 +50,7 @@ class InducedUnits [t : TopologicalSpace <| Rˣ] : Prop where
 variable [TopologicalSpace <| Rˣ]
 
 theorem units_topology_eq [InducedUnits R] : ‹TopologicalSpace Rˣ› = induced (coe : Rˣ → R) ‹_› :=
-  induced_units.top_eq
+  InducedUnits.top_eq
 #align topological_ring.units_topology_eq TopologicalRing.units_topology_eq
 
 theorem InducedUnits.continuous_coe [InducedUnits R] : Continuous (coe : Rˣ → R) :=

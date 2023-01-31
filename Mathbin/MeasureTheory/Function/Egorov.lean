@@ -57,7 +57,7 @@ theorem mem_notConvergentSeq_iff [Preorder ι] {x : α} :
 #align measure_theory.egorov.mem_not_convergent_seq_iff MeasureTheory.Egorov.mem_notConvergentSeq_iff
 
 theorem notConvergentSeq_antitone [Preorder ι] : Antitone (notConvergentSeq f g n) := fun j k hjk =>
-  Union₂_mono' fun l hl => ⟨l, le_trans hjk hl, Subset.rfl⟩
+  unionᵢ₂_mono' fun l hl => ⟨l, le_trans hjk hl, Subset.rfl⟩
 #align measure_theory.egorov.not_convergent_seq_antitone MeasureTheory.Egorov.notConvergentSeq_antitone
 
 theorem measure_inter_notConvergentSeq_eq_zero [SemilatticeSup ι] [Nonempty ι]

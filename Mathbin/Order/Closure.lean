@@ -677,7 +677,7 @@ but is expected to have type
   forall {α : Type.{u3}} {ι : Sort.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u3} α] [_inst_2 : Preorder.{u2} β] {u : β -> α} (l : LowerAdjoint.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u) (f : ι -> α), Eq.{succ u3} α (u (LowerAdjoint.toFun.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u l (supᵢ.{u3, u1} α (CompleteLattice.toSupSet.{u3} α _inst_1) ι (fun (i : ι) => u (LowerAdjoint.toFun.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u l (f i)))))) (u (LowerAdjoint.toFun.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u l (supᵢ.{u3, u1} α (CompleteLattice.toSupSet.{u3} α _inst_1) ι (fun (i : ι) => f i))))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_supr_closure LowerAdjoint.closure_supᵢ_closureₓ'. -/
 theorem closure_supᵢ_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
-  l.ClosureOperator.closure_supr_closure _
+  l.ClosureOperator.closure_supᵢ_closure _
 #align lower_adjoint.closure_supr_closure LowerAdjoint.closure_supᵢ_closure
 
 /- warning: lower_adjoint.closure_supr₂_closure -> LowerAdjoint.closure_supᵢ₂_closure is a dubious translation:
@@ -690,7 +690,7 @@ Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem closure_supᵢ₂_closure (f : ∀ i, κ i → α) :
     u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
-  l.ClosureOperator.closure_supr₂_closure _
+  l.ClosureOperator.closure_supᵢ₂_closure _
 #align lower_adjoint.closure_supr₂_closure LowerAdjoint.closure_supᵢ₂_closure
 
 end CompleteLattice
@@ -802,7 +802,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_Union_closure LowerAdjoint.closure_unionᵢ_closureₓ'. -/
 @[simp]
 theorem closure_unionᵢ_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
-  SetLike.coe_injective <| l.closure_supr_closure _
+  SetLike.coe_injective <| l.closure_supᵢ_closure _
 #align lower_adjoint.closure_Union_closure LowerAdjoint.closure_unionᵢ_closure
 
 /- warning: lower_adjoint.closure_Union₂_closure -> LowerAdjoint.closure_unionᵢ₂_closure is a dubious translation:
@@ -816,7 +816,7 @@ Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_
 @[simp]
 theorem closure_unionᵢ₂_closure (f : ∀ i, κ i → α) :
     l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
-  SetLike.coe_injective <| l.closure_supr₂_closure _
+  SetLike.coe_injective <| l.closure_supᵢ₂_closure _
 #align lower_adjoint.closure_Union₂_closure LowerAdjoint.closure_unionᵢ₂_closure
 
 end CoeToSet

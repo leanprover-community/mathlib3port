@@ -181,7 +181,7 @@ theorem separationRel_comap {f : α → β}
   by
   subst h
   dsimp [separationRel]
-  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).sInter_sets, ←
+  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).interₛ_sets, ←
     preimage_Inter, sInter_eq_bInter]
   rfl
 #align separation_rel_comap separationRel_comap
@@ -297,7 +297,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
         by rw [map_lift'_eq] <;> exact monotone_id.comp_rel (monotone_id.comp_rel monotone_id)
       _ ≤ map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) u.uniformity := map_mono comp_le_uniformity3
       
-  is_open_uniformity s :=
+  isOpen_uniformity s :=
     by
     have :
       ∀ a,
@@ -397,7 +397,7 @@ def SeparationQuotient (α : Type _) [UniformSpace α] :=
 namespace SeparationQuotient
 
 instance : UniformSpace (SeparationQuotient α) :=
-  separation_setoid.uniform_space
+  separationSetoid.uniformSpace
 
 instance : SeparatedSpace (SeparationQuotient α) :=
   UniformSpace.separated_separation

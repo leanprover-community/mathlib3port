@@ -659,16 +659,16 @@ instance : CompleteLattice (AffineSubspace k P) :=
       { carrier := ∅
         smul_vsub_vadd_mem := fun _ _ _ _ => False.elim }
     bot_le := fun _ _ => False.elim
-    sup := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P))
-    inf := fun s =>
+    supₛ := fun s => affineSpan k (⋃ s' ∈ s, (s' : Set P))
+    infₛ := fun s =>
       mk (⋂ s' ∈ s, (s' : Set P)) fun c p1 p2 p3 hp1 hp2 hp3 =>
         Set.mem_interᵢ₂.2 fun s2 hs2 => by
           rw [Set.mem_interᵢ₂] at *
           exact s2.smul_vsub_vadd_mem c (hp1 s2 hs2) (hp2 s2 hs2) (hp3 s2 hs2)
-    le_Sup := fun _ _ h => Set.Subset.trans (Set.subset_bunionᵢ_of_mem h) (subset_spanPoints k _)
-    Sup_le := fun _ _ h => spanPoints_subset_coe_of_subset_coe (Set.unionᵢ₂_subset h)
-    Inf_le := fun _ _ => Set.binterᵢ_subset_of_mem
-    le_Inf := fun _ _ => Set.subset_interᵢ₂ }
+    le_sup := fun _ _ h => Set.Subset.trans (Set.subset_bunionᵢ_of_mem h) (subset_spanPoints k _)
+    sup_le := fun _ _ h => spanPoints_subset_coe_of_subset_coe (Set.unionᵢ₂_subset h)
+    inf_le := fun _ _ => Set.binterᵢ_subset_of_mem
+    le_inf := fun _ _ => Set.subset_interᵢ₂ }
 
 instance : Inhabited (AffineSubspace k P) :=
   ⟨⊤⟩
@@ -723,7 +723,7 @@ variable (k V)
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
 theorem affineSpan_eq_infₛ (s : Set P) : affineSpan k s = infₛ { s' | s ⊆ s' } :=
-  le_antisymm (span_points_subset_coe_of_subset_coe <| Set.subset_interᵢ₂ fun _ => id)
+  le_antisymm (spanPoints_subset_coe_of_subset_coe <| Set.subset_interᵢ₂ fun _ => id)
     (infₛ_le (subset_spanPoints k _))
 #align affine_subspace.affine_span_eq_Inf AffineSubspace.affineSpan_eq_infₛ
 
@@ -792,7 +792,7 @@ theorem span_union (s t : Set P) : affineSpan k (s ∪ t) = affineSpan k s ⊔ a
 their spans. -/
 theorem span_unionᵢ {ι : Type _} (s : ι → Set P) :
     affineSpan k (⋃ i, s i) = ⨆ i, affineSpan k (s i) :=
-  (AffineSubspace.gi k V P).gc.l_supr
+  (AffineSubspace.gi k V P).gc.l_supᵢ
 #align affine_subspace.span_Union AffineSubspace.span_unionᵢ
 
 variable (P)
@@ -1169,7 +1169,7 @@ given point on the right, excluding the subtraction of that point from
 itself. -/
 theorem vectorSpan_eq_span_vsub_finset_right_ne [DecidableEq P] [DecidableEq V] {s : Finset P}
     {p : P} (hp : p ∈ s) :
-    vectorSpan k (s : Set P) = Submodule.span k ((s.erase p).image (· -ᵥ p)) := by
+    vectorSpan k (s : Set P) = Submodule.span k ((s.eraseₓ p).image (· -ᵥ p)) := by
   simp [vectorSpan_eq_span_vsub_set_right_ne _ (finset.mem_coe.mpr hp)]
 #align vector_span_eq_span_vsub_finset_right_ne vectorSpan_eq_span_vsub_finset_right_ne
 
@@ -1786,7 +1786,7 @@ theorem map_sup (s t : AffineSubspace k P₁) (f : P₁ →ᵃ[k] P₂) : (s ⊔
 
 theorem map_supᵢ {ι : Sort _} (f : P₁ →ᵃ[k] P₂) (s : ι → AffineSubspace k P₁) :
     (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supr
+  (gc_map_comap f).l_supᵢ
 #align affine_subspace.map_supr AffineSubspace.map_supᵢ
 
 theorem comap_inf (s t : AffineSubspace k P₂) (f : P₁ →ᵃ[k] P₂) :
@@ -1796,7 +1796,7 @@ theorem comap_inf (s t : AffineSubspace k P₂) (f : P₁ →ᵃ[k] P₂) :
 
 theorem comap_supr {ι : Sort _} (f : P₁ →ᵃ[k] P₂) (s : ι → AffineSubspace k P₂) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infi
+  (gc_map_comap f).u_infᵢ
 #align affine_subspace.comap_supr AffineSubspace.comap_supr
 
 @[simp]

@@ -288,11 +288,11 @@ instance : Monoid (X q) :=
 instance : AddGroupWithOne (X q) :=
   { X.monoid, X.addCommGroup _ with
     natCast := fun n => ⟨n, 0⟩
-    nat_cast_zero := by simp
-    nat_cast_succ := by simp [Nat.cast, Monoid.one]
+    natCast_zero := by simp
+    natCast_succ := by simp [Nat.cast, Monoid.one]
     intCast := fun n => ⟨n, 0⟩
-    int_cast_of_nat := fun n => by simp <;> rfl
-    int_cast_neg_succ_of_nat := fun n => by ext <;> simp <;> rfl }
+    intCast_ofNat := fun n => by simp <;> rfl
+    intCast_negSucc := fun n => by ext <;> simp <;> rfl }
 
 theorem left_distrib (x y z : X q) : x * (y + z) = x * y + x * z := by
   ext <;>

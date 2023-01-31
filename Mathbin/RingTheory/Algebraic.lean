@@ -282,7 +282,7 @@ theorem IsAlgebraic.algHom_bijective (ha : Algebra.IsAlgebraic K L) (f : L →�
 #align algebra.is_algebraic.alg_hom_bijective Algebra.IsAlgebraic.algHom_bijective
 
 theorem AlgHom.bijective [FiniteDimensional K L] (ϕ : L →ₐ[K] L) : Function.Bijective ϕ :=
-  (Algebra.isAlgebraic_of_finite K L).alg_hom_bijective ϕ
+  (Algebra.isAlgebraic_of_finite K L).algHom_bijective ϕ
 #align alg_hom.bijective AlgHom.bijective
 
 variable (K L)
@@ -292,7 +292,7 @@ variable (K L)
 noncomputable def IsAlgebraic.algEquivEquivAlgHom (ha : Algebra.IsAlgebraic K L) :
     (L ≃ₐ[K] L) ≃* (L →ₐ[K] L) where
   toFun ϕ := ϕ.toAlgHom
-  invFun ϕ := AlgEquiv.ofBijective ϕ (ha.alg_hom_bijective ϕ)
+  invFun ϕ := AlgEquiv.ofBijective ϕ (ha.algHom_bijective ϕ)
   left_inv _ := by
     ext
     rfl

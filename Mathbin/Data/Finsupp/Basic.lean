@@ -318,7 +318,7 @@ def equivMapDomain (f : α ≃ β) (l : α →₀ M) : β →₀ M
     where
   support := l.support.map f.toEmbedding
   toFun a := l (f.symm a)
-  mem_support_to_fun a := by simp only [Finset.mem_map_equiv, mem_support_to_fun] <;> rfl
+  mem_support_toFun a := by simp only [Finset.mem_map_equiv, mem_support_to_fun] <;> rfl
 #align finsupp.equiv_map_domain Finsupp.equivMapDomain
 
 @[simp]
@@ -702,7 +702,7 @@ def comapDomain [Zero M] (f : α → β) (l : β →₀ M) (hf : Set.InjOn f (f 
     where
   support := l.support.Preimage f hf
   toFun a := l (f a)
-  mem_support_to_fun := by
+  mem_support_toFun := by
     intro a
     simp only [finset.mem_def.symm, Finset.mem_preimage]
     exact l.mem_support_to_fun (f a)
@@ -899,61 +899,61 @@ def filter (p : α → Prop) (f : α →₀ M) : α →₀ M
   support :=
     haveI := Classical.decPred p
     f.support.filter fun a => p a
-  mem_support_to_fun a := by
+  mem_support_toFun a := by
     split_ifs <;>
       · simp only [h, mem_filter, mem_support_iff]
         tauto
 #align finsupp.filter Finsupp.filter
 
-theorem filter_apply (a : α) [D : Decidable (p a)] : f.filter p a = if p a then f a else 0 := by
+theorem filter_apply (a : α) [D : Decidable (p a)] : f.filterₓ p a = if p a then f a else 0 := by
   rw [Subsingleton.elim D] <;> rfl
 #align finsupp.filter_apply Finsupp.filter_apply
 
-theorem filter_eq_indicator : ⇑(f.filter p) = Set.indicator { x | p x } f :=
+theorem filter_eq_indicator : ⇑(f.filterₓ p) = Set.indicator { x | p x } f :=
   rfl
 #align finsupp.filter_eq_indicator Finsupp.filter_eq_indicator
 
-theorem filter_eq_zero_iff : f.filter p = 0 ↔ ∀ x, p x → f x = 0 := by
+theorem filter_eq_zero_iff : f.filterₓ p = 0 ↔ ∀ x, p x → f x = 0 := by
   simp only [FunLike.ext_iff, filter_eq_indicator, zero_apply, Set.indicator_apply_eq_zero,
     Set.mem_setOf_eq]
 #align finsupp.filter_eq_zero_iff Finsupp.filter_eq_zero_iff
 
-theorem filter_eq_self_iff : f.filter p = f ↔ ∀ x, f x ≠ 0 → p x := by
+theorem filter_eq_self_iff : f.filterₓ p = f ↔ ∀ x, f x ≠ 0 → p x := by
   simp only [FunLike.ext_iff, filter_eq_indicator, Set.indicator_apply_eq_self, Set.mem_setOf_eq,
     not_imp_comm]
 #align finsupp.filter_eq_self_iff Finsupp.filter_eq_self_iff
 
 @[simp]
-theorem filter_apply_pos {a : α} (h : p a) : f.filter p a = f a := by classical convert if_pos h
+theorem filter_apply_pos {a : α} (h : p a) : f.filterₓ p a = f a := by classical convert if_pos h
 #align finsupp.filter_apply_pos Finsupp.filter_apply_pos
 
 @[simp]
-theorem filter_apply_neg {a : α} (h : ¬p a) : f.filter p a = 0 := by classical convert if_neg h
+theorem filter_apply_neg {a : α} (h : ¬p a) : f.filterₓ p a = 0 := by classical convert if_neg h
 #align finsupp.filter_apply_neg Finsupp.filter_apply_neg
 
 @[simp]
-theorem support_filter [D : DecidablePred p] : (f.filter p).support = f.support.filter p := by
+theorem support_filter [D : DecidablePred p] : (f.filterₓ p).support = f.support.filterₓ p := by
   rw [Subsingleton.elim D] <;> rfl
 #align finsupp.support_filter Finsupp.support_filter
 
-theorem filter_zero : (0 : α →₀ M).filter p = 0 := by
+theorem filter_zero : (0 : α →₀ M).filterₓ p = 0 := by
   classical rw [← support_eq_empty, support_filter, support_zero, Finset.filter_empty]
 #align finsupp.filter_zero Finsupp.filter_zero
 
 @[simp]
-theorem filter_single_of_pos {a : α} {b : M} (h : p a) : (single a b).filter p = single a b :=
+theorem filter_single_of_pos {a : α} {b : M} (h : p a) : (single a b).filterₓ p = single a b :=
   (filter_eq_self_iff _ _).2 fun x hx => (single_apply_ne_zero.1 hx).1.symm ▸ h
 #align finsupp.filter_single_of_pos Finsupp.filter_single_of_pos
 
 @[simp]
-theorem filter_single_of_neg {a : α} {b : M} (h : ¬p a) : (single a b).filter p = 0 :=
+theorem filter_single_of_neg {a : α} {b : M} (h : ¬p a) : (single a b).filterₓ p = 0 :=
   (filter_eq_zero_iff _ _).2 fun x hpx =>
     single_apply_eq_zero.2 fun hxa => absurd hpx (hxa.symm ▸ h)
 #align finsupp.filter_single_of_neg Finsupp.filter_single_of_neg
 
 @[to_additive]
 theorem prod_filter_index [CommMonoid N] (g : α → M → N) :
-    (f.filter p).Prod g = ∏ x in (f.filter p).support, g x (f x) := by
+    (f.filterₓ p).Prod g = ∏ x in (f.filterₓ p).support, g x (f x) := by
   classical
     refine' Finset.prod_congr rfl fun x hx => _
     rw [support_filter, Finset.mem_filter] at hx
@@ -963,7 +963,7 @@ theorem prod_filter_index [CommMonoid N] (g : α → M → N) :
 
 @[simp, to_additive]
 theorem prod_filter_mul_prod_filter_not [CommMonoid N] (g : α → M → N) :
-    (f.filter p).Prod g * (f.filter fun a => ¬p a).Prod g = f.Prod g := by
+    (f.filterₓ p).Prod g * (f.filterₓ fun a => ¬p a).Prod g = f.Prod g := by
   classical simp_rw [prod_filter_index, support_filter, prod_filter_mul_prod_filter_not,
       Finsupp.prod]
 #align finsupp.prod_filter_mul_prod_filter_not Finsupp.prod_filter_mul_prod_filter_not
@@ -971,7 +971,7 @@ theorem prod_filter_mul_prod_filter_not [CommMonoid N] (g : α → M → N) :
 
 @[simp, to_additive]
 theorem prod_div_prod_filter [CommGroup G] (g : α → M → G) :
-    f.Prod g / (f.filter p).Prod g = (f.filter fun a => ¬p a).Prod g :=
+    f.Prod g / (f.filterₓ p).Prod g = (f.filterₓ fun a => ¬p a).Prod g :=
   div_eq_of_eq_mul' (prod_filter_mul_prod_filter_not _ _ _).symm
 #align finsupp.prod_div_prod_filter Finsupp.prod_div_prod_filter
 #align finsupp.sum_sub_sum_filter Finsupp.sum_sub_sum_filter
@@ -979,8 +979,8 @@ theorem prod_div_prod_filter [CommGroup G] (g : α → M → G) :
 end Zero
 
 theorem filter_pos_add_filter_neg [AddZeroClass M] (f : α →₀ M) (p : α → Prop) :
-    (f.filter p + f.filter fun a => ¬p a) = f :=
-  coe_fn_injective <| Set.indicator_self_add_compl { x | p x } f
+    (f.filterₓ p + f.filterₓ fun a => ¬p a) = f :=
+  coeFn_injective <| Set.indicator_self_add_compl { x | p x } f
 #align finsupp.filter_pos_add_filter_neg Finsupp.filter_pos_add_filter_neg
 
 end Filter
@@ -1037,7 +1037,7 @@ def subtypeDomain (p : α → Prop) (f : α →₀ M) : Subtype p →₀ M
     haveI := Classical.decPred p
     f.support.subtype p
   toFun := f ∘ coe
-  mem_support_to_fun a := by simp only [mem_subtype, mem_support_iff]
+  mem_support_toFun a := by simp only [mem_subtype, mem_support_iff]
 #align finsupp.subtype_domain Finsupp.subtypeDomain
 
 @[simp]
@@ -1102,11 +1102,11 @@ def filterAddHom (p : α → Prop) : (α →₀ M) →+ α →₀ M
     where
   toFun := filter p
   map_zero' := filter_zero p
-  map_add' f g := coe_fn_injective <| Set.indicator_add { x | p x } f g
+  map_add' f g := coeFn_injective <| Set.indicator_add { x | p x } f g
 #align finsupp.filter_add_hom Finsupp.filterAddHom
 
 @[simp]
-theorem filter_add {v v' : α →₀ M} : (v + v').filter p = v.filter p + v'.filter p :=
+theorem filter_add {v v' : α →₀ M} : (v + v').filterₓ p = v.filterₓ p + v'.filterₓ p :=
   (filterAddHom p).map_add v v'
 #align finsupp.filter_add Finsupp.filter_add
 
@@ -1123,17 +1123,17 @@ theorem subtypeDomain_sum {s : Finset ι} {h : ι → α →₀ M} :
 
 theorem subtypeDomain_finsupp_sum [Zero N] {s : β →₀ N} {h : β → N → α →₀ M} :
     (s.Sum h).subtypeDomain p = s.Sum fun c d => (h c d).subtypeDomain p :=
-  subtype_domain_sum
+  subtypeDomain_sum
 #align finsupp.subtype_domain_finsupp_sum Finsupp.subtypeDomain_finsupp_sum
 
 theorem filter_sum (s : Finset ι) (f : ι → α →₀ M) :
-    (∑ a in s, f a).filter p = ∑ a in s, filter p (f a) :=
+    (∑ a in s, f a).filterₓ p = ∑ a in s, filter p (f a) :=
   (filterAddHom p : (α →₀ M) →+ _).map_sum f s
 #align finsupp.filter_sum Finsupp.filter_sum
 
 theorem filter_eq_sum (p : α → Prop) [D : DecidablePred p] (f : α →₀ M) :
-    f.filter p = ∑ i in f.support.filter p, single i (f i) :=
-  (f.filter p).sum_single.symm.trans <|
+    f.filterₓ p = ∑ i in f.support.filterₓ p, single i (f i) :=
+  (f.filterₓ p).sum_single.symm.trans <|
     Finset.sum_congr (by rw [Subsingleton.elim D] <;> rfl) fun x hx => by
       rw [filter_apply_pos _ _ (mem_filter.1 hx).2]
 #align finsupp.filter_eq_sum Finsupp.filter_eq_sum
@@ -1281,7 +1281,7 @@ def finsuppProdEquiv : (α × β →₀ M) ≃ (α →₀ β →₀ M)
 #align finsupp.finsupp_prod_equiv Finsupp.finsuppProdEquiv
 
 theorem filter_curry (f : α × β →₀ M) (p : α → Prop) :
-    (f.filter fun a : α × β => p a.1).curry = f.curry.filter p := by
+    (f.filterₓ fun a : α × β => p a.1).curry = f.curry.filterₓ p := by
   classical
     rw [Finsupp.curry, Finsupp.curry, Finsupp.sum, Finsupp.sum, filter_sum, support_filter,
       sum_filter]
@@ -1445,7 +1445,7 @@ theorem comap_smul_def (g : G) (f : α →₀ M) : g • f = mapDomain ((· • 
 
 @[simp]
 theorem comap_smul_single (g : G) (a : α) (b : M) : g • single a b = single (g • a) b :=
-  map_domain_single
+  mapDomain_single
 #align finsupp.comap_smul_single Finsupp.comap_smul_single
 
 /-- `finsupp.comap_has_smul` is multiplicative -/
@@ -1577,8 +1577,8 @@ variable {p : α → Prop}
 
 @[simp]
 theorem filter_smul {_ : Monoid R} [AddMonoid M] [DistribMulAction R M] {b : R} {v : α →₀ M} :
-    (b • v).filter p = b • v.filter p :=
-  coe_fn_injective <| Set.indicator_const_smul { x | p x } b v
+    (b • v).filterₓ p = b • v.filterₓ p :=
+  coeFn_injective <| Set.indicator_const_smul { x | p x } b v
 #align finsupp.filter_smul Finsupp.filter_smul
 
 end
@@ -1591,7 +1591,7 @@ theorem mapDomain_smul {_ : Monoid R} [AddCommMonoid M] [DistribMulAction R M] {
 @[simp]
 theorem smul_single {_ : Monoid R} [AddMonoid M] [DistribMulAction R M] (c : R) (a : α) (b : M) :
     c • Finsupp.single a b = Finsupp.single a (c • b) :=
-  map_range_single
+  mapRange_single
 #align finsupp.smul_single Finsupp.smul_single
 
 @[simp]
@@ -1681,7 +1681,7 @@ theorem distribMulActionHom_ext {f g : (α →₀ M) →+[R] N}
 theorem distribMulActionHom_ext' {f g : (α →₀ M) →+[R] N}
     (h : ∀ a : α, f.comp (DistribMulActionHom.single a) = g.comp (DistribMulActionHom.single a)) :
     f = g :=
-  distrib_mul_action_hom_ext fun a => DistribMulActionHom.congr_fun (h a)
+  distribMulActionHom_ext fun a => DistribMulActionHom.congr_fun (h a)
 #align finsupp.distrib_mul_action_hom_ext' Finsupp.distribMulActionHom_ext'
 
 end DistribMulActionHom
@@ -1821,7 +1821,7 @@ def splitComp [Zero N] (g : ∀ i, (αs i →₀ M) → N) (hg : ∀ i x, x = 0 
     where
   support := splitSupport l
   toFun i := g i (split l i)
-  mem_support_to_fun := by
+  mem_support_toFun := by
     intro i
     rw [mem_split_support_iff_nonzero, not_iff_not, hg]
 #align finsupp.split_comp Finsupp.splitComp

@@ -464,7 +464,7 @@ theorem bind_powerset_len {α : Type _} (S : Multiset α) :
 theorem nodup_powerset {s : Multiset α} : Nodup (powerset s) ↔ Nodup s :=
   ⟨fun h => (nodup_of_le (map_single_le_powerset _) h).of_map _,
     Quotient.inductionOn s fun l h => by
-      simp <;> refine' (nodup_sublists'.2 h).map_on _ <;>
+      simp <;> refine' (nodup_sublists'.2 h).map_onₓ _ <;>
         exact fun x sx y sy e =>
           (h.sublist_ext (mem_sublists'.1 sx) (mem_sublists'.1 sy)).1 (Quotient.exact e)⟩
 #align multiset.nodup_powerset Multiset.nodup_powerset

@@ -152,7 +152,7 @@ def ofComplex : ℂ →ₐ[ℝ] ℍ where
 #align quaternion.of_complex Quaternion.ofComplex
 
 @[simp]
-theorem coe_ofComplex : ⇑of_complex = coe :=
+theorem coe_ofComplex : ⇑ofComplex = coe :=
   rfl
 #align quaternion.coe_of_complex Quaternion.coe_ofComplex
 

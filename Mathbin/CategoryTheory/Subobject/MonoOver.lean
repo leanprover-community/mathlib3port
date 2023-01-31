@@ -198,7 +198,7 @@ def slice {A : C} {f : Over A} (h₁ h₂) : MonoOver f ≌ MonoOver f.left
       MonoOver.liftIso _ _ f.iteratedSliceEquiv.unitIso ≪≫ (MonoOver.liftComp _ _ _ _).symm
   counitIso :=
     MonoOver.liftComp _ _ _ _ ≪≫
-      MonoOver.liftIso _ _ f.iteratedSliceEquiv.counitIso ≪≫ mono_over.lift_id
+      MonoOver.liftIso _ _ f.iteratedSliceEquiv.counitIso ≪≫ MonoOver.liftId
 #align category_theory.mono_over.slice CategoryTheory.MonoOver.slice
 
 section Pullback
@@ -223,7 +223,7 @@ def pullbackComp (f : X ⟶ Y) (g : Y ⟶ Z) : pullback (f ≫ g) ≅ pullback g
 
 /-- pullback preserves the identity (up to a natural isomorphism) -/
 def pullbackId : pullback (𝟙 X) ≅ 𝟭 _ :=
-  liftIso _ _ Over.pullbackId ≪≫ lift_id
+  liftIso _ _ Over.pullbackId ≪≫ liftId
 #align category_theory.mono_over.pullback_id CategoryTheory.MonoOver.pullbackId
 
 @[simp]
@@ -258,7 +258,7 @@ def mapComp (f : X ⟶ Y) (g : Y ⟶ Z) [Mono f] [Mono g] : map (f ≫ g) ≅ ma
 
 /-- `mono_over.map` preserves the identity (up to a natural isomorphism). -/
 def mapId : map (𝟙 X) ≅ 𝟭 _ :=
-  liftIso _ _ Over.mapId ≪≫ lift_id
+  liftIso _ _ Over.mapId ≪≫ liftId
 #align category_theory.mono_over.map_id CategoryTheory.MonoOver.mapId
 
 @[simp]
@@ -288,8 +288,8 @@ def mapIso {A B : C} (e : A ≅ B) : MonoOver A ≌ MonoOver B
     where
   Functor := map e.Hom
   inverse := map e.inv
-  unitIso := ((mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ map_id).symm
-  counitIso := (mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ map_id
+  unitIso := ((mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ mapId).symm
+  counitIso := (mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ mapId
 #align category_theory.mono_over.map_iso CategoryTheory.MonoOver.mapIso
 
 section

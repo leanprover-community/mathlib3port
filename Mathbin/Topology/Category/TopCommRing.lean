@@ -29,7 +29,7 @@ structure TopCommRing where
   α : Type u
   [isCommRing : CommRing α]
   [isTopologicalSpace : TopologicalSpace α]
-  [is_topological_ring : TopologicalRing α]
+  [is_topologicalRing : TopologicalRing α]
 #align TopCommRing TopCommRing
 
 namespace TopCommRing
@@ -82,7 +82,7 @@ instance forgetCommRing (R : TopCommRing) : CommRing ((forget TopCommRing).obj R
 #align TopCommRing.forget_comm_ring TopCommRing.forgetCommRing
 
 instance forget_topologicalRing (R : TopCommRing) : TopologicalRing ((forget TopCommRing).obj R) :=
-  R.is_topological_ring
+  R.is_topologicalRing
 #align TopCommRing.forget_topological_ring TopCommRing.forget_topologicalRing
 
 instance hasForgetToCommRing : HasForget₂ TopCommRing CommRingCat :=
@@ -107,7 +107,7 @@ instance forgetToTopCommRing (R : TopCommRing) : CommRing ((forget₂ TopCommRin
 
 instance forget_to_topCat_topologicalRing (R : TopCommRing) :
     TopologicalRing ((forget₂ TopCommRing TopCat).obj R) :=
-  R.is_topological_ring
+  R.is_topologicalRing
 #align TopCommRing.forget_to_Top_topological_ring TopCommRing.forget_to_topCat_topologicalRing
 
 /-- The forgetful functors to `Type` do not reflect isomorphisms,

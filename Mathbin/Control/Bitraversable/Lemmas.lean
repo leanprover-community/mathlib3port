@@ -76,25 +76,25 @@ theorem id_tsnd : ∀ {α β} (x : t α β), tsnd id.mk x = id.mk x :=
 
 @[higher_order tfst_comp_tfst]
 theorem comp_tfst {α₀ α₁ α₂ β} (f : α₀ → F α₁) (f' : α₁ → G α₂) (x : t α₀ β) :
-    Comp.mk (tfst f' <$> tfst f x) = tfst (comp.mk ∘ map f' ∘ f) x := by
+    Comp.mk (tfst f' <$> tfst f x) = tfst (Comp.mk ∘ map f' ∘ f) x := by
   rw [← comp_bitraverse] <;> simp [tfst, map_comp_pure, Pure.pure]
 #align bitraversable.comp_tfst Bitraversable.comp_tfst
 
 @[higher_order tfst_comp_tsnd]
 theorem tfst_tsnd {α₀ α₁ β₀ β₁} (f : α₀ → F α₁) (f' : β₀ → G β₁) (x : t α₀ β₀) :
-    Comp.mk (tfst f <$> tsnd f' x) = bitraverse (comp.mk ∘ pure ∘ f) (comp.mk ∘ map pure ∘ f') x :=
+    Comp.mk (tfst f <$> tsnd f' x) = bitraverse (Comp.mk ∘ pure ∘ f) (Comp.mk ∘ map pure ∘ f') x :=
   by rw [← comp_bitraverse] <;> simp [tfst, tsnd]
 #align bitraversable.tfst_tsnd Bitraversable.tfst_tsnd
 
 @[higher_order tsnd_comp_tfst]
 theorem tsnd_tfst {α₀ α₁ β₀ β₁} (f : α₀ → F α₁) (f' : β₀ → G β₁) (x : t α₀ β₀) :
-    Comp.mk (tsnd f' <$> tfst f x) = bitraverse (comp.mk ∘ map pure ∘ f) (comp.mk ∘ pure ∘ f') x :=
+    Comp.mk (tsnd f' <$> tfst f x) = bitraverse (Comp.mk ∘ map pure ∘ f) (Comp.mk ∘ pure ∘ f') x :=
   by rw [← comp_bitraverse] <;> simp [tfst, tsnd]
 #align bitraversable.tsnd_tfst Bitraversable.tsnd_tfst
 
 @[higher_order tsnd_comp_tsnd]
 theorem comp_tsnd {α β₀ β₁ β₂} (g : β₀ → F β₁) (g' : β₁ → G β₂) (x : t α β₀) :
-    Comp.mk (tsnd g' <$> tsnd g x) = tsnd (comp.mk ∘ map g' ∘ g) x := by
+    Comp.mk (tsnd g' <$> tsnd g x) = tsnd (Comp.mk ∘ map g' ∘ g) x := by
   rw [← comp_bitraverse] <;> simp [tsnd] <;> rfl
 #align bitraversable.comp_tsnd Bitraversable.comp_tsnd
 

@@ -92,7 +92,7 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
       (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius a)
   rw [← HEq] at h₂
   convert tendsto_nhds_unique h₂ (pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a⋆ * a))
-  rw [(IsSelfAdjoint.star_mul_self a).spectral_radius_eq_nnnorm, sq, nnnorm_star_mul_self, coe_mul]
+  rw [(IsSelfAdjoint.star_mul_self a).spectralRadius_eq_nnnorm, sq, nnnorm_star_mul_self, coe_mul]
 #align is_star_normal.spectral_radius_eq_nnnorm IsStarNormal.spectralRadius_eq_nnnorm
 
 /-- Any element of the spectrum of a selfadjoint is real. -/
@@ -152,7 +152,7 @@ theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ :=
           simpa only [nnnorm_star_mul_self, map_star, map_mul] using
             this _ (IsSelfAdjoint.star_mul_self a))
   · intro s hs
-    simpa only [hs.spectral_radius_eq_nnnorm, (hs.star_hom_apply φ).spectral_radius_eq_nnnorm,
+    simpa only [hs.spectral_radius_eq_nnnorm, (hs.star_hom_apply φ).spectralRadius_eq_nnnorm,
       coe_le_coe] using
       show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from
         supᵢ_le_supᵢ_of_subset (AlgHom.spectrum_apply_subset φ s)

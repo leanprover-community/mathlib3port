@@ -54,7 +54,7 @@ protected def zero (n : ℕ) : Bitvec n :=
 @[reducible]
 protected def one : ∀ n : ℕ, Bitvec n
   | 0 => nil
-  | succ n => replicate n false++ₜtt ::ᵥ nil
+  | succ n => replicate n false++ₜtrue ::ᵥ nil
 #align bitvec.one Bitvec.one
 -/
 
@@ -349,8 +349,8 @@ protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
 #print Bitvec.ofInt /-
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
-  | n, Int.ofNat m => ff ::ᵥ Bitvec.ofNat n m
-  | n, Int.negSucc m => tt ::ᵥ not (Bitvec.ofNat n m)
+  | n, Int.ofNat m => false ::ᵥ Bitvec.ofNat n m
+  | n, Int.negSucc m => true ::ᵥ not (Bitvec.ofNat n m)
 #align bitvec.of_int Bitvec.ofInt
 -/
 
@@ -445,7 +445,7 @@ theorem toNat_ofNat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
 protected def toInt : ∀ {n : Nat}, Bitvec n → Int
   | 0, _ => 0
   | succ n, v =>
-    cond (head v) (Int.negSucc <| Bitvec.toNat <| Not <| tail v)
+    cond (head v) (Int.negSucc <| Bitvec.toNat <| not <| tail v)
       (Int.ofNat <| Bitvec.toNat <| tail v)
 #align bitvec.to_int Bitvec.toInt
 -/

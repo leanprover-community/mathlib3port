@@ -164,14 +164,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.nonempty.smul Set.Nonempty.smulₓ'. -/
 @[to_additive]
 theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
-  nonempty.image2
+  Nonempty.image2
 #align set.nonempty.smul Set.Nonempty.smul
 #align set.nonempty.vadd Set.Nonempty.vadd
 
 #print Set.Nonempty.of_smul_left /-
 @[to_additive]
 theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
-  nonempty.of_image2_left
+  Nonempty.of_image2_left
 #align set.nonempty.of_smul_left Set.Nonempty.of_smul_left
 #align set.nonempty.of_vadd_left Set.Nonempty.of_vadd_left
 -/
@@ -179,7 +179,7 @@ theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
 #print Set.Nonempty.of_smul_right /-
 @[to_additive]
 theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
-  nonempty.of_image2_right
+  Nonempty.of_image2_right
 #align set.nonempty.of_smul_right Set.Nonempty.of_smul_right
 #align set.nonempty.of_vadd_right Set.Nonempty.of_vadd_right
 -/
@@ -544,7 +544,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.smul_set_Union Set.smul_set_Unionₓ'. -/
 @[to_additive]
 theorem smul_set_Union (a : α) (s : ι → Set β) : (a • ⋃ i, s i) = ⋃ i, a • s i :=
-  image_Union
+  image_unionᵢ
 #align set.smul_set_Union Set.smul_set_Union
 #align set.vadd_set_Union Set.vadd_set_Union
 
@@ -643,7 +643,7 @@ theorem smul_set_range [SMul α β] {ι : Sort _} {f : ι → β} : a • range 
 @[to_additive]
 instance smulCommClass_set [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass α β (Set γ) :=
-  ⟨fun _ _ => commute.set_image <| smul_comm _ _⟩
+  ⟨fun _ _ => Commute.set_image <| smul_comm _ _⟩
 #align set.smul_comm_class_set Set.smulCommClass_set
 #align set.vadd_comm_class_set Set.vaddCommClass_set
 -/
@@ -879,7 +879,7 @@ theorem vsub_nonempty : (s -ᵥ t : Set α).Nonempty ↔ s.Nonempty ∧ t.Nonemp
 
 #print Set.Nonempty.vsub /-
 theorem Nonempty.vsub : s.Nonempty → t.Nonempty → (s -ᵥ t : Set α).Nonempty :=
-  nonempty.image2
+  Nonempty.image2
 #align set.nonempty.vsub Set.Nonempty.vsub
 -/
 
@@ -890,7 +890,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, (Set.Nonempty.{u2} α (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)) -> (Set.Nonempty.{u1} β s)
 Case conversion may be inaccurate. Consider using '#align set.nonempty.of_vsub_left Set.Nonempty.of_vsub_leftₓ'. -/
 theorem Nonempty.of_vsub_left : (s -ᵥ t : Set α).Nonempty → s.Nonempty :=
-  nonempty.of_image2_left
+  Nonempty.of_image2_left
 #align set.nonempty.of_vsub_left Set.Nonempty.of_vsub_left
 
 /- warning: set.nonempty.of_vsub_right -> Set.Nonempty.of_vsub_right is a dubious translation:
@@ -900,7 +900,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {s : Set.{u1} β} {t : Set.{u1} β}, (Set.Nonempty.{u2} α (VSub.vsub.{u2, u1} (Set.{u2} α) (Set.{u1} β) (Set.vsub.{u2, u1} α β _inst_1) s t)) -> (Set.Nonempty.{u1} β t)
 Case conversion may be inaccurate. Consider using '#align set.nonempty.of_vsub_right Set.Nonempty.of_vsub_rightₓ'. -/
 theorem Nonempty.of_vsub_right : (s -ᵥ t : Set α).Nonempty → t.Nonempty :=
-  nonempty.of_image2_right
+  Nonempty.of_image2_right
 #align set.nonempty.of_vsub_right Set.Nonempty.of_vsub_right
 
 #print Set.vsub_singleton /-
@@ -1229,7 +1229,7 @@ Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint_
 @[to_additive]
 theorem pairwiseDisjoint_smul_iff :
     s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t).InjOn fun p => p.1 * p.2 :=
-  pairwise_disjoint_image_right_iff fun _ _ => mul_right_injective _
+  pairwiseDisjoint_image_right_iff fun _ _ => mul_right_injective _
 #align set.pairwise_disjoint_smul_iff Set.pairwiseDisjoint_smul_iff
 #align set.pairwise_disjoint_vadd_iff Set.pairwiseDisjoint_vadd_iff
 

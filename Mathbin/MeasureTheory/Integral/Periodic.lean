@@ -311,7 +311,7 @@ theorem intervalIntegral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
   by
   -- Reduce to the case `b = 0`
   suffices (∫ x in 0 ..n • T, f x) = n • ∫ x in 0 ..T, f x by
-    simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).interval_integral_add_eq t 0, zero_add,
+    simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).intervalIntegral_add_eq t 0, zero_add,
       this]
   -- First prove it for natural numbers
   have : ∀ m : ℕ, (∫ x in 0 ..m • T, f x) = m • ∫ x in 0 ..T, f x :=
@@ -357,7 +357,7 @@ theorem infₛ_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
-    (continuous_primitive h_int 0).ContinuousOn.Inf_image_Icc_le
+    (continuous_primitive h_int 0).ContinuousOn.infₛ_image_Icc_le
       (mem_Icc_of_Ico (Int.fract_div_mul_self_mem_Ico T t hT))
 #align function.periodic.Inf_add_zsmul_le_integral_of_pos Function.Periodic.infₛ_add_zsmul_le_integral_of_pos
 
@@ -375,7 +375,7 @@ theorem integral_le_supₛ_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
-    (continuous_primitive h_int 0).ContinuousOn.le_Sup_image_Icc
+    (continuous_primitive h_int 0).ContinuousOn.le_supₛ_image_Icc
       (mem_Icc_of_Ico (Int.fract_div_mul_self_mem_Ico T t hT))
 #align function.periodic.integral_le_Sup_add_zsmul_of_pos Function.Periodic.integral_le_supₛ_add_zsmul_of_pos
 
@@ -405,16 +405,14 @@ theorem tendsto_atBot_intervalIntegral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x) (
 tends to `∞` as `t` tends to `∞`. -/
 theorem tendsto_atTop_intervalIntegral_of_pos' (h₀ : ∀ x, 0 < g x) (hT : 0 < T) :
     Tendsto (fun t => ∫ x in 0 ..t, g x) atTop atTop :=
-  hg.tendsto_at_top_interval_integral_of_pos h_int (intervalIntegral_pos_of_pos (h_int 0 T) h₀ hT)
-    hT
+  hg.tendsto_atTop_intervalIntegral_of_pos h_int (intervalIntegral_pos_of_pos (h_int 0 T) h₀ hT) hT
 #align function.periodic.tendsto_at_top_interval_integral_of_pos' Function.Periodic.tendsto_atTop_intervalIntegral_of_pos'
 
 /-- If `g : ℝ → ℝ` is periodic with period `T > 0` and `∀ x, 0 < g x`, then `t ↦ ∫ x in 0..t, g x`
 tends to `-∞` as `t` tends to `-∞`. -/
 theorem tendsto_atBot_intervalIntegral_of_pos' (h₀ : ∀ x, 0 < g x) (hT : 0 < T) :
     Tendsto (fun t => ∫ x in 0 ..t, g x) atBot atBot :=
-  hg.tendsto_at_bot_interval_integral_of_pos h_int (intervalIntegral_pos_of_pos (h_int 0 T) h₀ hT)
-    hT
+  hg.tendsto_atBot_intervalIntegral_of_pos h_int (intervalIntegral_pos_of_pos (h_int 0 T) h₀ hT) hT
 #align function.periodic.tendsto_at_bot_interval_integral_of_pos' Function.Periodic.tendsto_atBot_intervalIntegral_of_pos'
 
 end RealValued

@@ -31,7 +31,7 @@ theorem Filter.IsBoundedUnder.isOCat_sub_self_inv {𝕜 E : Type _} [NormedField
     {f : 𝕜 → E} (h : IsBoundedUnder (· ≤ ·) (𝓝[≠] a) (norm ∘ f)) :
     f =o[𝓝[≠] a] fun x => (x - a)⁻¹ :=
   by
-  refine' (h.is_O_const (one_ne_zero' ℝ)).trans_is_o (is_o_const_left.2 <| Or.inr _)
+  refine' (h.is_O_const (one_ne_zero' ℝ)).trans_isOCat (is_o_const_left.2 <| Or.inr _)
   simp only [(· ∘ ·), norm_inv]
   exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
 #align filter.is_bounded_under.is_o_sub_self_inv Filter.IsBoundedUnder.isOCat_sub_self_inv
@@ -43,14 +43,14 @@ section LinearOrderedField
 variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 
 theorem pow_div_pow_eventuallyEq_atTop {p q : ℕ} :
-    (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[at_top] fun x => x ^ ((p : ℤ) - q) :=
+    (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[atTop] fun x => x ^ ((p : ℤ) - q) :=
   by
   apply (eventually_gt_at_top (0 : 𝕜)).mono fun x hx => _
   simp [zpow_sub₀ hx.ne']
 #align pow_div_pow_eventually_eq_at_top pow_div_pow_eventuallyEq_atTop
 
 theorem pow_div_pow_eventuallyEq_atBot {p q : ℕ} :
-    (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[at_bot] fun x => x ^ ((p : ℤ) - q) :=
+    (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[atBot] fun x => x ^ ((p : ℤ) - q) :=
   by
   apply (eventually_lt_at_bot (0 : 𝕜)).mono fun x hx => _
   simp [zpow_sub₀ hx.ne]
@@ -86,7 +86,7 @@ section NormedLinearOrderedField
 variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜]
 
 theorem Asymptotics.isOCat_pow_pow_atTop_of_lt [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
-    (fun x : 𝕜 => x ^ p) =o[at_top] fun x => x ^ q :=
+    (fun x : 𝕜 => x ^ p) =o[atTop] fun x => x ^ q :=
   by
   refine' (is_o_iff_tendsto' _).mpr (tendsto_pow_div_pow_atTop_zero hpq)
   exact (eventually_gt_at_top 0).mono fun x hx hxq => (pow_ne_zero q hx.ne' hxq).elim
@@ -111,8 +111,8 @@ open BigOperators
 open Finset
 
 theorem Asymptotics.IsOCat.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ}
-    (h : f =o[at_top] g) (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
-    (fun n => ∑ i in range n, f i) =o[at_top] fun n => ∑ i in range n, g i :=
+    (h : f =o[atTop] g) (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
+    (fun n => ∑ i in range n, f i) =o[atTop] fun n => ∑ i in range n, g i :=
   by
   have A : ∀ i, ‖g i‖ = g i := fun i => Real.norm_of_nonneg (hg i)
   have B : ∀ n, ‖∑ i in range n, g i‖ = ∑ i in range n, g i := fun n => by
@@ -150,7 +150,7 @@ theorem Asymptotics.IsOCat.sum_range {α : Type _} [NormedAddCommGroup α] {f : 
 #align asymptotics.is_o.sum_range Asymptotics.IsOCat.sum_range
 
 theorem Asymptotics.isOCat_sum_range_of_tendsto_zero {α : Type _} [NormedAddCommGroup α] {f : ℕ → α}
-    (h : Tendsto f atTop (𝓝 0)) : (fun n => ∑ i in range n, f i) =o[at_top] fun n => (n : ℝ) :=
+    (h : Tendsto f atTop (𝓝 0)) : (fun n => ∑ i in range n, f i) =o[atTop] fun n => (n : ℝ) :=
   by
   have := ((is_o_one_iff ℝ).2 h).sum_range fun i => zero_le_one
   simp only [sum_const, card_range, Nat.smul_one_eq_coe] at this
@@ -164,7 +164,7 @@ theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedAddCommGroup E] [NormedSp
   by
   rw [← tendsto_sub_nhds_zero_iff, ← is_o_one_iff ℝ]
   have := Asymptotics.isOCat_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 h)
-  apply ((is_O_refl (fun n : ℕ => (n : ℝ)⁻¹) at_top).smul_is_o this).congr' _ _
+  apply ((is_O_refl (fun n : ℕ => (n : ℝ)⁻¹) at_top).smul_isOCat this).congr' _ _
   · filter_upwards [Ici_mem_at_top 1]with n npos
     have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
     simp only [smul_sub, sum_sub_distrib, sum_const, card_range, sub_right_inj]

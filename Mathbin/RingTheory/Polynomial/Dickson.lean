@@ -64,7 +64,7 @@ element `a ∈ R`. -/
 noncomputable def dickson : ℕ → R[X]
   | 0 => 3 - k
   | 1 => x
-  | n + 2 => X * dickson (n + 1) - c a * dickson n
+  | n + 2 => x * dickson (n + 1) - c a * dickson n
 #align polynomial.dickson Polynomial.dickson
 
 @[simp]
@@ -73,20 +73,20 @@ theorem dickson_zero : dickson k a 0 = 3 - k :=
 #align polynomial.dickson_zero Polynomial.dickson_zero
 
 @[simp]
-theorem dickson_one : dickson k a 1 = X :=
+theorem dickson_one : dickson k a 1 = x :=
   rfl
 #align polynomial.dickson_one Polynomial.dickson_one
 
-theorem dickson_two : dickson k a 2 = X ^ 2 - c a * (3 - k) := by simp only [dickson, sq]
+theorem dickson_two : dickson k a 2 = x ^ 2 - c a * (3 - k) := by simp only [dickson, sq]
 #align polynomial.dickson_two Polynomial.dickson_two
 
 @[simp]
 theorem dickson_add_two (n : ℕ) :
-    dickson k a (n + 2) = X * dickson k a (n + 1) - c a * dickson k a n := by rw [dickson]
+    dickson k a (n + 2) = x * dickson k a (n + 1) - c a * dickson k a n := by rw [dickson]
 #align polynomial.dickson_add_two Polynomial.dickson_add_two
 
 theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) :
-    dickson k a n = X * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
+    dickson k a n = x * dickson k a (n - 1) - c a * dickson k a (n - 2) :=
   by
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le h
   rw [add_comm]
@@ -109,7 +109,7 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
 variable {R}
 
 @[simp]
-theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
+theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = x ^ n
   | 0 => by
     simp only [dickson_zero, pow_zero]
     norm_num
@@ -152,7 +152,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
 variable (R)
 
 theorem dickson_one_one_eq_chebyshev_t [Invertible (2 : R)] :
-    ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * X)
+    ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.t R n).comp (c (⅟ 2) * x)
   | 0 => by
     simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]
     norm_num
@@ -169,7 +169,7 @@ theorem dickson_one_one_eq_chebyshev_t [Invertible (2 : R)] :
 #align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_t
 
 theorem chebyshev_t_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
-    Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * X) :=
+    Chebyshev.t R n = c (⅟ 2) * (dickson 1 1 n).comp (2 * x) :=
   by
   rw [dickson_one_one_eq_chebyshev_T]
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
@@ -201,7 +201,7 @@ theorem dickson_one_one_comp_comm (m n : ℕ) :
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 #align polynomial.dickson_one_one_comp_comm Polynomial.dickson_one_one_comp_comm
 
-theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p) p = X ^ p :=
+theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p) p = x ^ p :=
   by
   -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
   -- as a polynomial that maps `x + x⁻¹` to `x ^ p + (x⁻¹) ^ p`.
@@ -253,7 +253,7 @@ theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul, mul_zero, sq,
           zero_add, one_ne_zero]
       classical
-        convert (φ.roots ∪ {0}).toFinset.finite_to_set using 1
+        convert (φ.roots ∪ {0}).toFinset.finite_toSet using 1
         ext1 y
         simp only [Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
           mem_roots hφ, is_root, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
@@ -275,7 +275,7 @@ theorem dickson_one_one_zMod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
         exact ⟨_, rfl, hx⟩
 #align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zMod_p
 
-theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
+theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = x ^ p :=
   by
   have h : (1 : R) = ZMod.castHom (dvd_refl p) R 1
   simp only [ZMod.castHom_apply, ZMod.cast_one']

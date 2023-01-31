@@ -57,7 +57,7 @@ category.
 @[simps]
 def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X
     where
-  obj A := Over.mk (A.a ≫ limits.prod.fst)
+  obj A := Over.mk (A.a ≫ Limits.prod.fst)
   map A₁ A₂ f :=
     Over.homMk f.f
       (by

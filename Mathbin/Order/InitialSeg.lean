@@ -56,7 +56,7 @@ open Function
 embedding whose range is an initial segment. That is, whenever `b < f a` in `β` then `b` is in the
 range of `f`. -/
 structure InitialSeg {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends r ↪r s where
-  init : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
+  dropLast : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
 #align initial_seg InitialSeg
 -/
 
@@ -115,7 +115,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u2, u1} α β r s) {a : α} {b : β}, (s b (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a)) -> (Exists.{succ u2} α (fun (a' : α) => Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a') (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a') b))
 Case conversion may be inaccurate. Consider using '#align initial_seg.init' InitialSeg.init'ₓ'. -/
 theorem init' (f : r ≼i s) {a : α} {b : β} : s b (f a) → ∃ a', f a' = b :=
-  f.init _ _
+  f.dropLast _ _
 #align initial_seg.init' InitialSeg.init'
 
 /- warning: initial_seg.map_rel_iff -> InitialSeg.map_rel_iff is a dubious translation:
@@ -420,7 +420,7 @@ theorem init [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) : �
 #print PrincipalSeg.hasCoeInitialSeg /-
 /-- A principal segment is in particular an initial segment. -/
 instance hasCoeInitialSeg [IsTrans β s] : Coe (r ≺i s) (r ≼i s) :=
-  ⟨fun f => ⟨f.toRelEmbedding, fun a b => f.init⟩⟩
+  ⟨fun f => ⟨f.toRelEmbedding, fun a b => f.dropLast⟩⟩
 #align principal_seg.has_coe_initial_seg PrincipalSeg.hasCoeInitialSeg
 -/
 
@@ -748,7 +748,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align initial_seg.le_lt_apply InitialSeg.leLT_applyₓ'. -/
 @[simp]
 theorem InitialSeg.leLT_apply [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) (a : α) :
-    (f.leLt g) a = g (f a) := by
+    (f.leLT g) a = g (f a) := by
   delta InitialSeg.leLT; cases' h : f.lt_or_eq with f' f'
   · simp only [PrincipalSeg.trans_apply, f.lt_or_eq_apply_left]
   · simp only [PrincipalSeg.equivLT_apply, f.lt_or_eq_apply_right]

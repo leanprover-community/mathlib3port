@@ -49,7 +49,7 @@ def IsQuasiSeparated (s : Set α) : Prop :=
 subsets are still compact. -/
 @[mk_iff]
 class QuasiSeparatedSpace (α : Type _) [TopologicalSpace α] : Prop where
-  inter_is_compact :
+  inter_isCompact :
     ∀ U V : Set α, IsOpen U → IsCompact U → IsOpen V → IsCompact V → IsCompact (U ∩ V)
 #align quasi_separated_space QuasiSeparatedSpace
 
@@ -130,6 +130,6 @@ theorem IsQuasiSeparated.of_quasiSeparatedSpace (s : Set α) [QuasiSeparatedSpac
 theorem QuasiSeparatedSpace.of_openEmbedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] :
     QuasiSeparatedSpace α :=
   isQuasiSeparated_univ_iff.mp
-    (h.is_quasi_separated_iff.mpr <| IsQuasiSeparated.of_quasiSeparatedSpace _)
+    (h.isQuasiSeparated_iff.mpr <| IsQuasiSeparated.of_quasiSeparatedSpace _)
 #align quasi_separated_space.of_open_embedding QuasiSeparatedSpace.of_openEmbedding
 

@@ -76,11 +76,11 @@ end
 instance : Coe ℤ[i] ℂ :=
   ⟨toComplex⟩
 
-theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re + x.im * I :=
+theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re + x.im * i :=
   rfl
 #align gaussian_int.to_complex_def GaussianInt.to_complex_def
 
-theorem to_complex_def' (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ) = x + y * I := by simp [to_complex_def]
+theorem to_complex_def' (x y : ℤ) : ((⟨x, y⟩ : ℤ[i]) : ℂ) = x + y * i := by simp [to_complex_def]
 #align gaussian_int.to_complex_def' GaussianInt.to_complex_def'
 
 theorem to_complex_def₂ (x : ℤ[i]) : (x : ℂ) = ⟨x.re, x.im⟩ := by
@@ -212,10 +212,10 @@ theorem normSq_le_normSq_of_re_le_of_im_le {x y : ℂ} (hre : |x.re| ≤ |y.re|)
 theorem normSq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq < 1 :=
   calc
     ((x / y : ℂ) - ((x / y : ℤ[i]) : ℂ)).normSq =
-        ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * I :
+        ((x / y : ℂ).re - ((x / y : ℤ[i]) : ℂ).re + ((x / y : ℂ).im - ((x / y : ℤ[i]) : ℂ).im) * i :
             ℂ).normSq :=
       congr_arg _ <| by apply Complex.ext <;> simp
-    _ ≤ (1 / 2 + 1 / 2 * I).normSq :=
+    _ ≤ (1 / 2 + 1 / 2 * i).normSq :=
       have : |(2⁻¹ : ℝ)| = 2⁻¹ := abs_of_nonneg (by norm_num)
       normSq_le_normSq_of_re_le_of_im_le
         (by
@@ -274,7 +274,7 @@ instance : EuclideanDomain ℤ[i] :=
       rfl
     quotient_mul_add_remainder_eq := fun _ _ => by simp [mod_def]
     R := _
-    r_well_founded := measure_wf (Int.natAbs ∘ norm)
+    r_wellFounded := measure_wf (Int.natAbs ∘ norm)
     remainder_lt := natAbs_norm_mod_lt
     mul_left_not_lt := fun a b hb0 => not_lt_of_ge <| norm_le_norm_mul_left a hb0 }
 

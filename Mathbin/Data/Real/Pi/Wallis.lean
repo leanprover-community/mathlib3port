@@ -264,6 +264,6 @@ end IntegralSinPowBounds
 theorem Real.tendsto_prod_pi_div_two :
     Tendsto (fun k => ∏ i in range k, ((2 : ℝ) * i + 2) / (2 * i + 1) * ((2 * i + 2) / (2 * i + 3)))
       atTop (𝓝 (π / 2)) :=
-  tendsto_W_nhds_pi_div_two
+  tendsto_w_nhds_pi_div_two
 #align real.tendsto_prod_pi_div_two Real.tendsto_prod_pi_div_two
 

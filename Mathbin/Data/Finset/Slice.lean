@@ -180,7 +180,7 @@ variable {𝒜 : Finset (Finset α)} {A A₁ A₂ : Finset α} {r r₁ r₂ : �
 #print Finset.slice /-
 /-- The `r`-th slice of a set family is the subset of its elements which have cardinality `r`. -/
 def slice (𝒜 : Finset (Finset α)) (r : ℕ) : Finset (Finset α) :=
-  𝒜.filter fun i => i.card = r
+  𝒜.filterₓ fun i => i.card = r
 #align finset.slice Finset.slice
 -/
 
@@ -234,7 +234,7 @@ variable [Fintype α] (𝒜)
 
 #print Finset.bunionᵢ_slice /-
 @[simp]
-theorem bunionᵢ_slice [DecidableEq α] : (Iic <| Fintype.card α).bUnion 𝒜.slice = 𝒜 :=
+theorem bunionᵢ_slice [DecidableEq α] : (Iic <| Fintype.card α).bunionᵢ 𝒜.slice = 𝒜 :=
   Subset.antisymm (bunionᵢ_subset.2 fun r _ => slice_subset) fun s hs =>
     mem_bunionᵢ.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.bunionᵢ_slice

@@ -348,7 +348,7 @@ def triangleRotation : Equivalence (Triangle C) (Triangle C)
   inverse := invRotate C
   unitIso := rotCompInvRot
   counitIso := invRotCompRot
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     introv ; ext
     · dsimp
       rw [comp_id]

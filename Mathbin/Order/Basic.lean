@@ -992,7 +992,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (compl)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:471:9: unsupported: advanced prec syntax «expr + »(max[], 1) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:471:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -1557,7 +1557,7 @@ theorem mk_le_mk [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁
 
 #print Prod.swap_le_swap /-
 @[simp]
-theorem swap_le_swap [LE α] [LE β] {x y : α × β} : x.swap ≤ y.swap ↔ x ≤ y :=
+theorem swap_le_swap [LE α] [LE β] {x y : α × β} : x.symm ≤ y.symm ↔ x ≤ y :=
   and_comm' _ _
 #align prod.swap_le_swap Prod.swap_le_swap
 -/
@@ -1579,7 +1579,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (LT.lt.{max u1 u2} (Prod.{u2, u1} β α) (Preorder.toLT.{max u1 u2} (Prod.{u2, u1} β α) (Prod.instPreorderProd.{u2, u1} β α _inst_2 _inst_1)) (Prod.swap.{u1, u2} α β x) (Prod.swap.{u1, u2} α β y)) (LT.lt.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2)) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_lt_swap Prod.swap_lt_swapₓ'. -/
 @[simp]
-theorem swap_lt_swap : x.swap < y.swap ↔ x < y :=
+theorem swap_lt_swap : x.symm < y.symm ↔ x < y :=
   and_congr swap_le_swap (not_congr swap_le_swap)
 #align prod.swap_lt_swap Prod.swap_lt_swap
 
@@ -1783,7 +1783,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}) {star : PUnit.{succ u1}}, Eq.{succ u1} PUnit.{succ u1} (Max.max.{u1} PUnit.{succ u1} (LinearOrder.toMax.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1}) a b) star
 Case conversion may be inaccurate. Consider using '#align punit.max_eq PUnit.max_eqₓ'. -/
-theorem max_eq : max a b = star :=
+theorem max_eq : max a b = unit :=
   rfl
 #align punit.max_eq PUnit.max_eq
 
@@ -1793,7 +1793,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : PUnit.{succ u1}) (b : PUnit.{succ u1}) {star : PUnit.{succ u1}}, Eq.{succ u1} PUnit.{succ u1} (Min.min.{u1} PUnit.{succ u1} (LinearOrder.toMin.{u1} PUnit.{succ u1} PUnit.linearOrder.{u1}) a b) star
 Case conversion may be inaccurate. Consider using '#align punit.min_eq PUnit.min_eqₓ'. -/
-theorem min_eq : min a b = star :=
+theorem min_eq : min a b = unit :=
   rfl
 #align punit.min_eq PUnit.min_eq
 

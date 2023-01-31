@@ -850,7 +850,7 @@ noncomputable instance : LinearOrderedField ℝ :=
       exact CauSeq.Completion.inv_mul_cancel h
     inv_zero := by simp [← of_cauchy_zero, ← of_cauchy_inv]
     ratCast := coe
-    rat_cast_mk := fun n d hd h2 => by
+    ratCast_mk := fun n d hd h2 => by
       rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast,
         of_cauchy_int_cast] }
 
@@ -1111,8 +1111,8 @@ protected theorem is_glb_infₛ (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBel
 
 noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
   { Real.linearOrder, Real.lattice with
-    sup := SupSet.supₛ
-    inf := InfSet.infₛ
+    supₛ := SupSet.supₛ
+    infₛ := InfSet.infₛ
     le_cSup := fun s a hs ha => (Real.isLUB_supₛ s ⟨a, ha⟩ hs).1 ha
     cSup_le := fun s a hs ha => (Real.isLUB_supₛ s hs ⟨a, ha⟩).2 ha
     cInf_le := fun s a hs ha => (Real.is_glb_infₛ s ⟨a, ha⟩ hs).1 ha
@@ -1283,7 +1283,7 @@ but is expected to have type
   forall {s : Set.{0} Real}, (Not (BddBelow.{0} Real Real.instPreorderReal s)) -> (Eq.{1} Real (InfSet.infₛ.{0} Real Real.instInfSetReal s) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)))
 Case conversion may be inaccurate. Consider using '#align real.Inf_of_not_bdd_below Real.infₛ_of_not_bddBelowₓ'. -/
 theorem infₛ_of_not_bddBelow {s : Set ℝ} (hs : ¬BddBelow s) : infₛ s = 0 :=
-  neg_eq_zero.2 <| Sup_of_not_bdd_above <| mt bddAbove_neg.1 hs
+  neg_eq_zero.2 <| supₛ_of_not_bddAbove <| mt bddAbove_neg.1 hs
 #align real.Inf_of_not_bdd_below Real.infₛ_of_not_bddBelow
 
 /- warning: real.infi_of_not_bdd_below -> Real.infᵢ_of_not_bddBelow is a dubious translation:

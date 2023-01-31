@@ -511,12 +511,12 @@ protected theorem hasSum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) 
 
 protected theorem summable_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
     Summable fun i => ⟪x, b i⟫ * ⟪b i, y⟫ :=
-  (b.has_sum_inner_mul_inner x y).Summable
+  (b.hasSum_inner_mul_inner x y).Summable
 #align hilbert_basis.summable_inner_mul_inner HilbertBasis.summable_inner_mul_inner
 
 protected theorem tsum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
     (∑' i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ :=
-  (b.has_sum_inner_mul_inner x y).tsum_eq
+  (b.hasSum_inner_mul_inner x y).tsum_eq
 #align hilbert_basis.tsum_inner_mul_inner HilbertBasis.tsum_inner_mul_inner
 
 -- Note : this should be `b.repr` composed with an identification of `lp (λ i : ι, 𝕜) p` with
@@ -526,7 +526,7 @@ protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : Ort
   OrthonormalBasis.mk b.Orthonormal
     (by
       refine' Eq.ge _
-      have := (span 𝕜 (finset.univ.image b : Set E)).closed_of_finite_dimensional
+      have := (span 𝕜 (finset.univ.image b : Set E)).closed_of_finiteDimensional
       simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
         this.submodule_topological_closure_eq.symm)
 #align hilbert_basis.to_orthonormal_basis HilbertBasis.toOrthonormalBasis
@@ -624,7 +624,7 @@ variable (𝕜 E)
 
 /-- A Hilbert space admits a Hilbert basis. -/
 theorem exists_hilbertBasis : ∃ (w : Set E)(b : HilbertBasis w 𝕜 E), ⇑b = (coe : w → E) :=
-  let ⟨w, hw, hw', hw''⟩ := (orthonormalEmpty 𝕜 E).exists_hilbert_basis_extension
+  let ⟨w, hw, hw', hw''⟩ := (orthonormalEmpty 𝕜 E).exists_hilbertBasis_extension
   ⟨w, hw, hw''⟩
 #align exists_hilbert_basis exists_hilbertBasis
 

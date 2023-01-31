@@ -83,7 +83,7 @@ unsafe def entries.add : entries → entry → entries
 #align tactic.explode.entries.add tactic.explode.entries.add
 
 unsafe def entries.head (es : entries) : Option entry :=
-  es.l.head'
+  es.l.head?
 #align tactic.explode.entries.head tactic.explode.entries.head
 
 unsafe def format_aux : List String → List String → List String → List entry → tactic format
@@ -151,7 +151,7 @@ mutual
           let deps' ← explode.append_dep Filter es' l deps'
           return <| es' ⟨e, es', depth, status.lam, thm.string "∀I", deps'⟩
     | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
-    | e@(macro n l), si, depth, es => explode.core l.head si depth es
+    | e@(macro n l), si, depth, es => explode.core l.headI si depth es
     | e, si, depth, es =>
       Filter e >>
         match get_app_fn_args e with

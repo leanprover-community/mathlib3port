@@ -293,7 +293,7 @@ protected def cofinite [DecidableEq α] : (@cofinite α).Realizer :=
       inf_le_right := fun s t a => mt (Finset.mem_union_right _) },
     filter_eq <|
       Set.ext fun x =>
-        ⟨fun ⟨s, h⟩ => s.finite_to_set.Subset (compl_subset_comm.1 h), fun h =>
+        ⟨fun ⟨s, h⟩ => s.finite_toSet.Subset (compl_subset_comm.1 h), fun h =>
           ⟨h.toFinset, by simp⟩⟩⟩
 #align filter.realizer.cofinite Filter.Realizer.cofinite
 

@@ -205,9 +205,9 @@ end LinearMap
 instance jordanHolderModule : JordanHolderLattice (Submodule R M)
     where
   IsMaximal := (· ⋖ ·)
-  lt_of_is_maximal x y := Covby.lt
-  sup_eq_of_is_maximal x y z hxz hyz := Wcovby.sup_eq hxz.Wcovby hyz.Wcovby
-  is_maximal_inf_left_of_is_maximal_sup A B := inf_covby_of_covby_sup_of_covby_sup_left
+  lt_of_isMaximal x y := Covby.lt
+  sup_eq_of_isMaximal x y z hxz hyz := Wcovby.sup_eq hxz.Wcovby hyz.Wcovby
+  isMaximal_inf_left_of_isMaximal_sup A B := inf_covby_of_covby_sup_of_covby_sup_left
   Iso X Y := Nonempty <| (X.2 ⧸ X.1.comap X.2.Subtype) ≃ₗ[R] Y.2 ⧸ Y.1.comap Y.2.Subtype
   iso_symm := fun A B ⟨f⟩ => ⟨f.symm⟩
   iso_trans := fun A B C ⟨f⟩ ⟨g⟩ => ⟨f.trans g⟩

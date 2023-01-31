@@ -425,7 +425,7 @@ section
 variable (M)
 
 theorem isUnit_comp (j : S →+* P) (y : M) : IsUnit (j.comp (algebraMap R S) y) :=
-  (toLocalizationMap M S).is_unit_comp j.toMonoidHom _
+  (toLocalizationMap M S).isUnit_comp j.toMonoidHom _
 #align is_localization.is_unit_comp IsLocalization.isUnit_comp
 
 end
@@ -906,9 +906,9 @@ instance : CommSemiring (Localization M) :=
     mul := (· * ·)
     npow := Localization.npow _
     nsmul := (· • ·)
-    nsmul_zero' := fun x =>
+    nsmul_zero := fun x =>
       Localization.induction_on x fun x => by simp only [smul_mk, zero_nsmul, mk_zero]
-    nsmul_succ' := fun n x =>
+    nsmul_succ := fun n x =>
       Localization.induction_on x fun x => by simp only [smul_mk, succ_nsmul, add_mk_self]
     add_assoc := fun m n k =>
       Localization.induction_on₃ m n k
@@ -1045,7 +1045,7 @@ theorem mk_eq_mk'_apply (x y) : mk x y = IsLocalization.mk' (Localization M) x y
 
 @[simp]
 theorem mk_eq_mk' : (mk : R → M → Localization M) = IsLocalization.mk' (Localization M) :=
-  mk_eq_monoid_of_mk'
+  mk_eq_monoidOf_mk'
 #align localization.mk_eq_mk' Localization.mk_eq_mk'
 
 theorem mk_algebraMap {A : Type _} [CommSemiring A] [Algebra A R] (m : A) :

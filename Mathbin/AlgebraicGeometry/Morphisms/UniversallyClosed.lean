@@ -99,7 +99,7 @@ theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyC
 theorem UniversallyClosed.openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y)
     (𝒰 : Scheme.OpenCover.{u} Y) :
     UniversallyClosed f ↔ ∀ i, UniversallyClosed (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  universallyClosedIsLocalAtTarget.open_cover_iff f 𝒰
+  universallyClosedIsLocalAtTarget.openCover_iff f 𝒰
 #align algebraic_geometry.universally_closed.open_cover_iff AlgebraicGeometry.UniversallyClosed.openCover_iff
 
 end AlgebraicGeometry

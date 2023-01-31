@@ -97,7 +97,7 @@ theorem differentiableAt {f : X → Y} {x : X} (h : ConformalAt f x) : Different
 theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u) (hf : ConformalAt f x)
     (h : ∀ x : X, x ∈ u → g x = f x) : ConformalAt g x :=
   let ⟨f', hfderiv, hf'⟩ := hf
-  ⟨f', hfderiv.congr_of_eventually_eq ((hu.eventually_mem hx).mono h), hf'⟩
+  ⟨f', hfderiv.congr_of_eventuallyEq ((hu.eventually_mem hx).mono h), hf'⟩
 #align conformal_at.congr ConformalAt.congr
 
 theorem comp {f : X → Y} {g : Y → Z} (x : X) (hg : ConformalAt g (f x)) (hf : ConformalAt f x) :

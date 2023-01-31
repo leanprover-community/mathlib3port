@@ -58,7 +58,7 @@ attribute [simp, reassoc.1] split_mono.id
 
 /-- `is_split_mono f` is the assertion that `f` admits a retraction -/
 class IsSplitMono {X Y : C} (f : X ⟶ Y) : Prop where
-  exists_split_mono : Nonempty (SplitMono f)
+  exists_splitMono : Nonempty (SplitMono f)
 #align category_theory.is_split_mono CategoryTheory.IsSplitMono
 
 /-- A constructor for `is_split_mono f` taking a `split_mono f` as an argument -/
@@ -84,7 +84,7 @@ attribute [simp, reassoc.1] split_epi.id
 
 /-- `is_split_epi f` is the assertion that `f` admits a section -/
 class IsSplitEpi {X Y : C} (f : X ⟶ Y) : Prop where
-  exists_split_epi : Nonempty (SplitEpi f)
+  exists_splitEpi : Nonempty (SplitEpi f)
 #align category_theory.is_split_epi CategoryTheory.IsSplitEpi
 
 /-- A constructor for `is_split_epi f` taking a `split_epi f` as an argument -/
@@ -94,12 +94,12 @@ theorem IsSplitEpi.mk' {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) : IsSplitEpi f 
 
 /-- The chosen retraction of a split monomorphism. -/
 noncomputable def retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : Y ⟶ X :=
-  hf.exists_split_mono.some.retraction
+  hf.exists_splitMono.some.retraction
 #align category_theory.retraction CategoryTheory.retraction
 
 @[simp, reassoc.1]
 theorem IsSplitMono.id {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : f ≫ retraction f = 𝟙 X :=
-  hf.exists_split_mono.some.id
+  hf.exists_splitMono.some.id
 #align category_theory.is_split_mono.id CategoryTheory.IsSplitMono.id
 
 /-- The retraction of a split monomorphism has an obvious section. -/
@@ -122,12 +122,12 @@ theorem isIso_of_epi_of_isSplitMono {X Y : C} (f : X ⟶ Y) [IsSplitMono f] [Epi
 (Note that `section` is a reserved keyword, so we append an underscore.)
 -/
 noncomputable def section_ {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : Y ⟶ X :=
-  hf.exists_split_epi.some.section_
+  hf.exists_splitEpi.some.section_
 #align category_theory.section_ CategoryTheory.section_
 
 @[simp, reassoc.1]
 theorem IsSplitEpi.id {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : section_ f ≫ f = 𝟙 Y :=
-  hf.exists_split_epi.some.id
+  hf.exists_splitEpi.some.id
 #align category_theory.is_split_epi.id CategoryTheory.IsSplitEpi.id
 
 /-- The section of a split epimorphism has an obvious retraction. -/
@@ -161,7 +161,7 @@ theorem SplitMono.mono {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) : Mono f :=
 
 /-- Every split mono is a mono. -/
 instance (priority := 100) IsSplitMono.mono {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : Mono f :=
-  hf.exists_split_mono.some.Mono
+  hf.exists_splitMono.some.Mono
 #align category_theory.is_split_mono.mono CategoryTheory.IsSplitMono.mono
 
 theorem SplitEpi.epi {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) : Epi f :=
@@ -170,31 +170,31 @@ theorem SplitEpi.epi {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) : Epi f :=
 
 /-- Every split epi is an epi. -/
 instance (priority := 100) IsSplitEpi.epi {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : Epi f :=
-  hf.exists_split_epi.some.Epi
+  hf.exists_splitEpi.some.Epi
 #align category_theory.is_split_epi.epi CategoryTheory.IsSplitEpi.epi
 
 /-- Every split mono whose retraction is mono is an iso. -/
-theorem IsIso.of_mono_retraction' {X Y : C} {f : X ⟶ Y} (hf : SplitMono f) [mono <| hf.retraction] :
+theorem IsIso.of_mono_retraction' {X Y : C} {f : X ⟶ Y} (hf : SplitMono f) [Mono <| hf.retraction] :
     IsIso f :=
   ⟨⟨hf.retraction, ⟨by simp, (cancel_mono_id <| hf.retraction).mp (by simp)⟩⟩⟩
 #align category_theory.is_iso.of_mono_retraction' CategoryTheory.IsIso.of_mono_retraction'
 
 /-- Every split mono whose retraction is mono is an iso. -/
 theorem IsIso.of_mono_retraction {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f]
-    [hf' : mono <| retraction f] : IsIso f :=
-  @IsIso.of_mono_retraction' _ _ _ _ _ hf.exists_split_mono.some hf'
+    [hf' : Mono <| retraction f] : IsIso f :=
+  @IsIso.of_mono_retraction' _ _ _ _ _ hf.exists_splitMono.some hf'
 #align category_theory.is_iso.of_mono_retraction CategoryTheory.IsIso.of_mono_retraction
 
 /-- Every split epi whose section is epi is an iso. -/
-theorem IsIso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : SplitEpi f) [epi <| hf.section_] :
+theorem IsIso.of_epi_section' {X Y : C} {f : X ⟶ Y} (hf : SplitEpi f) [Epi <| hf.section_] :
     IsIso f :=
   ⟨⟨hf.section_, ⟨(cancel_epi_id <| hf.section_).mp (by simp), by simp⟩⟩⟩
 #align category_theory.is_iso.of_epi_section' CategoryTheory.IsIso.of_epi_section'
 
 /-- Every split epi whose section is epi is an iso. -/
-theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : epi <| section_ f] :
+theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : Epi <| section_ f] :
     IsIso f :=
-  @IsIso.of_epi_section' _ _ _ _ _ hf.exists_split_epi.some hf'
+  @IsIso.of_epi_section' _ _ _ _ _ hf.exists_splitEpi.some hf'
 #align category_theory.is_iso.of_epi_section CategoryTheory.IsIso.of_epi_section
 
 -- FIXME this has unnecessarily become noncomputable!
@@ -215,12 +215,12 @@ variable (C)
 
 /-- A split mono category is a category in which every monomorphism is split. -/
 class SplitMonoCategory where
-  is_split_mono_of_mono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], IsSplitMono f
+  isSplitMono_of_mono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], IsSplitMono f
 #align category_theory.split_mono_category CategoryTheory.SplitMonoCategory
 
 /-- A split epi category is a category in which every epimorphism is split. -/
 class SplitEpiCategory where
-  is_split_epi_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], IsSplitEpi f
+  isSplitEpi_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], IsSplitEpi f
 #align category_theory.split_epi_category CategoryTheory.SplitEpiCategory
 
 end
@@ -258,10 +258,10 @@ def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) : Split
 #align category_theory.split_epi.map CategoryTheory.SplitEpi.map
 
 instance {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] (F : C ⥤ D) : IsSplitMono (F.map f) :=
-  IsSplitMono.mk' (hf.exists_split_mono.some.map F)
+  IsSplitMono.mk' (hf.exists_splitMono.some.map F)
 
 instance {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] (F : C ⥤ D) : IsSplitEpi (F.map f) :=
-  IsSplitEpi.mk' (hf.exists_split_epi.some.map F)
+  IsSplitEpi.mk' (hf.exists_splitEpi.some.map F)
 
 end
 

@@ -276,7 +276,7 @@ theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] [OrderClosedTopo
 theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hf : StronglyMeasurable f)
     (hfi : Integrable f μ) :
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, f x ∂μ) - ∫ x in { x | f x ≤ 0 }, f x ∂μ :=
-  have h_meas : MeasurableSet { x | 0 ≤ f x } := stronglyMeasurable_const.measurable_set_le hf
+  have h_meas : MeasurableSet { x | 0 ≤ f x } := stronglyMeasurable_const.measurableSet_le hf
   calc
     (∫ x, ‖f x‖ ∂μ) = (∫ x in { x | 0 ≤ f x }, ‖f x‖ ∂μ) + ∫ x in { x | 0 ≤ f x }ᶜ, ‖f x‖ ∂μ := by
       rw [← integral_add_compl h_meas hfi.norm]
@@ -781,7 +781,8 @@ theorem ContinuousWithinAt.integral_sub_linear_isOCat_ae [TopologicalSpace α]
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
-  (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finite_at_nhds_within a t) hs m hsμ
+  (ha.mono_left inf_le_left).integral_sub_linear_isOCat_ae hfm (μ.finite_at_nhds_within a t) hs m
+    hsμ
 #align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_isOCat_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds` version: if `μ` is a locally finite
@@ -799,7 +800,7 @@ theorem ContinuousAt.integral_sub_linear_isOCat_ae [TopologicalSpace α] [OpensM
     {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finiteAtNhds a) hs m hsμ
+  (ha.mono_left inf_le_left).integral_sub_linear_isOCat_ae hfm (μ.finiteAtNhds a) hs m hsμ
 #align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isOCat_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
@@ -817,8 +818,8 @@ theorem ContinuousOn.integral_sub_linear_isOCat_ae [TopologicalSpace α] [OpensM
     (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
-  (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩ hs
-    m hsμ
+  (hft a ha).integral_sub_linear_isOCat_ae ht ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩
+    hs m hsμ
 #align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isOCat_ae
 
 section
@@ -849,7 +850,7 @@ theorem integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) :
 
 theorem set_integral_compLp (L : E →L[𝕜] F) (φ : lp E p μ) {s : Set α} (hs : MeasurableSet s) :
     (∫ a in s, (L.compLp φ) a ∂μ) = ∫ a in s, L (φ a) ∂μ :=
-  set_integral_congr_ae hs ((L.coe_fn_comp_Lp φ).mono fun x hx hx2 => hx)
+  set_integral_congr_ae hs ((L.coeFn_compLp φ).mono fun x hx hx2 => hx)
 #align continuous_linear_map.set_integral_comp_Lp ContinuousLinearMap.set_integral_compLp
 
 theorem continuous_integral_comp_L1 (L : E →L[𝕜] F) :
@@ -1051,7 +1052,7 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
       convert this
       ext1 u
       simp only [Function.comp_apply, with_density_smul_li_apply]
-      exact integral_congr_ae (mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp.symm
+      exact integral_congr_ae (mem_ℒ1_smul_of_L1_with_density f_meas u).coeFn_toLp.symm
     exact isClosed_eq C1 C2
   · intro u v huv u_int hu
     rw [← integral_congr_ae huv, hu]

@@ -139,12 +139,12 @@ theorem Function.Injective.hasSum_iff {g : γ → β} (hg : Injective g)
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
 theorem Function.Injective.summable_iff {g : γ → β} (hg : Injective g)
     (hf : ∀ (x) (_ : x ∉ Set.range g), f x = 0) : Summable (f ∘ g) ↔ Summable f :=
-  exists_congr fun _ => hg.has_sum_iff hf
+  exists_congr fun _ => hg.hasSum_iff hf
 #align function.injective.summable_iff Function.Injective.summable_iff
 
 theorem hasSum_subtype_iff_of_support_subset {s : Set β} (hf : support f ⊆ s) :
     HasSum (f ∘ coe : s → α) a ↔ HasSum f a :=
-  Subtype.coe_injective.has_sum_iff <| by simpa using support_subset_iff'.1 hf
+  Subtype.coe_injective.hasSum_iff <| by simpa using support_subset_iff'.1 hf
 #align has_sum_subtype_iff_of_support_subset hasSum_subtype_iff_of_support_subset
 
 theorem hasSum_subtype_iff_indicator {s : Set β} :
@@ -211,19 +211,19 @@ theorem hasSum_ite_eq (b : β) [DecidablePred (· = b)] (a : α) :
 #align has_sum_ite_eq hasSum_ite_eq
 
 theorem Equiv.hasSum_iff (e : γ ≃ β) : HasSum (f ∘ e) a ↔ HasSum f a :=
-  e.Injective.has_sum_iff <| by simp
+  e.Injective.hasSum_iff <| by simp
 #align equiv.has_sum_iff Equiv.hasSum_iff
 
 theorem Function.Injective.hasSum_range_iff {g : γ → β} (hg : Injective g) :
     HasSum (fun x : Set.range g => f x) a ↔ HasSum (f ∘ g) a :=
-  (Equiv.ofInjective g hg).has_sum_iff.symm
+  (Equiv.ofInjective g hg).hasSum_iff.symm
 #align function.injective.has_sum_range_iff Function.Injective.hasSum_range_iff
 
 theorem Equiv.summable_iff (e : γ ≃ β) : Summable (f ∘ e) ↔ Summable f :=
-  exists_congr fun a => e.has_sum_iff
+  exists_congr fun a => e.hasSum_iff
 #align equiv.summable_iff Equiv.summable_iff
 
-theorem Summable.prod_symm {f : β × γ → α} (hf : Summable f) : Summable fun p : γ × β => f p.swap :=
+theorem Summable.prod_symm {f : β × γ → α} (hf : Summable f) : Summable fun p : γ × β => f p.symm :=
   (Equiv.prodComm γ β).summable_iff.2 hf
 #align summable.prod_symm Summable.prod_symm
 
@@ -247,7 +247,7 @@ theorem hasSum_iff_hasSum_of_ne_zero_bij {g : γ → α} (i : support g → β)
 
 theorem Equiv.summable_iff_of_support {g : γ → α} (e : support f ≃ support g)
     (he : ∀ x : support f, g (e x) = f x) : Summable f ↔ Summable g :=
-  exists_congr fun _ => e.has_sum_iff_of_support he
+  exists_congr fun _ => e.hasSum_iff_of_support he
 #align equiv.summable_iff_of_support Equiv.summable_iff_of_support
 
 protected theorem HasSum.map [AddCommMonoid γ] [TopologicalSpace γ] (hf : HasSum f a) {G}
@@ -355,7 +355,7 @@ theorem HasSum.star (h : HasSum f a) : HasSum (fun b => star (f b)) (star a) := 
 #align has_sum.star HasSum.star
 
 theorem Summable.star (hf : Summable f) : Summable fun b => star (f b) :=
-  hf.HasSum.star.Summable
+  hf.HasSum.unit.Summable
 #align summable.star Summable.star
 
 theorem Summable.of_star (hf : Summable fun b => star (f b)) : Summable f := by
@@ -413,7 +413,7 @@ theorem HasSum.add_isCompl {s t : Set β} (hs : IsCompl s t) (ha : HasSum (f ∘
 
 theorem HasSum.add_compl {s : Set β} (ha : HasSum (f ∘ coe : s → α) a)
     (hb : HasSum (f ∘ coe : sᶜ → α) b) : HasSum f (a + b) :=
-  ha.add_is_compl isCompl_compl hb
+  ha.add_isCompl isCompl_compl hb
 #align has_sum.add_compl HasSum.add_compl
 
 theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coe : s → α))
@@ -423,7 +423,7 @@ theorem Summable.add_compl {s : Set β} (hs : Summable (f ∘ coe : s → α))
 
 theorem HasSum.compl_add {s : Set β} (ha : HasSum (f ∘ coe : sᶜ → α) a)
     (hb : HasSum (f ∘ coe : s → α) b) : HasSum f (a + b) :=
-  ha.add_is_compl isCompl_compl.symm hb
+  ha.add_isCompl isCompl_compl.symm hb
 #align has_sum.compl_add HasSum.compl_add
 
 theorem HasSum.even_add_odd {f : ℕ → α} (he : HasSum (fun k => f (2 * k)) a)
@@ -431,7 +431,7 @@ theorem HasSum.even_add_odd {f : ℕ → α} (he : HasSum (fun k => f (2 * k)) a
   by
   have := mul_right_injective₀ (two_ne_zero' ℕ)
   replace he := this.has_sum_range_iff.2 he
-  replace ho := ((add_left_injective 1).comp this).has_sum_range_iff.2 ho
+  replace ho := ((add_left_injective 1).comp this).hasSum_range_iff.2 ho
   refine' he.add_is_compl _ ho
   simpa [(· ∘ ·)] using Nat.isCompl_even_odd
 #align has_sum.even_add_odd HasSum.even_add_odd
@@ -456,7 +456,7 @@ theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b
   intro bs hbs
   simp only [Set.mem_preimage, ge_iff_le, Finset.le_iff_subset] at hu
   have :
-    tendsto (fun t : Finset (Σb, γ b) => ∑ p in t.filter fun p => p.1 ∈ bs, f p) at_top
+    tendsto (fun t : Finset (Σb, γ b) => ∑ p in t.filterₓ fun p => p.1 ∈ bs, f p) at_top
       (𝓝 <| ∑ b in bs, g b) :=
     by
     simp only [← sigma_preimage_mk, sum_sigma]
@@ -472,7 +472,7 @@ theorem HasSum.sigma [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b
 has sum `g b`, then the series `g` has sum `a`. -/
 theorem HasSum.prod_fiberwise [RegularSpace α] {f : β × γ → α} {g : β → α} {a : α} (ha : HasSum f a)
     (hf : ∀ b, HasSum (fun c => f (b, c)) (g b)) : HasSum g a :=
-  HasSum.sigma ((Equiv.sigmaEquivProd β γ).has_sum_iff.2 ha) hf
+  HasSum.sigma ((Equiv.sigmaEquivProd β γ).hasSum_iff.2 ha) hf
 #align has_sum.prod_fiberwise HasSum.prod_fiberwise
 
 theorem Summable.sigma' [RegularSpace α] {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f)
@@ -626,22 +626,22 @@ theorem Function.Surjective.tsum_eq_tsum_of_hasSum_iff_hasSum {α' : Type _} [Ad
     {g : γ → α'} (h : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : (∑' b, f b) = e (∑' c, g c) :=
   by_cases (fun this : Summable g => (h.mpr this.HasSum).tsum_eq) fun hg : ¬Summable g =>
     by
-    have hf : ¬Summable f := mt (hes.summable_iff_of_has_sum_iff @h).1 hg
+    have hf : ¬Summable f := mt (hes.summable_iff_of_hasSum_iff @h).1 hg
     simp [tsum, hf, hg, h0]
 #align function.surjective.tsum_eq_tsum_of_has_sum_iff_has_sum Function.Surjective.tsum_eq_tsum_of_hasSum_iff_hasSum
 
 theorem tsum_eq_tsum_of_hasSum_iff_hasSum {f : β → α} {g : γ → α}
     (h : ∀ {a}, HasSum f a ↔ HasSum g a) : (∑' b, f b) = ∑' c, g c :=
-  surjective_id.tsum_eq_tsum_of_has_sum_iff_has_sum rfl @h
+  surjective_id.tsum_eq_tsum_of_hasSum_iff_hasSum rfl @h
 #align tsum_eq_tsum_of_has_sum_iff_has_sum tsum_eq_tsum_of_hasSum_iff_hasSum
 
 theorem Equiv.tsum_eq (j : γ ≃ β) (f : β → α) : (∑' c, f (j c)) = ∑' b, f b :=
-  tsum_eq_tsum_of_hasSum_iff_hasSum fun a => j.has_sum_iff
+  tsum_eq_tsum_of_hasSum_iff_hasSum fun a => j.hasSum_iff
 #align equiv.tsum_eq Equiv.tsum_eq
 
 theorem Equiv.tsum_eq_tsum_of_support {f : β → α} {g : γ → α} (e : support f ≃ support g)
     (he : ∀ x, g (e x) = f x) : (∑' x, f x) = ∑' y, g y :=
-  tsum_eq_tsum_of_hasSum_iff_hasSum fun _ => e.has_sum_iff_of_support he
+  tsum_eq_tsum_of_hasSum_iff_hasSum fun _ => e.hasSum_iff_of_support he
 #align equiv.tsum_eq_tsum_of_support Equiv.tsum_eq_tsum_of_support
 
 theorem tsum_eq_tsum_of_ne_zero_bij {g : γ → α} (i : support g → β)
@@ -991,23 +991,23 @@ theorem HasSum.hasSum_compl_iff {s : Set β} (hf : HasSum (f ∘ coe : s → α)
 
 theorem HasSum.hasSum_iff_compl {s : Set β} (hf : HasSum (f ∘ coe : s → α) a₁) :
     HasSum f a₂ ↔ HasSum (f ∘ coe : sᶜ → α) (a₂ - a₁) :=
-  Iff.symm <| hf.has_sum_compl_iff.trans <| by rw [add_sub_cancel'_right]
+  Iff.symm <| hf.hasSum_compl_iff.trans <| by rw [add_sub_cancel'_right]
 #align has_sum.has_sum_iff_compl HasSum.hasSum_iff_compl
 
 theorem Summable.summable_compl_iff {s : Set β} (hf : Summable (f ∘ coe : s → α)) :
     Summable (f ∘ coe : sᶜ → α) ↔ Summable f :=
-  ⟨fun ⟨a, ha⟩ => (hf.HasSum.has_sum_compl_iff.1 ha).Summable, fun ⟨a, ha⟩ =>
-    (hf.HasSum.has_sum_iff_compl.1 ha).Summable⟩
+  ⟨fun ⟨a, ha⟩ => (hf.HasSum.hasSum_compl_iff.1 ha).Summable, fun ⟨a, ha⟩ =>
+    (hf.HasSum.hasSum_iff_compl.1 ha).Summable⟩
 #align summable.summable_compl_iff Summable.summable_compl_iff
 
 protected theorem Finset.hasSum_compl_iff (s : Finset β) :
     HasSum (fun x : { x // x ∉ s } => f x) a ↔ HasSum f (a + ∑ i in s, f i) :=
-  (s.HasSum f).has_sum_compl_iff.trans <| by rw [add_comm]
+  (s.HasSum f).hasSum_compl_iff.trans <| by rw [add_comm]
 #align finset.has_sum_compl_iff Finset.hasSum_compl_iff
 
 protected theorem Finset.hasSum_iff_compl (s : Finset β) :
     HasSum f a ↔ HasSum (fun x : { x // x ∉ s } => f x) (a - ∑ i in s, f i) :=
-  (s.HasSum f).has_sum_iff_compl
+  (s.HasSum f).hasSum_iff_compl
 #align finset.has_sum_iff_compl Finset.hasSum_iff_compl
 
 protected theorem Finset.summable_compl_iff (s : Finset β) :
@@ -1075,14 +1075,14 @@ section Nat
 theorem hasSum_nat_add_iff {f : ℕ → α} (k : ℕ) {a : α} :
     HasSum (fun n => f (n + k)) a ↔ HasSum f (a + ∑ i in range k, f i) :=
   by
-  refine' Iff.trans _ (range k).has_sum_compl_iff
-  rw [← (notMemRangeEquiv k).symm.has_sum_iff]
+  refine' Iff.trans _ (range k).hasSum_compl_iff
+  rw [← (notMemRangeEquiv k).symm.hasSum_iff]
   rfl
 #align has_sum_nat_add_iff hasSum_nat_add_iff
 
 theorem summable_nat_add_iff {f : ℕ → α} (k : ℕ) : (Summable fun n => f (n + k)) ↔ Summable f :=
   Iff.symm <|
-    (Equiv.addRight (∑ i in range k, f i)).Surjective.summable_iff_of_has_sum_iff fun a =>
+    (Equiv.addRight (∑ i in range k, f i)).Surjective.summable_iff_of_hasSum_iff fun a =>
       (hasSum_nat_add_iff k).symm
 #align summable_nat_add_iff summable_nat_add_iff
 
@@ -1166,7 +1166,7 @@ theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalS
     [HasContinuousAdd α] {a : α} {f : ℤ → α} (hf : HasSum f a) :
     HasSum (fun n : ℕ => f n + f (-n)) (a + f 0) :=
   by
-  apply (hf.add (hasSum_ite_eq (0 : ℤ) (f 0))).has_sum_of_sum_eq fun u => _
+  apply (hf.add (hasSum_ite_eq (0 : ℤ) (f 0))).hasSum_of_sum_eq fun u => _
   refine' ⟨u.image Int.natAbs, fun v' hv' => _⟩
   let u1 := v'.image fun x : ℕ => (x : ℤ)
   let u2 := v'.image fun x : ℕ => -(x : ℤ)
@@ -1660,9 +1660,9 @@ theorem Summable.summable_of_eq_zero_or_self (hf : Summable f) (h : ∀ b, g b =
   summable_iff_vanishing.2 fun e he =>
     let ⟨s, hs⟩ := summable_iff_vanishing.1 hf e he
     ⟨s, fun t ht =>
-      have eq : (∑ b in t.filter fun b => g b = f b, f b) = ∑ b in t, g b :=
+      have eq : (∑ b in t.filterₓ fun b => g b = f b, f b) = ∑ b in t, g b :=
         calc
-          (∑ b in t.filter fun b => g b = f b, f b) = ∑ b in t.filter fun b => g b = f b, g b :=
+          (∑ b in t.filterₓ fun b => g b = f b, f b) = ∑ b in t.filterₓ fun b => g b = f b, g b :=
             Finset.sum_congr rfl fun b hb => (Finset.mem_filter.1 hb).2.symm
           _ = ∑ b in t, g b :=
             by

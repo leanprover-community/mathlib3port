@@ -51,7 +51,7 @@ variable [Mul α] {s s₁ s₂ t t₁ t₂ : Finset α}
 @[to_additive additive_energy
       "The additive energy of two finsets `s` and `t` in a group is the\nnumber of quadruples `(a₁, a₂, b₁, b₂) ∈ s × s × t × t` such that `a₁ + b₁ = a₂ + b₂`."]
 def multiplicativeEnergy (s t : Finset α) : ℕ :=
-  (((s ×ˢ s) ×ˢ t ×ˢ t).filter fun x : (α × α) × α × α => x.1.1 * x.2.1 = x.1.2 * x.2.2).card
+  (((s ×ˢ s) ×ˢ t ×ˢ t).filterₓ fun x : (α × α) × α × α => x.1.1 * x.2.1 = x.1.2 * x.2.2).card
 #align finset.multiplicative_energy Finset.multiplicativeEnergy
 #align finset.additive_energy Finset.additiveEnergy
 -/

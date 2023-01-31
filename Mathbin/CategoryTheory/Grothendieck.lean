@@ -165,7 +165,7 @@ variable (G : C ⥤ Type w)
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
-def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elements
+def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ typeToCat) ⥤ G.Elements
     where
   obj X := ⟨X.1, X.2.as⟩
   map X Y f := ⟨f.1, f.2.1.1⟩
@@ -173,7 +173,7 @@ def grothendieckTypeToCatFunctor : Grothendieck (G ⋙ Type_to_Cat) ⥤ G.Elemen
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]
-def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Cat)
+def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ typeToCat)
     where
   obj X := ⟨X.1, ⟨X.2⟩⟩
   map X Y f := ⟨f.1, ⟨⟨f.2⟩⟩⟩
@@ -184,7 +184,7 @@ def grothendieckTypeToCatInverse : G.Elements ⥤ Grothendieck (G ⋙ Type_to_Ca
 is the same as the 'category of elements' construction.
 -/
 @[simps]
-def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements
+def grothendieckTypeToCat : Grothendieck (G ⋙ typeToCat) ≌ G.Elements
     where
   Functor := grothendieckTypeToCatFunctor G
   inverse := grothendieckTypeToCatInverse G
@@ -210,7 +210,7 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ Type_to_Cat) ≌ G.Elements
         subst e
         ext
         simp)
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     rintro ⟨_, ⟨⟩⟩
     dsimp
     simp

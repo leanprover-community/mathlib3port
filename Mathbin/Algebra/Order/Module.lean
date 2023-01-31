@@ -225,20 +225,20 @@ variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSMul k M] 
 
 theorem smul_lowerBounds_subset_upperBounds_smul (hc : c ≤ 0) :
     c • lowerBounds s ⊆ upperBounds (c • s) :=
-  (antitone_smul_left hc).image_lower_bounds_subset_upper_bounds_image
+  (antitone_smul_left hc).image_lowerBounds_subset_upperBounds_image
 #align smul_lower_bounds_subset_upper_bounds_smul smul_lowerBounds_subset_upperBounds_smul
 
 theorem smul_upperBounds_subset_lowerBounds_smul (hc : c ≤ 0) :
     c • upperBounds s ⊆ lowerBounds (c • s) :=
-  (antitone_smul_left hc).image_upper_bounds_subset_lower_bounds_image
+  (antitone_smul_left hc).image_upperBounds_subset_lowerBounds_image
 #align smul_upper_bounds_subset_lower_bounds_smul smul_upperBounds_subset_lowerBounds_smul
 
 theorem BddBelow.smul_of_nonpos (hc : c ≤ 0) (hs : BddBelow s) : BddAbove (c • s) :=
-  (antitone_smul_left hc).map_bdd_below hs
+  (antitone_smul_left hc).map_bddBelow hs
 #align bdd_below.smul_of_nonpos BddBelow.smul_of_nonpos
 
 theorem BddAbove.smul_of_nonpos (hc : c ≤ 0) (hs : BddAbove s) : BddBelow (c • s) :=
-  (antitone_smul_left hc).map_bdd_above hs
+  (antitone_smul_left hc).map_bddAbove hs
 #align bdd_above.smul_of_nonpos BddAbove.smul_of_nonpos
 
 end OrderedRing
@@ -250,22 +250,22 @@ variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSMu
 
 @[simp]
 theorem lowerBounds_smul_of_neg (hc : c < 0) : lowerBounds (c • s) = c • upperBounds s :=
-  (OrderIso.smulLeftDual M hc).upper_bounds_image
+  (OrderIso.smulLeftDual M hc).upperBounds_image
 #align lower_bounds_smul_of_neg lowerBounds_smul_of_neg
 
 @[simp]
 theorem upperBounds_smul_of_neg (hc : c < 0) : upperBounds (c • s) = c • lowerBounds s :=
-  (OrderIso.smulLeftDual M hc).lower_bounds_image
+  (OrderIso.smulLeftDual M hc).lowerBounds_image
 #align upper_bounds_smul_of_neg upperBounds_smul_of_neg
 
 @[simp]
 theorem bddBelow_smul_iff_of_neg (hc : c < 0) : BddBelow (c • s) ↔ BddAbove s :=
-  (OrderIso.smulLeftDual M hc).bdd_above_image
+  (OrderIso.smulLeftDual M hc).bddAbove_image
 #align bdd_below_smul_iff_of_neg bddBelow_smul_iff_of_neg
 
 @[simp]
 theorem bddAbove_smul_iff_of_neg (hc : c < 0) : BddAbove (c • s) ↔ BddBelow s :=
-  (OrderIso.smulLeftDual M hc).bdd_below_image
+  (OrderIso.smulLeftDual M hc).bddBelow_image
 #align bdd_above_smul_iff_of_neg bddAbove_smul_iff_of_neg
 
 end LinearOrderedField

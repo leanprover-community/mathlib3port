@@ -86,14 +86,14 @@ theorem IsInitial.subsingleton_to (hI : IsInitial I) {A : C} : Subsingleton (A �
 #align category_theory.limits.is_initial.subsingleton_to CategoryTheory.Limits.IsInitial.subsingleton_to
 
 instance (priority := 100) initial_mono_of_strict_initial_objects : InitialMonoClass C
-    where is_initial_mono_from I A hI :=
+    where isInitial_mono_from I A hI :=
     { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ }
 #align category_theory.limits.initial_mono_of_strict_initial_objects CategoryTheory.Limits.initial_mono_of_strict_initial_objects
 
 /-- If `I` is initial, then `X ⨯ I` is isomorphic to it. -/
 @[simps Hom]
 noncomputable def mulIsInitial (X : C) [HasBinaryProduct X I] (hI : IsInitial I) : X ⨯ I ≅ I :=
-  @asIso _ prod.snd (hI.is_iso_to _)
+  @asIso _ prod.snd (hI.isIso_to _)
 #align category_theory.limits.mul_is_initial CategoryTheory.Limits.mulIsInitial
 
 @[simp]
@@ -105,7 +105,7 @@ theorem mulIsInitial_inv (X : C) [HasBinaryProduct X I] (hI : IsInitial I) :
 /-- If `I` is initial, then `I ⨯ X` is isomorphic to it. -/
 @[simps Hom]
 noncomputable def isInitialMul (X : C) [HasBinaryProduct I X] (hI : IsInitial I) : I ⨯ X ≅ I :=
-  @asIso _ prod.fst (hI.is_iso_to _)
+  @asIso _ prod.fst (hI.isIso_to _)
 #align category_theory.limits.is_initial_mul CategoryTheory.Limits.isInitialMul
 
 @[simp]
@@ -117,7 +117,7 @@ theorem isInitialMul_inv (X : C) [HasBinaryProduct I X] (hI : IsInitial I) :
 variable [HasInitial C]
 
 instance initial_isIso_to {A : C} (f : A ⟶ ⊥_ C) : IsIso f :=
-  initialIsInitial.is_iso_to _
+  initialIsInitial.isIso_to _
 #align category_theory.limits.initial_is_iso_to CategoryTheory.Limits.initial_isIso_to
 
 @[ext]
@@ -230,7 +230,7 @@ theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
         simpa
       · cases h
         erw [category.comp_id]
-        haveI : is_iso (F.map f) := (H _ h_1).is_iso_from _
+        haveI : is_iso (F.map f) := (H _ h_1).isIso_from _
         rw [← is_iso.comp_inv_eq]
         apply (H _ h_1).hom_ext
       · cases h_1
@@ -251,7 +251,7 @@ theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
 variable [HasTerminal C]
 
 instance terminal_isIso_from {A : C} (f : ⊤_ C ⟶ A) : IsIso f :=
-  terminalIsTerminal.is_iso_from _
+  terminalIsTerminal.isIso_from _
 #align category_theory.limits.terminal_is_iso_from CategoryTheory.Limits.terminal_isIso_from
 
 @[ext]

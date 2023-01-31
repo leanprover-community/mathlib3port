@@ -116,7 +116,7 @@ def equivOfIso {C D : Cat} (γ : C ≅ D) : C ≌ D
     where
   Functor := γ.Hom
   inverse := γ.inv
-  unitIso := eq_to_iso <| Eq.symm γ.hom_inv_id
+  unitIso := eqToIso <| Eq.symm γ.hom_inv_id
   counitIso := eqToIso γ.inv_hom_id
 #align category_theory.Cat.equiv_of_iso CategoryTheory.Cat.equivOfIso
 
@@ -131,7 +131,7 @@ This ought to be modelled as a 2-functor!
 @[simps]
 def typeToCat : Type u ⥤ Cat where
   obj X := Cat.of (Discrete X)
-  map X Y f := Discrete.functor (discrete.mk ∘ f)
+  map X Y f := Discrete.functor (Discrete.mk ∘ f)
   map_id' X := by apply Functor.ext; tidy
   map_comp' X Y Z f g := by apply Functor.ext; tidy
 #align category_theory.Type_to_Cat CategoryTheory.typeToCat
@@ -142,7 +142,7 @@ instance : Faithful typeToCat.{u}
 
 instance : Full typeToCat.{u}
     where
-  preimage X Y F := discrete.as ∘ F.obj ∘ discrete.mk
+  preimage X Y F := Discrete.as ∘ F.obj ∘ Discrete.mk
   witness' := by
     intro X Y F
     apply Functor.ext

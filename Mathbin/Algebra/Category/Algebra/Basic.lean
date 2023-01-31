@@ -148,12 +148,12 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X A => (FreeAlgebra.lift _).symm
       -- Relying on `obviously` to fill out these proofs is very slow :(
-      hom_equiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm' := by
         intros
         ext
         simp only [free_map, Equiv.symm_symm, FreeAlgebra.lift_ι_apply, CategoryTheory.coe_comp,
           Function.comp_apply, types_comp_apply]
-      hom_equiv_naturality_right' := by
+      homEquiv_naturality_right' := by
         intros
         ext
         simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_apply,

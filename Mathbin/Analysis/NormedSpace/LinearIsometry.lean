@@ -252,7 +252,7 @@ theorem isComplete_image_iff [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f :
 
 theorem isComplete_map_iff [RingHomSurjective σ₁₂] {p : Submodule R E} :
     IsComplete (p.map f.toLinearMap : Set E₂) ↔ IsComplete (p : Set E) :=
-  f.is_complete_image_iff
+  f.isComplete_image_iff
 #align linear_isometry.is_complete_map_iff LinearIsometry.isComplete_map_iff
 
 theorem isComplete_map_iff' [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) [RingHomSurjective σ₁₂]
@@ -262,12 +262,12 @@ theorem isComplete_map_iff' [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 
 
 instance completeSpace_map [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) [RingHomSurjective σ₁₂]
     (p : Submodule R E) [CompleteSpace p] : CompleteSpace (p.map f) :=
-  ((isComplete_map_iff' f).2 <| completeSpace_coe_iff_isComplete.1 ‹_›).complete_space_coe
+  ((isComplete_map_iff' f).2 <| completeSpace_coe_iff_isComplete.1 ‹_›).completeSpace_coe
 #align linear_isometry.complete_space_map LinearIsometry.completeSpace_map
 
 instance completeSpace_map' [RingHomSurjective σ₁₂] (p : Submodule R E) [CompleteSpace p] :
     CompleteSpace (p.map f.toLinearMap) :=
-  (f.is_complete_map_iff.2 <| completeSpace_coe_iff_isComplete.1 ‹_›).complete_space_coe
+  (f.isComplete_map_iff.2 <| completeSpace_coe_iff_isComplete.1 ‹_›).completeSpace_coe
 #align linear_isometry.complete_space_map' LinearIsometry.completeSpace_map'
 
 @[simp]
@@ -319,7 +319,7 @@ theorem preimage_sphere (x : E) (r : ℝ) : f ⁻¹' Metric.sphere (f x) r = Met
 @[simp]
 theorem preimage_closedBall (x : E) (r : ℝ) :
     f ⁻¹' Metric.closedBall (f x) r = Metric.closedBall x r :=
-  f.Isometry.preimage_closed_ball x r
+  f.Isometry.preimage_closedBall x r
 #align linear_isometry.preimage_closed_ball LinearIsometry.preimage_closedBall
 
 theorem ediam_image (s : Set E) : Emetric.diam (f '' s) = Emetric.diam s :=
@@ -371,7 +371,7 @@ def id : E →ₗᵢ[R] E :=
 #align linear_isometry.id LinearIsometry.id
 
 @[simp]
-theorem coe_id : ((id : E →ₗᵢ[R] E) : E → E) = _root_.id :=
+theorem coe_id : ((id : E →ₗᵢ[R] E) : E → E) = id :=
   rfl
 #align linear_isometry.coe_id LinearIsometry.coe_id
 
@@ -434,7 +434,7 @@ instance : Monoid (E →ₗᵢ[R] E) where
   mul_one := comp_id
 
 @[simp]
-theorem coe_one : ((1 : E →ₗᵢ[R] E) : E → E) = _root_.id :=
+theorem coe_one : ((1 : E →ₗᵢ[R] E) : E → E) = id :=
   rfl
 #align linear_isometry.coe_one LinearIsometry.coe_one
 
@@ -600,7 +600,7 @@ theorem coe_toLinearEquiv (e : E ≃ₛₗᵢ[σ₁₂] E₂) : ⇑e.toLinearEqu
 
 @[ext]
 theorem ext {e e' : E ≃ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_linear_equiv_injective <| LinearEquiv.ext h
+  toLinearEquiv_injective <| LinearEquiv.ext h
 #align linear_isometry_equiv.ext LinearIsometryEquiv.ext
 
 protected theorem congr_arg {f : E ≃ₛₗᵢ[σ₁₂] E₂} : ∀ {x x' : E}, x = x' → f x = f x'
@@ -1075,7 +1075,7 @@ theorem preimage_sphere (x : E₂) (r : ℝ) : e ⁻¹' Metric.sphere x r = Metr
 @[simp]
 theorem preimage_closedBall (x : E₂) (r : ℝ) :
     e ⁻¹' Metric.closedBall x r = Metric.closedBall (e.symm x) r :=
-  e.toIsometryEquiv.preimage_closed_ball x r
+  e.toIsometryEquiv.preimage_closedBall x r
 #align linear_isometry_equiv.preimage_closed_ball LinearIsometryEquiv.preimage_closedBall
 
 @[simp]
@@ -1090,14 +1090,14 @@ theorem image_sphere (x : E) (r : ℝ) : e '' Metric.sphere x r = Metric.sphere 
 
 @[simp]
 theorem image_closedBall (x : E) (r : ℝ) : e '' Metric.closedBall x r = Metric.closedBall (e x) r :=
-  e.toIsometryEquiv.image_closed_ball x r
+  e.toIsometryEquiv.image_closedBall x r
 #align linear_isometry_equiv.image_closed_ball LinearIsometryEquiv.image_closedBall
 
 variable {α : Type _} [TopologicalSpace α]
 
 @[simp]
 theorem comp_continuousOn_iff {f : α → E} {s : Set α} : ContinuousOn (e ∘ f) s ↔ ContinuousOn f s :=
-  e.Isometry.comp_continuous_on_iff
+  e.Isometry.comp_continuousOn_iff
 #align linear_isometry_equiv.comp_continuous_on_iff LinearIsometryEquiv.comp_continuousOn_iff
 
 @[simp]
@@ -1107,7 +1107,7 @@ theorem comp_continuous_iff {f : α → E} : Continuous (e ∘ f) ↔ Continuous
 
 instance completeSpace_map (p : Submodule R E) [CompleteSpace p] :
     CompleteSpace (p.map (e.toLinearEquiv : E →ₛₗ[σ₁₂] E₂)) :=
-  e.toLinearIsometry.complete_space_map' p
+  e.toLinearIsometry.completeSpace_map' p
 #align linear_isometry_equiv.complete_space_map LinearIsometryEquiv.completeSpace_map
 
 include σ₂₁

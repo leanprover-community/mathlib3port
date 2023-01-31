@@ -209,7 +209,8 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
                               ((f.trans ULift.moduleEquiv.{u, u, v}.symm).toLinearMap.comp <| mkq _)
                               ((DirectSum.toModule _ _ _ fun i =>
                                     (liftqSpanSingleton.{u, u} (p ^ k i)
-                                        (LinearMap.toSpanSingleton _ _ _) (this i).some_spec.left :
+                                        (LinearMap.toSpanSingleton _ _ _)
+                                        (this i).choose_spec.left :
                                       R ⧸ _ →ₗ[R] _)).comp
                                 ulift.module_equiv.to_linear_map)
                               (R ∙ s j).injective_subtype _ _).symm.trans <|
@@ -232,11 +233,11 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
           simp only [LinearMap.coe_comp, Function.comp_apply, mkq_apply]
           rw [LinearEquiv.coe_toLinearMap, LinearMap.id_apply, DirectSum.toModule_lof,
             liftq_span_singleton_apply, LinearMap.toSpanSingleton_one, Ideal.Quotient.mk_eq_mk,
-            map_one, (this i).some_spec.right]
+            map_one, (this i).choose_spec.right]
       ·
         exact
           (mk_surjective _).forall.mpr fun x =>
-            ⟨(@hN x).some, by rw [← quotient.mk_smul, (@hN x).some_spec, quotient.mk_zero]⟩
+            ⟨(@hN x).some, by rw [← quotient.mk_smul, (@hN x).choose_spec, quotient.mk_zero]⟩
       · have hs' := congr_arg (Submodule.map <| mkq <| R ∙ s j) hs
         rw [Submodule.map_span, Submodule.map_top, range_mkq] at hs'
         simp only [mkq_apply] at hs'
@@ -271,9 +272,9 @@ theorem equiv_directSum_of_isTorsion [h' : Module.Finite R N] (hN : Module.IsTor
   classical
     refine'
       ⟨Σi, Fin (this i).some, inferInstance, fun ⟨i, j⟩ => p i, fun ⟨i, j⟩ => hp i, fun ⟨i, j⟩ =>
-        (this i).some_spec.some j,
+        (this i).choose_spec.some j,
         ⟨(LinearEquiv.ofBijective (DirectSum.coeLinearMap _) h).symm.trans <|
-            (Dfinsupp.mapRange.linearEquiv fun i => (this i).some_spec.some_spec.some).trans <|
+            (Dfinsupp.mapRange.linearEquiv fun i => (this i).choose_spec.choose_spec.some).trans <|
               (DirectSum.sigmaLcurryEquiv R).symm.trans
                 (Dfinsupp.mapRange.linearEquiv fun i => quot_equiv_of_eq _ _ _)⟩⟩
     cases' i with i j

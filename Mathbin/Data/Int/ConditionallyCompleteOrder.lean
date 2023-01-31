@@ -30,11 +30,11 @@ noncomputable section
 instance : ConditionallyCompleteLinearOrder ℤ :=
   { Int.linearOrder,
     LinearOrder.toLattice with
-    sup := fun s =>
+    supₛ := fun s =>
       if h : s.Nonempty ∧ BddAbove s then
         greatestOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
       else 0
-    inf := fun s =>
+    infₛ := fun s =>
       if h : s.Nonempty ∧ BddBelow s then
         leastOfBdd (Classical.choose h.2) (Classical.choose_spec h.2) h.1
       else 0

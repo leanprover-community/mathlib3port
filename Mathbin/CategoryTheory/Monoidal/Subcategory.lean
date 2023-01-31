@@ -80,8 +80,8 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P)
   tensor_id' X Y := tensor_id X.1 Y.1
   tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ := tensor_comp f₁ f₂ g₁ g₂
   associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ := associator_naturality f₁ f₂ f₃
-  left_unitor_naturality' X Y f := leftUnitor_naturality f
-  right_unitor_naturality' X Y f := rightUnitor_naturality f
+  leftUnitor_naturality' X Y f := leftUnitor_naturality f
+  rightUnitor_naturality' X Y f := rightUnitor_naturality f
   pentagon' W X Y Z := pentagon W.1 X.1 Y.1 Z.1
   triangle' X Y := triangle X.1 Y.1
 #align category_theory.monoidal_category.full_monoidal_subcategory CategoryTheory.MonoidalCategory.fullMonoidalSubcategory

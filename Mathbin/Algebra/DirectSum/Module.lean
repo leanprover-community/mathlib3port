@@ -400,7 +400,7 @@ theorem IsInternal.isCompl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j)
   ⟨hi.submodule_independent.PairwiseDisjoint hij,
     codisjoint_iff.mpr <|
       Eq.symm <|
-        hi.submodule_supr_eq_top.symm.trans <| by
+        hi.submodule_supᵢ_eq_top.symm.trans <| by
           rw [← supₛ_pair, supᵢ, ← Set.image_univ, h, Set.image_insert_eq, Set.image_singleton]⟩
 #align direct_sum.is_internal.is_compl DirectSum.IsInternal.isCompl
 
@@ -429,7 +429,7 @@ theorem isInternal_submodule_of_independent_of_supᵢ_eq_top {A : ι → Submodu
 -/
 theorem isInternal_submodule_iff_independent_and_supᵢ_eq_top (A : ι → Submodule R M) :
     IsInternal A ↔ CompleteLattice.Independent A ∧ supᵢ A = ⊤ :=
-  ⟨fun i => ⟨i.submodule_independent, i.submodule_supr_eq_top⟩,
+  ⟨fun i => ⟨i.submodule_independent, i.submodule_supᵢ_eq_top⟩,
     And.ndrec isInternal_submodule_of_independent_of_supᵢ_eq_top⟩
 #align direct_sum.is_internal_submodule_iff_independent_and_supr_eq_top DirectSum.isInternal_submodule_iff_independent_and_supᵢ_eq_top
 

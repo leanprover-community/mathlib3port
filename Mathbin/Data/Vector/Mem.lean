@@ -30,7 +30,7 @@ variable {α β : Type _} {n : ℕ} (a a' : α)
 
 #print Vector.get_mem /-
 @[simp]
-theorem get_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList :=
+theorem get_mem (i : Fin n) (v : Vector α n) : v.get? i ∈ v.toList :=
   by
   rw [nth_eq_nth_le]
   exact List.nthLe_mem _ _ _
@@ -38,7 +38,7 @@ theorem get_mem (i : Fin n) (v : Vector α n) : v.nth i ∈ v.toList :=
 -/
 
 #print Vector.mem_iff_get /-
-theorem mem_iff_get (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.nth i = a := by
+theorem mem_iff_get (v : Vector α n) : a ∈ v.toList ↔ ∃ i, v.get? i = a := by
   simp only [List.mem_iff_nthLe, Fin.exists_iff, Vector.get_eq_get] <;>
     exact
       ⟨fun ⟨i, hi, h⟩ => ⟨i, by rwa [to_list_length] at hi, h⟩, fun ⟨i, hi, h⟩ =>
@@ -65,7 +65,7 @@ theorem mem_cons_iff (v : Vector α n) : a' ∈ (a ::ᵥ v).toList ↔ a' = a �
 -/
 
 #print Vector.mem_succ_iff /-
-theorem mem_succ_iff (v : Vector α (n + 1)) : a ∈ v.toList ↔ a = v.head ∨ a ∈ v.tail.toList :=
+theorem mem_succ_iff (v : Vector α (n + 1)) : a ∈ v.toList ↔ a = v.headI ∨ a ∈ v.tail.toList :=
   by
   obtain ⟨a', v', h⟩ := exists_eq_cons v
   simp_rw [h, Vector.mem_cons_iff, Vector.head_cons, Vector.tail_cons]
@@ -80,8 +80,8 @@ theorem mem_cons_self (v : Vector α n) : a ∈ (a ::ᵥ v).toList :=
 
 #print Vector.head_mem /-
 @[simp]
-theorem head_mem (v : Vector α (n + 1)) : v.head ∈ v.toList :=
-  (Vector.mem_iff_get v.head v).2 ⟨0, Vector.get_zero v⟩
+theorem head_mem (v : Vector α (n + 1)) : v.headI ∈ v.toList :=
+  (Vector.mem_iff_get v.headI v).2 ⟨0, Vector.get_zero v⟩
 #align vector.head_mem Vector.head_mem
 -/
 
@@ -128,7 +128,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {n : Nat} (b : β) (v : Vector.{u2} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (f : α -> β), Iff (Membership.mem.{u1, u1} β (List.{u1} β) (List.instMembershipList.{u1} β) b (Vector.toList.{u1} β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Vector.map.{u2, u1} α β (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) f v))) (Or (Eq.{succ u1} β (f (Vector.head.{u2} α n v)) b) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a (Vector.toList.{u2} α (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Vector.tail.{u2} α (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) v))) (Eq.{succ u1} β (f a) b))))
 Case conversion may be inaccurate. Consider using '#align vector.mem_map_succ_iff Vector.mem_map_succ_iffₓ'. -/
 theorem mem_map_succ_iff (b : β) (v : Vector α (n + 1)) (f : α → β) :
-    b ∈ (v.map f).toList ↔ f v.head = b ∨ ∃ a : α, a ∈ v.tail.toList ∧ f a = b := by
+    b ∈ (v.map f).toList ↔ f v.headI = b ∨ ∃ a : α, a ∈ v.tail.toList ∧ f a = b := by
   rw [mem_succ_iff, head_map, tail_map, mem_map_iff, @eq_comm _ b]
 #align vector.mem_map_succ_iff Vector.mem_map_succ_iff
 

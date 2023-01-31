@@ -54,14 +54,14 @@ variable (r : α → β → Prop) (s : Finset α) (t : Finset β) (a a' : α) (b
 #print Finset.bipartiteBelow /-
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
 def bipartiteBelow : Finset α :=
-  s.filter fun a => r a b
+  s.filterₓ fun a => r a b
 #align finset.bipartite_below Finset.bipartiteBelow
 -/
 
 #print Finset.bipartiteAbove /-
 /-- Elements of `t` which are "above" `a` according to relation `r`. -/
 def bipartiteAbove : Finset β :=
-  t.filter (r a)
+  t.filterₓ (r a)
 #align finset.bipartite_above Finset.bipartiteAbove
 -/
 

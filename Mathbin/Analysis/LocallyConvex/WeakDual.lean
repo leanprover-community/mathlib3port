@@ -147,7 +147,7 @@ theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
 
 theorem LinearMap.weakBilinWithSeminorms (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
     WithSeminorms (LinearMap.toSeminormFamily B : F → Seminorm 𝕜 (WeakBilin B)) :=
-  SeminormFamily.withSeminormsOfHasBasis _ B.has_basis_weak_bilin
+  SeminormFamily.withSeminormsOfHasBasis _ B.hasBasis_weakBilin
 #align linear_map.weak_bilin_with_seminorms LinearMap.weakBilinWithSeminorms
 
 end Topology

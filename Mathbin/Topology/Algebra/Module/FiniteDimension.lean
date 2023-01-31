@@ -186,7 +186,7 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
     and only if its kernel is closed. -/
 theorem LinearMap.continuous_iff_isClosed_ker (l : E →ₗ[𝕜] 𝕜) :
     Continuous l ↔ IsClosed (l.ker : Set E) :=
-  ⟨fun h => isClosed_singleton.Preimage h, l.continuous_of_is_closed_ker⟩
+  ⟨fun h => isClosed_singleton.Preimage h, l.continuous_of_isClosed_ker⟩
 #align linear_map.continuous_iff_is_closed_ker LinearMap.continuous_iff_isClosed_ker
 
 /-- Over a nontrivially normed field, any linear form which is nonzero on a nonempty open set is
@@ -281,8 +281,7 @@ theorem LinearMap.continuous_of_finiteDimensional [T2Space E] [FiniteDimensional
 
 instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [FiniteDimensional 𝕜 E] :
     ContinuousLinearMapClass (E →ₗ[𝕜] F') 𝕜 E F' :=
-  { LinearMap.semilinearMapClass with
-    map_continuous := fun f => f.continuous_of_finite_dimensional }
+  { LinearMap.semilinearMapClass with map_continuous := fun f => f.continuous_of_finiteDimensional }
 #align linear_map.continuous_linear_map_class_of_finite_dimensional LinearMap.continuousLinearMapClassOfFiniteDimensional
 
 /-- In finite dimensions over a non-discrete complete normed field, the canonical identification
@@ -303,7 +302,7 @@ variable [T2Space E] [FiniteDimensional 𝕜 E]
 /-- The continuous linear map induced by a linear map on a finite dimensional space -/
 def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F'
     where
-  toFun f := ⟨f, f.continuous_of_finite_dimensional⟩
+  toFun f := ⟨f, f.continuous_of_finiteDimensional⟩
   invFun := coe
   map_add' f g := rfl
   map_smul' c f := rfl
@@ -369,8 +368,8 @@ variable [T2Space E] [T2Space F] [FiniteDimensional 𝕜 E]
 space. -/
 def toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : E ≃L[𝕜] F :=
   { e with
-    continuous_to_fun := e.toLinearMap.continuous_of_finite_dimensional
-    continuous_inv_fun :=
+    continuous_toFun := e.toLinearMap.continuous_of_finiteDimensional
+    continuous_invFun :=
       haveI : FiniteDimensional 𝕜 F := e.finite_dimensional
       e.symm.to_linear_map.continuous_of_finite_dimensional }
 #align linear_equiv.to_continuous_linear_equiv LinearEquiv.toContinuousLinearEquiv
@@ -415,7 +414,7 @@ theorem toLinearEquiv_toContinuousLinearEquiv_symm (e : E ≃ₗ[𝕜] F) :
 
 instance canLiftContinuousLinearEquiv :
     CanLift (E ≃ₗ[𝕜] F) (E ≃L[𝕜] F) ContinuousLinearEquiv.toLinearEquiv fun _ => True :=
-  ⟨fun f _ => ⟨_, f.to_linear_equiv_to_continuous_linear_equiv⟩⟩
+  ⟨fun f _ => ⟨_, f.toLinearEquiv_toContinuousLinearEquiv⟩⟩
 #align linear_equiv.can_lift_continuous_linear_equiv LinearEquiv.canLiftContinuousLinearEquiv
 
 end LinearEquiv

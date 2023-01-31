@@ -75,7 +75,7 @@ include 𝕜
 
 theorem ContDiffWithinAt.inner (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x) :
     ContDiffWithinAt ℝ n (fun x => ⟪f x, g x⟫) s x :=
-  contDiffAt_inner.comp_cont_diff_within_at x (hf.Prod hg)
+  contDiffAt_inner.comp_contDiffWithinAt x (hf.Prod hg)
 #align cont_diff_within_at.inner ContDiffWithinAt.inner
 
 theorem ContDiffAt.inner (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) :
@@ -95,7 +95,7 @@ theorem ContDiff.inner (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) :
 theorem HasFderivWithinAt.inner (hf : HasFderivWithinAt f f' s x)
     (hg : HasFderivWithinAt g g' s x) :
     HasFderivWithinAt (fun t => ⟪f t, g t⟫) ((fderivInnerClm (f x, g x)).comp <| f'.Prod g') s x :=
-  (isBoundedBilinearMapInner.HasFderivAt (f x, g x)).comp_has_fderiv_within_at x (hf.Prod hg)
+  (isBoundedBilinearMapInner.HasFderivAt (f x, g x)).comp_hasFderivWithinAt x (hf.Prod hg)
 #align has_fderiv_within_at.inner HasFderivWithinAt.inner
 
 theorem HasStrictFderivAt.inner (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x) :
@@ -122,7 +122,7 @@ theorem HasDerivAt.inner {f g : ℝ → E} {f' g' : E} {x : ℝ} :
 
 theorem DifferentiableWithinAt.inner (hf : DifferentiableWithinAt ℝ f s x)
     (hg : DifferentiableWithinAt ℝ g s x) : DifferentiableWithinAt ℝ (fun x => ⟪f x, g x⟫) s x :=
-  ((differentiable_inner _).HasFderivAt.comp_has_fderiv_within_at x
+  ((differentiable_inner _).HasFderivAt.comp_hasFderivWithinAt x
       (hf.Prod hg).HasFderivWithinAt).DifferentiableWithinAt
 #align differentiable_within_at.inner DifferentiableWithinAt.inner
 
@@ -164,7 +164,7 @@ theorem ContDiff.norm_sq (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => ‖f 
 
 theorem ContDiffWithinAt.norm_sq (hf : ContDiffWithinAt ℝ n f s x) :
     ContDiffWithinAt ℝ n (fun y => ‖f y‖ ^ 2) s x :=
-  contDiff_norm_sq.ContDiffAt.comp_cont_diff_within_at x hf
+  contDiff_norm_sq.ContDiffAt.comp_contDiffWithinAt x hf
 #align cont_diff_within_at.norm_sq ContDiffWithinAt.norm_sq
 
 theorem ContDiffAt.norm_sq (hf : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun y => ‖f y‖ ^ 2) x :=
@@ -191,7 +191,7 @@ theorem ContDiffAt.dist (hf : ContDiffAt ℝ n f x) (hg : ContDiffAt ℝ n g x) 
 
 theorem ContDiffWithinAt.norm (hf : ContDiffWithinAt ℝ n f s x) (h0 : f x ≠ 0) :
     ContDiffWithinAt ℝ n (fun y => ‖f y‖) s x :=
-  (contDiffAt_norm h0).comp_cont_diff_within_at x hf
+  (contDiffAt_norm h0).comp_contDiffWithinAt x hf
 #align cont_diff_within_at.norm ContDiffWithinAt.norm
 
 theorem ContDiffWithinAt.dist (hf : ContDiffWithinAt ℝ n f s x) (hg : ContDiffWithinAt ℝ n g s x)
@@ -268,12 +268,12 @@ theorem Differentiable.dist (hf : Differentiable ℝ f) (hg : Differentiable ℝ
 
 theorem DifferentiableWithinAt.norm_sq (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun y => ‖f y‖ ^ 2) s x :=
-  (contDiffAt_id.normSq.DifferentiableAt le_rfl).comp_differentiable_within_at x hf
+  (contDiffAt_id.normSq.DifferentiableAt le_rfl).comp_differentiableWithinAt x hf
 #align differentiable_within_at.norm_sq DifferentiableWithinAt.norm_sq
 
 theorem DifferentiableWithinAt.norm (hf : DifferentiableWithinAt ℝ f s x) (h0 : f x ≠ 0) :
     DifferentiableWithinAt ℝ (fun y => ‖f y‖) s x :=
-  ((contDiffAt_id.norm h0).DifferentiableAt le_rfl).comp_differentiable_within_at x hf
+  ((contDiffAt_id.norm h0).DifferentiableAt le_rfl).comp_differentiableWithinAt x hf
 #align differentiable_within_at.norm DifferentiableWithinAt.norm
 
 theorem DifferentiableWithinAt.dist (hf : DifferentiableWithinAt ℝ f s x)
@@ -309,21 +309,21 @@ variable {𝕜 ι H : Type _} [IsROrC 𝕜] [NormedAddCommGroup H] [NormedSpace 
 theorem differentiableWithinAt_euclidean :
     DifferentiableWithinAt 𝕜 f t y ↔ ∀ i, DifferentiableWithinAt 𝕜 (fun x => f x i) t y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_within_at_iff, differentiableWithinAt_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiableWithinAt_iff, differentiableWithinAt_pi]
   rfl
 #align differentiable_within_at_euclidean differentiableWithinAt_euclidean
 
 theorem differentiableAt_euclidean :
     DifferentiableAt 𝕜 f y ↔ ∀ i, DifferentiableAt 𝕜 (fun x => f x i) y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_at_iff, differentiableAt_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiableAt_iff, differentiableAt_pi]
   rfl
 #align differentiable_at_euclidean differentiableAt_euclidean
 
 theorem differentiableOn_euclidean :
     DifferentiableOn 𝕜 f t ↔ ∀ i, DifferentiableOn 𝕜 (fun x => f x i) t :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiable_on_iff, differentiableOn_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_differentiableOn_iff, differentiableOn_pi]
   rfl
 #align differentiable_on_euclidean differentiableOn_euclidean
 
@@ -337,7 +337,7 @@ theorem hasStrictFderivAt_euclidean :
     HasStrictFderivAt f f' y ↔
       ∀ i, HasStrictFderivAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_strict_fderiv_at_iff, hasStrictFderivAt_pi']
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_hasStrictFderivAt_iff, hasStrictFderivAt_pi']
   rfl
 #align has_strict_fderiv_at_euclidean hasStrictFderivAt_euclidean
 
@@ -345,34 +345,34 @@ theorem hasFderivWithinAt_euclidean :
     HasFderivWithinAt f f' t y ↔
       ∀ i, HasFderivWithinAt (fun x => f x i) (EuclideanSpace.proj i ∘L f') t y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_has_fderiv_within_at_iff, hasFderivWithinAt_pi']
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_hasFderivWithinAt_iff, hasFderivWithinAt_pi']
   rfl
 #align has_fderiv_within_at_euclidean hasFderivWithinAt_euclidean
 
 theorem contDiffWithinAt_euclidean {n : ℕ∞} :
     ContDiffWithinAt 𝕜 n f t y ↔ ∀ i, ContDiffWithinAt 𝕜 n (fun x => f x i) t y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_within_at_iff, contDiffWithinAt_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_contDiffWithinAt_iff, contDiffWithinAt_pi]
   rfl
 #align cont_diff_within_at_euclidean contDiffWithinAt_euclidean
 
 theorem contDiffAt_euclidean {n : ℕ∞} :
     ContDiffAt 𝕜 n f y ↔ ∀ i, ContDiffAt 𝕜 n (fun x => f x i) y :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_at_iff, contDiffAt_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_contDiffAt_iff, contDiffAt_pi]
   rfl
 #align cont_diff_at_euclidean contDiffAt_euclidean
 
 theorem contDiffOn_euclidean {n : ℕ∞} :
     ContDiffOn 𝕜 n f t ↔ ∀ i, ContDiffOn 𝕜 n (fun x => f x i) t :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_on_iff, contDiffOn_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_contDiffOn_iff, contDiffOn_pi]
   rfl
 #align cont_diff_on_euclidean contDiffOn_euclidean
 
 theorem contDiff_euclidean {n : ℕ∞} : ContDiff 𝕜 n f ↔ ∀ i, ContDiff 𝕜 n fun x => f x i :=
   by
-  rw [← (EuclideanSpace.equiv ι 𝕜).comp_cont_diff_iff, contDiff_pi]
+  rw [← (EuclideanSpace.equiv ι 𝕜).comp_contDiff_iff, contDiff_pi]
   rfl
 #align cont_diff_euclidean contDiff_euclidean
 
@@ -380,7 +380,7 @@ end PiLike
 
 section DiffeomorphUnitBall
 
-open Metric hiding mem_nhds_iff
+open Metric hiding mem_nhds_iffₓ
 
 variable {n : ℕ∞} {E : Type _} [InnerProductSpace ℝ E]
 

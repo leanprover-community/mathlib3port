@@ -170,7 +170,7 @@ theorem coe_eq_zero (z : ℤ_[p]) : (z : ℚ_[p]) = 0 ↔ z = 0 := by rw [← co
 #align padic_int.coe_eq_zero PadicInt.coe_eq_zero
 
 theorem coe_ne_zero (z : ℤ_[p]) : (z : ℚ_[p]) ≠ 0 ↔ z ≠ 0 :=
-  z.coe_eq_zero.Not
+  z.val_eq_zero.Not
 #align padic_int.coe_ne_zero PadicInt.coe_ne_zero
 
 instance : AddCommGroup ℤ_[p] :=
@@ -256,7 +256,7 @@ instance : MetricSpace ℤ_[p] :=
 
 instance completeSpace : CompleteSpace ℤ_[p] :=
   have : IsClosed { x : ℚ_[p] | ‖x‖ ≤ 1 } := isClosed_le continuous_norm continuous_const
-  this.complete_space_coe
+  this.completeSpace_coe
 #align padic_int.complete_space PadicInt.completeSpace
 
 instance : HasNorm ℤ_[p] :=

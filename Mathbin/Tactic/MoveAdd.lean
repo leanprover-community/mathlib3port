@@ -102,9 +102,9 @@ unsafe def move_left_or_right :
       List expr → List Bool → tactic (List expr × List expr × List expr × List Bool)
   | [], l_un, l_m => return ([], [], l_un, l_m)
   | be :: l, l_un, l_m => do
-    let ex :: _ ← l_un.mfilter fun e' => succeeds <| unify be.2 e' |
+    let ex :: _ ← l_un.filterM fun e' => succeeds <| unify be.2 e' |
       move_left_or_right l l_un (l_m.append [true])
-    let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.erase ex) (l_m.append [false])
+    let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.eraseₓ ex) (l_m.append [false])
     if be.1 then return (ex :: l_tt, l_ff, l_un, l_m) else return (l_tt, ex :: l_ff, l_un, l_m)
 #align tactic.move_op.move_left_or_right tactic.move_op.move_left_or_right
 
@@ -117,7 +117,7 @@ unsafe def move_left_or_right :
 unsafe def final_sort (lp : List (Bool × pexpr)) (sl : List expr) :
     tactic (List expr × List Bool) := do
   let lp_exp : List (Bool × expr) ←
-    lp.mmap fun x => do
+    lp.mapM fun x => do
         let e ← to_expr x.2 true false
         return (x.1, e)
   let (l1, l2, l3, is_unused) ← move_left_or_right lp_exp sl []
@@ -177,13 +177,13 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
         let summed := recs_rest (fun e f => op [e, f]) recs_0
         return (summed, list_unused List.and)
       | none => do
-        let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mmap <| reorder_oper
+        let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mapM <| reorder_oper
         return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map List.and)
   | expr.pi na bi e f => do
-    let [en, fn] ← [e, f].mmap <| reorder_oper
+    let [en, fn] ← [e, f].mapM <| reorder_oper
     return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map List.and)
   | expr.lam na bi e f => do
-    let [en, fn] ← [e, f].mmap <| reorder_oper
+    let [en, fn] ← [e, f].mapM <| reorder_oper
     return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map List.and)
   | expr.mvar na pp e => do
     let en
@@ -198,12 +198,12 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
           e
     return (expr.local_const na pp bi en.1, [en.2].transpose.map List.and)
   | expr.elet na e f g => do
-    let [en, fn, gn] ← [e, f, g].mmap <| reorder_oper
+    let [en, fn, gn] ← [e, f, g].mapM <| reorder_oper
     return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map List.and)
   | expr.macro ma le => do
     let len
       ←-- is it really needed to recurse here?
-            le.mmap <|
+            le.mapM <|
           reorder_oper
     let (lee, lb) := len.unzip
     return (expr.macro ma lee, lb List.and)
@@ -295,7 +295,7 @@ unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse locati
   let tg ← target
   let locas_with_tg := if locat.include_goal then locas ++ [tg] else locas
   let ner ←
-    locas_with_tg.mmap fun e => reorder_hyp op args e.local_pp_name <|> reorder_hyp op args none
+    locas_with_tg.mapM fun e => reorder_hyp op args e.local_pp_name <|> reorder_hyp op args none
   let (unch_tgts, unus_vars) := ner.unzip
   let str_unva ←
     match
@@ -306,12 +306,12 @@ unsafe def move_op (args : parse move_pexpr_list_or_texpr) (locat : parse locati
         return [f! "'{nm}' is an unused variable"]
       | pes => do
         let nms ←
-          (pes.mmap fun e => to_expr e true false) >>= fun exs =>
-              (exs.map expr.replace_mvars).mmap pp
+          (pes.mapM fun e => to_expr e true false) >>= fun exs =>
+              (exs.map expr.replace_mvars).mapM pp
         return [f! "'{nms}' are unused variables"]
   let str_tgts :=
     match locat with
-    | loc.wildcard => if unch_tgts.band then [f!"nothing changed"] else []
+    | loc.wildcard => if unch_tgts.and then [f!"nothing changed"] else []
     | loc.ns names =>
       let linames := returnUnused locas unch_tgts
       (if none ∈ returnUnused names unch_tgts then [f!"Goal did not change"] else []) ++

@@ -64,7 +64,7 @@ The converse of `is_subterminal_of_mono_terminal_from`.
 -/
 theorem IsSubterminal.mono_terminal_from [HasTerminal C] (hA : IsSubterminal A) :
     Mono (terminal.from A) :=
-  hA.mono_is_terminal_from terminalIsTerminal
+  hA.mono_isTerminal_from terminalIsTerminal
 #align category_theory.is_subterminal.mono_terminal_from CategoryTheory.IsSubterminal.mono_terminal_from
 
 /-- If the unique morphism from `A` to a terminal object is a monomorphism, `A` is subterminal.

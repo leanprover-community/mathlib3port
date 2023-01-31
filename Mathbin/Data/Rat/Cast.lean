@@ -156,7 +156,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.cast_add_of_ne_zero Rat.cast_add_of_ne_zeroₓ'. -/
 @[norm_cast]
 theorem cast_add_of_ne_zero :
-    ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m + n : ℚ) : α) = m + n
+    ∀ {m n : ℚ}, (m.den : α) ≠ 0 → (n.den : α) ≠ 0 → ((m + n : ℚ) : α) = m + n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun (d₁0 : (d₁ : α) ≠ 0) (d₂0 : (d₂ : α) ≠ 0) =>
     by
     have d₁0' : (d₁ : ℤ) ≠ 0 :=
@@ -194,10 +194,10 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] {m : Rat} {n : Rat}, (Ne.{succ u1} α (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Rat.den m)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Ne.{succ u1} α (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Rat.den n)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (HSub.hSub.{0, 0, 0} Rat Rat Rat (instHSub.{0} Rat Rat.instSubRat) m n)) (HSub.hSub.{u1, u1, u1} α α α (instHSub.{u1} α (Ring.toSub.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) m) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) n)))
 Case conversion may be inaccurate. Consider using '#align rat.cast_sub_of_ne_zero Rat.cast_sub_of_ne_zeroₓ'. -/
 @[norm_cast]
-theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.denom : α) ≠ 0) (n0 : (n.denom : α) ≠ 0) :
+theorem cast_sub_of_ne_zero {m n : ℚ} (m0 : (m.den : α) ≠ 0) (n0 : (n.den : α) ≠ 0) :
     ((m - n : ℚ) : α) = m - n :=
   by
-  have : ((-n).denom : α) ≠ 0 := by cases n <;> exact n0
+  have : ((-n).den : α) ≠ 0 := by cases n <;> exact n0
   simp [sub_eq_add_neg, cast_add_of_ne_zero m0 this]
 #align rat.cast_sub_of_ne_zero Rat.cast_sub_of_ne_zero
 
@@ -209,7 +209,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.cast_mul_of_ne_zero Rat.cast_mul_of_ne_zeroₓ'. -/
 @[norm_cast]
 theorem cast_mul_of_ne_zero :
-    ∀ {m n : ℚ}, (m.denom : α) ≠ 0 → (n.denom : α) ≠ 0 → ((m * n : ℚ) : α) = m * n
+    ∀ {m n : ℚ}, (m.den : α) ≠ 0 → (n.den : α) ≠ 0 → ((m * n : ℚ) : α) = m * n
   | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => fun (d₁0 : (d₁ : α) ≠ 0) (d₂0 : (d₂ : α) ≠ 0) =>
     by
     have d₁0' : (d₁ : ℤ) ≠ 0 :=
@@ -260,7 +260,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] {n : Rat}, (Ne.{succ u1} α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (DivisionRing.toRing.{u1} α _inst_1)) (Rat.num n)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Ne.{succ u1} α (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Rat.den n)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (Inv.inv.{0} Rat Rat.instInvRat n)) (Inv.inv.{u1} α (DivisionRing.toInv.{u1} α _inst_1) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) n)))
 Case conversion may be inaccurate. Consider using '#align rat.cast_inv_of_ne_zero Rat.cast_inv_of_ne_zeroₓ'. -/
 @[norm_cast]
-theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.denom : α) ≠ 0 → ((n⁻¹ : ℚ) : α) = n⁻¹
+theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.den : α) ≠ 0 → ((n⁻¹ : ℚ) : α) = n⁻¹
   | ⟨n, d, h, c⟩ => fun (n0 : (n : α) ≠ 0) (d0 : (d : α) ≠ 0) =>
     by
     have n0' : (n : ℤ) ≠ 0 := fun e => by rw [e] at n0 <;> exact n0 Int.cast_zero
@@ -277,12 +277,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] {m : Rat} {n : Rat}, (Ne.{succ u1} α (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Rat.den m)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Ne.{succ u1} α (Int.cast.{u1} α (Ring.toIntCast.{u1} α (DivisionRing.toRing.{u1} α _inst_1)) (Rat.num n)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Ne.{succ u1} α (Nat.cast.{u1} α (NonAssocRing.toNatCast.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (Rat.den n)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1))))))) -> (Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (HDiv.hDiv.{0, 0, 0} Rat Rat Rat (instHDiv.{0} Rat Rat.instDivRat) m n)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivisionRing.toDiv.{u1} α _inst_1)) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) m) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) n)))
 Case conversion may be inaccurate. Consider using '#align rat.cast_div_of_ne_zero Rat.cast_div_of_ne_zeroₓ'. -/
 @[norm_cast]
-theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.denom : α) ≠ 0) (nn : (n.num : α) ≠ 0)
-    (nd : (n.denom : α) ≠ 0) : ((m / n : ℚ) : α) = m / n :=
+theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.den : α) ≠ 0) (nn : (n.num : α) ≠ 0)
+    (nd : (n.den : α) ≠ 0) : ((m / n : ℚ) : α) = m / n :=
   by
-  have : (n⁻¹.denom : ℤ) ∣ n.num := by
-    conv in n⁻¹.denom => rw [← @num_denom n, inv_def] <;> apply denom_dvd
-  have : (n⁻¹.denom : α) = 0 → (n.num : α) = 0 := fun h =>
+  have : (n⁻¹.den : ℤ) ∣ n.num := by
+    conv in n⁻¹.den => rw [← @num_denom n, inv_def] <;> apply denom_dvd
+  have : (n⁻¹.den : α) = 0 → (n.num : α) = 0 := fun h =>
     by
     let ⟨k, e⟩ := this
     have := congr_arg (coe : ℤ → α) e <;> rwa [Int.cast_mul, Int.cast_ofNat, h, zero_mul] at this

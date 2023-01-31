@@ -53,7 +53,7 @@ variable {α : Type u} {β : α → Type v}
   that the list have unique keys. -/
 structure AList (β : α → Type v) : Type max u v where
   entries : List (Sigma β)
-  Nodupkeys : entries.Nodupkeys
+  NodupKeys : entries.NodupKeys
 #align alist AList
 -/
 
@@ -63,7 +63,7 @@ entries with duplicate keys. -/
 def List.toAList [DecidableEq α] {β : α → Type v} (l : List (Sigma β)) : AList β
     where
   entries := _
-  Nodupkeys := nodupKeys_dedupKeys l
+  NodupKeys := nodupKeys_dedupKeys l
 #align list.to_alist List.toAList
 -/
 
@@ -97,7 +97,7 @@ def keys (s : AList β) : List α :=
 
 #print AList.keys_nodup /-
 theorem keys_nodup (s : AList β) : s.keys.Nodup :=
-  s.Nodupkeys
+  s.NodupKeys
 #align alist.keys_nodup AList.keys_nodup
 -/
 
@@ -185,7 +185,7 @@ variable [DecidableEq α]
 #print AList.lookup /-
 /-- Look up the value associated to a key in an association list. -/
 def lookup (a : α) (s : AList β) : Option (β a) :=
-  s.entries.lookup a
+  s.entries.dlookup a
 #align alist.lookup AList.lookup
 -/
 
@@ -197,28 +197,28 @@ theorem lookup_empty (a) : lookup a (∅ : AList β) = none :=
 -/
 
 #print AList.lookup_isSome /-
-theorem lookup_isSome {a : α} {s : AList β} : (s.lookup a).isSome ↔ a ∈ s :=
-  lookup_is_some
+theorem lookup_isSome {a : α} {s : AList β} : (s.dlookup a).isSome ↔ a ∈ s :=
+  dlookup_isSome
 #align alist.lookup_is_some AList.lookup_isSome
 -/
 
 #print AList.lookup_eq_none /-
 theorem lookup_eq_none {a : α} {s : AList β} : lookup a s = none ↔ a ∉ s :=
-  lookup_eq_none
+  dlookup_eq_none
 #align alist.lookup_eq_none AList.lookup_eq_none
 -/
 
 #print AList.mem_lookup_iff /-
 theorem mem_lookup_iff {a : α} {b : β a} {s : AList β} :
     b ∈ lookup a s ↔ Sigma.mk a b ∈ s.entries :=
-  mem_dlookup_iff s.Nodupkeys
+  mem_dlookup_iff s.NodupKeys
 #align alist.mem_lookup_iff AList.mem_lookup_iff
 -/
 
 #print AList.perm_lookup /-
 theorem perm_lookup {a : α} {s₁ s₂ : AList β} (p : s₁.entries ~ s₂.entries) :
-    s₁.lookup a = s₂.lookup a :=
-  perm_dlookup _ s₁.Nodupkeys s₂.Nodupkeys p
+    s₁.dlookup a = s₂.dlookup a :=
+  perm_dlookup _ s₁.NodupKeys s₂.NodupKeys p
 #align alist.perm_lookup AList.perm_lookup
 -/
 
@@ -232,7 +232,7 @@ instance (a : α) (s : AList β) : Decidable (a ∈ s) :=
 /-- Replace a key with a given value in an association list.
   If the key is not present it does nothing. -/
 def replace (a : α) (b : β a) (s : AList β) : AList β :=
-  ⟨kreplace a b s.entries, (kreplace_nodupKeys a b).2 s.Nodupkeys⟩
+  ⟨kreplace a b s.entries, (kreplace_nodupKeys a b).2 s.NodupKeys⟩
 #align alist.replace AList.replace
 -/
 
@@ -253,7 +253,7 @@ theorem mem_replace {a a' : α} {b : β a} {s : AList β} : a' ∈ replace a b s
 #print AList.perm_replace /-
 theorem perm_replace {a : α} {b : β a} {s₁ s₂ : AList β} :
     s₁.entries ~ s₂.entries → (replace a b s₁).entries ~ (replace a b s₂).entries :=
-  Perm.kreplace s₁.Nodupkeys
+  Perm.kreplace s₁.NodupKeys
 #align alist.perm_replace AList.perm_replace
 -/
 
@@ -276,7 +276,7 @@ variable [DecidableEq α]
 #print AList.erase /-
 /-- Erase a key from the map. If the key is not present, do nothing. -/
 def erase (a : α) (s : AList β) : AList β :=
-  ⟨s.entries.kerase a, s.Nodupkeys.kerase a⟩
+  ⟨s.entries.kerase a, s.NodupKeys.kerase a⟩
 #align alist.erase AList.erase
 -/
 
@@ -287,7 +287,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : AList.{u1, u2} α β), Eq.{succ u1} (List.{u1} α) (AList.keys.{u1, u2} α β (AList.erase.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a s)) (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (AList.keys.{u1, u2} α β s) a)
 Case conversion may be inaccurate. Consider using '#align alist.keys_erase AList.keys_eraseₓ'. -/
 @[simp]
-theorem keys_erase (a : α) (s : AList β) : (erase a s).keys = s.keys.erase a :=
+theorem keys_erase (a : α) (s : AList β) : (erase a s).keys = s.keys.eraseₓ a :=
   keys_kerase
 #align alist.keys_erase AList.keys_erase
 
@@ -301,14 +301,14 @@ theorem mem_erase {a a' : α} {s : AList β} : a' ∈ erase a s ↔ a' ≠ a ∧
 #print AList.perm_erase /-
 theorem perm_erase {a : α} {s₁ s₂ : AList β} :
     s₁.entries ~ s₂.entries → (erase a s₁).entries ~ (erase a s₂).entries :=
-  Perm.kerase s₁.Nodupkeys
+  Perm.kerase s₁.NodupKeys
 #align alist.perm_erase AList.perm_erase
 -/
 
 #print AList.lookup_erase /-
 @[simp]
 theorem lookup_erase (a) (s : AList β) : lookup a (erase a s) = none :=
-  dlookup_kerase a s.Nodupkeys
+  dlookup_kerase a s.NodupKeys
 #align alist.lookup_erase AList.lookup_erase
 -/
 
@@ -320,7 +320,7 @@ theorem lookup_erase_ne {a a'} {s : AList β} (h : a ≠ a') : lookup a (erase a
 -/
 
 #print AList.erase_erase /-
-theorem erase_erase (a a' : α) (s : AList β) : (s.erase a).erase a' = (s.erase a').erase a :=
+theorem erase_erase (a a' : α) (s : AList β) : (s.eraseₓ a).eraseₓ a' = (s.eraseₓ a').eraseₓ a :=
   ext <| kerase_kerase
 #align alist.erase_erase AList.erase_erase
 -/
@@ -332,7 +332,7 @@ theorem erase_erase (a a' : α) (s : AList β) : (s.erase a).erase a' = (s.erase
 /-- Insert a key-value pair into an association list and erase any existing pair
   with the same key. -/
 def insert (a : α) (b : β a) (s : AList β) : AList β :=
-  ⟨kinsert a b s.entries, kinsert_nodupKeys a b s.Nodupkeys⟩
+  ⟨kinsert a b s.entries, kinsert_nodupKeys a b s.NodupKeys⟩
 #align alist.insert AList.insert
 -/
 
@@ -377,7 +377,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : α -> Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {b : β a} (s : AList.{u1, u2} α β), Eq.{succ u1} (List.{u1} α) (AList.keys.{u1, u2} α β (AList.insert.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) a b s)) (List.cons.{u1} α a (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (AList.keys.{u1, u2} α β s) a))
 Case conversion may be inaccurate. Consider using '#align alist.keys_insert AList.keys_insertₓ'. -/
 @[simp]
-theorem keys_insert {a} {b : β a} (s : AList β) : (insert a b s).keys = a :: s.keys.erase a := by
+theorem keys_insert {a} {b : β a} (s : AList β) : (insert a b s).keys = a :: s.keys.eraseₓ a := by
   simp [insert, keys, keys_kerase]
 #align alist.keys_insert AList.keys_insert
 
@@ -405,7 +405,7 @@ theorem lookup_insert_ne {a a'} {b' : β a'} {s : AList β} (h : a ≠ a') :
 
 #print AList.lookup_to_alist /-
 @[simp]
-theorem lookup_to_alist {a} (s : List (Sigma β)) : lookup a s.toAlist = s.lookup a := by
+theorem lookup_to_alist {a} (s : List (Sigma β)) : lookup a s.toAList = s.dlookup a := by
   rw [List.toAList, lookup, lookup_dedupkeys]
 #align alist.lookup_to_alist AList.lookup_to_alist
 -/
@@ -444,12 +444,12 @@ theorem entries_toAList (xs : List (Sigma β)) : (List.toAList xs).entries = ded
 
 #print AList.toAList_cons /-
 theorem toAList_cons (a : α) (b : β a) (xs : List (Sigma β)) :
-    List.toAList (⟨a, b⟩ :: xs) = insert a b xs.toAlist :=
+    List.toAList (⟨a, b⟩ :: xs) = insert a b xs.toAList :=
   rfl
 #align alist.to_alist_cons AList.toAList_cons
 -/
 
-theorem mk_cons_eq_insert (c : Sigma β) (l : List (Sigma β)) (h : (c :: l).Nodupkeys) :
+theorem mk_cons_eq_insert (c : Sigma β) (l : List (Sigma β)) (h : (c :: l).NodupKeys) :
     (⟨c :: l, h⟩ : AList β) = insert c.1 c.2 ⟨l, nodupKeys_of_nodupKeys_cons h⟩ := by
   simpa [insert] using (kerase_of_not_mem_keys <| not_mem_keys_of_nodupkeys_cons h).symm
 #align alist.mk_cons_eq_insert AList.mk_cons_eq_insert
@@ -514,7 +514,7 @@ theorem recursion_insert_mk {C : AList β → Sort _} (H0 : C ∅)
 #print AList.extract /-
 /-- Erase a key from the map, and return the corresponding value, if found. -/
 def extract (a : α) (s : AList β) : Option (β a) × AList β :=
-  have : (kextract a s.entries).2.Nodupkeys := by
+  have : (kextract a s.entries).2.NodupKeys := by
     rw [kextract_eq_lookup_kerase] <;> exact s.nodupkeys.kerase _
   match kextract a s.entries, this with
   | (b, l), h => (b, ⟨l, h⟩)
@@ -536,7 +536,7 @@ theorem extract_eq_lookup_erase (a : α) (s : AList β) : extract a s = (lookup 
 left-biased: if there exists an `a ∈ s₁`, `lookup a (s₁ ∪ s₂) = lookup a s₁`.
 -/
 def union (s₁ s₂ : AList β) : AList β :=
-  ⟨s₁.entries.kunion s₂.entries, s₁.Nodupkeys.kunion s₂.Nodupkeys⟩
+  ⟨s₁.entries.kunion s₂.entries, s₁.NodupKeys.kunion s₂.NodupKeys⟩
 #align alist.union AList.union
 -/
 
@@ -587,14 +587,14 @@ theorem union_erase (a : α) (s₁ s₂ : AList β) : erase a (s₁ ∪ s₂) = 
 #print AList.lookup_union_left /-
 @[simp]
 theorem lookup_union_left {a} {s₁ s₂ : AList β} : a ∈ s₁ → lookup a (s₁ ∪ s₂) = lookup a s₁ :=
-  lookup_kunion_left
+  dlookup_kunion_left
 #align alist.lookup_union_left AList.lookup_union_left
 -/
 
 #print AList.lookup_union_right /-
 @[simp]
 theorem lookup_union_right {a} {s₁ s₂ : AList β} : a ∉ s₁ → lookup a (s₁ ∪ s₂) = lookup a s₂ :=
-  lookup_kunion_right
+  dlookup_kunion_right
 #align alist.lookup_union_right AList.lookup_union_right
 -/
 
@@ -602,14 +602,14 @@ theorem lookup_union_right {a} {s₁ s₂ : AList β} : a ∉ s₁ → lookup a 
 @[simp]
 theorem mem_lookup_union {a} {b : β a} {s₁ s₂ : AList β} :
     b ∈ lookup a (s₁ ∪ s₂) ↔ b ∈ lookup a s₁ ∨ a ∉ s₁ ∧ b ∈ lookup a s₂ :=
-  mem_lookup_kunion
+  mem_dlookup_kunion
 #align alist.mem_lookup_union AList.mem_lookup_union
 -/
 
 #print AList.mem_lookup_union_middle /-
 theorem mem_lookup_union_middle {a} {b : β a} {s₁ s₂ s₃ : AList β} :
     b ∈ lookup a (s₁ ∪ s₃) → a ∉ s₂ → b ∈ lookup a (s₁ ∪ s₂ ∪ s₃) :=
-  mem_lookup_kunion_middle
+  mem_dlookup_kunion_middle
 #align alist.mem_lookup_union_middle AList.mem_lookup_union_middle
 -/
 

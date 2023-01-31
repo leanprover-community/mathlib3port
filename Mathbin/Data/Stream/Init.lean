@@ -108,7 +108,7 @@ theorem drop_succ (n : Nat) (s : Stream' α) : drop (succ n) s = drop n (tail s)
 
 #print Stream'.head_drop /-
 @[simp]
-theorem head_drop {α} (a : Stream' α) (n : ℕ) : (a.drop n).head = a.nth n := by
+theorem head_drop {α} (a : Stream' α) (n : ℕ) : (a.drop n).headI = a.get? n := by
   simp only [drop, head, Nat.zero_add, Stream'.nth]
 #align stream.head_drop Stream'.head_drop
 -/
@@ -300,7 +300,7 @@ theorem zip_eq (s₁ : Stream' α) (s₂ : Stream' β) :
 
 #print Stream'.nth_enum /-
 @[simp]
-theorem nth_enum (s : Stream' α) (n : ℕ) : nth (enum s) n = (n, s.nth n) :=
+theorem nth_enum (s : Stream' α) (n : ℕ) : nth (enum s) n = (n, s.get? n) :=
   rfl
 #align stream.nth_enum Stream'.nth_enum
 -/

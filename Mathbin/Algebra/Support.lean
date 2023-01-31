@@ -225,7 +225,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.mul_support_one Function.mulSupport_oneₓ'. -/
 @[simp, to_additive]
 theorem mulSupport_one : (mulSupport fun x : α => (1 : M)) = ∅ :=
-  mul_support_one'
+  mulSupport_one'
 #align function.mul_support_one Function.mulSupport_one
 #align function.support_zero Function.support_zero
 

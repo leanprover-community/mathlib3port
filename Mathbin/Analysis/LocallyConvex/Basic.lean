@@ -191,7 +191,7 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
 #align balanced.inter Balanced.inter
 
 theorem balanced_unionᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
-  fun a ha => (smul_set_Union _ _).Subset.trans <| Union_mono fun _ => h _ _ ha
+  fun a ha => (smul_set_Union _ _).Subset.trans <| unionᵢ_mono fun _ => h _ _ ha
 #align balanced_Union balanced_unionᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -201,7 +201,7 @@ theorem balanced_Union₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced �
 #align balanced_Union₂ balanced_Union₂
 
 theorem balanced_interᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋂ i, f i) :=
-  fun a ha => (smul_set_interᵢ_subset _ _).trans <| Inter_mono fun _ => h _ _ ha
+  fun a ha => (smul_set_interᵢ_subset _ _).trans <| interᵢ_mono fun _ => h _ _ ha
 #align balanced_Inter balanced_interᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/

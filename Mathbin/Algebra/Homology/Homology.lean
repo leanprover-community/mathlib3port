@@ -60,7 +60,7 @@ theorem cycles_eq_kernelSubobject {i j : ι} (r : c.Rel i j) :
 for any `j` such that `rel i j`.
 -/
 def cyclesIsoKernel {i j : ι} (r : c.Rel i j) : (C.cycles i : V) ≅ kernel (C.d i j) :=
-  Subobject.isoOfEq _ _ (C.cycles_eq_kernel_subobject r) ≪≫ kernelSubobjectIso (C.d i j)
+  Subobject.isoOfEq _ _ (C.cycles_eq_kernelSubobject r) ≪≫ kernelSubobjectIso (C.d i j)
 #align homological_complex.cycles_iso_kernel HomologicalComplex.cyclesIsoKernel
 
 theorem cycles_eq_top {i} (h : ¬c.Rel i (c.next i)) : C.cycles i = ⊤ :=
@@ -91,7 +91,7 @@ for any `i` such that `rel i j`.
 -/
 def boundariesIsoImage [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
     (C.boundaries j : V) ≅ image (C.d i j) :=
-  Subobject.isoOfEq _ _ (C.boundaries_eq_image_subobject r) ≪≫ imageSubobjectIso (C.d i j)
+  Subobject.isoOfEq _ _ (C.boundaries_eq_imageSubobject r) ≪≫ imageSubobjectIso (C.d i j)
 #align homological_complex.boundaries_iso_image HomologicalComplex.boundariesIsoImage
 
 theorem boundaries_eq_bot [HasZeroObject V] {j} (h : ¬c.Rel (c.prev j) j) : C.boundaries j = ⊥ :=
@@ -108,14 +108,14 @@ section
 variable [HasKernels V] [HasImages V]
 
 theorem boundaries_le_cycles (C : HomologicalComplex V c) (i : ι) : C.boundaries i ≤ C.cycles i :=
-  image_le_kernel _ _ (C.d_to_comp_d_from i)
+  image_le_kernel _ _ (C.dTo_comp_dFrom i)
 #align homological_complex.boundaries_le_cycles HomologicalComplex.boundaries_le_cycles
 
 /-- The canonical map from `boundaries i` to `cycles i`.
 -/
 abbrev boundariesToCycles (C : HomologicalComplex V c) (i : ι) :
     (C.boundaries i : V) ⟶ (C.cycles i : V) :=
-  imageToKernel _ _ (C.d_to_comp_d_from i)
+  imageToKernel _ _ (C.dTo_comp_dFrom i)
 #align homological_complex.boundaries_to_cycles HomologicalComplex.boundariesToCycles
 
 /-- Prefer `boundaries_to_cycles`. -/
@@ -130,7 +130,7 @@ variable [HasCokernels V]
 /-- The homology of a complex at index `i`.
 -/
 abbrev homology (C : HomologicalComplex V c) (i : ι) : V :=
-  homology (C.dTo i) (C.dFrom i) (C.d_to_comp_d_from i)
+  homology (C.dTo i) (C.dFrom i) (C.dTo_comp_dFrom i)
 #align homological_complex.homology HomologicalComplex.homology
 
 /-- The `j`th homology of a homological complex (as kernel of 'the differential from `Cⱼ`' modulo

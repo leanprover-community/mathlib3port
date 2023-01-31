@@ -117,7 +117,7 @@ unsafe def exprform.exprs : exprform → List expr
 unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic Preterm
   | exprterm.cst k => return (&k)
   | exprterm.exp k x =>
-    let m := xs.indexOf x
+    let m := xs.indexOfₓ x
     if m < xs.length then return (k ** m) else failed
   | exprterm.add xa xb => do
     let a ← xa.to_preterm
@@ -151,7 +151,7 @@ unsafe def exprform.to_preform (xs : List expr) : exprform → tactic Preform
 
 /-- Reification to an intermediate shadow syntax which eliminates exprs,
     but still includes non-canonical terms. -/
-unsafe def to_preform (x : expr) : tactic (preform × Nat) := do
+unsafe def to_preform (x : expr) : tactic (Preform × Nat) := do
   let xf ← to_exprform x
   let xs := xf.exprs
   let f ← xf.to_preform xs

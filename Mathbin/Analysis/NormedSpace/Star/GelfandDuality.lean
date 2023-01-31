@@ -148,7 +148,7 @@ theorem gelfandTransform_isometry : Isometry (gelfandTransform ℂ A) :=
     by
     unfold spectralRadius
     rw [spectrum.gelfandTransform_eq]
-  simp only [map_mul, (IsSelfAdjoint.star_mul_self _).spectral_radius_eq_nnnorm,
+  simp only [map_mul, (IsSelfAdjoint.star_mul_self _).spectralRadius_eq_nnnorm,
     gelfandTransform_map_star a, Ennreal.coe_eq_coe, CstarRing.nnnorm_star_mul_self, ← sq] at this
   simpa only [Function.comp_apply, Nnreal.sqrt_sq] using
     congr_arg ((coe : ℝ≥0 → ℝ) ∘ ⇑Nnreal.sqrt) this
@@ -219,7 +219,7 @@ variable [NormedRing C] [NormedAlgebra ℂ C] [CompleteSpace C] [StarRing C]
 noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) : C(characterSpace ℂ B, characterSpace ℂ A)
     where
   toFun φ := equivAlgHom.symm ((equivAlgHom φ).comp ψ.toAlgHom)
-  continuous_to_fun :=
+  continuous_toFun :=
     Continuous.subtype_mk
       (continuous_of_continuous_eval fun a => map_continuous <| gelfandTransform ℂ B (ψ a)) _
 #align weak_dual.character_space.comp_continuous_map WeakDual.characterSpace.compContinuousMap

@@ -362,7 +362,7 @@ theorem twoTorsionPolynomial_disc_isUnit [Invertible (2 : R)] :
 
 theorem twoTorsionPolynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] (hΔ : IsUnit W.Δ) :
     W.twoTorsionPolynomial.disc ≠ 0 :=
-  (W.two_torsion_polynomial_disc_is_unit.mpr hΔ).NeZero
+  (W.twoTorsionPolynomial_disc_isUnit.mpr hΔ).NeZero
 #align weierstrass_curve.two_torsion_polynomial_disc_ne_zero WeierstrassCurve.twoTorsionPolynomial_disc_ne_zero
 
 end TorsionPolynomial
@@ -380,7 +380,7 @@ open Polynomial
 Weierstrass curve `W` over `R`. For ease of polynomial manipulation, this is represented as a term
 of type `R[X][X]`, where the inner variable represents $X$ and the outer variable represents $Y$. -/
 protected noncomputable def polynomial : R[X][X] :=
-  X ^ 2 + c (c W.a₁ * X + c W.a₃) * X - c (X ^ 3 + c W.a₂ * X ^ 2 + c W.a₄ * X + c W.a₆)
+  x ^ 2 + c (c W.a₁ * x + c W.a₃) * x - c (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆)
 #align weierstrass_curve.polynomial WeierstrassCurve.polynomial
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3327705701.C_simp -/
@@ -488,7 +488,7 @@ theorem equation_iff_variableChange (x y : R) :
 
 /-- The partial derivative $W_X(X, Y)$ of $W(X, Y)$ with respect to $X$. -/
 noncomputable def polynomialX : R[X][X] :=
-  c (c W.a₁) * X - c (c 3 * X ^ 2 + c (2 * W.a₂) * X + c W.a₄)
+  c (c W.a₁) * x - c (c 3 * x ^ 2 + c (2 * W.a₂) * x + c W.a₄)
 #align weierstrass_curve.polynomial_X WeierstrassCurve.polynomialX
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.52466349.eval_simp -/
@@ -508,7 +508,7 @@ theorem eval_polynomialX_zero : eval 0 (eval 0 W.polynomialX) = -W.a₄ := by
 
 /-- The partial derivative $W_Y(X, Y)$ of $W(X, Y)$ with respect to $Y$. -/
 noncomputable def polynomialY : R[X][X] :=
-  c (c 2) * X + c (c W.a₁ * X + c W.a₃)
+  c (c 2) * x + c (c W.a₁ * x + c W.a₃)
 #align weierstrass_curve.polynomial_Y WeierstrassCurve.polynomialY
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.52466349.eval_simp -/
@@ -570,8 +570,8 @@ theorem nonsingular_zero_of_Δ_ne_zero (h : W.Equation 0 0) (hΔ : W.Δ ≠ 0) :
 /-- A Weierstrass curve is nonsingular at every point if its discriminant is non-zero. -/
 theorem nonsingular_of_Δ_ne_zero {x y : R} (h : W.Equation x y) (hΔ : W.Δ ≠ 0) :
     W.Nonsingular x y :=
-  (W.nonsingular_iff_variable_change x y).mpr <|
-    nonsingular_zero_of_Δ_ne_zero _ ((W.equation_iff_variable_change x y).mp h) <| by
+  (W.nonsingular_iff_variableChange x y).mpr <|
+    nonsingular_zero_of_Δ_ne_zero _ ((W.equation_iff_variableChange x y).mp h) <| by
       rwa [variable_change_Δ, inv_one, Units.val_one, one_pow, one_mul]
 #align weierstrass_curve.nonsingular_of_Δ_ne_zero WeierstrassCurve.nonsingular_of_Δ_ne_zero
 
@@ -615,7 +615,7 @@ variable (x : R) (y : R[X])
 /-- The class of the element $X - x$ in $R[W]$ for some $x \in R$. -/
 @[simp]
 noncomputable def xClass : W.CoordinateRing :=
-  AdjoinRoot.mk W.Polynomial <| C <| X - c x
+  AdjoinRoot.mk W.Polynomial <| c <| x - c x
 #align weierstrass_curve.coordinate_ring.X_class WeierstrassCurve.CoordinateRing.xClass
 
 theorem xClass_ne_zero [Nontrivial R] : xClass W x ≠ 0 :=
@@ -628,7 +628,7 @@ theorem xClass_ne_zero [Nontrivial R] : xClass W x ≠ 0 :=
 /-- The class of the element $Y - y(X)$ in $R[W]$ for some $y(X) \in R[X]$. -/
 @[simp]
 noncomputable def yClass : W.CoordinateRing :=
-  AdjoinRoot.mk W.Polynomial <| X - c y
+  AdjoinRoot.mk W.Polynomial <| x - c y
 #align weierstrass_curve.coordinate_ring.Y_class WeierstrassCurve.CoordinateRing.yClass
 
 theorem yClass_ne_zero [Nontrivial R] : yClass W y ≠ 0 :=
@@ -721,7 +721,7 @@ theorem smul_basis_eq_zero {p q : R[X]} (hpq : p • 1 + q • AdjoinRoot.mk W.P
 theorem exists_smul_basis_eq (x : W.CoordinateRing) :
     ∃ p q : R[X], p • 1 + q • AdjoinRoot.mk W.Polynomial x = x :=
   by
-  have h := (coordinate_ring.basis W).sum_equiv_fun x
+  have h := (coordinate_ring.basis W).sum_equivFun x
   erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h
   exact ⟨_, _, h⟩
 #align weierstrass_curve.coordinate_ring.exists_smul_basis_eq WeierstrassCurve.CoordinateRing.exists_smul_basis_eq
@@ -738,8 +738,8 @@ theorem smul_basis_mul_c (p q : R[X]) :
 
 theorem smul_basis_mul_Y (p q : R[X]) :
     (p • 1 + q • AdjoinRoot.mk W.Polynomial x) * AdjoinRoot.mk W.Polynomial x =
-      (q * (X ^ 3 + c W.a₂ * X ^ 2 + c W.a₄ * X + c W.a₆)) • 1 +
-        (p - q * (c W.a₁ * X + c W.a₃)) • AdjoinRoot.mk W.Polynomial x :=
+      (q * (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆)) • 1 +
+        (p - q * (c W.a₁ * x + c W.a₃)) • AdjoinRoot.mk W.Polynomial x :=
   by
   have Y_sq :
     AdjoinRoot.mk W.polynomial X ^ 2 =
@@ -758,8 +758,8 @@ theorem smul_basis_mul_Y (p q : R[X]) :
 
 theorem norm_smul_basis (p q : R[X]) :
     Algebra.norm R[X] (p • 1 + q • AdjoinRoot.mk W.Polynomial x) =
-      p ^ 2 - p * q * (c W.a₁ * X + c W.a₃) -
-        q ^ 2 * (X ^ 3 + c W.a₂ * X ^ 2 + c W.a₄ * X + c W.a₆) :=
+      p ^ 2 - p * q * (c W.a₁ * x + c W.a₃) -
+        q ^ 2 * (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆) :=
   by
   simp_rw [Algebra.norm_eq_matrix_det W, Matrix.det_fin_two, Algebra.leftMulMatrix_eq_repr_mul,
     basis_zero, mul_one, basis_one, smul_basis_mul_Y, map_add, Finsupp.add_apply, map_smul,
@@ -771,7 +771,7 @@ theorem norm_smul_basis (p q : R[X]) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3327705701.C_simp -/
 theorem coe_norm_smul_basis (p q : R[X]) :
     ↑(Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial x) =
-      AdjoinRoot.mk W.Polynomial ((c p + c q * X) * (c p + c q * (-X - c (c W.a₁ * X + c W.a₃)))) :=
+      AdjoinRoot.mk W.Polynomial ((c p + c q * x) * (c p + c q * (-x - c (c W.a₁ * x + c W.a₃)))) :=
   AdjoinRoot.mk_eq_mk.mpr
     ⟨c q ^ 2, by
       rw [norm_smul_basis, WeierstrassCurve.polynomial]
@@ -873,7 +873,7 @@ def j : R :=
 
 theorem twoTorsionPolynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] :
     E.twoTorsionPolynomial.disc ≠ 0 :=
-  E.two_torsion_polynomial_disc_ne_zero <| E.coe_Δ' ▸ E.Δ'.IsUnit
+  E.twoTorsionPolynomial_disc_ne_zero <| E.coe_Δ' ▸ E.Δ'.IsUnit
 #align elliptic_curve.two_torsion_polynomial_disc_ne_zero EllipticCurve.twoTorsionPolynomial_disc_ne_zero
 
 theorem nonsingular [Nontrivial R] {x y : R} (h : E.Equation x y) : E.Nonsingular x y :=

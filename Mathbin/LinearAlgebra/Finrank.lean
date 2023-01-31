@@ -164,7 +164,7 @@ open FiniteDimensional
 theorem finrank_eq_zero_of_basis_imp_not_finite
     (h : ∀ s : Set V, Basis.{v} (s : Set V) K V → ¬s.Finite) : finrank K V = 0 :=
   dif_neg fun dim_lt =>
-    h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_dim_lt_aleph_0 dim_lt)
+    h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_dim_lt_aleph0 dim_lt)
 #align finrank_eq_zero_of_basis_imp_not_finite finrank_eq_zero_of_basis_imp_not_finite
 
 theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) :
@@ -476,7 +476,7 @@ noncomputable def finsetBasisOfTopLeSpanOfCardEqFinrank {s : Finset V}
 noncomputable def setBasisOfTopLeSpanOfCardEqFinrank {s : Set V} [Fintype s]
     (le_span : ⊤ ≤ span K s) (card_eq : s.toFinset.card = finrank K V) : Basis s K V :=
   basisOfTopLeSpanOfCardEqFinrank (coe : s → V) ((@Subtype.range_coe_subtype _ s).symm ▸ le_span)
-    (trans s.to_finset_card.symm card_eq)
+    (trans s.toFinset_card.symm card_eq)
 #align set_basis_of_top_le_span_of_card_eq_finrank setBasisOfTopLeSpanOfCardEqFinrank
 
 end DivisionRing

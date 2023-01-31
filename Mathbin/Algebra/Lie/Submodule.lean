@@ -740,7 +740,7 @@ theorem span_empty : lieSpan R L (∅ : Set M) = ⊥ :=
 
 @[simp]
 theorem span_univ : lieSpan R L (Set.univ : Set M) = ⊤ :=
-  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
+  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lieSpan
 #align lie_submodule.span_univ LieSubmodule.span_univ
 
 theorem lieSpan_eq_bot_iff : lieSpan R L s = ⊥ ↔ ∀ m ∈ s, m = (0 : M) := by
@@ -754,7 +754,7 @@ theorem span_union (s t : Set M) : lieSpan R L (s ∪ t) = lieSpan R L s ⊔ lie
 #align lie_submodule.span_union LieSubmodule.span_union
 
 theorem span_unionᵢ {ι} (s : ι → Set M) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
-  (LieSubmodule.gi R L M).gc.l_supr
+  (LieSubmodule.gi R L M).gc.l_supᵢ
 #align lie_submodule.span_Union LieSubmodule.span_unionᵢ
 
 end LieSpan

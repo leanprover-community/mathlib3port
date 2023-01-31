@@ -96,13 +96,13 @@ structure BasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField �
   (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
   [SmoothManifoldWithCorners I M] (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F] where
   coordChange : atlas H M → atlas H M → H → F →L[𝕜] F
-  coord_change_self : ∀ i : atlas H M, ∀ x ∈ i.1.target, ∀ v, coord_change i i x v = v
-  coord_change_comp :
+  coordChange_self : ∀ i : atlas H M, ∀ x ∈ i.1.target, ∀ v, coord_change i i x v = v
+  coordChange_comp :
     ∀ i j k : atlas H M,
       ∀ x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).source,
         ∀ v,
           (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v
-  coord_change_smooth_clm :
+  coordChange_smooth_clm :
     ∀ i j : atlas H M, ContDiffOn 𝕜 ∞ (coord_change i j ∘ I.symm) (I '' (i.1.symm.trans j.1).source)
 #align basic_smooth_vector_bundle_core BasicSmoothVectorBundleCore
 
@@ -115,9 +115,9 @@ def trivialBasicSmoothVectorBundleCore {𝕜 : Type _} [NontriviallyNormedField 
     BasicSmoothVectorBundleCore I M F
     where
   coordChange i j x := ContinuousLinearMap.id 𝕜 F
-  coord_change_self i x hx v := rfl
-  coord_change_comp i j k x hx v := rfl
-  coord_change_smooth_clm i j := by
+  coordChange_self i x hx v := rfl
+  coordChange_comp i j k x hx v := rfl
+  coordChange_smooth_clm i j := by
     dsimp
     exact contDiffOn_const
 #align trivial_basic_smooth_vector_bundle_core trivialBasicSmoothVectorBundleCore
@@ -146,7 +146,7 @@ theorem coordChange_comp' {i j k : atlas H M} {x : M} (hi : x ∈ i.1.source) (h
 /-- A reformulation of `coord_change_self`, formulated in terms of a point in `M`. -/
 theorem coordChange_self' {i : atlas H M} {x : M} (hi : x ∈ i.1.source) (v : F) :
     Z.coordChange i i (i x) v = v :=
-  Z.coord_change_self i (i x) (i.1.MapsTo hi) v
+  Z.coordChange_self i (i x) (i.1.MapsTo hi) v
 #align basic_smooth_vector_bundle_core.coord_change_self' BasicSmoothVectorBundleCore.coordChange_self'
 
 /-- `Z.coord_change j i` is a partial inverse of `Z.coord_change i j`. -/
@@ -206,18 +206,18 @@ theorem coordChange_smooth (i j : atlas H M) :
 def toVectorBundleCore : VectorBundleCore 𝕜 M F (atlas H M)
     where
   baseSet i := i.1.source
-  is_open_base_set i := i.1.open_source
+  isOpen_baseSet i := i.1.open_source
   indexAt := achart H
-  mem_base_set_at x := mem_chart_source H x
+  mem_baseSet_at x := mem_chart_source H x
   coordChange i j x := Z.coordChange i j (i.1 x)
-  coord_change_self i x hx v := Z.coord_change_self i (i.1 x) (i.1.map_source hx) v
-  coord_change_comp := fun i j k x ⟨⟨hx1, hx2⟩, hx3⟩ v =>
+  coordChange_self i x hx v := Z.coordChange_self i (i.1 x) (i.1.map_source hx) v
+  coordChange_comp := fun i j k x ⟨⟨hx1, hx2⟩, hx3⟩ v =>
     by
     have := Z.coord_change_comp i j k (i.1 x) _ v
     convert this using 2
     · simp only [hx1, mfld_simps]
     · simp only [hx1, hx2, hx3, mfld_simps]
-  continuous_on_coord_change i j :=
+  continuousOn_coordChange i j :=
     by
     refine' ((Z.coord_change_continuous i j).comp' i.1.ContinuousOn).mono _
     rintro p ⟨hp₁, hp₂⟩
@@ -399,7 +399,7 @@ fiber corresponds to the derivative of the coordinate change in `M`. -/
 def tangentBundleCore : BasicSmoothVectorBundleCore I M E
     where
   coordChange i j x := fderivWithin 𝕜 (I ∘ j.1 ∘ i.1.symm ∘ I.symm) (range I) (I x)
-  coord_change_smooth_clm i j := by
+  coordChange_smooth_clm i j := by
     rw [I.image_eq]
     have A :
       ContDiffOn 𝕜 ∞ (I ∘ i.1.symm.trans j.1 ∘ I.symm)
@@ -433,7 +433,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E
     intro x hx
     simp only [mfld_simps] at hx
     simp only [hx, D, mfld_simps]
-  coord_change_self i x hx v :=
+  coordChange_self i x hx v :=
     by
     /- Locally, a self-change of coordinate is just the identity, thus its derivative is the
         identity. One just needs to write this carefully, paying attention to the sets where the
@@ -460,7 +460,7 @@ def tangentBundleCore : BasicSmoothVectorBundleCore I M E
     rw [fderivWithin_id I.unique_diff_at_image] at C
     rw [C]
     rfl
-  coord_change_comp i j u x hx :=
+  coordChange_comp i j u x hx :=
     by
     /- The cocycle property is just the fact that the derivative of a composition is the product of
         the derivatives. One needs however to check that all the functions one considers are smooth, and
@@ -670,7 +670,7 @@ theorem tangentBundle_proj_continuous : Continuous (TangentBundle.proj I M) :=
 
 /-- The tangent bundle projection on the basis is an open map. -/
 theorem tangentBundle_proj_open : IsOpenMap (TangentBundle.proj I M) :=
-  (tangentBundleCore I M).toVectorBundleCore.is_open_map_proj
+  (tangentBundleCore I M).toVectorBundleCore.isOpenMap_proj
 #align tangent_bundle_proj_open tangentBundle_proj_open
 
 /-- In the tangent bundle to the model space, the charts are just the canonical identification
@@ -730,8 +730,7 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
   {
     Equiv.sigmaEquivProd H
       E with
-    continuous_to_fun :=
-      by
+    continuous_toFun := by
       let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
       have : Continuous (chart_at (ModelProd H E) p) :=
         by
@@ -739,7 +738,7 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
         convert LocalHomeomorph.continuousOn _
         simp only [mfld_simps]
       simpa only [mfld_simps] using this
-    continuous_inv_fun :=
+    continuous_invFun :=
       by
       let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
       have : Continuous (chart_at (ModelProd H E) p).symm :=

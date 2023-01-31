@@ -85,7 +85,7 @@ unsafe def wlog (vars' : List expr) (h_cases fst_case : expr) (perms : List (Lis
         (fst_case.instantiate_locals <| (vars'.zip vars).map fun ⟨o, n⟩ => (o.local_uniq_name, n))
   let ((), pr) ← solve_aux cases (repeat <| exact h_fst_case <|> left >> skip)
   let t ← target
-  let fixed_vars ← vars.mmap update_type
+  let fixed_vars ← vars.mapM update_type
   let t' := (instantiate_local h_cases.local_uniq_name pr t).pis (fixed_vars ++ [h_fst_case])
   let (h, [g]) ←
     local_proof `this t' do
@@ -233,7 +233,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                                   =>
                                   do
                                     let pat ← to_expr pat
-                                      let vars' := vars . filter fun v => v . occurs pat
+                                      let vars' := vars . filterₓ fun v => v . occurs pat
                                       let case_pat ← tactic.mk_pattern [ ] vars' pat [ ] vars'
                                       let perms' ← match_perms case_pat cases
                                       return ( pat , perms' )
@@ -242,12 +242,12 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                                   =>
                                   do
                                     let p :: ps ← dest_or cases
-                                      let vars' := vars . filter fun v => v . occurs p
+                                      let vars' := vars . filterₓ fun v => v . occurs p
                                       let case_pat ← tactic.mk_pattern [ ] vars' p [ ] vars'
                                       let
                                         perms'
                                           ←
-                                          ( p :: ps ) . mmap
+                                          ( p :: ps ) . mapM
                                             fun
                                               p => do let m ← match_pattern case_pat p return m . 2
                                       return ( p , perms' )
@@ -274,7 +274,7 @@ private unsafe def parse_permutations : Option (List (List Name)) → tactic (Li
                     none
                     =>
                     do
-                      let name_h := h . getOrElse `case
+                      let name_h := h . getD `case
                         let
                           some pat
                             ←

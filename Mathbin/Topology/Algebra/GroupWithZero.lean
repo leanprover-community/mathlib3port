@@ -88,10 +88,10 @@ end DivConst
 /-- A type with `0` and `has_inv` such that `λ x, x⁻¹` is continuous at all nonzero points. Any
 normed (semi)field has this property. -/
 class HasContinuousInv₀ (G₀ : Type _) [Zero G₀] [Inv G₀] [TopologicalSpace G₀] : Prop where
-  continuous_at_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt Inv.inv x
+  continuousAt_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt Inv.inv x
 #align has_continuous_inv₀ HasContinuousInv₀
 
-export HasContinuousInv₀ (continuous_at_inv₀)
+export HasContinuousInv₀ (continuousAt_inv₀)
 
 section Inv₀
 
@@ -243,16 +243,16 @@ variable [TopologicalSpace α] [GroupWithZero α] [HasContinuousMul α]
 is a homeomorphism of the underlying type. -/
 protected def mulLeft₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
   { Equiv.mulLeft₀ c hc with
-    continuous_to_fun := continuous_mul_left _
-    continuous_inv_fun := continuous_mul_left _ }
+    continuous_toFun := continuous_mul_left _
+    continuous_invFun := continuous_mul_left _ }
 #align homeomorph.mul_left₀ Homeomorph.mulLeft₀
 
 /-- Right multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
 protected def mulRight₀ (c : α) (hc : c ≠ 0) : α ≃ₜ α :=
   { Equiv.mulRight₀ c hc with
-    continuous_to_fun := continuous_mul_right _
-    continuous_inv_fun := continuous_mul_right _ }
+    continuous_toFun := continuous_mul_right _
+    continuous_invFun := continuous_mul_right _ }
 #align homeomorph.mul_right₀ Homeomorph.mulRight₀
 
 @[simp]

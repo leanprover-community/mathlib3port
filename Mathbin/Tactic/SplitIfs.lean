@@ -32,7 +32,7 @@ unsafe def find_if_cond : expr → Option expr
 
 unsafe def find_if_cond_at (at_ : Loc) : tactic (Option expr) := do
   let lctx ← at_.get_locals
-  let lctx ← lctx.mmap infer_type
+  let lctx ← lctx.mapM infer_type
   let tgt ← target
   let es := if at_.include_goal then tgt :: lctx else lctx
   return <| find_if_cond <| es app default
@@ -70,7 +70,7 @@ private unsafe def get_next_name (names : ref (List Name)) : tactic Name := do
 
 private unsafe def value_known (c : expr) : tactic Bool := do
   let lctx ← local_context
-  let lctx ← lctx.mmap infer_type
+  let lctx ← lctx.mapM infer_type
   return <| c ∈ lctx ∨ q(¬$(c)) ∈ lctx
 #align tactic.value_known tactic.value_known
 

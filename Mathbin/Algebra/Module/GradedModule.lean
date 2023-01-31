@@ -80,9 +80,9 @@ namespace Gmodule
 `⨁ᵢ Aᵢ`-scalar multiplication on `⨁ᵢ Mᵢ` induced by `gsmul_hom`. -/
 def smulAddMonoidHom [DecidableEq ι] [GMonoid A] [Gmodule A M] :
     (⨁ i, A i) →+ (⨁ i, M i) →+ ⨁ i, M i :=
-  to_add_monoid fun i =>
+  toAddMonoid fun i =>
     AddMonoidHom.flip <|
-      to_add_monoid fun j => AddMonoidHom.flip <| (of M _).compHom.comp <| gsmulHom A M
+      toAddMonoid fun j => AddMonoidHom.flip <| (of M _).compHom.comp <| gsmulHom A M
 #align direct_sum.gmodule.smul_add_monoid_hom DirectSum.Gmodule.smulAddMonoidHom
 
 section

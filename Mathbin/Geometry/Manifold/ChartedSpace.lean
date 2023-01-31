@@ -584,7 +584,7 @@ theorem ChartedSpace.second_countable_of_countable_cover [SecondCountableTopolog
     SecondCountableTopology M :=
   by
   haveI : ∀ x : M, second_countable_topology (chart_at H x).source := fun x =>
-    (chart_at H x).second_countable_topology_source
+    (chart_at H x).secondCountableTopology_source
   haveI := hsc.to_encodable
   rw [bUnion_eq_Union] at hs
   exact
@@ -614,11 +614,10 @@ theorem ChartedSpace.locally_compact [LocallyCompactSpace H] : LocallyCompactSpa
     intro x
     rw [← (chart_at H x).symm_map_nhds_eq (mem_chart_source H x)]
     exact
-      ((compact_basis_nhds (chart_at H x x)).has_basis_self_subset (chart_target_mem_nhds H x)).map
-        _
+      ((compact_basis_nhds (chart_at H x x)).hasBasis_self_subset (chart_target_mem_nhds H x)).map _
   refine' locallyCompactSpace_of_hasBasis this _
   rintro x s ⟨h₁, h₂, h₃⟩
-  exact h₂.image_of_continuous_on ((chart_at H x).continuous_on_symm.mono h₃)
+  exact h₂.image_of_continuous_on ((chart_at H x).continuousOn_symm.mono h₃)
 #align charted_space.locally_compact ChartedSpace.locally_compact
 
 /-- If a topological space admits an atlas with locally connected charts, then the space itself is
@@ -635,7 +634,7 @@ theorem ChartedSpace.locallyConnectedSpace [LocallyConnectedSpace H] : LocallyCo
             ((E x).open_target.mem_nhds (mem_chart_target H x))).map
         (E x).symm
   · rintro x s ⟨⟨-, -, hsconn⟩, hssubset⟩
-    exact hsconn.is_preconnected.image _ ((E x).continuous_on_symm.mono hssubset)
+    exact hsconn.is_preconnected.image _ ((E x).continuousOn_symm.mono hssubset)
 #align charted_space.locally_connected_space ChartedSpace.locallyConnectedSpace
 
 /-- If `M` is modelled on `H'` and `H'` is itself modelled on `H`, then we can consider `M` as being
@@ -784,7 +783,7 @@ structure ChartedSpaceCore (H : Type _) [TopologicalSpace H] (M : Type _) where
   mem_chart_source : ∀ x, x ∈ (chart_at x).source
   chart_mem_atlas : ∀ x, chart_at x ∈ atlas
   open_source : ∀ e e' : LocalEquiv M H, e ∈ atlas → e' ∈ atlas → IsOpen (e.symm.trans e').source
-  continuous_to_fun :
+  continuous_toFun :
     ∀ e e' : LocalEquiv M H,
       e ∈ atlas → e' ∈ atlas → ContinuousOn (e.symm.trans e') (e.symm.trans e').source
 #align charted_space_core ChartedSpaceCore
@@ -823,7 +822,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
   { e with
     open_source := by convert c.open_source' he
     open_target := by convert c.open_target he
-    continuous_to_fun := by
+    continuous_toFun := by
       letI : TopologicalSpace M := c.to_topological_space
       rw [continuousOn_open_iff (c.open_source' he)]
       intro s s_open
@@ -831,7 +830,7 @@ protected def localHomeomorph (e : LocalEquiv M H) (he : e ∈ c.atlas) :
       apply TopologicalSpace.GenerateOpen.basic
       simp only [exists_prop, mem_Union, mem_singleton_iff]
       exact ⟨e, he, ⟨s, s_open, rfl⟩⟩
-    continuous_inv_fun := by
+    continuous_invFun := by
       letI : TopologicalSpace M := c.to_topological_space
       apply continuousOn_open_of_generateFrom (c.open_target he)
       intro t ht
@@ -943,7 +942,7 @@ theorem StructureGroupoid.subset_maximalAtlas [HasGroupoid M G] : atlas H M ⊆ 
 
 theorem StructureGroupoid.chart_mem_maximalAtlas [HasGroupoid M G] (x : M) :
     chartAt H x ∈ G.maximalAtlas M :=
-  G.subset_maximal_atlas (chart_mem_atlas H x)
+  G.subset_maximalAtlas (chart_mem_atlas H x)
 #align structure_groupoid.chart_mem_maximal_atlas StructureGroupoid.chart_mem_maximalAtlas
 
 variable {G}
@@ -986,7 +985,7 @@ variable (G)
 
 /-- In the model space, the identity is in any maximal atlas. -/
 theorem StructureGroupoid.id_mem_maximalAtlas : LocalHomeomorph.refl H ∈ G.maximalAtlas H :=
-  G.subset_maximal_atlas <| by simp
+  G.subset_maximalAtlas <| by simp
 #align structure_groupoid.id_mem_maximal_atlas StructureGroupoid.id_mem_maximalAtlas
 
 /-- In the model space, any element of the groupoid is in the maximal atlas. -/
@@ -1068,7 +1067,7 @@ theorem singletonChartedSpace_chartAt_eq {f : α → H} (h : OpenEmbedding f) {x
 
 theorem singleton_hasGroupoid {f : α → H} (h : OpenEmbedding f) (G : StructureGroupoid H)
     [ClosedUnderRestriction G] : @HasGroupoid _ _ _ _ h.singletonChartedSpace G :=
-  (h.toLocalHomeomorph f).singleton_has_groupoid (by simp) G
+  (h.toLocalHomeomorph f).singleton_hasGroupoid (by simp) G
 #align open_embedding.singleton_has_groupoid OpenEmbedding.singleton_hasGroupoid
 
 end OpenEmbedding
@@ -1175,7 +1174,7 @@ def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') :
       have hg₂ := mem_chart_source H y
       let s := (c.symm ≫ₕ f₁).source ∩ c.symm ≫ₕ f₁ ⁻¹' g.source
       have open_s : IsOpen s := by
-        apply (c.symm ≫ₕ f₁).continuous_to_fun.preimage_open_of_open <;> apply open_source
+        apply (c.symm ≫ₕ f₁).continuous_toFun.preimage_open_of_open <;> apply open_source
       have : x ∈ s := by
         constructor
         · simp only [trans_source, preimage_univ, inter_univ, Homeomorph.toLocalHomeomorph_source]

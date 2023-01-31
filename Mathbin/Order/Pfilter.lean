@@ -120,7 +120,7 @@ instance : PartialOrder (Pfilter P) :=
 
 @[trans]
 theorem mem_of_mem_of_le {F G : Pfilter P} : x ∈ F → F ≤ G → x ∈ G :=
-  ideal.mem_of_mem_of_le
+  Ideal.mem_of_mem_of_le
 #align order.pfilter.mem_of_mem_of_le Order.Pfilter.mem_of_mem_of_le
 
 /-- The smallest filter containing a given element. -/
@@ -135,12 +135,12 @@ theorem mem_def (x : P) (I : Ideal Pᵒᵈ) : x ∈ (⟨I⟩ : Pfilter P) ↔ Or
 
 @[simp]
 theorem principal_le_iff {F : Pfilter P} : principal x ≤ F ↔ x ∈ F :=
-  ideal.principal_le_iff
+  Ideal.principal_le_iff
 #align order.pfilter.principal_le_iff Order.Pfilter.principal_le_iff
 
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
-  ideal.mem_principal
+  Ideal.mem_principal
 #align order.pfilter.mem_principal Order.Pfilter.mem_principal
 
 -- defeq abuse
@@ -186,7 +186,7 @@ theorem inf_mem (hx : x ∈ F) (hy : y ∈ F) : x ⊓ y ∈ F :=
 
 @[simp]
 theorem inf_mem_iff : x ⊓ y ∈ F ↔ x ∈ F ∧ y ∈ F :=
-  ideal.sup_mem_iff
+  Ideal.sup_mem_iff
 #align order.pfilter.inf_mem_iff Order.Pfilter.inf_mem_iff
 
 end SemilatticeInf

@@ -147,7 +147,7 @@ instance : Inhabited Prop :=
   ⟨Prop.true⟩
 
 /-- Given the contents of an `and` variant, return the two conjuncts. -/
-def AndKind.sides : AndKind → Prop → Prop → prop × prop
+def AndKind.sides : AndKind → Prop → Prop → Prop × Prop
   | and_kind.and, A, B => (A, B)
   | _, A, B => (A.imp B, B.imp A)
 #align tactic.itauto.and_kind.sides Tactic.Itauto.AndKind.sides
@@ -417,14 +417,14 @@ and a target proposition `B`, so that in the case that `⊥` is found we can ski
 and just prove `B` outright. -/
 @[inline]
 unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop)
-    (f : context → Prop → ℕ → Bool × proof × ℕ) (n : ℕ) : Bool × proof × ℕ :=
+    (f : context → Prop → ℕ → Bool × Proof × ℕ) (n : ℕ) : Bool × Proof × ℕ :=
   match Γ.add A p with
   | Except.ok Γ_A => f Γ_A B n
   | Except.error p => (true, p B, n)
 #align tactic.itauto.context.with_add tactic.itauto.context.with_add
 
 /-- Map a function over the proof (regardless of whether the proof is successful or not). -/
-def mapProof (f : Proof → Proof) : Bool × proof × ℕ → Bool × proof × ℕ
+def mapProof (f : Proof → Proof) : Bool × Proof × ℕ → Bool × Proof × ℕ
   | (b, p, n) => (b, f p, n)
 #align tactic.itauto.map_proof Tactic.Itauto.mapProof
 
@@ -435,7 +435,7 @@ def isOk {α} : Bool × α → Option α
 #align tactic.itauto.is_ok Tactic.Itauto.isOk
 
 /-- Skip the continuation and return a failed proof if the boolean is false. -/
-def whenOk : Bool → (ℕ → Bool × proof × ℕ) → ℕ → Bool × proof × ℕ
+def whenOk : Bool → (ℕ → Bool × Proof × ℕ) → ℕ → Bool × Proof × ℕ
   | ff, f, n => (false, Proof.sorry, n)
   | tt, f, n => f n
 #align tactic.itauto.when_ok Tactic.Itauto.whenOk
@@ -451,8 +451,8 @@ prove `A₁ → A₂`, which can be written `A₂ → C, A₁ ⊢ A₂` (where w
 `(A₁ → A₂) → C`), and one to use the consequent, `C ⊢ B`. The search here is that there are
 potentially many implications to split like this, and we have to try all of them if we want to be
 complete. -/
-unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) :
-    context → Prop → ℕ → Bool × proof × ℕ
+unsafe def search (prove : context → Prop → ℕ → Bool × Proof × ℕ) :
+    context → Prop → ℕ → Bool × Proof × ℕ
   | Γ, B, n =>
     match Γ.find B with
     | some p => (true, p, n)
@@ -465,14 +465,14 @@ unsafe def search (prove : context → Prop → ℕ → Bool × proof × ℕ) :
             match A with
             | prop.imp A' C =>
               match Γ.find A' with
-              | some q => is_ok <| context.with_add (Γ.erase A) C (p.app q) B prove n
+              | some q => isOk <| context.with_add (Γ.eraseₓ A) C (p.app q) B prove n
               | none =>
                 match A' with
                 | prop.imp A₁ A₂ => do
-                  let Γ : context := Γ.erase A
+                  let Γ : context := Γ.eraseₓ A
                   let (a, n) := fresh_name n
                   let (p₁, n) ←
-                    is_ok <|
+                    isOk <|
                         Γ.with_add A₁ (Proof.hyp a) A₂
                           (fun Γ_A₁ A₂ =>
                             Γ_A₁.with_add (Prop.imp A₂ C) (Proof.imp_imp_simp a p) A₂ prove)
@@ -506,7 +506,7 @@ handle. The rule `Γ ⊢ A ∧ B` is a level 2 rule, also handled here. If none 
 the level 2 rule `A ∨ B ⊢ C` by searching the context and splitting all ors we find. Finally, if
 we don't make any more progress, we go to the search phase.
 -/
-unsafe def prove : context → Prop → ℕ → Bool × proof × ℕ
+unsafe def prove : context → Prop → ℕ → Bool × Proof × ℕ
   | Γ, prop.true, n => (true, Proof.triv, n)
   | Γ, prop.imp A B, n =>
     let (a, n) := fresh_name n
@@ -520,7 +520,7 @@ unsafe def prove : context → Prop → ℕ → Bool × proof × ℕ
       (fun A p IH b Γ n =>
         match A with
         | prop.or A₁ A₂ =>
-          let Γ : context := Γ.erase A
+          let Γ : context := Γ.eraseₓ A
           let (a, n) := fresh_name n
           let (b, p₁, n) := Γ.with_add A₁ (Proof.hyp a) B (fun Γ _ => IH true Γ) n
           mapProof (proof.or_elim p a p₁) <|
@@ -549,18 +549,18 @@ unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic Prop := do
     ( atoms : ref ( Buffer expr ) ) : expr → tactic Prop
     | q( True ) => pure Prop.true
       | q( False ) => pure Prop.false
-      | q( ¬ $ ( a ) ) => prop.not <$> reify a
-      | q( $ ( a ) ∧ $ ( b ) ) => prop.and <$> reify a <*> reify b
-      | q( $ ( a ) ∨ $ ( b ) ) => prop.or <$> reify a <*> reify b
-      | q( $ ( a ) ↔ $ ( b ) ) => prop.iff <$> reify a <*> reify b
-      | q( Xor' $ ( a ) $ ( b ) ) => prop.xor <$> reify a <*> reify b
-      | q( @ Eq Prop $ ( a ) $ ( b ) ) => prop.eq <$> reify a <*> reify b
-      | q( @ Ne Prop $ ( a ) $ ( b ) ) => prop.not <$> ( prop.eq <$> reify a <*> reify b )
-      | q( Implies $ ( a ) $ ( b ) ) => prop.imp <$> reify a <*> reify b
+      | q( ¬ $ ( a ) ) => Prop.not <$> reify a
+      | q( $ ( a ) ∧ $ ( b ) ) => Prop.and <$> reify a <*> reify b
+      | q( $ ( a ) ∨ $ ( b ) ) => Prop.or <$> reify a <*> reify b
+      | q( $ ( a ) ↔ $ ( b ) ) => Prop.iff <$> reify a <*> reify b
+      | q( Xor' $ ( a ) $ ( b ) ) => Prop.xor <$> reify a <*> reify b
+      | q( @ Eq Prop $ ( a ) $ ( b ) ) => Prop.eq <$> reify a <*> reify b
+      | q( @ Ne Prop $ ( a ) $ ( b ) ) => Prop.not <$> ( Prop.eq <$> reify a <*> reify b )
+      | q( Implies $ ( a ) $ ( b ) ) => Prop.imp <$> reify a <*> reify b
       |
         e @ q( $ ( a ) → $ ( b ) )
         =>
-        if b . has_var then reify_atom atoms e else prop.imp <$> reify a <*> reify b
+        if b . has_var then reify_atom atoms e else Prop.imp <$> reify a <*> reify b
       | e => reify_atom atoms e
 #align tactic.itauto.reify tactic.itauto.reify
 
@@ -738,10 +738,10 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
   using_new_ref mkBuffer fun atoms =>
     using_new_ref mk_name_map fun hs => do
       let t ← target
-      let t ← condM (is_prop t) (reify atoms t) (tactic.exfalso $> prop.false)
+      let t ← condM (is_prop t) (reify atoms t) (tactic.exfalso $> Prop.false)
       let hyps ← local_context
       let (Γ, decs) ←
-        hyps.mfoldl
+        hyps.foldlM
             (fun (Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr)) h => do
               let e ← infer_type h
               condM (is_prop e)
@@ -769,7 +769,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
               (set_goals [m] >> apply_instance) >> failure
             else pure decs
           else pure (native.rb_map.insert decs A (res (tt, e) (Prod.mk ff)))
-      let decs ← extra_dec.mfoldl (add_dec true) decs
+      let decs ← extra_dec.foldlM (add_dec true) decs
       let decs ←
         if use_dec then do
             let decided :=
@@ -822,7 +822,7 @@ unsafe def itauto (classical : parse (parser.optional (tk "!"))) :
     parse (parser.optional (some <$> pexpr_list <|> tk "*" *> pure none)) → tactic Unit
   | none => tactic.itauto False classical.isSome []
   | some none => tactic.itauto True classical.isSome []
-  | some (some ls) => ls.mmap i_to_expr >>= tactic.itauto False classical.isSome
+  | some (some ls) => ls.mapM i_to_expr >>= tactic.itauto False classical.isSome
 #align tactic.interactive.itauto tactic.interactive.itauto
 
 add_hint_tactic itauto

@@ -196,7 +196,7 @@ theorem span_union (S T : Set (ℙ K V)) : span (S ∪ T) = span S ⊔ span T :=
 /-- The supremum of a collection of subspaces is equal to the span of the union of the
 collection. -/
 theorem span_unionᵢ {ι} (s : ι → Set (ℙ K V)) : span (⋃ i, s i) = ⨆ i, span (s i) :=
-  (@gi K V _ _ _).gc.l_supr
+  (@gi K V _ _ _).gc.l_supᵢ
 #align projectivization.subspace.span_Union Projectivization.Subspace.span_unionᵢ
 
 /-- The supremum of a subspace and the span of a set of points is equal to the span of the union of

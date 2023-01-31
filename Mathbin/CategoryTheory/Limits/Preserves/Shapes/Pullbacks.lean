@@ -55,7 +55,7 @@ def isLimitMapConePullbackConeEquiv :
         (PullbackCone.mk (G.map h) (G.map k) (by simp only [← G.map_comp, comm]) :
           PullbackCone (G.map f) (G.map g)) :=
   (IsLimit.postcomposeHomEquiv (diagramIsoCospan.{v₂} _) _).symm.trans <|
-    is_limit.equiv_iso_limit <|
+    IsLimit.equivIsoLimit <|
       Cones.ext (Iso.refl _) <| by
         rintro (_ | _ | _) <;> dsimp <;> simp only [comp_id, id_comp, G.map_comp]
 #align category_theory.limits.is_limit_map_cone_pullback_cone_equiv CategoryTheory.Limits.isLimitMapConePullbackConeEquiv
@@ -157,7 +157,7 @@ def isColimitMapCoconePushoutCoconeEquiv :
         (PushoutCocone.mk (G.map h) (G.map k) (by simp only [← G.map_comp, comm]) :
           PushoutCocone (G.map f) (G.map g)) :=
   (IsColimit.precomposeHomEquiv (diagramIsoSpan.{v₂} _).symm _).symm.trans <|
-    is_colimit.equiv_iso_colimit <|
+    IsColimit.equivIsoColimit <|
       Cocones.ext (Iso.refl _) <| by
         rintro (_ | _ | _) <;> dsimp <;>
           simp only [category.comp_id, category.id_comp, ← G.map_comp]

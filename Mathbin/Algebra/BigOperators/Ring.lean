@@ -243,7 +243,7 @@ theorem prod_add_ordered {ι R : Type _} [CommSemiring R] [LinearOrder ι] (s : 
     (∏ i in s, f i + g i) =
       (∏ i in s, f i) +
         ∑ i in s,
-          (g i * ∏ j in s.filter (· < i), f j + g j) * ∏ j in s.filter fun j => i < j, f j :=
+          (g i * ∏ j in s.filterₓ (· < i), f j + g j) * ∏ j in s.filterₓ fun j => i < j, f j :=
   by
   refine' Finset.induction_on_max s (by simp) _
   clear s
@@ -274,7 +274,7 @@ theorem prod_sub_ordered {ι R : Type _} [CommRing R] [LinearOrder ι] (s : Fins
     (∏ i in s, f i - g i) =
       (∏ i in s, f i) -
         ∑ i in s,
-          (g i * ∏ j in s.filter (· < i), f j - g j) * ∏ j in s.filter fun j => i < j, f j :=
+          (g i * ∏ j in s.filterₓ (· < i), f j - g j) * ∏ j in s.filterₓ fun j => i < j, f j :=
   by
   simp only [sub_eq_add_neg]
   convert prod_add_ordered s f fun i => -g i
@@ -290,7 +290,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_one_sub_or
 /-- `∏ i, (1 - f i) = 1 - ∑ i, f i * (∏ j < i, 1 - f j)`. This formula is useful in construction of
 a partition of unity from a collection of “bump” functions.  -/
 theorem prod_one_sub_ordered {ι R : Type _} [CommRing R] [LinearOrder ι] (s : Finset ι)
-    (f : ι → R) : (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i * ∏ j in s.filter (· < i), 1 - f j :=
+    (f : ι → R) : (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i * ∏ j in s.filterₓ (· < i), 1 - f j :=
   by
   rw [prod_sub_ordered]
   simp

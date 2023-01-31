@@ -210,7 +210,7 @@ instance uliftFunctor_faithful : Faithful uliftFunctor
 
 /-- The functor embedding `Type u` into `Type u` via `ulift` is isomorphic to the identity functor.
  -/
-def uliftFunctorTrivial : ulift_functor.{u, u} ≅ 𝟭 _ :=
+def uliftFunctorTrivial : uliftFunctor.{u, u} ≅ 𝟭 _ :=
   NatIso.ofComponents uliftTrivial (by tidy)
 #align category_theory.ulift_functor_trivial CategoryTheory.uliftFunctorTrivial
 
@@ -369,7 +369,7 @@ theorem isIso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.
 #align category_theory.is_iso_iff_bijective CategoryTheory.isIso_iff_bijective
 
 instance : SplitEpiCategory (Type u)
-    where is_split_epi_of_epi X Y f hf :=
+    where isSplitEpi_of_epi X Y f hf :=
     IsSplitEpi.mk'
       { section_ := Function.surjInv <| (epi_iff_surjective f).1 hf
         id' := funext <| Function.rightInverse_surjInv <| (epi_iff_surjective f).1 hf }

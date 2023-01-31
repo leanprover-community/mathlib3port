@@ -46,7 +46,7 @@ theorem mem_derangements_iff_fixedPoints_eq_empty {f : Perm α} :
 
 /-- If `α` is equivalent to `β`, then `derangements α` is equivalent to `derangements β`. -/
 def Equiv.derangementsCongr (e : α ≃ β) : derangements α ≃ derangements β :=
-  e.permCongr.subtypeEquiv fun f => e.forall_congr <| by simp
+  e.permCongr.subtypeEquiv fun f => e.forall_congr' <| by simp
 #align equiv.derangements_congr Equiv.derangementsCongr
 
 namespace derangements

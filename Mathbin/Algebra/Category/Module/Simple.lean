@@ -26,7 +26,7 @@ variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M]
 open CategoryTheory ModuleCat
 
 theorem simple_iff_isSimpleModule : Simple (of R M) ↔ IsSimpleModule R M :=
-  (simple_iff_subobject_isSimpleOrder _).trans (subobjectModule (of R M)).is_simple_order_iff
+  (simple_iff_subobject_isSimpleOrder _).trans (subobjectModule (of R M)).isSimpleOrder_iff
 #align simple_iff_is_simple_module simple_iff_isSimpleModule
 
 theorem simple_iff_is_simple_module' (M : ModuleCat R) : Simple M ↔ IsSimpleModule R M :=

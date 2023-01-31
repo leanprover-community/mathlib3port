@@ -29,7 +29,7 @@ open BigOperators
 /-- A subalgebra is a sub(semi)ring that includes the range of `algebra_map`. -/
 structure Subalgebra (R : Type u) (A : Type v) [CommSemiring R] [Semiring A] [Algebra R A] extends
   Subsemiring A : Type v where
-  algebra_map_mem' : ∀ r, algebraMap R A r ∈ carrier
+  algebraMap_mem' : ∀ r, algebraMap R A r ∈ carrier
   zero_mem' := (algebraMap R A).map_zero ▸ algebra_map_mem' 0
   one_mem' := (algebraMap R A).map_one ▸ algebra_map_mem' 1
 #align subalgebra Subalgebra
@@ -95,7 +95,7 @@ protected def copy (S : Subalgebra R A) (s : Set A) (hs : s = ↑S) : Subalgebra
   carrier := s
   add_mem' _ _ := hs.symm ▸ S.add_mem'
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
-  algebra_map_mem' := hs.symm ▸ S.algebra_map_mem'
+  algebraMap_mem' := hs.symm ▸ S.algebraMap_mem'
 #align subalgebra.copy Subalgebra.copy
 
 @[simp]
@@ -110,14 +110,14 @@ theorem copy_eq (S : Subalgebra R A) (s : Set A) (hs : s = ↑S) : S.copy s hs =
 variable (S : Subalgebra R A)
 
 theorem algebraMap_mem (r : R) : algebraMap R A r ∈ S :=
-  S.algebra_map_mem' r
+  S.algebraMap_mem' r
 #align subalgebra.algebra_map_mem Subalgebra.algebraMap_mem
 
 theorem rangeS_le : (algebraMap R A).srange ≤ S.toSubsemiring := fun x ⟨r, hr⟩ =>
-  hr ▸ S.algebra_map_mem r
+  hr ▸ S.algebraMap_mem r
 #align subalgebra.srange_le Subalgebra.rangeS_le
 
-theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebra_map_mem r
+theorem range_subset : Set.range (algebraMap R A) ⊆ S := fun x ⟨r, hr⟩ => hr ▸ S.algebraMap_mem r
 #align subalgebra.range_subset Subalgebra.range_subset
 
 theorem range_le : Set.range (algebraMap R A) ≤ S :=
@@ -125,7 +125,7 @@ theorem range_le : Set.range (algebraMap R A) ≤ S :=
 #align subalgebra.range_le Subalgebra.range_le
 
 theorem smul_mem {x : A} (hx : x ∈ S) (r : R) : r • x ∈ S :=
-  (Algebra.smul_def r x).symm ▸ mul_mem (S.algebra_map_mem r) hx
+  (Algebra.smul_def r x).symm ▸ mul_mem (S.algebraMap_mem r) hx
 #align subalgebra.smul_mem Subalgebra.smul_mem
 
 protected theorem one_mem : (1 : A) ∈ S :=
@@ -478,7 +478,7 @@ def toSubmoduleEquiv (S : Subalgebra R A) : S.toSubmodule ≃ₗ[R] S :=
 /-- Transport a subalgebra via an algebra homomorphism. -/
 def map (f : A →ₐ[R] B) (S : Subalgebra R A) : Subalgebra R B :=
   { S.toSubsemiring.map (f : A →+* B) with
-    algebra_map_mem' := fun r => f.commutes r ▸ Set.mem_image_of_mem _ (S.algebra_map_mem r) }
+    algebraMap_mem' := fun r => f.commutes r ▸ Set.mem_image_of_mem _ (S.algebraMap_mem r) }
 #align subalgebra.map Subalgebra.map
 
 theorem map_mono {S₁ S₂ : Subalgebra R A} {f : A →ₐ[R] B} : S₁ ≤ S₂ → S₁.map f ≤ S₂.map f :=
@@ -522,8 +522,8 @@ theorem coe_map (S : Subalgebra R A) (f : A →ₐ[R] B) : (S.map f : Set B) = f
 /-- Preimage of a subalgebra under an algebra homomorphism. -/
 def comap (f : A →ₐ[R] B) (S : Subalgebra R B) : Subalgebra R A :=
   { S.toSubsemiring.comap (f : A →+* B) with
-    algebra_map_mem' := fun r =>
-      show f (algebraMap R A r) ∈ S from (f.commutes r).symm ▸ S.algebra_map_mem r }
+    algebraMap_mem' := fun r =>
+      show f (algebraMap R A r) ∈ S from (f.commutes r).symm ▸ S.algebraMap_mem r }
 #align subalgebra.comap Subalgebra.comap
 
 theorem map_le {S : Subalgebra R A} {f : A →ₐ[R] B} {U : Subalgebra R B} :
@@ -567,7 +567,7 @@ def toSubalgebra (p : Submodule R A) (h_one : (1 : A) ∈ p)
     (h_mul : ∀ x y, x ∈ p → y ∈ p → x * y ∈ p) : Subalgebra R A :=
   { p with
     mul_mem' := h_mul
-    algebra_map_mem' := fun r => by
+    algebraMap_mem' := fun r => by
       rw [Algebra.algebraMap_eq_smul_one]
       exact p.smul_mem _ h_one }
 #align submodule.to_subalgebra Submodule.toSubalgebra
@@ -620,7 +620,7 @@ variable (φ : A →ₐ[R] B)
 
 /-- Range of an `alg_hom` as a subalgebra. -/
 protected def range (φ : A →ₐ[R] B) : Subalgebra R B :=
-  { φ.toRingHom.srange with algebra_map_mem' := fun r => ⟨algebraMap R A r, φ.commutes r⟩ }
+  { φ.toRingHom.srange with algebraMap_mem' := fun r => ⟨algebraMap R A r, φ.commutes r⟩ }
 #align alg_hom.range AlgHom.range
 
 @[simp]
@@ -686,7 +686,7 @@ def equalizer (ϕ ψ : A →ₐ[R] B) : Subalgebra R A
     rw [Set.mem_setOf_eq, ϕ.map_add, ψ.map_add, hx, hy]
   mul_mem' x y (hx : ϕ x = ψ x) (hy : ϕ y = ψ y) := by
     rw [Set.mem_setOf_eq, ϕ.map_mul, ψ.map_mul, hx, hy]
-  algebra_map_mem' x := by rw [Set.mem_setOf_eq, AlgHom.commutes, AlgHom.commutes]
+  algebraMap_mem' x := by rw [Set.mem_setOf_eq, AlgHom.commutes, AlgHom.commutes]
 #align alg_hom.equalizer AlgHom.equalizer
 
 @[simp]
@@ -773,7 +773,7 @@ variable [CommSemiring R] [Semiring A] [Algebra R A] [Semiring B] [Algebra R B]
 /-- The minimal subalgebra that includes `s`. -/
 def adjoin (s : Set A) : Subalgebra R A :=
   { Subsemiring.closure (Set.range (algebraMap R A) ∪ s) with
-    algebra_map_mem' := fun r => Subsemiring.subset_closure <| Or.inl ⟨r, rfl⟩ }
+    algebraMap_mem' := fun r => Subsemiring.subset_closure <| Or.inl ⟨r, rfl⟩ }
 #align algebra.adjoin Algebra.adjoin
 
 variable {R}
@@ -1140,7 +1140,7 @@ def prod : Subalgebra R (A × B) :=
   {
     S.toSubsemiring.Prod S₁.toSubsemiring with
     carrier := S ×ˢ S₁
-    algebra_map_mem' := fun r => ⟨algebraMap_mem _ _, algebraMap_mem _ _⟩ }
+    algebraMap_mem' := fun r => ⟨algebraMap_mem _ _, algebraMap_mem _ _⟩ }
 #align subalgebra.prod Subalgebra.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1194,7 +1194,7 @@ theorem coe_supᵢ_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : 
         let ⟨j, hj⟩ := Set.mem_unionᵢ.1 hy
         let ⟨k, hik, hjk⟩ := dir i j
         Set.mem_unionᵢ.2 ⟨k, Subalgebra.add_mem (S k) (hik hi) (hjk hj)⟩
-      algebra_map_mem' := fun r =>
+      algebraMap_mem' := fun r =>
         let i := @Nonempty.some ι inferInstance
         Set.mem_unionᵢ.2 ⟨i, Subalgebra.algebraMap_mem _ _⟩ }
   have : supᵢ S = K :=
@@ -1269,7 +1269,7 @@ variable {α β : Type _}
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
 instance [SMul A α] (S : Subalgebra R A) : SMul S α :=
-  S.toSubsemiring.HasSmul
+  S.toSubsemiring.SMul
 
 theorem smul_def [SMul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (g : A) • m :=
   rfl
@@ -1277,12 +1277,12 @@ theorem smul_def [SMul A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (
 
 instance sMulCommClass_left [SMul A β] [SMul α β] [SMulCommClass A α β] (S : Subalgebra R A) :
     SMulCommClass S α β :=
-  S.toSubsemiring.smul_comm_class_left
+  S.toSubsemiring.smulCommClass_left
 #align subalgebra.smul_comm_class_left Subalgebra.sMulCommClass_left
 
 instance sMulCommClass_right [SMul α β] [SMul A β] [SMulCommClass α A β] (S : Subalgebra R A) :
     SMulCommClass α S β :=
-  S.toSubsemiring.smul_comm_class_right
+  S.toSubsemiring.smulCommClass_right
 #align subalgebra.smul_comm_class_right Subalgebra.sMulCommClass_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
@@ -1298,7 +1298,7 @@ instance isScalarTower_mid {R S T : Type _} [CommSemiring R] [Semiring S] [AddCo
 #align subalgebra.is_scalar_tower_mid Subalgebra.isScalarTower_mid
 
 instance [SMul A α] [FaithfulSMul A α] (S : Subalgebra R A) : FaithfulSMul S α :=
-  S.toSubsemiring.HasFaithfulSmul
+  S.toSubsemiring.FaithfulSMul
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
 instance [MulAction A α] (S : Subalgebra R A) : MulAction S α :=
@@ -1310,7 +1310,7 @@ instance [AddMonoid α] [DistribMulAction A α] (S : Subalgebra R A) : DistribMu
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
 instance [Zero α] [SMulWithZero A α] (S : Subalgebra R A) : SMulWithZero S α :=
-  S.toSubsemiring.SmulWithZero
+  S.toSubsemiring.SMulWithZero
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
 instance [Zero α] [MulActionWithZero A α] (S : Subalgebra R A) : MulActionWithZero S α :=
@@ -1365,7 +1365,7 @@ variable (R A)
 /-- The center of an algebra is the set of elements which commute with every element. They form a
 subalgebra. -/
 def center : Subalgebra R A :=
-  { Subsemiring.center A with algebra_map_mem' := Set.algebraMap_mem_center }
+  { Subsemiring.center A with algebraMap_mem' := Set.algebraMap_mem_center }
 #align subalgebra.center Subalgebra.center
 
 theorem coe_center : (center R A : Set A) = Set.center A :=
@@ -1413,7 +1413,7 @@ variable (R)
 
 /-- The centralizer of a set as a subalgebra. -/
 def centralizer (s : Set A) : Subalgebra R A :=
-  { Subsemiring.centralizer s with algebra_map_mem' := Set.algebraMap_mem_centralizer }
+  { Subsemiring.centralizer s with algebraMap_mem' := Set.algebraMap_mem_centralizer }
 #align subalgebra.centralizer Subalgebra.centralizer
 
 @[simp, norm_cast]
@@ -1486,7 +1486,7 @@ variable {R : Type _} [Semiring R]
 
 /-- A subsemiring is a `ℕ`-subalgebra. -/
 def subalgebraOfSubsemiring (S : Subsemiring R) : Subalgebra ℕ R :=
-  { S with algebra_map_mem' := fun i => coe_nat_mem S i }
+  { S with algebraMap_mem' := fun i => coe_nat_mem S i }
 #align subalgebra_of_subsemiring subalgebraOfSubsemiring
 
 @[simp]
@@ -1504,7 +1504,7 @@ variable {R : Type _} [Ring R]
 /-- A subring is a `ℤ`-subalgebra. -/
 def subalgebraOfSubring (S : Subring R) : Subalgebra ℤ R :=
   { S with
-    algebra_map_mem' := fun i =>
+    algebraMap_mem' := fun i =>
       Int.induction_on i (by simpa using S.zero_mem)
         (fun i ih => by simpa using S.add_mem ih S.one_mem) fun i ih =>
         show ((-i - 1 : ℤ) : R) ∈ S by

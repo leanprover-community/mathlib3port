@@ -306,7 +306,8 @@ theorem zpow_mul' (A : M) (h : IsUnit A.det) (m n : ℤ) : A ^ (m * n) = (A ^ n)
 @[simp, norm_cast]
 theorem coe_units_zpow (u : Mˣ) : ∀ n : ℤ, ((u ^ n : Mˣ) : M) = u ^ n
   | (n : ℕ) => by rw [_root_.zpow_coe_nat, zpow_ofNat, Units.val_pow_eq_pow_val]
-  | -[k+1] => by rw [zpow_negSucc, zpow_negSucc, ← inv_pow, u⁻¹.coe_pow, ← inv_pow', coe_units_inv]
+  | -[k+1] => by
+    rw [zpow_negSucc, zpow_negSucc, ← inv_pow, u⁻¹.val_pow_eq_pow_val, ← inv_pow', coe_units_inv]
 #align matrix.coe_units_zpow Matrix.coe_units_zpow
 
 theorem zpow_ne_zero_of_isUnit_det [Nonempty n'] [Nontrivial R] {A : M} (ha : IsUnit A.det)

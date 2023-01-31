@@ -248,9 +248,9 @@ theorem map_linearMap_add_haar_eq_smul_add_haar {f : E →ₗ[ℝ] E} (hf : f.de
     simp only [LinearEquiv.coe_coe, Function.comp_apply, LinearMap.coe_comp,
       LinearEquiv.symm_apply_apply, hg]
   simp only [fg, LinearEquiv.coe_coe, LinearMap.coe_comp]
-  have Ce : Continuous e := (e : E →ₗ[ℝ] ι → ℝ).continuous_of_finite_dimensional
+  have Ce : Continuous e := (e : E →ₗ[ℝ] ι → ℝ).continuous_of_finiteDimensional
   have Cg : Continuous g := LinearMap.continuous_of_finiteDimensional g
-  have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finite_dimensional
+  have Cesymm : Continuous e.symm := (e.symm : (ι → ℝ) →ₗ[ℝ] E).continuous_of_finiteDimensional
   rw [← map_map Cesymm.measurable (Cg.comp Ce).Measurable, ← map_map Cg.measurable Ce.measurable]
   haveI : is_add_haar_measure (map e μ) := (e : E ≃+ (ι → ℝ)).is_add_haar_measure_map μ Ce Cesymm
   have ecomp : e.symm ∘ e = id := by
@@ -336,7 +336,7 @@ equal to `μ s` times the absolute value of the determinant of `f`. -/
 @[simp]
 theorem add_haar_image_continuousLinearEquiv (f : E ≃L[ℝ] E) (s : Set E) :
     μ (f '' s) = Ennreal.ofReal (abs (f : E →ₗ[ℝ] E).det) * μ s :=
-  μ.add_haar_image_linear_map (f : E →ₗ[ℝ] E) s
+  μ.add_haar_image_linearMap (f : E →ₗ[ℝ] E) s
 #align measure_theory.measure.add_haar_image_continuous_linear_equiv MeasureTheory.Measure.add_haar_image_continuousLinearEquiv
 
 /-!

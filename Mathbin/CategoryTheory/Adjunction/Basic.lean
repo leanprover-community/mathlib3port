@@ -64,8 +64,8 @@ structure Adjunction (F : C ⥤ D) (G : D ⥤ C) where
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
   Unit : 𝟭 C ⟶ F.comp G
   counit : G.comp F ⟶ 𝟭 D
-  hom_equiv_unit' : ∀ {X Y f}, (hom_equiv X Y) f = (Unit : _ ⟶ _).app X ≫ G.map f := by obviously
-  hom_equiv_counit' : ∀ {X Y g}, (hom_equiv X Y).symm g = F.map g ≫ counit.app Y := by obviously
+  homEquiv_unit' : ∀ {X Y f}, (hom_equiv X Y) f = (Unit : _ ⟶ _).app X ≫ G.map f := by obviously
+  homEquiv_counit' : ∀ {X Y g}, (hom_equiv X Y).symm g = F.map g ≫ counit.app Y := by obviously
 #align category_theory.adjunction CategoryTheory.Adjunction
 
 -- mathport name: «expr ⊣ »
@@ -96,13 +96,13 @@ def rightAdjoint (L : C ⥤ D) [IsLeftAdjoint L] : D ⥤ C :=
 /-- The adjunction associated to a functor known to be a left adjoint. -/
 def Adjunction.ofLeftAdjoint (left : C ⥤ D) [IsLeftAdjoint left] :
     Adjunction left (rightAdjoint left) :=
-  is_left_adjoint.adj
+  IsLeftAdjoint.adj
 #align category_theory.adjunction.of_left_adjoint CategoryTheory.Adjunction.ofLeftAdjoint
 
 /-- The adjunction associated to a functor known to be a right adjoint. -/
 def Adjunction.ofRightAdjoint (right : C ⥤ D) [IsRightAdjoint right] :
     Adjunction (leftAdjoint right) right :=
-  is_right_adjoint.adj
+  IsRightAdjoint.adj
 #align category_theory.adjunction.of_right_adjoint CategoryTheory.Adjunction.ofRightAdjoint
 
 namespace Adjunction
@@ -218,11 +218,11 @@ This structure won't typically be used anywhere else.
 @[nolint has_nonempty_instance]
 structure CoreHomEquiv (F : C ⥤ D) (G : D ⥤ C) where
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
-  hom_equiv_naturality_left_symm' :
+  homEquiv_naturality_left_symm' :
     ∀ {X' X Y} (f : X' ⟶ X) (g : X ⟶ G.obj Y),
       (hom_equiv X' Y).symm (f ≫ g) = F.map f ≫ (hom_equiv X Y).symm g := by
     obviously
-  hom_equiv_naturality_right' :
+  homEquiv_naturality_right' :
     ∀ {X Y Y'} (f : F.obj X ⟶ Y) (g : Y ⟶ Y'),
       (hom_equiv X Y') (f ≫ g) = (hom_equiv X Y) f ≫ G.map g := by
     obviously
@@ -300,8 +300,8 @@ def mkOfHomEquiv (adj : CoreHomEquiv F G) : F ⊣ G :=
           intros
           erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm]
           dsimp; simp }
-    hom_equiv_unit' := fun X Y f => by erw [← adj.hom_equiv_naturality_right] <;> simp
-    hom_equiv_counit' := fun X Y f => by erw [← adj.hom_equiv_naturality_left_symm] <;> simp }
+    homEquiv_unit' := fun X Y f => by erw [← adj.hom_equiv_naturality_right] <;> simp
+    homEquiv_counit' := fun X Y f => by erw [← adj.hom_equiv_naturality_left_symm] <;> simp }
 #align category_theory.adjunction.mk_of_hom_equiv CategoryTheory.Adjunction.mkOfHomEquiv
 
 /-- Construct an adjunction between functors `F` and `G` given a unit and counit for the adjunction
@@ -465,7 +465,7 @@ to `adjunction_of_equiv_right`. -/
 def adjunctionOfEquivLeft : leftAdjointOfEquiv e he ⊣ G :=
   mkOfHomEquiv
     { homEquiv := e
-      hom_equiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm' := by
         intros
         erw [← he' e he, ← Equiv.apply_eq_iff_eq]
         simp [(he _ _ _ _ _).symm] }
@@ -511,8 +511,8 @@ to `adjunction_of_equiv_left`. -/
 def adjunctionOfEquivRight : F ⊣ rightAdjointOfEquiv e he :=
   mkOfHomEquiv
     { homEquiv := e
-      hom_equiv_naturality_left_symm' := by intros <;> rw [Equiv.symm_apply_eq, he] <;> simp
-      hom_equiv_naturality_right' := by
+      homEquiv_naturality_left_symm' := by intros <;> rw [Equiv.symm_apply_eq, he] <;> simp
+      homEquiv_naturality_right' := by
         intro X Y Y' g h
         erw [← he, Equiv.apply_eq_iff_eq, ← assoc, he' e he, comp_id, Equiv.symm_apply_apply] }
 #align category_theory.adjunction.adjunction_of_equiv_right CategoryTheory.Adjunction.adjunctionOfEquivRight

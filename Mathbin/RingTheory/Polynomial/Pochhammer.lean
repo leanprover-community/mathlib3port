@@ -46,7 +46,7 @@ with coefficients in the semiring `S`.
 -/
 noncomputable def pochhammer : ℕ → S[X]
   | 0 => 1
-  | n + 1 => X * (pochhammer n).comp (X + 1)
+  | n + 1 => x * (pochhammer n).comp (x + 1)
 #align pochhammer pochhammer
 
 @[simp]
@@ -55,10 +55,10 @@ theorem pochhammer_zero : pochhammer S 0 = 1 :=
 #align pochhammer_zero pochhammer_zero
 
 @[simp]
-theorem pochhammer_one : pochhammer S 1 = X := by simp [pochhammer]
+theorem pochhammer_one : pochhammer S 1 = x := by simp [pochhammer]
 #align pochhammer_one pochhammer_one
 
-theorem pochhammer_succ_left (n : ℕ) : pochhammer S (n + 1) = X * (pochhammer S n).comp (X + 1) :=
+theorem pochhammer_succ_left (n : ℕ) : pochhammer S (n + 1) = x * (pochhammer S n).comp (x + 1) :=
   by rw [pochhammer]
 #align pochhammer_succ_left pochhammer_succ_left
 
@@ -98,7 +98,7 @@ theorem pochhammer_ne_zero_eval_zero {n : ℕ} (h : n ≠ 0) : (pochhammer S n).
   simp [pochhammer_eval_zero, h]
 #align pochhammer_ne_zero_eval_zero pochhammer_ne_zero_eval_zero
 
-theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (X + n) :=
+theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (x + n) :=
   by
   suffices h : pochhammer ℕ (n + 1) = pochhammer ℕ n * (X + n)
   · apply_fun Polynomial.map (algebraMap ℕ S)  at h
@@ -119,8 +119,8 @@ theorem pochhammer_succ_eval {S : Type _} [Semiring S] (n : ℕ) (k : S) :
 #align pochhammer_succ_eval pochhammer_succ_eval
 
 theorem pochhammer_succ_comp_x_add_one (n : ℕ) :
-    (pochhammer S (n + 1)).comp (X + 1) =
-      pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (X + 1) :=
+    (pochhammer S (n + 1)).comp (x + 1) =
+      pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (x + 1) :=
   by
   suffices
     (pochhammer ℕ (n + 1)).comp (X + 1) =
@@ -132,12 +132,12 @@ theorem pochhammer_succ_comp_x_add_one (n : ℕ) :
 #align pochhammer_succ_comp_X_add_one pochhammer_succ_comp_x_add_one
 
 theorem Polynomial.mul_x_add_nat_cast_comp {p q : S[X]} {n : ℕ} :
-    (p * (X + n)).comp q = p.comp q * (q + n) := by
+    (p * (x + n)).comp q = p.comp q * (q + n) := by
   rw [mul_add, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_add]
 #align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_x_add_nat_cast_comp
 
 theorem pochhammer_mul (n m : ℕ) :
-    pochhammer S n * (pochhammer S m).comp (X + n) = pochhammer S (n + m) :=
+    pochhammer S n * (pochhammer S m).comp (x + n) = pochhammer S (n + m) :=
   by
   induction' m with m ih
   · simp

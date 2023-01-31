@@ -212,7 +212,7 @@ by whiskering the cone and postcomposing with a suitable isomorphism. -/
 def whiskerToCone {f : J → C} (c : Bicone f) (g : K ≃ J) :
     (c.whisker g).toCone ≅
       (Cones.postcompose (Discrete.functorComp f g).inv).obj
-        (c.toCone.whisker (Discrete.functor (discrete.mk ∘ g))) :=
+        (c.toCone.whisker (Discrete.functor (Discrete.mk ∘ g))) :=
   Cones.ext (Iso.refl _) (by tidy)
 #align category_theory.limits.bicone.whisker_to_cone CategoryTheory.Limits.Bicone.whiskerToCone
 
@@ -221,7 +221,7 @@ by whiskering the cocone and precomposing with a suitable isomorphism. -/
 def whiskerToCocone {f : J → C} (c : Bicone f) (g : K ≃ J) :
     (c.whisker g).toCocone ≅
       (Cocones.precompose (Discrete.functorComp f g).hom).obj
-        (c.toCocone.whisker (Discrete.functor (discrete.mk ∘ g))) :=
+        (c.toCocone.whisker (Discrete.functor (Discrete.mk ∘ g))) :=
   Cocones.ext (Iso.refl _) (by tidy)
 #align category_theory.limits.bicone.whisker_to_cocone CategoryTheory.Limits.Bicone.whiskerToCocone
 
@@ -330,7 +330,7 @@ theorem hasBiproductsOfShapeOfEquiv {K : Type w'} [HasBiproductsOfShape K C] (e 
   ⟨fun F =>
     let ⟨⟨h⟩⟩ := HasBiproductsOfShape.hasBiproduct (F ∘ e.symm)
     let ⟨c, hc⟩ := h
-    has_biproduct.mk <| by
+    HasBiproduct.mk <| by
       simpa only [(· ∘ ·), e.symm_apply_apply] using
         limit_bicone.mk (c.whisker e) ((c.whisker_is_bilimit_iff _).2 hc)⟩
 #align category_theory.limits.has_biproducts_of_shape_of_equiv CategoryTheory.Limits.hasBiproductsOfShapeOfEquiv
@@ -1102,7 +1102,7 @@ def toBicone {X Y : C} (b : BinaryBicone X Y) : Bicone (pairFunction X Y)
 /-- A binary bicone is a limit cone if and only if the corresponding bicone is a limit cone. -/
 def toBiconeIsLimit {X Y : C} (b : BinaryBicone X Y) :
     IsLimit b.toBicone.toCone ≃ IsLimit b.toCone :=
-  is_limit.equiv_iso_limit <|
+  IsLimit.equivIsoLimit <|
     Cones.ext (Iso.refl _) fun j => by
       cases j
       tidy
@@ -1112,7 +1112,7 @@ def toBiconeIsLimit {X Y : C} (b : BinaryBicone X Y) :
     cocone. -/
 def toBiconeIsColimit {X Y : C} (b : BinaryBicone X Y) :
     IsColimit b.toBicone.toCocone ≃ IsColimit b.toCocone :=
-  is_colimit.equiv_iso_colimit <|
+  IsColimit.equivIsoColimit <|
     Cocones.ext (Iso.refl _) fun j => by
       cases j
       tidy
@@ -1145,14 +1145,14 @@ def toBinaryBicone {X Y : C} (b : Bicone (pairFunction X Y)) : BinaryBicone X Y
     cone.  -/
 def toBinaryBiconeIsLimit {X Y : C} (b : Bicone (pairFunction X Y)) :
     IsLimit b.toBinaryBicone.toCone ≃ IsLimit b.toCone :=
-  is_limit.equiv_iso_limit <| Cones.ext (Iso.refl _) fun j => by rcases j with ⟨⟨⟩⟩ <;> tidy
+  IsLimit.equivIsoLimit <| Cones.ext (Iso.refl _) fun j => by rcases j with ⟨⟨⟩⟩ <;> tidy
 #align category_theory.limits.bicone.to_binary_bicone_is_limit CategoryTheory.Limits.Bicone.toBinaryBiconeIsLimit
 
 /-- A bicone over a pair is a colimit cocone if and only if the corresponding binary bicone is a
     colimit cocone. -/
 def toBinaryBiconeIsColimit {X Y : C} (b : Bicone (pairFunction X Y)) :
     IsColimit b.toBinaryBicone.toCocone ≃ IsColimit b.toCocone :=
-  is_colimit.equiv_iso_colimit <| Cocones.ext (Iso.refl _) fun j => by rcases j with ⟨⟨⟩⟩ <;> tidy
+  IsColimit.equivIsoColimit <| Cocones.ext (Iso.refl _) fun j => by rcases j with ⟨⟨⟩⟩ <;> tidy
 #align category_theory.limits.bicone.to_binary_bicone_is_colimit CategoryTheory.Limits.Bicone.toBinaryBiconeIsColimit
 
 end Bicone

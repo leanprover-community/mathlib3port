@@ -38,16 +38,16 @@ variable (R : Type u) [CommSemiring R] {S : Type v} [CommSemiring S] (p q : ℕ)
 
 /-- Expand the polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`. -/
 noncomputable def expand : R[X] →ₐ[R] R[X] :=
-  { (eval₂RingHom c (X ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_c _ _ }
+  { (eval₂RingHom c (x ^ p) : R[X] →+* R[X]) with commutes' := fun r => eval₂_c _ _ }
 #align polynomial.expand Polynomial.expand
 
-theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ c (X ^ p) :=
+theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ c (x ^ p) :=
   rfl
 #align polynomial.coe_expand Polynomial.coe_expand
 
 variable {R}
 
-theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => c a * (X ^ p) ^ e :=
+theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => c a * (x ^ p) ^ e :=
   by
   dsimp [expand, eval₂]
   rfl
@@ -59,7 +59,7 @@ theorem expand_c (r : R) : expand R p (c r) = c r :=
 #align polynomial.expand_C Polynomial.expand_c
 
 @[simp]
-theorem expand_x : expand R p x = X ^ p :=
+theorem expand_x : expand R p x = x ^ p :=
   eval₂_x _ _
 #align polynomial.expand_X Polynomial.expand_x
 
@@ -95,7 +95,7 @@ theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
 #align polynomial.expand_pow Polynomial.expand_pow
 
 theorem derivative_expand (f : R[X]) :
-    (expand R p f).derivative = expand R p f.derivative * (p * X ^ (p - 1)) := by
+    (expand R p f).derivative = expand R p f.derivative * (p * x ^ (p - 1)) := by
   rw [coe_expand, derivative_eval₂_C, derivative_pow, C_eq_nat_cast, derivative_X, mul_one]
 #align polynomial.derivative_expand Polynomial.derivative_expand
 

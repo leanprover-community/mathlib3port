@@ -326,7 +326,7 @@ theorem isTopologicalBasis_cylinders :
   apply is_topological_basis_of_open_of_nhds
   · rintro u ⟨x, n, rfl⟩
     rw [cylinder_eq_pi]
-    exact isOpen_set_pi (Finset.range n).finite_to_set fun a ha => isOpen_discrete _
+    exact isOpen_set_pi (Finset.range n).finite_toSet fun a ha => isOpen_discrete _
   · intro x u hx u_open
     obtain ⟨v, ⟨U, F, hUF, rfl⟩, xU, Uu⟩ :
       ∃ (v : Set (∀ i : ℕ, E i))(H :
@@ -363,7 +363,7 @@ theorem isOpen_iff_dist (s : Set (∀ n, E n)) :
     exact
       ⟨(1 / 2 : ℝ) ^ n, by simp, fun y hy => h's fun i hi => (apply_eq_of_dist_lt hy hi.le).symm⟩
   · intro h
-    apply (is_topological_basis_cylinders E).is_open_iff.2 fun x hx => _
+    apply (is_topological_basis_cylinders E).isOpen_iff.2 fun x hx => _
     rcases h x hx with ⟨ε, εpos, hε⟩
     obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos one_half_lt_one
     refine' ⟨cylinder x n, ⟨x, n, rfl⟩, self_mem_cylinder x n, fun y hy => hε y _⟩
@@ -403,7 +403,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
         intro ε εpos
         obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos (by norm_num)
         apply
-          @mem_infi_of_Inter _ _ _ _ _ (Finset.range n).finite_to_set fun i =>
+          @mem_infi_of_Inter _ _ _ _ _ (Finset.range n).finite_toSet fun i =>
             { p : (∀ n : ℕ, E n) × ∀ n : ℕ, E n | p.fst i = p.snd i }
         · simp only [mem_principal, set_of_subset_set_of, imp_self, imp_true_iff]
         · rintro ⟨x, y⟩ hxy
@@ -600,7 +600,7 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
     · rintro x ⟨y, rfl⟩
       by_cases hy : y ∈ s
       · rwa [fs y hy]
-      simpa [hf, if_neg hy] using (inter_cylinder_longest_prefix_nonempty hs hne y).some_spec.1
+      simpa [hf, if_neg hy] using (inter_cylinder_longest_prefix_nonempty hs hne y).choose_spec.1
     · intro x hx
       rw [← fs x hx]
       exact mem_range_self _

@@ -303,7 +303,7 @@ attribute [reducible] comm_ring_aux₂
 
 /-- The commutative ring structure on `𝕎 R`. -/
 instance : CommRing (𝕎 R) :=
-  (mapFun.surjective _ <| counit_surjective _).CommRing (map_fun <| MvPolynomial.counit _)
+  (mapFun.surjective _ <| counit_surjective _).CommRing (mapFun <| MvPolynomial.counit _)
     (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
     (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
 
@@ -368,7 +368,7 @@ def ghostEquiv : 𝕎 R ≃+* (ℕ → R) :=
 #align witt_vector.ghost_equiv WittVector.ghostEquiv
 
 @[simp]
-theorem ghostEquiv_coe : (ghostEquiv p R : 𝕎 R →+* ℕ → R) = ghost_map :=
+theorem ghostEquiv_coe : (ghostEquiv p R : 𝕎 R →+* ℕ → R) = ghostMap :=
   rfl
 #align witt_vector.ghost_equiv_coe WittVector.ghostEquiv_coe
 

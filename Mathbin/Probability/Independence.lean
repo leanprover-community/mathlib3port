@@ -510,7 +510,7 @@ theorem indepSuprOfDirectedLe {Ω} {m : ι → MeasurableSpace Ω} {m' m0 : Meas
     by
     refine' indep_sets.Union _
     simp_rw [h_gen_n, h_gen'] at h_indep
-    exact fun n => (h_indep n).IndepSets
+    exact fun n => (h_indep n).IndepSetsCat
   -- now go from π-systems to σ-algebras
   refine' indep_sets.indep (supᵢ_le h_le) h_le' hp_supr_pi hp'_pi _ h_gen' h_pi_system_indep
   exact (generate_from_Union_measurable_set _).symm
@@ -729,12 +729,12 @@ theorem indepFun_iff_measure_inter_preimage_eq_mul {ι : Type _} {β : ι → Ty
       by
       intro i hi_mem
       simp_rw [setsβ, dif_pos hi_mem]
-      exact (h_meas i hi_mem).some_spec.1
+      exact (h_meas i hi_mem).choose_spec.1
     have h_preim : ∀ i ∈ S, setsΩ i = f i ⁻¹' setsβ i :=
       by
       intro i hi_mem
       simp_rw [setsβ, dif_pos hi_mem]
-      exact (h_meas i hi_mem).some_spec.2.symm
+      exact (h_meas i hi_mem).choose_spec.2.symm
     have h_left_eq : μ (⋂ i ∈ S, setsΩ i) = μ (⋂ i ∈ S, f i ⁻¹' setsβ i) :=
       by
       congr with (i x)

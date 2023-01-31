@@ -283,7 +283,7 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
 #align continuous_linear_map.is_open_map ContinuousLinearMap.isOpenMap
 
 protected theorem quotientMap (surj : Surjective f) : QuotientMap f :=
-  (f.IsOpenMap surj).to_quotient_map f.Continuous surj
+  (f.IsOpenMap surj).to_quotientMap f.Continuous surj
 #align continuous_linear_map.quotient_map ContinuousLinearMap.quotientMap
 
 theorem AffineMap.isOpenMap {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
@@ -360,8 +360,8 @@ the direct map is continuous, thanks to the Banach open mapping theorem that ens
 inverse map is also continuous. -/
 def toContinuousLinearEquivOfContinuous (e : E ≃ₗ[𝕜] F) (h : Continuous e) : E ≃L[𝕜] F :=
   { e with
-    continuous_to_fun := h
-    continuous_inv_fun := e.continuous_symm h }
+    continuous_toFun := h
+    continuous_invFun := e.continuous_symm h }
 #align linear_equiv.to_continuous_linear_equiv_of_continuous LinearEquiv.toContinuousLinearEquivOfContinuous
 
 @[simp]
@@ -507,7 +507,7 @@ namespace ContinuousLinearMap
 def ofIsClosedGraph (hg : IsClosed (g.graph : Set <| E × F)) : E →L[𝕜] F
     where
   toLinearMap := g
-  cont := g.continuous_of_is_closed_graph hg
+  cont := g.continuous_of_isClosed_graph hg
 #align continuous_linear_map.of_is_closed_graph ContinuousLinearMap.ofIsClosedGraph
 
 @[simp]

@@ -72,7 +72,7 @@ It is the unique non-negative integer that is `< p` with this property.
 See `padic_int.zmod_repr` for a version that takes values in `ℕ`
 and works for arbitrary `x : ℤ_[p]`.) -/
 def modPart : ℤ :=
-  r.num * gcdA r.denom p % p
+  r.num * gcdA r.den p % p
 #align padic_int.mod_part PadicInt.modPart
 
 include hp_prime
@@ -90,7 +90,7 @@ theorem modPart_nonneg : 0 ≤ modPart p r :=
   Int.emod_nonneg _ <| by exact_mod_cast hp_prime.1.NeZero
 #align padic_int.mod_part_nonneg PadicInt.modPart_nonneg
 
-theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.denom : ℤ_[p]) :=
+theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.den : ℤ_[p]) :=
   by
   rw [is_unit_iff]
   apply le_antisymm (r.denom : ℤ_[p]).2
@@ -117,7 +117,7 @@ theorem isUnit_den (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) : IsUnit (r.denom :
 #align padic_int.is_unit_denom PadicInt.isUnit_den
 
 theorem norm_sub_mod_part_aux (r : ℚ) (h : ‖(r : ℚ_[p])‖ ≤ 1) :
-    ↑p ∣ r.num - r.num * r.denom.gcdA p % p * ↑r.denom :=
+    ↑p ∣ r.num - r.num * r.den.gcdA p % p * ↑r.den :=
   by
   rw [← ZMod.int_coe_zMod_eq_zero_iff_dvd]
   simp only [Int.cast_ofNat, ZMod.nat_cast_mod, Int.cast_mul, Int.cast_sub]

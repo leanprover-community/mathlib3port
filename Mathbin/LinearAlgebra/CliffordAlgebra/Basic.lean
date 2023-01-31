@@ -192,7 +192,7 @@ theorem induction {C : CliffordAlgebra Q → Prop}
     { carrier := C
       mul_mem' := h_mul
       add_mem' := h_add
-      algebra_map_mem' := h_grade0 }
+      algebraMap_mem' := h_grade0 }
   let of : { f : M →ₗ[R] s // ∀ m, f m * f m = algebraMap _ _ (Q m) } :=
     ⟨(ι Q).codRestrict s.to_submodule h_grade1, fun m => Subtype.eq <| ι_sq_scalar Q m⟩
   -- the mapping through the subalgebra is the identity
@@ -326,7 +326,7 @@ theorem equivOfIsometry_trans (e₁₂ : Q₁.Isometry Q₂) (e₂₃ : Q₂.Iso
 
 @[simp]
 theorem equivOfIsometry_refl :
-    (equiv_of_isometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl :=
+    (equivOfIsometry <| QuadraticForm.Isometry.refl Q₁) = AlgEquiv.refl :=
   by
   ext x
   exact AlgHom.congr_fun (map_id Q₁) x
@@ -340,9 +340,9 @@ variable (Q)
 def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m)
     where
   invOf := ι Q (⅟ (Q m) • m)
-  inv_of_mul_self := by
+  invOf_mul_self := by
     rw [map_smul, smul_mul_assoc, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
-  mul_inv_of_self := by
+  mul_invOf_self := by
     rw [map_smul, mul_smul_comm, ι_sq_scalar, Algebra.smul_def, ← map_mul, invOf_mul_self, map_one]
 #align clifford_algebra.invertible_ι_of_invertible CliffordAlgebra.invertibleιOfInvertible
 

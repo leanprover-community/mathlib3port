@@ -53,7 +53,7 @@ inductive εClosure (S : Set σ) : Set σ
 
 @[simp]
 theorem subset_εClosure (S : Set σ) : S ⊆ M.εClosure S :=
-  ε_closure.base
+  εClosure.base
 #align ε_NFA.subset_ε_closure εNFA.subset_εClosure
 
 @[simp]
@@ -75,7 +75,7 @@ variable {M}
 
 @[simp]
 theorem mem_stepSet_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align ε_NFA.mem_step_set_iff εNFA.mem_stepSet_iff
 
 @[simp]

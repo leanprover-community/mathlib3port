@@ -410,7 +410,7 @@ theorem homIso_hom (h : IsLimit t) {W : C} (f : ULift.{u₁} (W ⟶ t.x)) :
 
 /-- The limit of `F` represents the functor taking `W` to
   the set of cones on `F` with vertex `W`. -/
-def natIso (h : IsLimit t) : yoneda.obj t.x ⋙ ulift_functor.{u₁} ≅ F.cones :=
+def natIso (h : IsLimit t) : yoneda.obj t.x ⋙ uliftFunctor.{u₁} ≅ F.cones :=
   NatIso.ofComponents (fun W => IsLimit.homIso h (unop W)) (by tidy)
 #align category_theory.limits.is_limit.nat_iso CategoryTheory.Limits.IsLimit.natIso
 
@@ -468,7 +468,7 @@ def isoUniqueConeMorphism {t : Cone F} : IsLimit t ≅ ∀ s, Unique (s ⟶ t)
 
 namespace OfNatIso
 
-variable {X : C} (h : yoneda.obj X ⋙ ulift_functor.{u₁} ≅ F.cones)
+variable {X : C} (h : yoneda.obj X ⋙ uliftFunctor.{u₁} ≅ F.cones)
 
 /-- If `F.cones` is represented by `X`, each morphism `f : Y ⟶ X` gives a cone with cone point
 `Y`. -/
@@ -532,7 +532,7 @@ open OfNatIso
 /-- If `F.cones` is representable, then the cone corresponding to the identity morphism on
 the representing object is a limit cone.
 -/
-def ofNatIso {X : C} (h : yoneda.obj X ⋙ ulift_functor.{u₁} ≅ F.cones) : IsLimit (limitCone h)
+def ofNatIso {X : C} (h : yoneda.obj X ⋙ uliftFunctor.{u₁} ≅ F.cones) : IsLimit (limitCone h)
     where
   lift s := homOfCone h s
   fac' s j := by
@@ -924,7 +924,7 @@ theorem homIso_hom (h : IsColimit t) {W : C} (f : ULift (t.x ⟶ W)) :
 
 /-- The colimit of `F` represents the functor taking `W` to
   the set of cocones on `F` with vertex `W`. -/
-def natIso (h : IsColimit t) : coyoneda.obj (op t.x) ⋙ ulift_functor.{u₁} ≅ F.cocones :=
+def natIso (h : IsColimit t) : coyoneda.obj (op t.x) ⋙ uliftFunctor.{u₁} ≅ F.cocones :=
   NatIso.ofComponents (IsColimit.homIso h) (by intros <;> ext <;> dsimp <;> rw [← assoc] <;> rfl)
 #align category_theory.limits.is_colimit.nat_iso CategoryTheory.Limits.IsColimit.natIso
 
@@ -982,7 +982,7 @@ def isoUniqueCoconeMorphism {t : Cocone F} : IsColimit t ≅ ∀ s, Unique (t �
 
 namespace OfNatIso
 
-variable {X : C} (h : coyoneda.obj (op X) ⋙ ulift_functor.{u₁} ≅ F.cocones)
+variable {X : C} (h : coyoneda.obj (op X) ⋙ uliftFunctor.{u₁} ≅ F.cocones)
 
 /-- If `F.cocones` is corepresented by `X`, each morphism `f : X ⟶ Y` gives a cocone with cone
 point `Y`. -/
@@ -1047,7 +1047,7 @@ open OfNatIso
 /-- If `F.cocones` is corepresentable, then the cocone corresponding to the identity morphism on
 the representing object is a colimit cocone.
 -/
-def ofNatIso {X : C} (h : coyoneda.obj (op X) ⋙ ulift_functor.{u₁} ≅ F.cocones) :
+def ofNatIso {X : C} (h : coyoneda.obj (op X) ⋙ uliftFunctor.{u₁} ≅ F.cocones) :
     IsColimit (colimitCocone h) where
   desc s := homOfCocone h s
   fac' s j := by

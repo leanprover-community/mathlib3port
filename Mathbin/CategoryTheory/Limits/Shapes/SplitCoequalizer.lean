@@ -66,9 +66,9 @@ structure IsSplitCoequalizer {Z : C} (π : Y ⟶ Z) where
   rightSection : Z ⟶ Y
   leftSection : Y ⟶ X
   condition : f ≫ π = g ≫ π
-  right_section_π : right_section ≫ π = 𝟙 Z
-  left_section_bottom : left_section ≫ g = 𝟙 Y
-  left_section_top : left_section ≫ f = π ≫ right_section
+  rightSection_π : right_section ≫ π = 𝟙 Z
+  leftSection_bottom : left_section ≫ g = 𝟙 Y
+  leftSection_top : left_section ≫ f = π ≫ right_section
 #align category_theory.is_split_coequalizer CategoryTheory.IsSplitCoequalizer
 
 instance {X : C} : Inhabited (IsSplitCoequalizer (𝟙 X) (𝟙 X) (𝟙 X)) :=
@@ -90,9 +90,9 @@ def IsSplitCoequalizer.map {Z : C} {π : Y ⟶ Z} (q : IsSplitCoequalizer f g π
   rightSection := F.map q.rightSection
   leftSection := F.map q.leftSection
   condition := by rw [← F.map_comp, q.condition, F.map_comp]
-  right_section_π := by rw [← F.map_comp, q.right_section_π, F.map_id]
-  left_section_bottom := by rw [← F.map_comp, q.left_section_bottom, F.map_id]
-  left_section_top := by rw [← F.map_comp, q.left_section_top, F.map_comp]
+  rightSection_π := by rw [← F.map_comp, q.right_section_π, F.map_id]
+  leftSection_bottom := by rw [← F.map_comp, q.left_section_bottom, F.map_id]
+  leftSection_top := by rw [← F.map_comp, q.left_section_top, F.map_comp]
 #align category_theory.is_split_coequalizer.map CategoryTheory.IsSplitCoequalizer.map
 
 section
@@ -153,13 +153,13 @@ noncomputable def HasSplitCoequalizer.coequalizerOfSplit [HasSplitCoequalizer f 
 /-- Get the coequalizer morphism from the typeclass `is_split_pair`. -/
 noncomputable def HasSplitCoequalizer.coequalizerπ [HasSplitCoequalizer f g] :
     Y ⟶ HasSplitCoequalizer.coequalizerOfSplit f g :=
-  (HasSplitCoequalizer.splittable f g).some_spec.some
+  (HasSplitCoequalizer.splittable f g).choose_spec.some
 #align category_theory.has_split_coequalizer.coequalizer_π CategoryTheory.HasSplitCoequalizer.coequalizerπ
 
 /-- The coequalizer morphism `coequalizer_ι` gives a split coequalizer on `f,g`. -/
 noncomputable def HasSplitCoequalizer.isSplitCoequalizer [HasSplitCoequalizer f g] :
     IsSplitCoequalizer f g (HasSplitCoequalizer.coequalizerπ f g) :=
-  Classical.choice (HasSplitCoequalizer.splittable f g).some_spec.some_spec
+  Classical.choice (HasSplitCoequalizer.splittable f g).choose_spec.choose_spec
 #align category_theory.has_split_coequalizer.is_split_coequalizer CategoryTheory.HasSplitCoequalizer.isSplitCoequalizer
 
 /-- If `f, g` is split, then `G f, G g` is split. -/

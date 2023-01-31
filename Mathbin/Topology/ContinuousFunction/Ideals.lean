@@ -193,7 +193,7 @@ on its own. -/
 theorem exists_mul_le_one_eqOn_ge (f : C(X, ℝ≥0)) {c : ℝ≥0} (hc : 0 < c) :
     ∃ g : C(X, ℝ≥0), (∀ x : X, (g * f) x ≤ 1) ∧ { x : X | c ≤ f x }.EqOn (g * f) 1 :=
   ⟨{  toFun := (f ⊔ const X c)⁻¹
-      continuous_to_fun :=
+      continuous_toFun :=
         ((map_continuous f).sup <| map_continuous _).inv₀ fun _ => (hc.trans_le le_sup_right).ne' },
     fun x =>
     (inv_mul_le_iff (hc.trans_le le_sup_right)).mpr ((mul_one (f x ⊔ c)).symm ▸ le_sup_left),
@@ -386,7 +386,7 @@ theorem idealOfSet_isMaximal_iff (s : Opens X) :
     (idealOfSet 𝕜 (s : Set X)).IsMaximal ↔ IsCoatom s :=
   by
   rw [Ideal.isMaximal_def]
-  refine' (ideal_opens_gi X 𝕜).is_coatom_iff (fun I hI => _) s
+  refine' (ideal_opens_gi X 𝕜).isCoatom_iff (fun I hI => _) s
   rw [← Ideal.isMaximal_def] at hI
   skip
   exact ideal_of_set_of_ideal_is_closed inferInstance
@@ -452,7 +452,7 @@ def continuousMapEval : C(X, characterSpace 𝕜 C(X, 𝕜))
       by
       rw [character_space.eq_set_map_one_map_mul]
       exact ⟨rfl, fun f g => rfl⟩⟩
-  continuous_to_fun := Continuous.subtype_mk (continuous_of_continuous_eval map_continuous) _
+  continuous_toFun := Continuous.subtype_mk (continuous_of_continuous_eval map_continuous) _
 #align weak_dual.character_space.continuous_map_eval WeakDual.characterSpace.continuousMapEval
 
 @[simp]

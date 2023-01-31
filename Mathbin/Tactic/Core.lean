@@ -90,7 +90,7 @@ unsafe def of_list (α : expr) : List expr → tactic expr
 /-- Generates an expression of the form `∃(args), inner`. `args` is assumed to be a list of local
 constants. When possible, `p ∧ q` is used instead of `∃(_ : p), q`. -/
 unsafe def mk_exists_lst (args : List expr) (inner : expr) : tactic expr :=
-  args.mfoldr
+  args.foldrM
     (fun arg i : expr => do
       let t ← infer_type arg
       let sort l ← infer_type t
@@ -120,7 +120,7 @@ with initial value `a`. -/
 unsafe def mfoldl {α : Type} {m} [Monad m] (f : α → expr → m α) : α → expr → m α
   | x, e =>
     Prod.snd <$>
-      (StateT.run (e.traverse fun e' => (get >>= monad_lift ∘ flip f e' >>= put) $> e') x : m _)
+      (StateT.run (e.traverse fun e' => (get >>= monadLift ∘ flip f e' >>= put) $> e') x : m _)
 #align expr.mfoldl expr.mfoldl
 
 /-- `kreplace e old new` replaces all occurrences of the expression `old` in `e`
@@ -499,7 +499,7 @@ better yet, if Lean exposed its path information.
 unsafe def get_decls_from (fs : List (Option String)) : tactic (name_map declaration) := do
   let root ← unsafe_run_io <| Io.Env.getCwd
   let fs := fs.map (Option.map fun path => root ++ "/" ++ path)
-  let err ← unsafe_run_io <| (fs.filterMap id).mfilter <| (· <$> ·) not ∘ Io.Fs.fileExists
+  let err ← unsafe_run_io <| (fs.filterMap id).filterM <| (· <$> ·) not ∘ Io.Fs.fileExists
   guard (err = []) <|> fail f! "File not found: {err}"
   let e ← tactic.get_env
   let xs :=
@@ -535,7 +535,7 @@ do e ← mk_const d.to_name,
 but is hopefully faster.
 -/
 unsafe def decl_mk_const (d : declaration) : tactic (expr × expr) := do
-  let subst ← d.univ_params.mmap fun u => Prod.mk u <$> mk_meta_univ
+  let subst ← d.univ_params.mapM fun u => Prod.mk u <$> mk_meta_univ
   let e : expr := expr.const d.to_name (Prod.snd <$> subst)
   return (e, d subst)
 #align tactic.decl_mk_const tactic.decl_mk_const
@@ -678,7 +678,7 @@ Returns `tt` if any types were successfully changed.
 unsafe def replace_at (tac : expr → tactic (expr × expr)) (hs : List expr) (tgt : Bool) :
     tactic Bool := do
   let to_remove ←
-    hs.mfilter fun h => do
+    hs.filterM fun h => do
         let h_type ← infer_type h
         succeeds do
             let (new_h_type, pr) ← tac h_type
@@ -709,7 +709,7 @@ unsafe def revert_after (e : expr) : tactic ℕ := do
 unsafe def revert_target_deps : tactic ℕ := do
   let tgt ← target
   let ctx ← local_context
-  let l ← ctx.mfilter (kdepends_on tgt)
+  let l ← ctx.filterM (kdepends_on tgt)
   let n ← revert_lst l
   if l = [] then return n
     else do
@@ -1023,7 +1023,7 @@ private unsafe def expanded_field_list' : Name → tactic (Dlist <| Name × Name
   | struct_n => do
     let (so, fs) ← subobject_names struct_n
     let ts ←
-      so.mmap fun n => do
+      so.mapM fun n => do
           let (_, e) ← mk_const (n.updatePrefix struct_n) >>= infer_type >>= open_pis
           expanded_field_list' <| e
     return <| Std.DList.join ts ++ Dlist.ofList (fs <| Prod.mk struct_n)
@@ -1147,7 +1147,7 @@ unsafe def apply_rules (args : List pexpr) (attrs : List Name) (n : Nat) (opt : 
     tactic Unit := do
   let attr_exprs ←
     lock_tactic_state <|
-        attrs.mfoldl (fun l n => List.append l <$> resolve_attribute_expr_list n) []
+        attrs.foldlM (fun l n => List.append l <$> resolve_attribute_expr_list n) []
   let args_exprs := args.map i_to_expr_for_apply ++ attr_exprs
   -- `args_exprs` is a list of `tactic expr`, rather than just `expr`, because these expressions will
       -- be repeatedly applied against goals, and we need to ensure that metavariables don't get stuck.
@@ -1463,7 +1463,7 @@ unsafe def fsplit : tactic Unit := do
   mk_const c >>= fun e =>
       apply e
           { NewGoals := new_goals.all
-            autoParam := ff } >>
+            autoParamₓ := ff } >>
         skip
 #align tactic.fsplit tactic.fsplit
 
@@ -1685,7 +1685,7 @@ unsafe def synthesize_tactic_state_with_variables_as_hyps (es : List pexpr) :
   let/- Look up the explicit `included_vars` and the `referenced_vars` (which have appeared in the
         `pexpr` list which we were passed.)  -/
   directly_included_vars :=
-    vars.filter fun var => var.local_pp_name ∈ included_vars ∨ var.local_pp_name ∈ referenced_vars
+    vars.filterₓ fun var => var.local_pp_name ∈ included_vars ∨ var.local_pp_name ∈ referenced_vars
   let/- Inflate the list `directly_included_vars` to include those variables which are "implicitly
         included" by virtue of reference to one or multiple others. For example, given
         `variables (n : ℕ) [prime n] [ih : even n]`, a reference to `n` implies that the typeclass
@@ -1776,7 +1776,7 @@ private unsafe def strip_prefix' (n : Name) : List String → Name → tactic Na
 /-- Strips unnecessary prefixes from a name, e.g. if a namespace is open. -/
 unsafe def strip_prefix : Name → tactic Name
   | n@(Name.mk_string a a_1) =>
-    if `_private.isPrefixOf n then
+    if `_private.isPrefixOfₓ n then
       let n' := n.updatePrefix Name.anonymous
       n' <$ resolve_name' n' <|> pure n
     else strip_prefix' n [a] a_1
@@ -1983,7 +1983,7 @@ unsafe def list_constructors_hole : hole_command
     let env ← get_env
     let cs := env.constructors_of cl
     let ts ←
-      cs.mmap fun c => do
+      cs.mapM fun c => do
           let e ← mk_const c
           let t ← infer_type (e.mk_app args) >>= pp
           let c ← strip_prefix c
@@ -1991,7 +1991,7 @@ unsafe def list_constructors_hole : hole_command
               f! "
                 {c } : {t}
                 "
-    let fs ← format.intercalate ", " <$> cs.mmap (strip_prefix >=> pure ∘ to_fmt)
+    let fs ← format.intercalate ", " <$> cs.mapM (strip_prefix >=> pure ∘ to_fmt)
     let out := format.to_string f! "\{! {fs} !}}"
     trace (format.join ts).toString
     return [(out, "")]
@@ -2155,7 +2155,7 @@ See the doc string for `tactic.interactive.use` for more information.
  -/
 protected unsafe def use (l : List pexpr) : tactic Unit :=
   focus1 <|
-    seq' (l.mmap' fun h => use_aux h <|> fail f! "failed to instantiate goal with {h}")
+    seq' (l.mapM' fun h => use_aux h <|> fail f! "failed to instantiate goal with {h}")
       instantiate_mvars_in_target
 #align tactic.use tactic.use
 
@@ -2191,7 +2191,7 @@ unsafe def apply_at (e h : expr) : tactic Unit := do
   let (h', gs') ← apply_at_aux h ht [] e et
   note h none h'
   clear h
-  let gs' ← gs'.mfilter is_assigned
+  let gs' ← gs'.filterM is_assigned
   let g :: gs ← get_goals
   set_goals (g :: gs' ++ gs)
 #align tactic.apply_at tactic.apply_at
@@ -2655,7 +2655,7 @@ unsafe def find_private_decl (n : Name) (fr : Option Name) : tactic Name := do
   let fn ←
     OptionT.run do
         let fr ← OptionT.mk (return fr)
-        let d ← monad_lift <| get_decl fr
+        let d ← monadLift <| get_decl fr
         OptionT.mk (return <| env d)
   let p : String → Bool :=
     match fn with
@@ -2664,7 +2664,7 @@ unsafe def find_private_decl (n : Name) (fr : Option Name) : tactic Name := do
   let xs :=
     env.decl_filter_map fun d => do
       let fn ← env.decl_olean d.to_name
-      guard (`_private.isPrefixOf d ∧ p fn ∧ d Name.anonymous = n)
+      guard (`_private.isPrefixOfₓ d ∧ p fn ∧ d Name.anonymous = n)
       pure d
   match xs with
     | [n] => pure n
@@ -2784,6 +2784,6 @@ Otherwise, it fails.
 -/
 unsafe def list.find_defeq (red : Tactic.Transparency) {v} (m : List (expr × v)) (e : expr) :
     tactic (expr × v) :=
-  m.mfind fun ⟨e', val⟩ => tactic.is_def_eq e e' red
+  m.findM fun ⟨e', val⟩ => tactic.is_def_eq e e' red
 #align list.find_defeq list.find_defeq
 

@@ -106,7 +106,7 @@ structure. -/
 def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
   { V
     toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
-    to_uniform_add_group := @topological_add_commGroup_is_uniform _ _ v.subgroups_basis.topology _
+    to_uniformAddGroup := @topological_add_commGroup_is_uniform _ _ v.subgroups_basis.topology _
     is_topological_valuation :=
       by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
@@ -132,9 +132,9 @@ theorem hasBasis_uniformity :
 #align valued.has_basis_uniformity Valued.hasBasis_uniformity
 
 theorem toUniformSpace_eq :
-    to_uniform_space = @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _ :=
+    toUniformSpace = @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _ :=
   uniformSpace_eq
-    ((hasBasis_uniformity R Γ₀).eq_of_same_basis <| v.subgroups_basis.has_basis_nhds_zero.comap _)
+    ((hasBasis_uniformity R Γ₀).eq_of_same_basis <| v.subgroups_basis.hasBasis_nhds_zero.comap _)
 #align valued.to_uniform_space_eq Valued.toUniformSpace_eq
 
 variable {R Γ₀}
@@ -159,7 +159,7 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 #align valued.loc_const Valued.loc_const
 
 instance (priority := 100) : TopologicalRing R :=
-  (toUniformSpace_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topological_ring
+  (toUniformSpace_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topologicalRing
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :

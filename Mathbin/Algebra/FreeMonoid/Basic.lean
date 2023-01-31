@@ -63,7 +63,7 @@ def ofList : List α ≃ FreeMonoid α :=
 
 #print FreeMonoid.toList_symm /-
 @[simp, to_additive]
-theorem toList_symm : (@toList α).symm = of_list :=
+theorem toList_symm : (@toList α).symm = ofList :=
   rfl
 #align free_monoid.to_list_symm FreeMonoid.toList_symm
 #align free_add_monoid.to_list_symm FreeAddMonoid.toList_symm
@@ -71,7 +71,7 @@ theorem toList_symm : (@toList α).symm = of_list :=
 
 #print FreeMonoid.ofList_symm /-
 @[simp, to_additive]
-theorem ofList_symm : (@ofList α).symm = to_list :=
+theorem ofList_symm : (@ofList α).symm = toList :=
   rfl
 #align free_monoid.of_list_symm FreeMonoid.ofList_symm
 #align free_add_monoid.of_list_symm FreeAddMonoid.ofList_symm
@@ -95,7 +95,7 @@ theorem ofList_toList (xs : FreeMonoid α) : ofList (toList xs) = xs :=
 
 #print FreeMonoid.toList_comp_ofList /-
 @[simp, to_additive]
-theorem toList_comp_ofList : @toList α ∘ of_list = id :=
+theorem toList_comp_ofList : @toList α ∘ ofList = id :=
   rfl
 #align free_monoid.to_list_comp_of_list FreeMonoid.toList_comp_ofList
 #align free_add_monoid.to_list_comp_of_list FreeAddMonoid.toList_comp_ofList
@@ -103,7 +103,7 @@ theorem toList_comp_ofList : @toList α ∘ of_list = id :=
 
 #print FreeMonoid.ofList_comp_toList /-
 @[simp, to_additive]
-theorem ofList_comp_toList : @ofList α ∘ to_list = id :=
+theorem ofList_comp_toList : @ofList α ∘ toList = id :=
   rfl
 #align free_monoid.of_list_comp_to_list FreeMonoid.ofList_comp_toList
 #align free_add_monoid.of_list_comp_to_list FreeAddMonoid.ofList_comp_toList
@@ -519,7 +519,7 @@ each `of x` to `of (f x)`. -/
       "The unique additive monoid homomorphism `free_add_monoid α →+ free_add_monoid β`\nthat sends each `of x` to `of (f x)`."]
 def map (f : α → β) : FreeMonoid α →* FreeMonoid β
     where
-  toFun l := of_list <| l.toList.map f
+  toFun l := ofList <| l.toList.map f
   map_one' := rfl
   map_mul' l₁ l₂ := List.map_append _ _ _
 #align free_monoid.map FreeMonoid.map

@@ -151,9 +151,9 @@ variable {n : ℕ} {α : Type _}
 /-- If two permutations of a tuple `f` are both monotone, then they are equal. -/
 theorem unique_monotone [PartialOrder α] {f : Fin n → α} {σ τ : Equiv.Perm (Fin n)}
     (hfσ : Monotone (f ∘ σ)) (hfτ : Monotone (f ∘ τ)) : f ∘ σ = f ∘ τ :=
-  of_fn_injective <|
-    eq_of_perm_of_sorted ((σ.of_fn_comp_perm f).trans (τ.of_fn_comp_perm f).symm) hfσ.of_fn_sorted
-      hfτ.of_fn_sorted
+  ofFn_injective <|
+    eq_of_perm_of_sorted ((σ.ofFn_comp_perm f).trans (τ.ofFn_comp_perm f).symm) hfσ.ofFn_sorted
+      hfτ.ofFn_sorted
 #align tuple.unique_monotone Tuple.unique_monotone
 -/
 

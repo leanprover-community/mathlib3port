@@ -51,7 +51,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.zip_with_nth Vector.zipWith_getₓ'. -/
 @[simp]
 theorem zipWith_get (x : Vector α n) (y : Vector β n) (i) :
-    (Vector.zipWith f x y).nth i = f (x.nth i) (y.nth i) :=
+    (Vector.zipWith f x y).get? i = f (x.get? i) (y.get? i) :=
   by
   dsimp only [Vector.zipWith, Vector.get]
   cases x; cases y

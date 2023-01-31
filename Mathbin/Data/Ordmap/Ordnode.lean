@@ -347,7 +347,7 @@ def Emem (x : α) : Ordnode α → Prop :=
 #align ordnode.emem Ordnode.Emem
 
 instance Emem.decidable [DecidableEq α] (x : α) : ∀ t, Decidable (Emem x t) :=
-  any.decidable
+  Any.decidable
 #align ordnode.emem.decidable Ordnode.Emem.decidable
 
 /-- O(n). Approximate membership in the set, that is, whether some element in the
@@ -372,7 +372,7 @@ def Amem [LE α] (x : α) : Ordnode α → Prop :=
 #align ordnode.amem Ordnode.Amem
 
 instance Amem.decidable [LE α] [@DecidableRel α (· ≤ ·)] (x : α) : ∀ t, Decidable (Amem x t) :=
-  any.decidable
+  Any.decidable
 #align ordnode.amem.decidable Ordnode.Amem.decidable
 
 /-- O(log n). Return the minimum element of the tree, or the provided default value.

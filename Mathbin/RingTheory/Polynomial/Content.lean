@@ -111,7 +111,7 @@ theorem content_zero : content (0 : R[X]) = 0 := by rw [← C_0, content_C, norm
 theorem content_one : content (1 : R[X]) = 1 := by rw [← C_1, content_C, normalize_one]
 #align polynomial.content_one Polynomial.content_one
 
-theorem content_x_mul {p : R[X]} : content (X * p) = content p :=
+theorem content_x_mul {p : R[X]} : content (x * p) = content p :=
   by
   rw [content, content, Finset.gcd_def, Finset.gcd_def]
   refine' congr rfl _
@@ -273,11 +273,11 @@ theorem isPrimitive_primPart (p : R[X]) : p.primPart.IsPrimitive :=
 #align polynomial.is_primitive_prim_part Polynomial.isPrimitive_primPart
 
 theorem content_primPart (p : R[X]) : p.primPart.content = 1 :=
-  p.is_primitive_prim_part.content_eq_one
+  p.isPrimitive_primPart.content_eq_one
 #align polynomial.content_prim_part Polynomial.content_primPart
 
 theorem primPart_ne_zero (p : R[X]) : p.primPart ≠ 0 :=
-  p.is_primitive_prim_part.NeZero
+  p.isPrimitive_primPart.NeZero
 #align polynomial.prim_part_ne_zero Polynomial.primPart_ne_zero
 
 theorem natDegree_primPart (p : R[X]) : p.primPart.natDegree = p.natDegree :=
@@ -305,13 +305,13 @@ theorem isUnit_primPart_c (r : R) : IsUnit (c r).primPart :=
       _⟩
   rw [← normalize_eq_zero, ← C_eq_zero] at h0
   apply mul_left_cancel₀ h0
-  conv_rhs => rw [← content_C, ← (C r).eq_C_content_mul_prim_part]
+  conv_rhs => rw [← content_C, ← (C r).eq_c_content_mul_primPart]
   simp only [Units.val_mk, normalize_apply, RingHom.map_mul]
   rw [mul_assoc, ← RingHom.map_mul, Units.mul_inv, C_1, mul_one]
 #align polynomial.is_unit_prim_part_C Polynomial.isUnit_primPart_c
 
 theorem primPart_dvd (p : R[X]) : p.primPart ∣ p :=
-  Dvd.intro_left (c p.content) p.eq_C_content_mul_prim_part.symm
+  Dvd.intro_left (c p.content) p.eq_c_content_mul_primPart.symm
 #align polynomial.prim_part_dvd Polynomial.primPart_dvd
 
 theorem aeval_primPart_eq_zero {S : Type _} [Ring S] [IsDomain S] [Algebra R S]
@@ -419,7 +419,7 @@ theorem primPart_mul {p q : R[X]} (h0 : p * q ≠ 0) : (p * q).primPart = p.prim
   rw [Ne.def, ← content_eq_zero_iff, ← C_eq_zero] at h0
   apply mul_left_cancel₀ h0
   conv_lhs =>
-    rw [← (p * q).eq_C_content_mul_prim_part, p.eq_C_content_mul_prim_part,
+    rw [← (p * q).eq_c_content_mul_primPart, p.eq_C_content_mul_prim_part,
       q.eq_C_content_mul_prim_part]
   rw [content_mul, RingHom.map_mul]
   ring

@@ -70,7 +70,7 @@ noncomputable def succFn (i : ι) : ι :=
 #align linear_locally_finite_order.succ_fn LinearLocallyFiniteOrder.succFn
 
 theorem succFn_spec (i : ι) : IsGLB (Set.Ioi i) (succFn i) :=
-  (exists_glb_Ioi i).some_spec
+  (exists_glb_Ioi i).choose_spec
 #align linear_locally_finite_order.succ_fn_spec LinearLocallyFiniteOrder.succFn_spec
 
 theorem le_succFn (i : ι) : i ≤ succFn i :=

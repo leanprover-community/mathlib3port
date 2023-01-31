@@ -47,10 +47,10 @@ instance [MulOneClass M] [CommMonoid N] : CommMonoid (M →* N)
     { toFun := fun x => f x ^ n
       map_one' := by simp
       map_mul' := fun x y => by simp [mul_pow] }
-  npow_zero' f := by
+  npow_zero f := by
     ext x
     simp
-  npow_succ' n f := by
+  npow_succ n f := by
     ext x
     simp [pow_succ]
 
@@ -91,8 +91,8 @@ instance [AddCommMonoid M] : Semiring (AddMonoid.End M) :=
     left_distrib := fun x y z => AddMonoidHom.ext fun i => AddMonoidHom.map_add _ _ _
     right_distrib := fun x y z => AddMonoidHom.ext fun i => rfl
     natCast := fun n => n • 1
-    nat_cast_zero := AddMonoid.nsmul_zero _
-    nat_cast_succ := fun n => (AddMonoid.nsmul_succ n 1).trans (add_comm _ _) }
+    natCast_zero := AddMonoid.nsmul_zero _
+    natCast_succ := fun n => (AddMonoid.nsmul_succ n 1).trans (add_comm _ _) }
 
 #print AddMonoid.End.natCast_apply /-
 /-- See also `add_monoid.End.nat_cast_def`. -/
@@ -110,8 +110,8 @@ instance [AddCommGroup M] : Ring (AddMonoid.End M) :=
   { AddMonoid.End.semiring,
     AddMonoidHom.addCommGroup with
     intCast := fun z => z • 1
-    int_cast_of_nat := ofNat_zsmul _
-    int_cast_neg_succ_of_nat := negSucc_zsmul _ }
+    intCast_ofNat := ofNat_zsmul _
+    intCast_negSucc := negSucc_zsmul _ }
 
 /- warning: add_monoid.End.int_cast_apply -> AddMonoid.End.int_cast_apply is a dubious translation:
 lean 3 declaration is

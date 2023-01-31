@@ -176,22 +176,22 @@ theorem isLowerSet_interₛ {S : Set (Set α)} (hf : ∀ s ∈ S, IsLowerSet s) 
 #align is_lower_set_sInter isLowerSet_interₛ
 
 @[simp]
-theorem isLowerSet_preimage_ofDual_iff : IsLowerSet (of_dual ⁻¹' s) ↔ IsUpperSet s :=
+theorem isLowerSet_preimage_ofDual_iff : IsLowerSet (ofDual ⁻¹' s) ↔ IsUpperSet s :=
   Iff.rfl
 #align is_lower_set_preimage_of_dual_iff isLowerSet_preimage_ofDual_iff
 
 @[simp]
-theorem isUpperSet_preimage_ofDual_iff : IsUpperSet (of_dual ⁻¹' s) ↔ IsLowerSet s :=
+theorem isUpperSet_preimage_ofDual_iff : IsUpperSet (ofDual ⁻¹' s) ↔ IsLowerSet s :=
   Iff.rfl
 #align is_upper_set_preimage_of_dual_iff isUpperSet_preimage_ofDual_iff
 
 @[simp]
-theorem isLowerSet_preimage_toDual_iff {s : Set αᵒᵈ} : IsLowerSet (to_dual ⁻¹' s) ↔ IsUpperSet s :=
+theorem isLowerSet_preimage_toDual_iff {s : Set αᵒᵈ} : IsLowerSet (toDual ⁻¹' s) ↔ IsUpperSet s :=
   Iff.rfl
 #align is_lower_set_preimage_to_dual_iff isLowerSet_preimage_toDual_iff
 
 @[simp]
-theorem isUpperSet_preimage_toDual_iff {s : Set αᵒᵈ} : IsUpperSet (to_dual ⁻¹' s) ↔ IsLowerSet s :=
+theorem isUpperSet_preimage_toDual_iff {s : Set αᵒᵈ} : IsUpperSet (toDual ⁻¹' s) ↔ IsLowerSet s :=
   Iff.rfl
 #align is_upper_set_preimage_to_dual_iff isUpperSet_preimage_toDual_iff
 
@@ -337,11 +337,11 @@ theorem IsUpperSet.not_bddAbove (hs : IsUpperSet s) : s.Nonempty → ¬BddAbove 
 #align is_upper_set.not_bdd_above IsUpperSet.not_bddAbove
 
 theorem not_bddAbove_Ici : ¬BddAbove (Ici a) :=
-  (isUpperSet_Ici _).not_bdd_above nonempty_Ici
+  (isUpperSet_Ici _).not_bddAbove nonempty_Ici
 #align not_bdd_above_Ici not_bddAbove_Ici
 
 theorem not_bddAbove_Ioi : ¬BddAbove (Ioi a) :=
-  (isUpperSet_Ioi _).not_bdd_above nonempty_Ioi
+  (isUpperSet_Ioi _).not_bddAbove nonempty_Ioi
 #align not_bdd_above_Ioi not_bddAbove_Ioi
 
 end NoMaxOrder
@@ -358,11 +358,11 @@ theorem IsLowerSet.not_bddBelow (hs : IsLowerSet s) : s.Nonempty → ¬BddBelow 
 #align is_lower_set.not_bdd_below IsLowerSet.not_bddBelow
 
 theorem not_bddBelow_Iic : ¬BddBelow (Iic a) :=
-  (isLowerSet_Iic _).not_bdd_below nonempty_Iic
+  (isLowerSet_Iic _).not_bddBelow nonempty_Iic
 #align not_bdd_below_Iic not_bddBelow_Iic
 
 theorem not_bddBelow_Iio : ¬BddBelow (Iio a) :=
-  (isLowerSet_Iio _).not_bdd_below nonempty_Iio
+  (isLowerSet_Iio _).not_bddBelow nonempty_Iio
 #align not_bdd_below_Iio not_bddBelow_Iio
 
 end NoMinOrder
@@ -595,12 +595,12 @@ theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∨ a ∈ t :=
 
 @[simp]
 theorem mem_supₛ_iff : a ∈ supₛ S ↔ ∀ s ∈ S, a ∈ s :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align upper_set.mem_Sup_iff UpperSet.mem_supₛ_iff
 
 @[simp]
 theorem mem_infₛ_iff : a ∈ infₛ S ↔ ∃ s ∈ S, a ∈ s :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align upper_set.mem_Inf_iff UpperSet.mem_infₛ_iff
 
 @[simp]
@@ -754,12 +754,12 @@ theorem mem_inf_iff : a ∈ s ⊓ t ↔ a ∈ s ∧ a ∈ t :=
 
 @[simp]
 theorem mem_supₛ_iff : a ∈ supₛ S ↔ ∃ s ∈ S, a ∈ s :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align lower_set.mem_Sup_iff LowerSet.mem_supₛ_iff
 
 @[simp]
 theorem mem_infₛ_iff : a ∈ infₛ S ↔ ∀ s ∈ S, a ∈ s :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align lower_set.mem_Inf_iff LowerSet.mem_infₛ_iff
 
 @[simp]
@@ -1412,7 +1412,7 @@ def iicInfHom : InfHom α (LowerSet α) :=
 #align lower_set.Iic_inf_hom LowerSet.iicInfHom
 
 @[simp]
-theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = Iic :=
+theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = iic :=
   rfl
 #align lower_set.coe_Iic_inf_hom LowerSet.coe_iicInfHom
 
@@ -1464,7 +1464,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α], Eq.{succ u1} ((fun (_x : InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (LowerSet.iicInfHom.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (fun (_x : InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (InfHom.hasCoeToFun.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (LowerSet.iicInfHom.{u1} α _inst_1)) (LowerSet.iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align lower_set.coe_Iic_Inf_hom LowerSet.coe_iicInfHomₓ'. -/
 @[simp]
-theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = Iic :=
+theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = iic :=
   rfl
 #align lower_set.coe_Iic_Inf_hom LowerSet.coe_iicInfHom
 
@@ -1586,7 +1586,7 @@ theorem LowerSet.supᵢ_iic (s : Set α) : (⨆ a ∈ s, LowerSet.iic a) = lower
 #align lower_set.supr_Iic LowerSet.supᵢ_iic
 
 theorem gc_upperClosure_coe :
-    GaloisConnection (to_dual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ) (coe ∘ of_dual) := fun s t =>
+    GaloisConnection (toDual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ) (coe ∘ ofDual) := fun s t =>
   ⟨fun h => subset_upperClosure.trans <| UpperSet.coe_subset_coe.2 h, fun h =>
     upperClosure_min h t.upper⟩
 #align gc_upper_closure_coe gc_upperClosure_coe
@@ -1598,7 +1598,7 @@ theorem gc_lowerClosure_coe : GaloisConnection (lowerClosure : Set α → LowerS
 
 /-- `upper_closure` forms a reversed Galois insertion with the coercion from upper sets to sets. -/
 def giUpperClosureCoe :
-    GaloisInsertion (to_dual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ) (coe ∘ of_dual)
+    GaloisInsertion (toDual ∘ upperClosure : Set α → (UpperSet α)ᵒᵈ) (coe ∘ ofDual)
     where
   choice s hs := toDual (⟨s, fun a b hab ha => hs ⟨a, ha, hab⟩⟩ : UpperSet α)
   gc := gc_upperClosure_coe

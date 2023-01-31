@@ -69,7 +69,7 @@ def MeasureTheory.SignedMeasure.toComplexMeasure (s t : SignedMeasure α) : Comp
   measureOf' i := ⟨s i, t i⟩
   empty' := by rw [s.empty, t.empty] <;> rfl
   not_measurable' i hi := by rw [s.not_measurable hi, t.not_measurable hi] <;> rfl
-  m_Union' f hf hfdisj := (Complex.hasSum_iff _ _).2 ⟨s.m_Union hf hfdisj, t.m_Union hf hfdisj⟩
+  m_Union' f hf hfdisj := (Complex.hasSum_iff _ _).2 ⟨s.m_unionᵢ hf hfdisj, t.m_unionᵢ hf hfdisj⟩
 #align measure_theory.signed_measure.to_complex_measure MeasureTheory.SignedMeasure.toComplexMeasure
 
 theorem MeasureTheory.SignedMeasure.toComplexMeasure_apply {s t : SignedMeasure α} {i : Set α} :
@@ -99,9 +99,8 @@ def equivSignedMeasure : ComplexMeasure α ≃ SignedMeasure α × SignedMeasure
     where
   toFun c := ⟨c.re, c.im⟩
   invFun := fun ⟨s, t⟩ => s.toComplexMeasure t
-  left_inv c := c.to_complex_measure_to_signed_measure
-  right_inv := fun ⟨s, t⟩ =>
-    Prod.mk.inj_iff.2 ⟨s.re_to_complex_measure t, s.im_to_complex_measure t⟩
+  left_inv c := c.toComplexMeasure_to_signedMeasure
+  right_inv := fun ⟨s, t⟩ => Prod.mk.inj_iff.2 ⟨s.re_toComplexMeasure t, s.im_toComplexMeasure t⟩
 #align measure_theory.complex_measure.equiv_signed_measure MeasureTheory.ComplexMeasure.equivSignedMeasure
 
 section

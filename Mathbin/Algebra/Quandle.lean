@@ -715,7 +715,7 @@ inductive PreEnvelGroupRel (R : Type u) [Rack R] : PreEnvelGroup R → PreEnvelG
 -/
 theorem PreEnvelGroupRel'.rel {R : Type u} [Rack R] {a b : PreEnvelGroup R} :
     PreEnvelGroupRel' R a b → PreEnvelGroupRel R a b :=
-  pre_envel_group_rel.rel
+  PreEnvelGroupRel.rel
 #align rack.pre_envel_group_rel'.rel Rack.PreEnvelGroupRel'.rel
 -/
 

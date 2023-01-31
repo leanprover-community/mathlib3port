@@ -198,7 +198,7 @@ noncomputable def reprX : C :=
 
 /-- The (forward direction of the) isomorphism witnessing `F` is representable. -/
 noncomputable def reprF : yoneda.obj F.reprX ⟶ F :=
-  Representable.has_representation.some_spec.some
+  Representable.has_representation.choose_spec.some
 #align category_theory.functor.repr_f CategoryTheory.Functor.reprF
 
 /- warning: category_theory.functor.repr_x clashes with category_theory.functor.repr_X -> CategoryTheory.Functor.reprX
@@ -216,7 +216,7 @@ noncomputable def reprX : F.obj (op F.reprX) :=
 #align category_theory.functor.repr_x CategoryTheory.Functor.reprX
 
 instance : IsIso F.reprF :=
-  Representable.has_representation.some_spec.some_spec
+  Representable.has_representation.choose_spec.choose_spec
 
 /-- An isomorphism between `F` and a functor of the form `C(-, F.repr_X)`.  Note the components
 `F.repr_w.app X` definitionally have type `(X.unop ⟶ F.repr_X) ≅ F.obj X`.
@@ -254,7 +254,7 @@ noncomputable def coreprX : C :=
 
 /-- The (forward direction of the) isomorphism witnessing `F` is corepresentable. -/
 noncomputable def coreprF : coyoneda.obj (op F.coreprX) ⟶ F :=
-  Corepresentable.has_corepresentation.some_spec.some
+  Corepresentable.has_corepresentation.choose_spec.some
 #align category_theory.functor.corepr_f CategoryTheory.Functor.coreprF
 
 /- warning: category_theory.functor.corepr_x clashes with category_theory.functor.corepr_X -> CategoryTheory.Functor.coreprX
@@ -272,7 +272,7 @@ noncomputable def coreprX : F.obj F.coreprX :=
 #align category_theory.functor.corepr_x CategoryTheory.Functor.coreprX
 
 instance : IsIso F.coreprF :=
-  Corepresentable.has_corepresentation.some_spec.some_spec
+  Corepresentable.has_corepresentation.choose_spec.choose_spec
 
 /-- An isomorphism between `F` and a functor of the form `C(F.corepr X, -)`. Note the components
 `F.corepr_w.app X` definitionally have type `F.corepr_X ⟶ X ≅ F.obj X`.
@@ -325,7 +325,7 @@ open Yoneda
 to `F.obj X`, functorially in both `X` and `F`.
 -/
 def yonedaEvaluation : Cᵒᵖ × (Cᵒᵖ ⥤ Type v₁) ⥤ Type max u₁ v₁ :=
-  evaluationUncurried Cᵒᵖ (Type v₁) ⋙ ulift_functor.{u₁}
+  evaluationUncurried Cᵒᵖ (Type v₁) ⋙ uliftFunctor.{u₁}
 #align category_theory.yoneda_evaluation CategoryTheory.yonedaEvaluation
 
 @[simp]

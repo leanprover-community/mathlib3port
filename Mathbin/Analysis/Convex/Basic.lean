@@ -138,7 +138,7 @@ theorem DirectedOn.convex_unionₛ {c : Set (Set E)} (hdir : DirectedOn (· ⊆ 
     (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀ c) :=
   by
   rw [sUnion_eq_Union]
-  exact (directedOn_iff_directed.1 hdir).convex_Union fun A => hc A.2
+  exact (directedOn_iff_directed.1 hdir).convex_unionᵢ fun A => hc A.2
 #align directed_on.convex_sUnion DirectedOn.convex_unionₛ
 
 end SMul

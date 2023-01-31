@@ -507,14 +507,14 @@ infixl:50 " ~ " => Equiv
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 theorem destruct_congr {s t : Wseq α} :
     s ~ t → Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
-  lift_rel_destruct
+  liftRel_destruct
 #align wseq.destruct_congr Wseq.destruct_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 theorem destruct_congr_iff {s t : Wseq α} :
     s ~ t ↔ Computation.LiftRel (BisimO (· ~ ·)) (destruct s) (destruct t) :=
-  lift_rel_destruct_iff
+  liftRel_destruct_iff
 #align wseq.destruct_congr_iff Wseq.destruct_congr_iff
 
 theorem LiftRel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (LiftRel R) := fun s =>
@@ -1148,7 +1148,7 @@ theorem liftRel_flatten {R : α → β → Prop} {c1 : Computation (Wseq α)} {c
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem flatten_congr {c1 c2 : Computation (Wseq α)} :
     Computation.LiftRel Equiv c1 c2 → flatten c1 ~ flatten c2 :=
-  lift_rel_flatten
+  liftRel_flatten
 #align wseq.flatten_congr Wseq.flatten_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1304,8 +1304,9 @@ theorem toList_ofList (l : List α) : l ∈ toList (ofList l) := by
 
 @[simp]
 theorem destruct_ofSeq (s : SeqCat α) :
-    destruct (ofSeq s) = return (s.head.map fun a => (a, ofSeq s.tail)) :=
-  destruct_eq_ret <| by
+    destruct (ofSeq s) = return (s.headI.map fun a => (a, ofSeq s.tail)) :=
+  destruct_eq_pure <|
+    by
     simp [of_seq, head, destruct, SeqCat.destruct, SeqCat.head]
     rw [show SeqCat.nth (some <$> s) 0 = some <$> SeqCat.nth s 0 by apply SeqCat.map_nth]
     cases' SeqCat.nth s 0 with a; · rfl
@@ -1314,7 +1315,7 @@ theorem destruct_ofSeq (s : SeqCat α) :
 #align wseq.destruct_of_seq Wseq.destruct_ofSeq
 
 @[simp]
-theorem head_ofSeq (s : SeqCat α) : head (ofSeq s) = return s.head := by
+theorem head_ofSeq (s : SeqCat α) : head (ofSeq s) = return s.headI := by
   simp [head] <;> cases SeqCat.head s <;> rfl
 #align wseq.head_of_seq Wseq.head_ofSeq
 

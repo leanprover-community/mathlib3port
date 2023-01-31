@@ -441,11 +441,11 @@ theorem clear_denom_div {α} [DivisionRing α] (a b b' c d : α) (h₀ : b ≠ 0
 unsafe def prove_clear_denom'
     (prove_ne_zero : instance_cache → expr → ℚ → tactic (instance_cache × expr))
     (c : instance_cache) (a d : expr) (na : ℚ) (nd : ℕ) : tactic (instance_cache × expr × expr) :=
-  if na.denom = 1 then prove_mul_nat c a d
+  if na.den = 1 then prove_mul_nat c a d
   else do
     let [_, _, a, b] ← return a.get_app_args
-    let (c, b') ← c.ofNat (nd / na.denom)
-    let (c, p₀) ← prove_ne_zero c b na.denom
+    let (c, b') ← c.ofNat (nd / na.den)
+    let (c, p₀) ← prove_ne_zero c b na.den
     let (c, _, p₁) ← prove_mul_nat c b b'
     let (c, r, p₂) ← prove_mul_nat c a b'
     let (c, p) ← c.mk_app `` clear_denom_div [a, b, b', r, d, p₀, p₁, p₂]
@@ -654,9 +654,9 @@ theorem clear_denom_lt {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ 
 /-- Given `a`,`b` nonnegative rational numerals, proves `⊢ a < b`. -/
 unsafe def prove_lt_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     tactic (instance_cache × expr) :=
-  if na.denom = 1 ∧ nb.denom = 1 then prove_lt_nat ic a b
+  if na.den = 1 ∧ nb.den = 1 then prove_lt_nat ic a b
   else do
-    let nd := na.denom.lcm nb.denom
+    let nd := na.den.lcm nb.den
     let (ic, d) ← ic.ofNat nd
     let (ic, p₀) ← prove_pos ic d
     let (ic, a', pa) ← prove_clear_denom' (fun ic e _ => prove_ne_zero' ic e) ic a d na nd
@@ -697,9 +697,9 @@ theorem clear_denom_le {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ 
 /-- Given `a`,`b` nonnegative rational numerals, proves `⊢ a ≤ b`. -/
 unsafe def prove_le_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     tactic (instance_cache × expr) :=
-  if na.denom = 1 ∧ nb.denom = 1 then prove_le_nat ic a b
+  if na.den = 1 ∧ nb.den = 1 then prove_le_nat ic a b
   else do
-    let nd := na.denom.lcm nb.denom
+    let nd := na.den.lcm nb.den
     let (ic, d) ← ic.ofNat nd
     let (ic, p₀) ← prove_pos ic d
     let (ic, a', pa) ← prove_clear_denom' (fun ic e _ => prove_ne_zero' ic e) ic a d na nd
@@ -874,7 +874,7 @@ theorem rat_cast_div {α} [DivisionRing α] [CharZero α] (a b : ℚ) (a' b' : �
 (Note that the returned value is on the left of the equality.) -/
 unsafe def prove_rat_uncast_nonneg (ic qc : instance_cache) (cz_inst a' : expr) (na' : ℚ) :
     tactic (instance_cache × instance_cache × expr × expr) :=
-  if na'.denom = 1 then prove_rat_uncast_nat ic qc cz_inst a'
+  if na'.den = 1 then prove_rat_uncast_nat ic qc cz_inst a'
   else do
     let [_, _, a', b'] ← return a'.get_app_args
     let (ic, qc, a, pa) ← prove_rat_uncast_nat ic qc cz_inst a'
@@ -992,9 +992,9 @@ theorem clear_denom_add {α} [DivisionRing α] (a a' b b' c c' d : α) (h₀ : d
 /-- Given `a`,`b`,`c` nonnegative rational numerals, returns `⊢ a + b = c`. -/
 unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc : ℚ) :
     tactic (instance_cache × expr) :=
-  if na.denom = 1 ∧ nb.denom = 1 then prove_add_nat ic a b c
+  if na.den = 1 ∧ nb.den = 1 then prove_add_nat ic a b c
   else do
-    let nd := na.denom.lcm nb.denom
+    let nd := na.den.lcm nb.den
     let (ic, d) ← ic.ofNat nd
     let (ic, p₀) ← prove_ne_zero ic d nd
     let (ic, a', pa) ← prove_clear_denom ic a d na nd
@@ -1069,13 +1069,13 @@ theorem clear_denom_simple_div {α} [DivisionRing α] (a b : α) (h : b ≠ 0) :
 where `b` and `c` are natural numerals. (`b` will be the denominator of `a`.) -/
 unsafe def prove_clear_denom_simple (c : instance_cache) (a : expr) (na : ℚ) :
     tactic (instance_cache × expr × expr × expr) :=
-  if na.denom = 1 then do
+  if na.den = 1 then do
     let (c, d) ← c.mk_app `` One.one []
     let (c, p) ← c.mk_app `` clear_denom_simple_nat [a]
     return (c, d, a, p)
   else do
     let [α, _, a, b] ← return a.get_app_args
-    let (c, p₀) ← prove_ne_zero c b na.denom
+    let (c, p₀) ← prove_ne_zero c b na.den
     let (c, p) ← c.mk_app `` clear_denom_simple_div [a, b, p₀]
     return (c, b, a, p)
 #align norm_num.prove_clear_denom_simple norm_num.prove_clear_denom_simple
@@ -1091,7 +1091,7 @@ theorem clear_denom_mul {α} [Field α] (a a' b b' c c' d₁ d₂ d : α) (ha : 
 /-- Given `a`,`b` nonnegative rational numerals, returns `(c, ⊢ a * b = c)`. -/
 unsafe def prove_mul_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     tactic (instance_cache × expr × expr) :=
-  if na.denom = 1 ∧ nb.denom = 1 then prove_mul_nat ic a b
+  if na.den = 1 ∧ nb.den = 1 then prove_mul_nat ic a b
   else do
     let nc := na * nb
     let (ic, c) ← ic.of_rat nc
@@ -1179,7 +1179,7 @@ unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cach
       return (ic, e, p)
     | Sum.inr tt =>
       if n.num = 1 then
-        if n.denom = 1 then do
+        if n.den = 1 then do
           let (ic, p) ← ic.mk_app `` inv_one []
           return (ic, e, p)
         else do
@@ -1187,7 +1187,7 @@ unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cach
           let (ic, p) ← ic.mk_app `` inv_one_div [e]
           return (ic, e, p)
       else
-        if n.denom = 1 then do
+        if n.den = 1 then do
           let (ic, p) ← ic.mk_app `` inv_div_one [e]
           let e ← infer_type p
           return (ic, e, p)
@@ -1720,7 +1720,7 @@ protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit
   cache_cfg :=
     { mk_cache := fun ns => do
         let t ←
-          ns.mfoldl
+          ns.foldlM
               (fun (t : expr → tactic (expr × expr)) n => do
                 let t' ← eval_expr (expr → tactic (expr × expr)) (expr.const n [])
                 pure fun e => t' e <|> t e)

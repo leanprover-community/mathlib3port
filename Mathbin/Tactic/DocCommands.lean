@@ -72,7 +72,7 @@ unsafe def copy_doc_string_cmd (_ : parse (tk "copy_doc_string")) : parser Unit 
   tk "->"
   let to ← parser.many parser.ident
   let expr.const fr _ ← resolve_name fr
-  let to ← parser.of_tactic (to.mmap fun n => expr.const_name <$> resolve_name n)
+  let to ← parser.of_tactic (to.mapM fun n => expr.const_name <$> resolve_name n)
   tactic.copy_doc_string fr to
 #align copy_doc_string_cmd copy_doc_string_cmd
 
@@ -134,7 +134,8 @@ unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "librar
 /-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
 unsafe def tactic.get_library_notes : tactic (List (String × String)) :=
-  attribute.get_instances `library_note >>= List.mapM fun dcl => Prod.mk dcl.last <$> doc_string dcl
+  attribute.get_instances `library_note >>=
+    List.mapM fun dcl => Prod.mk dcl.getLast <$> doc_string dcl
 #align tactic.get_library_notes tactic.get_library_notes
 
 /-! ### The `add_tactic_doc_entry` command -/

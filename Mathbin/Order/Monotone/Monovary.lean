@@ -417,7 +417,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, (Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g) -> (Monovary.{u3, u2, u1} ι (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.preorder.{u2} α _inst_1) (OrderDual.preorder.{u1} β _inst_2) (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g))
 Case conversion may be inaccurate. Consider using '#align monovary.dual Monovary.dualₓ'. -/
-theorem Monovary.dual : Monovary f g → Monovary (to_dual ∘ f) (to_dual ∘ g) :=
+theorem Monovary.dual : Monovary f g → Monovary (toDual ∘ f) (toDual ∘ g) :=
   swap
 #align monovary.dual Monovary.dual
 
@@ -427,7 +427,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g) -> (Antivary.{u3, u2, u1} ι (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.preorder.{u2} α _inst_1) (OrderDual.preorder.{u1} β _inst_2) (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g))
 Case conversion may be inaccurate. Consider using '#align antivary.dual Antivary.dualₓ'. -/
-theorem Antivary.dual : Antivary f g → Antivary (to_dual ∘ f) (to_dual ∘ g) :=
+theorem Antivary.dual : Antivary f g → Antivary (toDual ∘ f) (toDual ∘ g) :=
   swap
 #align antivary.dual Antivary.dual
 
@@ -437,7 +437,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, (Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g) -> (Antivary.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g)
 Case conversion may be inaccurate. Consider using '#align monovary.dual_left Monovary.dual_leftₓ'. -/
-theorem Monovary.dual_left : Monovary f g → Antivary (to_dual ∘ f) g :=
+theorem Monovary.dual_left : Monovary f g → Antivary (toDual ∘ f) g :=
   id
 #align monovary.dual_left Monovary.dual_left
 
@@ -447,7 +447,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g) -> (Monovary.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g)
 Case conversion may be inaccurate. Consider using '#align antivary.dual_left Antivary.dual_leftₓ'. -/
-theorem Antivary.dual_left : Antivary f g → Monovary (to_dual ∘ f) g :=
+theorem Antivary.dual_left : Antivary f g → Monovary (toDual ∘ f) g :=
   id
 #align antivary.dual_left Antivary.dual_left
 
@@ -457,7 +457,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, (Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g) -> (Antivary.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g))
 Case conversion may be inaccurate. Consider using '#align monovary.dual_right Monovary.dual_rightₓ'. -/
-theorem Monovary.dual_right : Monovary f g → Antivary f (to_dual ∘ g) :=
+theorem Monovary.dual_right : Monovary f g → Antivary f (toDual ∘ g) :=
   swap
 #align monovary.dual_right Monovary.dual_right
 
@@ -467,7 +467,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g) -> (Monovary.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g))
 Case conversion may be inaccurate. Consider using '#align antivary.dual_right Antivary.dual_rightₓ'. -/
-theorem Antivary.dual_right : Antivary f g → Monovary f (to_dual ∘ g) :=
+theorem Antivary.dual_right : Antivary f g → Monovary f (toDual ∘ g) :=
   swap
 #align antivary.dual_right Antivary.dual_right
 
@@ -477,7 +477,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s) -> (MonovaryOn.{u3, u2, u1} ι (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.preorder.{u2} α _inst_1) (OrderDual.preorder.{u1} β _inst_2) (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g) s)
 Case conversion may be inaccurate. Consider using '#align monovary_on.dual MonovaryOn.dualₓ'. -/
-theorem MonovaryOn.dual : MonovaryOn f g s → MonovaryOn (to_dual ∘ f) (to_dual ∘ g) s :=
+theorem MonovaryOn.dual : MonovaryOn f g s → MonovaryOn (toDual ∘ f) (toDual ∘ g) s :=
   swap₂
 #align monovary_on.dual MonovaryOn.dual
 
@@ -487,7 +487,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s) -> (AntivaryOn.{u3, u2, u1} ι (OrderDual.{u2} α) (OrderDual.{u1} β) (OrderDual.preorder.{u2} α _inst_1) (OrderDual.preorder.{u1} β _inst_2) (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g) s)
 Case conversion may be inaccurate. Consider using '#align antivary_on.dual AntivaryOn.dualₓ'. -/
-theorem AntivaryOn.dual : AntivaryOn f g s → AntivaryOn (to_dual ∘ f) (to_dual ∘ g) s :=
+theorem AntivaryOn.dual : AntivaryOn f g s → AntivaryOn (toDual ∘ f) (toDual ∘ g) s :=
   swap₂
 #align antivary_on.dual AntivaryOn.dual
 
@@ -497,7 +497,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s) -> (AntivaryOn.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g s)
 Case conversion may be inaccurate. Consider using '#align monovary_on.dual_left MonovaryOn.dual_leftₓ'. -/
-theorem MonovaryOn.dual_left : MonovaryOn f g s → AntivaryOn (to_dual ∘ f) g s :=
+theorem MonovaryOn.dual_left : MonovaryOn f g s → AntivaryOn (toDual ∘ f) g s :=
   id
 #align monovary_on.dual_left MonovaryOn.dual_left
 
@@ -507,7 +507,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s) -> (MonovaryOn.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g s)
 Case conversion may be inaccurate. Consider using '#align antivary_on.dual_left AntivaryOn.dual_leftₓ'. -/
-theorem AntivaryOn.dual_left : AntivaryOn f g s → MonovaryOn (to_dual ∘ f) g s :=
+theorem AntivaryOn.dual_left : AntivaryOn f g s → MonovaryOn (toDual ∘ f) g s :=
   id
 #align antivary_on.dual_left AntivaryOn.dual_left
 
@@ -517,7 +517,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s) -> (AntivaryOn.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g) s)
 Case conversion may be inaccurate. Consider using '#align monovary_on.dual_right MonovaryOn.dual_rightₓ'. -/
-theorem MonovaryOn.dual_right : MonovaryOn f g s → AntivaryOn f (to_dual ∘ g) s :=
+theorem MonovaryOn.dual_right : MonovaryOn f g s → AntivaryOn f (toDual ∘ g) s :=
   swap₂
 #align monovary_on.dual_right MonovaryOn.dual_right
 
@@ -527,7 +527,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s) -> (MonovaryOn.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g) s)
 Case conversion may be inaccurate. Consider using '#align antivary_on.dual_right AntivaryOn.dual_rightₓ'. -/
-theorem AntivaryOn.dual_right : AntivaryOn f g s → MonovaryOn f (to_dual ∘ g) s :=
+theorem AntivaryOn.dual_right : AntivaryOn f g s → MonovaryOn f (toDual ∘ g) s :=
   swap₂
 #align antivary_on.dual_right AntivaryOn.dual_right
 
@@ -538,7 +538,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, Iff (Monovary.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g) (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align monovary_to_dual_left monovary_toDual_leftₓ'. -/
 @[simp]
-theorem monovary_toDual_left : Monovary (to_dual ∘ f) g ↔ Antivary f g :=
+theorem monovary_toDual_left : Monovary (toDual ∘ f) g ↔ Antivary f g :=
   Iff.rfl
 #align monovary_to_dual_left monovary_toDual_left
 
@@ -549,7 +549,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, Iff (Monovary.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g)) (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align monovary_to_dual_right monovary_toDual_rightₓ'. -/
 @[simp]
-theorem monovary_toDual_right : Monovary f (to_dual ∘ g) ↔ Antivary f g :=
+theorem monovary_toDual_right : Monovary f (toDual ∘ g) ↔ Antivary f g :=
   forall_swap
 #align monovary_to_dual_right monovary_toDual_right
 
@@ -560,7 +560,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, Iff (Antivary.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g) (Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align antivary_to_dual_left antivary_toDual_leftₓ'. -/
 @[simp]
-theorem antivary_toDual_left : Antivary (to_dual ∘ f) g ↔ Monovary f g :=
+theorem antivary_toDual_left : Antivary (toDual ∘ f) g ↔ Monovary f g :=
   Iff.rfl
 #align antivary_to_dual_left antivary_toDual_left
 
@@ -571,7 +571,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β}, Iff (Antivary.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g)) (Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align antivary_to_dual_right antivary_toDual_rightₓ'. -/
 @[simp]
-theorem antivary_toDual_right : Antivary f (to_dual ∘ g) ↔ Monovary f g :=
+theorem antivary_toDual_right : Antivary f (toDual ∘ g) ↔ Monovary f g :=
   forall_swap
 #align antivary_to_dual_right antivary_toDual_right
 
@@ -582,7 +582,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, Iff (MonovaryOn.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g s) (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
 Case conversion may be inaccurate. Consider using '#align monovary_on_to_dual_left monovaryOn_toDual_leftₓ'. -/
 @[simp]
-theorem monovaryOn_toDual_left : MonovaryOn (to_dual ∘ f) g s ↔ AntivaryOn f g s :=
+theorem monovaryOn_toDual_left : MonovaryOn (toDual ∘ f) g s ↔ AntivaryOn f g s :=
   Iff.rfl
 #align monovary_on_to_dual_left monovaryOn_toDual_left
 
@@ -593,7 +593,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, Iff (MonovaryOn.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g) s) (AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
 Case conversion may be inaccurate. Consider using '#align monovary_on_to_dual_right monovaryOn_toDual_rightₓ'. -/
 @[simp]
-theorem monovaryOn_toDual_right : MonovaryOn f (to_dual ∘ g) s ↔ AntivaryOn f g s :=
+theorem monovaryOn_toDual_right : MonovaryOn f (toDual ∘ g) s ↔ AntivaryOn f g s :=
   forall₂_swap
 #align monovary_on_to_dual_right monovaryOn_toDual_right
 
@@ -604,7 +604,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, Iff (AntivaryOn.{u3, u2, u1} ι (OrderDual.{u2} α) β (OrderDual.preorder.{u2} α _inst_1) _inst_2 (Function.comp.{succ u3, succ u2, succ u2} ι α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) f) g s) (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
 Case conversion may be inaccurate. Consider using '#align antivary_on_to_dual_left antivaryOn_toDual_leftₓ'. -/
 @[simp]
-theorem antivaryOn_toDual_left : AntivaryOn (to_dual ∘ f) g s ↔ MonovaryOn f g s :=
+theorem antivaryOn_toDual_left : AntivaryOn (toDual ∘ f) g s ↔ MonovaryOn f g s :=
   Iff.rfl
 #align antivary_on_to_dual_left antivaryOn_toDual_left
 
@@ -615,7 +615,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} {s : Set.{u3} ι}, Iff (AntivaryOn.{u3, u2, u1} ι α (OrderDual.{u1} β) _inst_1 (OrderDual.preorder.{u1} β _inst_2) f (Function.comp.{succ u3, succ u1, succ u1} ι β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) g) s) (MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s)
 Case conversion may be inaccurate. Consider using '#align antivary_on_to_dual_right antivaryOn_toDual_rightₓ'. -/
 @[simp]
-theorem antivaryOn_toDual_right : AntivaryOn f (to_dual ∘ g) s ↔ MonovaryOn f g s :=
+theorem antivaryOn_toDual_right : AntivaryOn f (toDual ∘ g) s ↔ MonovaryOn f g s :=
   forall₂_swap
 #align antivary_on_to_dual_right antivaryOn_toDual_right
 

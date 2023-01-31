@@ -153,7 +153,7 @@ theorem mem_of_formPerm_apply_mem (x : α) (l : List α) (h : l.formPerm x ∈ l
 
 #print List.formPerm_mem_iff_mem /-
 theorem formPerm_mem_iff_mem : l.formPerm x ∈ l ↔ x ∈ l :=
-  ⟨l.mem_of_form_perm_apply_mem x, l.form_perm_apply_mem_of_mem x⟩
+  ⟨l.mem_of_formPerm_apply_mem x, l.formPerm_apply_mem_of_mem x⟩
 #align list.form_perm_mem_iff_mem List.formPerm_mem_iff_mem
 -/
 
@@ -171,7 +171,7 @@ theorem formPerm_cons_concat_apply_last (x y : α) (xs : List α) :
 #print List.formPerm_apply_getLast /-
 @[simp]
 theorem formPerm_apply_getLast (x : α) (xs : List α) :
-    formPerm (x :: xs) ((x :: xs).last (cons_ne_nil x xs)) = x := by
+    formPerm (x :: xs) ((x :: xs).getLast (cons_ne_nil x xs)) = x := by
   induction' xs using List.reverseRecOn with xs y IH generalizing x <;> simp
 #align list.form_perm_apply_last List.formPerm_apply_getLast
 -/
@@ -521,7 +521,7 @@ theorem formPerm_eq_one_iff (hl : Nodup l) : formPerm l = 1 ↔ l.length ≤ 1 :
     constructor
     · simp (config := { contextual := true })
     · intro h
-      simp only [(hd :: tl).form_perm_apply_mem_eq_self_iff hl hd (mem_cons_self hd tl),
+      simp only [(hd :: tl).formPerm_apply_mem_eq_self_iff hl hd (mem_cons_self hd tl),
         add_le_iff_nonpos_left, length, nonpos_iff_eq_zero, length_eq_zero] at h
       simp [h]
 #align list.form_perm_eq_one_iff List.formPerm_eq_one_iff

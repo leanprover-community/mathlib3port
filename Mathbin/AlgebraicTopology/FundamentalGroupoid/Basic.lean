@@ -88,7 +88,7 @@ theorem reflTransSymmAux_mem_I (x : I × I) : reflTransSymmAux x ∈ I :=
 def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.symm)
     where
   toFun x := p ⟨reflTransSymmAux x, reflTransSymmAux_mem_I x⟩
-  continuous_to_fun := by continuity
+  continuous_toFun := by continuity
   map_zero_left' := by norm_num [refl_trans_symm_aux]
   map_one_left' x :=
     by

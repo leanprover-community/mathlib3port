@@ -65,7 +65,7 @@ instance : BundledHom.ParentProjection @NonemptyFinLinOrd.toLinearOrder :=
 deriving instance LargeCategory, ConcreteCategory for NonemptyFinLinOrdCat
 
 instance : CoeSort NonemptyFinLinOrdCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `NonemptyFinLinOrd` from the underlying type and typeclass. -/
 def of (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrdCat :=
@@ -114,8 +114,8 @@ def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align NonemptyFinLinOrd.dual_equiv NonemptyFinLinOrdCat.dualEquiv
 
 theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
@@ -184,7 +184,7 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
       by
       rw [epi_iff_surjective] at hf
       intro y
-      exact Nonempty.intro ⟨(hf y).some, (hf y).some_spec⟩
+      exact Nonempty.intro ⟨(hf y).some, (hf y).choose_spec⟩
     let φ : Y → X := fun y => (H y).some.1
     have hφ : ∀ y : Y, f (φ y) = y := fun y => (H y).some.2
     refine' is_split_epi.mk' ⟨⟨φ, _⟩, _⟩

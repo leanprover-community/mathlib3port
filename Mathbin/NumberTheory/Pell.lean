@@ -500,7 +500,7 @@ theorem dvd_of_ysq_dvd {n t} (h : yn n * yn n ∣ yn t) : yn n ∣ t :=
           have xm := (xy_modeq_yn a1 n k).right <;> rw [← ke] at xm <;>
             exact (xm.of_dvd <| by simp [pow_succ]).symm.trans h.modeq_zero_nat
     rw [ke] <;>
-      exact dvd_mul_of_dvd_right (((xy_coprime _ _).pow_left _).symm.dvd_of_dvd_mul_right this) _
+      exact dvd_mul_of_dvd_right (((xy_coprime _ _).pow_leftₓ _).symm.dvd_of_dvd_mul_right this) _
 #align pell.dvd_of_ysq_dvd Pell.dvd_of_ysq_dvd
 
 theorem pellZd_succ_succ (n) : pell_zd (n + 2) + pell_zd n = (2 * a : ℕ) * pell_zd (n + 1) :=
@@ -559,7 +559,7 @@ theorem yn_modEq_two : ∀ n, yn n ≡ n [MOD 2]
     (yn_modeq_two n).add_right_cancel <|
       by
       rw [yn_succ_succ, mul_assoc, (by ring : n + 2 + n = 2 * (n + 1))]
-      exact (dvd_mul_right 2 _).modeq_zero_nat.trans (dvd_mul_right 2 _).zero_modeq_nat
+      exact (dvd_mul_right 2 _).modEq_zero_nat.trans (dvd_mul_right 2 _).zero_modEq_nat
 #align pell.yn_modeq_two Pell.yn_modEq_two
 
 section
@@ -603,10 +603,10 @@ theorem xn_modeq_x2n_add_lem (n j) : xn n ∣ d * yn n * (yn n * xn j) + xn j :=
 theorem xn_modEq_x2n_add (n j) : xn (2 * n + j) + xn j ≡ 0 [MOD xn n] :=
   by
   rw [two_mul, add_assoc, xn_add, add_assoc, ← zero_add 0]
-  refine' (dvd_mul_right (xn a1 n) (xn a1 (n + j))).modeq_zero_nat.add _
+  refine' (dvd_mul_right (xn a1 n) (xn a1 (n + j))).modEq_zero_nat.add _
   rw [yn_add, left_distrib, add_assoc, ← zero_add 0]
   exact
-    ((dvd_mul_right _ _).mul_left _).modeq_zero_nat.add (xn_modeq_x2n_add_lem _ _ _).modeq_zero_nat
+    ((dvd_mul_right _ _).mul_left _).modEq_zero_nat.add (xn_modeq_x2n_add_lem _ _ _).modEq_zero_nat
 #align pell.xn_modeq_x2n_add Pell.xn_modEq_x2n_add
 
 theorem xn_modEq_x2n_sub_lem {n j} (h : j ≤ n) : xn (2 * n - j) + xn j ≡ 0 [MOD xn n] :=
@@ -622,8 +622,8 @@ theorem xn_modEq_x2n_sub_lem {n j} (h : j ≤ n) : xn (2 * n - j) + xn j ≡ 0 [
           ((dvd_mul_right _ _).mul_left _)
   rw [two_mul, add_tsub_assoc_of_le h, xn_add, add_assoc, ← zero_add 0]
   exact
-    (dvd_mul_right _ _).modeq_zero_nat.add
-      (Int.coe_nat_dvd.1 <| by simpa [xz, yz] using h1).modeq_zero_nat
+    (dvd_mul_right _ _).modEq_zero_nat.add
+      (Int.coe_nat_dvd.1 <| by simpa [xz, yz] using h1).modEq_zero_nat
 #align pell.xn_modeq_x2n_sub_lem Pell.xn_modEq_x2n_sub_lem
 
 theorem xn_modEq_x2n_sub {n j} (h : j ≤ 2 * n) : xn (2 * n - j) + xn j ≡ 0 [MOD xn n] :=
@@ -874,7 +874,7 @@ theorem matiyasevic {a k x y} :
         have yv : y * y ∣ v := (ysq_dvd_yy a1 k).trans <| (y_dvd_iff _ _ _).2 <| dvd_mul_left _ _
         have uco : Nat.coprime u (4 * y) :=
           have : 2 ∣ v :=
-            modeq_zero_iff_dvd.1 <| (yn_modeq_two _ _).trans (dvd_mul_right _ _).modeq_zero_nat
+            modeq_zero_iff_dvd.1 <| (yn_modeq_two _ _).trans (dvd_mul_right _ _).modEq_zero_nat
           have : Nat.coprime u 2 := (xy_coprime a1 m).coprime_dvd_right this
           (this.mul_right this).mul_right <|
             (xy_coprime _ _).coprime_dvd_right (dvd_of_mul_left_dvd yv)

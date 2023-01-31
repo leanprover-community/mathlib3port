@@ -385,12 +385,12 @@ theorem Adapted.isStoppingTime_crossing (hf : Adapted ℱ f) :
 
 theorem Adapted.isStoppingTime_upperCrossingTime (hf : Adapted ℱ f) :
     IsStoppingTime ℱ (upperCrossingTime a b f N n) :=
-  hf.is_stopping_time_crossing.1
+  hf.isStoppingTime_crossing.1
 #align measure_theory.adapted.is_stopping_time_upper_crossing_time MeasureTheory.Adapted.isStoppingTime_upperCrossingTime
 
 theorem Adapted.isStoppingTime_lowerCrossingTime (hf : Adapted ℱ f) :
     IsStoppingTime ℱ (lowerCrossingTime a b f N n) :=
-  hf.is_stopping_time_crossing.2
+  hf.isStoppingTime_crossing.2
 #align measure_theory.adapted.is_stopping_time_lower_crossing_time MeasureTheory.Adapted.isStoppingTime_lowerCrossingTime
 
 /-- `upcrossing_strat a b f N n` is 1 if `n` is between a consecutive pair of lower and upper
@@ -453,7 +453,7 @@ theorem Submartingale.sumUpcrossingStratMul [IsFiniteMeasure μ] (hf : Submartin
     (N : ℕ) :
     Submartingale
       (fun n : ℕ => ∑ k in Finset.range n, upcrossingStrat a b f N k * (f (k + 1) - f k)) ℱ μ :=
-  hf.sumMulSub hf.Adapted.upcrossing_strat_adapted (fun _ _ => upcrossingStrat_le_one) fun _ _ =>
+  hf.sumMulSub hf.Adapted.upcrossingStrat_adapted (fun _ _ => upcrossingStrat_le_one) fun _ _ =>
     upcrossingStrat_nonneg
 #align measure_theory.submartingale.sum_upcrossing_strat_mul MeasureTheory.Submartingale.sumUpcrossingStratMul
 
@@ -526,7 +526,7 @@ theorem upperCrossingTime_lt_of_le_upcrossingsBefore (hN : 0 < N) (hab : a < b)
     (hn : n ≤ upcrossingsBefore a b f N ω) : upperCrossingTime a b f N n ω < N :=
   haveI : upper_crossing_time a b f N (upcrossings_before a b f N ω) ω < N :=
     (upper_crossing_time_lt_nonempty hN).cSup_mem
-      ((OrderBot.bddBelow _).finite_of_bdd_above (upper_crossing_time_lt_bdd_above hab))
+      ((OrderBot.bddBelow _).finite_of_bddAbove (upper_crossing_time_lt_bdd_above hab))
   lt_of_le_of_lt (upper_crossing_time_mono hn) this
 #align measure_theory.upper_crossing_time_lt_of_le_upcrossings_before MeasureTheory.upperCrossingTime_lt_of_le_upcrossingsBefore
 
@@ -758,7 +758,7 @@ theorem integral_mul_upcrossingsBefore_le_integral [IsFiniteMeasure μ] (hf : Su
       · exact eventually_of_forall fun ω => mul_nonneg (sub_nonneg.2 hab.le) (Nat.cast_nonneg _)
       · refine' eventually_of_forall fun ω => _
         simpa using mul_upcrossings_before_le (hfN ω) hab
-    _ ≤ μ[f N] - μ[f 0] := hf.sum_mul_upcrossing_strat_le
+    _ ≤ μ[f N] - μ[f 0] := hf.sum_mul_upcrossingStrat_le
     _ ≤ μ[f N] := (sub_le_self_iff _).2 (integral_nonneg hfzero)
     
 #align measure_theory.integral_mul_upcrossings_before_le_integral MeasureTheory.integral_mul_upcrossingsBefore_le_integral
@@ -949,7 +949,7 @@ noncomputable def upcrossings [Preorder ι] [OrderBot ι] [InfSet ι] (a b : ℝ
 
 theorem Adapted.measurable_upcrossings (hf : Adapted ℱ f) (hab : a < b) :
     Measurable (upcrossings a b f) :=
-  measurable_supᵢ fun N => measurable_from_top.comp (hf.measurable_upcrossings_before hab)
+  measurable_supᵢ fun N => measurable_from_top.comp (hf.measurable_upcrossingsBefore hab)
 #align measure_theory.adapted.measurable_upcrossings MeasureTheory.Adapted.measurable_upcrossings
 
 theorem upcrossings_lt_top_iff :

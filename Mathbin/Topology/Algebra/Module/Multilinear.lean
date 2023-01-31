@@ -102,7 +102,7 @@ theorem toMultilinearMap_inj :
 
 @[ext]
 theorem ext {f f' : ContinuousMultilinearMap R M₁ M₂} (H : ∀ x, f x = f' x) : f = f' :=
-  to_multilinear_map_inj <| MultilinearMap.ext H
+  toMultilinearMap_inj <| MultilinearMap.ext H
 #align continuous_multilinear_map.ext ContinuousMultilinearMap.ext
 
 theorem ext_iff {f f' : ContinuousMultilinearMap R M₁ M₂} : f = f' ↔ ∀ x, f x = f' x := by

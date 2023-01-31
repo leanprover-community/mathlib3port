@@ -412,7 +412,7 @@ protected theorem subset_of_eq {s t : Finset α} (h : s = t) : s ⊆ t :=
 
 #print Finset.Subset.trans /-
 theorem Subset.trans {s₁ s₂ s₃ : Finset α} : s₁ ⊆ s₂ → s₂ ⊆ s₃ → s₁ ⊆ s₃ :=
-  subset.trans
+  Subset.trans
 #align finset.subset.trans Finset.Subset.trans
 -/
 
@@ -2204,7 +2204,7 @@ theorem DirectedOn.exists_mem_subset_of_finset_subset_bunionᵢ {α ι : Type _}
   rw [Set.bunionᵢ_eq_unionᵢ] at hs
   haveI := hn.coe_sort
   obtain ⟨⟨i, hic⟩, hi⟩ :=
-    (directed_comp.2 hc.directed_coe).exists_mem_subset_of_finset_subset_bUnion hs
+    (directed_comp.2 hc.directed_coe).exists_mem_subset_of_finset_subset_bunionᵢ hs
   exact ⟨i, hic, hi⟩
 #align directed_on.exists_mem_subset_of_finset_subset_bUnion DirectedOn.exists_mem_subset_of_finset_subset_bunionᵢ
 
@@ -2645,13 +2645,13 @@ variable [DecidableEq α] {s t u v : Finset α} {a b : α}
 /-- `erase s a` is the set `s - {a}`, that is, the elements of `s` which are
   not equal to `a`. -/
 def erase (s : Finset α) (a : α) : Finset α :=
-  ⟨_, s.2.erase a⟩
+  ⟨_, s.2.eraseₓ a⟩
 #align finset.erase Finset.erase
 -/
 
 #print Finset.erase_val /-
 @[simp]
-theorem erase_val (s : Finset α) (a : α) : (erase s a).1 = s.1.erase a :=
+theorem erase_val (s : Finset α) (a : α) : (erase s a).1 = s.1.eraseₓ a :=
   rfl
 #align finset.erase_val Finset.erase_val
 -/
@@ -2679,7 +2679,7 @@ theorem erase_empty (a : α) : erase ∅ a = ∅ :=
 
 #print Finset.erase_singleton /-
 @[simp]
-theorem erase_singleton (a : α) : ({a} : Finset α).erase a = ∅ :=
+theorem erase_singleton (a : α) : ({a} : Finset α).eraseₓ a = ∅ :=
   by
   ext x
   rw [mem_erase, mem_singleton, not_and_self_iff]
@@ -2707,7 +2707,7 @@ theorem mem_erase_of_ne_of_mem : a ≠ b → a ∈ s → a ∈ erase s b := by
 #print Finset.eq_of_mem_of_not_mem_erase /-
 /-- An element of `s` that is not an element of `erase s a` must be
 `a`. -/
-theorem eq_of_mem_of_not_mem_erase (hs : b ∈ s) (hsa : b ∉ s.erase a) : b = a :=
+theorem eq_of_mem_of_not_mem_erase (hs : b ∈ s) (hsa : b ∉ s.eraseₓ a) : b = a :=
   by
   rw [mem_erase, not_and] at hsa
   exact not_imp_not.mp hsa hs
@@ -2723,14 +2723,14 @@ theorem erase_eq_of_not_mem {a : α} {s : Finset α} (h : a ∉ s) : erase s a =
 
 #print Finset.erase_eq_self /-
 @[simp]
-theorem erase_eq_self : s.erase a = s ↔ a ∉ s :=
+theorem erase_eq_self : s.eraseₓ a = s ↔ a ∉ s :=
   ⟨fun h => h ▸ not_mem_erase _ _, erase_eq_of_not_mem⟩
 #align finset.erase_eq_self Finset.erase_eq_self
 -/
 
 #print Finset.erase_insert_eq_erase /-
 @[simp]
-theorem erase_insert_eq_erase (s : Finset α) (a : α) : (insert a s).erase a = s.erase a :=
+theorem erase_insert_eq_erase (s : Finset α) (a : α) : (insert a s).eraseₓ a = s.eraseₓ a :=
   ext fun x => by
     simp (config := { contextual := true }) only [mem_erase, mem_insert, and_congr_right_iff,
       false_or_iff, iff_self_iff, imp_true_iff]
@@ -2781,7 +2781,7 @@ theorem erase_subset (a : α) (s : Finset α) : erase s a ⊆ s :=
 -/
 
 #print Finset.subset_erase /-
-theorem subset_erase {a : α} {s t : Finset α} : s ⊆ t.erase a ↔ s ⊆ t ∧ a ∉ s :=
+theorem subset_erase {a : α} {s t : Finset α} : s ⊆ t.eraseₓ a ↔ s ⊆ t ∧ a ∉ s :=
   ⟨fun h => ⟨h.trans (erase_subset _ _), fun ha => not_mem_erase _ _ (h ha)⟩, fun h b hb =>
     mem_erase.2 ⟨ne_of_mem_of_not_mem hb h.2, h.1 hb⟩⟩
 #align finset.subset_erase Finset.subset_erase
@@ -2799,9 +2799,9 @@ theorem coe_erase (a : α) (s : Finset α) : ↑(erase s a) = (s \ {a} : Set α)
 #align finset.coe_erase Finset.coe_erase
 
 #print Finset.erase_ssubset /-
-theorem erase_ssubset {a : α} {s : Finset α} (h : a ∈ s) : s.erase a ⊂ s :=
+theorem erase_ssubset {a : α} {s : Finset α} (h : a ∈ s) : s.eraseₓ a ⊂ s :=
   calc
-    s.erase a ⊂ insert a (s.erase a) := ssubset_insert <| not_mem_erase _ _
+    s.eraseₓ a ⊂ insert a (s.eraseₓ a) := ssubset_insert <| not_mem_erase _ _
     _ = _ := insert_erase h
     
 #align finset.erase_ssubset Finset.erase_ssubset
@@ -2813,7 +2813,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s t) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a))))
 Case conversion may be inaccurate. Consider using '#align finset.ssubset_iff_exists_subset_erase Finset.ssubset_iff_exists_subset_eraseₓ'. -/
-theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a ∈ t, s ⊆ t.erase a :=
+theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a ∈ t, s ⊆ t.eraseₓ a :=
   by
   refine' ⟨fun h => _, fun ⟨a, ha, h⟩ => ssubset_of_subset_of_ssubset h <| erase_ssubset ha⟩
   obtain ⟨a, ht, hs⟩ := not_subset.1 h.2
@@ -2821,20 +2821,20 @@ theorem ssubset_iff_exists_subset_erase {s t : Finset α} : s ⊂ t ↔ ∃ a �
 #align finset.ssubset_iff_exists_subset_erase Finset.ssubset_iff_exists_subset_erase
 
 #print Finset.erase_ssubset_insert /-
-theorem erase_ssubset_insert (s : Finset α) (a : α) : s.erase a ⊂ insert a s :=
+theorem erase_ssubset_insert (s : Finset α) (a : α) : s.eraseₓ a ⊂ insert a s :=
   ssubset_iff_exists_subset_erase.2
     ⟨a, mem_insert_self _ _, erase_subset_erase _ <| subset_insert _ _⟩
 #align finset.erase_ssubset_insert Finset.erase_ssubset_insert
 -/
 
 #print Finset.erase_ne_self /-
-theorem erase_ne_self : s.erase a ≠ s ↔ a ∈ s :=
+theorem erase_ne_self : s.eraseₓ a ≠ s ↔ a ∈ s :=
   erase_eq_self.not_left
 #align finset.erase_ne_self Finset.erase_ne_self
 -/
 
 #print Finset.erase_cons /-
-theorem erase_cons {s : Finset α} {a : α} (h : a ∉ s) : (s.cons a h).erase a = s := by
+theorem erase_cons {s : Finset α} {a : α} (h : a ∉ s) : (s.cons a h).eraseₓ a = s := by
   rw [cons_eq_insert, erase_insert_eq_erase, erase_eq_of_not_mem h]
 #align finset.erase_cons Finset.erase_cons
 -/
@@ -2862,13 +2862,13 @@ theorem subset_insert_iff {a : α} {s t : Finset α} : s ⊆ insert a t ↔ eras
 
 #print Finset.erase_insert_subset /-
 theorem erase_insert_subset (a : α) (s : Finset α) : erase (insert a s) a ⊆ s :=
-  subset_insert_iff.1 <| subset.rfl
+  subset_insert_iff.1 <| Subset.rfl
 #align finset.erase_insert_subset Finset.erase_insert_subset
 -/
 
 #print Finset.insert_erase_subset /-
 theorem insert_erase_subset (a : α) (s : Finset α) : s ⊆ insert a (erase s a) :=
-  subset_insert_iff.2 <| subset.rfl
+  subset_insert_iff.2 <| Subset.rfl
 #align finset.insert_erase_subset Finset.insert_erase_subset
 -/
 
@@ -2879,13 +2879,13 @@ theorem subset_insert_iff_of_not_mem (h : a ∉ s) : s ⊆ insert a t ↔ s ⊆ 
 -/
 
 #print Finset.erase_subset_iff_of_mem /-
-theorem erase_subset_iff_of_mem (h : a ∈ t) : s.erase a ⊆ t ↔ s ⊆ t := by
+theorem erase_subset_iff_of_mem (h : a ∈ t) : s.eraseₓ a ⊆ t ↔ s ⊆ t := by
   rw [← subset_insert_iff, insert_eq_of_mem h]
 #align finset.erase_subset_iff_of_mem Finset.erase_subset_iff_of_mem
 -/
 
 #print Finset.erase_inj /-
-theorem erase_inj {x y : α} (s : Finset α) (hx : x ∈ s) : s.erase x = s.erase y ↔ x = y :=
+theorem erase_inj {x y : α} (s : Finset α) (hx : x ∈ s) : s.eraseₓ x = s.eraseₓ y ↔ x = y :=
   by
   refine' ⟨fun h => _, congr_arg _⟩
   rw [eq_of_mem_of_not_mem_erase hx]
@@ -2895,13 +2895,13 @@ theorem erase_inj {x y : α} (s : Finset α) (hx : x ∈ s) : s.erase x = s.eras
 -/
 
 #print Finset.erase_injOn /-
-theorem erase_injOn (s : Finset α) : Set.InjOn s.erase s := fun _ _ _ _ => (erase_inj s ‹_›).mp
+theorem erase_injOn (s : Finset α) : Set.InjOn s.eraseₓ s := fun _ _ _ _ => (erase_inj s ‹_›).mp
 #align finset.erase_inj_on Finset.erase_injOn
 -/
 
 #print Finset.erase_injOn' /-
 theorem erase_injOn' (a : α) : { s : Finset α | a ∈ s }.InjOn fun s => erase s a :=
-  fun s hs t ht (h : s.erase a = _) => by rw [← insert_erase hs, ← insert_erase ht, h]
+  fun s hs t ht (h : s.eraseₓ a = _) => by rw [← insert_erase hs, ← insert_erase ht, h]
 #align finset.erase_inj_on' Finset.erase_injOn'
 -/
 
@@ -3204,7 +3204,7 @@ theorem sdiff_sdiff_left' (s t u : Finset α) : (s \ t) \ u = s \ t ∩ (s \ u) 
 -/
 
 #print Finset.sdiff_insert /-
-theorem sdiff_insert (s t : Finset α) (x : α) : s \ insert x t = (s \ t).erase x := by
+theorem sdiff_insert (s t : Finset α) (x : α) : s \ insert x t = (s \ t).eraseₓ x := by
   simp_rw [← sdiff_singleton_eq_erase, insert_eq, sdiff_sdiff_left', sdiff_union_distrib,
     inter_comm]
 #align finset.sdiff_insert Finset.sdiff_insert
@@ -3218,7 +3218,7 @@ theorem sdiff_insert_insert_of_mem_of_not_mem {s t : Finset α} {x : α} (hxs : 
 -/
 
 #print Finset.sdiff_erase /-
-theorem sdiff_erase {x : α} (hx : x ∈ s) : s \ s.erase x = {x} :=
+theorem sdiff_erase {x : α} (hx : x ∈ s) : s \ s.eraseₓ x = {x} :=
   by
   rw [← sdiff_singleton_eq_erase, sdiff_sdiff_right_self]
   exact inf_eq_right.2 (singleton_subset_iff.2 hx)
@@ -3251,7 +3251,7 @@ theorem union_eq_sdiff_union_sdiff_union_inter (s t : Finset α) : s ∪ t = s \
 -/
 
 #print Finset.erase_eq_empty_iff /-
-theorem erase_eq_empty_iff (s : Finset α) (a : α) : s.erase a = ∅ ↔ s = ∅ ∨ s = {a} := by
+theorem erase_eq_empty_iff (s : Finset α) (a : α) : s.eraseₓ a = ∅ ↔ s = ∅ ∨ s = {a} := by
   rw [← sdiff_singleton_eq_erase, sdiff_eq_empty_iff_subset, subset_singleton_iff]
 #align finset.erase_eq_empty_iff Finset.erase_eq_empty_iff
 -/
@@ -3723,20 +3723,20 @@ variable (p q : α → Prop) [DecidablePred p] [DecidablePred q]
 #print Finset.filter /-
 /-- `filter p s` is the set of elements of `s` that satisfy `p`. -/
 def filter (s : Finset α) : Finset α :=
-  ⟨_, s.2.filter p⟩
+  ⟨_, s.2.filterₓ p⟩
 #align finset.filter Finset.filter
 -/
 
 #print Finset.filter_val /-
 @[simp]
-theorem filter_val (s : Finset α) : (filter p s).1 = s.1.filter p :=
+theorem filter_val (s : Finset α) : (filter p s).1 = s.1.filterₓ p :=
   rfl
 #align finset.filter_val Finset.filter_val
 -/
 
 #print Finset.filter_subset /-
 @[simp]
-theorem filter_subset (s : Finset α) : s.filter p ⊆ s :=
+theorem filter_subset (s : Finset α) : s.filterₓ p ⊆ s :=
   filter_subset _ _
 #align finset.filter_subset Finset.filter_subset
 -/
@@ -3745,13 +3745,13 @@ variable {p}
 
 #print Finset.mem_filter /-
 @[simp]
-theorem mem_filter {s : Finset α} {a : α} : a ∈ s.filter p ↔ a ∈ s ∧ p a :=
+theorem mem_filter {s : Finset α} {a : α} : a ∈ s.filterₓ p ↔ a ∈ s ∧ p a :=
   mem_filter
 #align finset.mem_filter Finset.mem_filter
 -/
 
 #print Finset.mem_of_mem_filter /-
-theorem mem_of_mem_filter {s : Finset α} (x : α) (h : x ∈ s.filter p) : x ∈ s :=
+theorem mem_of_mem_filter {s : Finset α} (x : α) (h : x ∈ s.filterₓ p) : x ∈ s :=
   mem_of_mem_filter h
 #align finset.mem_of_mem_filter Finset.mem_of_mem_filter
 -/
@@ -3762,7 +3762,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) s) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) (Not (p x))))
 Case conversion may be inaccurate. Consider using '#align finset.filter_ssubset Finset.filter_ssubsetₓ'. -/
-theorem filter_ssubset {s : Finset α} : s.filter p ⊂ s ↔ ∃ x ∈ s, ¬p x :=
+theorem filter_ssubset {s : Finset α} : s.filterₓ p ⊂ s ↔ ∃ x ∈ s, ¬p x :=
   ⟨fun h =>
     let ⟨x, hs, hp⟩ := Set.exists_of_ssubset h
     ⟨x, hs, mt (fun hp => mem_filter.2 ⟨hs, hp⟩) hp⟩,
@@ -3772,7 +3772,7 @@ theorem filter_ssubset {s : Finset α} : s.filter p ⊂ s ↔ ∃ x ∈ s, ¬p x
 variable (p)
 
 #print Finset.filter_filter /-
-theorem filter_filter (s : Finset α) : (s.filter p).filter q = s.filter fun a => p a ∧ q a :=
+theorem filter_filter (s : Finset α) : (s.filterₓ p).filterₓ q = s.filterₓ fun a => p a ∧ q a :=
   ext fun a => by simp only [mem_filter, and_comm', and_left_comm]
 #align finset.filter_filter Finset.filter_filter
 -/
@@ -3801,27 +3801,27 @@ theorem filter_False {h} (s : Finset α) : @filter α (fun a => False) h s = ∅
 variable {p q}
 
 #print Finset.filter_eq_self /-
-theorem filter_eq_self (s : Finset α) : s.filter p = s ↔ ∀ x ∈ s, p x := by simp [Finset.ext_iff]
+theorem filter_eq_self (s : Finset α) : s.filterₓ p = s ↔ ∀ x ∈ s, p x := by simp [Finset.ext_iff]
 #align finset.filter_eq_self Finset.filter_eq_self
 -/
 
 #print Finset.filter_true_of_mem /-
 /-- If all elements of a `finset` satisfy the predicate `p`, `s.filter p` is `s`. -/
 @[simp]
-theorem filter_true_of_mem {s : Finset α} (h : ∀ x ∈ s, p x) : s.filter p = s :=
+theorem filter_true_of_mem {s : Finset α} (h : ∀ x ∈ s, p x) : s.filterₓ p = s :=
   (filter_eq_self s).mpr h
 #align finset.filter_true_of_mem Finset.filter_true_of_mem
 -/
 
 #print Finset.filter_false_of_mem /-
 /-- If all elements of a `finset` fail to satisfy the predicate `p`, `s.filter p` is `∅`. -/
-theorem filter_false_of_mem {s : Finset α} (h : ∀ x ∈ s, ¬p x) : s.filter p = ∅ :=
+theorem filter_false_of_mem {s : Finset α} (h : ∀ x ∈ s, ¬p x) : s.filterₓ p = ∅ :=
   eq_empty_of_forall_not_mem (by simpa)
 #align finset.filter_false_of_mem Finset.filter_false_of_mem
 -/
 
 #print Finset.filter_eq_empty_iff /-
-theorem filter_eq_empty_iff (s : Finset α) : s.filter p = ∅ ↔ ∀ x ∈ s, ¬p x :=
+theorem filter_eq_empty_iff (s : Finset α) : s.filterₓ p = ∅ ↔ ∀ x ∈ s, ¬p x :=
   by
   refine' ⟨_, filter_false_of_mem⟩
   intro hs
@@ -3836,7 +3836,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u1} α p] {s : Finset.{u1} α}, Iff (Finset.Nonempty.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (p a)))
 Case conversion may be inaccurate. Consider using '#align finset.filter_nonempty_iff Finset.filter_nonempty_iffₓ'. -/
-theorem filter_nonempty_iff {s : Finset α} : (s.filter p).Nonempty ↔ ∃ a ∈ s, p a := by
+theorem filter_nonempty_iff {s : Finset α} : (s.filterₓ p).Nonempty ↔ ∃ a ∈ s, p a := by
   simp only [nonempty_iff_ne_empty, Ne.def, filter_eq_empty_iff, Classical.not_not, not_forall]
 #align finset.filter_nonempty_iff Finset.filter_nonempty_iff
 
@@ -3855,7 +3855,7 @@ theorem filter_empty : filter p ∅ = ∅ :=
 -/
 
 #print Finset.filter_subset_filter /-
-theorem filter_subset_filter {s t : Finset α} (h : s ⊆ t) : s.filter p ⊆ t.filter p := fun a ha =>
+theorem filter_subset_filter {s t : Finset α} (h : s ⊆ t) : s.filterₓ p ⊆ t.filterₓ p := fun a ha =>
   mem_filter.2 ⟨h (mem_filter.1 ha).1, (mem_filter.1 ha).2⟩
 #align finset.filter_subset_filter Finset.filter_subset_filter
 -/
@@ -3867,21 +3867,21 @@ theorem monotone_filter_left : Monotone (filter p) := fun _ _ => filter_subset_f
 
 #print Finset.monotone_filter_right /-
 theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [DecidablePred p] [DecidablePred q]
-    (h : p ≤ q) : s.filter p ≤ s.filter q :=
+    (h : p ≤ q) : s.filterₓ p ≤ s.filterₓ q :=
   Multiset.subset_of_le (Multiset.monotone_filter_right s.val h)
 #align finset.monotone_filter_right Finset.monotone_filter_right
 -/
 
 #print Finset.coe_filter /-
 @[simp, norm_cast]
-theorem coe_filter (s : Finset α) : ↑(s.filter p) = ({ x ∈ ↑s | p x } : Set α) :=
+theorem coe_filter (s : Finset α) : ↑(s.filterₓ p) = ({ x ∈ ↑s | p x } : Set α) :=
   Set.ext fun _ => mem_filter
 #align finset.coe_filter Finset.coe_filter
 -/
 
 #print Finset.subset_coe_filter_of_subset_forall /-
 theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : t ⊆ s)
-    (h₂ : ∀ x ∈ t, p x) : t ⊆ s.filter p := fun x hx => (s.coe_filter p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
+    (h₂ : ∀ x ∈ t, p x) : t ⊆ s.filterₓ p := fun x hx => (s.coe_filter p).symm ▸ ⟨h₁ hx, h₂ x hx⟩
 #align finset.subset_coe_filter_of_subset_forall Finset.subset_coe_filter_of_subset_forall
 -/
 
@@ -3915,7 +3915,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Finset.{u1} α} {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], Iff (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) s)) (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (p x) -> (Not (q x)))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter Finset.disjoint_filterₓ'. -/
 theorem disjoint_filter {s : Finset α} {p q : α → Prop} [DecidablePred p] [DecidablePred q] :
-    Disjoint (s.filter p) (s.filter q) ↔ ∀ x ∈ s, p x → ¬q x := by
+    Disjoint (s.filterₓ p) (s.filterₓ q) ↔ ∀ x ∈ s, p x → ¬q x := by
   constructor <;> simp (config := { contextual := true }) [disjoint_left]
 #align finset.disjoint_filter Finset.disjoint_filter
 
@@ -3926,7 +3926,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Finset.{u1} α} {t : Finset.{u1} α} {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s t) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter Finset.disjoint_filter_filterₓ'. -/
 theorem disjoint_filter_filter {s t : Finset α} {p q : α → Prop} [DecidablePred p]
-    [DecidablePred q] : Disjoint s t → Disjoint (s.filter p) (t.filter q) :=
+    [DecidablePred q] : Disjoint s t → Disjoint (s.filterₓ p) (t.filterₓ q) :=
   Disjoint.mono (filter_subset _ _) (filter_subset _ _)
 #align finset.disjoint_filter_filter Finset.disjoint_filter_filter
 
@@ -3937,7 +3937,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) {p : α -> Prop} {q : α -> Prop} [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : DecidablePred.{succ u1} α q], (Disjoint.{u1} (α -> Prop) (Pi.partialOrder.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Prop.partialOrder)) (Pi.orderBot.{u1, 0} α (fun (ᾰ : α) => Prop) (fun (i : α) => Preorder.toLE.{0} ((fun (i : α) => (fun (i : α) => Prop) i) i) ((fun (i : α) => PartialOrder.toPreorder.{0} ((fun (ᾰ : α) => Prop) i) ((fun (i : α) => Prop.partialOrder) i)) i)) (fun (i : α) => BoundedOrder.toOrderBot.{0} Prop Prop.le Prop.boundedOrder)) p q) -> (Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α q (fun (a : α) => _inst_4 a) t))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter' Finset.disjoint_filter_filter'ₓ'. -/
 theorem disjoint_filter_filter' (s t : Finset α) {p q : α → Prop} [DecidablePred p]
-    [DecidablePred q] (h : Disjoint p q) : Disjoint (s.filter p) (t.filter q) :=
+    [DecidablePred q] (h : Disjoint p q) : Disjoint (s.filterₓ p) (t.filterₓ q) :=
   by
   simp_rw [disjoint_left, mem_filter]
   rintro a ⟨hs, hp⟩ ⟨ht, hq⟩
@@ -3951,7 +3951,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Finset.{u1} α) (t : Finset.{u1} α) (p : α -> Prop) [_inst_3 : DecidablePred.{succ u1} α p] [_inst_4 : forall (x : α), Decidable (Not (p x))], Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α p (fun (a : α) => _inst_3 a) s) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => _inst_4 a) t)
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_filter_filter_neg Finset.disjoint_filter_filter_negₓ'. -/
 theorem disjoint_filter_filter_neg (s t : Finset α) (p : α → Prop) [DecidablePred p]
-    [DecidablePred fun a => ¬p a] : Disjoint (s.filter p) (t.filter fun a => ¬p a) :=
+    [DecidablePred fun a => ¬p a] : Disjoint (s.filterₓ p) (t.filterₓ fun a => ¬p a) :=
   disjoint_filter_filter' s t disjoint_compl_right
 #align finset.disjoint_filter_filter_neg Finset.disjoint_filter_filter_neg
 
@@ -3985,26 +3985,27 @@ theorem filter_cons {a : α} (s : Finset α) (ha : a ∉ s) :
 variable [DecidableEq α]
 
 #print Finset.filter_union /-
-theorem filter_union (s₁ s₂ : Finset α) : (s₁ ∪ s₂).filter p = s₁.filter p ∪ s₂.filter p :=
+theorem filter_union (s₁ s₂ : Finset α) : (s₁ ∪ s₂).filterₓ p = s₁.filterₓ p ∪ s₂.filterₓ p :=
   ext fun _ => by simp only [mem_filter, mem_union, or_and_right]
 #align finset.filter_union Finset.filter_union
 -/
 
 #print Finset.filter_union_right /-
-theorem filter_union_right (s : Finset α) : s.filter p ∪ s.filter q = s.filter fun x => p x ∨ q x :=
+theorem filter_union_right (s : Finset α) :
+    s.filterₓ p ∪ s.filterₓ q = s.filterₓ fun x => p x ∨ q x :=
   ext fun x => by simp only [mem_filter, mem_union, and_or_distrib_left.symm]
 #align finset.filter_union_right Finset.filter_union_right
 -/
 
 #print Finset.filter_mem_eq_inter /-
 theorem filter_mem_eq_inter {s t : Finset α} [∀ i, Decidable (i ∈ t)] :
-    (s.filter fun i => i ∈ t) = s ∩ t :=
+    (s.filterₓ fun i => i ∈ t) = s ∩ t :=
   ext fun i => by rw [mem_filter, mem_inter]
 #align finset.filter_mem_eq_inter Finset.filter_mem_eq_inter
 -/
 
 #print Finset.filter_inter_distrib /-
-theorem filter_inter_distrib (s t : Finset α) : (s ∩ t).filter p = s.filter p ∩ t.filter p :=
+theorem filter_inter_distrib (s t : Finset α) : (s ∩ t).filterₓ p = s.filterₓ p ∩ t.filterₓ p :=
   by
   ext
   simp only [mem_filter, mem_inter]
@@ -4051,7 +4052,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Or (p a) (q a)) (fun (a : α) => instDecidableOr (p a) (q a) (_inst_1 a) (_inst_2 a)) _inst_4) (Union.union.{u1} (Finset.{u1} α) (Finset.instUnionFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4) (Finset.filter.{u1} α q (fun (a : α) => _inst_2 a) _inst_4))
 Case conversion may be inaccurate. Consider using '#align finset.filter_or Finset.filter_orₓ'. -/
 theorem filter_or [DecidablePred fun a => p a ∨ q a] (s : Finset α) :
-    (s.filter fun a => p a ∨ q a) = s.filter p ∪ s.filter q :=
+    (s.filterₓ fun a => p a ∨ q a) = s.filterₓ p ∪ s.filterₓ q :=
   ext fun _ => by simp only [mem_filter, mem_union, and_or_left]
 #align finset.filter_or Finset.filter_or
 
@@ -4062,7 +4063,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Prop) (q : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_2 : DecidablePred.{succ u1} α q] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => And (p a) (q a)) (fun (a : α) => instDecidableAnd (p a) (q a) (_inst_1 a) (_inst_2 a)) _inst_4) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4) (Finset.filter.{u1} α q (fun (a : α) => _inst_2 a) _inst_4))
 Case conversion may be inaccurate. Consider using '#align finset.filter_and Finset.filter_andₓ'. -/
 theorem filter_and [DecidablePred fun a => p a ∧ q a] (s : Finset α) :
-    (s.filter fun a => p a ∧ q a) = s.filter p ∩ s.filter q :=
+    (s.filterₓ fun a => p a ∧ q a) = s.filterₓ p ∩ s.filterₓ q :=
   ext fun _ => by simp only [mem_filter, mem_inter, and_comm', and_left_comm, and_self_iff]
 #align finset.filter_and Finset.filter_and
 
@@ -4073,7 +4074,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => instDecidableNot (p a) (_inst_1 a)) _inst_4) (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) _inst_4 (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4))
 Case conversion may be inaccurate. Consider using '#align finset.filter_not Finset.filter_notₓ'. -/
 theorem filter_not [DecidablePred fun a => ¬p a] (s : Finset α) :
-    (s.filter fun a => ¬p a) = s \ s.filter p :=
+    (s.filterₓ fun a => ¬p a) = s \ s.filterₓ p :=
   ext <| by
     simpa only [mem_filter, mem_sdiff, and_comm', not_and] using fun a =>
       and_congr_right fun h : a ∈ s => (imp_iff_right h).symm.trans imp_not_comm
@@ -4131,7 +4132,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_congr_de
 -- We can simplify an application of filter where the decidability is inferred in "the wrong way"
 @[simp]
 theorem [anonymous] {α} (s : Finset α) (p : α → Prop) (h : DecidablePred p) [DecidablePred p] :
-    @filter α p h s = s.filter p := by congr
+    @filter α p h s = s.filterₓ p := by congr
 #align finset.filter_congr_decidable [anonymous]
 
 section Classical
@@ -4148,10 +4149,10 @@ open Classical
   instance for decidability.
 -/
 noncomputable instance {α : Type _} : Sep α (Finset α) :=
-  ⟨fun p x => x.filter p⟩
+  ⟨fun p x => x.filterₓ p⟩
 
 @[simp]
-theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x ∈ s | p x } = s.filter p :=
+theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x ∈ s | p x } = s.filterₓ p :=
   rfl
 #align finset.sep_def Finset.sep_def
 
@@ -4164,7 +4165,7 @@ end Classical
 
   This is equivalent to `filter_eq'` with the equality the other way.
 -/
-theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) : s.filter (Eq b) = ite (b ∈ s) {b} ∅ :=
+theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) : s.filterₓ (Eq b) = ite (b ∈ s) {b} ∅ :=
   by
   split_ifs
   · ext
@@ -4186,14 +4187,14 @@ theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) : s.filter (Eq b) = 
   This is equivalent to `filter_eq` with the equality the other way.
 -/
 theorem filter_eq' [DecidableEq β] (s : Finset β) (b : β) :
-    (s.filter fun a => a = b) = ite (b ∈ s) {b} ∅ :=
+    (s.filterₓ fun a => a = b) = ite (b ∈ s) {b} ∅ :=
   trans (filter_congr fun _ _ => ⟨Eq.symm, Eq.symm⟩) (filter_eq s b)
 #align finset.filter_eq' Finset.filter_eq'
 -/
 
 #print Finset.filter_ne /-
-theorem filter_ne [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a => b ≠ a) = s.erase b :=
-  by
+theorem filter_ne [DecidableEq β] (s : Finset β) (b : β) :
+    (s.filterₓ fun a => b ≠ a) = s.eraseₓ b := by
   ext
   simp only [mem_filter, mem_erase, Ne.def]
   tauto
@@ -4201,7 +4202,8 @@ theorem filter_ne [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a =>
 -/
 
 #print Finset.filter_ne' /-
-theorem filter_ne' [DecidableEq β] (s : Finset β) (b : β) : (s.filter fun a => a ≠ b) = s.erase b :=
+theorem filter_ne' [DecidableEq β] (s : Finset β) (b : β) :
+    (s.filterₓ fun a => a ≠ b) = s.eraseₓ b :=
   trans (filter_congr fun _ _ => ⟨Ne.symm, Ne.symm⟩) (filter_ne s b)
 #align finset.filter_ne' Finset.filter_ne'
 -/
@@ -4213,20 +4215,20 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [_inst_3 : DecidableEq.{succ u1} α] (_inst_4 : Finset.{u1} α) (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Inter.inter.{u1} (Finset.{u1} α) (Finset.instInterFinset.{u1} α (fun (a : α) (b : α) => _inst_3 a b)) (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) _inst_4) (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => instDecidableNot (p a) (_inst_1 a)) s)) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} α) (Finset.instEmptyCollectionFinset.{u1} α))
 Case conversion may be inaccurate. Consider using '#align finset.filter_inter_filter_neg_eq Finset.filter_inter_filter_neg_eqₓ'. -/
 theorem filter_inter_filter_neg_eq [DecidablePred fun a => ¬p a] (s t : Finset α) :
-    (s.filter p ∩ t.filter fun a => ¬p a) = ∅ :=
+    (s.filterₓ p ∩ t.filterₓ fun a => ¬p a) = ∅ :=
   (disjoint_filter_filter_neg s t p).eq_bot
 #align finset.filter_inter_filter_neg_eq Finset.filter_inter_filter_neg_eq
 
 #print Finset.filter_union_filter_of_codisjoint /-
 theorem filter_union_filter_of_codisjoint (s : Finset α) (h : Codisjoint p q) :
-    s.filter p ∪ s.filter q = s :=
+    s.filterₓ p ∪ s.filterₓ q = s :=
   (filter_or _ _ _).symm.trans <| filter_true_of_mem fun x hx => h.top_le x trivial
 #align finset.filter_union_filter_of_codisjoint Finset.filter_union_filter_of_codisjoint
 -/
 
 #print Finset.filter_union_filter_neg_eq /-
 theorem filter_union_filter_neg_eq [DecidablePred fun a => ¬p a] (s : Finset α) :
-    (s.filter p ∪ s.filter fun a => ¬p a) = s :=
+    (s.filterₓ p ∪ s.filterₓ fun a => ¬p a) = s :=
   filter_union_filter_of_codisjoint _ _ _ codisjoint_hnot_right
 #align finset.filter_union_filter_neg_eq Finset.filter_union_filter_neg_eq
 -/
@@ -4374,7 +4376,7 @@ but is expected to have type
   forall {n : Nat} {m : Nat}, Eq.{1} (Finset.{0} Nat) (Finset.filter.{0} Nat (fun (_x : Nat) => Eq.{1} Nat _x m) (fun (a : Nat) => instDecidableEqNat a m) (Finset.range n)) (ite.{1} (Finset.{0} Nat) (LT.lt.{0} Nat instLTNat m n) (Nat.decLt m n) (Singleton.singleton.{0, 0} Nat (Finset.{0} Nat) (Finset.instSingletonFinset.{0} Nat) m) (EmptyCollection.emptyCollection.{0} (Finset.{0} Nat) (Finset.instEmptyCollectionFinset.{0} Nat)))
 Case conversion may be inaccurate. Consider using '#align finset.range_filter_eq Finset.range_filter_eqₓ'. -/
 @[simp]
-theorem range_filter_eq {n m : ℕ} : (range n).filter (· = m) = if m < n then {m} else ∅ :=
+theorem range_filter_eq {n m : ℕ} : (range n).filterₓ (· = m) = if m < n then {m} else ∅ :=
   by
   convert filter_eq (range n) m
   · ext
@@ -4789,7 +4791,7 @@ theorem nodup_toList (s : Finset α) : s.toList.Nodup :=
 #print Finset.mem_toList /-
 @[simp]
 theorem mem_toList {a : α} {s : Finset α} : a ∈ s.toList ↔ a ∈ s :=
-  mem_to_list
+  mem_toList
 #align finset.mem_to_list Finset.mem_toList
 -/
 
@@ -4829,7 +4831,7 @@ theorem Nonempty.not_empty_toList {s : Finset α} (hs : s.Nonempty) : ¬s.toList
 #print Finset.coe_toList /-
 @[simp, norm_cast]
 theorem coe_toList (s : Finset α) : (s.toList : Multiset α) = s.val :=
-  s.val.coe_to_list
+  s.val.coe_toList
 #align finset.coe_to_list Finset.coe_toList
 -/
 
@@ -4849,13 +4851,13 @@ theorem toList_eq_singleton_iff {a : α} {s : Finset α} : s.toList = [a] ↔ s 
 
 @[simp]
 theorem toList_singleton : ∀ a, ({a} : Finset α).toList = [a] :=
-  to_list_singleton
+  toList_singleton
 #align finset.to_list_singleton Finset.toList_singleton
 
 #print Finset.exists_list_nodup_eq /-
 theorem exists_list_nodup_eq [DecidableEq α] (s : Finset α) :
     ∃ l : List α, l.Nodup ∧ l.toFinset = s :=
-  ⟨s.toList, s.nodup_to_list, s.to_list_to_finset⟩
+  ⟨s.toList, s.nodup_toList, s.toList_toFinset⟩
 #align finset.exists_list_nodup_eq Finset.exists_list_nodup_eq
 -/
 
@@ -4905,7 +4907,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.disj_Union_val Finset.disjUnionᵢ_valₓ'. -/
 @[simp]
 theorem disjUnionᵢ_val (s : Finset α) (t : α → Finset β) (h) :
-    (s.disjUnion t h).1 = s.1.bind fun a => (t a).1 :=
+    (s.disjUnionₓ t h).1 = s.1.bind fun a => (t a).1 :=
   rfl
 #align finset.disj_Union_val Finset.disjUnionᵢ_val
 
@@ -4923,7 +4925,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {b : β} {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (Finset.toSet.{u1} α s) t}, Iff (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u1, u2} α β s t h)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (t a))))
 Case conversion may be inaccurate. Consider using '#align finset.mem_disj_Union Finset.mem_disjUnionᵢₓ'. -/
 @[simp]
-theorem mem_disjUnionᵢ {b : β} {h} : b ∈ s.disjUnion t h ↔ ∃ a ∈ s, b ∈ t a := by
+theorem mem_disjUnionᵢ {b : β} {h} : b ∈ s.disjUnionₓ t h ↔ ∃ a ∈ s, b ∈ t a := by
   simp only [mem_def, disj_Union_val, mem_bind, exists_prop]
 #align finset.mem_disj_Union Finset.mem_disjUnionᵢ
 
@@ -4934,7 +4936,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {h : Set.PairwiseDisjoint.{u2, u1} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (Finset.toSet.{u1} α s) t}, Eq.{succ u2} (Set.{u2} β) (Finset.toSet.{u2} β (Finset.disjUnionᵢ.{u1, u2} α β s t h)) (Set.unionᵢ.{u2, succ u1} β α (fun (x : α) => Set.unionᵢ.{u2, 0} β (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Finset.toSet.{u1} α s)) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Finset.toSet.{u1} α s)) => Finset.toSet.{u2} β (t x))))
 Case conversion may be inaccurate. Consider using '#align finset.coe_disj_Union Finset.coe_disjUnionᵢₓ'. -/
 @[simp, norm_cast]
-theorem coe_disjUnionᵢ {h} : (s.disjUnion t h : Set β) = ⋃ x ∈ (s : Set α), t x := by
+theorem coe_disjUnionᵢ {h} : (s.disjUnionₓ t h : Set β) = ⋃ x ∈ (s : Set α), t x := by
   simp only [Set.ext_iff, mem_disj_Union, Set.mem_unionᵢ, iff_self_iff, mem_coe, imp_true_iff]
 #align finset.coe_disj_Union Finset.coe_disjUnionᵢ
 
@@ -4947,7 +4949,7 @@ Case conversion may be inaccurate. Consider using '#align finset.disj_Union_cons
 @[simp]
 theorem disjUnionᵢ_cons (a : α) (s : Finset α) (ha : a ∉ s) (f : α → Finset β) (H) :
     disjUnion (cons a s ha) f H =
-      (f a).disjUnion (s.disjUnion f fun b hb c hc => H (mem_cons_of_mem hb) (mem_cons_of_mem hc))
+      (f a).disjUnion (s.disjUnionₓ f fun b hb c hc => H (mem_cons_of_mem hb) (mem_cons_of_mem hc))
         (disjoint_left.mpr fun b hb h =>
           let ⟨c, hc, h⟩ := mem_disjUnionᵢ.mp h
           disjoint_left.mp
@@ -4973,10 +4975,10 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (s : Finset.{u3} α) (f : α -> (Finset.{u2} β)) (g : β -> (Finset.{u1} γ)) (h1 : Set.PairwiseDisjoint.{u2, u3} (Finset.{u2} β) α (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (Finset.toSet.{u3} α s) f) (h2 : Set.PairwiseDisjoint.{u1, u2} (Finset.{u1} γ) β (Finset.partialOrder.{u1} γ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} γ) (Finset.toSet.{u2} β (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) g), Eq.{succ u1} (Finset.{u1} γ) (Finset.disjUnionᵢ.{u2, u1} β γ (Finset.disjUnionᵢ.{u3, u2} α β s f h1) g h2) (Finset.disjUnionᵢ.{u3, u1} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) γ (Finset.attach.{u3} α s) (fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) (fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) (ha : Membership.mem.{u3, u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) (Set.{u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s))) (Set.instMembershipSet.{u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s))) a (Finset.toSet.{u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) (Finset.attach.{u3} α s))) (b : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) (hb : Membership.mem.{u3, u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) (Set.{u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s))) (Set.instMembershipSet.{u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s))) b (Finset.toSet.{u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) (Finset.attach.{u3} α s))) (hab : Ne.{succ u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) a b) => Iff.mpr (Disjoint.{u1} (Finset.{u1} γ) (Finset.partialOrder.{u1} γ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} γ) ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) a) ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) b)) (forall {{a_1 : γ}}, (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) a_1 ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) a)) -> (Not (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) a_1 ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) b)))) (Finset.disjoint_left.{u1} γ ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) a) ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) b)) (fun (x : γ) (hxa : Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) a)) (hxb : Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x ((fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) b)) => Exists.casesOn.{succ u2} β (fun (a_1 : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g a_1))) (fun (_fresh.526.41011 : Exists.{succ u2} β (fun (a_1 : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g a_1)))) => False) (Iff.mp (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc)))))) (Exists.{succ u2} β (fun (a_1 : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g a_1)))) (Finset.mem_disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) g x (fun (b : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)))) => h2 b (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hc))))) hxa) (fun (xa : β) (h : And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xa))) => And.casesOn.{0} (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xa)) (fun (h : And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xa))) => False) h (fun (hfa : Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (hga : Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xa)) => Exists.casesOn.{succ u2} β (fun (a : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g a))) (fun (_fresh.526.41128 : Exists.{succ u2} β (fun (a : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g a)))) => False) (Iff.mp (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (Finset.disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b)) g (fun (b_1 : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b_1 (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b)))) => h2 b_1 (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b_1 h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) hc)))))) (Exists.{succ u2} β (fun (a : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g a)))) (Finset.mem_disjUnionᵢ.{u2, u1} β γ (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b)) g x (fun (b_1 : β) (hb : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) b_1 (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b)))) (c : β) (hc : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) c (Finset.toSet.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b)))) => h2 b_1 (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f b_1 h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) hb))) c (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f c h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) c (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) hc))))) hxb) (fun (xb : β) (h : And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xb))) => And.casesOn.{0} (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xb)) (fun (h : And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xb))) => False) h (fun (hfb : Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (hgb : Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xb)) => Iff.mp (Disjoint.{u1} (Finset.{u1} γ) (Finset.partialOrder.{u1} γ) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} γ) (g xa) (g xb)) (forall {{a : γ}}, (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) a (g xa)) -> (Not (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) a (g xb)))) (Finset.disjoint_left.{u1} γ (g xa) (g xb)) (h2 xa (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f xa h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) hfa))) xb (Iff.mpr (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (Finset.disjUnionᵢ.{u3, u2} α β s f h1)) (Exists.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f a)))) (Finset.mem_disjUnionᵢ.{u3, u2} α β s f xb h1) (Exists.intro.{succ u3} α (fun (a : α) => And (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f a))) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (And.intro (Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) hfb))) (fun (a._@.Init.Prelude.139.Mathlib.Data.Finset.Basic._hyg.32511 : Eq.{succ u2} β xa xb) => Eq.ndrec.{0, succ u2} β xa (fun (xb : β) => (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xb (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) -> (Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xb)) -> False) (fun (hfb : Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) xa (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (hgb : Membership.mem.{u1, u1} γ (Finset.{u1} γ) (Finset.instMembershipFinset.{u1} γ) x (g xa)) => Iff.mp (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (forall {{a_1 : β}}, (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a))) -> (Not (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) a_1 (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))))) (Finset.disjoint_left.{u2} β (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a)) (f (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b))) (h1 (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (Subtype.prop.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) b) (Function.Injective.ne.{succ u3, succ u3} (Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) α (fun (a : Subtype.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) => Subtype.val.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s) a) (Subtype.coe_injective.{succ u3} α (fun (x : α) => Membership.mem.{u3, u3} α (Finset.{u3} α) (Finset.instMembershipFinset.{u3} α) x s)) a b hab)) xa hfa hfb) xb a._@.Init.Prelude.139.Mathlib.Data.Finset.Basic._hyg.32511 hfb hgb)) x hga hgb)))))))
 Case conversion may be inaccurate. Consider using '#align finset.disj_Union_disj_Union Finset.disjUnionᵢ_disjUnionᵢₓ'. -/
 theorem disjUnionᵢ_disjUnionᵢ (s : Finset α) (f : α → Finset β) (g : β → Finset γ) (h1 h2) :
-    (s.disjUnion f h1).disjUnion g h2 =
-      s.attach.disjUnion
+    (s.disjUnionₓ f h1).disjUnionₓ g h2 =
+      s.attach.disjUnionₓ
         (fun a =>
-          (f a).disjUnion g fun b hb c hc =>
+          (f a).disjUnionₓ g fun b hb c hc =>
             h2 (mem_disjUnionᵢ.mpr ⟨_, a.Prop, hb⟩) (mem_disjUnionᵢ.mpr ⟨_, a.Prop, hc⟩))
         fun a ha b hb hab =>
         disjoint_left.mpr fun x hxa hxb =>
@@ -4995,7 +4997,7 @@ theorem disjUnionᵢ_disjUnionᵢ (s : Finset α) (f : α → Finset β) (g : β
 #print Finset.disjUnionᵢ_filter_eq_of_maps_to /-
 theorem disjUnionᵢ_filter_eq_of_maps_to [DecidableEq β] {s : Finset α} {t : Finset β} {f : α → β}
     (h : ∀ x ∈ s, f x ∈ t) :
-    (t.disjUnion (fun a => s.filter fun c => f c = a) fun x' hx y' hy hne =>
+    (t.disjUnionₓ (fun a => s.filterₓ fun c => f c = a) fun x' hx y' hy hne =>
         disjoint_filter_filter' _ _
           (by
             simp_rw [Pi.disjoint_iff, Prop.disjoint_iff]
@@ -5036,7 +5038,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_val Finset.bunionᵢ_valₓ'. -/
 @[simp]
 theorem bunionᵢ_val (s : Finset α) (t : α → Finset β) :
-    (s.bUnion t).1 = (s.1.bind fun a => (t a).1).dedup :=
+    (s.bunionᵢ t).1 = (s.1.bind fun a => (t a).1).dedup :=
   rfl
 #align finset.bUnion_val Finset.bunionᵢ_val
 
@@ -5054,13 +5056,13 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)} {b : β}, Iff (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (Finset.bunionᵢ.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) b (t a))))
 Case conversion may be inaccurate. Consider using '#align finset.mem_bUnion Finset.mem_bunionᵢₓ'. -/
 @[simp]
-theorem mem_bunionᵢ {b : β} : b ∈ s.bUnion t ↔ ∃ a ∈ s, b ∈ t a := by
+theorem mem_bunionᵢ {b : β} : b ∈ s.bunionᵢ t ↔ ∃ a ∈ s, b ∈ t a := by
   simp only [mem_def, bUnion_val, mem_dedup, mem_bind, exists_prop]
 #align finset.mem_bUnion Finset.mem_bunionᵢ
 
 #print Finset.coe_bunionᵢ /-
 @[simp, norm_cast]
-theorem coe_bunionᵢ : (s.bUnion t : Set β) = ⋃ x ∈ (s : Set α), t x := by
+theorem coe_bunionᵢ : (s.bunionᵢ t : Set β) = ⋃ x ∈ (s : Set α), t x := by
   simp only [Set.ext_iff, mem_bUnion, Set.mem_unionᵢ, iff_self_iff, mem_coe, imp_true_iff]
 #align finset.coe_bUnion Finset.coe_bunionᵢ
 -/
@@ -5072,7 +5074,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t : α -> (Finset.{u1} β)} [_inst_2 : DecidableEq.{succ u2} α] {a : α}, Eq.{succ u1} (Finset.{u1} β) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a s) t) (Union.union.{u1} (Finset.{u1} β) (Finset.instUnionFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (t a) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t))
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_insert Finset.bunionᵢ_insertₓ'. -/
 @[simp]
-theorem bunionᵢ_insert [DecidableEq α] {a : α} : (insert a s).bUnion t = t a ∪ s.bUnion t :=
+theorem bunionᵢ_insert [DecidableEq α] {a : α} : (insert a s).bunionᵢ t = t a ∪ s.bunionᵢ t :=
   ext fun x => by
     simp only [mem_bUnion, exists_prop, mem_union, mem_insert, or_and_right, exists_or,
       exists_eq_left]
@@ -5085,7 +5087,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s₁ : Finset.{u2} α} {s₂ : Finset.{u2} α} {t₁ : α -> (Finset.{u1} β)} {t₂ : α -> (Finset.{u1} β)}, (Eq.{succ u2} (Finset.{u2} α) s₁ s₂) -> (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s₁) -> (Eq.{succ u1} (Finset.{u1} β) (t₁ a) (t₂ a))) -> (Eq.{succ u1} (Finset.{u1} β) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s₁ t₁) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s₂ t₂))
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_congr Finset.bunionᵢ_congrₓ'. -/
 -- ext $ λ x, by simp [or_and_distrib_right, exists_or_distrib]
-theorem bunionᵢ_congr (hs : s₁ = s₂) (ht : ∀ a ∈ s₁, t₁ a = t₂ a) : s₁.bUnion t₁ = s₂.bUnion t₂ :=
+theorem bunionᵢ_congr (hs : s₁ = s₂) (ht : ∀ a ∈ s₁, t₁ a = t₂ a) : s₁.bunionᵢ t₁ = s₂.bunionᵢ t₂ :=
   ext fun x => by simp (config := { contextual := true }) [hs, ht]
 #align finset.bUnion_congr Finset.bunionᵢ_congr
 
@@ -5097,7 +5099,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.disj_Union_eq_bUnion Finset.disjUnionᵢ_eq_bunionᵢₓ'. -/
 @[simp]
 theorem disjUnionᵢ_eq_bunionᵢ (s : Finset α) (f : α → Finset β) (hf) :
-    s.disjUnion f hf = s.bUnion f :=
+    s.disjUnionₓ f hf = s.bunionᵢ f :=
   by
   dsimp [disj_Union, Finset.bunionᵢ, Function.comp]
   generalize_proofs h
@@ -5105,7 +5107,7 @@ theorem disjUnionᵢ_eq_bunionᵢ (s : Finset α) (f : α → Finset β) (hf) :
 #align finset.disj_Union_eq_bUnion Finset.disjUnionᵢ_eq_bunionᵢ
 
 #print Finset.bunionᵢ_subset /-
-theorem bunionᵢ_subset {s' : Finset β} : s.bUnion t ⊆ s' ↔ ∀ x ∈ s, t x ⊆ s' := by
+theorem bunionᵢ_subset {s' : Finset β} : s.bunionᵢ t ⊆ s' ↔ ∀ x ∈ s, t x ⊆ s' := by
   simp only [subset_iff, mem_bUnion] <;>
     exact ⟨fun H a ha b hb => H ⟨a, ha, hb⟩, fun H b ⟨a, ha, hb⟩ => H a ha hb⟩
 #align finset.bUnion_subset Finset.bunionᵢ_subset
@@ -5125,7 +5127,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (t : Finset.{u1} β), Eq.{succ u1} (Finset.{u1} β) (Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f) t) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (x : α) => Inter.inter.{u1} (Finset.{u1} β) (Finset.instInterFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b)) (f x) t))
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_inter Finset.bunionᵢ_interₓ'. -/
 theorem bunionᵢ_inter (s : Finset α) (f : α → Finset β) (t : Finset β) :
-    s.bUnion f ∩ t = s.bUnion fun x => f x ∩ t :=
+    s.bunionᵢ f ∩ t = s.bunionᵢ fun x => f x ∩ t :=
   by
   ext x
   simp only [mem_bUnion, mem_inter]
@@ -5134,7 +5136,7 @@ theorem bunionᵢ_inter (s : Finset α) (f : α → Finset β) (t : Finset β) :
 
 #print Finset.inter_bunionᵢ /-
 theorem inter_bunionᵢ (t : Finset β) (s : Finset α) (f : α → Finset β) :
-    t ∩ s.bUnion f = s.bUnion fun x => t ∩ f x := by
+    t ∩ s.bunionᵢ f = s.bunionᵢ fun x => t ∩ f x := by
   rw [inter_comm, bUnion_inter] <;> simp [inter_comm]
 #align finset.inter_bUnion Finset.inter_bunionᵢ
 -/
@@ -5146,7 +5148,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u3} γ] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (g : β -> (Finset.{u3} γ)), Eq.{succ u3} (Finset.{u3} γ) (Finset.bunionᵢ.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_2 a b) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f) g) (Finset.bunionᵢ.{u2, u3} α γ (fun (a : γ) (b : γ) => _inst_2 a b) s (fun (a : α) => Finset.bunionᵢ.{u1, u3} β γ (fun (a : γ) (b : γ) => _inst_2 a b) (f a) g))
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_bUnion Finset.bunionᵢ_bunionᵢₓ'. -/
 theorem bunionᵢ_bunionᵢ [DecidableEq γ] (s : Finset α) (f : α → Finset β) (g : β → Finset γ) :
-    (s.bUnion f).bUnion g = s.bUnion fun a => (f a).bUnion g :=
+    (s.bunionᵢ f).bunionᵢ g = s.bunionᵢ fun a => (f a).bunionᵢ g :=
   by
   ext
   simp only [Finset.mem_bunionᵢ, exists_prop]
@@ -5161,7 +5163,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u2} α] (s : Multiset.{u2} α) (t : α -> (Multiset.{u1} β)), Eq.{succ u1} (Finset.{u1} β) (Multiset.toFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.bind.{u2, u1} α β s t)) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) (Multiset.toFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b) s) (fun (a : α) => Multiset.toFinset.{u1} β (fun (a : β) (b : β) => _inst_1 a b) (t a)))
 Case conversion may be inaccurate. Consider using '#align finset.bind_to_finset Finset.bind_toFinsetₓ'. -/
 theorem bind_toFinset [DecidableEq α] (s : Multiset α) (t : α → Multiset β) :
-    (s.bind t).toFinset = s.toFinset.bUnion fun a => (t a).toFinset :=
+    (s.bind t).toFinset = s.toFinset.bunionᵢ fun a => (t a).toFinset :=
   ext fun x => by simp only [Multiset.mem_toFinset, mem_bUnion, Multiset.mem_bind, exists_prop]
 #align finset.bind_to_finset Finset.bind_toFinset
 
@@ -5171,7 +5173,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t₁ : α -> (Finset.{u1} β)} {t₂ : α -> (Finset.{u1} β)}, (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (t₁ a) (t₂ a))) -> (HasSubset.Subset.{u1} (Finset.{u1} β) (Finset.instHasSubsetFinset.{u1} β) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t₁) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t₂))
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_mono Finset.bunionᵢ_monoₓ'. -/
-theorem bunionᵢ_mono (h : ∀ a ∈ s, t₁ a ⊆ t₂ a) : s.bUnion t₁ ⊆ s.bUnion t₂ :=
+theorem bunionᵢ_mono (h : ∀ a ∈ s, t₁ a ⊆ t₂ a) : s.bunionᵢ t₁ ⊆ s.bunionᵢ t₂ :=
   by
   have : ∀ b a, a ∈ s → b ∈ t₁ a → ∃ a : α, a ∈ s ∧ b ∈ t₂ a := fun b a ha hb =>
     ⟨a, ha, Finset.mem_of_subset (h a ha) hb⟩
@@ -5180,7 +5182,7 @@ theorem bunionᵢ_mono (h : ∀ a ∈ s, t₁ a ⊆ t₂ a) : s.bUnion t₁ ⊆ 
 
 #print Finset.bunionᵢ_subset_bunionᵢ_of_subset_left /-
 theorem bunionᵢ_subset_bunionᵢ_of_subset_left (t : α → Finset β) (h : s₁ ⊆ s₂) :
-    s₁.bUnion t ⊆ s₂.bUnion t := by
+    s₁.bunionᵢ t ⊆ s₂.bunionᵢ t := by
   intro x
   simp only [and_imp, mem_bUnion, exists_prop]
   exact Exists.imp fun a ha => ⟨h ha.1, ha.2⟩
@@ -5188,7 +5190,7 @@ theorem bunionᵢ_subset_bunionᵢ_of_subset_left (t : α → Finset β) (h : s�
 -/
 
 #print Finset.subset_bunionᵢ_of_mem /-
-theorem subset_bunionᵢ_of_mem (u : α → Finset β) {x : α} (xs : x ∈ s) : u x ⊆ s.bUnion u :=
+theorem subset_bunionᵢ_of_mem (u : α → Finset β) {x : α} (xs : x ∈ s) : u x ⊆ s.bunionᵢ u :=
   singleton_bunionᵢ.Superset.trans <|
     bunionᵢ_subset_bunionᵢ_of_subset_left u <| singleton_subset_iff.2 xs
 #align finset.subset_bUnion_of_mem Finset.subset_bunionᵢ_of_mem
@@ -5202,7 +5204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_subset_iff_forall_subset Finset.bunionᵢ_subset_iff_forall_subsetₓ'. -/
 @[simp]
 theorem bunionᵢ_subset_iff_forall_subset {α β : Type _} [DecidableEq β] {s : Finset α}
-    {t : Finset β} {f : α → Finset β} : s.bUnion f ⊆ t ↔ ∀ x ∈ s, f x ⊆ t :=
+    {t : Finset β} {f : α → Finset β} : s.bunionᵢ f ⊆ t ↔ ∀ x ∈ s, f x ⊆ t :=
   ⟨fun h x hx => (subset_bunionᵢ_of_mem f hx).trans h, fun h x hx =>
     let ⟨a, ha₁, ha₂⟩ := mem_bunionᵢ.mp hx
     h _ ha₁ ha₂⟩
@@ -5210,7 +5212,7 @@ theorem bunionᵢ_subset_iff_forall_subset {α β : Type _} [DecidableEq β] {s 
 
 #print Finset.bunionᵢ_singleton_eq_self /-
 @[simp]
-theorem bunionᵢ_singleton_eq_self [DecidableEq α] : s.bUnion (singleton : α → Finset α) = s :=
+theorem bunionᵢ_singleton_eq_self [DecidableEq α] : s.bunionᵢ (singleton : α → Finset α) = s :=
   ext fun x => by simp only [mem_bUnion, mem_singleton, exists_prop, exists_eq_right']
 #align finset.bUnion_singleton_eq_self Finset.bunionᵢ_singleton_eq_self
 -/
@@ -5222,7 +5224,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (p : β -> Prop) [_inst_2 : DecidablePred.{succ u1} β p], Eq.{succ u1} (Finset.{u1} β) (Finset.filter.{u1} β p (fun (a : β) => _inst_2 a) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f)) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s (fun (a : α) => Finset.filter.{u1} β p (fun (a : β) => _inst_2 a) (f a)))
 Case conversion may be inaccurate. Consider using '#align finset.filter_bUnion Finset.filter_bunionᵢₓ'. -/
 theorem filter_bunionᵢ (s : Finset α) (f : α → Finset β) (p : β → Prop) [DecidablePred p] :
-    (s.bUnion f).filter p = s.bUnion fun a => (f a).filter p :=
+    (s.bunionᵢ f).filterₓ p = s.bunionᵢ fun a => (f a).filterₓ p :=
   by
   ext b
   simp only [mem_bUnion, exists_prop, mem_filter]
@@ -5240,13 +5242,13 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] [_inst_2 : DecidableEq.{succ u2} α] {s : Finset.{u2} α} {t : Finset.{u1} β} {f : α -> β}, (forall (x : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) -> (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) (f x) t)) -> (Eq.{succ u2} (Finset.{u2} α) (Finset.bunionᵢ.{u1, u2} β α (fun (a : α) (b : α) => _inst_2 a b) t (fun (a : β) => Finset.filter.{u2} α (fun (c : α) => Eq.{succ u1} β (f c) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)) s)
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_filter_eq_of_maps_to Finset.bunionᵢ_filter_eq_of_maps_toₓ'. -/
 theorem bunionᵢ_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β}
-    (h : ∀ x ∈ s, f x ∈ t) : (t.bUnion fun a => s.filter fun c => f c = a) = s := by
+    (h : ∀ x ∈ s, f x ∈ t) : (t.bunionᵢ fun a => s.filterₓ fun c => f c = a) = s := by
   simpa only [disj_Union_eq_bUnion] using disj_Union_filter_eq_of_maps_to h
 #align finset.bUnion_filter_eq_of_maps_to Finset.bunionᵢ_filter_eq_of_maps_to
 
 #print Finset.erase_bunionᵢ /-
 theorem erase_bunionᵢ (f : α → Finset β) (s : Finset α) (b : β) :
-    (s.bUnion f).erase b = s.bUnion fun x => (f x).erase b :=
+    (s.bunionᵢ f).eraseₓ b = s.bunionᵢ fun x => (f x).eraseₓ b :=
   by
   ext
   simp only [Finset.mem_bunionᵢ, iff_self_iff, exists_and_left, Finset.mem_erase]
@@ -5260,7 +5262,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : α -> (Finset.{u2} β)}, Iff (Finset.Nonempty.{u2} β (Finset.bunionᵢ.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) s t)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) (Finset.Nonempty.{u2} β (t x))))
 Case conversion may be inaccurate. Consider using '#align finset.bUnion_nonempty Finset.bunionᵢ_nonemptyₓ'. -/
 @[simp]
-theorem bunionᵢ_nonempty : (s.bUnion t).Nonempty ↔ ∃ x ∈ s, (t x).Nonempty := by
+theorem bunionᵢ_nonempty : (s.bunionᵢ t).Nonempty ↔ ∃ x ∈ s, (t x).Nonempty := by
   simp [Finset.Nonempty, ← exists_and_left, @exists_swap α]
 #align finset.bUnion_nonempty Finset.bunionᵢ_nonempty
 
@@ -5270,7 +5272,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {s : Finset.{u2} α} {t : α -> (Finset.{u1} β)}, (Finset.Nonempty.{u2} α s) -> (forall (x : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) x s) -> (Finset.Nonempty.{u1} β (t x))) -> (Finset.Nonempty.{u1} β (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s t))
 Case conversion may be inaccurate. Consider using '#align finset.nonempty.bUnion Finset.Nonempty.bunionᵢₓ'. -/
-theorem Nonempty.bunionᵢ (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) : (s.bUnion t).Nonempty :=
+theorem Nonempty.bunionᵢ (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) :
+    (s.bunionᵢ t).Nonempty :=
   bunionᵢ_nonempty.2 <| hs.imp fun x hx => ⟨hx, ht x hx⟩
 #align finset.nonempty.bUnion Finset.Nonempty.bunionᵢ
 
@@ -5281,7 +5284,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] (s : Finset.{u2} α) (f : α -> (Finset.{u1} β)) (t : Finset.{u1} β), Iff (Disjoint.{u1} (Finset.{u1} β) (Finset.partialOrder.{u1} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) (Finset.bunionᵢ.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) s f) t) (forall (i : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) i s) -> (Disjoint.{u1} (Finset.{u1} β) (Finset.partialOrder.{u1} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} β) (f i) t))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_bUnion_left Finset.disjoint_bunionᵢ_leftₓ'. -/
 theorem disjoint_bunionᵢ_left (s : Finset α) (f : α → Finset β) (t : Finset β) :
-    Disjoint (s.bUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
+    Disjoint (s.bunionᵢ f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
   classical
     refine' s.induction _ _
     · simp only [forall_mem_empty_iff, bUnion_empty, disjoint_empty_left]
@@ -5296,7 +5299,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u2} β] (s : Finset.{u2} β) (t : Finset.{u1} α) (f : α -> (Finset.{u2} β)), Iff (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) s (Finset.bunionᵢ.{u1, u2} α β (fun (a : β) (b : β) => _inst_1 a b) t f)) (forall (i : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) i t) -> (Disjoint.{u2} (Finset.{u2} β) (Finset.partialOrder.{u2} β) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} β) s (f i)))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_bUnion_right Finset.disjoint_bunionᵢ_rightₓ'. -/
 theorem disjoint_bunionᵢ_right (s : Finset β) (t : Finset α) (f : α → Finset β) :
-    Disjoint s (t.bUnion f) ↔ ∀ i ∈ t, Disjoint s (f i) := by
+    Disjoint s (t.bunionᵢ f) ↔ ∀ i ∈ t, Disjoint s (f i) := by
   simpa only [disjoint_comm] using disjoint_bUnion_left t f s
 #align finset.disjoint_bUnion_right Finset.disjoint_bunionᵢ_right
 

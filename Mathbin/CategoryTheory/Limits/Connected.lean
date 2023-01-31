@@ -113,7 +113,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
     {
       preserves := fun c l =>
         { lift := fun s =>
-            prod.lift (s.π.app (Classical.arbitrary _) ≫ limits.prod.fst) (l.lift (forgetCone s))
+            prod.lift (s.π.app (Classical.arbitrary _) ≫ Limits.prod.fst) (l.lift (forgetCone s))
           fac' := fun s j => by
             apply prod.hom_ext
             · erw [assoc, lim_map_π, comp_id, limit.lift_π]

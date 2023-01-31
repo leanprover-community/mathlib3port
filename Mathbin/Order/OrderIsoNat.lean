@@ -221,7 +221,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.order_embedding_of_set_range Nat.orderEmbeddingOfSet_rangeₓ'. -/
 theorem orderEmbeddingOfSet_range [DecidablePred (· ∈ s)] :
     Set.range (Nat.orderEmbeddingOfSet s) = s :=
-  subtype.coe_comp_of_nat_range
+  Subtype.coe_comp_ofNat_range
 #align nat.order_embedding_of_set_range Nat.orderEmbeddingOfSet_range
 
 /- warning: nat.exists_subseq_of_forall_mem_union -> Nat.exists_subseq_of_forall_mem_union is a dubious translation:
@@ -284,7 +284,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
       let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.find (h gn)
       exact
         ⟨(RelEmbedding.natLt (fun n => g' n + m) fun n =>
-              Nat.add_lt_add_right (Nat.find_spec (h (g' n))).1 m).orderEmbeddingOfLtEmbedding,
+              Nat.add_lt_add_right (Nat.find_spec (h (g' n))).1 m).orderEmbeddingOfLTEmbedding,
           Or.intro_left _ fun n => (Nat.find_spec (h (g' n))).2⟩
 #align exists_increasing_or_nonincreasing_subseq' exists_increasing_or_nonincreasing_subseq'
 

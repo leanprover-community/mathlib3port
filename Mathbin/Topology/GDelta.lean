@@ -151,15 +151,15 @@ theorem Set.Countable.isGδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ)
 #align set.countable.is_Gδ_compl Set.Countable.isGδ_compl
 
 theorem Set.Finite.isGδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
-  hs.Countable.is_Gδ_compl
+  hs.Countable.isGδ_compl
 #align set.finite.is_Gδ_compl Set.Finite.isGδ_compl
 
 theorem Set.Subsingleton.isGδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
-  hs.Finite.is_Gδ_compl
+  hs.Finite.isGδ_compl
 #align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_compl
 
 theorem Finset.isGδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
-  s.finite_to_set.is_Gδ_compl
+  s.finite_toSet.isGδ_compl
 #align finset.is_Gδ_compl Finset.isGδ_compl
 
 open TopologicalSpace
@@ -195,7 +195,7 @@ theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 �
   by
   obtain ⟨U, hUo, hU⟩ := (@uniformity_hasBasis_open_symmetric β _).exists_antitone_subbasis
   simp only [Uniform.continuousAt_iff_prod, nhds_prod_eq]
-  simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true,
+  simp only [(nhds_basis_opens _).prod_self.tendsto_iffₓ hU.to_has_basis, forall_prop_of_true,
     set_of_forall, id]
   refine' isGδ_interᵢ fun k => IsOpen.isGδ <| isOpen_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩

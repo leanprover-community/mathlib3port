@@ -174,7 +174,7 @@ def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C)
   inverse := monToMonad _
   unitIso := unitIso
   counitIso := counitIso
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     intro X
     ext
     dsimp

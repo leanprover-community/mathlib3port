@@ -494,7 +494,7 @@ but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isPrefix.{u1} α (List.takeWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.take_while_prefix List.takeWhile_prefixₓ'. -/
 theorem takeWhile_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
-  ⟨l.dropWhile p, takeWhile_append_drop p l⟩
+  ⟨l.dropWhileₓ p, takeWhile_append_drop p l⟩
 #align list.take_while_prefix List.takeWhile_prefix
 
 /- warning: list.drop_while_suffix -> List.dropWhile_suffix is a dubious translation:
@@ -503,12 +503,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isSuffix.{u1} α (List.dropWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.drop_while_suffix List.dropWhile_suffixₓ'. -/
-theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhile p <:+ l :=
+theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhileₓ p <:+ l :=
   ⟨l.takeWhile p, takeWhile_append_drop p l⟩
 #align list.drop_while_suffix List.dropWhile_suffix
 
 #print List.dropLast_prefix /-
-theorem dropLast_prefix : ∀ l : List α, l.init <+: l
+theorem dropLast_prefix : ∀ l : List α, l.dropLast <+: l
   | [] => ⟨nil, by rw [init, List.append_nil]⟩
   | a :: l => ⟨_, dropLast_append_getLast (cons_ne_nil a l)⟩
 #align list.init_prefix List.dropLast_prefix
@@ -520,7 +520,7 @@ theorem tail_suffix (l : List α) : tail l <:+ l := by rw [← drop_one] <;> app
 -/
 
 #print List.dropLast_sublist /-
-theorem dropLast_sublist (l : List α) : l.init <+ l :=
+theorem dropLast_sublist (l : List α) : l.dropLast <+ l :=
   (dropLast_prefix l).Sublist
 #align list.init_sublist List.dropLast_sublist
 -/
@@ -532,7 +532,7 @@ theorem tail_sublist (l : List α) : l.tail <+ l :=
 -/
 
 #print List.dropLast_subset /-
-theorem dropLast_subset (l : List α) : l.init ⊆ l :=
+theorem dropLast_subset (l : List α) : l.dropLast ⊆ l :=
   (dropLast_sublist l).Subset
 #align list.init_subset List.dropLast_subset
 -/
@@ -544,7 +544,7 @@ theorem tail_subset (l : List α) : tail l ⊆ l :=
 -/
 
 #print List.mem_of_mem_dropLast /-
-theorem mem_of_mem_dropLast (h : a ∈ l.init) : a ∈ l :=
+theorem mem_of_mem_dropLast (h : a ∈ l.dropLast) : a ∈ l :=
   dropLast_subset l h
 #align list.mem_of_mem_init List.mem_of_mem_dropLast
 -/
@@ -585,11 +585,11 @@ theorem suffix_iff_eq_drop : l₁ <:+ l₂ ↔ l₁ = drop (length l₂ - length
 #print List.decidablePrefix /-
 instance decidablePrefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <+: l₂)
   | [], l₂ => isTrue ⟨l₂, rfl⟩
-  | a :: l₁, [] => is_false fun ⟨t, te⟩ => List.noConfusion te
+  | a :: l₁, [] => isFalse fun ⟨t, te⟩ => List.noConfusion te
   | a :: l₁, b :: l₂ =>
     if h : a = b then
       decidable_of_decidable_of_iff (decidable_prefix l₁ l₂) (by rw [← h, prefix_cons_inj])
-    else is_false fun ⟨t, te⟩ => h <| by injection te
+    else isFalse fun ⟨t, te⟩ => h <| by injection te
 #align list.decidable_prefix List.decidablePrefix
 -/
 
@@ -597,7 +597,7 @@ instance decidablePrefix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (
 -- Alternatively, use mem_tails
 instance decidableSuffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+ l₂)
   | [], l₂ => isTrue ⟨l₂, append_nil _⟩
-  | a :: l₁, [] => is_false <| mt (sublist.length_le ∘ is_suffix.sublist) (by decide)
+  | a :: l₁, [] => isFalse <| mt (Sublist.length_le ∘ isSuffix.sublist) (by decide)
   | l₁, b :: l₂ =>
     decidable_of_decidable_of_iff (@Or.decidable _ _ _ (l₁.decidableSuffix l₂)) suffix_cons_iff.symm
 #align list.decidable_suffix List.decidableSuffix
@@ -606,7 +606,7 @@ instance decidableSuffix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (
 #print List.decidableInfix /-
 instance decidableInfix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (l₁ <:+: l₂)
   | [], l₂ => isTrue ⟨[], l₂, rfl⟩
-  | a :: l₁, [] => is_false fun ⟨s, t, te⟩ => by simp at te <;> exact te
+  | a :: l₁, [] => isFalse fun ⟨s, t, te⟩ => by simp at te <;> exact te
   | l₁, b :: l₂ =>
     decidable_of_decidable_of_iff
       (@Or.decidable _ _ (l₁.decidablePrefix (b :: l₂)) (l₁.decidableInfix l₂)) infix_cons_iff.symm
@@ -697,7 +697,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isPrefix.{u1} α _inst_1 l₁) -> (List.isPrefix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_prefix.filter List.isPrefix.filterₓ'. -/
 theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
-    l₁.filter p <+: l₂.filter p := by
+    l₁.filterₓ p <+: l₂.filterₓ p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact prefix_append _ _
@@ -710,7 +710,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isSuffix.{u1} α _inst_1 l₁) -> (List.isSuffix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_suffix.filter List.isSuffix.filterₓ'. -/
 theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
-    l₁.filter p <:+ l₂.filter p := by
+    l₁.filterₓ p <:+ l₂.filterₓ p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact suffix_append _ _
@@ -723,7 +723,8 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isInfix.{u1} α _inst_1 l₁) -> (List.isInfix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_infix.filter List.isInfix.filterₓ'. -/
 theorem isInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
-    l₁.filter p <:+: l₂.filter p := by
+    l₁.filterₓ p <:+: l₂.filterₓ p :=
+  by
   obtain ⟨xs, ys, rfl⟩ := h
   rw [filter_append, filter_append]
   exact infix_append _ _ _

@@ -1154,7 +1154,7 @@ theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
 theorem abs_oangle_sub_right_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
     |(o.oangle x (x - y)).toReal| < π / 2 :=
-  (o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h).symm ▸ o.abs_oangle_sub_left_to_real_lt_pi_div_two h
+  (o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h).symm ▸ o.abs_oangle_sub_left_toReal_lt_pi_div_two h
 #align orientation.abs_oangle_sub_right_to_real_lt_pi_div_two Orientation.abs_oangle_sub_right_toReal_lt_pi_div_two
 
 end Orientation

@@ -81,7 +81,7 @@ namespace TotalFunction
 
 /-- Apply a total function to an argument. -/
 def apply [DecidableEq α] : TotalFunction α β → α → β
-  | total_function.with_default m y, x => (m.lookup x).getOrElse y
+  | total_function.with_default m y, x => (m.dlookup x).getD y
 #align slim_check.total_function.apply SlimCheck.TotalFunction.apply
 
 /-- Implementation of `has_repr (total_function α β)`.
@@ -164,7 +164,7 @@ variable [DecidableEq α] [DecidableEq β]
 @[simp]
 def zeroDefaultSupp : TotalFunction α β → Finset α
   | with_default A y =>
-    List.toFinset <| (A.dedupkeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
+    List.toFinset <| (A.dedupKeys.filterₓ fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
 #align slim_check.total_function.zero_default_supp SlimCheck.TotalFunction.zeroDefaultSupp
 
 /-- Create a finitely supported function from a total function by taking the default value to
@@ -173,7 +173,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
     where
   support := zeroDefaultSupp tf
   toFun := tf.zeroDefault.apply
-  mem_support_to_fun := by
+  mem_support_toFun := by
     intro a
     rcases tf with ⟨A, y⟩
     simp only [apply, zero_default_supp, List.mem_map', List.mem_filter, exists_and_right,
@@ -185,7 +185,7 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
       · simpa
       · simpa [List.dlookup_dedupKeys, WithTop.some_eq_coe]
     · intro h
-      use (A.lookup a).getOrElse (0 : β)
+      use (A.lookup a).getD (0 : β)
       rw [← List.dlookup_dedupKeys] at h⊢
       simp only [h, ← List.mem_dlookup_iff A.nodupkeys_dedupkeys, and_true_iff, not_false_iff,
         Option.mem_def]
@@ -211,7 +211,7 @@ instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β
 instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β)
     where
   ProxyRepr := TotalFunction α β
-  interp := Finsupp.toDfinsupp ∘ total_function.apply_finsupp
+  interp := Finsupp.toDfinsupp ∘ TotalFunction.applyFinsupp
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
     let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
@@ -270,7 +270,7 @@ namespace InjectiveFunction
 
 /-- Apply a total function to an argument. -/
 def apply [DecidableEq α] : InjectiveFunction α → α → α
-  | injective_function.map_to_self m _ _, x => (m.lookup x).getOrElse x
+  | injective_function.map_to_self m _ _, x => (m.dlookup x).getD x
 #align slim_check.injective_function.apply SlimCheck.InjectiveFunction.apply
 
 /-- Produce a string for a given `total_function`.
@@ -288,7 +288,7 @@ instance (α : Type u) [Repr α] : Repr (InjectiveFunction α) :=
 /-- Interpret a list of pairs as a total function, defaulting to
 the identity function when no entries are found for a given function -/
 def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
-  ((xs.map Prod.toSigma).lookup x).getOrElse x
+  ((xs.map Prod.toSigma).dlookup x).getD x
 #align slim_check.injective_function.list.apply_id SlimCheck.InjectiveFunction.List.applyId
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -306,8 +306,8 @@ open _Root_.Prod (toSigma)
 open _Root_.Nat
 
 theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs)
-    (h₁ : xs.length = ys.length) (x y : α) (i : ℕ) (h₂ : xs.nth i = some x) :
-    List.applyId.{u} (xs.zip ys) x = y ↔ ys.nth i = some y :=
+    (h₁ : xs.length = ys.length) (x y : α) (i : ℕ) (h₂ : xs.get? i = some x) :
+    List.applyId.{u} (xs.zip ys) x = y ↔ ys.get? i = some y :=
   by
   induction xs generalizing ys i
   case nil ys i h₁ h₂ => cases h₂
@@ -524,7 +524,7 @@ instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function
   ProxyRepr := InjectiveFunction ℤ
   interp f := ⟨apply f, f.Injective⟩
   sample :=
-    gen.sized fun sz => do
+    Gen.sized fun sz => do
       let xs' := Int.range (-(2 * sz + 2)) (2 * sz + 2)
       let ys ← Gen.permutationOf xs'
       have Hinj : injective fun r : ℕ => -(2 * sz + 2 : ℤ) + ↑r := fun x y h =>

@@ -784,11 +784,11 @@ theorem closure_union (s t : Set K) : closure (s ∪ t) = closure s ⊔ closure 
 #align subfield.closure_union Subfield.closure_union
 
 theorem closure_unionᵢ {ι} (s : ι → Set K) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Subfield.gi K).gc.l_supr
+  (Subfield.gi K).gc.l_supᵢ
 #align subfield.closure_Union Subfield.closure_unionᵢ
 
 theorem closure_unionₛ (s : Set (Set K)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
-  (Subfield.gi K).gc.l_Sup
+  (Subfield.gi K).gc.l_supₛ
 #align subfield.closure_sUnion Subfield.closure_unionₛ
 
 theorem map_sup (s t : Subfield K) (f : K →+* L) : (s ⊔ t).map f = s.map f ⊔ t.map f :=
@@ -797,7 +797,7 @@ theorem map_sup (s t : Subfield K) (f : K →+* L) : (s ⊔ t).map f = s.map f �
 
 theorem map_supᵢ {ι : Sort _} (f : K →+* L) (s : ι → Subfield K) :
     (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supr
+  (gc_map_comap f).l_supᵢ
 #align subfield.map_supr Subfield.map_supᵢ
 
 theorem comap_inf (s t : Subfield L) (f : K →+* L) : (s ⊓ t).comap f = s.comap f ⊓ t.comap f :=
@@ -806,7 +806,7 @@ theorem comap_inf (s t : Subfield L) (f : K →+* L) : (s ⊓ t).comap f = s.com
 
 theorem comap_infᵢ {ι : Sort _} (f : K →+* L) (s : ι → Subfield L) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infi
+  (gc_map_comap f).u_infᵢ
 #align subfield.comap_infi Subfield.comap_infᵢ
 
 @[simp]
@@ -899,7 +899,7 @@ theorem eq_of_eqOn_subfield_top {f g : K →+* L} (h : Set.EqOn f g (⊤ : Subfi
 
 theorem eq_of_eqOn_of_field_closure_eq_top {s : Set K} (hs : closure s = ⊤) {f g : K →+* L}
     (h : s.EqOn f g) : f = g :=
-  eq_of_eq_on_subfield_top <| hs ▸ eqOn_field_closure h
+  eq_of_eqOn_subfield_top <| hs ▸ eqOn_field_closure h
 #align ring_hom.eq_of_eq_on_of_field_closure_eq_top RingHom.eq_of_eqOn_of_field_closure_eq_top
 
 theorem field_closure_preimage_le (f : K →+* L) (s : Set L) :

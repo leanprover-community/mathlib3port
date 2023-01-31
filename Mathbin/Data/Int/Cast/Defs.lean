@@ -57,11 +57,11 @@ It also contains data for the unique homomorphisms `ℕ → R` and `ℤ → R`.
 @[protect_proj]
 class AddGroupWithOne (R : Type u) extends IntCast R, AddGroup R, AddMonoidWithOne R where
   intCast := Int.castDef
-  int_cast_of_nat :
+  intCast_ofNat :
     ∀ n : ℕ, int_cast n = (n : R) := by
     intros
     rfl
-  int_cast_neg_succ_of_nat :
+  intCast_negSucc :
     ∀ n : ℕ, int_cast (-(n + 1 : ℕ)) =
         -((n + 1 : ℕ) : R) := by
     intros

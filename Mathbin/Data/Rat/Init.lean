@@ -55,7 +55,7 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom
   exponentially (for example, adding 1/2 to itself repeatedly). -/
 structure Rat where mk' ::
   num : ℤ
-  denom : ℕ
+  den : ℕ
   Pos : 0 < denom
   cop : Num.natAbs.coprime denom
 #align rat Rat
@@ -82,7 +82,7 @@ unsafe instance : has_to_format ℚ :=
   ⟨coe ∘ Rat.repr⟩
 
 #print Rat.ext_iff /-
-theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
+theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.den = q.den :=
   by
   cases p
   cases q
@@ -92,7 +92,7 @@ theorem ext_iff {p q : ℚ} : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
 
 #print Rat.ext /-
 @[ext]
-theorem ext {p q : ℚ} (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
+theorem ext {p q : ℚ} (hn : p.num = q.num) (hd : p.den = q.den) : p = q :=
   Rat.ext_iff.mpr ⟨hn, hd⟩
 #align rat.ext Rat.ext
 -/

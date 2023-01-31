@@ -162,8 +162,8 @@ def dual : BoundedLattice ⥤ BoundedLattice
 @[simps Functor inverse]
 def dualEquiv : BoundedLattice ≌ BoundedLattice :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoundedLattice.dual_equiv BoundedLattice.dualEquiv
 
 end BoundedLattice

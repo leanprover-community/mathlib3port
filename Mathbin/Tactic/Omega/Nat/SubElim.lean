@@ -24,7 +24,7 @@ open Omega.Nat
 namespace Preterm
 
 /-- Find subtraction inside preterm and return its operands -/
-def subTerms : Preterm → Option (preterm × preterm)
+def subTerms : Preterm → Option (Preterm × Preterm)
   | &i => none
   | i ** n => none
   | t +* s => t.subTerms <|> s.subTerms
@@ -68,7 +68,7 @@ end Preterm
 namespace Preform
 
 /-- Find subtraction inside preform and return its operands -/
-def subTerms : Preform → Option (preterm × preterm)
+def subTerms : Preform → Option (Preterm × Preterm)
   | t =* s => t.subTerms <|> s.subTerms
   | t ≤* s => t.subTerms <|> s.subTerms
   | ¬* p => p.subTerms
@@ -156,7 +156,7 @@ theorem sat_subElim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sa
   cases' h1 with v h1
   refine' ⟨update (sub_fresh_index t s p) (t.val v - s.val v) v, _⟩
   constructor
-  · apply (sub_subst_equiv p _).elimRight h1
+  · apply (sub_subst_equiv p _).right h1
     apply le_max_left
   · apply holds_is_diff
     rw [update_eq]

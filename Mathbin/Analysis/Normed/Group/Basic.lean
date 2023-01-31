@@ -721,7 +721,7 @@ namespace IsometryEquiv
 /-- Multiplication `y ↦ y * x` as an `isometry`. -/
 @[to_additive "Addition `y ↦ y + x` as an `isometry`"]
 protected def mulRight (x : E) : E ≃ᵢ E :=
-  { Equiv.mulRight x with isometry_to_fun := Isometry.of_dist_eq fun y z => dist_mul_right _ _ _ }
+  { Equiv.mulRight x with isometry_toFun := Isometry.of_dist_eq fun y z => dist_mul_right _ _ _ }
 #align isometry_equiv.mul_right IsometryEquiv.mulRight
 #align isometry_equiv.add_right IsometryEquiv.addRight
 
@@ -870,7 +870,7 @@ theorem MonoidHomClass.uniformContinuous_of_bound [MonoidHomClass 𝓕 E F] (f :
 @[to_additive IsCompact.exists_bound_of_continuousOn]
 theorem IsCompact.exists_bound_of_continuous_on' [TopologicalSpace α] {s : Set α} (hs : IsCompact s)
     {f : α → E} (hf : ContinuousOn f s) : ∃ C, ∀ x ∈ s, ‖f x‖ ≤ C :=
-  (bounded_iff_forall_norm_le'.1 (hs.image_of_continuous_on hf).Bounded).imp fun C hC x hx =>
+  (bounded_iff_forall_norm_le'.1 (hs.image_of_continuousOn hf).Bounded).imp fun C hC x hx =>
     hC _ <| Set.mem_image_of_mem _ hx
 #align is_compact.exists_bound_of_continuous_on' IsCompact.exists_bound_of_continuous_on'
 #align is_compact.exists_bound_of_continuous_on IsCompact.exists_bound_of_continuousOn
@@ -1204,7 +1204,7 @@ can be applied to `(*)`, `flip (*)`, `(•)`, and `flip (•)`. -/
 theorem Filter.Tendsto.op_one_isBoundedUnder_le {f : α → E} {g : α → F} {l : Filter α}
     (hf : Tendsto f l (𝓝 1)) (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) (op : E → F → G)
     (h_op : ∀ x y, ‖op x y‖ ≤ ‖x‖ * ‖y‖) : Tendsto (fun x => op (f x) (g x)) l (𝓝 1) :=
-  hf.op_one_is_bounded_under_le' hg op ⟨1, fun x y => (one_mul ‖x‖).symm ▸ h_op x y⟩
+  hf.op_one_isBoundedUnder_le' hg op ⟨1, fun x y => (one_mul ‖x‖).symm ▸ h_op x y⟩
 #align filter.tendsto.op_one_is_bounded_under_le Filter.Tendsto.op_one_isBoundedUnder_le
 #align filter.tendsto.op_zero_is_bounded_under_le Filter.Tendsto.op_zero_isBoundedUnder_le
 
@@ -1287,7 +1287,7 @@ end
       "If `‖y‖→∞`, then we can assume `y≠x` for any\nfixed `x`"]
 theorem eventually_ne_of_tendsto_norm_at_top' {l : Filter α} {f : α → E}
     (h : Tendsto (fun y => ‖f y‖) l atTop) (x : E) : ∀ᶠ y in l, f y ≠ x :=
-  (h.eventually_ne_at_top _).mono fun x => ne_of_apply_ne norm
+  (h.eventually_ne_atTop _).mono fun x => ne_of_apply_ne norm
 #align eventually_ne_of_tendsto_norm_at_top' eventually_ne_of_tendsto_norm_at_top'
 #align eventually_ne_of_tendsto_norm_at_top eventually_ne_of_tendsto_norm_atTop
 
@@ -1663,7 +1663,7 @@ namespace IsometryEquiv
 @[to_additive "Addition `y ↦ x + y` as an `isometry`"]
 protected def mulLeft (x : E) : E ≃ᵢ E
     where
-  isometry_to_fun := Isometry.of_dist_eq fun y z => dist_mul_left _ _ _
+  isometry_toFun := Isometry.of_dist_eq fun y z => dist_mul_left _ _ _
   toEquiv := Equiv.mulLeft x
 #align isometry_equiv.mul_left IsometryEquiv.mulLeft
 #align isometry_equiv.add_left IsometryEquiv.addLeft
@@ -1692,7 +1692,7 @@ variable (E)
 @[to_additive "Negation `x ↦ -x` as an `isometry`."]
 protected def inv : E ≃ᵢ E
     where
-  isometry_to_fun := Isometry.of_dist_eq fun x y => dist_inv_inv _ _
+  isometry_toFun := Isometry.of_dist_eq fun x y => dist_inv_inv _ _
   toEquiv := Equiv.inv E
 #align isometry_equiv.inv IsometryEquiv.inv
 #align isometry_equiv.neg IsometryEquiv.neg

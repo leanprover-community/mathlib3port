@@ -1406,7 +1406,7 @@ theorem IsGLB.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsGLB s b) :
     IsGLB ((fun b => a * b) '' s) (a * b) :=
   by
   rcases lt_or_eq_of_le ha with (ha | rfl)
-  · exact (OrderIso.mulLeft₀ _ ha).is_glb_image'.2 hs
+  · exact (OrderIso.mulLeft₀ _ ha).isGLB_image'.2 hs
   · simp_rw [zero_mul]
     rw [hs.nonempty.image_const]
     exact isGLB_singleton
@@ -2004,7 +2004,7 @@ theorem IsLUB.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsLUB s b) :
     IsLUB ((fun b => a * b) '' s) (a * b) :=
   by
   rcases lt_or_eq_of_le ha with (ha | rfl)
-  · exact (OrderIso.mulLeft₀ _ ha).is_lub_image'.2 hs
+  · exact (OrderIso.mulLeft₀ _ ha).isLUB_image'.2 hs
   · simp_rw [zero_mul]
     rw [hs.nonempty.image_const]
     exact isLUB_singleton

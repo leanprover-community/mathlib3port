@@ -258,7 +258,7 @@ theorem UniformOnFun.hasContinuousSmul_submodule_of_image_bounded (h𝔖₁ : �
   haveI : TopologicalAddGroup H :=
     topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
   UniformOnFun.hasContinuousSmul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
-    (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_coe fun ⟨u, hu⟩ => h u hu
+    (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_subtype_val fun ⟨u, hu⟩ => h u hu
 #align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.hasContinuousSmul_submodule_of_image_bounded
 
 end Module

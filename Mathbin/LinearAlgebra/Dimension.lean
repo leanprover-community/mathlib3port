@@ -321,7 +321,7 @@ theorem LinearIndependent.finite_of_isNoetherian [IsNoetherian R M] {v : ι → 
 
 theorem LinearIndependent.set_finite_of_isNoetherian [IsNoetherian R M] {s : Set M}
     (hi : LinearIndependent R (coe : s → M)) : s.Finite :=
-  @Set.toFinite _ _ hi.finite_of_is_noetherian
+  @Set.toFinite _ _ hi.finite_of_isNoetherian
 #align linear_independent.set_finite_of_is_noetherian LinearIndependent.set_finite_of_isNoetherian
 
 -- One might hope that a finite spanning set implies that any linearly independent set is finite.
@@ -825,13 +825,13 @@ theorem Basis.card_le_card_of_linearIndependent {ι : Type _} [Fintype ι] (b : 
 
 theorem Basis.card_le_card_of_submodule (N : Submodule R M) [Fintype ι] (b : Basis ι R M)
     [Fintype ι'] (b' : Basis ι' R N) : Fintype.card ι' ≤ Fintype.card ι :=
-  b.card_le_card_of_linear_independent (b'.LinearIndependent.map' N.Subtype N.ker_subtype)
+  b.card_le_card_of_linearIndependent (b'.LinearIndependent.map' N.Subtype N.ker_subtype)
 #align basis.card_le_card_of_submodule Basis.card_le_card_of_submodule
 
 theorem Basis.card_le_card_of_le {N O : Submodule R M} (hNO : N ≤ O) [Fintype ι] (b : Basis ι R O)
     [Fintype ι'] (b' : Basis ι' R N) : Fintype.card ι' ≤ Fintype.card ι :=
-  b.card_le_card_of_linear_independent
-    (b'.LinearIndependent.map' (Submodule.ofLe hNO) (N.ker_of_le O _))
+  b.card_le_card_of_linearIndependent
+    (b'.LinearIndependent.map' (Submodule.ofLe hNO) (N.ker_ofLe O _))
 #align basis.card_le_card_of_le Basis.card_le_card_of_le
 
 theorem Basis.mk_eq_dim (v : Basis ι R M) :
@@ -858,13 +858,13 @@ theorem Basis.nonempty_fintype_index_of_dim_lt_aleph0 {ι : Type _} (b : Basis �
 /-- If a module has a finite dimension, all bases are indexed by a finite type. -/
 noncomputable def Basis.fintypeIndexOfDimLtAleph0 {ι : Type _} (b : Basis ι R M)
     (h : Module.rank R M < ℵ₀) : Fintype ι :=
-  Classical.choice (b.nonempty_fintype_index_of_dim_lt_aleph_0 h)
+  Classical.choice (b.nonempty_fintype_index_of_dim_lt_aleph0 h)
 #align basis.fintype_index_of_dim_lt_aleph_0 Basis.fintypeIndexOfDimLtAleph0
 
 /-- If a module has a finite dimension, all bases are indexed by a finite set. -/
 theorem Basis.finite_index_of_dim_lt_aleph0 {ι : Type _} {s : Set ι} (b : Basis s R M)
     (h : Module.rank R M < ℵ₀) : s.Finite :=
-  finite_def.2 (b.nonempty_fintype_index_of_dim_lt_aleph_0 h)
+  finite_def.2 (b.nonempty_fintype_index_of_dim_lt_aleph0 h)
 #align basis.finite_index_of_dim_lt_aleph_0 Basis.finite_index_of_dim_lt_aleph0
 
 theorem dim_span {v : ι → M} (hv : LinearIndependent R v) :
@@ -936,7 +936,7 @@ variable {K V}
 /-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
 theorem Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0 (h : Module.rank K V < ℵ₀) :
     (Basis.ofVectorSpaceIndex K V).Finite :=
-  finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph_0 h
+  finite_def.2 <| (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_aleph0 h
 #align basis.finite_of_vector_space_index_of_dim_lt_aleph_0 Basis.finite_ofVectorSpaceIndex_of_dim_lt_aleph0
 
 variable [AddCommGroup V'] [Module K V']

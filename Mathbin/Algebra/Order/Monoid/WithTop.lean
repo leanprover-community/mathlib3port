@@ -448,8 +448,8 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne (WithTop α) :=
   { WithTop.one,
     WithTop.addMonoid with
     natCast := fun n => ↑(n : α)
-    nat_cast_zero := by rw [Nat.cast_zero, WithTop.coe_zero]
-    nat_cast_succ := fun n => by rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
+    natCast_zero := by rw [Nat.cast_zero, WithTop.coe_zero]
+    natCast_succ := fun n => by rw [Nat.cast_add_one, WithTop.coe_add, WithTop.coe_one] }
 
 instance [AddCommMonoidWithOne α] : AddCommMonoidWithOne (WithTop α) :=
   { WithTop.addMonoidWithOne, WithTop.addCommMonoid with }
@@ -572,7 +572,7 @@ protected def AddHom.withTopMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) 
 @[simps (config := { fullyApplied := false })]
 protected def AddMonoidHom.withTopMap {M N : Type _} [AddZeroClass M] [AddZeroClass N]
     (f : M →+ N) : WithTop M →+ WithTop N :=
-  { f.toZeroHom.with_top_map, f.toAddHom.with_top_map with toFun := WithTop.map f }
+  { f.toZeroHom.withTop_map, f.toAddHom.withTop_map with toFun := WithTop.map f }
 #align add_monoid_hom.with_top_map AddMonoidHom.withTopMap
 -/
 
@@ -825,7 +825,7 @@ protected def AddHom.withBotMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) 
 @[simps (config := { fullyApplied := false })]
 protected def AddMonoidHom.withBotMap {M N : Type _} [AddZeroClass M] [AddZeroClass N]
     (f : M →+ N) : WithBot M →+ WithBot N :=
-  { f.toZeroHom.with_bot_map, f.toAddHom.with_bot_map with toFun := WithBot.map f }
+  { f.toZeroHom.withBot_map, f.toAddHom.withBot_map with toFun := WithBot.map f }
 #align add_monoid_hom.with_bot_map AddMonoidHom.withBotMap
 -/
 

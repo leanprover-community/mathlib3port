@@ -400,7 +400,7 @@ theorem compMeasurable_toGerm [MeasurableSpace β] [BorelSpace β] [PseudoMetriz
 #align measure_theory.ae_eq_fun.comp_measurable_to_germ MeasureTheory.AeEqFun.compMeasurable_toGerm
 
 theorem comp₂_toGerm (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁ : α →ₘ[μ] β)
-    (f₂ : α →ₘ[μ] γ) : (comp₂ g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
+    (f₂ : α →ₘ[μ] γ) : (comp₂ g hg f₁ f₂).toGerm = f₁.toGerm.zipWith g f₂.toGerm :=
   inductionOn₂ f₁ f₂ fun f₁ hf₁ f₂ hf₂ => by simp
 #align measure_theory.ae_eq_fun.comp₂_to_germ MeasureTheory.AeEqFun.comp₂_toGerm
 
@@ -409,7 +409,7 @@ theorem comp₂Measurable_toGerm [PseudoMetrizableSpace β] [SecondCountableTopo
     [MeasurableSpace γ] [BorelSpace γ] [PseudoMetrizableSpace δ] [SecondCountableTopology δ]
     [MeasurableSpace δ] [OpensMeasurableSpace δ] (g : β → γ → δ) (hg : Measurable (uncurry g))
     (f₁ : α →ₘ[μ] β) (f₂ : α →ₘ[μ] γ) :
-    (comp₂Measurable g hg f₁ f₂).toGerm = f₁.toGerm.map₂ g f₂.toGerm :=
+    (comp₂Measurable g hg f₁ f₂).toGerm = f₁.toGerm.zipWith g f₂.toGerm :=
   inductionOn₂ f₁ f₂ fun f₁ hf₁ f₂ hf₂ => by simp
 #align measure_theory.ae_eq_fun.comp₂_measurable_to_germ MeasureTheory.AeEqFun.comp₂Measurable_toGerm
 

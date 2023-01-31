@@ -33,20 +33,20 @@ namespace Int
 
 #print Int.bodd_zero /-
 @[simp]
-theorem bodd_zero : bodd 0 = ff :=
+theorem bodd_zero : bodd 0 = false :=
   rfl
 #align int.bodd_zero Int.bodd_zero
 -/
 
 #print Int.bodd_one /-
 @[simp]
-theorem bodd_one : bodd 1 = tt :=
+theorem bodd_one : bodd 1 = true :=
   rfl
 #align int.bodd_one Int.bodd_one
 -/
 
 #print Int.bodd_two /-
-theorem bodd_two : bodd 2 = ff :=
+theorem bodd_two : bodd 2 = false :=
   rfl
 #align int.bodd_two Int.bodd_two
 -/
@@ -183,14 +183,14 @@ theorem bodd_bit (b n) : bodd (bit b n) = b := by
 
 #print Int.bodd_bit0 /-
 @[simp]
-theorem bodd_bit0 (n : ℤ) : bodd (bit0 n) = ff :=
+theorem bodd_bit0 (n : ℤ) : bodd (bit0 n) = false :=
   bodd_bit false n
 #align int.bodd_bit0 Int.bodd_bit0
 -/
 
 #print Int.bodd_bit1 /-
 @[simp]
-theorem bodd_bit1 (n : ℤ) : bodd (bit1 n) = tt :=
+theorem bodd_bit1 (n : ℤ) : bodd (bit1 n) = true :=
   bodd_bit true n
 #align int.bodd_bit1 Int.bodd_bit1
 -/
@@ -254,7 +254,7 @@ theorem bitwise_and : bitwise and = land := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_diff /-
-theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
+theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff' := by
   run_tac
     bitwise_tac
 #align int.bitwise_diff Int.bitwise_diff
@@ -262,7 +262,7 @@ theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.1792841685.bitwise_tac -/
 #print Int.bitwise_xor /-
-theorem bitwise_xor : bitwise xor = lxor := by
+theorem bitwise_xor : bitwise xor = lxor' := by
   run_tac
     bitwise_tac
 #align int.bitwise_xor Int.bitwise_xor

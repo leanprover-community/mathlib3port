@@ -144,7 +144,7 @@ theorem sum_incMatrix_apply_of_mem_edgeSet : e ∈ G.edgeSet → (∑ a, G.incMa
 #align simple_graph.sum_inc_matrix_apply_of_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_mem_edgeSet
 
 theorem sum_incMatrix_apply_of_not_mem_edgeSet (h : e ∉ G.edgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
-  sum_eq_zero fun a _ => G.inc_matrix_of_not_mem_incidence_set fun he => h he.1
+  sum_eq_zero fun a _ => G.incMatrix_of_not_mem_incidenceSet fun he => h he.1
 #align simple_graph.sum_inc_matrix_apply_of_not_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_not_mem_edgeSet
 
 theorem incMatrix_transpose_mul_diag [DecidableRel G.Adj] :

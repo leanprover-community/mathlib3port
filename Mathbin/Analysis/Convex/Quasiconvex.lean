@@ -69,15 +69,15 @@ def QuasilinearOn : Prop :=
 
 variable {𝕜 s f}
 
-theorem QuasiconvexOn.dual : QuasiconvexOn 𝕜 s f → QuasiconcaveOn 𝕜 s (to_dual ∘ f) :=
+theorem QuasiconvexOn.dual : QuasiconvexOn 𝕜 s f → QuasiconcaveOn 𝕜 s (toDual ∘ f) :=
   id
 #align quasiconvex_on.dual QuasiconvexOn.dual
 
-theorem QuasiconcaveOn.dual : QuasiconcaveOn 𝕜 s f → QuasiconvexOn 𝕜 s (to_dual ∘ f) :=
+theorem QuasiconcaveOn.dual : QuasiconcaveOn 𝕜 s f → QuasiconvexOn 𝕜 s (toDual ∘ f) :=
   id
 #align quasiconcave_on.dual QuasiconcaveOn.dual
 
-theorem QuasilinearOn.dual : QuasilinearOn 𝕜 s f → QuasilinearOn 𝕜 s (to_dual ∘ f) :=
+theorem QuasilinearOn.dual : QuasilinearOn 𝕜 s f → QuasilinearOn 𝕜 s (toDual ∘ f) :=
   And.symm
 #align quasilinear_on.dual QuasilinearOn.dual
 
@@ -267,7 +267,7 @@ theorem QuasilinearOn.monotoneOn_or_antitoneOn (hf : QuasilinearOn 𝕜 s f) :
 
 theorem quasilinearOn_iff_monotoneOn_or_antitoneOn (hs : Convex 𝕜 s) :
     QuasilinearOn 𝕜 s f ↔ MonotoneOn f s ∨ AntitoneOn f s :=
-  ⟨fun h => h.monotone_on_or_antitone_on, fun h =>
+  ⟨fun h => h.monotoneOn_or_antitoneOn, fun h =>
     h.elim (fun h => h.QuasilinearOn hs) fun h => h.QuasilinearOn hs⟩
 #align quasilinear_on_iff_monotone_on_or_antitone_on quasilinearOn_iff_monotoneOn_or_antitoneOn
 

@@ -52,7 +52,7 @@ instance : BundledHom @ContinuousHom
 deriving instance LargeCategory, ConcreteCategory for ωCPO
 
 instance : CoeSort ωCPO (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled ωCPO from the underlying type and typeclass. -/
 def of (α : Type _) [OmegaCompletePartialOrder α] : ωCPO :=
@@ -152,7 +152,7 @@ instance : HasEqualizers ωCPO.{v} :=
   hasEqualizers_of_hasLimit_parallelPair _
 
 instance : HasLimits ωCPO.{v} :=
-  has_limits_of_has_equalizers_and_products
+  hasLimitsOfHasEqualizersAndProducts
 
 end
 

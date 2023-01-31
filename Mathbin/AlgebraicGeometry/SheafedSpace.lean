@@ -94,7 +94,7 @@ def forgetToPresheafedSpace : SheafedSpace.{v} C ⥤ PresheafedSpace.{v} C :=
 
 instance is_presheafedSpace_iso {X Y : SheafedSpace.{v} C} (f : X ⟶ Y) [IsIso f] :
     @IsIso (PresheafedSpace C) _ _ _ f :=
-  SheafedSpace.forgetToPresheafedSpace.map_is_iso f
+  SheafedSpace.forgetToPresheafedSpace.map_isIso f
 #align algebraic_geometry.SheafedSpace.is_PresheafedSpace_iso AlgebraicGeometry.SheafedSpace.is_presheafedSpace_iso
 
 variable {C}

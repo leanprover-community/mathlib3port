@@ -37,7 +37,7 @@ theorem ordConnectedComponent_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a �
 #align set.ord_connected_component_mem_nhds Set.ordConnectedComponent_mem_nhds
 
 theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (closure t))
-    (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a :=
+    (ha : a ∈ s) : (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a :=
   by
   have hmem : tᶜ ∈ 𝓝[≥] a := by
     refine' mem_nhdsWithin_of_mem_nhds _
@@ -75,16 +75,16 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (clos
 #align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Ici
 
 theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Iic (hd : Disjoint s (closure t))
-    (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a :=
+    (ha : a ∈ s) : (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a :=
   by
-  have hd' : Disjoint (of_dual ⁻¹' s) (closure <| of_dual ⁻¹' t) := hd
-  have ha' : toDual a ∈ of_dual ⁻¹' s := ha
+  have hd' : Disjoint (ofDual ⁻¹' s) (closure <| ofDual ⁻¹' t) := hd
+  have ha' : toDual a ∈ ofDual ⁻¹' s := ha
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
     compl_section_ord_separating_set_mem_nhds_within_Ici hd' ha'
 #align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Iic
 
 theorem compl_section_ordSeparatingSet_mem_nhds (hd : Disjoint s (closure t)) (ha : a ∈ s) :
-    (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a :=
+    (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a :=
   by
   rw [← nhds_left_sup_nhds_right, mem_sup]
   exact

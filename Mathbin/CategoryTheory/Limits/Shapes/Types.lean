@@ -148,25 +148,25 @@ noncomputable def binaryProductIso (X Y : Type u) : Limits.prod X Y ≅ X × Y :
 
 @[simp, elementwise]
 theorem binaryProductIso_hom_comp_fst (X Y : Type u) :
-    (binaryProductIso X Y).Hom ≫ Prod.fst = limits.prod.fst :=
+    (binaryProductIso X Y).Hom ≫ Prod.fst = Limits.prod.fst :=
   limit.isoLimitCone_hom_π (binaryProductLimitCone X Y) ⟨WalkingPair.left⟩
 #align category_theory.limits.types.binary_product_iso_hom_comp_fst CategoryTheory.Limits.Types.binaryProductIso_hom_comp_fst
 
 @[simp, elementwise]
 theorem binaryProductIso_hom_comp_snd (X Y : Type u) :
-    (binaryProductIso X Y).Hom ≫ Prod.snd = limits.prod.snd :=
+    (binaryProductIso X Y).Hom ≫ Prod.snd = Limits.prod.snd :=
   limit.isoLimitCone_hom_π (binaryProductLimitCone X Y) ⟨WalkingPair.right⟩
 #align category_theory.limits.types.binary_product_iso_hom_comp_snd CategoryTheory.Limits.Types.binaryProductIso_hom_comp_snd
 
 @[simp, elementwise]
 theorem binaryProductIso_inv_comp_fst (X Y : Type u) :
-    (binaryProductIso X Y).inv ≫ limits.prod.fst = Prod.fst :=
+    (binaryProductIso X Y).inv ≫ Limits.prod.fst = Prod.fst :=
   limit.isoLimitCone_inv_π (binaryProductLimitCone X Y) ⟨WalkingPair.left⟩
 #align category_theory.limits.types.binary_product_iso_inv_comp_fst CategoryTheory.Limits.Types.binaryProductIso_inv_comp_fst
 
 @[simp, elementwise]
 theorem binaryProductIso_inv_comp_snd (X Y : Type u) :
-    (binaryProductIso X Y).inv ≫ limits.prod.snd = Prod.snd :=
+    (binaryProductIso X Y).inv ≫ Limits.prod.snd = Prod.snd :=
   limit.isoLimitCone_inv_π (binaryProductLimitCone X Y) ⟨WalkingPair.right⟩
 #align category_theory.limits.types.binary_product_iso_inv_comp_snd CategoryTheory.Limits.Types.binaryProductIso_inv_comp_snd
 
@@ -186,7 +186,7 @@ def binaryProductFunctor : Type u ⥤ Type u ⥤ Type u
 /-- The product functor given by the instance `has_binary_products (Type u)` is isomorphic to the
 explicit binary product functor given by the product type.
 -/
-noncomputable def binaryProductIsoProd : binary_product_functor ≅ (prod.functor : Type u ⥤ _) :=
+noncomputable def binaryProductIsoProd : binaryProductFunctor ≅ (prod.functor : Type u ⥤ _) :=
   by
   apply nat_iso.of_components (fun X => _) _
   · apply nat_iso.of_components (fun Y => _) _
@@ -228,25 +228,25 @@ open CategoryTheory.Type
 
 @[simp, elementwise]
 theorem binaryCoproductIso_inl_comp_hom (X Y : Type u) :
-    limits.coprod.inl ≫ (binaryCoproductIso X Y).Hom = Sum.inl :=
+    Limits.coprod.inl ≫ (binaryCoproductIso X Y).Hom = Sum.inl :=
   colimit.isoColimitCocone_ι_hom (binaryCoproductColimitCocone X Y) ⟨WalkingPair.left⟩
 #align category_theory.limits.types.binary_coproduct_iso_inl_comp_hom CategoryTheory.Limits.Types.binaryCoproductIso_inl_comp_hom
 
 @[simp, elementwise]
 theorem binaryCoproductIso_inr_comp_hom (X Y : Type u) :
-    limits.coprod.inr ≫ (binaryCoproductIso X Y).Hom = Sum.inr :=
+    Limits.coprod.inr ≫ (binaryCoproductIso X Y).Hom = Sum.inr :=
   colimit.isoColimitCocone_ι_hom (binaryCoproductColimitCocone X Y) ⟨WalkingPair.right⟩
 #align category_theory.limits.types.binary_coproduct_iso_inr_comp_hom CategoryTheory.Limits.Types.binaryCoproductIso_inr_comp_hom
 
 @[simp, elementwise]
 theorem binaryCoproductIso_inl_comp_inv (X Y : Type u) :
-    ↾(Sum.inl : X ⟶ Sum X Y) ≫ (binaryCoproductIso X Y).inv = limits.coprod.inl :=
+    ↾(Sum.inl : X ⟶ Sum X Y) ≫ (binaryCoproductIso X Y).inv = Limits.coprod.inl :=
   colimit.isoColimitCocone_ι_inv (binaryCoproductColimitCocone X Y) ⟨WalkingPair.left⟩
 #align category_theory.limits.types.binary_coproduct_iso_inl_comp_inv CategoryTheory.Limits.Types.binaryCoproductIso_inl_comp_inv
 
 @[simp, elementwise]
 theorem binaryCoproductIso_inr_comp_inv (X Y : Type u) :
-    ↾(Sum.inr : Y ⟶ Sum X Y) ≫ (binaryCoproductIso X Y).inv = limits.coprod.inr :=
+    ↾(Sum.inr : Y ⟶ Sum X Y) ≫ (binaryCoproductIso X Y).inv = Limits.coprod.inr :=
   colimit.isoColimitCocone_ι_inv (binaryCoproductColimitCocone X Y) ⟨WalkingPair.right⟩
 #align category_theory.limits.types.binary_coproduct_iso_inr_comp_inv CategoryTheory.Limits.Types.binaryCoproductIso_inr_comp_inv
 

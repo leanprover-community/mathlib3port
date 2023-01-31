@@ -172,7 +172,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
     simp only [integrable_on, ← measure.restrict_congr_set (box.Ioo_ae_eq_Icc _)] at Hi⊢
     rw [← box.Union_Ioo_of_tendsto J.monotone hJl hJu] at Hi⊢
     exact
-      tendsto_set_integral_of_monotone (fun k => (J k).measurable_set_Ioo) (box.Ioo.comp J).Monotone
+      tendsto_set_integral_of_monotone (fun k => (J k).measurableSet_Ioo) (box.Ioo.comp J).Monotone
         Hi
   -- Thus it suffices to prove the same about the RHS.
   refine' tendsto_nhds_unique_of_eventuallyEq hI_tendsto _ (eventually_of_forall HJ_eq)
@@ -189,17 +189,17 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
     by
     rw [box.Icc_eq_pi] at hJ_sub'
     refine' tendsto_finset_sum _ fun i hi => (this _ _ _ _ (hJu _)).sub (this _ _ _ _ (hJl _))
-    exacts[fun k => hJ_sub' k (J k).upper_mem_Icc _ trivial, fun k =>
-      hJ_sub' k (J k).lower_mem_Icc _ trivial]
+    exacts[fun k => hJ_sub' k (J k).upper_mem_icc _ trivial, fun k =>
+      hJ_sub' k (J k).lower_mem_icc _ trivial]
   intro i c d hc hcd
   /- First we prove that the integrals of the restriction of `f` to `{x | x i = d}` over increasing
     boxes `((J k).face i).Icc` tend to the desired limit. The proof mostly repeats the one above. -/
   have hd : d ∈ Icc (I.lower i) (I.upper i) :=
     is_closed_Icc.mem_of_tendsto hcd (eventually_of_forall hc)
   have Hic : ∀ k, integrable_on (fun x => f (i.insert_nth (c k) x) i) (I.face i).Icc := fun k =>
-    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuous_on Hc) (hc k)).integrableOnIcc
+    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuousOn Hc) (hc k)).integrableOnIcc
   have Hid : integrable_on (fun x => f (i.insert_nth d x) i) (I.face i).Icc :=
-    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuous_on Hc) hd).integrableOnIcc
+    (box.continuous_on_face_Icc ((continuous_apply i).comp_continuousOn Hc) hd).integrableOnIcc
   have H :
     tendsto (fun k => ∫ x in ((J k).face i).Icc, f (i.insert_nth d x) i) at_top
       (𝓝 <| ∫ x in (I.face i).Icc, f (i.insert_nth d x) i) :=
@@ -209,7 +209,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
         (tendsto_pi_nhds.2 fun _ => hJl _) (tendsto_pi_nhds.2 fun _ => hJu _)
     simp only [integrable_on, ← measure.restrict_congr_set (box.Ioo_ae_eq_Icc _), ← hIoo] at Hid⊢
     exact
-      tendsto_set_integral_of_monotone (fun k => ((J k).face i).measurable_set_Ioo)
+      tendsto_set_integral_of_monotone (fun k => ((J k).face i).measurableSet_Ioo)
         (box.Ioo.monotone.comp ((box.monotone_face i).comp J.monotone)) Hid
   /- Thus it suffices to show that the distance between the integrals of the restrictions of `f` to
     `{x | x i = c k}` and `{x | x i = d}` over `((J k).face i).Icc` tends to zero as `k → ∞`. Choose
@@ -234,7 +234,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
       by
       refine'
         norm_set_integral_le_of_norm_le_const' (((J k).face i).measure_Icc_lt_top _)
-          ((J k).face i).measurable_set_Icc fun x hx => _
+          ((J k).face i).measurableSet_Icc fun x hx => _
       rw [← dist_eq_norm]
       calc
         dist (f (i.insert_nth d x) i) (f (i.insert_nth (c k) x) i) ≤
@@ -253,7 +253,7 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ (I : Bo
       refine'
         div_le_div_of_le_left εpos.le (hvol_pos _) (prod_le_prod (fun j hj => _) fun j hj => _)
       exacts[sub_nonneg.2 (box.lower_le_upper _ _),
-        sub_le_sub ((hJ_sub' _ (J _).upper_mem_Icc).2 _) ((hJ_sub' _ (J _).lower_mem_Icc).1 _)]
+        sub_le_sub ((hJ_sub' _ (J _).upper_mem_icc).2 _) ((hJ_sub' _ (J _).lower_mem_icc).1 _)]
     
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂
 

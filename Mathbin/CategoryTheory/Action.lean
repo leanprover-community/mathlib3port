@@ -142,7 +142,7 @@ protected theorem comp_val {x y z : ActionCategory M X} (f : x ⟶ y) (g : y ⟶
 #align category_theory.action_category.comp_val CategoryTheory.ActionCategory.comp_val
 
 instance [IsPretransitive M X] [Nonempty X] : IsConnected (ActionCategory M X) :=
-  zigzag_is_connected fun x y =>
+  zigzag_isConnected fun x y =>
     Relation.ReflTransGen.single <|
       Or.inl <| nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
 

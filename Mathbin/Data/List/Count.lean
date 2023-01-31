@@ -430,7 +430,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Eq.{succ u1} α a a_1) (_inst_1 a a_1)) l) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) a)
 Case conversion may be inaccurate. Consider using '#align list.filter_eq List.filter_eqₓ'. -/
-theorem filter_eq (l : List α) (a : α) : l.filter (Eq a) = replicate (count a l) a := by
+theorem filter_eq (l : List α) (a : α) : l.filterₓ (Eq a) = replicate (count a l) a := by
   simp [eq_replicate, count, countp_eq_length_filter, @eq_comm _ _ a]
 #align list.filter_eq List.filter_eq
 
@@ -440,7 +440,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Eq.{succ u1} α a_1 a) (_inst_1 a_1 a)) l) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) a)
 Case conversion may be inaccurate. Consider using '#align list.filter_eq' List.filter_eq'ₓ'. -/
-theorem filter_eq' (l : List α) (a : α) : (l.filter fun x => x = a) = replicate (count a l) a := by
+theorem filter_eq' (l : List α) (a : α) : (l.filterₓ fun x => x = a) = replicate (count a l) a := by
   simp only [filter_eq, @eq_comm _ _ a]
 #align list.filter_eq' List.filter_eq'
 
@@ -519,7 +519,7 @@ theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : �
 #align list.count_le_count_map List.count_le_count_map
 
 #print List.count_erase /-
-theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a l - ite (a = b) 1 0
+theorem count_erase (a b : α) : ∀ l : List α, count a (l.eraseₓ b) = count a l - ite (a = b) 1 0
   | [] => by simp
   | c :: l => by
     rw [erase_cons]
@@ -542,7 +542,7 @@ theorem count_erase_self (a : α) (l : List α) : count a (List.erase l a) = cou
 
 #print List.count_erase_of_ne /-
 @[simp]
-theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.erase b) = count a l :=
+theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.eraseₓ b) = count a l :=
   by rw [count_erase, if_neg ab, tsub_zero]
 #align list.count_erase_of_ne List.count_erase_of_ne
 -/

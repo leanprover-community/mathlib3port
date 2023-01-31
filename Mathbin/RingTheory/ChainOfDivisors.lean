@@ -46,7 +46,7 @@ variable {M : Type _} [CancelCommMonoidWithZero M]
 theorem Associates.isAtom_iff {p : Associates M} (h₁ : p ≠ 0) : IsAtom p ↔ Irreducible p :=
   ⟨fun hp =>
     ⟨by simpa only [Associates.isUnit_iff_eq_one] using hp.1, fun a b h =>
-      (hp.le_iff.mp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.is_unit_iff_eq_one.mpr ha)) fun ha =>
+      (hp.le_iff.mp ⟨_, h⟩).casesOn (fun ha => Or.inl (a.isUnit_iff_eq_one.mpr ha)) fun ha =>
         Or.inr
           (show IsUnit b by
             rw [ha] at h
@@ -54,7 +54,7 @@ theorem Associates.isAtom_iff {p : Associates M} (h₁ : p ≠ 0) : IsAtom p ↔
     fun hp =>
     ⟨by simpa only [Associates.isUnit_iff_eq_one, Associates.bot_eq_one] using hp.1,
       fun b ⟨⟨a, hab⟩, hb⟩ =>
-      (hp.is_unit_or_is_unit hab).casesOn
+      (hp.isUnit_or_isUnit hab).casesOn
         (fun hb => show b = ⊥ by rwa [Associates.isUnit_iff_eq_one, ← Associates.bot_eq_one] at hb)
         fun ha =>
         absurd

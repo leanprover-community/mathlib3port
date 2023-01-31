@@ -225,7 +225,7 @@ instance [AddCommMonoid α] [Module ℚ α] : Module ℚ≥0 α :=
   Module.compHom α coeHom
 
 @[simp]
-theorem coe_coeHom : ⇑coe_hom = coe :=
+theorem coe_coeHom : ⇑coeHom = coe :=
   rfl
 #align nnrat.coe_coe_hom Nnrat.coe_coeHom
 
@@ -457,7 +457,7 @@ def num (q : ℚ≥0) : ℕ :=
 
 /-- The denominator of a nonnegative rational. -/
 def denom (q : ℚ≥0) : ℕ :=
-  (q : ℚ).denom
+  (q : ℚ).den
 #align nnrat.denom Nnrat.denom
 
 @[simp]
@@ -466,11 +466,11 @@ theorem natAbs_num_coe : (q : ℚ).num.natAbs = q.num :=
 #align nnrat.nat_abs_num_coe Nnrat.natAbs_num_coe
 
 @[simp]
-theorem den_coe : (q : ℚ).denom = q.denom :=
+theorem den_coe : (q : ℚ).den = q.den :=
   rfl
 #align nnrat.denom_coe Nnrat.den_coe
 
-theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
+theorem ext_num_denom (hn : p.num = q.num) (hd : p.den = q.den) : p = q :=
   ext <|
     Rat.ext
       ((Int.natAbs_inj_of_nonneg_of_nonneg (Rat.num_nonneg_iff_zero_le.2 p.2) <|
@@ -479,14 +479,14 @@ theorem ext_num_denom (hn : p.num = q.num) (hd : p.denom = q.denom) : p = q :=
       hd
 #align nnrat.ext_num_denom Nnrat.ext_num_denom
 
-theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.denom = q.denom :=
+theorem ext_num_denom_iff : p = q ↔ p.num = q.num ∧ p.den = q.den :=
   ⟨by
     rintro rfl
     exact ⟨rfl, rfl⟩, fun h => ext_num_denom h.1 h.2⟩
 #align nnrat.ext_num_denom_iff Nnrat.ext_num_denom_iff
 
 @[simp]
-theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.denom = q :=
+theorem num_div_denom (q : ℚ≥0) : (q.num : ℚ≥0) / q.den = q :=
   by
   ext1
   rw [coe_div, coe_nat_cast, coe_nat_cast, Num, ← Int.cast_ofNat,

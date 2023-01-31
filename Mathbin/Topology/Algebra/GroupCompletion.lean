@@ -121,10 +121,10 @@ instance : AddMonoid (Completion α) :=
         fun a b c =>
         show (a : Completion α) + b + c = a + (b + c) by repeat' rw_mod_cast [add_assoc]
     nsmul := (· • ·)
-    nsmul_zero' := fun a =>
+    nsmul_zero := fun a =>
       Completion.induction_on a (isClosed_eq continuous_map continuous_const) fun a => by
         rw [← coe_smul, ← coe_zero, zero_smul]
-    nsmul_succ' := fun n a =>
+    nsmul_succ := fun n a =>
       Completion.induction_on a
         (isClosed_eq continuous_map <| continuous_map₂ continuous_id continuous_map) fun a => by
         rw_mod_cast [succ_nsmul] }
@@ -194,7 +194,7 @@ theorem continuous_toCompl : Continuous (toCompl : α → Completion α) :=
 variable (α)
 
 theorem denseInducing_toCompl : DenseInducing (toCompl : α → Completion α) :=
-  dense_inducing_coe
+  denseInducing_coe
 #align uniform_space.completion.dense_inducing_to_compl UniformSpace.Completion.denseInducing_toCompl
 
 variable {α}

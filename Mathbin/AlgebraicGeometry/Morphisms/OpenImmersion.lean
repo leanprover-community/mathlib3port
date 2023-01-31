@@ -96,12 +96,12 @@ theorem IsOpenImmersion.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           IsOpenImmersion (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤),
           ∀ i, IsOpenImmersion (f ∣_ U i)] :=
-  isOpenImmersionIsLocalAtTarget.open_cover_tfae f
+  isOpenImmersionIsLocalAtTarget.openCover_tFAE f
 #align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.openCover_tFAE
 
 theorem IsOpenImmersion.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
     IsOpenImmersion f ↔ ∀ i, IsOpenImmersion (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  isOpenImmersionIsLocalAtTarget.open_cover_iff f 𝒰
+  isOpenImmersionIsLocalAtTarget.openCover_iff f 𝒰
 #align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.openCover_iff
 
 theorem isOpenImmersion_stableUnderBaseChange :

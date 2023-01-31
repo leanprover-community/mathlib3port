@@ -41,7 +41,7 @@ variable {γ : ι → Type _} [∀ i, DecidableEq (γ i)]
 
 /-- The Hamming distance function to the naturals. -/
 def hammingDist (x y : ∀ i, β i) : ℕ :=
-  (univ.filter fun i => x i ≠ y i).card
+  (univ.filterₓ fun i => x i ≠ y i).card
 #align hamming_dist hammingDist
 
 /-- Corresponds to `dist_self`. -/
@@ -167,7 +167,7 @@ variable [∀ i, Zero (β i)] [∀ i, Zero (γ i)]
 
 /-- The Hamming weight function to the naturals. -/
 def hammingNorm (x : ∀ i, β i) : ℕ :=
-  (univ.filter fun i => x i ≠ 0).card
+  (univ.filterₓ fun i => x i ≠ 0).card
 #align hamming_norm hammingNorm
 
 /-- Corresponds to `dist_zero_right`. -/
@@ -331,12 +331,12 @@ def ofHamming : Hamming β ≃ ∀ i, β i :=
 #align hamming.of_hamming Hamming.ofHamming
 
 @[simp]
-theorem toHamming_symm_eq : (@toHamming _ β).symm = of_hamming :=
+theorem toHamming_symm_eq : (@toHamming _ β).symm = ofHamming :=
   rfl
 #align hamming.to_hamming_symm_eq Hamming.toHamming_symm_eq
 
 @[simp]
-theorem ofHamming_symm_eq : (@ofHamming _ β).symm = to_hamming :=
+theorem ofHamming_symm_eq : (@ofHamming _ β).symm = toHamming :=
   rfl
 #align hamming.of_hamming_symm_eq Hamming.ofHamming_symm_eq
 

@@ -108,7 +108,7 @@ theorem radical_eq_jacobson [H : IsJacobson R] (I : Ideal R) : I.radical = I.jac
 instance (priority := 100) isJacobson_field {K : Type _} [Field K] : IsJacobson K :=
   ⟨fun I hI =>
     Or.rec_on (eq_bot_or_top I)
-      (fun h => le_antisymm (infₛ_le ⟨le_rfl, h.symm ▸ bot_is_maximal⟩) (h.symm ▸ bot_le)) fun h =>
+      (fun h => le_antisymm (infₛ_le ⟨le_rfl, h.symm ▸ bot_isMaximal⟩) (h.symm ▸ bot_le)) fun h =>
       by rw [h, jacobson_eq_top_iff]⟩
 #align ideal.is_jacobson_field Ideal.isJacobson_field
 
@@ -449,7 +449,7 @@ theorem isJacobson_polynomial_of_isJacobson (hR : IsJacobson R) : IsJacobson R[X
   intro hI
   let R' : Subring (R[X] ⧸ I) := ((Quotient.mk' I).comp C).range
   let i : R →+* R' := ((Quotient.mk' I).comp C).range_restrict
-  have hi : Function.Surjective (i : R → R') := ((Quotient.mk' I).comp C).range_restrict_surjective
+  have hi : Function.Surjective (i : R → R') := ((Quotient.mk' I).comp C).rangeRestrict_surjective
   have hi' : (Polynomial.mapRingHom i : R[X] →+* R'[X]).ker ≤ I :=
     by
     refine' fun f hf => polynomial_mem_ideal_of_coeff_mem_ideal I f fun n => _
@@ -562,8 +562,7 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
   have hM : (0 : R ⧸ P') ∉ M := fun ⟨n, hn⟩ => hp0 <| leading_coeff_eq_zero.mp (pow_eq_zero hn)
   let M' : Submonoid (R[X] ⧸ P) := M.map (QuotientMap P C le_rfl)
   refine'
-    (QuotientMap P C le_rfl).is_integral_tower_bot_of_is_integral (algebraMap _ (Localization M')) _
-      _
+    (QuotientMap P C le_rfl).isIntegral_tower_bot_of_isIntegral (algebraMap _ (Localization M')) _ _
   · refine'
       IsLocalization.injective (Localization M')
         (show M' ≤ _ from le_nonZeroDivisors_of_noZeroDivisors fun hM' => hM _)
@@ -576,7 +575,7 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
         (IsLocalization.map (Localization M') _ M.le_comap_map) _ _
     ·
       exact
-        (algebraMap (R ⧸ P') (Localization M)).is_integral_of_surjective
+        (algebraMap (R ⧸ P') (Localization M)).isIntegral_of_surjective
           (IsField.localization_map_bijective hM
               ((quotient.maximal_ideal_iff_is_field_quotient _).mp
                 (is_maximal_comap_C_of_is_maximal P hP'))).2
@@ -603,8 +602,8 @@ theorem quotient_mk_comp_c_isIntegral_of_jacobson :
   refine' RingHom.isIntegral_tower_bot_of_isIntegral _ _ (injective_quotient_le_comap_map P) _
   rw [← quotient_mk_maps_eq]
   refine'
-    RingHom.isIntegral_trans _ _
-      ((Quotient.mk' P').is_integral_of_surjective quotient.mk_surjective) _
+    RingHom.isIntegral_trans _ _ ((Quotient.mk' P').isIntegral_of_surjective quotient.mk_surjective)
+      _
   apply quotient_mk_comp_C_is_integral_of_jacobson' _ _ fun x hx => _
   any_goals exact Ideal.isJacobson_quotient
   ·

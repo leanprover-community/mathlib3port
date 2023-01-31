@@ -91,7 +91,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] (p : Prod.{u2, u1} M N) (q : Prod.{u2, u1} M N), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} N M) (Prod.swap.{u2, u1} M N (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u2, u1} M N) (Prod.{u2, u1} M N) (Prod.{u2, u1} M N) (instHMul.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) p q)) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u1, u2} N M) (Prod.{u1, u2} N M) (Prod.{u1, u2} N M) (instHMul.{max u2 u1} (Prod.{u1, u2} N M) (Prod.instMulProd.{u1, u2} N M _inst_2 _inst_1)) (Prod.swap.{u2, u1} M N p) (Prod.swap.{u2, u1} M N q))
 Case conversion may be inaccurate. Consider using '#align prod.swap_mul Prod.swap_mulₓ'. -/
 @[simp, to_additive]
-theorem swap_mul [Mul M] [Mul N] (p q : M × N) : (p * q).swap = p.swap * q.swap :=
+theorem swap_mul [Mul M] [Mul N] (p q : M × N) : (p * q).symm = p.symm * q.symm :=
   rfl
 #align prod.swap_mul Prod.swap_mul
 #align prod.swap_add Prod.swap_add
@@ -191,7 +191,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : One.{u2} M] [_inst_2 : One.{u1} N], Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} N M) (Prod.swap.{u2, u1} M N (OfNat.ofNat.{max u2 u1} (Prod.{u2, u1} M N) 1 (One.toOfNat1.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instOneProd.{u2, u1} M N _inst_1 _inst_2)))) (OfNat.ofNat.{max u2 u1} (Prod.{u1, u2} N M) 1 (One.toOfNat1.{max u2 u1} (Prod.{u1, u2} N M) (Prod.instOneProd.{u1, u2} N M _inst_2 _inst_1)))
 Case conversion may be inaccurate. Consider using '#align prod.swap_one Prod.swap_oneₓ'. -/
 @[simp, to_additive]
-theorem swap_one [One M] [One N] : (1 : M × N).swap = 1 :=
+theorem swap_one [One M] [One N] : (1 : M × N).symm = 1 :=
   rfl
 #align prod.swap_one Prod.swap_one
 #align prod.swap_zero Prod.swap_zero
@@ -255,7 +255,7 @@ but is expected to have type
   forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Inv.{u2} G] [_inst_2 : Inv.{u1} H] (p : Prod.{u2, u1} G H), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} H G) (Prod.swap.{u2, u1} G H (Inv.inv.{max u2 u1} (Prod.{u2, u1} G H) (Prod.instInvProd.{u2, u1} G H _inst_1 _inst_2) p)) (Inv.inv.{max u2 u1} (Prod.{u1, u2} H G) (Prod.instInvProd.{u1, u2} H G _inst_2 _inst_1) (Prod.swap.{u2, u1} G H p))
 Case conversion may be inaccurate. Consider using '#align prod.swap_inv Prod.swap_invₓ'. -/
 @[simp, to_additive]
-theorem swap_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.swap = p.swap⁻¹ :=
+theorem swap_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.symm = p.symm⁻¹ :=
   rfl
 #align prod.swap_inv Prod.swap_inv
 #align prod.swap_neg Prod.swap_neg
@@ -312,7 +312,7 @@ but is expected to have type
   forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Div.{u2} G] [_inst_2 : Div.{u1} H] (a : Prod.{u2, u1} G H) (b : Prod.{u2, u1} G H), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} H G) (Prod.swap.{u2, u1} G H (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u2, u1} G H) (Prod.{u2, u1} G H) (Prod.{u2, u1} G H) (instHDiv.{max u2 u1} (Prod.{u2, u1} G H) (Prod.instDivProd.{u2, u1} G H _inst_1 _inst_2)) a b)) (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u1, u2} H G) (Prod.{u1, u2} H G) (Prod.{u1, u2} H G) (instHDiv.{max u2 u1} (Prod.{u1, u2} H G) (Prod.instDivProd.{u1, u2} H G _inst_2 _inst_1)) (Prod.swap.{u2, u1} G H a) (Prod.swap.{u2, u1} G H b))
 Case conversion may be inaccurate. Consider using '#align prod.swap_div Prod.swap_divₓ'. -/
 @[simp, to_additive]
-theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap :=
+theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).symm = a.symm / b.symm :=
   rfl
 #align prod.swap_div Prod.swap_div
 #align prod.swap_sub Prod.swap_sub
@@ -346,8 +346,8 @@ instance [Monoid M] [Monoid N] : Monoid (M × N) :=
   { Prod.semigroup,
     Prod.mulOneClass with
     npow := fun z a => ⟨Monoid.npow z a.1, Monoid.npow z a.2⟩
-    npow_zero' := fun z => ext (Monoid.npow_zero _) (Monoid.npow_zero _)
-    npow_succ' := fun z a => ext (Monoid.npow_succ _ _) (Monoid.npow_succ _ _) }
+    npow_zero := fun z => ext (Monoid.npow_zero _) (Monoid.npow_zero _)
+    npow_succ := fun z a => ext (Monoid.npow_succ _ _) (Monoid.npow_succ _ _) }
 
 @[to_additive Prod.subNegMonoid]
 instance [DivInvMonoid G] [DivInvMonoid H] : DivInvMonoid (G × H) :=
@@ -597,7 +597,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_hom.prod_comp_prod_map MulHom.prod_comp_prodMapₓ'. -/
 @[to_additive prod_comp_prod_map]
 theorem prod_comp_prodMap (f : P →ₙ* M) (g : P →ₙ* N) (f' : M →ₙ* M') (g' : N →ₙ* N') :
-    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 #align mul_hom.prod_comp_prod_map MulHom.prod_comp_prodMap
 #align add_hom.prod_comp_prod_map AddHom.prod_comp_prodMap
@@ -940,7 +940,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_comp_prod_map MonoidHom.prod_comp_prodMapₓ'. -/
 @[to_additive prod_comp_prod_map]
 theorem prod_comp_prodMap (f : P →* M) (g : P →* N) (f' : M →* M') (g' : N →* N') :
-    (f'.prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
   rfl
 #align monoid_hom.prod_comp_prod_map MonoidHom.prod_comp_prodMap
 #align add_monoid_hom.prod_comp_prod_map AddMonoidHom.prod_comp_prodMap

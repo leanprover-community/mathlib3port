@@ -450,19 +450,19 @@ theorem isDetector_unop_iff (G : Cᵒᵖ) : IsDetector (unop G) ↔ IsCodetector
 end Dual
 
 theorem IsDetector.isSeparator [HasEqualizers C] {G : C} : IsDetector G → IsSeparator G :=
-  is_detecting.is_separating
+  IsDetecting.isSeparating
 #align category_theory.is_detector.is_separator CategoryTheory.IsDetector.isSeparator
 
 theorem IsCodetector.isCoseparator [HasCoequalizers C] {G : C} : IsCodetector G → IsCoseparator G :=
-  is_codetecting.is_coseparating
+  IsCodetecting.isCoseparating
 #align category_theory.is_codetector.is_coseparator CategoryTheory.IsCodetector.isCoseparator
 
 theorem IsSeparator.isDetector [Balanced C] {G : C} : IsSeparator G → IsDetector G :=
-  is_separating.is_detecting
+  IsSeparating.isDetecting
 #align category_theory.is_separator.is_detector CategoryTheory.IsSeparator.isDetector
 
 theorem IsCospearator.isCodetector [Balanced C] {G : C} : IsCoseparator G → IsCodetector G :=
-  is_coseparating.is_codetecting
+  IsCoseparating.isCodetecting
 #align category_theory.is_cospearator.is_codetector CategoryTheory.IsCospearator.isCodetector
 
 theorem isSeparator_def (G : C) :

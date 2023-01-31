@@ -139,14 +139,14 @@ theorem preservesZeroMorphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preserve
 
 instance (priority := 100) preservesZeroMorphisms_of_preserves_initial_object
     [PreservesColimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
-  preserves_zero_morphisms_of_map_zero_object <|
+  preservesZeroMorphisms_of_map_zero_object <|
     F.mapIso HasZeroObject.zeroIsoInitial ≪≫
       PreservesInitial.iso F ≪≫ HasZeroObject.zeroIsoInitial.symm
 #align category_theory.functor.preserves_zero_morphisms_of_preserves_initial_object CategoryTheory.Functor.preservesZeroMorphisms_of_preserves_initial_object
 
 instance (priority := 100) preservesZeroMorphisms_of_preserves_terminal_object
     [PreservesLimit (Functor.empty.{0} C) F] : PreservesZeroMorphisms F :=
-  preserves_zero_morphisms_of_map_zero_object <|
+  preservesZeroMorphisms_of_map_zero_object <|
     F.mapIso HasZeroObject.zeroIsoTerminal ≪≫
       PreservesTerminal.iso F ≪≫ HasZeroObject.zeroIsoTerminal.symm
 #align category_theory.functor.preserves_zero_morphisms_of_preserves_terminal_object CategoryTheory.Functor.preservesZeroMorphisms_of_preserves_terminal_object
@@ -157,8 +157,7 @@ variable (F)
 def preservesTerminalObjectOfPreservesZeroMorphisms [PreservesZeroMorphisms F] :
     PreservesLimit (Functor.empty C) F :=
   preservesTerminalOfIso F <|
-    F.mapIso HasZeroObject.zeroIsoTerminal.symm ≪≫
-      mapZeroObject F ≪≫ has_zero_object.zero_iso_terminal
+    F.mapIso HasZeroObject.zeroIsoTerminal.symm ≪≫ mapZeroObject F ≪≫ HasZeroObject.zeroIsoTerminal
 #align category_theory.functor.preserves_terminal_object_of_preserves_zero_morphisms CategoryTheory.Functor.preservesTerminalObjectOfPreservesZeroMorphisms
 
 /-- Preserving zero morphisms implies preserving terminal objects. -/

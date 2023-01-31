@@ -43,7 +43,7 @@ theorem continuous_coe : Continuous (coe : ℝ → Angle) :=
 #align real.angle.continuous_coe Real.Angle.continuous_coe
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/
-def coeHom : ℝ →+ angle :=
+def coeHom : ℝ →+ Angle :=
   quotientAddGroup.mk' _
 #align real.angle.coe_hom Real.Angle.coeHom
 
@@ -291,7 +291,7 @@ theorem sin_coe (x : ℝ) : sin (x : Angle) = Real.sin x :=
 
 @[continuity]
 theorem continuous_sin : Continuous sin :=
-  Real.continuous_sin.quotient_lift_on' _
+  Real.continuous_sin.quotient_liftOn' _
 #align real.angle.continuous_sin Real.Angle.continuous_sin
 
 /-- The cosine of a `real.angle`. -/
@@ -306,7 +306,7 @@ theorem cos_coe (x : ℝ) : cos (x : Angle) = Real.cos x :=
 
 @[continuity]
 theorem continuous_cos : Continuous cos :=
-  Real.continuous_cos.quotient_lift_on' _
+  Real.continuous_cos.quotient_liftOn' _
 #align real.angle.continuous_cos Real.Angle.continuous_cos
 
 theorem cos_eq_real_cos_iff_eq_or_eq_neg {θ : Angle} {ψ : ℝ} :
@@ -1071,8 +1071,7 @@ theorem continuousAt_sign {θ : Angle} (h0 : θ ≠ 0) (hpi : θ ≠ π) : Conti
 #align real.angle.continuous_at_sign Real.Angle.continuousAt_sign
 
 theorem ContinuousOn.angle_sign_comp {α : Type _} [TopologicalSpace α] {f : α → Angle} {s : Set α}
-    (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) :
-    ContinuousOn (SignType.sign ∘ f) s :=
+    (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) : ContinuousOn (sign ∘ f) s :=
   by
   refine' (ContinuousAt.continuousOn fun θ hθ => _).comp hf (Set.mapsTo_image f s)
   obtain ⟨z, hz, rfl⟩ := hθ

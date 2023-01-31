@@ -37,10 +37,10 @@ section Rfind
 parameter (p : ℕ →. Bool)
 
 private def lbp (m n : ℕ) : Prop :=
-  m = n + 1 ∧ ∀ k ≤ n, ff ∈ p k
+  m = n + 1 ∧ ∀ k ≤ n, false ∈ p k
 #align nat.lbp nat.lbp
 
-parameter (H : ∃ n, tt ∈ p n ∧ ∀ k < n, (p k).Dom)
+parameter (H : ∃ n, true ∈ p n ∧ ∀ k < n, (p k).Dom)
 
 private def wf_lbp : WellFounded lbp :=
   ⟨by
@@ -52,8 +52,8 @@ private def wf_lbp : WellFounded lbp :=
     · exact IH _ (by rw [Nat.add_right_comm] <;> exact kn)⟩
 #align nat.wf_lbp nat.wf_lbp
 
-def rfindX : { n // tt ∈ p n ∧ ∀ m < n, ff ∈ p m } :=
-  suffices ∀ k, (∀ n < k, ff ∈ p n) → { n // tt ∈ p n ∧ ∀ m < n, ff ∈ p m } from
+def rfindX : { n // true ∈ p n ∧ ∀ m < n, false ∈ p m } :=
+  suffices ∀ k, (∀ n < k, false ∈ p n) → { n // true ∈ p n ∧ ∀ m < n, false ∈ p m } from
     this 0 fun n => (Nat.not_lt_zero _).elim
   @WellFounded.fix _ _ lbp wf_lbp
     (by
@@ -82,20 +82,22 @@ def rfind (p : ℕ →. Bool) : Part ℕ :=
   ⟨_, fun h => (rfindX p h).1⟩
 #align nat.rfind Nat.rfind
 
-theorem rfind_spec {p : ℕ →. Bool} {n : ℕ} (h : n ∈ rfind p) : tt ∈ p n :=
+theorem rfind_spec {p : ℕ →. Bool} {n : ℕ} (h : n ∈ rfind p) : true ∈ p n :=
   h.snd ▸ (rfindX p h.fst).2.1
 #align nat.rfind_spec Nat.rfind_spec
 
-theorem rfind_min {p : ℕ →. Bool} {n : ℕ} (h : n ∈ rfind p) : ∀ {m : ℕ}, m < n → ff ∈ p m :=
+theorem rfind_min {p : ℕ →. Bool} {n : ℕ} (h : n ∈ rfind p) : ∀ {m : ℕ}, m < n → false ∈ p m :=
   h.snd ▸ (rfindX p h.fst).2.2
 #align nat.rfind_min Nat.rfind_min
 
 @[simp]
-theorem rfind_dom {p : ℕ →. Bool} : (rfind p).Dom ↔ ∃ n, tt ∈ p n ∧ ∀ {m : ℕ}, m < n → (p m).Dom :=
+theorem rfind_dom {p : ℕ →. Bool} :
+    (rfind p).Dom ↔ ∃ n, true ∈ p n ∧ ∀ {m : ℕ}, m < n → (p m).Dom :=
   Iff.rfl
 #align nat.rfind_dom Nat.rfind_dom
 
-theorem rfind_dom' {p : ℕ →. Bool} : (rfind p).Dom ↔ ∃ n, tt ∈ p n ∧ ∀ {m : ℕ}, m ≤ n → (p m).Dom :=
+theorem rfind_dom' {p : ℕ →. Bool} :
+    (rfind p).Dom ↔ ∃ n, true ∈ p n ∧ ∀ {m : ℕ}, m ≤ n → (p m).Dom :=
   exists_congr fun n =>
     and_congr_right fun pn =>
       ⟨fun H m h => (Decidable.eq_or_lt_of_le h).elim (fun e => e.symm ▸ pn.fst) (H _), fun H m h =>
@@ -103,7 +105,8 @@ theorem rfind_dom' {p : ℕ →. Bool} : (rfind p).Dom ↔ ∃ n, tt ∈ p n ∧
 #align nat.rfind_dom' Nat.rfind_dom'
 
 @[simp]
-theorem mem_rfind {p : ℕ →. Bool} {n : ℕ} : n ∈ rfind p ↔ tt ∈ p n ∧ ∀ {m : ℕ}, m < n → ff ∈ p m :=
+theorem mem_rfind {p : ℕ →. Bool} {n : ℕ} :
+    n ∈ rfind p ↔ true ∈ p n ∧ ∀ {m : ℕ}, m < n → false ∈ p m :=
   ⟨fun h => ⟨rfind_spec h, @rfind_min _ _ h⟩, fun ⟨h₁, h₂⟩ =>
     by
     let ⟨m, hm⟩ := dom_iff_mem.1 <| (@rfind_dom p).2 ⟨_, h₁, fun m mn => (h₂ mn).fst⟩
@@ -114,7 +117,7 @@ theorem mem_rfind {p : ℕ →. Bool} {n : ℕ} : n ∈ rfind p ↔ tt ∈ p n �
 #align nat.mem_rfind Nat.mem_rfind
 
 theorem rfind_min' {p : ℕ → Bool} {m : ℕ} (pm : p m) : ∃ n ∈ rfind p, n ≤ m :=
-  have : tt ∈ (p : ℕ →. Bool) m := ⟨trivial, pm⟩
+  have : true ∈ (p : ℕ →. Bool) m := ⟨trivial, pm⟩
   let ⟨n, hn⟩ := dom_iff_mem.1 <| (@rfind_dom p).2 ⟨m, this, fun k h => ⟨⟩⟩
   ⟨n, hn, not_lt.1 fun h => by injection mem_unique this (rfind_min hn h)⟩
 #align nat.rfind_min' Nat.rfind_min'
@@ -714,7 +717,7 @@ theorem option_map {f : α → Option β} {g : α → β → σ} (hf : Computabl
 #align computable.option_map Computable.option_map
 
 theorem option_getD {f : α → Option β} {g : α → β} (hf : Computable f) (hg : Computable g) :
-    Computable fun a => (f a).getOrElse (g a) :=
+    Computable fun a => (f a).getD (g a) :=
   (Computable.option_cases hf hg (show Computable₂ fun a b => b from Computable.snd)).of_eq fun a =>
     by cases f a <;> rfl
 #align computable.option_get_or_else Computable.option_getD

@@ -49,7 +49,7 @@ open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given
 def productOfMemOpens : C(X, Opens X → Prop)
     where
   toFun x u := x ∈ u
-  continuous_to_fun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
+  continuous_toFun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
 #align topological_space.product_of_mem_opens TopologicalSpace.productOfMemOpens
 
 theorem productOfMemOpens_inducing : Inducing (productOfMemOpens X) :=

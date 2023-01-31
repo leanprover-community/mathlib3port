@@ -161,7 +161,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_Ixx_class_of_subset Filter.tendstoIxxClass_of_subsetₓ'. -/
 theorem tendstoIxxClass_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → α → Set α}
     (h : ∀ a b, Ixx a b ⊆ Ixx' a b) [h' : TendstoIxxClass Ixx' l₁ l₂] : TendstoIxxClass Ixx l₁ l₂ :=
-  ⟨h'.1.small_sets_mono <| eventually_of_forall <| Prod.forall.2 h⟩
+  ⟨h'.1.smallSets_mono <| eventually_of_forall <| Prod.forall.2 h⟩
 #align filter.tendsto_Ixx_class_of_subset Filter.tendstoIxxClass_of_subset
 
 /- warning: filter.has_basis.tendsto_Ixx_class -> Filter.HasBasis.tendstoIxxClass is a dubious translation:
@@ -173,13 +173,13 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.tends
 theorem HasBasis.tendstoIxxClass {ι : Type _} {p : ι → Prop} {s} {l : Filter α}
     (hl : l.HasBasis p s) {Ixx : α → α → Set α}
     (H : ∀ i, p i → ∀ x ∈ s i, ∀ y ∈ s i, Ixx x y ⊆ s i) : TendstoIxxClass Ixx l l :=
-  ⟨(hl.prod_self.tendsto_iff hl.smallSets).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
+  ⟨(hl.prod_self.tendsto_iffₓ hl.smallSets).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
 #align filter.has_basis.tendsto_Ixx_class Filter.HasBasis.tendstoIxxClass
 
 #print Filter.tendsto_Icc_atTop_atTop /-
 instance tendsto_Icc_atTop_atTop : TendstoIxxClass Icc (atTop : Filter α) atTop :=
   (hasBasis_infᵢ_principal_finite _).TendstoIxxClass fun s hs =>
-    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ordConnected_Ici
+    Set.OrdConnected.out <| ordConnected_binterᵢ fun i hi => ordConnected_Ici
 #align filter.tendsto_Icc_at_top_at_top Filter.tendsto_Icc_atTop_atTop
 -/
 
@@ -204,7 +204,7 @@ instance tendsto_Ioo_atTop_atTop : TendstoIxxClass Ioo (atTop : Filter α) atTop
 #print Filter.tendsto_Icc_atBot_atBot /-
 instance tendsto_Icc_atBot_atBot : TendstoIxxClass Icc (atBot : Filter α) atBot :=
   (hasBasis_infᵢ_principal_finite _).TendstoIxxClass fun s hs =>
-    Set.OrdConnected.out <| ord_connected_bInter fun i hi => ordConnected_Iic
+    Set.OrdConnected.out <| ordConnected_binterᵢ fun i hi => ordConnected_Iic
 #align filter.tendsto_Icc_at_bot_at_bot Filter.tendsto_Icc_atBot_atBot
 -/
 
@@ -313,7 +313,7 @@ instance tendsto_Icc_Icc_Icc {a b : α} : TendstoIxxClass Icc (𝓟 (Icc a b)) (
 
 #print Filter.tendsto_Ioc_Icc_Icc /-
 instance tendsto_Ioc_Icc_Icc {a b : α} : TendstoIxxClass Ioc (𝓟 (Icc a b)) (𝓟 (Icc a b)) :=
-  tendsto_Ixx_class_of_subset fun _ _ => Ioc_subset_Icc_self
+  tendstoIxxClass_of_subset fun _ _ => Ioc_subset_Icc_self
 #align filter.tendsto_Ioc_Icc_Icc Filter.tendsto_Ioc_Icc_Icc
 -/
 

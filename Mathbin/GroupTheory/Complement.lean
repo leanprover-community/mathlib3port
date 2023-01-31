@@ -176,13 +176,13 @@ theorem isComplement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} :=
 
 @[to_additive]
 theorem isComplement'_top_bot : IsComplement' (⊤ : Subgroup G) ⊥ :=
-  is_complement_top_singleton
+  isComplement_top_singleton
 #align subgroup.is_complement'_top_bot Subgroup.isComplement'_top_bot
 #align add_subgroup.is_complement'_top_bot AddSubgroup.isComplement'_top_bot
 
 @[to_additive]
 theorem isComplement'_bot_top : IsComplement' (⊥ : Subgroup G) ⊤ :=
-  is_complement_singleton_top
+  isComplement_singleton_top
 #align subgroup.is_complement'_bot_top Subgroup.isComplement'_bot_top
 #align add_subgroup.is_complement'_bot_top AddSubgroup.isComplement'_bot_top
 

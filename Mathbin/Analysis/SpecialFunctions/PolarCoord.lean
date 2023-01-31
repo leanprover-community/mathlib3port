@@ -84,10 +84,10 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
   open_source :=
     (isOpen_lt continuous_const continuous_fst).union
       (isOpen_ne_fun continuous_snd continuous_const)
-  continuous_inv_fun :=
+  continuous_invFun :=
     ((continuous_fst.mul (continuous_cos.comp continuous_snd)).prod_mk
         (continuous_fst.mul (continuous_sin.comp continuous_snd))).ContinuousOn
-  continuous_to_fun :=
+  continuous_toFun :=
     by
     apply ((continuous_fst.pow 2).add (continuous_snd.pow 2)).sqrt.ContinuousOn.Prod
     have A :
@@ -113,8 +113,8 @@ theorem hasFderivAt_polarCoord_symm (p : ℝ × ℝ) :
   rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
   convert
       HasFderivAt.prod
-        (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_has_fderiv_at p hasFderivAt_snd))
-        (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_has_fderiv_at p hasFderivAt_snd)) using
+        (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_hasFderivAt p hasFderivAt_snd))
+        (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_hasFderivAt p hasFderivAt_snd)) using
       2 <;>
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
 #align has_fderiv_at_polar_coord_symm hasFderivAt_polarCoord_symm

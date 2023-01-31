@@ -361,7 +361,7 @@ def preservesLimitsOfEvaluation (F : D ⥤ K ⥤ C)
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves limits. -/
 instance preservesLimitsConst : PreservesLimitsOfSize.{w', w} (const D : C ⥤ _) :=
   preservesLimitsOfEvaluation _ fun X =>
-    preserves_limits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
+    preservesLimitsOfNatIso <| Iso.symm <| constCompEvaluationObj _ _
 #align category_theory.limits.preserves_limits_const CategoryTheory.Limits.preservesLimitsConst
 
 instance evaluationPreservesColimits [HasColimits C] (k : K) :
@@ -399,7 +399,7 @@ def preservesColimitsOfEvaluation (F : D ⥤ K ⥤ C)
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves colimits. -/
 instance preservesColimitsConst : PreservesColimitsOfSize.{w', w} (const D : C ⥤ _) :=
   preservesColimitsOfEvaluation _ fun X =>
-    preserves_colimits_of_nat_iso <| iso.symm <| constCompEvaluationObj _ _
+    preservesColimitsOfNatIso <| Iso.symm <| constCompEvaluationObj _ _
 #align category_theory.limits.preserves_colimits_const CategoryTheory.Limits.preservesColimitsConst
 
 open CategoryTheory.prod
@@ -407,13 +407,13 @@ open CategoryTheory.prod
 /-- The limit of a diagram `F : J ⥤ K ⥤ C` is isomorphic to the functor given by
 the individual limits on objects. -/
 @[simps]
-def limitIsoFlipCompLim [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) : limit F ≅ F.flip ⋙ limUnder :=
+def limitIsoFlipCompLim [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) : limit F ≅ F.flip ⋙ lim :=
   NatIso.ofComponents (limitObjIsoLimitCompEvaluation F) <| by tidy
 #align category_theory.limits.limit_iso_flip_comp_lim CategoryTheory.Limits.limitIsoFlipCompLim
 
 /-- A variant of `limit_iso_flip_comp_lim` where the arguemnts of `F` are flipped. -/
 @[simps]
-def limitFlipIsoCompLim [HasLimitsOfShape J C] (F : K ⥤ J ⥤ C) : limit F.flip ≅ F ⋙ limUnder :=
+def limitFlipIsoCompLim [HasLimitsOfShape J C] (F : K ⥤ J ⥤ C) : limit F.flip ≅ F ⋙ lim :=
   (NatIso.ofComponents fun k =>
       limitObjIsoLimitCompEvaluation F.flip k ≪≫ HasLimit.isoOfNatIso (flipCompEvaluation _ _)) <|
     by tidy
@@ -424,7 +424,7 @@ Note that this does not require `K` to be small.
 -/
 @[simps]
 def limitIsoSwapCompLim [HasLimitsOfShape J C] (G : J ⥤ K ⥤ C) :
-    limit G ≅ curry.obj (swap K J ⋙ uncurry.obj G) ⋙ limUnder :=
+    limit G ≅ curry.obj (swap K J ⋙ uncurry.obj G) ⋙ lim :=
   limitIsoFlipCompLim G ≪≫ isoWhiskerRight (flipIsoCurrySwapUncurry _) _
 #align category_theory.limits.limit_iso_swap_comp_lim CategoryTheory.Limits.limitIsoSwapCompLim
 

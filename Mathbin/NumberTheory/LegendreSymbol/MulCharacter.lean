@@ -555,7 +555,7 @@ theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] :
   calc
     (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 :=
       Finset.sum_congr rfl fun a _ => _
-    _ = ((Finset.univ : Finset R).filter IsUnit).card := Finset.sum_boole
+    _ = ((Finset.univ : Finset R).filterₓ IsUnit).card := Finset.sum_boole
     _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _
     _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
     

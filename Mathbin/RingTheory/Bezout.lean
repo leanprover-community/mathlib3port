@@ -32,7 +32,7 @@ variable (R : Type u) [CommRing R]
 
 /-- A Bézout ring is a ring whose finitely generated ideals are principal. -/
 class IsBezout : Prop where
-  is_principal_of_fg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
+  isPrincipal_of_fg : ∀ I : Ideal R, I.Fg → I.IsPrincipal
 #align is_bezout IsBezout
 
 namespace IsBezout

@@ -45,7 +45,7 @@ unsafe def delta_instance_name : pexpr → String
   | expr.app f _ => delta_instance_name f
   | expr.pi _ _ _ body => delta_instance_name body
   | expr.lam _ _ _ body => delta_instance_name body
-  | expr.const nm _ => nm.last
+  | expr.const nm _ => nm.getLast
   | _ => "inst"
 #align tactic.delta_instance_name tactic.delta_instance_name
 

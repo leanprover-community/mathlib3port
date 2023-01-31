@@ -121,6 +121,6 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
     exact hc (subset_convexHull _ _ <| mem_insert _ _)
   rw [convexHull_insert ⟨z, hzC⟩, convexJoin_singleton_left]
   refine' disjoint_Union₂_left.2 fun a ha => disjoint_iff_inf_le.mpr fun b hb => h a _ ⟨b, hb⟩
-  rwa [← hC.1.convex_hull_eq]
+  rwa [← hC.1.convexHull_eq]
 #align exists_convex_convex_compl_subset exists_convex_convex_compl_subset
 

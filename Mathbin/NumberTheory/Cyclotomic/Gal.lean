@@ -68,7 +68,7 @@ theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
   suffices f hμ.to_roots_of_unity = g hμ.to_roots_of_unity
     by
     apply AlgEquiv.coe_algHom_injective
-    apply (hμ.power_basis K).alg_hom_ext
+    apply (hμ.power_basis K).algHom_ext
     exact this
   rw [ZMod.eq_iff_modEq_nat] at hfg
   refine' (hf.trans _).trans hg.symm
@@ -90,7 +90,7 @@ variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L]
 
 /-- Cyclotomic extensions are abelian. -/
 noncomputable def Aut.commGroup : CommGroup (L ≃ₐ[K] L) :=
-  ((zeta_spec n K L).aut_to_pow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _)
+  ((zeta_spec n K L).autToPow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _)
     (map_div _) (map_pow _) (map_zpow _)
 #align is_cyclotomic_extension.aut.comm_group IsCyclotomicExtension.Aut.commGroup
 
@@ -120,7 +120,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
     left_inv := fun f => by
       simp only [MonoidHom.toFun_eq_coe]
       apply AlgEquiv.coe_algHom_injective
-      apply (hζ.power_basis K).alg_hom_ext
+      apply (hζ.power_basis K).algHom_ext
       simp only [AlgEquiv.coe_algHom, AlgEquiv.map_pow]
       rw [PowerBasis.equivOfMinpoly_gen]
       simp only [IsPrimitiveRoot.powerBasis_gen, IsPrimitiveRoot.autToPow_spec]
@@ -128,14 +128,14 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
       simp only [MonoidHom.toFun_eq_coe]
       generalize_proofs _ h
       have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
-      have := (hζ.power_basis K).equiv_of_minpoly_gen ((hμ x).PowerBasis K) h
+      have := (hζ.power_basis K).equivOfMinpoly_gen ((hμ x).PowerBasis K) h
       rw [hζ.power_basis_gen K] at this
       rw [this, IsPrimitiveRoot.powerBasis_gen] at key
       rw [← hζ.coe_to_roots_of_unity_coe] at key
       simp only [← coe_coe, ← rootsOfUnity.coe_pow] at key
       replace key := rootsOfUnity.coe_injective key
       rw [pow_eq_pow_iff_modEq, ← orderOf_subgroup, ← orderOf_units, hζ.coe_to_roots_of_unity_coe, ←
-        (zeta_spec n K L).eq_order_of, ← ZMod.eq_iff_modEq_nat] at key
+        (zeta_spec n K L).eq_orderOf, ← ZMod.eq_iff_modEq_nat] at key
       simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
@@ -149,7 +149,7 @@ noncomputable def fromZetaAut : L ≃ₐ[K] L :=
   let hζ := (zeta_spec n K L).eq_pow_of_pow_eq_one hμ.pow_eq_one n.Pos
   (autEquivPow L h).symm <|
     ZMod.unitOfCoprime hζ.some <|
-      ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.some_spec.some_spec.symm ▸ hμ
+      ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.choose_spec.choose_spec.symm ▸ hμ
 #align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/
@@ -181,7 +181,7 @@ noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (ZMod 
 /-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`.
 Asserts that the Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ`
 if `cyclotomic n K` is irreducible in the base field. -/
-noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
+noncomputable def galXPowEquivUnitsZmod : (x ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_X_pow_equiv_units_zmod galXPowEquivUnitsZmod

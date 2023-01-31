@@ -67,8 +67,8 @@ theorem lex_lt_of_lt [PartialOrder N] (r) [IsStrictOrder α r] {x y : α →₀ 
 instance Lex.isStrictOrder [LinearOrder α] [PartialOrder N] :
     IsStrictOrder (Lex (α →₀ N)) (· < ·) :=
   let i : IsStrictOrder (Lex (α → N)) (· < ·) := Pi.Lex.isStrictOrder
-  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a
-    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
+  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_isIrrefl a
+    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_isTrans a b c }
 #align finsupp.lex.is_strict_order Finsupp.Lex.isStrictOrder
 
 variable [LinearOrder α]
@@ -83,7 +83,7 @@ instance Lex.partialOrder [PartialOrder N] : PartialOrder (Lex (α →₀ N)) :=
 /-- The linear order on `finsupp`s obtained by the lexicographic ordering. -/
 instance Lex.linearOrder [LinearOrder N] : LinearOrder (Lex (α →₀ N)) :=
   { Lex.partialOrder,
-    LinearOrder.lift' (toLex ∘ to_dfinsupp ∘ ofLex) finsuppEquivDfinsupp.Injective with }
+    LinearOrder.lift' (toLex ∘ toDfinsupp ∘ ofLex) finsuppEquivDfinsupp.Injective with }
 #align finsupp.lex.linear_order Finsupp.Lex.linearOrder
 
 variable [PartialOrder N]

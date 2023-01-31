@@ -113,8 +113,8 @@ def dual : BoundedDistribLattice ⥤ BoundedDistribLattice
 @[simps Functor inverse]
 def dualEquiv : BoundedDistribLattice ≌ BoundedDistribLattice :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoundedDistribLattice.dual_equiv BoundedDistribLattice.dualEquiv
 
 end BoundedDistribLattice

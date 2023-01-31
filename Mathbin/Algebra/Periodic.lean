@@ -92,14 +92,14 @@ theorem List.periodic_prod [Add α] [CommMonoid β] (l : List (α → β)) (hl :
 @[to_additive]
 theorem Multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β))
     (hs : ∀ f ∈ s, Periodic f c) : Periodic s.Prod c :=
-  (s.prod_to_list ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_toList.mp hf
+  (s.prod_toList ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_toList.mp hf
 #align multiset.periodic_prod Multiset.periodic_prod
 #align multiset.periodic_sum Multiset.periodic_sum
 
 @[to_additive]
 theorem Finset.periodic_prod [Add α] [CommMonoid β] {ι : Type _} {f : ι → α → β} (s : Finset ι)
     (hs : ∀ i ∈ s, Periodic (f i) c) : Periodic (∏ i in s, f i) c :=
-  s.prod_to_list f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic] )
+  s.prod_toList f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic] )
 #align finset.periodic_prod Finset.periodic_prod
 #align finset.periodic_sum Finset.periodic_sum
 

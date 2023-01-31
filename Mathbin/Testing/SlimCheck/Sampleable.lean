@@ -359,7 +359,7 @@ instance Int.sampleable : Sampleable ℤ where
         (by decide)
   shrink x :=
     LazyList.ofList <|
-      (nat.shrink <| Int.natAbs x).bind fun ⟨y, h⟩ =>
+      (Nat.shrink <| Int.natAbs x).bind fun ⟨y, h⟩ =>
         [⟨y, h⟩, ⟨-y, by dsimp [SizeOf.sizeOf, SizeOf.sizeOf] <;> rw [Int.natAbs_neg] <;> exact h⟩]
 #align slim_check.int.sampleable SlimCheck.Int.sampleable
 
@@ -430,7 +430,7 @@ instance Sum.sampleable : SampleableBifunctor.{u, v} Sum
 
 instance Rat.sampleable : Sampleable ℚ :=
   (Sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x [anonymous]) fun r =>
-      (r.Num, ⟨r.denom, r.Pos⟩)) <|
+      (r.Num, ⟨r.den, r.Pos⟩)) <|
     by
     intro i
     rcases i with ⟨x, ⟨y, hy⟩⟩ <;> unfold_wf <;> dsimp [[anonymous]]
@@ -531,7 +531,7 @@ def List.shrinkRemoves (k : ℕ) (hk : 0 < k) :
     if hkn : k > n then LazyList.nil
     else
       if hkn' : k = n then
-        have : 1 < xs.sizeof := by
+        have : 1 < xs.sizeOf := by
           subst_vars
           cases xs
           · contradiction
@@ -640,7 +640,7 @@ def NoShrink.get {α} (x : NoShrink α) : α :=
 -/
 
 instance NoShrink.sampleable {α} [Sampleable α] : Sampleable (NoShrink α)
-    where sample := no_shrink.mk <$> sample α
+    where sample := NoShrink.mk <$> sample α
 #align slim_check.no_shrink.sampleable SlimCheck.NoShrink.sampleable
 
 instance String.sampleable : Sampleable String :=
@@ -705,7 +705,7 @@ each subtrees, and by shrinking the subtree to recombine them.
 
 This strategy is taken directly from Haskell's QuickCheck -/
 def Tree.shrinkWith [SizeOf α] (shrink_a : ShrinkFn α) : ShrinkFn (Tree α) :=
-  rec_shrink_with fun t =>
+  recShrinkWith fun t =>
     match t with
     | Tree.nil => fun f_rec => []
     | Tree.node x t₀ t₁ => fun f_rec =>
@@ -914,7 +914,7 @@ def printSamples {t : Type u} [Repr t] (g : Gen t) : Io Unit := do
   let xs ←
     Io.runRand <|
         Uliftable.down do
-          let xs ← (List.range 10).mmap <| g.run ∘ ULift.up
+          let xs ← (List.range 10).mapM <| g.run ∘ ULift.up
           pure ⟨xs repr⟩
   xs Io.putStrLn
 #align slim_check.print_samples SlimCheck.printSamples

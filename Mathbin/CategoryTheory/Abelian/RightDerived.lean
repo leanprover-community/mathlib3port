@@ -303,7 +303,7 @@ theorem rightDerived_zero_to_self_natural [EnoughInjectives C] {X : C} {Y : C} (
 
 /-- Given `preserves_finite_limits F`, the natural isomorphism `(F.right_derived 0) ≅ F`. -/
 def rightDerivedZeroIsoSelf [EnoughInjectives C] [PreservesFiniteLimits F] : F.rightDerived 0 ≅ F :=
-  iso.symm <|
+  Iso.symm <|
     NatIso.ofComponents
       (fun X => (right_derived_zero_to_self_app_iso _ (InjectiveResolution.of X)).symm) fun X Y f =>
       right_derived_zero_to_self_natural _ _ _ _

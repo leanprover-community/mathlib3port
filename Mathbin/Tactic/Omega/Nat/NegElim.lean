@@ -151,7 +151,7 @@ theorem implies_negElimCore : ∀ {p : Preform}, Preform.Implies p (negElimCore 
 
 /-- Eliminate all negations in a preform -/
 def negElim : Preform → Preform :=
-  neg_elim_core ∘ nnf
+  negElimCore ∘ nnf
 #align omega.nat.neg_elim Omega.Nat.negElim
 
 theorem negFree_negElim {p : Preform} : (negElim p).NegFree :=
@@ -161,7 +161,7 @@ theorem negFree_negElim {p : Preform} : (negElim p).NegFree :=
 theorem implies_negElim {p : Preform} : Preform.Implies p (negElim p) :=
   by
   intro v h1; apply implies_neg_elim_core
-  apply (nnf_equiv v).elimRight h1
+  apply (nnf_equiv v).right h1
 #align omega.nat.implies_neg_elim Omega.Nat.implies_negElim
 
 end Nat

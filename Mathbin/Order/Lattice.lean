@@ -1695,14 +1695,14 @@ theorem snd_inf [HasInf α] [HasInf β] (p q : α × β) : (p ⊓ q).snd = p.snd
 
 #print Prod.swap_sup /-
 @[simp]
-theorem swap_sup [HasSup α] [HasSup β] (p q : α × β) : (p ⊔ q).swap = p.swap ⊔ q.swap :=
+theorem swap_sup [HasSup α] [HasSup β] (p q : α × β) : (p ⊔ q).symm = p.symm ⊔ q.symm :=
   rfl
 #align prod.swap_sup Prod.swap_sup
 -/
 
 #print Prod.swap_inf /-
 @[simp]
-theorem swap_inf [HasInf α] [HasInf β] (p q : α × β) : (p ⊓ q).swap = p.swap ⊓ q.swap :=
+theorem swap_inf [HasInf α] [HasInf β] (p q : α × β) : (p ⊓ q).symm = p.symm ⊓ q.symm :=
   rfl
 #align prod.swap_inf Prod.swap_inf
 -/

@@ -121,7 +121,7 @@ def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
       dsimp at w
       rw [continuous_iff_continuousAt] at w
       specialize w ⟨x, m⟩
-      simpa using (opens.open_embedding_of_le i.le).continuous_at_iff.1 w }
+      simpa using (opens.open_embedding_of_le i.le).continuousAt_iff.1 w }
 #align Top.continuous_local TopCat.continuousLocal
 
 /-- Satisfying the inhabited linter. -/
@@ -192,7 +192,7 @@ theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredica
     have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j =>
       congr_arg Subtype.val (sf_comp i j)
     -- So, we can obtain a unique gluing
-    obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).exists_unique_gluing U sf' sf'_comp
+    obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).existsUnique_gluing U sf' sf'_comp
     refine' ⟨⟨gl, _⟩, _, _⟩
     · -- Our first goal is to show that this chosen gluing satisfies the
       -- predicate. Of course, we use locality of the predicate.

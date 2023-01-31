@@ -28,46 +28,46 @@ namespace Complex
 /-- The determinant of `conj_lie`, as a linear map. -/
 @[simp]
 theorem det_conjLie : (conjLie.toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = -1 :=
-  det_conj_ae
+  det_conjAe
 #align complex.det_conj_lie Complex.det_conjLie
 
 /-- The determinant of `conj_lie`, as a linear equiv. -/
 @[simp]
 theorem linearEquiv_det_conjLie : conjLie.toLinearEquiv.det = -1 :=
-  linear_equiv_det_conj_ae
+  linearEquiv_det_conjAe
 #align complex.linear_equiv_det_conj_lie Complex.linearEquiv_det_conjLie
 
 @[simp]
-theorem reClm_norm : ‖re_clm‖ = 1 :=
+theorem reClm_norm : ‖reClm‖ = 1 :=
   le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
     calc
       1 = ‖reClm 1‖ := by simp
-      _ ≤ ‖re_clm‖ := unit_le_op_norm _ _ (by simp)
+      _ ≤ ‖reClm‖ := unit_le_op_norm _ _ (by simp)
       
 #align complex.re_clm_norm Complex.reClm_norm
 
 @[simp]
-theorem reClm_nnnorm : ‖re_clm‖₊ = 1 :=
+theorem reClm_nnnorm : ‖reClm‖₊ = 1 :=
   Subtype.ext reClm_norm
 #align complex.re_clm_nnnorm Complex.reClm_nnnorm
 
 @[simp]
-theorem imClm_norm : ‖im_clm‖ = 1 :=
+theorem imClm_norm : ‖imClm‖ = 1 :=
   le_antisymm (LinearMap.mkContinuous_norm_le _ zero_le_one _) <|
     calc
       1 = ‖imClm i‖ := by simp
-      _ ≤ ‖im_clm‖ := unit_le_op_norm _ _ (by simp)
+      _ ≤ ‖imClm‖ := unit_le_op_norm _ _ (by simp)
       
 #align complex.im_clm_norm Complex.imClm_norm
 
 @[simp]
-theorem imClm_nnnorm : ‖im_clm‖₊ = 1 :=
+theorem imClm_nnnorm : ‖imClm‖₊ = 1 :=
   Subtype.ext imClm_norm
 #align complex.im_clm_nnnorm Complex.imClm_nnnorm
 
 @[simp]
 theorem conjCle_norm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖ = 1 :=
-  conjLie.toLinearIsometry.norm_to_continuous_linear_map
+  conjLie.toLinearIsometry.norm_toContinuousLinearMap
 #align complex.conj_cle_norm Complex.conjCle_norm
 
 @[simp]
@@ -76,13 +76,13 @@ theorem conjCle_nnorm : ‖(conjCle : ℂ →L[ℝ] ℂ)‖₊ = 1 :=
 #align complex.conj_cle_nnorm Complex.conjCle_nnorm
 
 @[simp]
-theorem ofRealClm_norm : ‖of_real_clm‖ = 1 :=
-  ofRealLi.norm_to_continuous_linear_map
+theorem ofRealClm_norm : ‖ofRealClm‖ = 1 :=
+  ofRealLi.norm_toContinuousLinearMap
 #align complex.of_real_clm_norm Complex.ofRealClm_norm
 
 @[simp]
-theorem ofRealClm_nnnorm : ‖of_real_clm‖₊ = 1 :=
-  Subtype.ext <| of_real_clm_norm
+theorem ofRealClm_nnnorm : ‖ofRealClm‖₊ = 1 :=
+  Subtype.ext <| ofRealClm_norm
 #align complex.of_real_clm_nnnorm Complex.ofRealClm_nnnorm
 
 end Complex

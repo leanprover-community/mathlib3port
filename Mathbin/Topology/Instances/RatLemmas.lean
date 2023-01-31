@@ -44,7 +44,7 @@ namespace Rat
 variable {p q : ℚ} {s t : Set ℚ}
 
 theorem interior_compact_eq_empty (hs : IsCompact s) : interior s = ∅ :=
-  denseEmbedding_coe_real.to_dense_inducing.interior_compact_eq_empty dense_irrational hs
+  denseEmbedding_coe_real.to_denseInducing.interior_compact_eq_empty dense_irrational hs
 #align rat.interior_compact_eq_empty Rat.interior_compact_eq_empty
 
 theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
@@ -53,7 +53,7 @@ theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
 
 instance cocompact_inf_nhds_neBot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
   by
-  refine' (has_basis_cocompact.inf (nhds_basis_opens _)).ne_bot_iff.2 _
+  refine' (has_basis_cocompact.inf (nhds_basis_opens _)).neBot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩; rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
 #align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_neBot

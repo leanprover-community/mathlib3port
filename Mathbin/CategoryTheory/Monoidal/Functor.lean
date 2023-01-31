@@ -159,8 +159,8 @@ A monoidal functor is a lax monoidal functor for which the tensorator and unitor
 See <https://stacks.math.columbia.edu/tag/0FFL>.
 -/
 structure MonoidalFunctor extends LaxMonoidalFunctor.{v₁, v₂} C D where
-  ε_is_iso : IsIso ε := by infer_instance
-  μ_is_iso : ∀ X Y : C, IsIso (μ X Y) := by infer_instance
+  ε_isIso : IsIso ε := by infer_instance
+  μ_isIso : ∀ X Y : C, IsIso (μ X Y) := by infer_instance
 #align category_theory.monoidal_functor CategoryTheory.MonoidalFunctor
 
 attribute [instance] monoidal_functor.ε_is_iso monoidal_functor.μ_is_iso
@@ -451,10 +451,10 @@ def comp : MonoidalFunctor.{v₁, v₃} C E :=
   {
     F.toLaxMonoidalFunctor.comp
       G.toLaxMonoidalFunctor with
-    ε_is_iso := by
+    ε_isIso := by
       dsimp
       infer_instance
-    μ_is_iso := by
+    μ_isIso := by
       dsimp
       infer_instance }
 #align category_theory.monoidal_functor.comp CategoryTheory.MonoidalFunctor.comp
@@ -480,8 +480,8 @@ def prod : MonoidalFunctor (B × D) (C × E) :=
   {
     F.toLaxMonoidalFunctor.Prod
       G.toLaxMonoidalFunctor with
-    ε_is_iso := (isIso_prod_iff C E).mpr ⟨ε_isIso F, ε_isIso G⟩
-    μ_is_iso := fun X Y => (isIso_prod_iff C E).mpr ⟨μ_isIso F X.1 Y.1, μ_isIso G X.2 Y.2⟩ }
+    ε_isIso := (isIso_prod_iff C E).mpr ⟨ε_isIso F, ε_isIso G⟩
+    μ_isIso := fun X Y => (isIso_prod_iff C E).mpr ⟨μ_isIso F X.1 Y.1, μ_isIso G X.2 Y.2⟩ }
 #align category_theory.monoidal_functor.prod CategoryTheory.MonoidalFunctor.prod
 
 end MonoidalFunctor
@@ -557,10 +557,10 @@ noncomputable def monoidalInverse (F : MonoidalFunctor C D) [IsEquivalence F.toF
     MonoidalFunctor D C
     where
   toLaxMonoidalFunctor := monoidalAdjoint F (asEquivalence _).toAdjunction
-  ε_is_iso := by
+  ε_isIso := by
     dsimp [equivalence.to_adjunction]
     infer_instance
-  μ_is_iso X Y := by
+  μ_isIso X Y := by
     dsimp [equivalence.to_adjunction]
     infer_instance
 #align category_theory.monoidal_inverse CategoryTheory.monoidalInverse

@@ -159,7 +159,7 @@ noncomputable def sheafificationIsoImagePresheaf :
           (isSheaf_iff_isSheaf_of_type J _).mp <| sheafify_isSheaf J _)
   inv := Subpresheaf.ι _
   hom_inv_id' :=
-    J.sheafify_hom_ext _ _ (J.sheafify_is_sheaf _) (by simp [to_image_presheaf_sheafify])
+    J.sheafify_hom_ext _ _ (J.sheafify_isSheaf _) (by simp [to_image_presheaf_sheafify])
   inv_hom_id' :=
     by
     rw [← cancel_mono (subpresheaf.ι _), category.id_comp, category.assoc]

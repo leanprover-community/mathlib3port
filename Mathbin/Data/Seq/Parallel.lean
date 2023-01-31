@@ -310,7 +310,7 @@ theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map 
         exact ⟨_, _, rfl, rfl⟩
 #align computation.map_parallel Computation.map_parallel
 
-theorem parallel_empty (S : Wseq (Computation α)) (h : S.head ~> none) : parallel S = empty _ :=
+theorem parallel_empty (S : Wseq (Computation α)) (h : S.headI ~> none) : parallel S = empty _ :=
   eq_empty_of_not_terminates fun ⟨⟨a, m⟩⟩ =>
     by
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel m

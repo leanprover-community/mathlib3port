@@ -149,7 +149,7 @@ theorem basicOpen_le {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f �
 
 /-- The restriction of a section `f` to the basic open of `f` is a unit. -/
 theorem isUnit_res_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
-    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basic_open_le f)).op f) :=
+    IsUnit (X.Presheaf.map (@homOfLe (Opens X) _ _ _ (X.basicOpen_le f)).op f) :=
   by
   apply is_unit_of_is_unit_germ
   rintro ⟨_, ⟨x, hx, rfl⟩⟩

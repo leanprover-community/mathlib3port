@@ -41,26 +41,26 @@ def mapTokens (c : Char) (f : String → String) : String → String :=
 #print String.isPrefixOf /-
 /-- Tests whether the first string is a prefix of the second string. -/
 def isPrefixOf (x y : String) : Bool :=
-  x.toList.isPrefixOf y.toList
+  x.toList.isPrefixOfₓ y.toList
 #align string.is_prefix_of String.isPrefixOf
 -/
 
 /-- Tests whether the first string is a suffix of the second string. -/
 def isSuffixOf (x y : String) : Bool :=
-  x.toList.isSuffixOf y.toList
+  x.toList.isSuffixOfₓ y.toList
 #align string.is_suffix_of String.isSuffixOf
 
 #print String.startsWith /-
 /-- `x.starts_with y` is true if `y` is a prefix of `x`, and is false otherwise. -/
 abbrev startsWith (x y : String) : Bool :=
-  y.isPrefixOf x
+  y.isPrefixOfₓ x
 #align string.starts_with String.startsWith
 -/
 
 #print String.endsWith /-
 /-- `x.ends_with y` is true if `y` is a suffix of `x`, and is false otherwise. -/
 abbrev endsWith (x y : String) : Bool :=
-  y.isSuffixOf x
+  y.isSuffixOfₓ x
 #align string.ends_with String.endsWith
 -/
 

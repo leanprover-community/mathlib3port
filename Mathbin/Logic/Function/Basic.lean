@@ -702,14 +702,14 @@ theorem LeftInverse.rightInverse_of_surjective {f : α → β} {g : β → α} (
 #print Function.RightInverse.leftInverse_of_surjective /-
 theorem RightInverse.leftInverse_of_surjective {f : α → β} {g : β → α} :
     RightInverse f g → Surjective f → LeftInverse f g :=
-  left_inverse.right_inverse_of_surjective
+  LeftInverse.rightInverse_of_surjective
 #align function.right_inverse.left_inverse_of_surjective Function.RightInverse.leftInverse_of_surjective
 -/
 
 #print Function.RightInverse.leftInverse_of_injective /-
 theorem RightInverse.leftInverse_of_injective {f : α → β} {g : β → α} :
     RightInverse f g → Injective g → LeftInverse f g :=
-  left_inverse.right_inverse_of_injective
+  LeftInverse.rightInverse_of_injective
 #align function.right_inverse.left_inverse_of_injective Function.RightInverse.leftInverse_of_injective
 -/
 
@@ -821,7 +821,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Nonempty.{u2} α] {f : α -> β}, (Function.Surjective.{u2, u1} α β f) -> (Function.RightInverse.{u2, u1} α β (Function.invFun.{u2, u1} α β _inst_1 f) f)
 Case conversion may be inaccurate. Consider using '#align function.right_inverse_inv_fun Function.rightInverse_invFunₓ'. -/
 theorem rightInverse_invFun (hf : Surjective f) : RightInverse (invFun f) f := fun b =>
-  inv_fun_eq <| hf b
+  invFun_eq <| hf b
 #align function.right_inverse_inv_fun Function.rightInverse_invFun
 
 /- warning: function.left_inverse_inv_fun -> Function.leftInverse_invFun is a dubious translation:

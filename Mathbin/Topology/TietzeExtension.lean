@@ -175,7 +175,7 @@ on the whole space. -/
 theorem exists_norm_eq_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (hs : IsClosed s) :
     ∃ g : Y →ᵇ ℝ, ‖g‖ = ‖f‖ ∧ g.restrict s = f :=
   exists_extension_norm_eq_of_closed_embedding' f ((ContinuousMap.id _).restrict s)
-    (closedEmbedding_subtype_coe hs)
+    (closedEmbedding_subtype_val hs)
 #align bounded_continuous_function.exists_norm_eq_restrict_eq_of_closed BoundedContinuousFunction.exists_norm_eq_restrict_eq_of_closed
 
 /-- **Tietze extension theorem** for real-valued bounded continuous maps, a version for a closed
@@ -360,7 +360,7 @@ theorem exists_forall_mem_restrict_eq_of_closed {s : Set Y} (f : s →ᵇ ℝ) (
     ∃ g : Y →ᵇ ℝ, (∀ y, g y ∈ t) ∧ g.restrict s = f :=
   by
   rcases exists_extension_forall_mem_of_closed_embedding f hf hne
-      (closedEmbedding_subtype_coe hs) with
+      (closedEmbedding_subtype_val hs) with
     ⟨g, hg, hgf⟩
   exact ⟨g, hg, FunLike.coe_injective hgf⟩
 #align bounded_continuous_function.exists_forall_mem_restrict_eq_of_closed BoundedContinuousFunction.exists_forall_mem_restrict_eq_of_closed
@@ -382,7 +382,7 @@ theorem exists_extension_forall_mem_of_closedEmbedding (f : C(X, ℝ)) {t : Set 
   have h : ℝ ≃o Ioo (-1 : ℝ) 1 := orderIsoIooNegOneOne ℝ
   set F : X →ᵇ ℝ :=
     { toFun := coe ∘ h ∘ f
-      continuous_to_fun := continuous_subtype_coe.comp (h.continuous.comp f.continuous)
+      continuous_toFun := continuous_subtype_coe.comp (h.continuous.comp f.continuous)
       map_bounded' :=
         bounded_range_iff.1
           ((bounded_Ioo (-1 : ℝ) 1).mono <| forall_range_iff.2 fun x => (h (f x)).2) }
@@ -431,7 +431,7 @@ theorem exists_restrict_eq_forall_mem_of_closed {s : Set Y} (f : C(s, ℝ)) {t :
     [OrdConnected t] (ht : ∀ x, f x ∈ t) (hne : t.Nonempty) (hs : IsClosed s) :
     ∃ g : C(Y, ℝ), (∀ y, g y ∈ t) ∧ g.restrict s = f :=
   let ⟨g, hgt, hgf⟩ :=
-    exists_extension_forall_mem_of_closedEmbedding f ht hne (closedEmbedding_subtype_coe hs)
+    exists_extension_forall_mem_of_closedEmbedding f ht hne (closedEmbedding_subtype_val hs)
   ⟨g, hgt, coe_injective hgf⟩
 #align continuous_map.exists_restrict_eq_forall_mem_of_closed ContinuousMap.exists_restrict_eq_forall_mem_of_closed
 

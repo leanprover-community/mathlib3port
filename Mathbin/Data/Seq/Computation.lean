@@ -73,7 +73,7 @@ def thinkN (c : Computation α) : ℕ → Computation α
 /-- `head c` is the first step of computation, either `some a` if `c = return a`
   or `none` if `c = think c'`. -/
 def head (c : Computation α) : Option α :=
-  c.1.head
+  c.1.headI
 #align computation.head Computation.head
 -/
 
@@ -816,9 +816,9 @@ def Bind.f (f : α → Computation β) :
     Sum (Computation α) (Computation β) → Sum β (Sum (Computation α) (Computation β))
   | Sum.inl ca =>
     match destruct ca with
-    | Sum.inl a => bind.G <| destruct (f a)
+    | Sum.inl a => Bind.g <| destruct (f a)
     | Sum.inr ca' => Sum.inr <| Sum.inl ca'
-  | Sum.inr cb => bind.G <| destruct cb
+  | Sum.inr cb => Bind.g <| destruct cb
 #align computation.bind.F Computation.Bind.f
 -/
 
@@ -914,7 +914,7 @@ theorem think_bind (c) (f : α → Computation β) : bind (think c) f = think (b
 
 #print Computation.bind_pure /-
 @[simp]
-theorem bind_pure (f : α → β) (s) : bind s (return ∘ f) = map f s :=
+theorem bind_pure (f : α → β) (s) : bind s (pure ∘ f) = map f s :=
   by
   apply eq_of_bisim fun c₁ c₂ => c₁ = c₂ ∨ ∃ s, c₁ = bind s (return ∘ f) ∧ c₂ = map f s
   · intro c₁ c₂ h
@@ -1076,7 +1076,7 @@ theorem pure_def (a) : (return a : Computation α) = pure a :=
 #print Computation.map_pure' /-
 @[simp]
 theorem map_pure' {α β} : ∀ (f : α → β) (a), f <$> pure a = pure (f a) :=
-  map_ret
+  map_pure
 #align computation.map_ret' Computation.map_pure'
 -/
 
@@ -1152,7 +1152,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align computation.ret_orelse Computation.ret_orElseₓ'. -/
 @[simp]
 theorem ret_orElse (a : α) (c₂ : Computation α) : (pure a <|> c₂) = pure a :=
-  destruct_eq_ret <| by unfold HasOrelse.orelse <;> simp [orelse]
+  destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.ret_orelse Computation.ret_orElse
 
 /- warning: computation.orelse_ret -> Computation.orelse_pure is a dubious translation:
@@ -1163,7 +1163,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align computation.orelse_ret Computation.orelse_pureₓ'. -/
 @[simp]
 theorem orelse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) = pure a :=
-  destruct_eq_ret <| by unfold HasOrelse.orelse <;> simp [orelse]
+  destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.orelse_ret Computation.orelse_pure
 
 /- warning: computation.orelse_think -> Computation.orelse_think is a dubious translation:

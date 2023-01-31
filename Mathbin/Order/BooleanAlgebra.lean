@@ -1233,8 +1233,8 @@ instance : BooleanAlgebra Bool :=
     le_inf := fun _ _ _ => Bool.le_and
     le_sup_inf := by decide
     compl := not
-    inf_compl_le_bot := fun a => a.band_bnot_self.le
-    top_le_sup_compl := fun a => a.bor_bnot_self.ge }
+    inf_compl_le_bot := fun a => a.and_not_self.le
+    top_le_sup_compl := fun a => a.or_not_self.ge }
 
 /- warning: bool.sup_eq_bor -> Bool.sup_eq_bor is a dubious translation:
 lean 3 declaration is

@@ -61,7 +61,7 @@ attribute [to_additive] Magma.largeCategory Magma.concreteCategory
 
 @[to_additive]
 instance : CoeSort Magma (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `Magma` from the underlying type and typeclass. -/
 @[to_additive]
@@ -127,7 +127,7 @@ attribute [to_additive] SemigroupCat.largeCategory SemigroupCat.concreteCategory
 
 @[to_additive]
 instance : CoeSort SemigroupCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `Semigroup` from the underlying type and typeclass. -/
 @[to_additive]

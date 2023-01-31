@@ -55,13 +55,13 @@ instance decidableSorted [DecidableRel r] (l : List α) : Decidable (Sorted r l)
 #print List.sorted_nil /-
 @[simp]
 theorem sorted_nil : Sorted r [] :=
-  pairwise.nil
+  Pairwise.nil
 #align list.sorted_nil List.sorted_nil
 -/
 
 #print List.Sorted.of_cons /-
 theorem Sorted.of_cons : Sorted r (a :: l) → Sorted r l :=
-  pairwise.of_cons
+  Pairwise.of_cons
 #align list.sorted.of_cons List.Sorted.of_cons
 -/
 
@@ -242,7 +242,7 @@ theorem orderedInsert_length : ∀ (L : List α) (a : α), (L.orderedInsert r a)
 /-- An alternative definition of `ordered_insert` using `take_while` and `drop_while`. -/
 theorem orderedInsert_eq_take_drop (a : α) :
     ∀ l : List α,
-      l.orderedInsert r a = (l.takeWhile fun b => ¬a ≼ b) ++ a :: l.dropWhile fun b => ¬a ≼ b
+      l.orderedInsert r a = (l.takeWhile fun b => ¬a ≼ b) ++ a :: l.dropWhileₓ fun b => ¬a ≼ b
   | [] => rfl
   | b :: l => by
     dsimp only [ordered_insert]
@@ -254,7 +254,7 @@ theorem orderedInsert_eq_take_drop (a : α) :
 theorem insertionSort_cons_eq_take_drop (a : α) (l : List α) :
     insertionSort r (a :: l) =
       ((insertionSort r l).takeWhile fun b => ¬a ≼ b) ++
-        a :: (insertionSort r l).dropWhile fun b => ¬a ≼ b :=
+        a :: (insertionSort r l).dropWhileₓ fun b => ¬a ≼ b :=
   orderedInsert_eq_take_drop r a _
 #align list.insertion_sort_cons_eq_take_drop List.insertionSort_cons_eq_take_drop
 -/

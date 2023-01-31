@@ -72,7 +72,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] (_inst_2 : β) (k : α -> β), Eq.{succ u1} (Finset.{u1} β) (Finset.image.{u2, u1} (Subtype.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2)) β (fun (a : β) (b : β) => Classical.propDecidable (Eq.{succ u1} β a b)) (fun (i : Subtype.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2)) => k (Subtype.val.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2) i)) (Finset.univ.{u2} (Subtype.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2)) (Subtype.fintype.{u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2) (fun (a : α) => instDecidableNot (Eq.{succ u1} β (k a) _inst_2) (Classical.propDecidable (Eq.{succ u1} β (k a) _inst_2))) _inst_1))) (Finset.erase.{u1} β (fun (a : β) (b : β) => Classical.propDecidable (Eq.{succ u1} β a b)) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => Classical.propDecidable (Eq.{succ u1} β a b)) k (Finset.univ.{u2} α _inst_1)) _inst_2)
 Case conversion may be inaccurate. Consider using '#align image_subtype_ne_univ_eq_image_erase image_subtype_ne_univ_eq_image_eraseₓ'. -/
 theorem image_subtype_ne_univ_eq_image_erase [Fintype α] [DecidableEq β] (k : β) (b : α → β) :
-    image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).erase k :=
+    image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).eraseₓ k :=
   by
   apply subset_antisymm
   · rw [image_subset_iff]

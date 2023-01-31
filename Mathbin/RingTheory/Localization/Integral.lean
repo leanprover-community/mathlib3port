@@ -225,7 +225,7 @@ theorem is_integral_localization_at_leadingCoeff {x : S} (p : R[X]) (hp : aeval 
             (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map) :
           Rₘ →+* _).IsIntegralElem
       (algebraMap S Sₘ x) :=
-  (algebraMap R S).is_integral_elem_localization_at_leading_coeff x p hp M hM
+  (algebraMap R S).isIntegralElem_localization_at_leadingCoeff x p hp M hM
 #align is_integral_localization_at_leading_coeff is_integral_localization_at_leadingCoeff
 
 /-- If `R → S` is an integral extension, `M` is a submonoid of `R`,

@@ -150,7 +150,7 @@ theorem HasFiniteIntegral.mono' {f : α → β} {g : α → ℝ} (hg : HasFinite
 
 theorem HasFiniteIntegral.congr' {f : α → β} {g : α → γ} (hf : HasFiniteIntegral f μ)
     (h : ∀ᵐ a ∂μ, ‖f a‖ = ‖g a‖) : HasFiniteIntegral g μ :=
-  hf.mono <| eventually_eq.le <| EventuallyEq.symm h
+  hf.mono <| EventuallyEq.le <| EventuallyEq.symm h
 #align measure_theory.has_finite_integral.congr' MeasureTheory.HasFiniteIntegral.congr'
 
 theorem hasFiniteIntegral_congr' {f : α → β} {g : α → γ} (h : ∀ᵐ a ∂μ, ‖f a‖ = ‖g a‖) :
@@ -165,7 +165,7 @@ theorem HasFiniteIntegral.congr {f g : α → β} (hf : HasFiniteIntegral f μ) 
 
 theorem hasFiniteIntegral_congr {f g : α → β} (h : f =ᵐ[μ] g) :
     HasFiniteIntegral f μ ↔ HasFiniteIntegral g μ :=
-  has_finite_integral_congr' <| h.fun_comp norm
+  hasFiniteIntegral_congr' <| h.fun_comp norm
 #align measure_theory.has_finite_integral_congr MeasureTheory.hasFiniteIntegral_congr
 
 theorem hasFiniteIntegral_const_iff {c : β} :
@@ -196,12 +196,12 @@ theorem HasFiniteIntegral.addMeasure {f : α → β} (hμ : HasFiniteIntegral f 
 
 theorem HasFiniteIntegral.leftOfAddMeasure {f : α → β} (h : HasFiniteIntegral f (μ + ν)) :
     HasFiniteIntegral f μ :=
-  h.monoMeasure <| measure.le_add_right <| le_rfl
+  h.monoMeasure <| Measure.le_add_right <| le_rfl
 #align measure_theory.has_finite_integral.left_of_add_measure MeasureTheory.HasFiniteIntegral.leftOfAddMeasure
 
 theorem HasFiniteIntegral.rightOfAddMeasure {f : α → β} (h : HasFiniteIntegral f (μ + ν)) :
     HasFiniteIntegral f ν :=
-  h.monoMeasure <| measure.le_add_left <| le_rfl
+  h.monoMeasure <| Measure.le_add_left <| le_rfl
 #align measure_theory.has_finite_integral.right_of_add_measure MeasureTheory.HasFiniteIntegral.rightOfAddMeasure
 
 @[simp]
@@ -253,7 +253,7 @@ theorem HasFiniteIntegral.norm {f : α → β} (hfi : HasFiniteIntegral f μ) :
 
 theorem hasFiniteIntegral_norm_iff (f : α → β) :
     HasFiniteIntegral (fun a => ‖f a‖) μ ↔ HasFiniteIntegral f μ :=
-  has_finite_integral_congr' <| eventually_of_forall fun x => norm_norm (f x)
+  hasFiniteIntegral_congr' <| eventually_of_forall fun x => norm_norm (f x)
 #align measure_theory.has_finite_integral_norm_iff MeasureTheory.hasFiniteIntegral_norm_iff
 
 theorem hasFiniteIntegralToRealOfLintegralNeTop {f : α → ℝ≥0∞} (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
@@ -290,7 +290,7 @@ theorem all_ae_ofReal_F_le_bound (h : ∀ n, ∀ᵐ a ∂μ, ‖F n a‖ ≤ bou
 
 theorem all_ae_tendsto_ofReal_norm (h : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) atTop <| 𝓝 <| f a) :
     ∀ᵐ a ∂μ, Tendsto (fun n => Ennreal.ofReal ‖F n a‖) atTop <| 𝓝 <| Ennreal.ofReal ‖f a‖ :=
-  h.mono fun a h => tendsto_of_real <| Tendsto.comp (Continuous.tendsto continuous_norm _) h
+  h.mono fun a h => tendsto_ofReal <| Tendsto.comp (Continuous.tendsto continuous_norm _) h
 #align measure_theory.all_ae_tendsto_of_real_norm MeasureTheory.all_ae_tendsto_ofReal_norm
 
 theorem all_ae_ofReal_f_le_bound (h_bound : ∀ n, ∀ᵐ a ∂μ, ‖F n a‖ ≤ bound a)
@@ -796,7 +796,7 @@ theorem Integrable.realToNnreal {f : α → ℝ} (hf : Integrable f μ) :
     Integrable (fun x => ((f x).toNnreal : ℝ)) μ :=
   by
   refine'
-    ⟨hf.ae_strongly_measurable.ae_measurable.real_to_nnreal.coeNnrealReal.AeStronglyMeasurable, _⟩
+    ⟨hf.ae_strongly_measurable.ae_measurable.real_toNnreal.coeNnrealReal.AeStronglyMeasurable, _⟩
   rw [has_finite_integral_iff_norm]
   refine' lt_of_le_of_lt _ ((has_finite_integral_iff_norm _).1 hf.has_finite_integral)
   apply lintegral_mono
@@ -911,9 +911,9 @@ noncomputable def withDensitySmulLi {f : α → ℝ≥0} (f_meas : Measurable f)
   map_add' := by
     intro u v
     ext1
-    filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp,
-      (mem_ℒ1_smul_of_L1_with_density f_meas v).coe_fn_to_Lp,
-      (mem_ℒ1_smul_of_L1_with_density f_meas (u + v)).coe_fn_to_Lp,
+    filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coeFn_toLp,
+      (mem_ℒ1_smul_of_L1_with_density f_meas v).coeFn_toLp,
+      (mem_ℒ1_smul_of_L1_with_density f_meas (u + v)).coeFn_toLp,
       Lp.coe_fn_add ((mem_ℒ1_smul_of_L1_with_density f_meas u).toLp _)
         ((mem_ℒ1_smul_of_L1_with_density f_meas v).toLp _),
       (ae_with_density_iff f_meas.coe_nnreal_ennreal).1 (Lp.coe_fn_add u v)]
@@ -927,9 +927,9 @@ noncomputable def withDensitySmulLi {f : α → ℝ≥0} (f_meas : Measurable f)
     intro r u
     ext1
     filter_upwards [(ae_with_density_iff f_meas.coe_nnreal_ennreal).1 (Lp.coe_fn_smul r u),
-      (mem_ℒ1_smul_of_L1_with_density f_meas (r • u)).coe_fn_to_Lp,
+      (mem_ℒ1_smul_of_L1_with_density f_meas (r • u)).coeFn_toLp,
       Lp.coe_fn_smul r ((mem_ℒ1_smul_of_L1_with_density f_meas u).toLp _),
-      (mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp]
+      (mem_ℒ1_smul_of_L1_with_density f_meas u).coeFn_toLp]
     intro x h h' h'' h'''
     rw [RingHom.id_apply, h', h'', Pi.smul_apply, h''']
     rcases eq_or_ne (f x) 0 with (hx | hx)
@@ -944,7 +944,7 @@ noncomputable def withDensitySmulLi {f : α → ℝ≥0} (f_meas : Measurable f)
         (Filter.eventually_of_forall fun x => Ennreal.coe_lt_top)]
     congr 1
     apply lintegral_congr_ae
-    filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coe_fn_to_Lp]with x hx
+    filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coeFn_toLp]with x hx
     rw [hx, Pi.mul_apply]
     change ↑‖(f x : ℝ) • u x‖₊ = ↑(f x) * ↑‖u x‖₊
     simp only [nnnorm_smul, Nnreal.nnnorm_eq, Ennreal.coe_mul]
@@ -1399,7 +1399,7 @@ variable {E : Type _} [NormedAddCommGroup E] {𝕜 : Type _} [NontriviallyNormed
 
 theorem MeasureTheory.Integrable.applyContinuousLinearMap {φ : α → H →L[𝕜] E}
     (φ_int : Integrable φ μ) (v : H) : Integrable (fun a => φ a v) μ :=
-  (φ_int.norm.mul_const ‖v‖).mono' (φ_int.AeStronglyMeasurable.apply_continuous_linear_map v)
+  (φ_int.norm.mul_const ‖v‖).mono' (φ_int.AeStronglyMeasurable.apply_continuousLinearMap v)
     (eventually_of_forall fun a => (φ a).le_op_norm v)
 #align measure_theory.integrable.apply_continuous_linear_map MeasureTheory.Integrable.applyContinuousLinearMap
 

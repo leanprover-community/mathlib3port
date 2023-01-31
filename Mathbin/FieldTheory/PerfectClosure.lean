@@ -28,7 +28,7 @@ variable (R : Type u) [CommSemiring R] (p : ℕ) [Fact p.Prime] [CharP R p]
 /-- A perfect ring is a ring of characteristic p that has p-th root. -/
 class PerfectRing : Type u where
   pthRoot' : R → R
-  frobenius_pth_root' : ∀ x, frobenius R p (pth_root' x) = x
+  frobenius_pthRoot' : ∀ x, frobenius R p (pth_root' x) = x
   pth_root_frobenius' : ∀ x, pth_root' (frobenius R p x) = x
 #align perfect_ring PerfectRing
 
@@ -108,16 +108,16 @@ theorem MonoidHom.map_pthRoot (x : R) : f (pthRoot R p x) = pthRoot S p (f x) :=
 
 theorem MonoidHom.map_iterate_pthRoot (x : R) (n : ℕ) :
     f ((pthRoot R p^[n]) x) = (pthRoot S p^[n]) (f x) :=
-  Semiconj.iterate_right f.map_pth_root n x
+  Semiconj.iterate_right f.map_pthRoot n x
 #align monoid_hom.map_iterate_pth_root MonoidHom.map_iterate_pthRoot
 
 theorem RingHom.map_pthRoot (x : R) : g (pthRoot R p x) = pthRoot S p (g x) :=
-  g.toMonoidHom.map_pth_root x
+  g.toMonoidHom.map_pthRoot x
 #align ring_hom.map_pth_root RingHom.map_pthRoot
 
 theorem RingHom.map_iterate_pthRoot (x : R) (n : ℕ) :
     g ((pthRoot R p^[n]) x) = (pthRoot S p^[n]) (g x) :=
-  g.toMonoidHom.map_iterate_pth_root x n
+  g.toMonoidHom.map_iterate_pthRoot x n
 #align ring_hom.map_iterate_pth_root RingHom.map_iterate_pthRoot
 
 variable (p)
@@ -515,7 +515,7 @@ instance : PerfectRing (PerfectClosure K p) p
     liftOn e (fun x => mk K p (x.1 + 1, x.2)) fun x y H =>
       match x, y, H with
       | _, _, r.intro n x => Quot.sound (R.intro _ _)
-  frobenius_pth_root' e :=
+  frobenius_pthRoot' e :=
     induction_on e fun ⟨n, x⟩ => by
       simp only [lift_on_mk, frobenius_mk]
       exact (Quot.sound <| r.intro _ _).symm
@@ -574,7 +574,7 @@ noncomputable def PerfectRing.ofSurjective (k : Type _) [CommRing k] [IsReduced 
     [Fact p.Prime] [CharP k p] (h : Function.Surjective <| frobenius k p) : PerfectRing k p
     where
   pthRoot' := Function.surjInv h
-  frobenius_pth_root' := Function.surjInv_eq h
+  frobenius_pthRoot' := Function.surjInv_eq h
   pth_root_frobenius' x := frobenius_inj _ _ <| Function.surjInv_eq h _
 #align perfect_ring.of_surjective PerfectRing.ofSurjective
 

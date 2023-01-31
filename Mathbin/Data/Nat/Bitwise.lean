@@ -61,13 +61,13 @@ theorem bit_true : bit true = bit1 :=
 
 #print Nat.bit_eq_zero /-
 @[simp]
-theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = ff := by
+theorem bit_eq_zero {n : ℕ} {b : Bool} : n.bit b = 0 ↔ n = 0 ∧ b = false := by
   cases b <;> simp [Nat.bit0_eq_zero, Nat.bit1_ne_zero]
 #align nat.bit_eq_zero Nat.bit_eq_zero
 -/
 
 #print Nat.zero_of_testBit_eq_false /-
-theorem zero_of_testBit_eq_false {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0 :=
+theorem zero_of_testBit_eq_false {n : ℕ} (h : ∀ i, testBit n i = false) : n = 0 :=
   by
   induction' n using Nat.binaryRec with b n hn
   · rfl
@@ -78,13 +78,13 @@ theorem zero_of_testBit_eq_false {n : ℕ} (h : ∀ i, testBit n i = ff) : n = 0
 
 #print Nat.zero_testBit /-
 @[simp]
-theorem zero_testBit (i : ℕ) : testBit 0 i = ff := by simp [test_bit]
+theorem zero_testBit (i : ℕ) : testBit 0 i = false := by simp [test_bit]
 #align nat.zero_test_bit Nat.zero_testBit
 -/
 
 #print Nat.testBit_eq_inth /-
 /-- The ith bit is the ith element of `n.bits`. -/
-theorem testBit_eq_inth (n i : ℕ) : n.testBit i = n.bits.inth i :=
+theorem testBit_eq_inth (n i : ℕ) : n.testBit i = n.bits.getI i :=
   by
   induction' i with i ih generalizing n
   · simp [test_bit, shiftr, bodd_eq_bits_head, List.getI_zero_eq_headI]
@@ -112,7 +112,7 @@ theorem eq_of_testBit_eq {n m : ℕ} (h : ∀ i, testBit n i = testBit m i) : n 
 
 #print Nat.exists_most_significant_bit /-
 theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) :
-    ∃ i, testBit n i = tt ∧ ∀ j, i < j → testBit n j = ff :=
+    ∃ i, testBit n i = true ∧ ∀ j, i < j → testBit n j = false :=
   by
   induction' n using Nat.binaryRec with b n hn
   · exact False.elim (h rfl)
@@ -132,7 +132,7 @@ theorem exists_most_significant_bit {n : ℕ} (h : n ≠ 0) :
 -/
 
 #print Nat.lt_of_testBit /-
-theorem lt_of_testBit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testBit m i = tt)
+theorem lt_of_testBit {n m : ℕ} (i : ℕ) (hn : testBit n i = false) (hm : testBit m i = true)
     (hnm : ∀ j, i < j → testBit n j = testBit m j) : n < m :=
   by
   induction' n using Nat.binaryRec with b n hn' generalizing i m
@@ -160,13 +160,13 @@ theorem lt_of_testBit {n m : ℕ} (i : ℕ) (hn : testBit n i = ff) (hm : testBi
 
 #print Nat.testBit_two_pow_self /-
 @[simp]
-theorem testBit_two_pow_self (n : ℕ) : testBit (2 ^ n) n = tt := by
+theorem testBit_two_pow_self (n : ℕ) : testBit (2 ^ n) n = true := by
   rw [test_bit, shiftr_eq_div_pow, Nat.div_self (pow_pos zero_lt_two n), bodd_one]
 #align nat.test_bit_two_pow_self Nat.testBit_two_pow_self
 -/
 
 #print Nat.testBit_two_pow_of_ne /-
-theorem testBit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = ff :=
+theorem testBit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = false :=
   by
   rw [test_bit, shiftr_eq_div_pow]
   cases' hm.lt_or_lt with hm hm
@@ -201,7 +201,7 @@ Case conversion may be inaccurate. Consider using '#align nat.bitwise_comm Nat.b
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also
     commutative. -/
 theorem bitwise'_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b' b)
-    (hf' : f false false = ff) (n m : ℕ) : bitwise f n m = bitwise f m n :=
+    (hf' : f false false = false) (n m : ℕ) : bitwise f n m = bitwise f m n :=
   suffices bitwise f = swap (bitwise f) by conv_lhs => rw [this]
   calc
     bitwise f = bitwise (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
@@ -321,7 +321,7 @@ theorem lor'_assoc (n m k : ℕ) : lor (lor n m) k = lor n (lor m k) := by
 #print Nat.lxor'_self /-
 @[simp]
 theorem lxor'_self (n : ℕ) : lxor' n n = 0 :=
-  zero_of_test_bit_eq_ff fun i => by simp
+  zero_of_testBit_eq_false fun i => by simp
 #align nat.lxor_self Nat.lxor'_self
 -/
 

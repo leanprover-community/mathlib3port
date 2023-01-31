@@ -94,7 +94,7 @@ theorem mulAntidiagonal_mono_right (h : u ⊆ t) :
 
 @[simp, to_additive]
 theorem swap_mem_mulAntidiagonal :
-    x.swap ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
+    x.symm ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
   simp [mul_comm, and_left_comm]
 #align finset.swap_mem_mul_antidiagonal Finset.swap_mem_mulAntidiagonal
 #align finset.swap_mem_add_antidiagonal Finset.swap_mem_add_antidiagonal

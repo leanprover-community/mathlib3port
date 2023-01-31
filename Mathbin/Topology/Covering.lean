@@ -66,7 +66,7 @@ theorem toTrivialization_apply {x : E} {I : Type _} [TopologicalSpace I]
 protected theorem continuousAt {x : E} {I : Type _} [TopologicalSpace I]
     (h : IsEvenlyCovered f (f x) I) : ContinuousAt f x :=
   let e := h.toTrivialization
-  e.continuous_at_proj (e.mem_source.mpr (mem_toTrivialization_baseSet h))
+  e.continuousAt_proj (e.mem_source.mpr (mem_toTrivialization_baseSet h))
 #align is_evenly_covered.continuous_at IsEvenlyCovered.continuousAt
 
 theorem to_isEvenlyCovered_preimage {x : X} {I : Type _} [TopologicalSpace I]
@@ -110,7 +110,7 @@ protected theorem isLocallyHomeomorphOn (hf : IsCoveringMapOn f s) :
   by
   refine' IsLocallyHomeomorphOn.mk f (f ⁻¹' s) fun x hx => _
   let e := (hf (f x) hx).toTrivialization
-  have h := (hf (f x) hx).mem_to_trivialization_base_set
+  have h := (hf (f x) hx).mem_toTrivialization_baseSet
   let he := e.mem_source.2 h
   refine'
     ⟨e.to_local_homeomorph.trans
@@ -125,10 +125,10 @@ protected theorem isLocallyHomeomorphOn (hf : IsCoveringMapOn f s) :
           map_target' := fun p hp => ⟨hp, rfl⟩
           left_inv' := fun p hp => Prod.ext rfl hp.2.symm
           right_inv' := fun p hp => rfl
-          continuous_to_fun := continuous_fst.continuous_on
-          continuous_inv_fun := (continuous_id'.prod_mk continuous_const).ContinuousOn },
+          continuous_toFun := continuous_fst.continuous_on
+          continuous_invFun := (continuous_id'.prod_mk continuous_const).ContinuousOn },
       ⟨he, by rwa [e.to_local_homeomorph.symm_symm, e.proj_to_fun x he],
-        (hf (f x) hx).to_trivialization_apply⟩,
+        (hf (f x) hx).toTrivialization_apply⟩,
       fun p h => (e.proj_to_fun p h.1).symm⟩
 #align is_covering_map_on.is_locally_homeomorph_on IsCoveringMapOn.isLocallyHomeomorphOn
 
@@ -177,7 +177,7 @@ protected theorem isOpenMap (hf : IsCoveringMap f) : IsOpenMap f :=
 
 protected theorem quotientMap (hf : IsCoveringMap f) (hf' : Function.Surjective f) :
     QuotientMap f :=
-  hf.IsOpenMap.to_quotient_map hf.Continuous hf'
+  hf.IsOpenMap.to_quotientMap hf.Continuous hf'
 #align is_covering_map.quotient_map IsCoveringMap.quotientMap
 
 end IsCoveringMap

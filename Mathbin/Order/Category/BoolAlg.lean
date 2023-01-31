@@ -31,7 +31,7 @@ def BoolAlg :=
 namespace BoolAlg
 
 instance : CoeSort BoolAlg (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : BoolAlg) : BooleanAlgebra X :=
   X.str
@@ -107,8 +107,8 @@ def dual : BoolAlg ⥤ BoolAlg where
 @[simps Functor inverse]
 def dualEquiv : BoolAlg ≌ BoolAlg :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BoolAlg.dual_equiv BoolAlg.dualEquiv
 
 end BoolAlg

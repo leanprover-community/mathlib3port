@@ -204,8 +204,8 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     -/
   dsimp [Set.SeparatesPointsStrongly] at sep
   let g : X → X → L := fun x y => (sep f x y).some
-  have w₁ : ∀ x y, g x y x = f x := fun x y => (sep f x y).some_spec.1
-  have w₂ : ∀ x y, g x y y = f y := fun x y => (sep f x y).some_spec.2
+  have w₁ : ∀ x y, g x y x = f x := fun x y => (sep f x y).choose_spec.1
+  have w₂ : ∀ x y, g x y y = f y := fun x y => (sep f x y).choose_spec.2
   -- For each `x y`, we define `U x y` to be `{z | f z - ε < g x y z}`,
   -- and observe this is a neighbourhood of `y`.
   let U : X → X → Set X := fun x y => { z | f z - ε < g x y z }
@@ -225,7 +225,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- so the union of the `U x y` for `y ∈ ys x` still covers everything.
   let ys : ∀ x, Finset X := fun x => (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some
   let ys_w : ∀ x, (⋃ y ∈ ys x, U x y) = ⊤ := fun x =>
-    (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).some_spec
+    (CompactSpace.elim_nhds_subcover (U x) (U_nhd_y x)).choose_spec
   have ys_nonempty : ∀ x, (ys x).Nonempty := fun x =>
     Set.nonempty_of_union_eq_top_of_nonempty _ _ nX (ys_w x)
   -- Thus for each `x` we have the desired `h x : A` so `f z - ε < h x z` everywhere
@@ -256,7 +256,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- Since `X` is compact, there is some finset `ys t`
   -- so the union of the `W x` for `x ∈ xs` still covers everything.
   let xs : Finset X := (CompactSpace.elim_nhds_subcover W W_nhd).some
-  let xs_w : (⋃ x ∈ xs, W x) = ⊤ := (CompactSpace.elim_nhds_subcover W W_nhd).some_spec
+  let xs_w : (⋃ x ∈ xs, W x) = ⊤ := (CompactSpace.elim_nhds_subcover W W_nhd).choose_spec
   have xs_nonempty : xs.nonempty := Set.nonempty_of_union_eq_top_of_nonempty _ _ nX xs_w
   -- Finally our candidate function is the infimum over `x ∈ xs` of the `h x`.
   -- This function is then globally less than `f z + ε`.

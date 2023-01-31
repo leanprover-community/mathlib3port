@@ -133,13 +133,13 @@ noncomputable def IsIrreducible.genericPoint [QuasiSober α] {S : Set α} (hS : 
 
 theorem IsIrreducible.genericPoint_spec [QuasiSober α] {S : Set α} (hS : IsIrreducible S) :
     IsGenericPoint hS.genericPoint (closure S) :=
-  (QuasiSober.sober hS.closure isClosed_closure).some_spec
+  (QuasiSober.sober hS.closure isClosed_closure).choose_spec
 #align is_irreducible.generic_point_spec IsIrreducible.genericPoint_spec
 
 @[simp]
 theorem IsIrreducible.genericPoint_closure_eq [QuasiSober α] {S : Set α} (hS : IsIrreducible S) :
     closure ({hS.genericPoint} : Set α) = closure S :=
-  hS.generic_point_spec
+  hS.genericPoint_spec
 #align is_irreducible.generic_point_closure_eq IsIrreducible.genericPoint_closure_eq
 
 variable (α)
@@ -150,7 +150,7 @@ noncomputable def genericPoint [QuasiSober α] [IrreducibleSpace α] : α :=
 #align generic_point genericPoint
 
 theorem genericPoint_spec [QuasiSober α] [IrreducibleSpace α] : IsGenericPoint (genericPoint α) ⊤ :=
-  by simpa using (IrreducibleSpace.isIrreducible_univ α).generic_point_spec
+  by simpa using (IrreducibleSpace.isIrreducible_univ α).genericPoint_spec
 #align generic_point_spec genericPoint_spec
 
 @[simp]
@@ -174,9 +174,9 @@ noncomputable def irreducibleSetEquivPoints [QuasiSober α] [T0Space α] :
   toFun s := s.Prop.1.genericPoint
   invFun x := ⟨closure ({x} : Set α), isIrreducible_singleton.closure, isClosed_closure⟩
   left_inv s :=
-    Subtype.eq <| Eq.trans s.Prop.1.generic_point_spec <| closure_eq_iff_isClosed.mpr s.2.2
+    Subtype.eq <| Eq.trans s.Prop.1.genericPoint_spec <| closure_eq_iff_isClosed.mpr s.2.2
   right_inv x :=
-    isIrreducible_singleton.closure.generic_point_spec.Eq
+    isIrreducible_singleton.closure.genericPoint_spec.Eq
       (by
         convert isGenericPoint_closure using 1
         rw [closure_closure])
@@ -239,7 +239,7 @@ theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s :
     trivial
   haveI : QuasiSober U := hS' ⟨U, hU⟩
   have H : IsPreirreducible (coe ⁻¹' t : Set U) :=
-    h.2.Preimage (hS ⟨U, hU⟩).open_embedding_subtype_coe
+    h.2.Preimage (hS ⟨U, hU⟩).openEmbedding_subtype_val
   replace H : IsIrreducible (coe ⁻¹' t : Set U) := ⟨⟨⟨x, hU'⟩, by simpa using hx⟩, H⟩
   use H.generic_point
   have := continuous_subtype_coe.closure_preimage_subset _ H.generic_point_spec.mem
@@ -248,7 +248,7 @@ theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s :
   · apply h'.closure_subset_iff.mpr
     simpa using this
   rw [← Set.image_singleton, ← closure_closure]
-  have := closure_mono (image_closure_subset_closure_image (@continuous_subtype_coe α _ U))
+  have := closure_mono (image_closure_subset_closure_image (@continuous_subtype_val α _ U))
   refine' Set.Subset.trans _ this
   rw [H.generic_point_spec.def]
   refine'

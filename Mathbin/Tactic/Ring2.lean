@@ -33,7 +33,7 @@ protected unsafe def reflect' (u : level) (α : expr) : Tree expr → expr
 /-- Returns an element indexed by `n`, or zero if `n` isn't a valid index.
 See `tree.get`. -/
 protected def getOrZero {α} [Zero α] (t : Tree α) (n : PosNum) : α :=
-  t.getOrElse n 0
+  t.getD n 0
 #align tree.get_or_zero Tree.getOrZero
 
 end Tree
@@ -95,7 +95,7 @@ namespace HornerExpr
 /-- True iff the `horner_expr` argument is a valid `csring_expr`.
 For that to be the case, all its constants must be non-negative. -/
 def IsCs : HornerExpr → Prop
-  | const n => ∃ m : Num, n = m.toZnum
+  | const n => ∃ m : Num, n = m.toZNum
   | horner a x n b => is_cs a ∧ is_cs b
 #align tactic.ring2.horner_expr.is_cs Tactic.Ring2.HornerExpr.IsCs
 
@@ -249,7 +249,7 @@ def inv (e : HornerExpr) : HornerExpr :=
 /-- Brings expressions into Horner normal form. -/
 def ofCsexpr : CsringExpr → HornerExpr
   | csring_expr.atom n => atom n
-  | csring_expr.const n => const n.toZnum
+  | csring_expr.const n => const n.toZNum
   | csring_expr.add x y => (of_csexpr x).add (of_csexpr y)
   | csring_expr.mul x y => (of_csexpr x).mul (of_csexpr y)
   | csring_expr.pow x n => (of_csexpr x).pow n
@@ -267,7 +267,7 @@ theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
 #align tactic.ring2.horner_expr.cseval_atom Tactic.Ring2.HornerExpr.cseval_atom
 
 theorem cseval_addConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
-    (addConst k.toZnum e).IsCs ∧ cseval t (addConst k.toZnum e) = k + cseval t e :=
+    (addConst k.toZNum e).IsCs ∧ cseval t (addConst k.toZNum e) = k + cseval t e :=
   by
   simp [add_const]
   cases k <;> simp! [*]
@@ -356,7 +356,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
 #align tactic.ring2.horner_expr.cseval_add Tactic.Ring2.HornerExpr.cseval_add
 
 theorem cseval_mulConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
-    (mulConst k.toZnum e).IsCs ∧ cseval t (mulConst k.toZnum e) = cseval t e * k :=
+    (mulConst k.toZNum e).IsCs ∧ cseval t (mulConst k.toZNum e) = cseval t e * k :=
   by
   simp [mul_const]
   split_ifs with h h
@@ -471,7 +471,7 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
     unsafe
   def
     reflect_expr
-    : expr → csring_expr × Dlist expr
+    : expr → CsringExpr × Dlist expr
     |
         q( $ ( e₁ ) + $ ( e₂ ) )
         =>
@@ -510,12 +510,12 @@ The initial state is a list of all atom occurrences in the goal, left-to-right. 
 unsafe def csring_expr.replace (t : Tree expr) : CsringExpr → StateT (List expr) Option CsringExpr
   | csring_expr.atom _ => do
     let e ← get
-    let p ← monadLift (t.indexOf (· < ·) e.head)
+    let p ← monadLift (t.indexOfₓ (· < ·) e.headI)
     put e
     pure (csring_expr.atom p)
   | csring_expr.const n => pure (CsringExpr.const n)
-  | csring_expr.add x y => csring_expr.add <$> x.replace <*> y.replace
-  | csring_expr.mul x y => csring_expr.mul <$> x.replace <*> y.replace
+  | csring_expr.add x y => CsringExpr.add <$> x.replace <*> y.replace
+  | csring_expr.mul x y => CsringExpr.mul <$> x.replace <*> y.replace
   | csring_expr.pow x n => (fun x => CsringExpr.pow x n) <$> x.replace
 #align tactic.ring2.csring_expr.replace tactic.ring2.csring_expr.replace
 

@@ -116,7 +116,7 @@ theorem IsAsymm.swap (r) [IsAsymm α r] : IsAsymm α (swap r) :=
 
 #print IsTotal.swap /-
 theorem IsTotal.swap (r) [IsTotal α r] : IsTotal α (swap r) :=
-  ⟨fun a b => (total_of r a b).swap⟩
+  ⟨fun a b => (total_of r a b).symm⟩
 #align is_total.swap IsTotal.swap
 -/
 
@@ -1038,7 +1038,7 @@ theorem eq_or_ssubset_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a = 
 
 #print ssubset_or_eq_of_subset /-
 theorem ssubset_or_eq_of_subset [IsAntisymm α (· ⊆ ·)] (h : a ⊆ b) : a ⊂ b ∨ a = b :=
-  (eq_or_ssubset_of_subset h).swap
+  (eq_or_ssubset_of_subset h).symm
 #align ssubset_or_eq_of_subset ssubset_or_eq_of_subset
 -/
 

@@ -198,7 +198,7 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
 is naturally compatible with the forgetful functors to `Module R`.
 -/
 def monModuleEquivalenceAlgebraForget :
-    Mon_Module_equivalence_Algebra.functor ⋙ forget₂ (AlgebraCat.{u} R) (ModuleCat.{u} R) ≅
+    MonModuleEquivalenceAlgebra.functor ⋙ forget₂ (AlgebraCat.{u} R) (ModuleCat.{u} R) ≅
       Mon_.forget (ModuleCat.{u} R) :=
   NatIso.ofComponents
     (fun A =>

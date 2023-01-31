@@ -30,16 +30,16 @@ namespace AddCommGroupCat
 
 -- As `AddCommGroup` is preadditive, and has all limits, it automatically has biproducts.
 instance : HasBinaryBiproducts AddCommGroupCat :=
-  has_binary_biproducts.of_has_binary_products
+  HasBinaryBiproducts.ofHasBinaryProducts
 
 instance : HasFiniteBiproducts AddCommGroupCat :=
-  has_finite_biproducts.of_has_finite_products
+  HasFiniteBiproducts.ofHasFiniteProducts
 
 -- We now construct explicit limit data,
 -- so we can compare the biproducts to the usual unbundled constructions.
 /-- Construct limit data for a binary product in `AddCommGroup`, using `AddCommGroup.of (G × H)`.
 -/
-@[simps cone_X is_limit_lift]
+@[simps cone_x isLimit_lift]
 def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair G H)
     where
   Cone :=

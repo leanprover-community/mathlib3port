@@ -32,13 +32,13 @@ The variant `observe? hp : p` will emit a trace message of the form `have hp : p
 This may be particularly useful to speed up proofs. -/
 unsafe def tactic.interactive.observe (trc : parse <| optional (tk "?"))
     (h : parse (parser.optional ident)) (t : parse (tk ":" *> texpr)) : tactic Unit := do
-  let h' := h.getOrElse `this
+  let h' := h.getD `this
   let t ← to_expr ``(($(t) : Prop))
   assert h' t
   let s ← focus1 (tactic.library_search { try_this := false }) <|> fail "observe failed"
   let s ← s.getRest "Try this: exact "
   let ppt ← pp t
-  let pph : String := (h.map fun n : Name => n.toString ++ " ").getOrElse ""
+  let pph : String := (h.map fun n : Name => n.toString ++ " ").getD ""
   when trc <|
       ← do
         dbg_trace "Try this: have {(← pph)}: {(← ppt)} := {← s}"

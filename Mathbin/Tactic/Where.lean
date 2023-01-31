@@ -102,7 +102,7 @@ unsafe def format_variable : expr × BinderInfo × List Name → tactic String
 
 /-- Turn a list of triples of variable names, binder info, and types, into a pretty list. -/
 unsafe def compile_variable_list (l : List (Name × BinderInfo × expr)) : tactic String :=
-  " ".intercalate <$> (sort_variable_list l).mmap format_variable
+  " ".intercalate <$> (sort_variable_list l).mapM format_variable
 #align where.compile_variable_list where.compile_variable_list
 
 /-- Strips the namespace prefix `ns` from `n`. -/

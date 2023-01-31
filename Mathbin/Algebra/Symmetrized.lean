@@ -76,7 +76,7 @@ theorem sym_comp_unsym : (sym : α → αˢʸᵐ) ∘ unsym = id :=
 #align sym_alg.sym_comp_unsym SymAlg.sym_comp_unsym
 
 @[simp]
-theorem unsym_comp_sym : (unsym : αˢʸᵐ → α) ∘ Sym = id :=
+theorem unsym_comp_sym : (unsym : αˢʸᵐ → α) ∘ sym = id :=
   rfl
 #align sym_alg.unsym_comp_sym SymAlg.unsym_comp_sym
 
@@ -86,7 +86,7 @@ theorem sym_symm : (@sym α).symm = unsym :=
 #align sym_alg.sym_symm SymAlg.sym_symm
 
 @[simp]
-theorem unsym_symm : (@unsym α).symm = Sym :=
+theorem unsym_symm : (@unsym α).symm = sym :=
   rfl
 #align sym_alg.unsym_symm SymAlg.unsym_symm
 
@@ -153,7 +153,7 @@ instance [Add α] [Mul α] [One α] [Invertible (2 : α)] : Mul αˢʸᵐ
     where mul a b := sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a))
 
 @[to_additive]
-instance [Inv α] : Inv αˢʸᵐ where inv a := Sym <| (unsym a)⁻¹
+instance [Inv α] : Inv αˢʸᵐ where inv a := sym <| (unsym a)⁻¹
 
 instance (R : Type _) [SMul R α] : SMul R αˢʸᵐ where smul r a := sym (r • unsym a)
 
@@ -280,9 +280,9 @@ instance {R : Type _} [Semiring R] [AddCommMonoid α] [Module R α] : Module R �
 instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] : Invertible (sym a)
     where
   invOf := sym (⅟ a)
-  inv_of_mul_self := by
+  invOf_mul_self := by
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
-  mul_inv_of_self := by
+  mul_invOf_self := by
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
 
 @[simp]
@@ -340,7 +340,7 @@ instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ
   lmul_comm_rmul_rmul a b :=
     by
     -- Rearrange LHS
-    have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.inv_of_left.Eq
+    have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.invOf_left.Eq
     rw [mul_def, mul_def a b, unsym_sym, ← mul_assoc, ← commute_half_left (unsym (a * a)),
       mul_assoc, mul_assoc, ← mul_add, ← mul_assoc, add_mul, mul_add (unsym (a * a)), ← add_assoc, ←
       mul_assoc, ← mul_assoc]

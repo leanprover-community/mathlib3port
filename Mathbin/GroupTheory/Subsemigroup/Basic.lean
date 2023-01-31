@@ -361,7 +361,7 @@ instance : CompleteLattice (Subsemigroup M) :=
     top := ⊤
     le_top := fun S x hx => mem_top x
     inf := (· ⊓ ·)
-    inf := InfSet.infₛ
+    infₛ := InfSet.infₛ
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
     inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
@@ -396,7 +396,7 @@ def closure (s : Set M) : Subsemigroup M :=
 #print Subsemigroup.mem_closure /-
 @[to_additive]
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Subsemigroup M, s ⊆ S → x ∈ S :=
-  mem_Inf
+  mem_infₛ
 #align subsemigroup.mem_closure Subsemigroup.mem_closure
 #align add_subsemigroup.mem_closure AddSubsemigroup.mem_closure
 -/
@@ -589,7 +589,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.closure_Union Subsemigroup.closure_unionᵢₓ'. -/
 @[to_additive]
 theorem closure_unionᵢ {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Subsemigroup.gi M).gc.l_supr
+  (Subsemigroup.gi M).gc.l_supᵢ
 #align subsemigroup.closure_Union Subsemigroup.closure_unionᵢ
 #align add_subsemigroup.closure_Union AddSubsemigroup.closure_unionᵢ
 
@@ -662,7 +662,7 @@ Case conversion may be inaccurate. Consider using '#align mul_hom.eq_on_mclosure
 @[to_additive
       "If two add homomorphisms are equal on a set,\nthen they are equal on its additive subsemigroup closure."]
 theorem eqOn_closure {f g : M →ₙ* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
-  show closure s ≤ f.eqMlocus g from closure_le.2 h
+  show closure s ≤ f.eqLocus g from closure_le.2 h
 #align mul_hom.eq_on_mclosure MulHom.eqOn_closure
 #align add_hom.eq_on_mclosure AddHom.eqOn_closure
 
@@ -687,7 +687,7 @@ Case conversion may be inaccurate. Consider using '#align mul_hom.eq_of_eq_on_md
 @[to_additive]
 theorem eq_of_eqOn_dense {s : Set M} (hs : closure s = ⊤) {f g : M →ₙ* N} (h : s.EqOn f g) :
     f = g :=
-  eq_of_eq_on_mtop <| hs ▸ eqOn_closure h
+  eq_of_eqOn_top <| hs ▸ eqOn_closure h
 #align mul_hom.eq_of_eq_on_mdense MulHom.eq_of_eqOn_dense
 #align add_hom.eq_of_eq_on_mdense AddHom.eq_of_eqOn_dense
 

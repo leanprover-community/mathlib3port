@@ -58,7 +58,7 @@ theorem LocallyConvexSpace.ofBases {ι : Type _} (b : E → ι → Set E) (p : E
     (hbasis : ∀ x : E, (𝓝 x).HasBasis (p x) (b x)) (hconvex : ∀ x i, p x i → Convex 𝕜 (b x i)) :
     LocallyConvexSpace 𝕜 E :=
   ⟨fun x =>
-    (hbasis x).to_has_basis
+    (hbasis x).to_hasBasis
       (fun i hi => ⟨b x i, ⟨⟨(hbasis x).mem_of_mem hi, hconvex x i hi⟩, le_refl (b x i)⟩⟩)
       fun s hs =>
       ⟨(hbasis x).index s hs.1, ⟨(hbasis x).property_index hs.1, (hbasis x).set_index_subset hs.1⟩⟩⟩
@@ -119,7 +119,7 @@ variable (𝕜 E : Type _) [LinearOrderedField 𝕜] [AddCommGroup E] [Module �
 
 theorem LocallyConvexSpace.convex_open_basis_zero [LocallyConvexSpace 𝕜 E] :
     (𝓝 0 : Filter E).HasBasis (fun s => (0 : E) ∈ s ∧ IsOpen s ∧ Convex 𝕜 s) id :=
-  (LocallyConvexSpace.convex_basis_zero 𝕜 E).to_has_basis
+  (LocallyConvexSpace.convex_basis_zero 𝕜 E).to_hasBasis
     (fun s hs =>
       ⟨interior s, ⟨mem_interior_iff_mem_nhds.mpr hs.1, isOpen_interior, hs.2.interior⟩,
         interior_subset⟩)

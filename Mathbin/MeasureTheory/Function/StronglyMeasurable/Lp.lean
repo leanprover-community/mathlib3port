@@ -51,7 +51,7 @@ theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ)
   refine' ⟨fs, _, _⟩
   · have h_fs_Lp : ∀ n, mem_ℒp (fs n) p μ :=
       simple_func.mem_ℒp_approx_on_range hf_meas.measurable hf
-    exact fun n => (fs n).measure_support_lt_top_of_mem_ℒp (h_fs_Lp n) hp_ne_zero hp_ne_top
+    exact fun n => (fs n).measure_support_lt_top_of_memℒp (h_fs_Lp n) hp_ne_zero hp_ne_top
   · intro x
     apply simple_func.tendsto_approx_on
     apply subset_closure
@@ -63,7 +63,7 @@ theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p �
   ⟨hf.AeStronglyMeasurable.mk f,
     ((memℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp
           hf).finStronglyMeasurableOfStronglyMeasurable
-      hf.AeStronglyMeasurable.strongly_measurable_mk hp_ne_zero hp_ne_top,
+      hf.AeStronglyMeasurable.stronglyMeasurable_mk hp_ne_zero hp_ne_top,
     hf.AeStronglyMeasurable.ae_eq_mk⟩
 #align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aeFinStronglyMeasurable
 

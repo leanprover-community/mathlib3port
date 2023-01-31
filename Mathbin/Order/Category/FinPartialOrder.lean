@@ -107,8 +107,8 @@ def dual : FinPartialOrder ⥤ FinPartialOrder
 @[simps Functor inverse]
 def dualEquiv : FinPartialOrder ≌ FinPartialOrder :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align FinPartialOrder.dual_equiv FinPartialOrder.dualEquiv
 
 end FinPartialOrder

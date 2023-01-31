@@ -775,7 +775,7 @@ protected theorem uniformEmbedding : UniformEmbedding (coe : lp.simpleFunc E p �
 #align measure_theory.Lp.simple_func.uniform_embedding MeasureTheory.lp.simpleFunc.uniformEmbedding
 
 protected theorem uniformInducing : UniformInducing (coe : lp.simpleFunc E p μ → lp E p μ) :=
-  simpleFunc.uniformEmbedding.to_uniform_inducing
+  simpleFunc.uniformEmbedding.to_uniformInducing
 #align measure_theory.Lp.simple_func.uniform_inducing MeasureTheory.lp.simpleFunc.uniformInducing
 
 protected theorem denseEmbedding (hp_ne_top : p ≠ ∞) :
@@ -787,7 +787,7 @@ protected theorem denseEmbedding (hp_ne_top : p ≠ ∞) :
   rw [mem_closure_iff_seq_limit]
   have hfi' : mem_ℒp f p μ := Lp.mem_ℒp f
   haveI : separable_space (range f ∪ {0} : Set E) :=
-    (Lp.strongly_measurable f).separable_space_range_union_singleton
+    (Lp.strongly_measurable f).separableSpace_range_union_singleton
   refine'
     ⟨fun n =>
       ↑(to_Lp
@@ -802,7 +802,7 @@ protected theorem denseEmbedding (hp_ne_top : p ≠ ∞) :
 
 protected theorem denseInducing (hp_ne_top : p ≠ ∞) :
     DenseInducing (coe : lp.simpleFunc E p μ → lp E p μ) :=
-  (simpleFunc.denseEmbedding hp_ne_top).to_dense_inducing
+  (simpleFunc.denseEmbedding hp_ne_top).to_denseInducing
 #align measure_theory.Lp.simple_func.dense_inducing MeasureTheory.lp.simpleFunc.denseInducing
 
 protected theorem denseRange (hp_ne_top : p ≠ ∞) :
@@ -921,7 +921,7 @@ theorem denseRange_coeSimpleFuncNonnegToLpNonneg [hp : Fact (1 ≤ p)] (hp_ne_to
     apply is_separable.separable_space
     apply is_separable.mono _ (Set.inter_subset_left _ _)
     exact
-      (Lp.strongly_measurable (g : Lp G p μ)).is_separable_range.union
+      (Lp.strongly_measurable (g : Lp G p μ)).isSeparable_range.union
         (finite_singleton _).IsSeparable
   have g_meas : Measurable g := (Lp.strongly_measurable (g : Lp G p μ)).Measurable
   let x n := simple_func.approx_on g g_meas ((range g ∪ {0}) ∩ { y | 0 ≤ y }) 0 zero_mem n
@@ -1046,7 +1046,7 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
         (this (Lp.simple_func.to_simple_func f) (Lp.simple_func.mem_ℒp f))
   have : ∀ f : Lp E p μ, P f := fun f =>
     (Lp.simple_func.dense_range hp_ne_top).inductionOn f h_closed this
-  exact fun f hf => h_ae hf.coe_fn_to_Lp (Lp.mem_ℒp _) (this (hf.toLp f))
+  exact fun f hf => h_ae hf.coeFn_toLp (Lp.mem_ℒp _) (this (hf.toLp f))
 #align measure_theory.mem_ℒp.induction MeasureTheory.Memℒp.induction
 
 section Integrable

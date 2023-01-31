@@ -91,7 +91,7 @@ def fromKleisli : Kleisli T ⥤ C where
 def adj : toKleisli T ⊣ fromKleisli T :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y => Equiv.refl (X ⟶ T.obj Y)
-      hom_equiv_naturality_left_symm' := fun X Y Z f g =>
+      homEquiv_naturality_left_symm' := fun X Y Z f g =>
         by
         unfold_projs
         dsimp
@@ -171,7 +171,7 @@ def fromCokleisli : Cokleisli U ⥤ C where
 def adj : fromCokleisli U ⊣ toCokleisli U :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y => Equiv.refl (U.obj X ⟶ Y)
-      hom_equiv_naturality_right' := fun X Y Z f g =>
+      homEquiv_naturality_right' := fun X Y Z f g =>
         by
         unfold_projs; dsimp; erw [← category.assoc (U.map f), U.ε.naturality]; dsimp
         simp only [← category.assoc, comonad.left_counit, category.id_comp] }

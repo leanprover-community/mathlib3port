@@ -110,8 +110,8 @@ theorem mem_invSubmonoid_iff_exists_mk' (x : S) : x ∈ invSubmonoid M S ↔ ∃
   by
   simp_rw [← to_inv_submonoid_eq_mk']
   exact
-    ⟨fun h => ⟨_, congr_arg Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).some_spec⟩,
-      fun h => h.some_spec ▸ (to_inv_submonoid M S h.some).Prop⟩
+    ⟨fun h => ⟨_, congr_arg Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).choose_spec⟩,
+      fun h => h.choose_spec ▸ (to_inv_submonoid M S h.some).Prop⟩
 #align is_localization.mem_inv_submonoid_iff_exists_mk' IsLocalization.mem_invSubmonoid_iff_exists_mk'
 
 variable (S)

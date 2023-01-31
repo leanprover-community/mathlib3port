@@ -73,7 +73,7 @@ unsafe def step1 (md : Transparency) (unify : Bool) (e : expr)
     let J ← infer_type j
     let k ← mk_local' n BinderInfo.default J
     let e ← kreplace e j k md unify
-    let ks ← ks.mmap fun k' => kreplace k' j k md unify
+    let ks ← ks.mapM fun k' => kreplace k' j k md unify
     pure (e, k :: ks)
   to_generalize go (e, [])
 #align tactic.generalizes.step1 tactic.generalizes.step1
@@ -90,7 +90,7 @@ equation).
 -/
 unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr)) :
     tactic (List (expr × expr)) :=
-  to_generalize.mmap fun ⟨n, j, k⟩ => do
+  to_generalize.mapM fun ⟨n, j, k⟩ => do
     let J ← infer_type j
     let K ← infer_type k
     let sort u ← infer_type K |
@@ -154,7 +154,7 @@ unsafe def generalizes' (args : List (Name × Option Name × expr)) (md := semir
   let stage1_args := args.map fun ⟨n, _, j⟩ => (n, j)
   let ⟨e, ks⟩ ← step1 md unify tgt stage1_args
   let stage2_args : List (Option (Name × expr × expr)) :=
-    args.map₂ (fun ⟨_, eq_name, j⟩ k => eq_name.map fun eq_name => (eq_name, j, k)) ks
+    args.zipWith (fun ⟨_, eq_name, j⟩ k => eq_name.map fun eq_name => (eq_name, j, k)) ks
   let stage2_args := stage2_args.reduceOption
   let eqs_and_proofs ← step2 md stage2_args
   let eqs := eqs_and_proofs.map Prod.fst
@@ -240,7 +240,7 @@ will then raise an error.
 unsafe def generalizes (args : parse generalizes_args_parser) : tactic Unit :=
   propagate_tags do
     let args ←
-      args.mmap fun ⟨arg_name, hyp_name, arg⟩ => do
+      args.mapM fun ⟨arg_name, hyp_name, arg⟩ => do
           let arg ← to_expr arg
           pure (arg_name, hyp_name, arg)
     generalizes_intro args

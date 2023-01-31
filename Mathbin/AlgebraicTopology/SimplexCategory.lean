@@ -158,7 +158,7 @@ instance smallCategory : SmallCategory.{0} SimplexCategory
 
 /-- The constant morphism from [0]. -/
 def const (x : SimplexCategory) (i : Fin (x.len + 1)) : [0] ⟶ x :=
-  hom.mk <| ⟨fun _ => i, by tauto⟩
+  Hom.mk <| ⟨fun _ => i, by tauto⟩
 #align simplex_category.const SimplexCategory.const
 
 @[simp]
@@ -492,7 +492,7 @@ instance : Faithful skeletalFunctor.{v}
     rw [h]
 
 instance : EssSurj skeletalFunctor.{v}
-    where mem_ess_image X :=
+    where mem_essImage X :=
     ⟨mk (Fintype.card X - 1 : ℕ),
       ⟨by
         have aux : Fintype.card X = Fintype.card X - 1 + 1 :=
@@ -896,10 +896,10 @@ instance : HasStrongEpiMonoFactorisations SimplexCategory :=
     SimplexCategory.skeletalEquivalence.{0}.inverse
 
 instance : HasStrongEpiImages SimplexCategory :=
-  limits.has_strong_epi_images_of_has_strong_epi_mono_factorisations
+  Limits.hasStrongEpiImages_of_hasStrongEpiMonoFactorisations
 
 instance (Δ Δ' : SimplexCategory) (θ : Δ ⟶ Δ') : Epi (factorThruImage θ) :=
-  strong_epi.epi
+  StrongEpi.epi
 
 theorem image_eq {Δ Δ' Δ'' : SimplexCategory} {φ : Δ ⟶ Δ''} {e : Δ ⟶ Δ'} [Epi e] {i : Δ' ⟶ Δ''}
     [Mono i] (fac : e ≫ i = φ) : image φ = Δ' :=

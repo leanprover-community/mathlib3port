@@ -59,10 +59,10 @@ def SimpleGraph.structure (G : SimpleGraph V) : Language.graph.Structure V :=
 namespace Graph
 
 instance : IsRelational Language.graph :=
-  language.is_relational_mk₂
+  Language.isRelational_mk₂
 
 instance : Subsingleton (Language.graph.Relations n) :=
-  language.subsingleton_mk₂_relations
+  Language.subsingleton_mk₂_relations
 
 end Graph
 
@@ -74,7 +74,7 @@ protected def Theory.simpleGraph : Language.graph.Theory :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem Theory.simpleGraph_model_iff [Language.graph.Structure V] :
-    V ⊨ Theory.simple_graph ↔
+    V ⊨ Theory.simpleGraph ↔
       (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧
         Symmetric fun x y : V => RelMap adj ![x, y] :=
   by simp [Theory.simple_graph]
@@ -91,7 +91,7 @@ variable (V)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Any model of the theory of simple graphs represents a simple graph. -/
 @[simps]
-def simpleGraphOfStructure [Language.graph.Structure V] [V ⊨ Theory.simple_graph] : SimpleGraph V
+def simpleGraphOfStructure [Language.graph.Structure V] [V ⊨ Theory.simpleGraph] : SimpleGraph V
     where
   Adj x y := RelMap adj ![x, y]
   symm :=
@@ -115,8 +115,8 @@ theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V]
-    [V ⊨ Theory.simple_graph] : (simpleGraphOfStructure V).Structure = S :=
+theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨ Theory.simpleGraph] :
+    (simpleGraphOfStructure V).Structure = S :=
   by
   ext (n f xs)
   · exact (is_relational.empty_functions n).elim f

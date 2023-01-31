@@ -472,8 +472,8 @@ instance [AddMonoidWithOne R] [AddMonoid M] : AddMonoidWithOne (tsze R M) :=
   { TrivSqZeroExt.addMonoid,
     TrivSqZeroExt.hasOne with
     natCast := fun n => inl n
-    nat_cast_zero := by simp [Nat.cast]
-    nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
+    natCast_zero := by simp [Nat.cast]
+    natCast_succ := fun _ => by ext <;> simp [Nat.cast] }
 
 @[simp]
 theorem fst_nat_cast [AddMonoidWithOne R] [AddMonoid M] (n : ℕ) : (n : tsze R M).fst = n :=
@@ -494,8 +494,8 @@ instance [AddGroupWithOne R] [AddGroup M] : AddGroupWithOne (tsze R M) :=
   { TrivSqZeroExt.addGroup,
     TrivSqZeroExt.addMonoidWithOne with
     intCast := fun z => inl z
-    int_cast_of_nat := fun n => ext (Int.cast_ofNat _) rfl
-    int_cast_neg_succ_of_nat := fun n => ext (Int.cast_negSucc _) neg_zero.symm }
+    intCast_ofNat := fun n => ext (Int.cast_ofNat _) rfl
+    intCast_negSucc := fun n => ext (Int.cast_negSucc _) neg_zero.symm }
 
 @[simp]
 theorem fst_int_cast [AddGroupWithOne R] [AddGroup M] (z : ℤ) : (z : tsze R M).fst = z :=
@@ -567,8 +567,8 @@ instance [CommMonoid R] [AddMonoid M] [DistribMulAction R M] : Monoid (tsze R M)
             x.1 • (y.1 • z.2 + z.1 • y.2) + (y.1 * z.1) • x.2
           by simp_rw [smul_add, ← mul_smul, add_assoc, mul_comm]
     npow := fun n x => x ^ n
-    npow_zero' := fun x => ext (pow_zero x.fst) (zero_smul _ _)
-    npow_succ' := fun n x =>
+    npow_zero := fun x => ext (pow_zero x.fst) (zero_smul _ _)
+    npow_succ := fun n x =>
       ext (pow_succ _ _)
         (by
           dsimp
@@ -662,7 +662,7 @@ theorem algHom_ext {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A�
 @[ext]
 theorem algHom_ext' {A} [Semiring A] [Algebra R A] ⦃f g : tsze R M →ₐ[R] A⦄
     (h : f.toLinearMap.comp (inrHom R M) = g.toLinearMap.comp (inrHom R M)) : f = g :=
-  alg_hom_ext <| LinearMap.congr_fun h
+  algHom_ext <| LinearMap.congr_fun h
 #align triv_sq_zero_ext.alg_hom_ext' TrivSqZeroExt.algHom_ext'
 
 variable {A : Type _} [Semiring A] [Algebra R A]
@@ -697,7 +697,7 @@ theorem liftAux_comp_inrHom (f : M →ₗ[R] A) (hf : ∀ x y, f x * f y = 0) :
 -- When applied to `inr` itself, `lift_aux` is the identity.
 @[simp]
 theorem liftAux_inrHom : liftAux (inrHom R M) (inr_mul_inr R) = AlgHom.id R (tsze R M) :=
-  alg_hom_ext' <| liftAux_comp_inrHom _ _
+  algHom_ext' <| liftAux_comp_inrHom _ _
 #align triv_sq_zero_ext.lift_aux_inr_hom TrivSqZeroExt.liftAux_inrHom
 
 /-- A universal property of the trivial square-zero extension, providing a unique
@@ -713,7 +713,7 @@ def lift : { f : M →ₗ[R] A // ∀ x y, f x * f y = 0 } ≃ (tsze R M →ₐ[
     ⟨F.toLinearMap.comp (inrHom R M), fun x y =>
       (F.map_mul _ _).symm.trans <| (F.congr_arg <| inr_mul_inr _ _ _).trans F.map_zero⟩
   left_inv f := Subtype.ext <| liftAux_comp_inrHom _ _
-  right_inv F := alg_hom_ext' <| liftAux_comp_inrHom _ _
+  right_inv F := algHom_ext' <| liftAux_comp_inrHom _ _
 #align triv_sq_zero_ext.lift TrivSqZeroExt.lift
 
 end Algebra

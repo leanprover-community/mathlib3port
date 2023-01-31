@@ -65,7 +65,7 @@ open Finset
 /-- An interval of length `a` filtered over a periodic predicate of period `a` has cardinality
 equal to the number naturals below `a` for which `p a` is true. -/
 theorem filter_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p]
-    (pp : Periodic p a) : ((Ico n (n + a)).filter p).card = a.count p :=
+    (pp : Periodic p a) : ((Ico n (n + a)).filterₓ p).card = a.count p :=
   filter_multiset_Ico_card_eq_of_periodic n a p pp
 #align nat.filter_Ico_card_eq_of_periodic Nat.filter_Ico_card_eq_of_periodic
 

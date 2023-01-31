@@ -228,7 +228,7 @@ theorem IsBaseChange.alg_hom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f
 
 theorem IsBaseChange.alg_hom_ext' [Module R Q] [IsScalarTower R S Q] (g₁ g₂ : N →ₗ[S] Q)
     (e : (g₁.restrictScalars R).comp f = (g₂.restrictScalars R).comp f) : g₁ = g₂ :=
-  h.alg_hom_ext g₁ g₂ (LinearMap.congr_fun e)
+  h.algHom_ext g₁ g₂ (LinearMap.congr_fun e)
 #align is_base_change.alg_hom_ext' IsBaseChange.alg_hom_ext'
 
 variable (R M N S)

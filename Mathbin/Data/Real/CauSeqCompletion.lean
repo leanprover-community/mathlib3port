@@ -424,7 +424,7 @@ noncomputable instance : DivisionRing (Cauchy abv) :=
     exists_pair_ne := ⟨0, 1, zero_ne_one⟩
     inv_zero := inv_zero
     ratCast := fun q => ofRat q
-    rat_cast_mk := fun n d hd hnd => by
+    ratCast_mk := fun n d hd hnd => by
       rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
 
 /- warning: cau_seq.completion.of_rat_div -> CauSeq.Completion.ofRat_div is a dubious translation:
@@ -495,7 +495,7 @@ but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} α] {β : Type.{u1}} [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] [_inst_4 : CauSeq.IsComplete.{u2, u1} α _inst_1 β _inst_2 abv _inst_3] (s : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv), Exists.{succ u1} β (fun (b : β) => HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) s (CauSeq.const.{u2, u1} α β _inst_1 _inst_2 abv _inst_3 b))
 Case conversion may be inaccurate. Consider using '#align cau_seq.complete CauSeq.completeₓ'. -/
 theorem complete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b :=
-  is_complete.is_complete
+  IsComplete.isComplete
 #align cau_seq.complete CauSeq.complete
 
 #print CauSeq.lim /-

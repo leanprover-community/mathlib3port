@@ -59,13 +59,13 @@ open MulOpposite
 /-- Notation typeclass (with no default notation!) for an algebraic structure with a star operation.
 -/
 class Star (R : Type u) where
-  star : R → R
+  unit : R → R
 #align has_star Star
 -/
 
 variable {R : Type u}
 
-export Star (star)
+export Star (unit)
 
 /-- A star operation (e.g. complex conjugate).
 -/
@@ -86,7 +86,7 @@ variable {S : Type u} [Star R] [SetLike S R] [hS : StarMemClass S R] (s : S)
 
 include hS
 
-instance : Star s where star r := ⟨star (r : R), star_mem r.Prop⟩
+instance : Star s where unit r := ⟨star (r : R), star_mem r.Prop⟩
 
 end StarMemClass
 
@@ -268,7 +268,7 @@ See note [reducible non-instances].
 @[reducible]
 def starSemigroupOfComm {R : Type _} [CommMonoid R] : StarSemigroup R
     where
-  star := id
+  unit := id
   star_involutive x := rfl
   star_mul := mul_comm
 #align star_semigroup_of_comm starSemigroupOfComm
@@ -507,7 +507,7 @@ theorem starRingEnd_self_apply [CommSemiring R] [StarRing R] (x : R) :
 instance RingHom.involutiveStar {S : Type _} [NonAssocSemiring S] [CommSemiring R] [StarRing R] :
     InvolutiveStar (S →+* R)
     where
-  toHasStar := { star := fun f => RingHom.comp (starRingEnd R) f }
+  toHasStar := { unit := fun f => RingHom.comp (starRingEnd R) f }
   star_involutive := by
     intro
     ext
@@ -616,7 +616,7 @@ See note [reducible non-instances].
 @[reducible]
 def starRingOfComm {R : Type _} [CommSemiring R] : StarRing R :=
   { starSemigroupOfComm with
-    star := id
+    unit := id
     star_add := fun x y => rfl }
 #align star_ring_of_comm starRingOfComm
 -/
@@ -784,7 +784,7 @@ variable [Monoid R] [StarSemigroup R]
 
 instance : StarSemigroup Rˣ
     where
-  star u :=
+  unit u :=
     { val := star u
       inv := star ↑u⁻¹
       val_inv := (star_mul _ _).symm.trans <| (congr_arg star u.inv_val).trans <| star_one _
@@ -828,7 +828,7 @@ theorem IsUnit.star [Monoid R] [StarSemigroup R] {a : R} : IsUnit a → IsUnit (
 #print isUnit_star /-
 @[simp]
 theorem isUnit_star [Monoid R] [StarSemigroup R] {a : R} : IsUnit (star a) ↔ IsUnit a :=
-  ⟨fun h => star_star a ▸ h.star, IsUnit.star⟩
+  ⟨fun h => star_star a ▸ h.unit, IsUnit.star⟩
 #align is_unit_star isUnit_star
 -/
 
@@ -852,8 +852,8 @@ Case conversion may be inaccurate. Consider using '#align invertible.star Invert
 instance Invertible.star {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r] :
     Invertible (star r) where
   invOf := star (⅟ r)
-  inv_of_mul_self := by rw [← star_mul, mul_invOf_self, star_one]
-  mul_inv_of_self := by rw [← star_mul, invOf_mul_self, star_one]
+  invOf_mul_self := by rw [← star_mul, mul_invOf_self, star_one]
+  mul_invOf_self := by rw [← star_mul, invOf_mul_self, star_one]
 #align invertible.star Invertible.star
 
 /- warning: star_inv_of -> star_invOf is a dubious translation:
@@ -872,7 +872,7 @@ theorem star_invOf {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible
 namespace MulOpposite
 
 /-- The opposite type carries the same star operation. -/
-instance [Star R] : Star Rᵐᵒᵖ where star r := op (star r.unop)
+instance [Star R] : Star Rᵐᵒᵖ where unit r := op (star r.unop)
 
 #print MulOpposite.unop_star /-
 @[simp]

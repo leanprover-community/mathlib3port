@@ -476,7 +476,7 @@ theorem isAdjointPair_toBilin [DecidableEq n] :
 theorem Matrix.isAdjointPair_equiv' [DecidableEq n] (P : Matrix n n R₃) (h : IsUnit P) :
     (Pᵀ ⬝ J ⬝ P).IsAdjointPair (Pᵀ ⬝ J ⬝ P) A A' ↔ J.IsAdjointPair J (P ⬝ A ⬝ P⁻¹) (P ⬝ A' ⬝ P⁻¹) :=
   by
-  have h' : IsUnit P.det := P.is_unit_iff_is_unit_det.mp h
+  have h' : IsUnit P.det := P.isUnit_iff_isUnit_det.mp h
   let u := P.nonsing_inv_unit h'
   let v := Pᵀ.nonsingInvUnit (P.is_unit_det_transpose h')
   let x := Aᵀ * Pᵀ * J
@@ -568,7 +568,7 @@ theorem Matrix.Nondegenerate.toBilin' {M : Matrix ι ι R₃} (h : M.Nondegenera
 @[simp]
 theorem Matrix.nondegenerate_toBilin'_iff {M : Matrix ι ι R₃} :
     M.toBilin'.Nondegenerate ↔ M.Nondegenerate :=
-  ⟨fun h v hv => h v fun w => (M.to_bilin'_apply' _ _).trans <| hv w, Matrix.Nondegenerate.toBilin'⟩
+  ⟨fun h v hv => h v fun w => (M.toBilin'_apply' _ _).trans <| hv w, Matrix.Nondegenerate.toBilin'⟩
 #align matrix.nondegenerate_to_bilin'_iff Matrix.nondegenerate_toBilin'_iff
 
 theorem Matrix.Nondegenerate.toBilin {M : Matrix ι ι R₃} (h : M.Nondegenerate) (b : Basis ι R₃ M₃) :

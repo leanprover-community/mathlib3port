@@ -35,7 +35,7 @@ def BoolRing :=
 namespace BoolRing
 
 instance : CoeSort BoolRing (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : BoolRing) : BooleanRing X :=
   X.str

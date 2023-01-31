@@ -395,14 +395,14 @@ theorem orderOf_dvd_lcm_mul : orderOf y ∣ Nat.lcm (orderOf x) (orderOf (x * y)
     rw [← one_mul y, ← pow_orderOf_eq_one x, ← succ_pred_eq_of_pos (Nat.pos_of_ne_zero h0),
       pow_succ', mul_assoc]
   exact
-    (((Commute.refl x).mul_right h).pow_left _).order_of_mul_dvd_lcm.trans
+    (((Commute.refl x).mul_right h).pow_leftₓ _).orderOf_mul_dvd_lcm.trans
       (lcm_dvd_iff.2 ⟨trans (orderOf_pow_dvd _) (dvd_lcm_left _ _), dvd_lcm_right _ _⟩)
 #align commute.order_of_dvd_lcm_mul Commute.orderOf_dvd_lcm_mul
 #align add_commute.order_of_dvd_lcm_add AddCommute.orderOf_dvd_lcm_add
 
 @[to_additive add_order_of_add_dvd_mul_add_order_of]
 theorem orderOf_mul_dvd_mul_orderOf : orderOf (x * y) ∣ orderOf x * orderOf y :=
-  dvd_trans h.order_of_mul_dvd_lcm (lcm_dvd_mul _ _)
+  dvd_trans h.orderOf_mul_dvd_lcm (lcm_dvd_mul _ _)
 #align commute.order_of_mul_dvd_mul_order_of Commute.orderOf_mul_dvd_mul_orderOf
 #align add_commute.add_order_of_add_dvd_mul_add_order_of AddCommute.add_orderOf_add_dvd_mul_add_orderOf
 
@@ -419,7 +419,7 @@ theorem orderOf_mul_eq_mul_orderOf_of_coprime (hco : (orderOf x).coprime (orderO
 @[to_additive "Commuting elements of finite additive order are closed under addition."]
 theorem isOfFinOrder_mul (hx : IsOfFinOrder x) (hy : IsOfFinOrder y) : IsOfFinOrder (x * y) :=
   orderOf_pos_iff.mp <|
-    pos_of_dvd_of_pos h.order_of_mul_dvd_mul_order_of <| mul_pos (orderOf_pos' hx) (orderOf_pos' hy)
+    pos_of_dvd_of_pos h.orderOf_mul_dvd_mul_orderOf <| mul_pos (orderOf_pos' hx) (orderOf_pos' hy)
 #align commute.is_of_fin_order_mul Commute.isOfFinOrder_mul
 #align add_commute.is_of_fin_order_add AddCommute.isOfFinOrder_add
 
@@ -678,7 +678,7 @@ variable [CommMonoid G]
 /-- Elements of finite order are closed under multiplication. -/
 @[to_additive "Elements of finite additive order are closed under addition."]
 theorem IsOfFinOrder.mul (hx : IsOfFinOrder x) (hy : IsOfFinOrder y) : IsOfFinOrder (x * y) :=
-  (Commute.all x y).is_of_fin_order_mul hx hy
+  (Commute.all x y).isOfFinOrder_mul hx hy
 #align is_of_fin_order.mul IsOfFinOrder.mul
 #align is_of_fin_add_order.add IsOfFinAddOrder.add
 
@@ -692,12 +692,12 @@ open BigOperators
 
 @[to_additive sum_card_add_orderOf_eq_card_nsmul_eq_zero]
 theorem sum_card_orderOf_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n ≠ 0) :
-    (∑ m in (Finset.range n.succ).filter (· ∣ n),
-        (Finset.univ.filter fun x : G => orderOf x = m).card) =
-      (Finset.univ.filter fun x : G => x ^ n = 1).card :=
+    (∑ m in (Finset.range n.succ).filterₓ (· ∣ n),
+        (Finset.univ.filterₓ fun x : G => orderOf x = m).card) =
+      (Finset.univ.filterₓ fun x : G => x ^ n = 1).card :=
   calc
-    (∑ m in (Finset.range n.succ).filter (· ∣ n),
-          (Finset.univ.filter fun x : G => orderOf x = m).card) =
+    (∑ m in (Finset.range n.succ).filterₓ (· ∣ n),
+          (Finset.univ.filterₓ fun x : G => orderOf x = m).card) =
         _ :=
       (Finset.card_bunionᵢ
           (by

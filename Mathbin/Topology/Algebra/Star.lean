@@ -73,12 +73,12 @@ theorem ContinuousAt.star (hf : ContinuousAt f x) : ContinuousAt (fun x => star 
 #align continuous_at.star ContinuousAt.star
 
 theorem ContinuousOn.star (hf : ContinuousOn f s) : ContinuousOn (fun x => star (f x)) s :=
-  continuous_star.comp_continuous_on hf
+  continuous_star.comp_continuousOn hf
 #align continuous_on.star ContinuousOn.star
 
 theorem ContinuousWithinAt.star (hf : ContinuousWithinAt f s x) :
     ContinuousWithinAt (fun x => star (f x)) s x :=
-  hf.star
+  hf.unit
 #align continuous_within_at.star ContinuousWithinAt.star
 
 /-- The star operation bundled as a continuous map. -/
@@ -100,11 +100,11 @@ instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, Star (C i)]
     where continuous_star := continuous_pi fun i => Continuous.star (continuous_apply i)
 
 instance [Star R] [TopologicalSpace R] [HasContinuousStar R] : HasContinuousStar Rᵐᵒᵖ :=
-  ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.star⟩
+  ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.unit⟩
 
 instance [Monoid R] [StarSemigroup R] [TopologicalSpace R] [HasContinuousStar R] :
     HasContinuousStar Rˣ :=
-  ⟨continuous_induced_rng.2 Units.continuous_embedProduct.star⟩
+  ⟨continuous_induced_rng.2 Units.continuous_embedProduct.unit⟩
 
 end Instances
 

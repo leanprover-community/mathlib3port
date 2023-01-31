@@ -82,7 +82,7 @@ def addCommMonoidHomOfHasBinaryBiproducts : AddCommMonoid (X ⟶ Y)
     where
   add := (· +ᵣ ·)
   add_assoc :=
-    (EckmannHilton.mul_assoc (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).assoc
+    (EckmannHilton.mul_assoc (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).and_assoc
   zero := 0
   zero_add := (isUnital_rightAdd X Y).left_id
   add_zero := (isUnital_rightAdd X Y).right_id

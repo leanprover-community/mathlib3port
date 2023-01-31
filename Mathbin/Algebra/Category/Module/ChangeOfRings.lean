@@ -90,7 +90,7 @@ theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring
 
 instance (priority := 100) sMulCommClass_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
     (f : R →+* S) (M : Type v) [AddCommGroup M] [Module S M] :
-    @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toHasSmul _
+    @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toSMul _
     where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
 #align category_theory.Module.smul_comm_class_mk CategoryTheory.Module.sMulCommClass_mk
 

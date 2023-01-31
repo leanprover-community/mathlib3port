@@ -96,7 +96,7 @@ theorem isClosed_topologicalClosure (s : StarSubalgebra R A) :
 instance {A : Type _} [UniformSpace A] [CompleteSpace A] [Semiring A] [StarRing A]
     [TopologicalSemiring A] [HasContinuousStar A] [Algebra R A] [StarModule R A]
     {S : StarSubalgebra R A} : CompleteSpace S.topologicalClosure :=
-  isClosed_closure.complete_space_coe
+  isClosed_closure.completeSpace_coe
 
 theorem topologicalClosure_minimal {s t : StarSubalgebra R A} (h : s ≤ t)
     (ht : IsClosed (t : Set A)) : s.topologicalClosure ≤ t :=
@@ -210,7 +210,7 @@ protected theorem isClosed (x : A) : IsClosed (elementalStarAlgebra R x : Set A)
 instance {A : Type _} [UniformSpace A] [CompleteSpace A] [Semiring A] [StarRing A]
     [TopologicalSemiring A] [HasContinuousStar A] [Algebra R A] [StarModule R A] (x : A) :
     CompleteSpace (elementalStarAlgebra R x) :=
-  isClosed_closure.complete_space_coe
+  isClosed_closure.completeSpace_coe
 
 theorem le_of_isClosed_of_mem {S : StarSubalgebra R A} (hS : IsClosed (S : Set A)) {x : A}
     (hx : x ∈ S) : elementalStarAlgebra R x ≤ S :=

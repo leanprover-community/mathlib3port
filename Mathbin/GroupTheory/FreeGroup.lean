@@ -103,7 +103,7 @@ def Red : List (α × Bool) → List (α × Bool) → Prop :=
 #print FreeGroup.Red.refl /-
 @[refl, to_additive]
 theorem Red.refl : Red L L :=
-  refl_trans_gen.refl
+  ReflTransGen.refl
 #align free_group.red.refl FreeGroup.Red.refl
 #align free_add_group.red.refl FreeAddGroup.Red.refl
 -/
@@ -111,7 +111,7 @@ theorem Red.refl : Red L L :=
 #print FreeGroup.Red.trans /-
 @[trans, to_additive]
 theorem Red.trans : Red L₁ L₂ → Red L₂ L₃ → Red L₁ L₃ :=
-  refl_trans_gen.trans
+  ReflTransGen.trans
 #align free_group.red.trans FreeGroup.Red.trans
 #align free_add_group.red.trans FreeAddGroup.Red.trans
 -/
@@ -270,7 +270,7 @@ theorem Step.diamond :
 #print FreeGroup.Red.Step.to_red /-
 @[to_additive]
 theorem Step.to_red : Step L₁ L₂ → Red L₁ L₂ :=
-  refl_trans_gen.single
+  ReflTransGen.single
 #align free_group.red.step.to_red FreeGroup.Red.Step.to_red
 #align free_add_group.red.step.to_red FreeAddGroup.Red.Step.to_red
 -/
@@ -315,7 +315,7 @@ theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
         cases' p with a b
         rw [step.cons_left_iff] at h₁₂
         rcases h₁₂ with (⟨L, h₁₂, rfl⟩ | rfl)
-        · exact (ih rfl rfl).head h₁₂
+        · exact (ih rfl rfl).headI h₁₂
         · exact (cons_cons h).tail step.cons_bnot_rev)
     cons_cons
 #align free_group.red.cons_cons_iff FreeGroup.Red.cons_cons_iff
@@ -473,7 +473,7 @@ but is expected to have type
   forall {α : Type.{u1}} {L₁ : List.{u1} (Prod.{u1, 0} α Bool)} {L₂ : List.{u1} (Prod.{u1, 0} α Bool)}, (FreeGroup.Red.Step.{u1} α L₁ L₂) -> (LT.lt.{0} Nat instLTNat (SizeOf.sizeOf.{succ u1} (List.{u1} (Prod.{u1, 0} α Bool)) (List._sizeOf_inst.{u1} (Prod.{u1, 0} α Bool) (Prod._sizeOf_inst.{u1, 0} α Bool (instSizeOf.{succ u1} α) Bool._sizeOf_inst)) L₂) (SizeOf.sizeOf.{succ u1} (List.{u1} (Prod.{u1, 0} α Bool)) (List._sizeOf_inst.{u1} (Prod.{u1, 0} α Bool) (Prod._sizeOf_inst.{u1, 0} α Bool (instSizeOf.{succ u1} α) Bool._sizeOf_inst)) L₁))
 Case conversion may be inaccurate. Consider using '#align free_group.red.sizeof_of_step FreeGroup.Red.sizeof_of_stepₓ'. -/
 @[to_additive]
-theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L₂.sizeof < L₁.sizeof
+theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)}, Step L₁ L₂ → L₂.sizeOf < L₁.sizeOf
   | _, _, @step.bnot _ L1 L2 x b => by
     induction' L1 with hd tl ih
     case nil =>
@@ -516,7 +516,7 @@ end Red
 #print FreeGroup.equivalence_join_red /-
 @[to_additive]
 theorem equivalence_join_red : Equivalence (Join (@Red α)) :=
-  equivalence_join_refl_trans_gen fun a b c hab hac =>
+  equivalence_join_reflTransGen fun a b c hab hac =>
     match b, c, Red.Step.diamond hab hac rfl with
     | b, _, Or.inl rfl => ⟨b, by rfl, by rfl⟩
     | b, c, Or.inr ⟨d, hbd, hcd⟩ => ⟨d, ReflGen.single hbd, ReflTransGen.single hcd⟩
@@ -538,7 +538,7 @@ theorem eqvGen_step_iff_join_red : EqvGen Red.Step L₁ L₂ ↔ Join Red L₁ L
   Iff.intro
     (fun h =>
       have : EqvGen (Join Red) L₁ L₂ := h.mono fun a b => join_red_of_step
-      equivalence_join_red.eqv_gen_iff.1 this)
+      equivalence_join_red.eqvGen_iff.1 this)
     (join_of_equivalence (EqvGen.is_equivalence _) fun a b =>
       reflTransGen_of_equivalence (EqvGen.is_equivalence _) EqvGen.rel)
 #align free_group.eqv_gen_step_iff_join_red FreeGroup.eqvGen_step_iff_join_red
@@ -600,7 +600,7 @@ theorem quot_liftOn_mk (β : Type v) (f : List (α × Bool) → β)
 #print FreeGroup.quot_map_mk /-
 @[simp, to_additive]
 theorem quot_map_mk (β : Type v) (f : List (α × Bool) → List (β × Bool))
-    (H : (red.step ⇒ red.step) f f) : Quot.map f H (mk L) = mk (f L) :=
+    (H : (Red.Step ⇒ Red.Step) f f) : Quot.map f H (mk L) = mk (f L) :=
   rfl
 #align free_group.quot_map_mk FreeGroup.quot_map_mk
 #align free_add_group.quot_map_mk FreeAddGroup.quot_map_mk
@@ -1563,7 +1563,7 @@ theorem reduce.idem : reduce (reduce L) = reduce L :=
 #print FreeGroup.reduce.Step.eq /-
 @[to_additive]
 theorem reduce.Step.eq (H : Red.Step L₁ L₂) : reduce L₁ = reduce L₂ :=
-  let ⟨L₃, HR13, HR23⟩ := Red.church_rosser reduce.red (reduce.red.head H)
+  let ⟨L₃, HR13, HR23⟩ := Red.church_rosser reduce.red (reduce.red.headI H)
   (reduce.min HR13).trans (reduce.min HR23).symm
 #align free_group.reduce.step.eq FreeGroup.reduce.Step.eq
 #align free_add_group.reduce.step.eq FreeAddGroup.reduce.Step.eq
@@ -1758,20 +1758,20 @@ instance : DecidableEq (FreeGroup α) :=
 -- TODO @[to_additive] doesn't succeed, possibly due to a bug
 instance Red.decidableRel : DecidableRel (@Red α)
   | [], [] => isTrue Red.refl
-  | [], hd2 :: tl2 => is_false fun H => List.noConfusion (Red.nil_iff.1 H)
+  | [], hd2 :: tl2 => isFalse fun H => List.noConfusion (Red.nil_iff.1 H)
   | (x, b) :: tl, [] =>
     match red.decidable_rel tl [(x, not b)] with
-    | is_true H => is_true <| Red.trans (Red.cons_cons H) <| (@Red.Step.not _ [] [] _ _).to_red
-    | is_false H => is_false fun H2 => H <| Red.cons_nil_iff_singleton.1 H2
+    | is_true H => isTrue <| Red.trans (Red.cons_cons H) <| (@Red.Step.not _ [] [] _ _).to_red
+    | is_false H => isFalse fun H2 => H <| Red.cons_nil_iff_singleton.1 H2
   | (x1, b1) :: tl1, (x2, b2) :: tl2 =>
     if h : (x1, b1) = (x2, b2) then
       match red.decidable_rel tl1 tl2 with
-      | is_true H => is_true <| h ▸ Red.cons_cons H
-      | is_false H => is_false fun H2 => H <| h ▸ (Red.cons_cons_iff _).1 <| H2
+      | is_true H => isTrue <| h ▸ Red.cons_cons H
+      | is_false H => isFalse fun H2 => H <| h ▸ (Red.cons_cons_iff _).1 <| H2
     else
       match red.decidable_rel tl1 ((x1, not b1) :: (x2, b2) :: tl2) with
-      | is_true H => is_true <| (Red.cons_cons H).tail Red.Step.cons_not
-      | is_false H => is_false fun H2 => H <| Red.inv_of_red_of_ne h H2
+      | is_true H => isTrue <| (Red.cons_cons H).tail Red.Step.cons_not
+      | is_false H => isFalse fun H2 => H <| Red.inv_of_red_of_ne h H2
 #align free_group.red.decidable_rel FreeGroup.Red.decidableRel
 -/
 
@@ -1796,7 +1796,7 @@ theorem Red.enum.complete (H : Red L₁ L₂) : L₂ ∈ Red.enum L₁ :=
 
 instance : Fintype { L₂ // Red L₁ L₂ } :=
   Fintype.subtype (List.toFinset <| Red.enum L₁) fun L₂ =>
-    ⟨fun H => red.enum.sound <| List.mem_toFinset.1 H, fun H =>
+    ⟨fun H => Red.enum.sound <| List.mem_toFinset.1 H, fun H =>
       List.mem_toFinset.2 <| Red.enum.complete H⟩
 
 end Reduce

@@ -508,7 +508,7 @@ theorem LinearMap.toMatrix_apply (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
 
 theorem LinearMap.toMatrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
     (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
-  funext fun i => f.to_matrix_apply _ _ i j
+  funext fun i => f.toMatrix_apply _ _ i j
 #align linear_map.to_matrix_transpose_apply LinearMap.toMatrix_transpose_apply
 
 theorem LinearMap.toMatrix_apply' (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
@@ -674,7 +674,7 @@ theorem LinearMap.toMatrixAlgEquiv_apply (f : M₁ →ₗ[R] M₁) (i j : n) :
 
 theorem LinearMap.toMatrixAlgEquiv_transpose_apply (f : M₁ →ₗ[R] M₁) (j : n) :
     (LinearMap.toMatrixAlgEquiv v₁ f)ᵀ j = v₁.repr (f (v₁ j)) :=
-  funext fun i => f.to_matrix_apply _ _ i j
+  funext fun i => f.toMatrix_apply _ _ i j
 #align linear_map.to_matrix_alg_equiv_transpose_apply LinearMap.toMatrixAlgEquiv_transpose_apply
 
 theorem LinearMap.toMatrixAlgEquiv_apply' (f : M₁ →ₗ[R] M₁) (i j : n) :
@@ -820,7 +820,7 @@ theorem leftMulMatrix_eq_repr_mul (x : S) (i j) : leftMulMatrix b x i j = b.repr
 
 theorem leftMulMatrix_mulVec_repr (x y : S) :
     (leftMulMatrix b x).mulVec (b.repr y) = b.repr (x * y) :=
-  (LinearMap.mulLeft R x).to_matrix_mul_vec_repr b b y
+  (LinearMap.mulLeft R x).toMatrix_mulVec_repr b b y
 #align algebra.left_mul_matrix_mul_vec_repr Algebra.leftMulMatrix_mulVec_repr
 
 @[simp]

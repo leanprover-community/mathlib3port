@@ -147,9 +147,9 @@ fraction `generalized_continued_fraction.of`.
 
 /-- Shows that the integer parts of the continued fraction are at least one. -/
 theorem of_one_le_nth_part_denom {b : K}
-    (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) : 1 ≤ b :=
+    (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) : 1 ≤ b :=
   by
-  obtain ⟨gp_n, nth_s_eq, ⟨-⟩⟩ : ∃ gp_n, (of v).s.nth n = some gp_n ∧ gp_n.b = b;
+  obtain ⟨gp_n, nth_s_eq, ⟨-⟩⟩ : ∃ gp_n, (of v).s.get? n = some gp_n ∧ gp_n.b = b;
   exact exists_s_b_of_part_denom nth_part_denom_eq
   obtain ⟨ifp_n, succ_nth_stream_eq, ifp_n_b_eq_gp_n_b⟩ :
     ∃ ifp, int_fract_pair.stream v (n + 1) = some ifp ∧ (ifp.b : K) = gp_n.b
@@ -163,13 +163,13 @@ Shows that the partial numerators `aᵢ` of the continued fraction are equal to 
 denominators `bᵢ` correspond to integers.
 -/
 theorem of_part_num_eq_one_and_exists_int_part_denom_eq {gp : GeneralizedContinuedFraction.Pair K}
-    (nth_s_eq : (of v).s.nth n = some gp) : gp.a = 1 ∧ ∃ z : ℤ, gp.b = (z : K) :=
+    (nth_s_eq : (of v).s.get? n = some gp) : gp.a = 1 ∧ ∃ z : ℤ, gp.b = (z : K) :=
   by
   obtain ⟨ifp, stream_succ_nth_eq, -⟩ : ∃ ifp, int_fract_pair.stream v (n + 1) = some ifp ∧ _
   exact int_fract_pair.exists_succ_nth_stream_of_gcf_of_nth_eq_some nth_s_eq
   have : gp = ⟨1, ifp.b⟩ :=
     by
-    have : (of v).s.nth n = some ⟨1, ifp.b⟩ :=
+    have : (of v).s.get? n = some ⟨1, ifp.b⟩ :=
       nth_of_eq_some_of_succ_nth_int_fract_pair_stream stream_succ_nth_eq
     have : some gp = some ⟨1, ifp.b⟩ := by rwa [nth_s_eq] at this
     injection this
@@ -177,10 +177,10 @@ theorem of_part_num_eq_one_and_exists_int_part_denom_eq {gp : GeneralizedContinu
 #align generalized_continued_fraction.of_part_num_eq_one_and_exists_int_part_denom_eq GeneralizedContinuedFraction.of_part_num_eq_one_and_exists_int_part_denom_eq
 
 /-- Shows that the partial numerators `aᵢ` are equal to one. -/
-theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.nth n = some a) :
+theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.get? n = some a) :
     a = 1 :=
   by
-  obtain ⟨gp, nth_s_eq, gp_a_eq_a_n⟩ : ∃ gp, (of v).s.nth n = some gp ∧ gp.a = a
+  obtain ⟨gp, nth_s_eq, gp_a_eq_a_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.a = a
   exact exists_s_a_of_part_num nth_part_num_eq
   have : gp.a = 1 := (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).left
   rwa [gp_a_eq_a_n] at this
@@ -188,9 +188,9 @@ theorem of_part_num_eq_one {a : K} (nth_part_num_eq : (of v).partialNumerators.n
 
 /-- Shows that the partial denominators `bᵢ` correspond to an integer. -/
 theorem exists_int_eq_of_part_denom {b : K}
-    (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) : ∃ z : ℤ, b = (z : K) :=
+    (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) : ∃ z : ℤ, b = (z : K) :=
   by
-  obtain ⟨gp, nth_s_eq, gp_b_eq_b_n⟩ : ∃ gp, (of v).s.nth n = some gp ∧ gp.b = b
+  obtain ⟨gp, nth_s_eq, gp_b_eq_b_n⟩ : ∃ gp, (of v).s.get? n = some gp ∧ gp.b = b
   exact exists_s_b_of_part_denom nth_part_denom_eq
   have : ∃ z : ℤ, gp.b = (z : K) := (of_part_num_eq_one_and_exists_int_part_denom_eq nth_s_eq).right
   rwa [gp_b_eq_b_n] at this
@@ -300,10 +300,10 @@ theorem zero_le_of_denom : 0 ≤ (of v).denominators n :=
 #align generalized_continued_fraction.zero_le_of_denom GeneralizedContinuedFraction.zero_le_of_denom
 
 theorem le_of_succ_succ_nth_continuantsAux_b {b : K}
-    (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
+    (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) :
     b * ((of v).continuantsAux <| n + 1).b ≤ ((of v).continuantsAux <| n + 2).b :=
   by
-  obtain ⟨gp_n, nth_s_eq, rfl⟩ : ∃ gp_n, (of v).s.nth n = some gp_n ∧ gp_n.b = b
+  obtain ⟨gp_n, nth_s_eq, rfl⟩ : ∃ gp_n, (of v).s.get? n = some gp_n ∧ gp_n.b = b
   exact exists_s_b_of_part_denom nth_part_denom_eq
   simp [of_part_num_eq_one (part_num_eq_s_a nth_s_eq), zero_le_of_continuants_aux_b,
     GeneralizedContinuedFraction.continuantsAux_recurrence nth_s_eq rfl rfl]
@@ -312,7 +312,7 @@ theorem le_of_succ_succ_nth_continuantsAux_b {b : K}
 /-- Shows that `bₙ * Bₙ ≤ Bₙ₊₁`, where `bₙ` is the `n`th partial denominator and `Bₙ₊₁` and `Bₙ` are
 the `n + 1`th and `n`th denominator of the continued fraction. -/
 theorem le_of_succ_nth_denom {b : K}
-    (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
+    (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) :
     b * (of v).denominators n ≤ (of v).denominators (n + 1) :=
   by
   rw [denom_eq_conts_b, nth_cont_eq_succ_nth_cont_aux]
@@ -460,7 +460,7 @@ theorem sub_convergents_eq {ifp : IntFractPair K}
       · simp
       · have : int_fract_pair.stream v (n' + 1) ≠ none := by simp [stream_nth_eq]
         have : ¬g.terminated_at n' :=
-          (not_congr of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none).elimRight this
+          (not_congr of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none).right this
         exact Or.inr this
     have determinant_eq : pA * B - pB * A = (-1) ^ n :=
       determinant_aux n_eq_zero_or_not_terminated_at_pred_n
@@ -600,9 +600,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     solve_by_elim [mul_pos]
   · -- we can cancel multiplication by `conts.b` and addition with `pred_conts.b`
     suffices : gp.b * conts.b ≤ ifp_n.fr⁻¹ * conts.b
-    exact
-      (mul_le_mul_left zero_lt_conts_b).elimRight <|
-        (add_le_add_iff_left pred_conts.b).elimRight this
+    exact (mul_le_mul_left zero_lt_conts_b).right <| (add_le_add_iff_left pred_conts.b).right this
     suffices (ifp_succ_n.b : K) * conts.b ≤ ifp_n.fr⁻¹ * conts.b by rwa [← ifp_succ_n_b_eq_gp_b]
     have : (ifp_succ_n.b : K) ≤ ifp_n.fr⁻¹ :=
       int_fract_pair.succ_nth_stream_b_le_nth_stream_fr_inv stream_nth_eq succ_nth_stream_eq
@@ -615,7 +613,7 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
 `gcf.abs_sub_convergents_le`, but sometimes it is easier to apply and sufficient for one's use case.
  -/
 theorem abs_sub_convergents_le' {b : K}
-    (nth_part_denom_eq : (of v).partialDenominators.nth n = some b) :
+    (nth_part_denom_eq : (of v).partialDenominators.get? n = some b) :
     |v - (of v).convergents n| ≤ 1 / (b * (of v).denominators n * (of v).denominators n) :=
   by
   have not_terminated_at_n : ¬(of v).TerminatedAt n := by

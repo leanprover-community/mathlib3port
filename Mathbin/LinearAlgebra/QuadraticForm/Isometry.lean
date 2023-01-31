@@ -146,7 +146,7 @@ variable [Field K] [Invertible (2 : K)] [AddCommGroup V] [Module K V]
 
 /-- Given an orthogonal basis, a quadratic form is isometric with a weighted sum of squares. -/
 noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
-    (v : Basis (Fin (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrtho v) :
+    (v : Basis (Fin (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrthoCat v) :
     Q.Isometry (weightedSumSquares K fun i => Q (v i)) :=
   by
   let iso := Q.isometry_basis_repr v

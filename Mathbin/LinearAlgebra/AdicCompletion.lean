@@ -135,7 +135,7 @@ variable {I M}
 
 theorem infᵢ_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2 fun x hx =>
-    (mem_bot _).2 <| h.haus x fun n => Smodeq.zero.2 <| (mem_infi fun n : ℕ => I ^ n • ⊤).1 hx n
+    (mem_bot _).2 <| h.haus x fun n => Smodeq.zero.2 <| (mem_infᵢ fun n : ℕ => I ^ n • ⊤).1 hx n
 #align is_Hausdorff.infi_pow_smul IsHausdorff.infᵢ_pow_smul
 
 end IsHausdorff
@@ -176,7 +176,7 @@ unique map from the Hausdorffification. -/
 def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
   liftq _ f <|
     map_le_iff_le_comap.1 <|
-      h.infi_pow_smul ▸
+      h.infᵢ_pow_smul ▸
         le_infᵢ fun n =>
           le_trans (map_mono <| infᵢ_le _ n) <|
             by

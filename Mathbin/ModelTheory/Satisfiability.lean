@@ -595,21 +595,21 @@ namespace Formula
 variable (φ ψ : L.Formula α)
 
 theorem semanticallyEquivalent_not_not : T.SemanticallyEquivalent φ φ.Not.Not :=
-  φ.semantically_equivalent_not_not
+  φ.semanticallyEquivalent_not_not
 #align first_order.language.formula.semantically_equivalent_not_not FirstOrder.Language.Formula.semanticallyEquivalent_not_not
 
 theorem imp_semanticallyEquivalent_not_sup : T.SemanticallyEquivalent (φ.imp ψ) (φ.Not ⊔ ψ) :=
-  φ.imp_semantically_equivalent_not_sup ψ
+  φ.imp_semanticallyEquivalent_not_sup ψ
 #align first_order.language.formula.imp_semantically_equivalent_not_sup FirstOrder.Language.Formula.imp_semanticallyEquivalent_not_sup
 
 theorem sup_semanticallyEquivalent_not_inf_not :
     T.SemanticallyEquivalent (φ ⊔ ψ) (φ.Not ⊓ ψ.Not).Not :=
-  φ.sup_semantically_equivalent_not_inf_not ψ
+  φ.sup_semanticallyEquivalent_not_inf_not ψ
 #align first_order.language.formula.sup_semantically_equivalent_not_inf_not FirstOrder.Language.Formula.sup_semanticallyEquivalent_not_inf_not
 
 theorem inf_semanticallyEquivalent_not_sup_not :
     T.SemanticallyEquivalent (φ ⊓ ψ) (φ.Not ⊔ ψ.Not).Not :=
-  φ.inf_semantically_equivalent_not_sup_not ψ
+  φ.inf_semanticallyEquivalent_not_sup_not ψ
 #align first_order.language.formula.inf_semantically_equivalent_not_sup_not FirstOrder.Language.Formula.inf_semanticallyEquivalent_not_sup_not
 
 end Formula
@@ -624,7 +624,7 @@ theorem IsQf.induction_on_sup_not {P : L.BoundedFormula α n → Prop} {φ : L.B
       ∀ {φ₁ φ₂ : L.BoundedFormula α n} (h : Theory.SemanticallyEquivalent ∅ φ₁ φ₂), P φ₁ ↔ P φ₂) :
     P φ :=
   IsQf.rec_on h hf ha fun φ₁ φ₂ _ _ h1 h2 =>
-    (hse (φ₁.imp_semantically_equivalent_not_sup φ₂)).2 (hsup (hnot h1) h2)
+    (hse (φ₁.imp_semanticallyEquivalent_not_sup φ₂)).2 (hsup (hnot h1) h2)
 #align first_order.language.bounded_formula.is_qf.induction_on_sup_not FirstOrder.Language.BoundedFormula.IsQf.induction_on_sup_not
 
 theorem IsQf.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n}
@@ -636,7 +636,7 @@ theorem IsQf.induction_on_inf_not {P : L.BoundedFormula α n → Prop} {φ : L.B
     P φ :=
   h.induction_on_sup_not hf ha
     (fun φ₁ φ₂ h1 h2 =>
-      (hse (φ₁.sup_semantically_equivalent_not_inf_not φ₂)).2 (hnot (hinf (hnot h1) (hnot h2))))
+      (hse (φ₁.sup_semanticallyEquivalent_not_inf_not φ₂)).2 (hnot (hinf (hnot h1) (hnot h2))))
     (fun _ => hnot) fun _ _ => hse
 #align first_order.language.bounded_formula.is_qf.induction_on_inf_not FirstOrder.Language.BoundedFormula.IsQf.induction_on_inf_not
 
@@ -671,7 +671,7 @@ theorem induction_on_exists_not {P : ∀ {m}, L.BoundedFormula α m → Prop} (�
         P φ₁ ↔ P φ₂) :
     P φ :=
   φ.induction_on_all_ex (fun _ _ => hqf)
-    (fun _ φ hφ => (hse φ.all_semantically_equivalent_not_ex_not).2 (hnot (hex (hnot hφ))))
+    (fun _ φ hφ => (hse φ.all_semanticallyEquivalent_not_ex_not).2 (hnot (hex (hnot hφ))))
     (fun _ _ => hex) fun _ _ _ => hse
 #align first_order.language.bounded_formula.induction_on_exists_not FirstOrder.Language.BoundedFormula.induction_on_exists_not
 
@@ -689,7 +689,7 @@ variable {L : Language.{u, v}} (κ : Cardinal.{w}) (T : L.Theory)
 
 /-- A theory is `κ`-categorical if all models of size `κ` are isomorphic. -/
 def Categorical : Prop :=
-  ∀ M N : T.Model, (#M) = κ → (#N) = κ → Nonempty (M ≃[L] N)
+  ∀ M N : T.ModelCat, (#M) = κ → (#N) = κ → Nonempty (M ≃[L] N)
 #align cardinal.categorical Cardinal.Categorical
 
 /-- The Łoś–Vaught Test : a criterion for categorical theories to be complete. -/

@@ -115,7 +115,7 @@ get a finset of `{0, ..., n}` containing `0` and `n`. This is the data in the st
 structure CompositionAsSet (n : ℕ) where
   boundaries : Finset (Fin n.succ)
   zero_mem : (0 : Fin n.succ) ∈ boundaries
-  last_mem : Fin.last n ∈ boundaries
+  getLast_mem : Fin.last n ∈ boundaries
 #align composition_as_set CompositionAsSet
 
 instance {n : ℕ} : Inhabited (CompositionAsSet n) :=
@@ -179,7 +179,7 @@ theorem blocks_pos' (i : ℕ) (h : i < c.length) : 0 < nthLe c.blocks i h :=
 #align composition.blocks_pos' Composition.blocks_pos'
 
 theorem one_le_blocksFun (i : Fin c.length) : 1 ≤ c.blocksFun i :=
-  c.one_le_blocks (c.blocks_fun_mem_blocks i)
+  c.one_le_blocks (c.blocksFun_mem_blocks i)
 #align composition.one_le_blocks_fun Composition.one_le_blocksFun
 
 theorem length_le : c.length ≤ n :=
@@ -213,7 +213,7 @@ theorem sizeUpTo_of_length_le (i : ℕ) (h : c.length ≤ i) : c.sizeUpTo i = n 
 
 @[simp]
 theorem sizeUpTo_length : c.sizeUpTo c.length = n :=
-  c.size_up_to_of_length_le c.length le_rfl
+  c.sizeUpTo_of_length_le c.length le_rfl
 #align composition.size_up_to_length Composition.sizeUpTo_length
 
 theorem sizeUpTo_le (i : ℕ) : c.sizeUpTo i ≤ n :=
@@ -231,7 +231,7 @@ theorem sizeUpTo_succ {i : ℕ} (h : i < c.length) :
 
 theorem sizeUpTo_succ' (i : Fin c.length) :
     c.sizeUpTo ((i : ℕ) + 1) = c.sizeUpTo i + c.blocksFun i :=
-  c.size_up_to_succ i.2
+  c.sizeUpTo_succ i.2
 #align composition.size_up_to_succ' Composition.sizeUpTo_succ'
 
 theorem sizeUpTo_strict_mono {i : ℕ} (h : i < c.length) : c.sizeUpTo i < c.sizeUpTo (i + 1) :=
@@ -248,8 +248,8 @@ theorem monotone_sizeUpTo : Monotone c.sizeUpTo :=
 a virtual point at the right of the last block, to make for a nice equiv with
 `composition_as_set n`. -/
 def boundary : Fin (c.length + 1) ↪o Fin (n + 1) :=
-  (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.size_up_to_le i)⟩) <|
-    Fin.strictMono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.size_up_to_strict_mono hi
+  (OrderEmbedding.ofStrictMono fun i => ⟨c.sizeUpTo i, Nat.lt_succ_of_le (c.sizeUpTo_le i)⟩) <|
+    Fin.strictMono_iff_lt_succ.2 fun ⟨i, hi⟩ => c.sizeUpTo_strict_mono hi
 #align composition.boundary Composition.boundary
 
 @[simp]
@@ -280,7 +280,7 @@ def toCompositionAsSet : CompositionAsSet n
     by
     simp only [boundaries, Finset.mem_univ, exists_prop_of_true, Finset.mem_map]
     exact ⟨0, rfl⟩
-  last_mem :=
+  getLast_mem :=
     by
     simp only [boundaries, Finset.mem_univ, exists_prop_of_true, Finset.mem_map]
     exact ⟨Fin.last c.length, c.boundary_last⟩
@@ -301,9 +301,9 @@ def embedding (i : Fin c.length) : Fin (c.blocksFun i) ↪o Fin n :=
   (Fin.natAdd <| c.sizeUpTo i).trans <|
     Fin.castLe <|
       calc
-        c.sizeUpTo i + c.blocksFun i = c.sizeUpTo (i + 1) := (c.size_up_to_succ _).symm
+        c.sizeUpTo i + c.blocksFun i = c.sizeUpTo (i + 1) := (c.sizeUpTo_succ _).symm
         _ ≤ c.sizeUpTo c.length := monotone_sum_take _ i.2
-        _ = n := c.size_up_to_length
+        _ = n := c.sizeUpTo_length
         
 #align composition.embedding Composition.embedding
 
@@ -796,7 +796,7 @@ def compositionAsSetEquiv (n : ℕ) : CompositionAsSet n ≃ Finset (Fin (n - 1)
         { i : Fin n.succ |
             i = 0 ∨ i = Fin.last n ∨ ∃ (j : Fin (n - 1))(hj : j ∈ s), (i : ℕ) = j + 1 }.toFinset
       zero_mem := by simp
-      last_mem := by simp }
+      getLast_mem := by simp }
   left_inv := by
     intro c
     ext i

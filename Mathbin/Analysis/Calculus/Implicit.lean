@@ -113,7 +113,7 @@ structure ImplicitFunctionData (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E
   right_has_deriv : HasStrictFderivAt right_fun right_deriv pt
   left_range : range left_deriv = ⊤
   right_range : range right_deriv = ⊤
-  is_compl_ker : IsCompl (ker left_deriv) (ker right_deriv)
+  isCompl_ker : IsCompl (ker left_deriv) (ker right_deriv)
 #align implicit_function_data ImplicitFunctionData
 
 namespace ImplicitFunctionData
@@ -136,7 +136,7 @@ theorem prodFun_apply (x : E) : φ.prodFun x = (φ.leftFun x, φ.rightFun x) :=
 protected theorem hasStrictFderivAt :
     HasStrictFderivAt φ.prodFun
       (φ.leftDeriv.equivProdOfSurjectiveOfIsCompl φ.rightDeriv φ.left_range φ.right_range
-          φ.is_compl_ker :
+          φ.isCompl_ker :
         E →L[𝕜] F × G)
       φ.pt :=
   φ.left_has_deriv.Prod φ.right_has_deriv
@@ -168,12 +168,12 @@ theorem toLocalHomeomorph_apply (x : E) : φ.toLocalHomeomorph x = (φ.leftFun x
 #align implicit_function_data.to_local_homeomorph_apply ImplicitFunctionData.toLocalHomeomorph_apply
 
 theorem pt_mem_toLocalHomeomorph_source : φ.pt ∈ φ.toLocalHomeomorph.source :=
-  φ.HasStrictFderivAt.mem_to_local_homeomorph_source
+  φ.HasStrictFderivAt.mem_toLocalHomeomorph_source
 #align implicit_function_data.pt_mem_to_local_homeomorph_source ImplicitFunctionData.pt_mem_toLocalHomeomorph_source
 
 theorem map_pt_mem_toLocalHomeomorph_target :
     (φ.leftFun φ.pt, φ.rightFun φ.pt) ∈ φ.toLocalHomeomorph.target :=
-  φ.toLocalHomeomorph.map_source <| φ.pt_mem_to_local_homeomorph_source
+  φ.toLocalHomeomorph.map_source <| φ.pt_mem_toLocalHomeomorph_source
 #align implicit_function_data.map_pt_mem_to_local_homeomorph_target ImplicitFunctionData.map_pt_mem_toLocalHomeomorph_target
 
 theorem prod_map_implicitFunction :
@@ -183,12 +183,12 @@ theorem prod_map_implicitFunction :
 
 theorem left_map_implicitFunction :
     ∀ᶠ p : F × G in 𝓝 (φ.prodFun φ.pt), φ.leftFun (φ.implicitFunction p.1 p.2) = p.1 :=
-  φ.prod_map_implicit_function.mono fun z => congr_arg Prod.fst
+  φ.prod_map_implicitFunction.mono fun z => congr_arg Prod.fst
 #align implicit_function_data.left_map_implicit_function ImplicitFunctionData.left_map_implicitFunction
 
 theorem right_map_implicitFunction :
     ∀ᶠ p : F × G in 𝓝 (φ.prodFun φ.pt), φ.rightFun (φ.implicitFunction p.1 p.2) = p.2 :=
-  φ.prod_map_implicit_function.mono fun z => congr_arg Prod.snd
+  φ.prod_map_implicitFunction.mono fun z => congr_arg Prod.snd
 #align implicit_function_data.right_map_implicit_function ImplicitFunctionData.right_map_implicitFunction
 
 theorem implicitFunction_apply_image :
@@ -259,7 +259,7 @@ def implicitFunctionDataOfComplemented (hf : HasStrictFderivAt f f' a) (hf' : ra
     (Classical.choose hker).HasStrictFderivAt.comp a ((hasStrictFderivAt_id a).sub_const a)
   left_range := hf'
   right_range := LinearMap.range_eq_of_proj (Classical.choose_spec hker)
-  is_compl_ker := LinearMap.isCompl_of_proj (Classical.choose_spec hker)
+  isCompl_ker := LinearMap.isCompl_of_proj (Classical.choose_spec hker)
 #align has_strict_fderiv_at.implicit_function_data_of_complemented HasStrictFderivAt.implicitFunctionDataOfComplemented
 
 /-- A local homeomorphism between `E` and `F × f'.ker` sending level surfaces of `f`
@@ -326,7 +326,7 @@ theorem map_implicitFunctionOfComplemented_eq (hf : HasStrictFderivAt f f' a) (h
     ∀ᶠ p : F × ker f' in 𝓝 (f a, 0),
       f (hf.implicitFunctionOfComplemented f f' hf' hker p.1 p.2) = p.1 :=
   ((hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker).eventually_right_inverse <|
-        hf.mem_implicit_to_local_homeomorph_of_complemented_target hf' hker).mono
+        hf.mem_implicitToLocalHomeomorphOfComplemented_target hf' hker).mono
     fun ⟨z, y⟩ h => congr_arg Prod.fst h
 #align has_strict_fderiv_at.map_implicit_function_of_complemented_eq HasStrictFderivAt.map_implicitFunctionOfComplemented_eq
 
@@ -338,7 +338,7 @@ theorem eq_implicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' :
       hf.implicitFunctionOfComplemented f f' hf' hker (f x)
           (hf.implicitToLocalHomeomorphOfComplemented f f' hf' hker x).snd =
         x :=
-  (implicitFunctionDataOfComplemented f f' hf hf' hker).implicit_function_apply_image
+  (implicitFunctionDataOfComplemented f f' hf hf' hker).implicitFunction_apply_image
 #align has_strict_fderiv_at.eq_implicit_function_of_complemented HasStrictFderivAt.eq_implicitFunctionOfComplemented
 
 @[simp]
@@ -357,7 +357,7 @@ theorem to_implicitFunctionOfComplemented (hf : HasStrictFderivAt f f' a) (hf' :
     HasStrictFderivAt (hf.implicitFunctionOfComplemented f f' hf' hker (f a)) (ker f').subtypeL 0 :=
   by
   convert
-    (implicit_function_data_of_complemented f f' hf hf' hker).implicit_function_has_strict_fderiv_at
+    (implicit_function_data_of_complemented f f' hf hf' hker).implicitFunction_hasStrictFderivAt
       (ker f').subtypeL _ _
   swap
   · ext

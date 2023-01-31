@@ -61,8 +61,8 @@ class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebr
   im : K →+ ℝ
   i : K
   -- Meant to be set to 0 for K=ℝ
-  I_re_ax : re I = 0
-  I_mul_I_ax : I = 0 ∨ I * I = -1
+  i_re_ax : re I = 0
+  i_mul_i_ax : I = 0 ∨ I * I = -1
   re_add_im_ax : ∀ z : K, 𝓚 (re z) + 𝓚 (im z) * I = z
   of_real_re_ax : ∀ r : ℝ, re (𝓚 r) = r
   of_real_im_ax : ∀ r : ℝ, im (𝓚 r) = 0
@@ -70,11 +70,11 @@ class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebr
   mul_im_ax : ∀ z w : K, im (z * w) = re z * im w + im z * re w
   conj_re_ax : ∀ z : K, re (conj z) = re z
   conj_im_ax : ∀ z : K, im (conj z) = -im z
-  conj_I_ax : conj I = -I
+  conj_i_ax : conj I = -I
   norm_sq_eq_def_ax : ∀ z : K, ‖z‖ ^ 2 = re z * re z + im z * im z
-  mul_im_I_ax : ∀ z : K, im z * im I = im z
+  mul_im_i_ax : ∀ z : K, im z * im I = im z
   inv_def_ax : ∀ z : K, z⁻¹ = conj z * 𝓚 (‖z‖ ^ 2)⁻¹
-  div_I_ax : ∀ z : K, z / I = -(z * I)
+  div_i_ax : ∀ z : K, z / I = -(z * I)
 #align is_R_or_C IsROrC
 
 end
@@ -115,7 +115,7 @@ theorem algebraMap_eq_of_real : ⇑(algebraMap ℝ K) = coe :=
 #align is_R_or_C.algebra_map_eq_of_real IsROrC.algebraMap_eq_of_real
 
 @[simp, is_R_or_C_simps]
-theorem re_add_im (z : K) : (re z : K) + im z * I = z :=
+theorem re_add_im (z : K) : (re z : K) + im z * i = z :=
   IsROrC.re_add_im_ax z
 #align is_R_or_C.re_add_im IsROrC.re_add_im
 
@@ -280,7 +280,7 @@ theorem norm_real (r : ℝ) : ‖(r : K)‖ = ‖r‖ := by
 /-- The imaginary unit. -/
 @[simp, is_R_or_C_simps]
 theorem i_re : re (i : K) = 0 :=
-  I_re_ax
+  i_re_ax
 #align is_R_or_C.I_re IsROrC.i_re
 
 @[simp, is_R_or_C_simps]
@@ -293,12 +293,12 @@ theorem i_im' (z : K) : im (i : K) * im z = im z := by rw [mul_comm, I_im _]
 #align is_R_or_C.I_im' IsROrC.i_im'
 
 @[simp, is_R_or_C_simps]
-theorem i_mul_re (z : K) : re (I * z) = -im z := by
+theorem i_mul_re (z : K) : re (i * z) = -im z := by
   simp only [I_re, zero_sub, I_im', zero_mul, mul_re]
 #align is_R_or_C.I_mul_re IsROrC.i_mul_re
 
-theorem i_mul_i : (i : K) = 0 ∨ (i : K) * I = -1 :=
-  I_mul_I_ax
+theorem i_mul_i : (i : K) = 0 ∨ (i : K) * i = -1 :=
+  i_mul_i_ax
 #align is_R_or_C.I_mul_I IsROrC.i_mul_i
 
 @[simp, is_R_or_C_simps]
@@ -312,7 +312,7 @@ theorem conj_im (z : K) : im (conj z) = -im z :=
 #align is_R_or_C.conj_im IsROrC.conj_im
 
 @[simp, is_R_or_C_simps]
-theorem conj_i : conj (i : K) = -I :=
+theorem conj_i : conj (i : K) = -i :=
   IsROrC.conj_i_ax
 #align is_R_or_C.conj_I IsROrC.conj_i
 
@@ -335,11 +335,11 @@ theorem conj_bit1 (z : K) : conj (bit1 z) = bit1 (conj z) := by
 #align is_R_or_C.conj_bit1 IsROrC.conj_bit1
 
 @[simp, is_R_or_C_simps]
-theorem conj_neg_i : conj (-I) = (i : K) := by
+theorem conj_neg_i : conj (-i) = (i : K) := by
   simp only [conj_I, RingHom.map_neg, eq_self_iff_true, neg_neg]
 #align is_R_or_C.conj_neg_I IsROrC.conj_neg_i
 
-theorem conj_eq_re_sub_im (z : K) : conj z = re z - im z * I :=
+theorem conj_eq_re_sub_im (z : K) : conj z = re z - im z * i :=
   by
   rw [ext_iff]
   simp only [add_zero, I_re, of_real_im, I_im, zero_sub, zero_mul, conj_im, of_real_re,
@@ -503,7 +503,7 @@ theorem of_real_pow (r : ℝ) (n : ℕ) : ((r ^ n : ℝ) : K) = r ^ n :=
   · simp only [*, of_real_mul, pow_succ]
 #align is_R_or_C.of_real_pow IsROrC.of_real_pow
 
-theorem sub_conj (z : K) : z - conj z = 2 * im z * I := by
+theorem sub_conj (z : K) : z - conj z = 2 * im z * i := by
   simp only [ext_iff, two_mul, sub_eq_add_neg, add_mul, map_add, add_zero, add_left_inj, zero_mul,
     map_add_neg, eq_self_iff_true, add_right_neg, and_self_iff, neg_neg, mul_zero, neg_zero,
     is_R_or_C_simps]
@@ -587,14 +587,14 @@ theorem of_real_zpow (r : ℝ) (n : ℤ) : ((r ^ n : ℝ) : K) = r ^ n :=
   map_zpow₀ (@IsROrC.coeHom K _) r n
 #align is_R_or_C.of_real_zpow IsROrC.of_real_zpow
 
-theorem i_mul_i_of_nonzero : (i : K) ≠ 0 → (i : K) * I = -1 :=
+theorem i_mul_i_of_nonzero : (i : K) ≠ 0 → (i : K) * i = -1 :=
   by
   have := I_mul_I_ax
   tauto
 #align is_R_or_C.I_mul_I_of_nonzero IsROrC.i_mul_i_of_nonzero
 
 @[simp, is_R_or_C_simps]
-theorem div_i (z : K) : z / I = -(z * I) :=
+theorem div_i (z : K) : z / i = -(z * i) :=
   by
   by_cases h : (I : K) = 0
   · simp [h]
@@ -602,7 +602,7 @@ theorem div_i (z : K) : z / I = -(z * I) :=
 #align is_R_or_C.div_I IsROrC.div_i
 
 @[simp, is_R_or_C_simps]
-theorem inv_i : (i : K)⁻¹ = -I := by field_simp
+theorem inv_i : (i : K)⁻¹ = -i := by field_simp
 #align is_R_or_C.inv_I IsROrC.inv_i
 
 @[simp, is_R_or_C_simps]
@@ -678,7 +678,7 @@ theorem re_eq_add_conj (z : K) : ↑(re z) = (z + conj z) / 2 := by
   rw [add_conj, mul_div_cancel_left (re z : K) two_ne_zero]
 #align is_R_or_C.re_eq_add_conj IsROrC.re_eq_add_conj
 
-theorem im_eq_conj_sub (z : K) : ↑(im z) = I * (conj z - z) / 2 :=
+theorem im_eq_conj_sub (z : K) : ↑(im z) = i * (conj z - z) / 2 :=
   by
   rw [← neg_inj, ← of_real_neg, ← I_mul_re, re_eq_add_conj]
   simp only [mul_add, sub_eq_add_neg, neg_div', neg_mul, conj_I, mul_neg, neg_add_rev, neg_neg,
@@ -982,8 +982,8 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
     re := AddMonoidHom.id ℝ
     im := 0
     i := 0
-    I_re_ax := by simp only [AddMonoidHom.map_zero]
-    I_mul_I_ax := Or.intro_left _ rfl
+    i_re_ax := by simp only [AddMonoidHom.map_zero]
+    i_mul_i_ax := Or.intro_left _ rfl
     re_add_im_ax := fun z => by
       simp only [add_zero, mul_zero, Algebra.id.map_eq_id, RingHom.id_apply, AddMonoidHom.id_apply]
     of_real_re_ax := fun r => by simp only [AddMonoidHom.id_apply, Algebra.id.map_eq_self]
@@ -993,15 +993,15 @@ noncomputable instance Real.isROrC : IsROrC ℝ :=
     mul_im_ax := fun z w => by simp only [add_zero, zero_mul, mul_zero, AddMonoidHom.zero_apply]
     conj_re_ax := fun z => by simp only [starRingEnd_apply, star_id_of_comm]
     conj_im_ax := fun z => by simp only [neg_zero, AddMonoidHom.zero_apply]
-    conj_I_ax := by simp only [RingHom.map_zero, neg_zero]
+    conj_i_ax := by simp only [RingHom.map_zero, neg_zero]
     norm_sq_eq_def_ax := fun z => by
       simp only [sq, Real.norm_eq_abs, ← abs_mul, abs_mul_self z, add_zero, mul_zero,
         AddMonoidHom.zero_apply, AddMonoidHom.id_apply]
-    mul_im_I_ax := fun z => by simp only [mul_zero, AddMonoidHom.zero_apply]
+    mul_im_i_ax := fun z => by simp only [mul_zero, AddMonoidHom.zero_apply]
     inv_def_ax := fun z => by
       simp only [starRingEnd_apply, star, sq, Real.norm_eq_abs, abs_mul_abs_self, ← div_eq_mul_inv,
         Algebra.id.map_eq_id, id.def, RingHom.id_apply, div_self_mul_self']
-    div_I_ax := fun z => by simp only [div_zero, mul_zero, neg_zero] }
+    div_i_ax := fun z => by simp only [div_zero, mul_zero, neg_zero] }
 #align real.is_R_or_C Real.isROrC
 
 end Instances
@@ -1084,7 +1084,7 @@ noncomputable def reClm : K →L[ℝ] ℝ :=
 #align is_R_or_C.re_clm IsROrC.reClm
 
 @[simp, is_R_or_C_simps, norm_cast]
-theorem reClm_coe : ((reClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = re_lm :=
+theorem reClm_coe : ((reClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = reLm :=
   rfl
 #align is_R_or_C.re_clm_coe IsROrC.reClm_coe
 
@@ -1117,7 +1117,7 @@ noncomputable def imClm : K →L[ℝ] ℝ :=
 #align is_R_or_C.im_clm IsROrC.imClm
 
 @[simp, is_R_or_C_simps, norm_cast]
-theorem imClm_coe : ((imClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = im_lm :=
+theorem imClm_coe : ((imClm : K →L[ℝ] ℝ) : K →ₗ[ℝ] ℝ) = imLm :=
   rfl
 #align is_R_or_C.im_clm_coe IsROrC.imClm_coe
 

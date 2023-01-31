@@ -244,7 +244,7 @@ def mapRange.linearEquiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β�
 
 @[simp]
 theorem mapRange.linearEquiv_refl :
-    (map_range.linear_equiv fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
+    (mapRange.linearEquiv fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
   LinearEquiv.ext mapRange_id
 #align dfinsupp.map_range.linear_equiv_refl Dfinsupp.mapRange.linearEquiv_refl
 
@@ -370,7 +370,7 @@ theorem mem_supᵢ_iff_exists_dfinsupp' (p : ι → Submodule R N) [∀ (i) (x :
 theorem mem_bsupr_iff_exists_dfinsupp (p : ι → Prop) [DecidablePred p] (S : ι → Submodule R N)
     (x : N) :
     (x ∈ ⨆ (i) (h : p i), S i) ↔
-      ∃ f : Π₀ i, S i, Dfinsupp.lsum ℕ (fun i => (S i).Subtype) (f.filter p) = x :=
+      ∃ f : Π₀ i, S i, Dfinsupp.lsum ℕ (fun i => (S i).Subtype) (f.filterₓ p) = x :=
   SetLike.ext_iff.mp (bsupr_eq_range_dfinsupp_lsum p S) x
 #align submodule.mem_bsupr_iff_exists_dfinsupp Submodule.mem_bsupr_iff_exists_dfinsupp
 

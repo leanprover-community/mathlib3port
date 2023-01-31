@@ -78,13 +78,13 @@ elements. -/
 @[protect_proj]
 class NormalizationMonoid (α : Type _) [CancelCommMonoidWithZero α] where
   normUnit : α → αˣ
-  norm_unit_zero : norm_unit 0 = 1
-  norm_unit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a * b) = norm_unit a * norm_unit b
-  norm_unit_coe_units : ∀ u : αˣ, norm_unit u = u⁻¹
+  normUnit_zero : norm_unit 0 = 1
+  normUnit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a * b) = norm_unit a * norm_unit b
+  normUnit_coe_units : ∀ u : αˣ, norm_unit u = u⁻¹
 #align normalization_monoid NormalizationMonoid
 -/
 
-export NormalizationMonoid (normUnit norm_unit_zero norm_unit_mul norm_unit_coe_units)
+export NormalizationMonoid (normUnit normUnit_zero normUnit_mul normUnit_coe_units)
 
 attribute [simp] norm_unit_coe_units norm_unit_zero norm_unit_mul
 
@@ -998,7 +998,7 @@ theorem exists_associated_pow_of_mul_eq_pow [GCDMonoid α] {a b c : α} (hab : I
   use d₁
   obtain ⟨h0₁, ⟨a', ha'⟩⟩ := pow_dvd_of_mul_eq_pow ha hab h hc hd₁
   rw [mul_comm] at h hc
-  rw [(gcd_comm' a b).is_unit_iff] at hab
+  rw [(gcd_comm' a b).isUnit_iff] at hab
   obtain ⟨h0₂, ⟨b', hb'⟩⟩ := pow_dvd_of_mul_eq_pow hb hab h hc hd₂
   rw [ha', hb', hc, mul_pow] at h
   have h' : a' * b' = 1 := by
@@ -1420,9 +1420,9 @@ variable [CancelCommMonoidWithZero α] [Unique αˣ]
 instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoid α
     where
   normUnit x := 1
-  norm_unit_zero := rfl
-  norm_unit_mul x y hx hy := (mul_one 1).symm
-  norm_unit_coe_units u := Subsingleton.elim _ _
+  normUnit_zero := rfl
+  normUnit_mul x y hx hy := (mul_one 1).symm
+  normUnit_coe_units u := Subsingleton.elim _ _
 #align normalization_monoid_of_unique_units normalizationMonoidOfUniqueUnits
 -/
 
@@ -1573,8 +1573,8 @@ def normalizationMonoidOfMonoidHomRightInverse [DecidableEq α] (f : Associates 
   normUnit a :=
     if a = 0 then 1
     else Classical.choose (Associates.mk_eq_mk_iff_associated.1 (hinv (Associates.mk a)).symm)
-  norm_unit_zero := if_pos rfl
-  norm_unit_mul a b ha hb :=
+  normUnit_zero := if_pos rfl
+  normUnit_mul a b ha hb :=
     by
     rw [if_neg (mul_ne_zero ha hb), if_neg ha, if_neg hb, Units.ext_iff, Units.val_mul]
     suffices
@@ -1586,7 +1586,7 @@ def normalizationMonoidOfMonoidHomRightInverse [DecidableEq α] (f : Associates 
       simpa only [mul_assoc, mul_comm, mul_left_comm] using this
     rw [map_mk_unit_aux hinv a, map_mk_unit_aux hinv (a * b), map_mk_unit_aux hinv b, ←
       MonoidHom.map_mul, Associates.mk_mul_mk]
-  norm_unit_coe_units u := by
+  normUnit_coe_units u := by
     nontriviality α
     rw [if_neg (Units.ne_zero u), Units.ext_iff]
     apply mul_left_cancel₀ (Units.ne_zero u)
@@ -1900,9 +1900,9 @@ variable (G₀ : Type _) [CommGroupWithZero G₀] [DecidableEq G₀]
 instance (priority := 100) : NormalizedGCDMonoid G₀
     where
   normUnit x := if h : x = 0 then 1 else (Units.mk0 x h)⁻¹
-  norm_unit_zero := dif_pos rfl
-  norm_unit_mul x y x0 y0 := Units.eq_iff.1 (by simp [x0, y0, mul_comm])
-  norm_unit_coe_units u := by
+  normUnit_zero := dif_pos rfl
+  normUnit_mul x y x0 y0 := Units.eq_iff.1 (by simp [x0, y0, mul_comm])
+  normUnit_coe_units u := by
     rw [dif_neg (Units.ne_zero _), Units.mk0_val]
     infer_instance
   gcd a b := if a = 0 ∧ b = 0 then 0 else 1

@@ -114,7 +114,7 @@ protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
 theorem apply_eq_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
-  hf.IsLocallyConstant.apply_eq_of_preconnected_space _ _
+  hf.IsLocallyConstant.apply_eq_of_preconnectedSpace _ _
 #align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compactSpace
 
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,

@@ -101,7 +101,7 @@ theorem maximals_antichain : IsAntichain r (maximals r s) := fun a ha b hb hab h
 
 theorem minimals_antichain : IsAntichain r (minimals r s) :=
   haveI := IsAntisymm.swap r
-  (maximals_antichain _ _).swap
+  (maximals_antichain _ _).symm
 #align minimals_antichain minimals_antichain
 
 end IsAntisymm
@@ -242,6 +242,6 @@ theorem IsAntichain.minimals_upperClosure (hs : IsAntichain (· ≤ ·) s) :
 
 theorem IsAntichain.maximals_lowerClosure (hs : IsAntichain (· ≤ ·) s) :
     maximals (· ≤ ·) (lowerClosure s : Set α) = s :=
-  hs.toDual.minimals_upper_closure
+  hs.toDual.minimals_upperClosure
 #align is_antichain.maximals_lower_closure IsAntichain.maximals_lowerClosure
 

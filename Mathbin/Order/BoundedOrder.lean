@@ -1585,7 +1585,7 @@ but is expected to have type
   Eq.{1} Bool (Top.top.{0} Bool (OrderTop.toTop.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (DistribLattice.toLattice.{0} Bool instDistribLatticeBool))))) (BoundedOrder.toOrderTop.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (DistribLattice.toLattice.{0} Bool instDistribLatticeBool))))) Bool.boundedOrder))) Bool.true
 Case conversion may be inaccurate. Consider using '#align top_eq_tt top_eq_trueₓ'. -/
 @[simp]
-theorem top_eq_true : ⊤ = tt :=
+theorem top_eq_true : ⊤ = true :=
   rfl
 #align top_eq_tt top_eq_true
 
@@ -1596,7 +1596,7 @@ but is expected to have type
   Eq.{1} Bool (Bot.bot.{0} Bool (OrderBot.toBot.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (DistribLattice.toLattice.{0} Bool instDistribLatticeBool))))) (BoundedOrder.toOrderBot.{0} Bool (Preorder.toLE.{0} Bool (PartialOrder.toPreorder.{0} Bool (SemilatticeInf.toPartialOrder.{0} Bool (Lattice.toSemilatticeInf.{0} Bool (DistribLattice.toLattice.{0} Bool instDistribLatticeBool))))) Bool.boundedOrder))) Bool.false
 Case conversion may be inaccurate. Consider using '#align bot_eq_ff bot_eq_falseₓ'. -/
 @[simp]
-theorem bot_eq_false : ⊥ = ff :=
+theorem bot_eq_false : ⊥ = false :=
   rfl
 #align bot_eq_ff bot_eq_false
 

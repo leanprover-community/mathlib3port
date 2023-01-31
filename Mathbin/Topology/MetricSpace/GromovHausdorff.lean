@@ -189,7 +189,7 @@ Hausdorff distance between isometric copies of the two spaces in a metric space.
 we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
 instance : HasDist GHSpace
     where dist x y :=
-    Inf <|
+    infₛ <|
       (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ =>
           hausdorffDist (p.1 : Set ℓ_infty_ℝ) p.2) ''
         { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }
@@ -1210,7 +1210,7 @@ instance : CompleteSpace GHSpace :=
   -- By construction, the image of `X3 n` in the Gromov-Hausdorff space is `u n`.
   have : ∀ n, (X3 n).toGHSpace = u n := by
     intro n
-    rw [nonempty_compacts.to_GH_space, ← (u n).to_GH_space_rep,
+    rw [nonempty_compacts.to_GH_space, ← (u n).toGHSpace_rep,
       to_GH_space_eq_to_GH_space_iff_isometry_equiv]
     constructor
     convert (isom n).isometryEquivOnRange.symm

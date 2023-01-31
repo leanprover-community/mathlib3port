@@ -368,7 +368,7 @@ def id : P1 →ᵃ[k] P1 where
 
 /-- The identity affine map acts as the identity. -/
 @[simp]
-theorem coe_id : ⇑(id k P1) = _root_.id :=
+theorem coe_id : ⇑(id k P1) = id :=
   rfl
 #align affine_map.coe_id AffineMap.coe_id
 
@@ -447,7 +447,7 @@ theorem coe_mul (f g : P1 →ᵃ[k] P1) : ⇑(f * g) = f ∘ g :=
 #align affine_map.coe_mul AffineMap.coe_mul
 
 @[simp]
-theorem coe_one : ⇑(1 : P1 →ᵃ[k] P1) = _root_.id :=
+theorem coe_one : ⇑(1 : P1 →ᵃ[k] P1) = id :=
   rfl
 #align affine_map.coe_one AffineMap.coe_one
 
@@ -606,17 +606,17 @@ theorem apply_lineMap (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) (c : k) :
 @[simp]
 theorem comp_lineMap (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) :
     f.comp (lineMap p₀ p₁) = lineMap (f p₀) (f p₁) :=
-  ext <| f.apply_line_map p₀ p₁
+  ext <| f.apply_lineMap p₀ p₁
 #align affine_map.comp_line_map AffineMap.comp_lineMap
 
 @[simp]
 theorem fst_lineMap (p₀ p₁ : P1 × P2) (c : k) : (lineMap p₀ p₁ c).1 = lineMap p₀.1 p₁.1 c :=
-  fst.apply_line_map p₀ p₁ c
+  fst.apply_lineMap p₀ p₁ c
 #align affine_map.fst_line_map AffineMap.fst_lineMap
 
 @[simp]
 theorem snd_lineMap (p₀ p₁ : P1 × P2) (c : k) : (lineMap p₀ p₁ c).2 = lineMap p₀.2 p₁.2 c :=
-  snd.apply_line_map p₀ p₁ c
+  snd.apply_lineMap p₀ p₁ c
 #align affine_map.snd_line_map AffineMap.snd_lineMap
 
 omit V2
@@ -657,14 +657,14 @@ theorem right_vsub_lineMap (p₀ p₁ : P1) (c : k) : p₁ -ᵥ lineMap p₀ p�
 
 theorem lineMap_vadd_lineMap (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :
     lineMap v₁ v₂ c +ᵥ lineMap p₁ p₂ c = lineMap (v₁ +ᵥ p₁) (v₂ +ᵥ p₂) c :=
-  ((fst : V1 × P1 →ᵃ[k] V1) +ᵥ snd).apply_line_map (v₁, p₁) (v₂, p₂) c
+  ((fst : V1 × P1 →ᵃ[k] V1) +ᵥ snd).apply_lineMap (v₁, p₁) (v₂, p₂) c
 #align affine_map.line_map_vadd_line_map AffineMap.lineMap_vadd_lineMap
 
 theorem lineMap_vsub_lineMap (p₁ p₂ p₃ p₄ : P1) (c : k) :
     lineMap p₁ p₂ c -ᵥ lineMap p₃ p₄ c = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₄) c :=
   letI-- Why Lean fails to find this instance without a hint?
    : affine_space (V1 × V1) (P1 × P1) := Prod.addTorsor
-  ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_line_map (_, _) (_, _) c
+  ((fst : P1 × P1 →ᵃ[k] P1) -ᵥ (snd : P1 × P1 →ᵃ[k] P1)).apply_lineMap (_, _) (_, _) c
 #align affine_map.line_map_vsub_line_map AffineMap.lineMap_vsub_lineMap
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
@@ -726,7 +726,7 @@ theorem proj_linear (i : ι) : (@proj k _ ι V P _ _ _ i).linear = @LinearMap.pr
 
 theorem pi_lineMap_apply (f g : ∀ i, P i) (c : k) (i : ι) :
     lineMap f g c i = lineMap (f i) (g i) c :=
-  (proj i : (∀ i, P i) →ᵃ[k] P i).apply_line_map f g c
+  (proj i : (∀ i, P i) →ᵃ[k] P i).apply_lineMap f g c
 #align affine_map.pi_line_map_apply AffineMap.pi_lineMap_apply
 
 end

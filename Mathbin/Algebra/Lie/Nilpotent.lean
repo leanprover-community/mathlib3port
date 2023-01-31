@@ -687,7 +687,7 @@ theorem LieEquiv.nilpotent_iff_equiv_nilpotent (e : L ≃ₗ⁅R⁆ L') :
 #align lie_equiv.nilpotent_iff_equiv_nilpotent LieEquiv.nilpotent_iff_equiv_nilpotent
 
 theorem LieHom.isNilpotent_range [IsNilpotent R L] (f : L →ₗ⁅R⁆ L') : IsNilpotent R f.range :=
-  f.surjective_range_restrict.lie_algebra_is_nilpotent
+  f.surjective_rangeRestrict.lieAlgebra_isNilpotent
 #align lie_hom.is_nilpotent_range LieHom.isNilpotent_range
 
 /-- Note that this result is not quite a special case of
@@ -703,7 +703,7 @@ theorem LieAlgebra.isNilpotent_range_ad_iff : IsNilpotent R (ad R L).range ↔ I
       LieAlgebra.nilpotent_of_nilpotent_quotient (le_of_eq this)
         ((ad R L).quotKerEquivRange.nilpotent_iff_equiv_nilpotent.mpr h)
   · intro h
-    exact (ad R L).is_nilpotent_range
+    exact (ad R L).isNilpotent_range
 #align lie_algebra.is_nilpotent_range_ad_iff LieAlgebra.isNilpotent_range_ad_iff
 
 instance [h : LieAlgebra.IsNilpotent R L] : LieAlgebra.IsNilpotent R (⊤ : LieSubalgebra R L) :=
@@ -790,7 +790,7 @@ theorem LieSubalgebra.isNilpotent_ad_of_isNilpotent_ad {L : Type v} [LieRing L] 
 
 theorem LieAlgebra.isNilpotent_ad_of_isNilpotent {L : LieSubalgebra R A} {x : L}
     (h : IsNilpotent (x : A)) : IsNilpotent (LieAlgebra.ad R L x) :=
-  L.is_nilpotent_ad_of_is_nilpotent_ad <| LieAlgebra.ad_nilpotent_of_nilpotent R h
+  L.isNilpotent_ad_of_isNilpotent_ad <| LieAlgebra.ad_nilpotent_of_nilpotent R h
 #align lie_algebra.is_nilpotent_ad_of_is_nilpotent LieAlgebra.isNilpotent_ad_of_isNilpotent
 
 end OfAssociative

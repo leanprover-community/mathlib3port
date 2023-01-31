@@ -355,7 +355,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.perm.sum_congr_one Equiv.Perm.sumCongr_oneₓ'. -/
 @[simp]
 theorem sumCongr_one {α β : Type _} : sumCongr (1 : Perm α) (1 : Perm β) = 1 :=
-  sum_congr_refl
+  sumCongr_refl
 #align equiv.perm.sum_congr_one Equiv.Perm.sumCongr_one
 
 /- warning: equiv.perm.sum_congr_hom -> Equiv.Perm.sumCongrHom is a dubious translation:
@@ -451,7 +451,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.sigma_congr
 @[simp]
 theorem sigmaCongrRight_one {α : Type _} {β : α → Type _} :
     sigmaCongrRight (1 : ∀ a, Equiv.Perm <| β a) = 1 :=
-  sigma_congr_right_refl
+  sigmaCongrRight_refl
 #align equiv.perm.sigma_congr_right_one Equiv.Perm.sigmaCongrRight_one
 
 #print Equiv.Perm.sigmaCongrRightHom /-
@@ -723,7 +723,7 @@ theorem ofSubtype_subtypePerm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h�
     ofSubtype (subtypePerm f h₁) = f :=
   Equiv.ext fun x => by
     by_cases hx : p x
-    · exact (subtype_perm f h₁).extend_domain_apply_subtype _ hx
+    · exact (subtype_perm f h₁).extendDomain_apply_subtype _ hx
     · rw [of_subtype, MonoidHom.coe_mk, Equiv.Perm.extendDomain_apply_not_subtype]
       · exact not_not.mp fun h => hx (h₂ x (Ne.symm h))
       · exact hx
@@ -777,7 +777,7 @@ the rest. -/
 protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
     Perm (Subtype p) ≃ { f : Perm α // ∀ a, ¬p a → f a = a }
     where
-  toFun f := ⟨f.ofSubtype, fun a => f.of_subtype_apply_of_not_mem⟩
+  toFun f := ⟨f.ofSubtype, fun a => f.ofSubtype_apply_of_not_mem⟩
   invFun f :=
     (f : Perm α).subtypePerm fun a =>
       ⟨Decidable.not_imp_not.1 fun hfa => f.val.Injective (f.Prop _ hfa) ▸ hfa,
@@ -791,14 +791,14 @@ protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
 #print Equiv.Perm.subtypeEquivSubtypePerm_apply_of_mem /-
 theorem subtypeEquivSubtypePerm_apply_of_mem (f : Perm (Subtype p)) (h : p a) :
     Perm.subtypeEquivSubtypePerm p f a = f ⟨a, h⟩ :=
-  f.of_subtype_apply_of_mem h
+  f.ofSubtype_apply_of_mem h
 #align equiv.perm.subtype_equiv_subtype_perm_apply_of_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_mem
 -/
 
 #print Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem /-
 theorem subtypeEquivSubtypePerm_apply_of_not_mem (f : Perm (Subtype p)) (h : ¬p a) :
     Perm.subtypeEquivSubtypePerm p f a = a :=
-  f.of_subtype_apply_of_not_mem h
+  f.ofSubtype_apply_of_not_mem h
 #align equiv.perm.subtype_equiv_subtype_perm_apply_of_not_mem Equiv.Perm.subtypeEquivSubtypePerm_apply_of_not_mem
 -/
 

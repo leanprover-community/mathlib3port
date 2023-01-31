@@ -81,7 +81,7 @@ theorem nextOr_cons_of_ne (xs : List α) (y x d : α) (h : x ≠ y) :
 #print List.nextOr_eq_nextOr_of_mem_of_ne /-
 /-- `next_or` does not depend on the default value, if the next value appears. -/
 theorem nextOr_eq_nextOr_of_mem_of_ne (xs : List α) (x d d' : α) (x_mem : x ∈ xs)
-    (x_ne : x ≠ xs.last (ne_nil_of_mem x_mem)) : nextOr xs x d = nextOr xs x d' :=
+    (x_ne : x ≠ xs.getLast (ne_nil_of_mem x_mem)) : nextOr xs x d = nextOr xs x d' :=
   by
   induction' xs with y ys IH
   · cases x_mem
@@ -965,7 +965,7 @@ instance fintypeNodupCycle [Fintype α] : Fintype { s : Cycle α // s.Nodup } :=
 instance fintypeNodupNontrivialCycle [Fintype α] :
     Fintype { s : Cycle α // s.Nodup ∧ s.Nontrivial } :=
   Fintype.subtype
-    (((Finset.univ : Finset { s : Cycle α // s.Nodup }).map (Function.Embedding.subtype _)).filter
+    (((Finset.univ : Finset { s : Cycle α // s.Nodup }).map (Function.Embedding.subtype _)).filterₓ
       Cycle.Nontrivial)
     (by simp)
 #align cycle.fintype_nodup_nontrivial_cycle Cycle.fintypeNodupNontrivialCycle
@@ -1085,7 +1085,7 @@ as `c[2, 1, 4, 3]`. Two equal cycles may be printed differently if their interna
 is different.
 -/
 unsafe instance [Repr α] : Repr (Cycle α) :=
-  ⟨fun s => "c[" ++ String.intercalate ", " (s.map repr).lists.unquot.head ++ "]"⟩
+  ⟨fun s => "c[" ++ String.intercalate ", " (s.map repr).lists.unquot.headI ++ "]"⟩
 
 #print Cycle.Chain /-
 /-- `chain R s` means that `R` holds between adjacent elements of `s`.

@@ -269,7 +269,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   rw [← key, ← lintegral_const_mul (Ennreal.ofReal p)] <;> simp_rw [obs]
   · congr with ω
     rw [← Ennreal.ofReal_mul p_pos.le, mul_div_cancel' (f ω ^ p) p_pos.ne.symm]
-  · exact ((f_mble.pow measurable_const).div_const p).ennreal_of_real
+  · exact ((f_mble.pow measurable_const).div_const p).ennreal_ofReal
 #align measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
 
 end MeasureTheory

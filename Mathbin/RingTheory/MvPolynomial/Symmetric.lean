@@ -85,7 +85,7 @@ variable (σ R)
 def symmetricSubalgebra [CommSemiring R] : Subalgebra R (MvPolynomial σ R)
     where
   carrier := setOf IsSymmetric
-  algebra_map_mem' r e := rename_c e r
+  algebraMap_mem' r e := rename_c e r
   mul_mem' a b ha hb e := by rw [AlgHom.map_mul, ha, hb]
   add_mem' a b ha hb e := by rw [AlgHom.map_add, ha, hb]
 #align mv_polynomial.symmetric_subalgebra MvPolynomial.symmetricSubalgebra
@@ -106,7 +106,7 @@ variable [CommSemiring R] [CommSemiring S] {φ ψ : MvPolynomial σ R}
 
 @[simp]
 theorem c (r : R) : IsSymmetric (c r : MvPolynomial σ R) :=
-  (symmetricSubalgebra σ R).algebra_map_mem r
+  (symmetricSubalgebra σ R).algebraMap_mem r
 #align mv_polynomial.is_symmetric.C MvPolynomial.IsSymmetric.c
 
 @[simp]
@@ -217,7 +217,7 @@ theorem esymm_isSymmetric (n : ℕ) : IsSymmetric (esymm σ R n) :=
 
 theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
-      (powersetLen n (univ : Finset σ)).bUnion fun t =>
+      (powersetLen n (univ : Finset σ)).bunionᵢ fun t =>
         (Finsupp.single (∑ i : σ in t, Finsupp.single i 1) (1 : R)).support :=
   by
   rw [esymm_eq_sum_monomial]
@@ -236,7 +236,7 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 
 theorem support_esymm' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
     (esymm σ R n).support =
-      (powersetLen n (univ : Finset σ)).bUnion fun t => {∑ i : σ in t, Finsupp.single i 1} :=
+      (powersetLen n (univ : Finset σ)).bunionᵢ fun t => {∑ i : σ in t, Finsupp.single i 1} :=
   by
   rw [support_esymm'']
   congr

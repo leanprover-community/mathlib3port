@@ -49,7 +49,7 @@ theorem denomsClearable_zero (N : ℕ) (a : R) (bu : bi * i b = 1) : DenomsClear
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2]) } -/
 theorem denomsClearable_c_mul_x_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : ℕ} (r : R)
-    (nN : n ≤ N) : DenomsClearable a b N (c r * X ^ n) i :=
+    (nN : n ≤ N) : DenomsClearable a b N (c r * x ^ n) i :=
   by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
   rw [C_mul_X_pow_eq_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, eval_mul, eval_pow, eval_C]

@@ -283,8 +283,7 @@ theorem to_fromCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
 def costructuredArrowYonedaEquivalence (F : Cᵒᵖ ⥤ Type v) :
     F.Elementsᵒᵖ ≌ CostructuredArrow yoneda F :=
   Equivalence.mk (toCostructuredArrow F) (fromCostructuredArrow F).rightOp
-    (NatIso.op (eqToIso (from_toCostructuredArrow_eq F)))
-    (eq_to_iso <| to_fromCostructuredArrow_eq F)
+    (NatIso.op (eqToIso (from_toCostructuredArrow_eq F))) (eqToIso <| to_fromCostructuredArrow_eq F)
 #align category_theory.category_of_elements.costructured_arrow_yoneda_equivalence CategoryTheory.categoryOfElements.costructuredArrowYonedaEquivalence
 
 /-- The equivalence `(-.elements)ᵒᵖ ≅ (yoneda, -)` of is actually a natural isomorphism of functors.

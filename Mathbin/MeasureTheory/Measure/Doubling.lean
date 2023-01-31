@@ -34,7 +34,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 
 open Ennreal Nnreal Topology
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closed_ball_le_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for
 all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius `2 * ε` is
 bounded by `C` times the measure of the concentric ball of radius `ε`.
@@ -45,7 +45,7 @@ exponentially in hyperbolic space. To be really explicit, consider the hyperboli
 curvature -1, the area of a disc of radius `ε` is `A(ε) = 2π(cosh(ε) - 1)` so `A(2ε)/A(ε) ~ exp(ε)`.
 -/
 class IsDoublingMeasure {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α) where
-  exists_measure_closed_ball_le_mul :
+  exists_measure_closedBall_le_mul :
     ∃ C : ℝ≥0, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ C * μ (closedBall x ε)
 #align is_doubling_measure IsDoublingMeasure
 
@@ -155,13 +155,13 @@ def scalingScaleOf (K : ℝ) : ℝ :=
 #align is_doubling_measure.scaling_scale_of IsDoublingMeasure.scalingScaleOf
 
 theorem scalingScaleOf_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
-  (eventually_measure_mul_le_scalingConstantOf_mul μ K).some_spec.1
+  (eventually_measure_mul_le_scalingConstantOf_mul μ K).choose_spec.1
 #align is_doubling_measure.scaling_scale_of_pos IsDoublingMeasure.scalingScaleOf_pos
 
 theorem measure_mul_le_scalingConstantOf_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ Ioc 0 K)
     (hr : r ≤ scalingScaleOf μ K) :
     μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
-  (eventually_measure_mul_le_scalingConstantOf_mul μ K).some_spec.2 x t r ht hr
+  (eventually_measure_mul_le_scalingConstantOf_mul μ K).choose_spec.2 x t r ht hr
 #align is_doubling_measure.measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.measure_mul_le_scalingConstantOf_mul
 
 end IsDoublingMeasure

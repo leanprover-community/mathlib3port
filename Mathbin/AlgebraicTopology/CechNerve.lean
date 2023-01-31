@@ -238,15 +238,15 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
 #align category_theory.simplicial_object.cech_nerve_equiv CategoryTheory.SimplicialObject.cechNerveEquiv
 
 /-- The augmented Čech nerve construction is right adjoint to the `to_arrow` functor. -/
-abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmented_cech_nerve :=
+abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmentedCechNerve :=
   Adjunction.mkOfHomEquiv
     { homEquiv := cechNerveEquiv
-      hom_equiv_naturality_left_symm' := fun x y f g h =>
+      homEquiv_naturality_left_symm' := fun x y f g h =>
         by
         ext
         · simp
         · simp
-      hom_equiv_naturality_right' := fun x y f g h =>
+      homEquiv_naturality_right' := fun x y f g h =>
         by
         ext
         · simp
@@ -458,16 +458,16 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
 #align category_theory.cosimplicial_object.cech_conerve_equiv CategoryTheory.CosimplicialObject.cechConerveEquiv
 
 /-- The augmented Čech conerve construction is left adjoint to the `to_arrow` functor. -/
-abbrev cechConerveAdjunction : augmented_cech_conerve ⊣ (Augmented.toArrow : _ ⥤ Arrow C) :=
+abbrev cechConerveAdjunction : augmentedCechConerve ⊣ (Augmented.toArrow : _ ⥤ Arrow C) :=
   Adjunction.mkOfHomEquiv
     { homEquiv := cechConerveEquiv
-      hom_equiv_naturality_left_symm' := fun x y f g h =>
+      homEquiv_naturality_left_symm' := fun x y f g h =>
         by
         ext
         · rfl
         · simp
         · simp
-      hom_equiv_naturality_right' := fun x y f g h =>
+      homEquiv_naturality_right' := fun x y f g h =>
         by
         ext
         · simp
@@ -563,7 +563,7 @@ def iso (X : C) : (Arrow.mk (terminal.from X)).cechNerve ≅ cechNerveTerminalFr
           dsimp only [cech_nerve_terminal_from, wide_pullback.π, pi.lift]
           erw [wide_pullback.lift_π,
             limit.cone_point_unique_up_to_iso_inv_comp (wide_cospan.limit_cone _ _).2,
-            (limit.is_limit _).cone_point_unique_up_to_iso_inv_comp (wide_cospan.limit_cone _ _).2,
+            (limit.is_limit _).conePointUniqueUpToIso_inv_comp (wide_cospan.limit_cone _ _).2,
             limit.lift_π]
           rfl)
         (@Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _))

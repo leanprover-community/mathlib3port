@@ -160,7 +160,7 @@ def commonNormalizeLemmaNames : List Name :=
 #align auto.common_normalize_lemma_names Auto.commonNormalizeLemmaNames
 
 def classicalNormalizeLemmaNames : List Name :=
-  common_normalize_lemma_names ++ [`` classical.implies_iff_not_or]
+  commonNormalizeLemmaNames ++ [`` classical.implies_iff_not_or]
 #align auto.classical_normalize_lemma_names Auto.classicalNormalizeLemmaNames
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

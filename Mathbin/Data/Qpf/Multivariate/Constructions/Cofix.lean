@@ -160,7 +160,7 @@ def Cofix.abs {α} : q.p.M α → Cofix F α :=
 
 /-- Representation function for `cofix F α` -/
 def Cofix.repr {α} : Cofix F α → q.p.M α :=
-  M.corec _ <| repr ∘ cofix.dest
+  M.corec _ <| repr ∘ Cofix.dest
 #align mvqpf.cofix.repr Mvqpf.Cofix.repr
 
 /-- Corecursor for `cofix F` -/
@@ -177,7 +177,7 @@ value instead of making a recursive call -/
 def Cofix.corec' {α : TypeVec n} {β : Type u} (g : β → F (α.append1 (Sum (Cofix F α) β))) (x : β) :
     Cofix F α :=
   let f : (α ::: Cofix F α) ⟹ (α ::: Sum (Cofix F α) β) := id ::: Sum.inl
-  Cofix.corec (Sum.elim (MvFunctor.map f ∘ cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
+  Cofix.corec (Sum.elim (MvFunctor.map f ∘ Cofix.dest) g) (Sum.inr x : Sum (Cofix F α) β)
 #align mvqpf.cofix.corec' Mvqpf.Cofix.corec'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -415,7 +415,7 @@ theorem liftr_map_last [LawfulMvFunctor F] {α : TypeVec n} {ι ι'} (R : ι' �
       ((fun i : Fin2 n => { x // ofRepeat (α.RelLast' R i.fs x) }) ::: Subtype (uncurry R)) :=
     ofSubtype _ ::: id
   have hh :
-    subtypeVal _ ⊚ toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b =
+    subtypeVal _ ⊚ toSubtype _ ⊚ fromAppend1DropLast ⊚ c ⊚ b =
       ((id ::: f) ⊗' (id ::: g)) ⊚ prod.diag :=
     by
     dsimp [c, b]
@@ -434,7 +434,7 @@ theorem liftr_map_last [LawfulMvFunctor F] {α : TypeVec n} {ι ι'} (R : ι' �
     dsimp
     ext1
     rfl
-  liftr_map _ _ _ _ (toSubtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b) hh
+  liftr_map _ _ _ _ (toSubtype _ ⊚ fromAppend1DropLast ⊚ c ⊚ b) hh
 #align mvqpf.liftr_map_last Mvqpf.liftr_map_last
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

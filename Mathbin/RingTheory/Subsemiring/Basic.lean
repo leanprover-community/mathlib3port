@@ -58,8 +58,8 @@ instance (priority := 74) AddSubmonoidWithOneClass.toAddMonoidWithOne
   { AddSubmonoidClass.toAddMonoid s with
     one := ⟨_, one_mem s⟩
     natCast := fun n => ⟨n, natCast_mem s n⟩
-    nat_cast_zero := Subtype.ext Nat.cast_zero
-    nat_cast_succ := fun n => Subtype.ext (Nat.cast_succ _) }
+    natCast_zero := Subtype.ext Nat.cast_zero
+    natCast_succ := fun n => Subtype.ext (Nat.cast_succ _) }
 #align add_submonoid_with_one_class.to_add_monoid_with_one AddSubmonoidWithOneClass.toAddMonoidWithOne
 -/
 
@@ -584,8 +584,8 @@ instance toNonAssocSemiring : NonAssocSemiring s :=
     right_distrib := fun x y z => Subtype.eq <| right_distrib x y z
     left_distrib := fun x y z => Subtype.eq <| left_distrib x y z
     natCast := fun n => ⟨n, coe_nat_mem s n⟩
-    nat_cast_zero := by simp [Nat.cast] <;> rfl
-    nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl }
+    natCast_zero := by simp [Nat.cast] <;> rfl
+    natCast_succ := fun _ => by simp [Nat.cast] <;> rfl }
 #align subsemiring.to_non_assoc_semiring Subsemiring.toNonAssocSemiring
 
 #print Subsemiring.coe_one /-
@@ -892,7 +892,7 @@ def topEquiv : (⊤ : Subsemiring R) ≃+* R
   left_inv r := SetLike.eta r _
   right_inv r := [anonymous] r _
   map_mul' := (⊤ : Subsemiring R).coe_mul
-  map_add' := (⊤ : Subsemiring R).coe_add
+  map_add' := (⊤ : Subsemiring R).val_add
 #align subsemiring.top_equiv Subsemiring.topEquiv
 
 #print Subsemiring.comap /-
@@ -1363,7 +1363,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] {x : R} {s : Set.{u1} R}, Iff (Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x (Subsemiring.closure.{u1} R _inst_1 s)) (forall (S : Subsemiring.{u1} R _inst_1), (HasSubset.Subset.{u1} (Set.{u1} R) (Set.instHasSubsetSet.{u1} R) s (SetLike.coe.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1) S)) -> (Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x S))
 Case conversion may be inaccurate. Consider using '#align subsemiring.mem_closure Subsemiring.mem_closureₓ'. -/
 theorem mem_closure {x : R} {s : Set R} : x ∈ closure s ↔ ∀ S : Subsemiring R, s ⊆ S → x ∈ S :=
-  mem_Inf
+  mem_infₛ
 #align subsemiring.mem_closure Subsemiring.mem_closure
 
 /- warning: subsemiring.subset_closure -> Subsemiring.subset_closure is a dubious translation:
@@ -1704,7 +1704,7 @@ but is expected to have type
   forall {R : Type.{u2}} [_inst_1 : NonAssocSemiring.{u2} R] {ι : Sort.{u1}} (s : ι -> (Set.{u2} R)), Eq.{succ u2} (Subsemiring.{u2} R _inst_1) (Subsemiring.closure.{u2} R _inst_1 (Set.unionᵢ.{u2, u1} R ι (fun (i : ι) => s i))) (supᵢ.{u2, u1} (Subsemiring.{u2} R _inst_1) (CompleteLattice.toSupSet.{u2} (Subsemiring.{u2} R _inst_1) (Subsemiring.instCompleteLatticeSubsemiring.{u2} R _inst_1)) ι (fun (i : ι) => Subsemiring.closure.{u2} R _inst_1 (s i)))
 Case conversion may be inaccurate. Consider using '#align subsemiring.closure_Union Subsemiring.closure_unionᵢₓ'. -/
 theorem closure_unionᵢ {ι} (s : ι → Set R) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Subsemiring.gi R).gc.l_supr
+  (Subsemiring.gi R).gc.l_supᵢ
 #align subsemiring.closure_Union Subsemiring.closure_unionᵢ
 
 /- warning: subsemiring.closure_sUnion -> Subsemiring.closure_unionₛ is a dubious translation:
@@ -1714,7 +1714,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (s : Set.{u1} (Set.{u1} R)), Eq.{succ u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.closure.{u1} R _inst_1 (Set.unionₛ.{u1} R s)) (supᵢ.{u1, succ u1} (Subsemiring.{u1} R _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instCompleteLatticeSubsemiring.{u1} R _inst_1)) (Set.{u1} R) (fun (t : Set.{u1} R) => supᵢ.{u1, 0} (Subsemiring.{u1} R _inst_1) (CompleteLattice.toSupSet.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instCompleteLatticeSubsemiring.{u1} R _inst_1)) (Membership.mem.{u1, u1} (Set.{u1} R) (Set.{u1} (Set.{u1} R)) (Set.instMembershipSet.{u1} (Set.{u1} R)) t s) (fun (H : Membership.mem.{u1, u1} (Set.{u1} R) (Set.{u1} (Set.{u1} R)) (Set.instMembershipSet.{u1} (Set.{u1} R)) t s) => Subsemiring.closure.{u1} R _inst_1 t)))
 Case conversion may be inaccurate. Consider using '#align subsemiring.closure_sUnion Subsemiring.closure_unionₛₓ'. -/
 theorem closure_unionₛ (s : Set (Set R)) : closure (⋃₀ s) = ⨆ t ∈ s, closure t :=
-  (Subsemiring.gi R).gc.l_Sup
+  (Subsemiring.gi R).gc.l_supₛ
 #align subsemiring.closure_sUnion Subsemiring.closure_unionₛ
 
 /- warning: subsemiring.map_sup -> Subsemiring.map_sup is a dubious translation:
@@ -1735,7 +1735,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.map_supr Subsemiring.map_supᵢₓ'. -/
 theorem map_supᵢ {ι : Sort _} (f : R →+* S) (s : ι → Subsemiring R) :
     (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supr
+  (gc_map_comap f).l_supᵢ
 #align subsemiring.map_supr Subsemiring.map_supᵢ
 
 /- warning: subsemiring.comap_inf -> Subsemiring.comap_inf is a dubious translation:
@@ -1756,7 +1756,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.comap_infi Subsemiring.comap_infᵢₓ'. -/
 theorem comap_infᵢ {ι : Sort _} (f : R →+* S) (s : ι → Subsemiring S) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infi
+  (gc_map_comap f).u_infᵢ
 #align subsemiring.comap_infi Subsemiring.comap_infᵢ
 
 #print Subsemiring.map_bot /-
@@ -2029,7 +2029,7 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.srange_restri
 
 This is the bundled version of `set.range_factorization`. -/
 def rangeSRestrict (f : R →+* S) : R →+* f.srange :=
-  f.codRestrict f.srange f.mem_srange_self
+  f.codRestrict f.srange f.mem_rangeS_self
 #align ring_hom.srange_restrict RingHom.rangeSRestrict
 
 /- warning: ring_hom.coe_srange_restrict -> RingHom.coe_rangeSRestrict is a dubious translation:
@@ -2081,7 +2081,7 @@ theorem rangeS_top_of_surjective (f : R →+* S) (hf : Function.Surjective f) :
 #print RingHom.eqLocusS /-
 /-- The subsemiring of elements `x : R` such that `f x = g x` -/
 def eqLocusS (f g : R →+* S) : Subsemiring R :=
-  { (f : R →* S).eqMlocus g, (f : R →+ S).eqMlocus g with carrier := { x | f x = g x } }
+  { (f : R →* S).eqLocus g, (f : R →+ S).eqLocus g with carrier := { x | f x = g x } }
 #align ring_hom.eq_slocus RingHom.eqLocusS
 -/
 
@@ -2092,7 +2092,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), Eq.{succ u1} (Subsemiring.{u1} R _inst_1) (RingHom.eqLocusS.{u1, u2} R S _inst_1 _inst_2 f f) (Top.top.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instTopSubsemiring.{u1} R _inst_1))
 Case conversion may be inaccurate. Consider using '#align ring_hom.eq_slocus_same RingHom.eqLocusS_sameₓ'. -/
 @[simp]
-theorem eqLocusS_same (f : R →+* S) : f.eqSlocus f = ⊤ :=
+theorem eqLocusS_same (f : R →+* S) : f.eqLocusS f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
 #align ring_hom.eq_slocus_same RingHom.eqLocusS_same
 
@@ -2104,7 +2104,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_hom.eq_on_sclosure RingHom.eqOn_sclosureₓ'. -/
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subsemiring closure. -/
 theorem eqOn_sclosure {f g : R →+* S} {s : Set R} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
-  show closure s ≤ f.eqSlocus g from closure_le.2 h
+  show closure s ≤ f.eqLocusS g from closure_le.2 h
 #align ring_hom.eq_on_sclosure RingHom.eqOn_sclosure
 
 /- warning: ring_hom.eq_of_eq_on_stop -> RingHom.eq_of_eqOn_stop is a dubious translation:
@@ -2125,7 +2125,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_hom.eq_of_eq_on_sdense RingHom.eq_of_eqOn_sdenseₓ'. -/
 theorem eq_of_eqOn_sdense {s : Set R} (hs : closure s = ⊤) {f g : R →+* S} (h : s.EqOn f g) :
     f = g :=
-  eq_of_eq_on_stop <| hs ▸ eqOn_sclosure h
+  eq_of_eqOn_stop <| hs ▸ eqOn_sclosure h
 #align ring_hom.eq_of_eq_on_sdense RingHom.eq_of_eqOn_sdense
 
 /- warning: ring_hom.sclosure_preimage_le -> RingHom.sclosure_preimage_le is a dubious translation:
@@ -2320,7 +2320,7 @@ variable [NonAssocSemiring R']
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [SMul R' α] (S : Subsemiring R') : SMul S α :=
-  S.toSubmonoid.HasSmul
+  S.toSubmonoid.SMul
 
 /- warning: subsemiring.smul_def -> Subsemiring.smul_def is a dubious translation:
 lean 3 declaration is
@@ -2340,7 +2340,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.smul_comm_class_left Subsemiring.smulCommClass_leftₓ'. -/
 instance smulCommClass_left [SMul R' β] [SMul α β] [SMulCommClass R' α β] (S : Subsemiring R') :
     SMulCommClass S α β :=
-  S.toSubmonoid.smul_comm_class_left
+  S.toSubmonoid.smulCommClass_left
 #align subsemiring.smul_comm_class_left Subsemiring.smulCommClass_left
 
 /- warning: subsemiring.smul_comm_class_right -> Subsemiring.smulCommClass_right is a dubious translation:
@@ -2351,7 +2351,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.smul_comm_class_right Subsemiring.smulCommClass_rightₓ'. -/
 instance smulCommClass_right [SMul α β] [SMul R' β] [SMulCommClass α R' β] (S : Subsemiring R') :
     SMulCommClass α S β :=
-  S.toSubmonoid.smul_comm_class_right
+  S.toSubmonoid.smulCommClass_right
 #align subsemiring.smul_comm_class_right Subsemiring.smulCommClass_right
 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
@@ -2360,7 +2360,7 @@ instance [SMul α β] [SMul R' α] [SMul R' β] [IsScalarTower R' α β] (S : Su
   S.toSubmonoid.IsScalarTower
 
 instance [SMul R' α] [FaithfulSMul R' α] (S : Subsemiring R') : FaithfulSMul S α :=
-  S.toSubmonoid.HasFaithfulSmul
+  S.toSubmonoid.FaithfulSMul
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [Zero α] [SMulWithZero R' α] (S : Subsemiring R') : SMulWithZero S α :=

@@ -131,13 +131,13 @@ noncomputable def commonDenom {ι : Type _} (s : Finset ι) (f : ι → S) : M :
 /-- The numerator of a fraction after clearing the denominators
 of a `finset`-indexed family of fractions. -/
 noncomputable def integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) : R :=
-  ((exist_integer_multiples M s f).some_spec i i.Prop).some
+  ((exist_integer_multiples M s f).choose_spec i i.Prop).some
 #align is_localization.integer_multiple IsLocalization.integerMultiple
 
 @[simp]
 theorem map_integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) :
     algebraMap R S (integerMultiple M s f i) = commonDenom M s f • f i :=
-  ((exist_integer_multiples M s f).some_spec _ i.Prop).some_spec
+  ((exist_integer_multiples M s f).choose_spec _ i.Prop).choose_spec
 #align is_localization.map_integer_multiple IsLocalization.map_integerMultiple
 
 /-- A choice of a common multiple of the denominators of a finite set of fractions. -/

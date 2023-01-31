@@ -36,19 +36,19 @@ variable (R : Type u) (M : Type v) (N : Type w) (X : Type x) (Y : Type y) [Unifo
 
 /-- An additive action such that for all `c`, the map `λ x, c +ᵥ x` is uniformly continuous. -/
 class HasUniformContinuousConstVadd [VAdd M X] : Prop where
-  uniform_continuous_const_vadd : ∀ c : M, UniformContinuous ((· +ᵥ ·) c : X → X)
+  uniformContinuous_const_vadd : ∀ c : M, UniformContinuous ((· +ᵥ ·) c : X → X)
 #align has_uniform_continuous_const_vadd HasUniformContinuousConstVadd
 
 /-- A multiplicative action such that for all `c`, the map `λ x, c • x` is uniformly continuous. -/
 @[to_additive]
 class HasUniformContinuousConstSmul [SMul M X] : Prop where
-  uniform_continuous_const_smul : ∀ c : M, UniformContinuous ((· • ·) c : X → X)
+  uniformContinuous_const_smul : ∀ c : M, UniformContinuous ((· • ·) c : X → X)
 #align has_uniform_continuous_const_smul HasUniformContinuousConstSmul
 #align has_uniform_continuous_const_vadd HasUniformContinuousConstVadd
 
-export HasUniformContinuousConstVadd (uniform_continuous_const_vadd)
+export HasUniformContinuousConstVadd (uniformContinuous_const_vadd)
 
-export HasUniformContinuousConstSmul (uniform_continuous_const_smul)
+export HasUniformContinuousConstSmul (uniformContinuous_const_smul)
 
 instance AddMonoid.hasUniformContinuousConstSmul_nat [AddGroup X] [UniformAddGroup X] :
     HasUniformContinuousConstSmul ℕ X :=

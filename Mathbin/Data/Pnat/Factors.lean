@@ -251,7 +251,7 @@ def factorMultiset (n : ℕ+) : PrimeMultiset :=
 
 /-- The product of the factors is the original number -/
 theorem prod_factorMultiset (n : ℕ+) : (factorMultiset n).Prod = n :=
-  Eq <| by
+  eq <| by
     dsimp [factor_multiset]
     rw [PrimeMultiset.prod_ofNatList]
     exact Nat.prod_factors n.ne_zero
@@ -328,7 +328,7 @@ theorem factorMultiset_ofPrime (p : Nat.Primes) :
   by
   apply factor_multiset_equiv.symm.injective
   change (p : ℕ+).factorMultiset.Prod = (PrimeMultiset.ofPrime p).Prod
-  rw [(p : ℕ+).prod_factor_multiset, PrimeMultiset.prod_ofPrime]
+  rw [(p : ℕ+).prod_factorMultiset, PrimeMultiset.prod_ofPrime]
 #align pnat.factor_multiset_of_prime PNat.factorMultiset_ofPrime
 
 /-- We now have four different results that all encode the

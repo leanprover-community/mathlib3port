@@ -139,7 +139,7 @@ theorem factorization_centralBinom_eq_zero_of_two_mul_lt (h : 2 * n < p) :
 -/
 theorem le_two_mul_of_factorization_centralBinom_pos
     (h_pos : 0 < (centralBinom n).factorization p) : p ≤ 2 * n :=
-  le_of_not_lt (pos_iff_ne_zero.mp h_pos ∘ factorization_central_binom_eq_zero_of_two_mul_lt)
+  le_of_not_lt (pos_iff_ne_zero.mp h_pos ∘ factorization_centralBinom_eq_zero_of_two_mul_lt)
 #align nat.le_two_mul_of_factorization_central_binom_pos Nat.le_two_mul_of_factorization_centralBinom_pos
 
 /-- A binomial coefficient is the product of its prime factors, which are at most `n`. -/

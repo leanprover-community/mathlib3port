@@ -120,7 +120,7 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
   · simp [this, hQ, isIntegral_zero]
   have hlt : Q.nat_degree < B.dim :=
     by
-    rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).nat_degree_map,
+    rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).natDegree_map,
       nat_degree_lt_nat_degree_iff hQ]
     letI : Nontrivial R := nontrivial.of_polynomial_ne hQ
     exact degree_mod_by_monic_lt _ (minpoly.monic hB)

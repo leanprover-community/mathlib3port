@@ -75,7 +75,7 @@ instance : CocompactMapClass (CocompactMap α β) α β
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
   cocompact_tendsto f := f.cocompact_tendsto'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -98,7 +98,7 @@ to fix definitional equalities. -/
 protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : CocompactMap α β
     where
   toFun := f'
-  continuous_to_fun := by
+  continuous_toFun := by
     rw [h]
     exact f.continuous_to_fun
   cocompact_tendsto' := by
@@ -203,7 +203,7 @@ end CocompactMap
 def Homeomorph.toCocompactMap {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
     (f : α ≃ₜ β) : CocompactMap α β where
   toFun := f
-  continuous_to_fun := f.Continuous
+  continuous_toFun := f.Continuous
   cocompact_tendsto' :=
     by
     refine' CocompactMap.tendsto_of_forall_preimage fun K hK => _

@@ -145,9 +145,9 @@ theorem mem_inf {x} : x ∈ S ⊓ T ↔ x ∈ S ∧ x ∈ T :=
 
 instance : InfSet (ConvexCone 𝕜 E) :=
   ⟨fun S =>
-    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_bInter fun s hs => s.smul_mem hc <| mem_interᵢ₂.1 hx s hs,
+    ⟨⋂ s ∈ S, ↑s, fun c hc x hx => mem_binterᵢ fun s hs => s.smul_mem hc <| mem_interᵢ₂.1 hx s hs,
       fun x hx y hy =>
-      mem_bInter fun s hs => s.add_mem (mem_interᵢ₂.1 hx s hs) (mem_interᵢ₂.1 hy s hs)⟩⟩
+      mem_binterᵢ fun s hs => s.add_mem (mem_interᵢ₂.1 hx s hs) (mem_interᵢ₂.1 hy s hs)⟩⟩
 
 @[simp]
 theorem coe_infₛ (S : Set (ConvexCone 𝕜 E)) : ↑(infₛ S) = ⋂ s ∈ S, (s : Set E) :=
@@ -155,7 +155,7 @@ theorem coe_infₛ (S : Set (ConvexCone 𝕜 E)) : ↑(infₛ S) = ⋂ s ∈ S, 
 #align convex_cone.coe_Inf ConvexCone.coe_infₛ
 
 theorem mem_infₛ {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align convex_cone.mem_Inf ConvexCone.mem_infₛ
 
 @[simp]
@@ -202,19 +202,19 @@ instance : CompleteLattice (ConvexCone 𝕜 E) :=
     top := ⊤
     le_top := fun S x hx => mem_top 𝕜 x
     inf := (· ⊓ ·)
-    inf := InfSet.infₛ
+    infₛ := InfSet.infₛ
     sup := fun a b => infₛ { x | a ≤ x ∧ b ≤ x }
-    sup := fun s => infₛ { T | ∀ S ∈ s, S ≤ T }
+    supₛ := fun s => infₛ { T | ∀ S ∈ s, S ≤ T }
     le_sup_left := fun a b => fun x hx => mem_infₛ.2 fun s hs => hs.1 hx
     le_sup_right := fun a b => fun x hx => mem_infₛ.2 fun s hs => hs.2 hx
     sup_le := fun a b c ha hb x hx => mem_infₛ.1 hx c ⟨ha, hb⟩
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
     inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right
-    le_Sup := fun s p hs x hx => mem_infₛ.2 fun t ht => ht p hs hx
-    Sup_le := fun s p hs x hx => mem_infₛ.1 hx p hs
-    le_Inf := fun s a ha x hx => mem_infₛ.2 fun t ht => ha t ht hx
-    Inf_le := fun s a ha x hx => mem_infₛ.1 hx _ ha }
+    le_sup := fun s p hs x hx => mem_infₛ.2 fun t ht => ht p hs hx
+    sup_le := fun s p hs x hx => mem_infₛ.1 hx p hs
+    le_inf := fun s a ha x hx => mem_infₛ.2 fun t ht => ha t ht hx
+    inf_le := fun s a ha x hx => mem_infₛ.1 hx _ ha }
 
 instance : Inhabited (ConvexCone 𝕜 E) :=
   ⟨⊥⟩
@@ -704,7 +704,7 @@ theorem toCone_isLeast : IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } (hs.toCone 
 #align convex.to_cone_is_least Convex.toCone_isLeast
 
 theorem toCone_eq_infₛ : hs.toCone s = infₛ { t : ConvexCone 𝕜 E | s ⊆ t } :=
-  hs.to_cone_is_least.IsGlb.Inf_eq.symm
+  hs.toCone_isLeast.IsGLB.infₛ_eq.symm
 #align convex.to_cone_eq_Inf Convex.toCone_eq_infₛ
 
 end Convex
@@ -712,7 +712,7 @@ end Convex
 theorem convexHull_toCone_isLeast (s : Set E) :
     IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } ((convex_convexHull 𝕜 s).toCone _) :=
   by
-  convert (convex_convexHull 𝕜 s).to_cone_is_least
+  convert (convex_convexHull 𝕜 s).toCone_isLeast
   ext t
   exact ⟨fun h => convexHull_min h t.convex, (subset_convexHull 𝕜 s).trans⟩
 #align convex_hull_to_cone_is_least convexHull_toCone_isLeast

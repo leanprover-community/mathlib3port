@@ -102,7 +102,7 @@ theorem w : res F U ≫ leftRes F U = res F U ≫ rightRes F U :=
 /-- The equalizer diagram for the sheaf condition.
 -/
 @[reducible]
-def diagram : walking_parallel_pair ⥤ C :=
+def diagram : WalkingParallelPair ⥤ C :=
   parallelPair (leftRes.{v'} F U) (rightRes F U)
 #align Top.presheaf.sheaf_condition_equalizer_products.diagram TopCat.Presheaf.SheafConditionEqualizerProducts.diagram
 

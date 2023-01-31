@@ -160,7 +160,7 @@ theorem int_valuation_le_pow_iff_dvd (r : R) (n : ℕ) :
 
 /-- The `v`-adic valuation of `0 : R` equals 0. -/
 theorem IntValuation.map_zero' : v.intValuationDef 0 = 0 :=
-  v.int_valuation_def_if_pos (Eq.refl 0)
+  v.intValuationDef_if_pos (Eq.refl 0)
 #align is_dedekind_domain.height_one_spectrum.int_valuation.map_zero' IsDedekindDomain.HeightOneSpectrum.IntValuation.map_zero'
 
 /-- The `v`-adic valuation of `1 : R` equals 1. -/

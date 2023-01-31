@@ -104,7 +104,7 @@ theorem isOpen_resolventSet (a : A) : IsOpen (ρ a) :=
 #align spectrum.is_open_resolvent_set spectrum.isOpen_resolventSet
 
 protected theorem isClosed (a : A) : IsClosed (σ a) :=
-  (isOpen_resolventSet a).is_closed_compl
+  (isOpen_resolventSet a).isClosed_compl
 #align spectrum.is_closed spectrum.isClosed
 
 theorem mem_resolventSet_of_norm_lt_mul {a : A} {k : 𝕜} (h : ‖a‖ * ‖(1 : A)‖ < ‖k‖) : k ∈ ρ a :=
@@ -164,7 +164,7 @@ theorem exists_nnnorm_eq_spectralRadius_of_nonempty [ProperSpace 𝕜] {a : A} (
 theorem spectralRadius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (ha : (σ a).Nonempty)
     {r : ℝ≥0} (hr : ∀ k ∈ σ a, ‖k‖₊ < r) : spectralRadius 𝕜 a < r :=
   supₛ_image.symm.trans_lt <|
-    ((spectrum.isCompact a).Sup_lt_iff_of_continuous ha
+    ((spectrum.isCompact a).supₛ_lt_iff_of_continuous ha
           (Ennreal.continuous_coe.comp continuous_nnnorm).ContinuousOn (r : ℝ≥0∞)).mpr
       (by exact_mod_cast hr)
 #align spectrum.spectral_radius_lt_of_forall_lt_of_nonempty spectrum.spectralRadius_lt_of_forall_lt_of_nonempty
@@ -324,7 +324,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
             simpa only [← coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nnreal] using hy
           rwa [← coe_nnnorm, ← Real.lt_toNnreal_iff_coe_lt, Real.toNnreal_one, nnnorm_smul, ←
             Nnreal.lt_inv_iff_mul_lt h]
-      simpa [← smul_pow, (NormedRing.summable_geometric_of_norm_lt_1 _ norm_lt).has_sum_iff] using
+      simpa [← smul_pow, (NormedRing.summable_geometric_of_norm_lt_1 _ norm_lt).hasSum_iff] using
         (NormedRing.inverse_oneSub _ norm_lt).symm }
 #align spectrum.has_fpower_series_on_ball_inverse_one_sub_smul spectrum.hasFpowerSeriesOnBallInverseOneSubSmul
 
@@ -434,7 +434,7 @@ protected theorem nonempty : (spectrum ℂ a).Nonempty :=
     by
     refine' fun z => H₁.apply_eq_apply_of_bounded (bounded_iff_forall_norm_le.mpr _) z 0
     rcases H₂ 1 zero_lt_one with ⟨R, R_pos, hR⟩
-    rcases(ProperSpace.isCompact_closedBall (0 : ℂ) R).exists_bound_of_continuous_on
+    rcases(ProperSpace.isCompact_closedBall (0 : ℂ) R).exists_bound_of_continuousOn
         H₁.continuous.continuous_on with
       ⟨C, hC⟩
     use max C 1

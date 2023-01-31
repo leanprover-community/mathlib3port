@@ -104,7 +104,7 @@ theorem cycleOf_formPerm (hl : Nodup l) (hn : 2 ≤ l.length) (x) :
     cycleOf l.attach.formPerm x = l.attach.formPerm :=
   have hn : 2 ≤ l.attach.length := by rwa [← length_attach] at hn
   have hl : l.attach.Nodup := by rwa [← nodup_attach] at hl
-  (isCycle_formPerm hl hn).cycle_of_eq
+  (isCycle_formPerm hl hn).cycleOf_eq
     ((formPerm_apply_mem_ne_self_iff _ hl _ (mem_attach _ _)).mpr hn)
 #align list.cycle_of_form_perm List.cycleOf_formPerm
 
@@ -446,7 +446,7 @@ The forward direction is implemented by `equiv.perm.to_cycle`.
 def isoCycle : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial }
     where
   toFun f := ⟨toCycle (f : Perm α) f.Prop, nodup_toCycle f f.Prop, nontrivial_toCycle _ f.Prop⟩
-  invFun s := ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).is_cycle_form_perm _ s.Prop.right⟩
+  invFun s := ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).isCycle_formPerm _ s.Prop.right⟩
   left_inv f := by
     obtain ⟨x, hx, -⟩ := id f.prop
     simpa [to_cycle_eq_to_list (f : perm α) f.prop x hx, form_perm_to_list, Subtype.ext_iff] using
@@ -525,8 +525,8 @@ The forward direction is implemented by finding this `cycle α` using `fintype.c
 -/
 def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s.Nontrivial }
     where
-  toFun f := Fintype.choose _ f.Prop.exists_unique_cycle_nontrivial_subtype
-  invFun s := ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).is_cycle_form_perm _ s.Prop.right⟩
+  toFun f := Fintype.choose _ f.Prop.existsUnique_cycle_nontrivial_subtype
+  invFun s := ⟨(s : Cycle α).formPerm s.Prop.left, (s : Cycle α).isCycle_formPerm _ s.Prop.right⟩
   left_inv f := by
     simpa [Subtype.ext_iff] using
       Fintype.choose_spec _ f.prop.exists_unique_cycle_nontrivial_subtype

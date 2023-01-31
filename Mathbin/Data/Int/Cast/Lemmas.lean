@@ -429,7 +429,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eq_int_cast' eq_intCast'ₓ'. -/
 theorem eq_intCast' [AddGroupWithOne α] [AddMonoidHomClass F ℤ α] (f : F) (h₁ : f 1 = 1) :
     ∀ n : ℤ, f n = n :=
-  AddMonoidHom.ext_iff.1 <| (f : ℤ →+ α).eq_int_cast_hom h₁
+  AddMonoidHom.ext_iff.1 <| (f : ℤ →+ α).eq_int_castAddHom h₁
 #align eq_int_cast' eq_intCast'
 
 /- warning: int.cast_add_hom_int -> Int.castAddHom_int is a dubious translation:
@@ -440,7 +440,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cast_add_hom_int Int.castAddHom_intₓ'. -/
 @[simp]
 theorem Int.castAddHom_int : Int.castAddHom ℤ = AddMonoidHom.id ℤ :=
-  ((AddMonoidHom.id ℤ).eq_int_cast_hom rfl).symm
+  ((AddMonoidHom.id ℤ).eq_int_castAddHom rfl).symm
 #align int.cast_add_hom_int Int.castAddHom_int
 
 namespace MonoidHom
@@ -495,7 +495,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.e
 theorem ext_int {f g : ℤ →*₀ M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidWithZeroHom = g.comp Int.ofNatHom.toMonoidWithZeroHom) :
     f = g :=
-  to_monoid_hom_injective <| MonoidHom.ext_int h_neg_one <| MonoidHom.ext (congr_fun h_nat : _)
+  toMonoidHom_injective <| MonoidHom.ext_int h_neg_one <| MonoidHom.ext (congr_fun h_nat : _)
 #align monoid_with_zero_hom.ext_int MonoidWithZeroHom.ext_int
 
 end MonoidWithZeroHom
@@ -563,7 +563,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_3 : NonAssocSemiring.{u1} R] (f : RingHom.{0, u1} Int R (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) _inst_3) (g : RingHom.{0, u1} Int R (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) _inst_3), Eq.{succ u1} (RingHom.{0, u1} Int R (NonAssocRing.toNonAssocSemiring.{0} Int (Ring.toNonAssocRing.{0} Int Int.instRingInt)) _inst_3) f g
 Case conversion may be inaccurate. Consider using '#align ring_hom.ext_int RingHom.ext_intₓ'. -/
 theorem ext_int {R : Type _} [NonAssocSemiring R] (f g : ℤ →+* R) : f = g :=
-  coe_add_monoid_hom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
+  coe_addMonoidHom_injective <| AddMonoidHom.ext_int <| f.map_one.trans g.map_one.symm
 #align ring_hom.ext_int RingHom.ext_int
 
 /- warning: ring_hom.int.subsingleton_ring_hom -> RingHom.Int.subsingleton_ringHom is a dubious translation:
@@ -593,7 +593,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cast_ring_hom_int Int.castRingHom_intₓ'. -/
 @[simp]
 theorem Int.castRingHom_int : Int.castRingHom ℤ = RingHom.id ℤ :=
-  (RingHom.id ℤ).eq_int_cast'.symm
+  (RingHom.id ℤ).eq_intCast'.symm
 #align int.cast_ring_hom_int Int.castRingHom_int
 
 namespace Pi

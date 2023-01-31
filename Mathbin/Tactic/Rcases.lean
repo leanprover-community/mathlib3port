@@ -254,7 +254,7 @@ protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.
     pure <| "@" ++ f
   | _, tuple [] => pure "⟨⟩"
   | _, tuple ls => do
-    let fs ← ls.mmap <| format false
+    let fs ← ls.mapM <| format false
     pure <|
         "⟨" ++
             _root_.format.group
@@ -262,7 +262,7 @@ protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.
                 _root_.format.join <| List.intersperse ("," ++ _root_.format.line) fs) ++
           "⟩"
   | br, alts ls => do
-    let fs ← ls.mmap <| format true
+    let fs ← ls.mapM <| format true
     let fmt := _root_.format.join <| List.intersperse (↑" |" ++ _root_.format.space) fs
     pure <| if br then _root_.format.bracket "(" ")" fmt else fmt
   | br, typed p e => do
@@ -293,16 +293,16 @@ unsafe def rcases.process_constructor :
     else
       match l, ps with
       | [], [] => ([`_], [default])
-      | [], [p] => ([p.Name.getOrElse `_], [p])
+      | [], [p] => ([p.Name.getD `_], [p])
       |-- The interesting case: we matched the last field against multiple
         -- patterns, so split off the remaining patterns into a subsequent
         -- match. This handles matching `α × β × γ` against `⟨a, b, c⟩`.
         [],
         ps => ([`_], [cond explicit (rcases_patt.tuple ps).explicit (rcases_patt.tuple ps)])
       | l, ps =>
-        let hd := ps.head
+        let hd := ps.headI
         let (ns, tl) := rcases.process_constructor explicit l ps.tail
-        (hd.Name.getOrElse `_ :: ns, hd :: tl)
+        (hd.Name.getD `_ :: ns, hd :: tl)
 #align tactic.rcases.process_constructor tactic.rcases.process_constructor
 
 private unsafe def get_pi_arity_list_aux : expr → tactic (List BinderInfo)
@@ -341,7 +341,7 @@ unsafe def rcases.process_constructors (params : Nat) :
           -- `α ⊕ β ⊕ γ` against `a|b|c`.
           [],
           _ :: _ => ((false, [rcases_patt.alts ps]), [])
-        | _, _ => (ps.head.as_tuple, ps.tail) :
+        | _, _ => (ps.headI.as_tuple, ps.tail) :
         _)
     let (ns, ps) := rcases.process_constructor explicit (l.drop params) h
     let (l, r) ← rcases.process_constructors cs t
@@ -454,10 +454,10 @@ end
 a list of variables to clear, actually perform the clear and set the goals with the result. -/
 unsafe def clear_goals (ugs : List uncleared_goal) : tactic Unit := do
   let gs ←
-    ugs.mmap fun ⟨cs, g⟩ => do
+    ugs.mapM fun ⟨cs, g⟩ => do
         set_goals [g]
         let cs ←
-          cs.mfoldr
+          cs.foldrM
               (fun c cs =>
                 (do
                     let (_, c) ← get_local_and_type c
@@ -482,7 +482,7 @@ unsafe def rcases (h : Option Name) (p : pexpr) (pat : rcases_patt) : tactic Uni
   let e ←
     match h with
       | some h => do
-        let x ← get_unused_name <| pat.Name.getOrElse `this
+        let x ← get_unused_name <| pat.Name.getD `this
         interactive.generalize h () (p, x)
         get_local x
       | none => i_to_expr p
@@ -512,7 +512,7 @@ See the module comment for the syntax of `pat`. -/
 unsafe def rcases_many (ps : listΠ pexpr) (pat : rcases_patt) : tactic Unit := do
   let (_, pats) := rcases.process_constructor false (ps.map fun _ => default) pat.as_tuple.2
   let pes ←
-    (ps.zip pats).mmap fun ⟨p, pat⟩ => do
+    (ps.zip pats).mapM fun ⟨p, pat⟩ => do
         let p :=
           match pat with
           | rcases_patt.typed _ ty => ``(($(p) : $(ty)))
@@ -542,8 +542,8 @@ unsafe def rcases_many (ps : listΠ pexpr) (pat : rcases_patt) : tactic Unit := 
 the same syntax as `rcases`. -/
 unsafe def rintro (ids : listΠ rcases_patt) : tactic Unit := do
   let l ←
-    ids.mmap fun id => do
-        let e ← intro <| id.Name.getOrElse `_
+    ids.mapM fun id => do
+        let e ← intro <| id.Name.getD `_
         pure (id, e)
   focus1 (rcases.continue l >>= clear_goals)
 #align tactic.rintro tactic.rintro
@@ -671,7 +671,7 @@ mutual
     | depth, e :: es => do
       let (p, gs) ← rcases_hint_core false depth e
       let (ps, gs') ←
-        gs.mfoldl
+        gs.foldlM
             (fun (r : listΠ rcases_patt × List expr) g => do
               let (ps, gs') ← set_goals [g] >> rcases_hint.continue depth es
               pure (merge_list rcases_patt.merge r.1 ps, r.2 ++ gs'))
@@ -721,7 +721,7 @@ unsafe def rcases_hint (p : pexpr) (depth : Nat) : tactic rcases_patt := do
   times as you like). -/
 unsafe def rcases_hint_many (ps : List pexpr) (depth : Nat) : tactic (listΠ rcases_patt) := do
   let es ←
-    ps.mmap fun p => do
+    ps.mapM fun p => do
         let e ← i_to_expr p
         if e then pure e
           else do
@@ -1106,7 +1106,7 @@ unsafe def rcases : parse rcases_parse → tactic Unit
         | Sum.inl p => Prod.mk <$> pp p <*> rcases_hint p depth
         | Sum.inr ps => do
           let patts ← rcases_hint_many ps depth
-          let pes ← ps.mmap pp
+          let pes ← ps.mapM pp
           pure (format.bracket "⟨" "⟩" (format.comma_separated pes), rcases_patt.tuple patts)
     let ppat ← pp patt
     trace <| ↑"Try this: rcases " ++ pe ++ " with " ++ ppat
@@ -1140,7 +1140,7 @@ unsafe def rintro : parse rintro_parse → tactic Unit
   | Sum.inr depth => do
     let ps ← tactic.rintro_hint depth
     let fs ←
-      ps.mmap fun p => do
+      ps.mapM fun p => do
           let f ← pp <| p.format true
           pure <| format.space ++ format.group f
     trace <| ↑"Try this: rintro" ++ format.join fs
@@ -1202,10 +1202,9 @@ If `⟨patt⟩` is omitted, `rcases` will try to infer the pattern.
 If `type` is omitted, `:= proof` is required.
 -/
 unsafe def obtain : parse obtain_parse → tactic Unit
-  | ((pat, _), some (Sum.inr val)) => tactic.rcases_many val (pat.getOrElse default)
-  | ((pat, none), some (Sum.inl val)) => tactic.rcases none val (pat.getOrElse default)
-  | ((pat, some tp), some (Sum.inl val)) =>
-    tactic.rcases none val <| (pat.getOrElse default).typed tp
+  | ((pat, _), some (Sum.inr val)) => tactic.rcases_many val (pat.getD default)
+  | ((pat, none), some (Sum.inl val)) => tactic.rcases none val (pat.getD default)
+  | ((pat, some tp), some (Sum.inl val)) => tactic.rcases none val <| (pat.getD default).typed tp
   | ((pat, some tp), none) => do
     let nm ← mk_fresh_name
     let e ← to_expr tp >>= assert nm

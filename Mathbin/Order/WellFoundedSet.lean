@@ -166,7 +166,7 @@ open Relation
             [`r])]
           "]")
          "."
-         `Tfae)))
+         `TFAE)))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -785,7 +785,7 @@ open Relation
               { b | TransGen r b a } . WellFoundedOn r
             ]
           .
-          Tfae
+          TFAE
     :=
       by
         tfae_have 1 → 2
@@ -822,8 +822,8 @@ variable [IsStrictOrder α r] {s t : Set α}
 
 instance IsStrictOrder.subset : IsStrictOrder α fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s
     where
-  to_is_irrefl := ⟨fun a con => irrefl_of r a Con.1⟩
-  to_is_trans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩
+  to_isIrrefl := ⟨fun a con => irrefl_of r a Con.1⟩
+  to_isTrans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩
 #align set.is_strict_order.subset Set.IsStrictOrder.subset
 
 theorem wellFoundedOn_iff_no_descending_seq :
@@ -897,7 +897,7 @@ protected theorem IsWf.union (hs : IsWf s) (ht : IsWf t) : IsWf (s ∪ t) :=
 
 @[simp]
 theorem isWf_union : IsWf (s ∪ t) ↔ IsWf s ∧ IsWf t :=
-  well_founded_on_union
+  wellFoundedOn_union
 #align set.is_wf_union Set.isWf_union
 
 end Preorder
@@ -995,7 +995,7 @@ protected theorem Finite.partiallyWellOrderedOn (hs : s.Finite) : s.PartiallyWel
 
 theorem IsAntichain.partiallyWellOrderedOn_iff (hs : IsAntichain r s) :
     s.PartiallyWellOrderedOn r ↔ s.Finite :=
-  ⟨hs.finite_of_partially_well_ordered_on, Finite.partiallyWellOrderedOn⟩
+  ⟨hs.finite_of_partiallyWellOrderedOn, Finite.partiallyWellOrderedOn⟩
 #align is_antichain.partially_well_ordered_on_iff IsAntichain.partiallyWellOrderedOn_iff
 
 @[simp]
@@ -1019,7 +1019,7 @@ protected theorem PartiallyWellOrderedOn.insert (h : PartiallyWellOrderedOn s r)
 theorem partiallyWellOrderedOn_iff_finite_antichains [IsSymm α r] :
     s.PartiallyWellOrderedOn r ↔ ∀ (t) (_ : t ⊆ s), IsAntichain r t → t.Finite :=
   by
-  refine' ⟨fun h t ht hrt => hrt.finite_of_partially_well_ordered_on (h.mono ht), _⟩
+  refine' ⟨fun h t ht hrt => hrt.finite_of_partiallyWellOrderedOn (h.mono ht), _⟩
   rintro hs f hf
   by_contra' H
   refine' infinite_range_of_injective (fun m n hmn => _) (hs _ (range_subset_iff.2 hf) _)
@@ -1112,7 +1112,7 @@ theorem IsPwo.exists_monotone_subseq (h : s.IsPwo) (f : ℕ → α) (hf : ∀ n,
 
 theorem isPwo_iff_exists_monotone_subseq :
     s.IsPwo ↔ ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
-  partially_well_ordered_on_iff_exists_monotone_subseq
+  partiallyWellOrderedOn_iff_exists_monotone_subseq
 #align set.is_pwo_iff_exists_monotone_subseq Set.isPwo_iff_exists_monotone_subseq
 
 protected theorem IsPwo.isWf (h : s.IsPwo) : s.IsWf := by
@@ -1139,7 +1139,7 @@ protected theorem IsPwo.union (hs : IsPwo s) (ht : IsPwo t) : IsPwo (s ∪ t) :=
 
 @[simp]
 theorem isPwo_union : IsPwo (s ∪ t) ↔ IsPwo s ∧ IsPwo t :=
-  partially_well_ordered_on_union
+  partiallyWellOrderedOn_union
 #align set.is_pwo_union Set.isPwo_union
 
 protected theorem Finite.isPwo (hs : s.Finite) : IsPwo s :=
@@ -1257,7 +1257,7 @@ variable {r : α → α → Prop}
 @[simp]
 protected theorem partiallyWellOrderedOn [IsRefl α r] (s : Finset α) :
     (s : Set α).PartiallyWellOrderedOn r :=
-  s.finite_to_set.PartiallyWellOrderedOn
+  s.finite_toSet.PartiallyWellOrderedOn
 #align finset.partially_well_ordered_on Finset.partiallyWellOrderedOn
 
 @[simp]
@@ -1267,7 +1267,7 @@ protected theorem isPwo [Preorder α] (s : Finset α) : Set.IsPwo (↑s : Set α
 
 @[simp]
 protected theorem isWf [Preorder α] (s : Finset α) : Set.IsWf (↑s : Set α) :=
-  s.finite_to_set.IsWf
+  s.finite_toSet.IsWf
 #align finset.is_wf Finset.isWf
 
 @[simp]
@@ -1289,12 +1289,12 @@ theorem partiallyWellOrderedOn_sup (s : Finset ι) {f : ι → Set α} :
 
 theorem isWf_sup [Preorder α] (s : Finset ι) {f : ι → Set α} :
     (s.sup f).IsWf ↔ ∀ i ∈ s, (f i).IsWf :=
-  s.well_founded_on_sup
+  s.wellFoundedOn_sup
 #align finset.is_wf_sup Finset.isWf_sup
 
 theorem isPwo_sup [Preorder α] (s : Finset ι) {f : ι → Set α} :
     (s.sup f).IsPwo ↔ ∀ i ∈ s, (f i).IsPwo :=
-  s.partially_well_ordered_on_sup
+  s.partiallyWellOrderedOn_sup
 #align finset.is_pwo_sup Finset.isPwo_sup
 
 @[simp]
@@ -1312,13 +1312,13 @@ theorem partiallyWellOrderedOn_bUnion (s : Finset ι) {f : ι → Set α} :
 @[simp]
 theorem isWf_bUnion [Preorder α] (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).IsWf ↔ ∀ i ∈ s, (f i).IsWf :=
-  s.well_founded_on_bUnion
+  s.wellFoundedOn_bUnion
 #align finset.is_wf_bUnion Finset.isWf_bUnion
 
 @[simp]
 theorem isPwo_bUnion [Preorder α] (s : Finset ι) {f : ι → Set α} :
     (⋃ i ∈ s, f i).IsPwo ↔ ∀ i ∈ s, (f i).IsPwo :=
-  s.partially_well_ordered_on_bUnion
+  s.partiallyWellOrderedOn_bUnion
 #align finset.is_pwo_bUnion Finset.isPwo_bUnion
 
 end Finset

@@ -255,7 +255,7 @@ instance : EsakiaHomClass (EsakiaHom α β) α β
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
   map_rel f := f.monotone'
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
   exists_map_eq_of_map_le f := f.exists_map_eq_of_map_le'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`

@@ -50,7 +50,7 @@ namespace Finset
 #print Finset.nonMemberSubfamily /-
 /-- Elements of `𝒜` that do not contain `a`. -/
 def nonMemberSubfamily (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  𝒜.filter fun s => a ∉ s
+  𝒜.filterₓ fun s => a ∉ s
 #align finset.non_member_subfamily Finset.nonMemberSubfamily
 -/
 
@@ -58,7 +58,7 @@ def nonMemberSubfamily (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α)
 /-- Image of the elements of `𝒜` which contain `a` under removing `a`. Finsets that do not contain
 `a` such that `insert a s ∈ 𝒜`. -/
 def memberSubfamily (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  (𝒜.filter fun s => a ∈ s).image fun s => erase s a
+  (𝒜.filterₓ fun s => a ∈ s).image fun s => erase s a
 #align finset.member_subfamily Finset.memberSubfamily
 -/
 
@@ -125,7 +125,7 @@ theorem card_memberSubfamily_add_card_nonMemberSubfamily (a : α) (𝒜 : Finset
 
 #print Finset.memberSubfamily_union_nonMemberSubfamily /-
 theorem memberSubfamily_union_nonMemberSubfamily (a : α) (𝒜 : Finset (Finset α)) :
-    𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.image fun s => s.erase a :=
+    𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.image fun s => s.eraseₓ a :=
   by
   ext s
   simp only [mem_union, mem_member_subfamily, mem_non_member_subfamily, mem_image, exists_prop]
@@ -189,8 +189,8 @@ namespace Down
 /-- `a`-down-compressing `𝒜` means removing `a` from the elements of `𝒜` that contain it, when the
 resulting finset is not already in `𝒜`. -/
 def compression (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
-  (𝒜.filter fun s => erase s a ∈ 𝒜).disjUnion
-      ((𝒜.image fun s => erase s a).filter fun s => s ∉ 𝒜) <|
+  (𝒜.filterₓ fun s => erase s a ∈ 𝒜).disjUnion
+      ((𝒜.image fun s => erase s a).filterₓ fun s => s ∉ 𝒜) <|
     disjoint_left.2 fun s h₁ h₂ => (mem_filter.1 h₂).2 (mem_filter.1 h₁).1
 #align down.compression Down.compression
 -/
@@ -201,7 +201,7 @@ scoped[FinsetFamily] notation "𝓓 " => Down.compression
 #print Down.mem_compression /-
 /-- `a` is in the down-compressed family iff it's in the original and its compression is in the
 original, or it's not in the original but it's the compression of something in the original. -/
-theorem mem_compression : s ∈ 𝓓 a 𝒜 ↔ s ∈ 𝒜 ∧ s.erase a ∈ 𝒜 ∨ s ∉ 𝒜 ∧ insert a s ∈ 𝒜 :=
+theorem mem_compression : s ∈ 𝓓 a 𝒜 ↔ s ∈ 𝒜 ∧ s.eraseₓ a ∈ 𝒜 ∨ s ∉ 𝒜 ∧ insert a s ∈ 𝒜 :=
   by
   simp_rw [compression, mem_disj_union, mem_filter, mem_image, and_comm' (s ∉ 𝒜)]
   refine'
@@ -214,7 +214,7 @@ theorem mem_compression : s ∈ 𝓓 a 𝒜 ↔ s ∈ 𝒜 ∧ s.erase a ∈ �
 -/
 
 #print Down.erase_mem_compression /-
-theorem erase_mem_compression (hs : s ∈ 𝒜) : s.erase a ∈ 𝓓 a 𝒜 :=
+theorem erase_mem_compression (hs : s ∈ 𝒜) : s.eraseₓ a ∈ 𝓓 a 𝒜 :=
   by
   simp_rw [mem_compression, erase_idem, and_self_iff]
   refine' (em _).imp_right fun h => ⟨h, _⟩
@@ -224,7 +224,7 @@ theorem erase_mem_compression (hs : s ∈ 𝒜) : s.erase a ∈ 𝓓 a 𝒜 :=
 
 #print Down.erase_mem_compression_of_mem_compression /-
 -- This is a special case of `erase_mem_compression` once we have `compression_idem`.
-theorem erase_mem_compression_of_mem_compression : s ∈ 𝓓 a 𝒜 → s.erase a ∈ 𝓓 a 𝒜 :=
+theorem erase_mem_compression_of_mem_compression : s ∈ 𝓓 a 𝒜 → s.eraseₓ a ∈ 𝓓 a 𝒜 :=
   by
   simp_rw [mem_compression, erase_idem]
   refine' Or.imp (fun h => ⟨h.2, h.2⟩) fun h => _

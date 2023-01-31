@@ -581,7 +581,7 @@ end Extend
 #print Function.surjective_pi_map /-
 theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Surjective (F i)) :
     Surjective fun x : ∀ i, f i => fun i => F i (x i) := fun y =>
-  ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).some_spec⟩
+  ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).choose_spec⟩
 #align function.surjective_pi_map Function.surjective_pi_map
 -/
 

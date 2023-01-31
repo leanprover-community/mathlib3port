@@ -40,7 +40,7 @@ variable {α β γ : Type _}
 /-- There is (noncomputably) an equivalence between a finite type `α` and `fin (nat.card α)`. -/
 def Finite.equivFin (α : Type _) [Finite α] : α ≃ Fin (Nat.card α) :=
   by
-  have := (Finite.exists_equiv_fin α).some_spec.some
+  have := (Finite.exists_equiv_fin α).choose_spec.some
   rwa [Nat.card_eq_of_equiv_fin this]
 #align finite.equiv_fin Finite.equivFin
 

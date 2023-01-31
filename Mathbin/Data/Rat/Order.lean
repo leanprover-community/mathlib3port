@@ -54,7 +54,7 @@ but is expected to have type
   forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Iff (Rat.Nonneg (Rat.divInt a b)) (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a))
 Case conversion may be inaccurate. Consider using '#align rat.mk_nonneg Rat.divInt_nonnegₓ'. -/
 @[simp]
-theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a :=
+theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 ≤ a :=
   by
   generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
   simp [Rat.Nonneg]
@@ -221,7 +221,7 @@ lean 3 declaration is
 but is expected to have type
   forall {p : Rat} {q : Rat}, Iff (LE.le.{0} Rat Rat.instLERat p q) (LE.le.{0} Int Int.instLEInt (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num p) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q))) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Rat.num q) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den p))))
 Case conversion may be inaccurate. Consider using '#align rat.le_def' Rat.le_def'ₓ'. -/
-protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.denom ≤ q.num * p.denom :=
+protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.den :=
   by
   rw [← @num_denom q, ← @num_denom p]
   conv_rhs => simp only [num_denom]
@@ -229,7 +229,7 @@ protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.denom ≤ q.num * 
 #align rat.le_def' Rat.le_def'
 
 #print Rat.lt_def /-
-protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.denom < q.num * p.denom :=
+protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :=
   by
   rw [lt_iff_le_and_ne, Rat.le_def']
   suffices p ≠ q ↔ p.num * q.denom ≠ q.num * p.denom
@@ -330,7 +330,7 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
 -/
 
 #print Rat.lt_one_iff_num_lt_denom /-
-theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.denom := by simp [Rat.lt_def]
+theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [Rat.lt_def]
 #align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denom
 -/
 
@@ -340,7 +340,7 @@ lean 3 declaration is
 but is expected to have type
   forall (q : Rat), Eq.{1} Rat (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat) q) (Rat.divInt (Nat.cast.{0} Int Int.instNatCastInt (Int.natAbs (Rat.num q))) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.abs_def Rat.abs_defₓ'. -/
-theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.denom :=
+theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]

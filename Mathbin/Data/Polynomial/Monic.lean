@@ -52,7 +52,7 @@ theorem monic_zero_iff_subsingleton' :
 #align polynomial.monic_zero_iff_subsingleton' Polynomial.monic_zero_iff_subsingleton'
 
 theorem Monic.as_sum (hp : p.Monic) :
-    p = X ^ p.natDegree + ∑ i in range p.natDegree, c (p.coeff i) * X ^ i :=
+    p = x ^ p.natDegree + ∑ i in range p.natDegree, c (p.coeff i) * x ^ i :=
   by
   conv_lhs => rw [p.as_sum_range_C_mul_X_pow, sum_range_succ_comm]
   suffices C (p.coeff p.nat_degree) = 1 by rw [this, one_mul]
@@ -98,14 +98,14 @@ theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) 
     rwa [monic, leading_coeff, nat_degree, (lt_or_eq_of_le H1).resolve_left H]
 #align polynomial.monic_of_degree_le Polynomial.monic_of_degree_le
 
-theorem monic_x_pow_add {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) + p) :=
+theorem monic_x_pow_add {n : ℕ} (H : degree p ≤ n) : Monic (x ^ (n + 1) + p) :=
   have H1 : degree p < n + 1 := lt_of_le_of_lt H (WithBot.coe_lt_coe.2 (Nat.lt_succ_self n))
   monic_of_degree_le (n + 1)
     (le_trans (degree_add_le _ _) (max_le (degree_x_pow_le _) (le_of_lt H1)))
     (by rw [coeff_add, coeff_X_pow, if_pos rfl, coeff_eq_zero_of_degree_lt H1, add_zero])
 #align polynomial.monic_X_pow_add Polynomial.monic_x_pow_add
 
-theorem monic_x_add_c (x : R) : Monic (X + c x) :=
+theorem monic_x_add_c (x : R) : Monic (x + c x) :=
   pow_one (x : R[X]) ▸ monic_x_pow_add degree_c_le
 #align polynomial.monic_X_add_C Polynomial.monic_x_add_c
 
@@ -249,8 +249,8 @@ theorem natDegree_pow (hp : p.Monic) (n : ℕ) : (p ^ n).natDegree = n * p.natDe
 end Monic
 
 @[simp]
-theorem natDegree_pow_x_add_c [Nontrivial R] (n : ℕ) (r : R) : ((X + c r) ^ n).natDegree = n := by
-  rw [(monic_X_add_C r).nat_degree_pow, nat_degree_X_add_C, mul_one]
+theorem natDegree_pow_x_add_c [Nontrivial R] (n : ℕ) (r : R) : ((x + c r) ^ n).natDegree = n := by
+  rw [(monic_X_add_C r).natDegree_pow, nat_degree_X_add_C, mul_one]
 #align polynomial.nat_degree_pow_X_add_C Polynomial.natDegree_pow_x_add_c
 
 theorem Monic.eq_one_of_isUnit (hm : Monic p) (hpu : IsUnit p) : p = 1 :=
@@ -263,7 +263,7 @@ theorem Monic.eq_one_of_isUnit (hm : Monic p) (hpu : IsUnit p) : p = 1 :=
 #align polynomial.monic.eq_one_of_is_unit Polynomial.Monic.eq_one_of_isUnit
 
 theorem Monic.isUnit_iff (hm : p.Monic) : IsUnit p ↔ p = 1 :=
-  ⟨hm.eq_one_of_is_unit, fun h => h.symm ▸ isUnit_one⟩
+  ⟨hm.eq_one_of_isUnit, fun h => h.symm ▸ isUnit_one⟩
 #align polynomial.monic.is_unit_iff Polynomial.Monic.isUnit_iff
 
 end Semiring
@@ -389,16 +389,16 @@ section Ring
 
 variable [Ring R] {p : R[X]}
 
-theorem monic_x_sub_c (x : R) : Monic (X - c x) := by
+theorem monic_x_sub_c (x : R) : Monic (x - c x) := by
   simpa only [sub_eq_add_neg, C_neg] using monic_X_add_C (-x)
 #align polynomial.monic_X_sub_C Polynomial.monic_x_sub_c
 
-theorem monic_x_pow_sub {n : ℕ} (H : degree p ≤ n) : Monic (X ^ (n + 1) - p) := by
+theorem monic_x_pow_sub {n : ℕ} (H : degree p ≤ n) : Monic (x ^ (n + 1) - p) := by
   simpa [sub_eq_add_neg] using monic_X_pow_add (show degree (-p) ≤ n by rwa [← degree_neg p] at H)
 #align polynomial.monic_X_pow_sub Polynomial.monic_x_pow_sub
 
 /-- `X ^ n - a` is monic. -/
-theorem monic_x_pow_sub_c {R : Type u} [Ring R] (a : R) {n : ℕ} (h : n ≠ 0) : (X ^ n - c a).Monic :=
+theorem monic_x_pow_sub_c {R : Type u} [Ring R] (a : R) {n : ℕ} (h : n ≠ 0) : (x ^ n - c a).Monic :=
   by
   obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero h
   convert monic_X_pow_sub _
@@ -406,12 +406,12 @@ theorem monic_x_pow_sub_c {R : Type u} [Ring R] (a : R) {n : ℕ} (h : n ≠ 0) 
 #align polynomial.monic_X_pow_sub_C Polynomial.monic_x_pow_sub_c
 
 theorem not_isUnit_x_pow_sub_one (R : Type _) [CommRing R] [Nontrivial R] (n : ℕ) :
-    ¬IsUnit (X ^ n - 1 : R[X]) := by
+    ¬IsUnit (x ^ n - 1 : R[X]) := by
   intro h
   rcases eq_or_ne n 0 with (rfl | hn)
   · simpa using h
   apply hn
-  rw [← @nat_degree_one R, ← (monic_X_pow_sub_C _ hn).eq_one_of_is_unit h, nat_degree_X_pow_sub_C]
+  rw [← @nat_degree_one R, ← (monic_X_pow_sub_C _ hn).eq_one_of_isUnit h, nat_degree_X_pow_sub_C]
 #align polynomial.not_is_unit_X_pow_sub_one Polynomial.not_isUnit_x_pow_sub_one
 
 theorem Monic.sub_of_left {p q : R[X]} (hp : Monic p) (hpq : degree q < degree p) : Monic (p - q) :=

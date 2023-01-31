@@ -82,10 +82,10 @@ in which the second embedding cannot take values in the range of the first. -/
 def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
     { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.range f.1) (Set.range f.2) } ≃
       Σf : α ↪ γ, β ↪ ↥(Set.range fᶜ) :=
-  (subtype_prod_equiv_sigma_subtype fun (a : α ↪ γ) (b : β ↪ _) =>
+  (subtypeProdEquivSigmaSubtype fun (a : α ↪ γ) (b : β ↪ _) =>
         Disjoint (Set.range a) (Set.range b)).trans <|
     Equiv.sigmaCongrRight fun a =>
-      (subtype_equiv_prop <| by
+      (subtypeEquivProp <| by
             ext f
             rw [← Set.range_subset_iff, Set.subset_compl_iff_disjoint_right, disjoint_comm]).trans
         (codRestrict _ _)

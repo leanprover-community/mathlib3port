@@ -285,19 +285,19 @@ theorem IsGLB.bunionᵢ_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a :=
 
 #print IsGLB.unionᵢ_Ioi_eq /-
 theorem IsGLB.unionᵢ_Ioi_eq (h : IsGLB (range f) a) : (⋃ x, Ioi (f x)) = Ioi a :=
-  bunionᵢ_range.symm.trans h.bUnion_Ioi_eq
+  bunionᵢ_range.symm.trans h.bunionᵢ_Ioi_eq
 #align is_glb.Union_Ioi_eq IsGLB.unionᵢ_Ioi_eq
 -/
 
 #print IsLUB.bunionᵢ_Iio_eq /-
 theorem IsLUB.bunionᵢ_Iio_eq (h : IsLUB s a) : (⋃ x ∈ s, Iio x) = Iio a :=
-  h.dual.bUnion_Ioi_eq
+  h.dual.bunionᵢ_Ioi_eq
 #align is_lub.bUnion_Iio_eq IsLUB.bunionᵢ_Iio_eq
 -/
 
 #print IsLUB.unionᵢ_Iio_eq /-
 theorem IsLUB.unionᵢ_Iio_eq (h : IsLUB (range f) a) : (⋃ x, Iio (f x)) = Iio a :=
-  h.dual.Union_Ioi_eq
+  h.dual.unionᵢ_Ioi_eq
 #align is_lub.Union_Iio_eq IsLUB.unionᵢ_Iio_eq
 -/
 
@@ -326,13 +326,13 @@ theorem IsGLB.bunionᵢ_Ici_eq_Ici (a_glb : IsGLB s a) (a_mem : a ∈ s) : (⋃ 
 #print IsLUB.bunionᵢ_Iic_eq_Iio /-
 theorem IsLUB.bunionᵢ_Iic_eq_Iio (a_lub : IsLUB s a) (a_not_mem : a ∉ s) :
     (⋃ x ∈ s, Iic x) = Iio a :=
-  a_lub.dual.bUnion_Ici_eq_Ioi a_not_mem
+  a_lub.dual.bunionᵢ_Ici_eq_Ioi a_not_mem
 #align is_lub.bUnion_Iic_eq_Iio IsLUB.bunionᵢ_Iic_eq_Iio
 -/
 
 #print IsLUB.bunionᵢ_Iic_eq_Iic /-
 theorem IsLUB.bunionᵢ_Iic_eq_Iic (a_lub : IsLUB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Iic x) = Iic a :=
-  a_lub.dual.bUnion_Ici_eq_Ici a_mem
+  a_lub.dual.bunionᵢ_Ici_eq_Ici a_mem
 #align is_lub.bUnion_Iic_eq_Iic IsLUB.bunionᵢ_Iic_eq_Iic
 -/
 

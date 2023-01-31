@@ -61,7 +61,7 @@ include hi
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯
     where
   toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
-  cont_mdiff_to_fun :=
+  contMdiff_toFun :=
     contMdiff_pi_space.2 fun i =>
       ((f i).smooth_smul contMdiffOn_extChartAt).prod_mk_space (f i).Smooth
 #align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent
@@ -85,7 +85,7 @@ theorem embeddingPiTangent_injOn : InjOn f.embeddingPiTangent s :=
 
 theorem embeddingPiTangent_injective (f : SmoothBumpCovering ι I M) :
     Injective f.embeddingPiTangent :=
-  injective_iff_injOn_univ.2 f.embedding_pi_tangent_inj_on
+  injective_iff_injOn_univ.2 f.embeddingPiTangent_injOn
 #align smooth_bump_covering.embedding_pi_tangent_injective SmoothBumpCovering.embeddingPiTangent_injective
 
 theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
@@ -100,7 +100,7 @@ theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
       (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))
   have := L.has_mfderiv_at.comp x f.embedding_pi_tangent.mdifferentiable_at.has_mfderiv_at
   convert hasMfderivAt_unique this _
-  refine' (hasMfderivAt_extChartAt I (f.mem_chart_at_ind_source x hx)).congr_of_eventually_eq _
+  refine' (hasMfderivAt_extChartAt I (f.mem_chart_at_ind_source x hx)).congr_of_eventuallyEq _
   refine' (f.eventually_eq_one x hx).mono fun y hy => _
   simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·),
     ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]
@@ -120,7 +120,7 @@ theorem embeddingPiTangent_ker_mfderiv (x : M) (hx : x ∈ s) :
 
 theorem embeddingPiTangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) :=
-  LinearMap.ker_eq_bot.1 (f.embedding_pi_tangent_ker_mfderiv x hx)
+  LinearMap.ker_eq_bot.1 (f.embeddingPiTangent_ker_mfderiv x hx)
 #align smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embeddingPiTangent_injective_mfderiv
 
 omit hi

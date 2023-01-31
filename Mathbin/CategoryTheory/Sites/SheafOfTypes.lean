@@ -183,7 +183,7 @@ This is the construction described as "easy" in Lemma C2.1.3 of [Elephant].
 -/
 noncomputable def FamilyOfElements.sieveExtend (x : FamilyOfElements P R) :
     FamilyOfElements P (generate R) := fun Z f hf =>
-  P.map hf.some_spec.some.op (x _ hf.some_spec.some_spec.some_spec.1)
+  P.map hf.choose_spec.some.op (x _ hf.choose_spec.choose_spec.choose_spec.1)
 #align category_theory.presieve.family_of_elements.sieve_extend CategoryTheory.Presieve.FamilyOfElements.sieveExtend
 
 /-- The extension of a compatible family to the generated sieve is compatible. -/
@@ -198,7 +198,7 @@ theorem FamilyOfElements.Compatible.sieveExtend {x : FamilyOfElements P R} (hx :
 theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X} (hf : R f) :
     x.sieveExtend f (le_generate R Y hf) = x f hf :=
   by
-  have h := (le_generate R Y hf).some_spec
+  have h := (le_generate R Y hf).choose_spec
   unfold family_of_elements.sieve_extend
   rw [t h.some (𝟙 _) _ hf _]
   · simp;
@@ -492,7 +492,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
     { app := fun Y f => t.1 _ f.2
       naturality' := fun Y Z g => by
         ext ⟨f, hf⟩
-        apply t.2.to_sieve_compatible _ }
+        apply t.2.to_sieveCompatible _ }
   left_inv α := by
     ext (X⟨_, _⟩)
     rfl
@@ -568,13 +568,13 @@ that the triangle below commutes, provided `P` is a sheaf for `S`
 @[simp, reassoc.1]
 theorem IsSheafFor.functorInclusion_comp_extend {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S)
     (f : S.Functor ⟶ P) : S.functorInclusion ≫ h.extend f = f :=
-  (isSheafFor_iff_yonedaSheafCondition.1 h f).exists.some_spec
+  (isSheafFor_iff_yonedaSheafCondition.1 h f).exists.choose_spec
 #align category_theory.presieve.is_sheaf_for.functor_inclusion_comp_extend CategoryTheory.Presieve.IsSheafFor.functorInclusion_comp_extend
 
 /-- The extension of `f` to `yoneda.obj X` is unique. -/
 theorem IsSheafFor.unique_extend {P : Cᵒᵖ ⥤ Type v₁} (h : IsSheafFor P S) {f : S.Functor ⟶ P}
     (t : yoneda.obj X ⟶ P) (ht : S.functorInclusion ≫ t = f) : t = h.extend f :=
-  (isSheafFor_iff_yonedaSheafCondition.1 h f).unique ht (h.functor_inclusion_comp_extend f)
+  (isSheafFor_iff_yonedaSheafCondition.1 h f).unique ht (h.functorInclusion_comp_extend f)
 #align category_theory.presieve.is_sheaf_for.unique_extend CategoryTheory.Presieve.IsSheafFor.unique_extend
 
 /--
@@ -626,7 +626,7 @@ noncomputable def IsSheafFor.amalgamate (t : IsSheafFor P R) (x : FamilyOfElemen
 
 theorem IsSheafFor.isAmalgamation (t : IsSheafFor P R) {x : FamilyOfElements P R}
     (hx : x.Compatible) : x.IsAmalgamation (t.amalgamate x hx) :=
-  (t x hx).exists.some_spec
+  (t x hx).exists.choose_spec
 #align category_theory.presieve.is_sheaf_for.is_amalgamation CategoryTheory.Presieve.IsSheafFor.isAmalgamation
 
 @[simp]

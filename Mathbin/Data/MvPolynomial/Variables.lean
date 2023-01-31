@@ -347,7 +347,7 @@ theorem vars_mul (φ ψ : MvPolynomial σ R) : (φ * ψ).vars ⊆ φ.vars ∪ ψ
 
 @[simp]
 theorem vars_one : (1 : MvPolynomial σ R).vars = ∅ :=
-  vars_C
+  vars_c
 #align mv_polynomial.vars_one MvPolynomial.vars_one
 
 theorem vars_pow (φ : MvPolynomial σ R) (n : ℕ) : (φ ^ n).vars ⊆ φ.vars :=
@@ -363,7 +363,7 @@ theorem vars_pow (φ : MvPolynomial σ R) (n : ℕ) : (φ ^ n).vars ⊆ φ.vars 
 are a subset of the union of the sets of variables of each polynomial.
 -/
 theorem vars_prod {ι : Type _} {s : Finset ι} (f : ι → MvPolynomial σ R) :
-    (∏ i in s, f i).vars ⊆ s.bUnion fun i => (f i).vars :=
+    (∏ i in s, f i).vars ⊆ s.bunionᵢ fun i => (f i).vars :=
   by
   apply s.induction_on
   · simp
@@ -446,7 +446,7 @@ theorem vars_monomial_single (i : σ) {e : ℕ} {r : R} (he : e ≠ 0) (hr : r �
   rw [vars_monomial hr, Finsupp.support_single_ne_zero _ he]
 #align mv_polynomial.vars_monomial_single MvPolynomial.vars_monomial_single
 
-theorem vars_eq_support_bunionᵢ_support : p.vars = p.support.bUnion Finsupp.support :=
+theorem vars_eq_support_bunionᵢ_support : p.vars = p.support.bunionᵢ Finsupp.support :=
   by
   ext i
   rw [mem_vars, Finset.mem_bunionᵢ]
@@ -832,8 +832,8 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
     (hC : f₁.comp c = f₂.comp c) (hv : ∀ i, i ∈ p₁.vars → i ∈ p₂.vars → f₁ (x i) = f₂ (x i))
     (hp : p₁ = p₂) : f₁ p₁ = f₂ p₂ :=
   calc
-    f₁ p₁ = eval₂Hom (f₁.comp c) (f₁ ∘ X) p₁ := RingHom.congr_fun (by ext <;> simp) _
-    _ = eval₂Hom (f₂.comp c) (f₂ ∘ X) p₂ := eval₂Hom_congr' hC hv hp
+    f₁ p₁ = eval₂Hom (f₁.comp c) (f₁ ∘ x) p₁ := RingHom.congr_fun (by ext <;> simp) _
+    _ = eval₂Hom (f₂.comp c) (f₂ ∘ x) p₂ := eval₂Hom_congr' hC hv hp
     _ = f₂ p₂ := RingHom.congr_fun (by ext <;> simp) _
     
 #align mv_polynomial.hom_congr_vars MvPolynomial.hom_congr_vars
@@ -853,7 +853,7 @@ theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ �
 #align mv_polynomial.exists_rename_eq_of_vars_subset_range MvPolynomial.exists_rename_eq_of_vars_subset_range
 
 theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-    (bind₁ f φ).vars ⊆ φ.vars.bUnion fun i => (f i).vars :=
+    (bind₁ f φ).vars ⊆ φ.vars.bunionᵢ fun i => (f i).vars :=
   by
   calc
     (bind₁ f φ).vars = (φ.support.sum fun x : σ →₀ ℕ => (bind₁ f) (monomial x (coeff x φ))).vars :=

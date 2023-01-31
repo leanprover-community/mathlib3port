@@ -105,7 +105,7 @@ instance concreteCategory : ConcreteCategory Bipointed
 /-- Swaps the pointed elements of a bipointed type. `prod.swap` as a functor. -/
 @[simps]
 def swap : Bipointed ⥤ Bipointed where
-  obj X := ⟨X, X.toProd.swap⟩
+  obj X := ⟨X, X.toProd.symm⟩
   map X Y f := ⟨f.toFun, f.map_snd, f.map_fst⟩
 #align Bipointed.swap Bipointed.swap
 
@@ -126,7 +126,7 @@ def swapEquiv : Bipointed ≌ Bipointed :=
 #align Bipointed.swap_equiv Bipointed.swapEquiv
 
 @[simp]
-theorem swapEquiv_symm : swapEquiv.symm = swap_equiv :=
+theorem swapEquiv_symm : swapEquiv.symm = swapEquiv :=
   rfl
 #align Bipointed.swap_equiv_symm Bipointed.swapEquiv_symm
 
@@ -243,7 +243,7 @@ def pointedToBipointedFstBipointedToPointedFstAdjunction :
             exact f.map_snd.symm
             rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm' := fun X' X Y f g =>
         by
         ext
         cases x <;> rfl }
@@ -263,7 +263,7 @@ def pointedToBipointedSndBipointedToPointedSndAdjunction :
             exact f.map_fst.symm
             rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm' := fun X' X Y f g =>
         by
         ext
         cases x <;> rfl }

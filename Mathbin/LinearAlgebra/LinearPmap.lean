@@ -246,7 +246,7 @@ def eqLocus (f g : E →ₗ.[R] F) : Submodule R E
 #align linear_pmap.eq_locus LinearPmap.eqLocus
 
 instance : HasInf (E →ₗ.[R] F) :=
-  ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp <| of_le fun x hx => hx.fst⟩⟩
+  ⟨fun f g => ⟨f.eqLocus g, f.toFun.comp <| ofLe fun x hx => hx.fst⟩⟩
 
 instance : Bot (E →ₗ.[R] F) :=
   ⟨⟨⊥, 0⟩⟩
@@ -364,7 +364,7 @@ protected theorem sup_le {f g h : E →ₗ.[R] F}
     f.sup g H ≤ h :=
   have Hf : f ≤ f.sup g H ⊓ h := le_inf (f.left_le_sup g H) fh
   have Hg : g ≤ f.sup g H ⊓ h := le_inf (f.right_le_sup g H) gh
-  le_of_eq_locus_ge <| sup_le Hf.1 Hg.1
+  le_of_eqLocus_ge <| sup_le Hf.1 Hg.1
 #align linear_pmap.sup_le LinearPmap.sup_le
 
 /-- Hypothesis for `linear_pmap.sup` holds, if `f.domain` is disjoint with `g.domain`. -/
@@ -537,7 +537,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align linear_pmap.Sup_le LinearPmap.sup_leₓ'. -/
 protected theorem sup_le {c : Set (E →ₗ.[R] F)} (hc : DirectedOn (· ≤ ·) c) {g : E →ₗ.[R] F}
     (hg : ∀ f ∈ c, f ≤ g) : LinearPmap.sup c hc ≤ g :=
-  le_of_eq_locus_ge <|
+  le_of_eqLocus_ge <|
     supₛ_le fun _ ⟨f, hf, Eq⟩ =>
       Eq ▸
         have : f ≤ LinearPmap.sup c hc ⊓ g := le_inf (LinearPmap.le_sup _ hf) (hg f hf)
@@ -650,7 +650,7 @@ section Graph
 
 /-- The graph of a `linear_pmap` viewed as a submodule on `E × F`. -/
 def graph (f : E →ₗ.[R] F) : Submodule R (E × F) :=
-  f.toFun.graph.map (f.domain.Subtype.prod_map (LinearMap.id : F →ₗ[R] F))
+  f.toFun.graph.map (f.domain.Subtype.Prod_map (LinearMap.id : F →ₗ[R] F))
 #align linear_pmap.graph LinearPmap.graph
 
 theorem mem_graph_iff' (f : E →ₗ.[R] F) {x : E × F} : x ∈ f.graph ↔ ∃ y : f.domain, (↑y, f y) = x :=
@@ -674,7 +674,7 @@ variable {M : Type _} [Monoid M] [DistribMulAction M F] [SMulCommClass R M F] (y
 /-- The graph of `z • f` as a pushforward. -/
 theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
     (z • f).graph =
-      f.graph.map ((LinearMap.id : E →ₗ[R] E).prod_map (z • (LinearMap.id : F →ₗ[R] F))) :=
+      f.graph.map ((LinearMap.id : E →ₗ[R] E).Prod_map (z • (LinearMap.id : F →ₗ[R] F))) :=
   by
   ext x; cases x
   constructor <;> intro h
@@ -700,7 +700,7 @@ theorem smul_graph (f : E →ₗ.[R] F) (z : M) :
 
 /-- The graph of `-f` as a pushforward. -/
 theorem neg_graph (f : E →ₗ.[R] F) :
-    (-f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).prod_map (-(LinearMap.id : F →ₗ[R] F))) :=
+    (-f).graph = f.graph.map ((LinearMap.id : E →ₗ[R] E).Prod_map (-(LinearMap.id : F →ₗ[R] F))) :=
   by
   ext; cases x
   constructor <;> intro h
@@ -872,7 +872,7 @@ noncomputable def valFromGraph {g : Submodule R (E × F)}
 theorem valFromGraph_mem {g : Submodule R (E × F)}
     (hg : ∀ (x : E × F) (hx : x ∈ g) (hx' : x.fst = 0), x.snd = 0) {a : E}
     (ha : a ∈ g.map (LinearMap.fst R E F)) : (a, valFromGraph hg ha) ∈ g :=
-  (ExistsUnique.exists (existsUnique_from_graph hg ha)).some_spec
+  (ExistsUnique.exists (existsUnique_from_graph hg ha)).choose_spec
 #align submodule.val_from_graph_mem Submodule.valFromGraph_mem
 
 /-- Define a `linear_pmap` from its graph. -/

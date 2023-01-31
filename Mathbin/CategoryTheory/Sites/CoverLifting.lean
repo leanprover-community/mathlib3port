@@ -332,12 +332,12 @@ noncomputable def Sites.pullbackCopullbackAdjunction {G : C ⥤ D} (Hp : CoverPr
     { app := fun X => ⟨(ran.adjunction A G.op).counit.app X.val⟩
       naturality' := fun _ _ f =>
         Sheaf.Hom.ext _ _ <| (ran.adjunction A G.op).counit.naturality f.val }
-  hom_equiv_unit' X Y f := by
+  homEquiv_unit' X Y f := by
     ext1
-    apply (Ran.adjunction A G.op).hom_equiv_unit
-  hom_equiv_counit' X Y f := by
+    apply (Ran.adjunction A G.op).homEquiv_unit
+  homEquiv_counit' X Y f := by
     ext1
-    apply (Ran.adjunction A G.op).hom_equiv_counit
+    apply (Ran.adjunction A G.op).homEquiv_counit
 #align category_theory.sites.pullback_copullback_adjunction CategoryTheory.Sites.pullbackCopullbackAdjunction
 
 end CategoryTheory

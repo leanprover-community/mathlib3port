@@ -59,7 +59,7 @@ theorem nhds_basis_abs_convex :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
   by
   refine'
-    (LocallyConvexSpace.convex_basis_zero ℝ E).to_has_basis (fun s hs => _) fun s hs =>
+    (LocallyConvexSpace.convex_basis_zero ℝ E).to_hasBasis (fun s hs => _) fun s hs =>
       ⟨s, ⟨hs.1, hs.2.2⟩, rfl.subset⟩
   refine' ⟨convexHull ℝ (balancedCore 𝕜 s), _, convexHull_min (balancedCore_subset s) hs.2⟩
   refine' ⟨Filter.mem_of_superset (balancedCore_mem_nhds_zero hs.1) (subset_convexHull ℝ _), _⟩
@@ -72,7 +72,7 @@ variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
 theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
   by
-  refine' (nhds_basis_abs_convex 𝕜 E).to_has_basis _ _
+  refine' (nhds_basis_abs_convex 𝕜 E).to_hasBasis _ _
   · rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
     refine' ⟨interior s, _, interior_subset⟩
     exact
@@ -114,7 +114,7 @@ theorem coe_isOpen (s : AbsConvexOpenSets 𝕜 E) : IsOpen (s : Set E) :=
 #align abs_convex_open_sets.coe_is_open AbsConvexOpenSets.coe_isOpen
 
 theorem coe_nhds (s : AbsConvexOpenSets 𝕜 E) : (s : Set E) ∈ 𝓝 (0 : E) :=
-  s.coe_is_open.mem_nhds s.coe_zero_mem
+  s.coe_isOpen.mem_nhds s.coe_zero_mem
 #align abs_convex_open_sets.coe_nhds AbsConvexOpenSets.coe_nhds
 
 theorem coe_balanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
@@ -170,9 +170,9 @@ variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   by
   refine' SeminormFamily.withSeminormsOfHasBasis _ _
-  refine' (nhds_basis_abs_convex_open 𝕜 E).to_has_basis (fun s hs => _) fun s hs => _
+  refine' (nhds_basis_abs_convex_open 𝕜 E).to_hasBasis (fun s hs => _) fun s hs => _
   · refine' ⟨s, ⟨_, rfl.subset⟩⟩
-    convert (gaugeSeminormFamily _ _).basis_sets_singleton_mem ⟨s, hs⟩ one_pos
+    convert (gaugeSeminormFamily _ _).basisSets_singleton_mem ⟨s, hs⟩ one_pos
     rw [gaugeSeminormFamily_ball, Subtype.coe_mk]
   refine' ⟨s, ⟨_, rfl.subset⟩⟩
   rw [SeminormFamily.basisSets_iff] at hs

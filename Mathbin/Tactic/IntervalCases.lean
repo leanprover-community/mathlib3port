@@ -230,7 +230,7 @@ unsafe def get_bounds (n : expr) : tactic (expr × expr) := do
   let hl ← try_core (initial_lower_bound n)
   let hu ← try_core (initial_upper_bound n)
   let lc ← local_context
-  let r ← lc.mfoldl (update_bounds n) (hl, hu)
+  let r ← lc.foldlM (update_bounds n) (hl, hu)
   match r with
     | (_, none) => fail "No upper bound located."
     | (none, _) => fail "No lower bound located."
@@ -305,7 +305,7 @@ unsafe def interval_cases (n : parse texpr ?)
       tactic.interval_cases_using hl hu lname
     else
       if h' : bounds then do
-        let [hl, hu] ← [(Option.get h').1, (Option.get h').2].mmap get_local
+        let [hl, hu] ← [(Option.get h').1, (Option.get h').2].mapM get_local
         tactic.interval_cases_using hl hu lname
       else
         fail

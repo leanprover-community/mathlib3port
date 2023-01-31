@@ -227,7 +227,7 @@ variable {R}
 
 theorem coe_linearMapAt (e : Trivialization F (π E)) [e.isLinear R] (b : B) :
     ⇑(e.linearMapAt R b) = fun y => if b ∈ e.baseSet then (e (totalSpaceMk b y)).2 else 0 :=
-  e.toPretrivialization.coe_linear_map_at b
+  e.toPretrivialization.coe_linearMapAt b
 #align trivialization.coe_linear_map_at Trivialization.coe_linearMapAt
 
 theorem coe_linearMapAt_of_mem (e : Trivialization F (π E)) [e.isLinear R] {b : B}
@@ -252,12 +252,12 @@ theorem linearMapAt_def_of_not_mem (e : Trivialization F (π E)) [e.isLinear R] 
 
 theorem symmₗ_linearMapAt (e : Trivialization F (π E)) [e.isLinear R] {b : B} (hb : b ∈ e.baseSet)
     (y : E b) : e.symmₗ R b (e.linearMapAt R b y) = y :=
-  e.toPretrivialization.symmₗ_linear_map_at hb y
+  e.toPretrivialization.symmₗ_linearMapAt hb y
 #align trivialization.symmₗ_linear_map_at Trivialization.symmₗ_linearMapAt
 
 theorem linearMapAt_symmₗ (e : Trivialization F (π E)) [e.isLinear R] {b : B} (hb : b ∈ e.baseSet)
     (y : F) : e.linearMapAt R b (e.symmₗ R b y) = y :=
-  e.toPretrivialization.linear_map_at_symmₗ hb y
+  e.toPretrivialization.linearMapAt_symmₗ hb y
 #align trivialization.linear_map_at_symmₗ Trivialization.linearMapAt_symmₗ
 
 variable (R)
@@ -272,7 +272,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R]
     else
       LinearEquiv.refl R
         F with
-    continuous_to_fun := by
+    continuous_toFun := by
       by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
         refine' (e'.continuous_on.comp_continuous _ _).snd
@@ -282,7 +282,7 @@ def coordChangeL (e e' : Trivialization F (π E)) [e.isLinear R] [e'.isLinear R]
         exact fun y => e'.mem_source.mpr hb.2
       · rw [dif_neg hb]
         exact continuous_id
-    continuous_inv_fun := by
+    continuous_invFun := by
       by_cases hb : b ∈ e.base_set ∩ e'.base_set
       · simp_rw [dif_pos hb]
         refine' (e.continuous_on.comp_continuous _ _).snd
@@ -344,14 +344,14 @@ variable [NontriviallyNormedField R] [∀ x, AddCommMonoid (E x)] [∀ x, Module
   [NormedAddCommGroup F] [NormedSpace R F] [TopologicalSpace B] [TopologicalSpace (TotalSpace E)]
   [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`continuous_on_coord_change'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`continuousOn_coord_change'] [] -/
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `vector_bundle R F E`) if around every point there is a fiber bundle trivialization
 which is linear in the fibers. -/
 class VectorBundle : Prop where
   trivialization_linear' : ∀ (e : Trivialization F (π E)) [MemTrivializationAtlas e], e.isLinear R
-  continuous_on_coord_change' :
+  continuousOn_coord_change' :
     ∀ (e e' : Trivialization F (π E)) [MemTrivializationAtlas e] [MemTrivializationAtlas e'],
       ContinuousOn (fun b => Trivialization.coordChangeL R e e' b : B → F →L[R] F)
         (e.baseSet ∩ e'.baseSet)
@@ -411,12 +411,12 @@ variable {R}
 
 theorem symmL_continuousLinearMapAt (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) (y : E b) : e.symmL R b (e.continuousLinearMapAt R b y) = y :=
-  e.symmₗ_linear_map_at hb y
+  e.symmₗ_linearMapAt hb y
 #align trivialization.symmL_continuous_linear_map_at Trivialization.symmL_continuousLinearMapAt
 
 theorem continuousLinearMapAt_symmL (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) (y : F) : e.continuousLinearMapAt R b (e.symmL R b y) = y :=
-  e.linear_map_at_symmₗ hb y
+  e.linearMapAt_symmₗ hb y
 #align trivialization.continuous_linear_map_at_symmL Trivialization.continuousLinearMapAt_symmL
 
 variable (R)
@@ -432,11 +432,11 @@ def continuousLinearEquivAt (e : Trivialization F (π E)) [e.isLinear R] (b : B)
       R b hb with
     toFun := fun y => (e (totalSpaceMk b y)).2
     invFun := e.symm b
-    continuous_to_fun :=
+    continuous_toFun :=
       continuous_snd.comp
         (e.toLocalHomeomorph.ContinuousOn.comp_continuous
           (FiberBundle.totalSpaceMk_inducing F E b).Continuous fun x => e.mem_source.mpr hb)
-    continuous_inv_fun := (e.symmL R b).Continuous }
+    continuous_invFun := (e.symmL R b).Continuous }
 #align trivialization.continuous_linear_equiv_at Trivialization.continuousLinearEquivAt
 
 variable {R}
@@ -444,7 +444,7 @@ variable {R}
 theorem coe_continuousLinearEquivAt_eq (e : Trivialization F (π E)) [e.isLinear R] {b : B}
     (hb : b ∈ e.baseSet) :
     (e.continuousLinearEquivAt R b hb : E b → F) = e.continuousLinearMapAt R b :=
-  (e.coe_linear_map_at_of_mem hb).symm
+  (e.coe_linearMapAt_of_mem hb).symm
 #align trivialization.coe_continuous_linear_equiv_at_eq Trivialization.coe_continuousLinearEquivAt_eq
 
 theorem symm_continuousLinearEquivAt_eq (e : Trivialization F (π E)) [e.isLinear R] {b : B}
@@ -514,13 +514,13 @@ construction gives a way to construct vector bundles from a structure registerin
 trivialization changes act on fibers. -/
 structure VectorBundleCore (ι : Type _) where
   baseSet : ι → Set B
-  is_open_base_set : ∀ i, IsOpen (base_set i)
+  isOpen_baseSet : ∀ i, IsOpen (base_set i)
   indexAt : B → ι
-  mem_base_set_at : ∀ x, x ∈ base_set (index_at x)
+  mem_baseSet_at : ∀ x, x ∈ base_set (index_at x)
   coordChange : ι → ι → B → F →L[R] F
-  coord_change_self : ∀ i, ∀ x ∈ base_set i, ∀ v, coord_change i i x v = v
-  continuous_on_coord_change : ∀ i j, ContinuousOn (coord_change i j) (base_set i ∩ base_set j)
-  coord_change_comp :
+  coordChange_self : ∀ i, ∀ x ∈ base_set i, ∀ v, coord_change i i x v = v
+  continuousOn_coordChange : ∀ i j, ContinuousOn (coord_change i j) (base_set i ∩ base_set j)
+  coordChange_comp :
     ∀ i j k,
       ∀ x ∈ base_set i ∩ base_set j ∩ base_set k,
         ∀ v, (coord_change j k x) (coord_change i j x v) = coord_change i k x v
@@ -531,13 +531,13 @@ identity. -/
 def trivialVectorBundleCore (ι : Type _) [Inhabited ι] : VectorBundleCore R B F ι
     where
   baseSet ι := univ
-  is_open_base_set i := isOpen_univ
+  isOpen_baseSet i := isOpen_univ
   indexAt := default
-  mem_base_set_at x := mem_univ x
+  mem_baseSet_at x := mem_univ x
   coordChange i j x := ContinuousLinearMap.id R F
-  coord_change_self i x hx v := rfl
-  coord_change_comp i j k x hx v := rfl
-  continuous_on_coord_change i j := continuousOn_const
+  coordChange_self i x hx v := rfl
+  coordChange_comp i j k x hx v := rfl
+  continuousOn_coordChange i j := continuousOn_const
 #align trivial_vector_bundle_core trivialVectorBundleCore
 
 instance (ι : Type _) [Inhabited ι] : Inhabited (VectorBundleCore R B F ι) :=
@@ -552,9 +552,9 @@ variable {R B F} {ι : Type _} (Z : VectorBundleCore R B F ι)
 def toFiberBundleCore : FiberBundleCore ι B F :=
   { Z with
     coordChange := fun i j b => Z.coordChange i j b
-    continuous_on_coord_change := fun i j =>
-      isBoundedBilinearMapApply.Continuous.comp_continuous_on
-        ((Z.continuous_on_coord_change i j).prod_map continuousOn_id) }
+    continuousOn_coordChange := fun i j =>
+      isBoundedBilinearMapApply.Continuous.comp_continuousOn
+        ((Z.continuousOn_coordChange i j).Prod_map continuousOn_id) }
 #align vector_bundle_core.to_fiber_bundle_core VectorBundleCore.toFiberBundleCore
 
 instance toFiberBundleCoreCoe : Coe (VectorBundleCore R B F ι) (FiberBundleCore ι B F) :=
@@ -609,7 +609,7 @@ instance addCommGroupFiber [AddCommGroup F] : ∀ x : B, AddCommGroup (Z.Fiber x
 /-- The projection from the total space of a fiber bundle core, on its base. -/
 @[reducible, simp, mfld_simps]
 def proj : TotalSpace Z.Fiber → B :=
-  total_space.proj
+  TotalSpace.proj
 #align vector_bundle_core.proj VectorBundleCore.proj
 
 /-- The total space of the vector bundle, as a convenience function for dot notation.
@@ -681,7 +681,7 @@ theorem localTriv_apply (p : Z.TotalSpace) :
 @[simp, mfld_simps]
 theorem mem_localTriv_target (p : B × F) :
     p ∈ (Z.localTriv i).target ↔ p.1 ∈ (Z.localTriv i).baseSet :=
-  Z.toFiberBundleCore.mem_local_triv_target i p
+  Z.toFiberBundleCore.mem_localTriv_target i p
 #align vector_bundle_core.mem_local_triv_target VectorBundleCore.mem_localTriv_target
 
 @[simp, mfld_simps]
@@ -729,7 +729,7 @@ theorem localTrivAt_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p
 
 @[simp, mfld_simps]
 theorem localTrivAt_apply_mk (b : B) (a : F) : (Z.localTrivAt b) ⟨b, a⟩ = ⟨b, a⟩ :=
-  Z.local_triv_at_apply _
+  Z.localTrivAt_apply _
 #align vector_bundle_core.local_triv_at_apply_mk VectorBundleCore.localTrivAt_apply_mk
 
 @[simp, mfld_simps]
@@ -746,7 +746,7 @@ instance vectorBundle : VectorBundle R F Z.Fiber
   trivialization_linear' := by
     rintro _ ⟨i, rfl⟩
     apply local_triv.is_linear
-  continuous_on_coord_change' := by
+  continuousOn_coord_change' := by
     rintro _ _ ⟨i, rfl⟩ ⟨i', rfl⟩
     refine' (Z.continuous_on_coord_change i i').congr fun b hb => _
     ext v
@@ -797,7 +797,7 @@ structure VectorPrebundle where
   pretrivialization_linear' :
     ∀ (e : Pretrivialization F (π E)) (he : e ∈ pretrivialization_atlas), e.isLinear R
   pretrivializationAt : B → Pretrivialization F (π E)
-  mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).baseSet
+  mem_base_pretrivializationAt : ∀ x : B, x ∈ (pretrivialization_at x).baseSet
   pretrivialization_mem_atlas : ∀ x : B, pretrivialization_at x ∈ pretrivialization_atlas
   exists_coord_change :
     ∀ (e) (_ : e ∈ pretrivialization_atlas) (e') (_ : e' ∈ pretrivialization_atlas),
@@ -851,7 +851,7 @@ def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=
       intro e he e' he'
       have :=
         is_bounded_bilinear_map_apply.continuous.comp_continuous_on
-          ((a.continuous_on_coord_change he' he).prod_map continuousOn_id)
+          ((a.continuous_on_coord_change he' he).Prod_map continuousOn_id)
       have H :
         e'.to_local_equiv.target ∩ e'.to_local_equiv.symm ⁻¹' e.to_local_equiv.source =
           (e'.base_set ∩ e.base_set) ×ˢ univ :=
@@ -898,7 +898,7 @@ theorem mem_trivialization_at_source (b : B) (x : E b) :
 @[simp]
 theorem totalSpaceMk_preimage_source (b : B) :
     totalSpaceMk b ⁻¹' (a.pretrivializationAt b).source = univ :=
-  a.toFiberPrebundle.total_space_mk_preimage_source b
+  a.toFiberPrebundle.totalSpaceMk_preimage_source b
 #align vector_prebundle.total_space_mk_preimage_source VectorPrebundle.totalSpaceMk_preimage_source
 
 /-- Topology on the fibers `E b` induced by the map `E b → E.total_space`. -/
@@ -909,13 +909,13 @@ def fiberTopology (b : B) : TopologicalSpace (E b) :=
 @[continuity]
 theorem inducing_totalSpaceMk (b : B) :
     @Inducing _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
-  a.toFiberPrebundle.inducing_total_space_mk b
+  a.toFiberPrebundle.inducing_totalSpaceMk b
 #align vector_prebundle.inducing_total_space_mk VectorPrebundle.inducing_totalSpaceMk
 
 @[continuity]
 theorem continuous_totalSpaceMk (b : B) :
     @Continuous _ _ (a.fiberTopology b) a.totalSpaceTopology (totalSpaceMk b) :=
-  a.toFiberPrebundle.continuous_total_space_mk b
+  a.toFiberPrebundle.continuous_totalSpaceMk b
 #align vector_prebundle.continuous_total_space_mk VectorPrebundle.continuous_totalSpaceMk
 
 /-- Make a `fiber_bundle` from a `vector_prebundle`; auxiliary construction for
@@ -935,7 +935,7 @@ theorem toVectorBundle :
   { trivialization_linear' := by
       rintro _ ⟨e, he, rfl⟩
       apply linear_of_mem_pretrivialization_atlas
-    continuous_on_coord_change' :=
+    continuousOn_coord_change' :=
       by
       rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
       refine' (a.continuous_on_coord_change he he').congr _

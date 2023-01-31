@@ -411,7 +411,7 @@ theorem AffineMap.affineIndependent_iff {p : ι → P} (f : P →ᵃ[k] P₂) (h
 /-- Affine equivalences preserve affine independence of families of points. -/
 theorem AffineEquiv.affineIndependent_iff {p : ι → P} (e : P ≃ᵃ[k] P₂) :
     AffineIndependent k (e ∘ p) ↔ AffineIndependent k p :=
-  e.toAffineMap.affine_independent_iff e.toEquiv.Injective
+  e.toAffineMap.affineIndependent_iff e.toEquiv.Injective
 #align affine_equiv.affine_independent_iff AffineEquiv.affineIndependent_iff
 
 /-- Affine equivalences preserve affine independence of subsets. -/

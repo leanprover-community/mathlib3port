@@ -81,15 +81,15 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
     -- so for each `j` we have some place `k j` to the right of both `kx` and `ky`
     simp [colimit_eq_iff.{v, v}] at h
     let k j := (h j).some
-    let f : ∀ j, kx ⟶ k j := fun j => (h j).some_spec.some
-    let g : ∀ j, ky ⟶ k j := fun j => (h j).some_spec.some_spec.some
+    let f : ∀ j, kx ⟶ k j := fun j => (h j).choose_spec.some
+    let g : ∀ j, ky ⟶ k j := fun j => (h j).choose_spec.choose_spec.some
     -- where the images of the components of the representatives become equal:
     have w :
       ∀ j,
         F.map ((𝟙 j, f j) : (j, kx) ⟶ (j, k j)) (limit.π ((curry.obj (swap K J ⋙ F)).obj kx) j x) =
           F.map ((𝟙 j, g j) : (j, ky) ⟶ (j, k j))
             (limit.π ((curry.obj (swap K J ⋙ F)).obj ky) j y) :=
-      fun j => (h j).some_spec.some_spec.some_spec
+      fun j => (h j).choose_spec.choose_spec.choose_spec
     -- We now use that `K` is filtered, picking some point to the right of all these
     -- morphisms `f j` and `g j`.
     let O : Finset K := finset.univ.image k ∪ {kx, ky}
@@ -152,12 +152,12 @@ theorem colimitLimitToLimitColimit_surjective :
     -- `k : J ⟶ K` records where the representative of the element in the `j`-th element of `x` lives
     let k : J → K := fun j => (z j).some
     -- `y j : F.obj (j, k j)` is the representative
-    let y : ∀ j, F.obj (j, k j) := fun j => (z j).some_spec.some
+    let y : ∀ j, F.obj (j, k j) := fun j => (z j).choose_spec.some
     -- and we record that these representatives, when mapped back into the relevant colimits,
     -- are actually the components of `x`.
     have e :
       ∀ j, colimit.ι ((curry.obj F).obj j) (k j) (y j) = limit.π (curry.obj F ⋙ limits.colim) j x :=
-      fun j => (z j).some_spec.some_spec
+      fun j => (z j).choose_spec.choose_spec
     clear_value k y
     -- A little tidying up of things we no longer need.
     clear z
@@ -189,8 +189,8 @@ theorem colimitLimitToLimitColimit_surjective :
     simp_rw [colimit_eq_iff.{v, v}] at w
     -- We take a moment to restate `w` more conveniently.
     let kf : ∀ {j j'} (f : j ⟶ j'), K := fun _ _ f => (w f).some
-    let gf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).some_spec.some
-    let hf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).some_spec.some_spec.some
+    let gf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).choose_spec.some
+    let hf : ∀ {j j'} (f : j ⟶ j'), k' ⟶ kf f := fun _ _ f => (w f).choose_spec.choose_spec.some
     have wf :
       ∀ {j j'} (f : j ⟶ j'),
         F.map ((𝟙 j', g j' ≫ gf f) : (j', k j') ⟶ (j', kf f)) (y j') =
@@ -200,7 +200,7 @@ theorem colimitLimitToLimitColimit_surjective :
       have q :
         ((curry.obj F).obj j').map (gf f) (F.map _ (y j')) =
           ((curry.obj F).obj j').map (hf f) (F.map _ (y j)) :=
-        (w f).some_spec.some_spec.some_spec
+        (w f).choose_spec.choose_spec.choose_spec
       dsimp at q
       simp_rw [← functor_to_types.map_comp_apply] at q
       convert q <;> simp only [comp_id]

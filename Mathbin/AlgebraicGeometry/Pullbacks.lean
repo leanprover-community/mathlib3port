@@ -392,7 +392,7 @@ theorem gluedLift_p1 : gluedLift 𝒰 f g s ≫ p1 𝒰 f g = s.fst :=
   erw [multicoequalizer.π_desc_assoc, multicoequalizer.π_desc_assoc]
   delta glued_lift
   simp_rw [← category.assoc]
-  rw [(𝒰.pullback_cover s.fst).ι_glue_morphisms]
+  rw [(𝒰.pullback_cover s.fst).ι_glueMorphisms]
   simp_rw [category.assoc]
   erw [multicoequalizer.π_desc, pullback.lift_fst_assoc, pullback.condition, category.comp_id]
   rw [pullback_symmetry_hom_comp_fst_assoc]
@@ -406,7 +406,7 @@ theorem gluedLift_p2 : gluedLift 𝒰 f g s ≫ p2 𝒰 f g = s.snd :=
   erw [multicoequalizer.π_desc_assoc, multicoequalizer.π_desc_assoc]
   delta glued_lift
   simp_rw [← category.assoc]
-  rw [(𝒰.pullback_cover s.fst).ι_glue_morphisms]
+  rw [(𝒰.pullback_cover s.fst).ι_glueMorphisms]
   simp_rw [category.assoc]
   erw [multicoequalizer.π_desc, pullback.lift_snd]
   rw [pullback_symmetry_hom_comp_snd_assoc]
@@ -541,7 +541,7 @@ def gluedIsLimit : IsLimit (PullbackCone.mk _ _ (p_comm 𝒰 f g)) :=
   intro i
   rw [open_cover.pullback_cover_map]
   have := pullback_right_pullback_fst_iso (p1 𝒰 f g) (𝒰.map i) m ≪≫ pullback.congr_hom h₁ rfl
-  erw [(𝒰.pullback_cover s.fst).ι_glue_morphisms]
+  erw [(𝒰.pullback_cover s.fst).ι_glueMorphisms]
   rw [←
     cancel_epi
       (pullback_right_pullback_fst_iso (p1 𝒰 f g) (𝒰.map i) m ≪≫ pullback.congr_hom h₁ rfl).Hom,

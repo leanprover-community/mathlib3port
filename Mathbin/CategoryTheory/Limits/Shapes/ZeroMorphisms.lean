@@ -52,7 +52,7 @@ variable (D : Type u') [Category.{v'} D]
 /-- A category "has zero morphisms" if there is a designated "zero morphism" in each morphism space,
 and compositions of zero morphisms with anything give the zero morphism. -/
 class HasZeroMorphisms where
-  [HasZero : ∀ X Y : C, Zero (X ⟶ Y)]
+  [Zero : ∀ X Y : C, Zero (X ⟶ Y)]
   comp_zero' : ∀ {X Y : C} (f : X ⟶ Y) (Z : C), f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) := by obviously
   zero_comp' : ∀ (X : C) {Y Z : C} (f : Y ⟶ Z), (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) := by obviously
 #align category_theory.limits.has_zero_morphisms CategoryTheory.Limits.HasZeroMorphisms
@@ -77,10 +77,10 @@ theorem zero_comp [HasZeroMorphisms C] {X : C} {Y Z : C} {f : Y ⟶ Z} :
   HasZeroMorphisms.zero_comp X f
 #align category_theory.limits.zero_comp CategoryTheory.Limits.zero_comp
 
-instance hasZeroMorphismsPempty : HasZeroMorphisms (Discrete PEmpty) where HasZero := by tidy
+instance hasZeroMorphismsPempty : HasZeroMorphisms (Discrete PEmpty) where Zero := by tidy
 #align category_theory.limits.has_zero_morphisms_pempty CategoryTheory.Limits.hasZeroMorphismsPempty
 
-instance hasZeroMorphismsPunit : HasZeroMorphisms (Discrete PUnit) where HasZero := by tidy
+instance hasZeroMorphismsPunit : HasZeroMorphisms (Discrete PUnit) where Zero := by tidy
 #align category_theory.limits.has_zero_morphisms_punit CategoryTheory.Limits.hasZeroMorphismsPunit
 
 namespace HasZeroMorphisms
@@ -124,7 +124,7 @@ open Opposite HasZeroMorphisms
 
 instance hasZeroMorphismsOpposite [HasZeroMorphisms C] : HasZeroMorphisms Cᵒᵖ
     where
-  HasZero X Y := ⟨(0 : unop Y ⟶ unop X).op⟩
+  Zero X Y := ⟨(0 : unop Y ⟶ unop X).op⟩
   comp_zero' X Y f Z := congr_arg Quiver.Hom.op (HasZeroMorphisms.zero_comp (unop Z) f.unop)
   zero_comp' X Y Z f := congr_arg Quiver.Hom.op (HasZeroMorphisms.comp_zero f.unop (unop X))
 #align category_theory.limits.has_zero_morphisms_opposite CategoryTheory.Limits.hasZeroMorphismsOpposite
@@ -159,7 +159,7 @@ section
 
 variable [HasZeroMorphisms D]
 
-instance : HasZeroMorphisms (C ⥤ D) where HasZero F G := ⟨{ app := fun X => 0 }⟩
+instance : HasZeroMorphisms (C ⥤ D) where Zero F G := ⟨{ app := fun X => 0 }⟩
 
 @[simp]
 theorem zero_app (F G : C ⥤ D) (j : C) : (0 : F ⟶ G).app j = 0 :=
@@ -254,7 +254,7 @@ end IsZero
     asks for an instance of `has_zero_objects`. -/
 def IsZero.hasZeroMorphisms {O : C} (hO : IsZero O) : HasZeroMorphisms C
     where
-  HasZero X Y := { zero := hO.from X ≫ hO.to Y }
+  Zero X Y := { zero := hO.from X ≫ hO.to Y }
   zero_comp' X Y Z f := by
     rw [category.assoc]
     congr
@@ -281,7 +281,7 @@ open ZeroObject
     asks for an instance of `has_zero_objects`. -/
 def zeroMorphismsOfZeroObject : HasZeroMorphisms C
     where
-  HasZero X Y := { zero := (default : X ⟶ 0) ≫ default }
+  Zero X Y := { zero := (default : X ⟶ 0) ≫ default }
   zero_comp' X Y Z f := by
     dsimp only [Zero.zero]
     rw [category.assoc]
@@ -603,7 +603,7 @@ def imageFactorisationZero (X Y : C) : ImageFactorisation (0 : X ⟶ Y)
 #align category_theory.limits.image_factorisation_zero CategoryTheory.Limits.imageFactorisationZero
 
 instance hasImage_zero {X Y : C} : HasImage (0 : X ⟶ Y) :=
-  has_image.mk <| imageFactorisationZero _ _
+  HasImage.mk <| imageFactorisationZero _ _
 #align category_theory.limits.has_image_zero CategoryTheory.Limits.hasImage_zero
 
 /-- The image of a zero morphism is the zero object. -/
@@ -613,7 +613,7 @@ def imageZero {X Y : C} : image (0 : X ⟶ Y) ≅ 0 :=
 
 /-- The image of a morphism which is equal to zero is the zero object. -/
 def imageZero' {X Y : C} {f : X ⟶ Y} (h : f = 0) [HasImage f] : image f ≅ 0 :=
-  image.eqToIso h ≪≫ image_zero
+  image.eqToIso h ≪≫ imageZero
 #align category_theory.limits.image_zero' CategoryTheory.Limits.imageZero'
 
 @[simp]
@@ -639,13 +639,13 @@ end Image
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/
 instance isSplitMono_sigma_ι {β : Type u'} [HasZeroMorphisms C] (f : β → C)
     [HasColimit (Discrete.functor f)] (b : β) : IsSplitMono (Sigma.ι f b) :=
-  IsSplitMono.mk' { retraction := sigma.desc <| Pi.single b (𝟙 _) }
+  IsSplitMono.mk' { retraction := Sigma.desc <| Pi.single b (𝟙 _) }
 #align category_theory.limits.is_split_mono_sigma_ι CategoryTheory.Limits.isSplitMono_sigma_ι
 
 /-- In the presence of zero morphisms, projections into a product are (split) epimorphisms. -/
 instance isSplitEpi_pi_π {β : Type u'} [HasZeroMorphisms C] (f : β → C)
     [HasLimit (Discrete.functor f)] (b : β) : IsSplitEpi (Pi.π f b) :=
-  IsSplitEpi.mk' { section_ := pi.lift <| Pi.single b (𝟙 _) }
+  IsSplitEpi.mk' { section_ := Pi.lift <| Pi.single b (𝟙 _) }
 #align category_theory.limits.is_split_epi_pi_π CategoryTheory.Limits.isSplitEpi_pi_π
 
 /-- In the presence of zero morphisms, coprojections into a coproduct are (split) monomorphisms. -/

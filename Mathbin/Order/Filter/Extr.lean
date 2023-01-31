@@ -255,19 +255,19 @@ theorem isExtrOn_const {b : β} : IsExtrOn (fun _ => b) s a :=
 open OrderDual (toDual)
 
 #print isMinFilter_dual_iff /-
-theorem isMinFilter_dual_iff : IsMinFilter (to_dual ∘ f) l a ↔ IsMaxFilter f l a :=
+theorem isMinFilter_dual_iff : IsMinFilter (toDual ∘ f) l a ↔ IsMaxFilter f l a :=
   Iff.rfl
 #align is_min_filter_dual_iff isMinFilter_dual_iff
 -/
 
 #print isMaxFilter_dual_iff /-
-theorem isMaxFilter_dual_iff : IsMaxFilter (to_dual ∘ f) l a ↔ IsMinFilter f l a :=
+theorem isMaxFilter_dual_iff : IsMaxFilter (toDual ∘ f) l a ↔ IsMinFilter f l a :=
   Iff.rfl
 #align is_max_filter_dual_iff isMaxFilter_dual_iff
 -/
 
 #print isExtrFilter_dual_iff /-
-theorem isExtrFilter_dual_iff : IsExtrFilter (to_dual ∘ f) l a ↔ IsExtrFilter f l a :=
+theorem isExtrFilter_dual_iff : IsExtrFilter (toDual ∘ f) l a ↔ IsExtrFilter f l a :=
   or_comm' _ _
 #align is_extr_filter_dual_iff isExtrFilter_dual_iff
 -/
@@ -285,19 +285,19 @@ alias isExtrFilter_dual_iff ↔ IsExtrFilter.undual IsExtrFilter.dual
 #align is_extr_filter.dual IsExtrFilter.dual
 
 #print isMinOn_dual_iff /-
-theorem isMinOn_dual_iff : IsMinOn (to_dual ∘ f) s a ↔ IsMaxOn f s a :=
+theorem isMinOn_dual_iff : IsMinOn (toDual ∘ f) s a ↔ IsMaxOn f s a :=
   Iff.rfl
 #align is_min_on_dual_iff isMinOn_dual_iff
 -/
 
 #print isMaxOn_dual_iff /-
-theorem isMaxOn_dual_iff : IsMaxOn (to_dual ∘ f) s a ↔ IsMinOn f s a :=
+theorem isMaxOn_dual_iff : IsMaxOn (toDual ∘ f) s a ↔ IsMinOn f s a :=
   Iff.rfl
 #align is_max_on_dual_iff isMaxOn_dual_iff
 -/
 
 #print isExtrOn_dual_iff /-
-theorem isExtrOn_dual_iff : IsExtrOn (to_dual ∘ f) s a ↔ IsExtrOn f s a :=
+theorem isExtrOn_dual_iff : IsExtrOn (toDual ∘ f) s a ↔ IsExtrOn f s a :=
   or_comm' _ _
 #align is_extr_on_dual_iff isExtrOn_dual_iff
 -/
@@ -600,14 +600,14 @@ theorem IsMinOn.comp_mapsTo {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn 
 #print IsMaxOn.comp_mapsTo /-
 theorem IsMaxOn.comp_mapsTo {t : Set δ} {g : δ → α} {b : δ} (hf : IsMaxOn f s a) (hg : MapsTo g t s)
     (ha : g b = a) : IsMaxOn (f ∘ g) t b :=
-  hf.dual.comp_maps_to hg ha
+  hf.dual.comp_mapsTo hg ha
 #align is_max_on.comp_maps_to IsMaxOn.comp_mapsTo
 -/
 
 #print IsExtrOn.comp_mapsTo /-
 theorem IsExtrOn.comp_mapsTo {t : Set δ} {g : δ → α} {b : δ} (hf : IsExtrOn f s a)
     (hg : MapsTo g t s) (ha : g b = a) : IsExtrOn (f ∘ g) t b :=
-  hf.elim (fun h => Or.inl <| h.comp_maps_to hg ha) fun h => Or.inr <| h.comp_maps_to hg ha
+  hf.elim (fun h => Or.inl <| h.comp_mapsTo hg ha) fun h => Or.inr <| h.comp_mapsTo hg ha
 #align is_extr_on.comp_maps_to IsExtrOn.comp_mapsTo
 -/
 

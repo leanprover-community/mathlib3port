@@ -63,7 +63,7 @@ attribute [to_additive] Mon.largeCategory Mon.concreteCategory
 
 @[to_additive]
 instance : CoeSort Mon (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `Mon` from the underlying type and typeclass. -/
 @[to_additive]
@@ -132,7 +132,7 @@ attribute [to_additive] CommMon.largeCategory CommMon.concreteCategory
 
 @[to_additive]
 instance : CoeSort CommMon (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `CommMon` from the underlying type and typeclass. -/
 @[to_additive]

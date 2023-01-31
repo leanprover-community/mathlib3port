@@ -157,7 +157,7 @@ theorem away_of_isUnit_of_bijective {R : Type _} (S : Type _) [CommRing R] [Comm
     IsLocalization.Away r S :=
   { map_units := by
       rintro ⟨_, n, rfl⟩
-      exact (algebraMap R S).is_unit_map (hr.pow _)
+      exact (algebraMap R S).isUnit_map (hr.pow _)
     surj := fun z => by
       obtain ⟨z', rfl⟩ := H.2 z
       exact ⟨⟨z', 1⟩, by simp⟩
@@ -205,7 +205,7 @@ attribute [local instance] IsLocalization.algHom_subsingleton AdjoinRoot.algHom_
 
 /-- The `R`-`alg_equiv` between the localization of `R` away from `r` and
     `R` with an inverse of `r` adjoined. -/
-noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (c r * X - 1) :=
+noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] AdjoinRoot (c r * x - 1) :=
   AlgEquiv.ofAlgHom
     { awayLift _ r _ with
       commutes' :=
@@ -216,7 +216,7 @@ noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] Adjoin
     (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align localization.away_equiv_adjoin Localization.awayEquivAdjoin
 
-theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * X - 1) :=
+theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <| c r * x - 1) :=
   IsLocalization.isLocalization_of_algEquiv _ (Localization.awayEquivAdjoin r)
 #align is_localization.adjoin_inv IsLocalization.adjoin_inv
 

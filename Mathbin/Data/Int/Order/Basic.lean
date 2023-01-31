@@ -82,7 +82,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.coe_nat_abs Int.coe_natAbsₓ'. -/
 @[simp, norm_cast]
 theorem coe_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
-  n.abs_eq_nat_abs.symm
+  n.abs_eq_natAbs.symm
 #align int.coe_nat_abs Int.coe_natAbs
 
 /- warning: nat.cast_nat_abs -> Nat.cast_natAbs is a dubious translation:
@@ -423,7 +423,7 @@ theorem emod_abs (a b : ℤ) : a % |b| = a % b :=
 theorem emod_nonneg : ∀ (a : ℤ) {b : ℤ}, b ≠ 0 → 0 ≤ a % b
   | (m : ℕ), n, H => ofNat_zero_le _
   | -[m+1], n, H =>
-    sub_nonneg_of_le <| coe_nat_le_coe_nat_of_le <| Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
+    sub_nonneg_of_le <| ofNat_le_ofNat_of_le <| Nat.mod_lt _ (natAbs_pos_of_ne_zero H)
 #align int.mod_nonneg Int.emod_nonneg
 -/
 
@@ -431,7 +431,7 @@ theorem emod_nonneg : ∀ (a : ℤ) {b : ℤ}, b ≠ 0 → 0 ≤ a % b
 theorem emod_lt_of_pos (a : ℤ) {b : ℤ} (H : 0 < b) : a % b < b :=
   match a, b, eq_succ_of_zero_lt H with
   | (m : ℕ), _, ⟨n, rfl⟩ => ofNat_lt_ofNat_of_lt (Nat.mod_lt _ (Nat.succ_pos _))
-  | -[m+1], _, ⟨n, rfl⟩ => sub_lt_self _ (coe_nat_lt_coe_nat_of_lt <| Nat.succ_pos _)
+  | -[m+1], _, ⟨n, rfl⟩ => sub_lt_self _ (ofNat_lt_ofNat_of_lt <| Nat.succ_pos _)
 #align int.mod_lt_of_pos Int.emod_lt_of_pos
 -/
 
@@ -1152,7 +1152,7 @@ theorem toNat_lt_toNat {a b : ℤ} (hb : 0 < b) : toNat a < toNat b ↔ a < b :=
 
 #print Int.lt_of_toNat_lt /-
 theorem lt_of_toNat_lt {a b : ℤ} (h : toNat a < toNat b) : a < b :=
-  (to_nat_lt_to_nat <| lt_toNat.1 <| lt_of_le_of_lt (Nat.zero_le _) h).1 h
+  (toNat_lt_toNat <| lt_toNat.1 <| lt_of_le_of_lt (Nat.zero_le _) h).1 h
 #align int.lt_of_to_nat_lt Int.lt_of_toNat_lt
 -/
 

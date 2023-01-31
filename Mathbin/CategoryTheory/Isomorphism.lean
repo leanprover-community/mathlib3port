@@ -465,7 +465,7 @@ Suppose we are given `f : X ≅ Y` with `X Y : Type u`.
 Without the lower priority, typeclass inference cannot deduce `is_iso f.hom`
 because `f.hom` is defeq to `(λ x, x) ≫ f.hom`, triggering a loop. -/
 instance (priority := 900) comp_isIso [IsIso f] [IsIso h] : IsIso (f ≫ h) :=
-  is_iso.of_iso <| asIso f ≪≫ asIso h
+  IsIso.of_iso <| asIso f ≪≫ asIso h
 #align category_theory.is_iso.comp_is_iso CategoryTheory.IsIso.comp_isIso
 -/
 
@@ -769,7 +769,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_iso_refl CategoryTheory.Functor.mapIso_reflₓ'. -/
 @[simp]
 theorem mapIso_refl (F : C ⥤ D) (X : C) : F.mapIso (Iso.refl X) = Iso.refl (F.obj X) :=
-  iso.ext <| F.map_id X
+  Iso.ext <| F.map_id X
 #align category_theory.functor.map_iso_refl CategoryTheory.Functor.mapIso_refl
 
 /- warning: category_theory.functor.map_is_iso -> CategoryTheory.Functor.map_isIso is a dubious translation:
@@ -779,7 +779,7 @@ but is expected to have type
   forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C] {X : C} {Y : C} {D : Type.{u3}} [_inst_2 : CategoryTheory.Category.{u4, u3} D] (F : CategoryTheory.Functor.{u1, u4, u2, u3} C _inst_1 D _inst_2) (f : Quiver.Hom.{succ u1, u2} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) X Y) [_inst_3 : CategoryTheory.IsIso.{u1, u2} C _inst_1 X Y f], CategoryTheory.IsIso.{u4, u3} D _inst_2 (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X) (Prefunctor.obj.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) Y) (Prefunctor.map.{succ u1, succ u4, u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u2} C (CategoryTheory.Category.toCategoryStruct.{u1, u2} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u4, u3} D (CategoryTheory.Category.toCategoryStruct.{u4, u3} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u4, u2, u3} C _inst_1 D _inst_2 F) X Y f)
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.map_is_iso CategoryTheory.Functor.map_isIsoₓ'. -/
 instance map_isIso (F : C ⥤ D) (f : X ⟶ Y) [IsIso f] : IsIso (F.map f) :=
-  is_iso.of_iso <| F.mapIso (asIso f)
+  IsIso.of_iso <| F.mapIso (asIso f)
 #align category_theory.functor.map_is_iso CategoryTheory.Functor.map_isIso
 
 /- warning: category_theory.functor.map_inv -> CategoryTheory.Functor.map_inv is a dubious translation:

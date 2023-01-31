@@ -51,13 +51,13 @@ variable {α : Type _} {β : Type _}
 
 /-- A uniform group is a group in which multiplication and inversion are uniformly continuous. -/
 class UniformGroup (α : Type _) [UniformSpace α] [Group α] : Prop where
-  uniform_continuous_div : UniformContinuous fun p : α × α => p.1 / p.2
+  uniformContinuous_div : UniformContinuous fun p : α × α => p.1 / p.2
 #align uniform_group UniformGroup
 
 /-- A uniform additive group is an additive group in which addition
   and negation are uniformly continuous.-/
 class UniformAddGroup (α : Type _) [UniformSpace α] [AddGroup α] : Prop where
-  uniform_continuous_sub : UniformContinuous fun p : α × α => p.1 - p.2
+  uniformContinuous_sub : UniformContinuous fun p : α × α => p.1 - p.2
 #align uniform_add_group UniformAddGroup
 
 attribute [to_additive] UniformGroup
@@ -209,7 +209,7 @@ namespace Subgroup
 instance (S : Subgroup α) : UniformGroup S :=
   ⟨uniformContinuous_comap'
       (uniformContinuous_div.comp <|
-        uniformContinuous_subtype_val.prod_map uniformContinuous_subtype_val)⟩
+        uniformContinuous_subtype_val.Prod_map uniformContinuous_subtype_val)⟩
 
 end Subgroup
 
@@ -221,7 +221,7 @@ variable [Group β]
 theorem uniformGroup_infₛ {us : Set (UniformSpace β)} (h : ∀ u ∈ us, @UniformGroup β u _) :
     @UniformGroup β (infₛ us) _ :=
   {
-    uniform_continuous_div :=
+    uniformContinuous_div :=
       uniformContinuous_infₛ_rng fun u hu =>
         uniformContinuous_infₛ_dom₂ hu hu (@UniformGroup.uniformContinuous_div β u _ (h u hu)) }
 #align uniform_group_Inf uniformGroup_infₛ
@@ -250,7 +250,7 @@ theorem uniformGroup_inf {u₁ u₂ : UniformSpace β} (h₁ : @UniformGroup β 
 theorem uniformGroup_comap {γ : Type _} [Group γ] {u : UniformSpace γ} [UniformGroup γ] {F : Type _}
     [MonoidHomClass F β γ] (f : F) : @UniformGroup β (u.comap f) _ :=
   {
-    uniform_continuous_div := by
+    uniformContinuous_div := by
       letI : UniformSpace β := u.comap f
       refine' uniformContinuous_comap' _
       simp_rw [Function.comp, map_div]
@@ -451,35 +451,35 @@ theorem uniformContinuous_monoid_hom_of_continuous {hom : Type _} [UniformSpace 
 @[to_additive]
 theorem CauchySeq.mul {ι : Type _} [SemilatticeSup ι] {u v : ι → α} (hu : CauchySeq u)
     (hv : CauchySeq v) : CauchySeq (u * v) :=
-  uniformContinuous_mul.comp_cauchy_seq (hu.Prod hv)
+  uniformContinuous_mul.comp_cauchySeq (hu.Prod hv)
 #align cauchy_seq.mul CauchySeq.mul
 #align cauchy_seq.add CauchySeq.add
 
 @[to_additive]
 theorem CauchySeq.mul_const {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x : α} (hu : CauchySeq u) :
     CauchySeq fun n => u n * x :=
-  (uniformContinuous_id.mul uniformContinuous_const).comp_cauchy_seq hu
+  (uniformContinuous_id.mul uniformContinuous_const).comp_cauchySeq hu
 #align cauchy_seq.mul_const CauchySeq.mul_const
 #align cauchy_seq.add_const CauchySeq.add_const
 
 @[to_additive]
 theorem CauchySeq.const_mul {ι : Type _} [SemilatticeSup ι] {u : ι → α} {x : α} (hu : CauchySeq u) :
     CauchySeq fun n => x * u n :=
-  (uniformContinuous_const.mul uniformContinuous_id).comp_cauchy_seq hu
+  (uniformContinuous_const.mul uniformContinuous_id).comp_cauchySeq hu
 #align cauchy_seq.const_mul CauchySeq.const_mul
 #align cauchy_seq.const_add CauchySeq.const_add
 
 @[to_additive]
 theorem CauchySeq.inv {ι : Type _} [SemilatticeSup ι] {u : ι → α} (h : CauchySeq u) :
     CauchySeq u⁻¹ :=
-  uniformContinuous_inv.comp_cauchy_seq h
+  uniformContinuous_inv.comp_cauchySeq h
 #align cauchy_seq.inv CauchySeq.inv
 #align cauchy_seq.neg CauchySeq.neg
 
 @[to_additive]
 theorem totallyBounded_iff_subset_finite_unionᵢ_nhds_one {s : Set α} :
     TotallyBounded s ↔ ∀ U ∈ 𝓝 (1 : α), ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, y • U :=
-  (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totally_bounded_iff.trans <| by
+  (𝓝 (1 : α)).basis_sets.uniformity_of_nhds_one_inv_mul_swapped.totallyBounded_iff.trans <| by
     simp [← preimage_smul_inv, preimage]
 #align totally_bounded_iff_subset_finite_Union_nhds_one totallyBounded_iff_subset_finite_unionᵢ_nhds_one
 #align totally_bounded_iff_subset_finite_Union_nhds_zero totallyBounded_iff_subset_finite_unionᵢ_nhds_zero
@@ -492,7 +492,7 @@ variable {ι : Type _} {l : Filter ι} {l' : Filter β} {f f' : ι → β → α
 theorem TendstoUniformlyOnFilter.mul (hf : TendstoUniformlyOnFilter f g l l')
     (hf' : TendstoUniformlyOnFilter f' g' l l') : TendstoUniformlyOnFilter (f * f') (g * g') l l' :=
   fun u hu =>
-  ((uniformContinuous_mul.comp_tendsto_uniformly_on_filter (hf.Prod hf')) u hu).diag_of_prod_left
+  ((uniformContinuous_mul.comp_tendstoUniformlyOnFilter (hf.Prod hf')) u hu).diag_of_prod_left
 #align tendsto_uniformly_on_filter.mul TendstoUniformlyOnFilter.mul
 #align tendsto_uniformly_on_filter.add TendstoUniformlyOnFilter.add
 
@@ -500,35 +500,35 @@ theorem TendstoUniformlyOnFilter.mul (hf : TendstoUniformlyOnFilter f g l l')
 theorem TendstoUniformlyOnFilter.div (hf : TendstoUniformlyOnFilter f g l l')
     (hf' : TendstoUniformlyOnFilter f' g' l l') : TendstoUniformlyOnFilter (f / f') (g / g') l l' :=
   fun u hu =>
-  ((uniformContinuous_div.comp_tendsto_uniformly_on_filter (hf.Prod hf')) u hu).diag_of_prod_left
+  ((uniformContinuous_div.comp_tendstoUniformlyOnFilter (hf.Prod hf')) u hu).diag_of_prod_left
 #align tendsto_uniformly_on_filter.div TendstoUniformlyOnFilter.div
 #align tendsto_uniformly_on_filter.sub TendstoUniformlyOnFilter.sub
 
 @[to_additive]
 theorem TendstoUniformlyOn.mul (hf : TendstoUniformlyOn f g l s)
     (hf' : TendstoUniformlyOn f' g' l s) : TendstoUniformlyOn (f * f') (g * g') l s := fun u hu =>
-  ((uniformContinuous_mul.comp_tendsto_uniformly_on (hf.Prod hf')) u hu).diag_of_prod
+  ((uniformContinuous_mul.comp_tendstoUniformlyOn (hf.Prod hf')) u hu).diag_of_prod
 #align tendsto_uniformly_on.mul TendstoUniformlyOn.mul
 #align tendsto_uniformly_on.add TendstoUniformlyOn.add
 
 @[to_additive]
 theorem TendstoUniformlyOn.div (hf : TendstoUniformlyOn f g l s)
     (hf' : TendstoUniformlyOn f' g' l s) : TendstoUniformlyOn (f / f') (g / g') l s := fun u hu =>
-  ((uniformContinuous_div.comp_tendsto_uniformly_on (hf.Prod hf')) u hu).diag_of_prod
+  ((uniformContinuous_div.comp_tendstoUniformlyOn (hf.Prod hf')) u hu).diag_of_prod
 #align tendsto_uniformly_on.div TendstoUniformlyOn.div
 #align tendsto_uniformly_on.sub TendstoUniformlyOn.sub
 
 @[to_additive]
 theorem TendstoUniformly.mul (hf : TendstoUniformly f g l) (hf' : TendstoUniformly f' g' l) :
     TendstoUniformly (f * f') (g * g') l := fun u hu =>
-  ((uniformContinuous_mul.comp_tendsto_uniformly (hf.Prod hf')) u hu).diag_of_prod
+  ((uniformContinuous_mul.comp_tendstoUniformly (hf.Prod hf')) u hu).diag_of_prod
 #align tendsto_uniformly.mul TendstoUniformly.mul
 #align tendsto_uniformly.add TendstoUniformly.add
 
 @[to_additive]
 theorem TendstoUniformly.div (hf : TendstoUniformly f g l) (hf' : TendstoUniformly f' g' l) :
     TendstoUniformly (f / f') (g / g') l := fun u hu =>
-  ((uniformContinuous_div.comp_tendsto_uniformly (hf.Prod hf')) u hu).diag_of_prod
+  ((uniformContinuous_div.comp_tendstoUniformly (hf.Prod hf')) u hu).diag_of_prod
 #align tendsto_uniformly.div TendstoUniformly.div
 #align tendsto_uniformly.sub TendstoUniformly.sub
 
@@ -595,7 +595,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G
         simpa using V_sum _ Hz2 _ Hz1
       exact Set.Subset.trans comp_rel_sub U_sub
     · exact monotone_id.comp_rel monotone_id
-  is_open_uniformity := by
+  isOpen_uniformity := by
     intro S
     let S' x := { p : G × G | p.1 = x → p.2 ∈ S }
     show IsOpen S ↔ ∀ x : G, x ∈ S → S' x ∈ comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G))
@@ -1078,7 +1078,7 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
   refine'
     ⟨↑x₀,
       tendsto_nhds_of_cauchySeq_of_subseq hx
-        (strictMono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_at_top _⟩
+        (strictMono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_atTop _⟩
   convert ((continuous_coinduced_rng : Continuous (coe : G → G ⧸ N)).Tendsto x₀).comp hx₀
   exact funext fun n => (x' n).snd
 #align quotient_group.complete_space' QuotientGroup.complete_space'

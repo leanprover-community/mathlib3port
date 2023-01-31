@@ -79,7 +79,7 @@ protected def Algebra.IsIntegral : Prop :=
 variable {R A}
 
 theorem RingHom.is_integral_map {x : R} : f.IsIntegralElem (f x) :=
-  ⟨X - c x, monic_x_sub_c _, by simp⟩
+  ⟨x - c x, monic_x_sub_c _, by simp⟩
 #align ring_hom.is_integral_map RingHom.is_integral_map
 
 theorem isIntegral_algebraMap {x : R} : IsIntegral R (algebraMap R A x) :=
@@ -259,7 +259,7 @@ theorem fg_adjoin_of_finite {s : Set A} (hfs : s.Finite) (his : ∀ x ∈ s, IsI
 
 theorem isNoetherian_adjoin_finset [IsNoetherianRing R] (s : Finset A)
     (hs : ∀ x ∈ s, IsIntegral R x) : IsNoetherian R (Algebra.adjoin R (↑s : Set A)) :=
-  isNoetherian_of_fg_of_noetherian _ (fg_adjoin_of_finite s.finite_to_set hs)
+  isNoetherian_of_fg_of_noetherian _ (fg_adjoin_of_finite s.finite_toSet hs)
 #align is_noetherian_adjoin_finset isNoetherian_adjoin_finset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -381,7 +381,7 @@ theorem isIntegral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R
       one_mem' := fun n hn => (one_smul A n).symm ▸ hn
       add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn)
       zero_mem' := fun n hn => (zero_smul A n).symm ▸ N.zero_mem
-      algebra_map_mem' := fun r n hn => (algebraMap_smul A r n).symm ▸ N.smul_mem r hn }
+      algebraMap_mem' := fun r n hn => (algebraMap_smul A r n).symm ▸ N.smul_mem r hn }
   let f : A' →ₐ[R] Module.End R N :=
     AlgHom.ofLinearMap
       { toFun := fun x => (DistribMulAction.toLinearMap R M x).restrict x.Prop
@@ -433,7 +433,7 @@ alias RingHom.IsIntegral.to_finite ← RingHom.Finite.of_isIntegral_of_finiteTyp
 
 /-- finite = integral + finite type -/
 theorem RingHom.finite_iff_isIntegral_and_finiteType : f.Finite ↔ f.IsIntegral ∧ f.FiniteType :=
-  ⟨fun h => ⟨h.to_is_integral, h.to_finite_type⟩, fun ⟨h, h'⟩ => h.toFinite h'⟩
+  ⟨fun h => ⟨h.to_isIntegral, h.to_finiteType⟩, fun ⟨h, h'⟩ => h.toFinite h'⟩
 #align ring_hom.finite_iff_is_integral_and_finite_type RingHom.finite_iff_isIntegral_and_finiteType
 
 theorem Algebra.IsIntegral.finite (h : Algebra.IsIntegral R A) [h' : Algebra.FiniteType R A] :
@@ -560,7 +560,7 @@ def integralClosure : Subalgebra R A
   one_mem' := isIntegral_one
   add_mem' _ _ := isIntegral_add
   mul_mem' _ _ := isIntegral_mul
-  algebra_map_mem' x := isIntegral_algebraMap
+  algebraMap_mem' x := isIntegral_algebraMap
 #align integral_closure integralClosure
 
 theorem mem_integralClosure_iff_mem_fg {r : A} :
@@ -815,7 +815,7 @@ theorem isIntegral_leadingCoeff_smul [Algebra R S] (h : aeval x p = 0) :
   by
   rw [aeval_def] at h
   rw [Algebra.smul_def]
-  exact (algebraMap R S).is_integral_elem_leading_coeff_mul p x h
+  exact (algebraMap R S).isIntegralElem_leadingCoeff_mul p x h
 #align is_integral_leading_coeff_smul isIntegral_leadingCoeff_smul
 
 end
@@ -824,15 +824,15 @@ end
 
 section IsIntegralClosure
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`algebra_map_injective] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`algebraMap_injective] [] -/
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.
 -/
 class IsIntegralClosure (A R B : Type _) [CommRing R] [CommSemiring A] [CommRing B] [Algebra R B]
   [Algebra A B] : Prop where
-  algebra_map_injective : Function.Injective (algebraMap A B)
-  is_integral_iff : ∀ {x : B}, IsIntegral R x ↔ ∃ y, algebraMap A B y = x
+  algebraMap_injective : Function.Injective (algebraMap A B)
+  isIntegral_iff : ∀ {x : B}, IsIntegral R x ↔ ∃ y, algebraMap A B y = x
 #align is_integral_closure IsIntegralClosure
 
 instance integralClosure.isIntegralClosure (R A : Type _) [CommRing R] [CommRing A] [Algebra R A] :
@@ -1033,7 +1033,7 @@ theorem RingHom.isIntegral_of_surjective (hf : Function.Surjective f) : f.IsInte
 
 theorem isIntegral_of_surjective (h : Function.Surjective (algebraMap R A)) :
     Algebra.IsIntegral R A :=
-  (algebraMap R A).is_integral_of_surjective h
+  (algebraMap R A).isIntegral_of_surjective h
 #align is_integral_of_surjective isIntegral_of_surjective
 
 /-- If `R → A → B` is an algebra tower with `A → B` injective,
@@ -1094,7 +1094,7 @@ theorem RingHom.isIntegral_quotient_of_isIntegral {I : Ideal S} (hf : f.IsIntegr
 
 theorem isIntegral_quotient_of_isIntegral {I : Ideal A} (hRA : Algebra.IsIntegral R A) :
     Algebra.IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=
-  (algebraMap R A).is_integral_quotient_of_is_integral hRA
+  (algebraMap R A).isIntegral_quotient_of_isIntegral hRA
 #align is_integral_quotient_of_is_integral isIntegral_quotient_of_isIntegral
 
 theorem isIntegral_quotientMap_iff {I : Ideal S} :

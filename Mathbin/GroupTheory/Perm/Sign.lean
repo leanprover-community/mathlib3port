@@ -471,7 +471,7 @@ theorem signAux_swap : ∀ {n : ℕ} {x y : Fin n} (hxy : x ≠ y), signAux (swa
   | n + 2 => fun x y hxy => by
     have h2n : 2 ≤ n + 2 := by decide
     rw [← isConj_iff_eq, ← sign_aux_swap_zero_one h2n]
-    exact (MonoidHom.mk' sign_aux sign_aux_mul).map_is_conj (is_conj_swap hxy (by decide))
+    exact (MonoidHom.mk' sign_aux sign_aux_mul).map_isConj (is_conj_swap hxy (by decide))
 #align equiv.perm.sign_aux_swap Equiv.Perm.signAux_swap
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -644,7 +644,7 @@ theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : Perm α �
 
 variable {α}
 
-theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) : s = SignType.sign :=
+theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) : s = sign :=
   have : ∀ {f}, IsSwap f → s f = -1 := fun f ⟨x, y, hxy, hxy'⟩ =>
     hxy'.symm ▸
       by_contradiction fun h =>
@@ -677,7 +677,7 @@ theorem sign_subtypePerm (f : Perm α) {p : α → Prop} [DecidablePred p] (h₁
   let l := (truncSwapFactors (subtypePerm f h₁)).out
   have hl' : ∀ g' ∈ l.1.map ofSubtype, IsSwap g' := fun g' hg' =>
     let ⟨g, hg⟩ := List.mem_map'.1 hg'
-    hg.2 ▸ (l.2.2 _ hg.1).of_subtype_is_swap
+    hg.2 ▸ (l.2.2 _ hg.1).of_subtype_isSwap
   have hl'₂ : (l.1.map ofSubtype).Prod = f := by
     rw [l.1.prod_hom of_subtype, l.2.1, of_subtype_subtype_perm _ h₂]
   conv =>

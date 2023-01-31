@@ -123,14 +123,14 @@ theorem mem_disjSum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ �
 #print Finset.inl_mem_disjSum /-
 @[simp]
 theorem inl_mem_disjSum : inl a ∈ s.disjSum t ↔ a ∈ s :=
-  inl_mem_disj_sum
+  inl_mem_disjSum
 #align finset.inl_mem_disj_sum Finset.inl_mem_disjSum
 -/
 
 #print Finset.inr_mem_disjSum /-
 @[simp]
 theorem inr_mem_disjSum : inr b ∈ s.disjSum t ↔ b ∈ t :=
-  inr_mem_disj_sum
+  inr_mem_disjSum
 #align finset.inr_mem_disj_sum Finset.inr_mem_disjSum
 -/
 

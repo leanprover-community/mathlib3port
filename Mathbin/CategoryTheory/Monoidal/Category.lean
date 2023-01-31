@@ -148,13 +148,13 @@ class MonoidalCategory (C : Type u) [𝒞 : Category.{v} C] where
     obviously
   -- left unitor:
   leftUnitor : ∀ X : C, tensor_obj («expr𝟙_») X ≅ X
-  left_unitor_naturality' :
+  leftUnitor_naturality' :
     ∀ {X Y : C} (f : X ⟶ Y),
       «expr ⊗' » (𝟙 («expr𝟙_»)) f ≫ ((«exprλ_») Y).Hom = ((«exprλ_») X).Hom ≫ f := by
     obviously
   -- right unitor:
   rightUnitor : ∀ X : C, tensor_obj X («expr𝟙_») ≅ X
-  right_unitor_naturality' :
+  rightUnitor_naturality' :
     ∀ {X Y : C} (f : X ⟶ Y),
       «expr ⊗' » f (𝟙 («expr𝟙_»)) ≫ ((exprρ_) Y).Hom = ((exprρ_) X).Hom ≫ f := by
     obviously

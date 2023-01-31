@@ -138,7 +138,7 @@ theorem matches_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches = 
 #align regular_expression.matches_pow RegularExpression.matches_pow
 
 @[simp]
-theorem matches_star (P : RegularExpression α) : P.star.matches = P.matches∗ :=
+theorem matches_star (P : RegularExpression α) : P.unit.matches = P.matches∗ :=
   rfl
 #align regular_expression.matches_star RegularExpression.matches_star
 
@@ -191,7 +191,7 @@ theorem deriv_add (P Q : RegularExpression α) (a : α) : deriv (P + Q) a = deri
 #align regular_expression.deriv_add RegularExpression.deriv_add
 
 @[simp]
-theorem deriv_star (P : RegularExpression α) (a : α) : deriv P.star a = deriv P a * star P :=
+theorem deriv_star (P : RegularExpression α) (a : α) : deriv P.unit a = deriv P a * star P :=
   rfl
 #align regular_expression.deriv_star RegularExpression.deriv_star
 
@@ -203,7 +203,7 @@ def rmatch : RegularExpression α → List α → Bool
 #align regular_expression.rmatch RegularExpression.rmatch
 
 @[simp]
-theorem zero_rmatch (x : List α) : rmatch 0 x = ff := by
+theorem zero_rmatch (x : List α) : rmatch 0 x = false := by
   induction x <;> simp [rmatch, match_epsilon, *]
 #align regular_expression.zero_rmatch RegularExpression.zero_rmatch
 

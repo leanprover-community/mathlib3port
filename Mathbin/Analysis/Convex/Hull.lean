@@ -94,7 +94,7 @@ theorem convexHull_univ : convexHull 𝕜 (univ : Set E) = univ :=
 
 @[simp]
 theorem convexHull_empty : convexHull 𝕜 (∅ : Set E) = ∅ :=
-  convex_empty.convex_hull_eq
+  convex_empty.convexHull_eq
 #align convex_hull_empty convexHull_empty
 
 @[simp]
@@ -126,7 +126,7 @@ theorem segment_subset_convexHull (hx : x ∈ s) (hy : y ∈ s) : segment 𝕜 x
 
 @[simp]
 theorem convexHull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
-  (convex_singleton x).convex_hull_eq
+  (convex_singleton x).convexHull_eq
 #align convex_hull_singleton convexHull_singleton
 
 @[simp]
@@ -178,7 +178,7 @@ theorem IsLinearMap.convexHull_image {f : E → F} (hf : IsLinearMap 𝕜 f) (s 
 
 theorem LinearMap.convexHull_image (f : E →ₗ[𝕜] F) (s : Set E) :
     convexHull 𝕜 (f '' s) = f '' convexHull 𝕜 s :=
-  f.isLinear.convex_hull_image s
+  f.isLinear.convexHull_image s
 #align linear_map.convex_hull_image LinearMap.convexHull_image
 
 end AddCommMonoid
@@ -190,7 +190,7 @@ section OrderedCommSemiring
 variable [OrderedCommSemiring 𝕜] [AddCommMonoid E] [Module 𝕜 E]
 
 theorem convexHull_smul (a : 𝕜) (s : Set E) : convexHull 𝕜 (a • s) = a • convexHull 𝕜 s :=
-  (LinearMap.lsmul _ _ a).convex_hull_image _
+  (LinearMap.lsmul _ _ a).convexHull_image _
 #align convex_hull_smul convexHull_smul
 
 end OrderedCommSemiring

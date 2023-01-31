@@ -89,8 +89,7 @@ def truncEquivFin (α) [DecidableEq α] [Fintype α] : Trunc (α ≃ Fin (card �
   unfold card Finset.card
   exact
     Quot.recOnSubsingleton' (@univ α _).1
-      (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) =>
-        Trunc.mk (nd.nthLeEquivOfForallMemList _ h).symm)
+      (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) => Trunc.mk (nd.getEquivOfForallMemList _ h).symm)
       mem_univ_val univ.2
 #align fintype.trunc_equiv_fin Fintype.truncEquivFin
 -/
@@ -123,7 +122,7 @@ def truncFinBijection (α) [Fintype α] : Trunc { f : Fin (card α) → α // Bi
   dsimp only [card, Finset.card]
   exact
     Quot.recOnSubsingleton' (@univ α _).1
-      (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) => Trunc.mk (nd.nthLeBijectionOfForallMemList _ h))
+      (fun l (h : ∀ x : α, x ∈ l) (nd : l.Nodup) => Trunc.mk (nd.getBijectionOfForallMemList _ h))
       mem_univ_val univ.2
 #align fintype.trunc_fin_bijection Fintype.truncFinBijection
 -/
@@ -990,7 +989,7 @@ def ofLeftInverseOfCardLe (hβα : card β ≤ card α) (f : α → β) (g : β 
   toFun := f
   invFun := g
   left_inv := h
-  right_inv := h.right_inverse_of_card_le hβα
+  right_inv := h.rightInverse_of_card_le hβα
 #align equiv.of_left_inverse_of_card_le Equiv.ofLeftInverseOfCardLe
 -/
 
@@ -1001,7 +1000,7 @@ def ofRightInverseOfCardLe (hαβ : card α ≤ card β) (f : α → β) (g : β
     α ≃ β where
   toFun := f
   invFun := g
-  left_inv := h.left_inverse_of_card_le hαβ
+  left_inv := h.leftInverse_of_card_le hαβ
   right_inv := h
 #align equiv.of_right_inverse_of_card_le Equiv.ofRightInverseOfCardLe
 -/
@@ -1184,7 +1183,7 @@ theorem Fintype.card_subtype_lt [Fintype α] {p : α → Prop} [DecidablePred p]
 
 #print Fintype.card_subtype /-
 theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
-    Fintype.card { x // p x } = ((Finset.univ : Finset α).filter p).card :=
+    Fintype.card { x // p x } = ((Finset.univ : Finset α).filterₓ p).card :=
   by
   refine' Fintype.card_of_subtype _ _
   simp

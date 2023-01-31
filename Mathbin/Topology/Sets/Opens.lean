@@ -237,8 +237,8 @@ theorem mem_supₛ {Us : Set (Opens α)} {x : α} : x ∈ supₛ Us ↔ ∃ u �
 
 instance : Frame (Opens α) :=
   { Opens.completeLattice with
-    sup := supₛ
-    inf_Sup_le_supr_inf := fun a s =>
+    supₛ := supₛ
+    inf_sup_le_supᵢ_inf := fun a s =>
       (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_unionᵢ₂]).le }
 
 theorem openEmbedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=

@@ -103,7 +103,7 @@ instance : Functor (WittVector p)
 
 instance : LawfulFunctor (WittVector p)
     where
-  map_const_eq α β := rfl
+  mapConst_eq α β := rfl
   id_map := fun α ⟨v, _⟩ => rfl
   comp_map α β γ f g v := rfl
 

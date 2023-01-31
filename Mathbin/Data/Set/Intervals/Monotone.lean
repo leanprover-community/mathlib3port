@@ -81,7 +81,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (AntitoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Ici.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align monotone_on.Ici MonotoneOn.Iciₓ'. -/
 protected theorem MonotoneOn.Ici (hf : MonotoneOn f s) : AntitoneOn (fun x => Ici (f x)) s :=
-  antitone_Ici.comp_monotone_on hf
+  antitone_Ici.comp_monotoneOn hf
 #align monotone_on.Ici MonotoneOn.Ici
 
 /- warning: antitone.Ici -> Antitone.Ici is a dubious translation:
@@ -101,7 +101,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (MonotoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Ici.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align antitone_on.Ici AntitoneOn.Iciₓ'. -/
 protected theorem AntitoneOn.Ici (hf : AntitoneOn f s) : MonotoneOn (fun x => Ici (f x)) s :=
-  antitone_Ici.comp_antitone_on hf
+  antitone_Ici.comp_antitoneOn hf
 #align antitone_on.Ici AntitoneOn.Ici
 
 /- warning: monotone.Iic -> Monotone.Iic is a dubious translation:
@@ -121,7 +121,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (MonotoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Iic.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align monotone_on.Iic MonotoneOn.Iicₓ'. -/
 protected theorem MonotoneOn.Iic (hf : MonotoneOn f s) : MonotoneOn (fun x => Iic (f x)) s :=
-  monotone_Iic.comp_monotone_on hf
+  monotone_Iic.comp_monotoneOn hf
 #align monotone_on.Iic MonotoneOn.Iic
 
 /- warning: antitone.Iic -> Antitone.Iic is a dubious translation:
@@ -141,7 +141,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (AntitoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Iic.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align antitone_on.Iic AntitoneOn.Iicₓ'. -/
 protected theorem AntitoneOn.Iic (hf : AntitoneOn f s) : AntitoneOn (fun x => Iic (f x)) s :=
-  monotone_Iic.comp_antitone_on hf
+  monotone_Iic.comp_antitoneOn hf
 #align antitone_on.Iic AntitoneOn.Iic
 
 /- warning: monotone.Ioi -> Monotone.Ioi is a dubious translation:
@@ -161,7 +161,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (AntitoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Ioi.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align monotone_on.Ioi MonotoneOn.Ioiₓ'. -/
 protected theorem MonotoneOn.Ioi (hf : MonotoneOn f s) : AntitoneOn (fun x => Ioi (f x)) s :=
-  antitone_Ioi.comp_monotone_on hf
+  antitone_Ioi.comp_monotoneOn hf
 #align monotone_on.Ioi MonotoneOn.Ioi
 
 /- warning: antitone.Ioi -> Antitone.Ioi is a dubious translation:
@@ -181,7 +181,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (MonotoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Ioi.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align antitone_on.Ioi AntitoneOn.Ioiₓ'. -/
 protected theorem AntitoneOn.Ioi (hf : AntitoneOn f s) : MonotoneOn (fun x => Ioi (f x)) s :=
-  antitone_Ioi.comp_antitone_on hf
+  antitone_Ioi.comp_antitoneOn hf
 #align antitone_on.Ioi AntitoneOn.Ioi
 
 /- warning: monotone.Iio -> Monotone.Iio is a dubious translation:
@@ -201,7 +201,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (MonotoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (MonotoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Iio.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align monotone_on.Iio MonotoneOn.Iioₓ'. -/
 protected theorem MonotoneOn.Iio (hf : MonotoneOn f s) : MonotoneOn (fun x => Iio (f x)) s :=
-  monotone_Iio.comp_monotone_on hf
+  monotone_Iio.comp_monotoneOn hf
 #align monotone_on.Iio MonotoneOn.Iio
 
 /- warning: antitone.Iio -> Antitone.Iio is a dubious translation:
@@ -221,7 +221,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : α -> β} {s : Set.{u2} α}, (AntitoneOn.{u2, u1} α β _inst_1 _inst_2 f s) -> (AntitoneOn.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (fun (x : α) => Set.Iio.{u1} β _inst_2 (f x)) s)
 Case conversion may be inaccurate. Consider using '#align antitone_on.Iio AntitoneOn.Iioₓ'. -/
 protected theorem AntitoneOn.Iio (hf : AntitoneOn f s) : AntitoneOn (fun x => Iio (f x)) s :=
-  monotone_Iio.comp_antitone_on hf
+  monotone_Iio.comp_antitoneOn hf
 #align antitone_on.Iio AntitoneOn.Iio
 
 /- warning: monotone.Icc -> Monotone.Icc is a dubious translation:
@@ -417,7 +417,7 @@ theorem unionᵢ_Ioo_of_mono_of_isGLB_of_isLUB (hf : Antitone f) (hg : Monotone 
   calc
     (⋃ x, Ioo (f x) (g x)) = (⋃ x, Ioi (f x)) ∩ ⋃ x, Iio (g x) :=
       unionᵢ_inter_of_monotone hf.Ioi hg.Iio
-    _ = Ioi a ∩ Iio b := congr_arg₂ (· ∩ ·) ha.Union_Ioi_eq hb.Union_Iio_eq
+    _ = Ioi a ∩ Iio b := congr_arg₂ (· ∩ ·) ha.unionᵢ_Ioi_eq hb.unionᵢ_Iio_eq
     
 #align Union_Ioo_of_mono_of_is_glb_of_is_lub unionᵢ_Ioo_of_mono_of_isGLB_of_isLUB
 

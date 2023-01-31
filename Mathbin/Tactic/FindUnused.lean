@@ -66,8 +66,8 @@ private unsafe def update_unsed_decls_list :
 that are not referenced by such declarations -/
 unsafe def all_unused (fs : List (Option String)) : tactic (name_map declaration) := do
   let ds ← get_decls_from fs
-  let ls ← ds.keys.mfilter (succeeds ∘ user_attribute.get_param_untyped main_declaration_attr)
-  let ds ← ls.mfoldl (flip update_unsed_decls_list) ds
+  let ls ← ds.keys.filterM (succeeds ∘ user_attribute.get_param_untyped main_declaration_attr)
+  let ds ← ls.foldlM (flip update_unsed_decls_list) ds
   ds fun n d => do
       let e ← get_env
       return <| !d e

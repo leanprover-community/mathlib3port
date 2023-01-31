@@ -83,7 +83,7 @@ theorem toCotangent_eq {x y : I} : I.toCotangent x = I.toCotangent y ↔ (x - y 
 #align ideal.to_cotangent_eq Ideal.toCotangent_eq
 
 theorem toCotangent_eq_zero (x : I) : I.toCotangent x = 0 ↔ (x : R) ∈ I ^ 2 :=
-  I.mem_to_cotangent_ker
+  I.mem_toCotangent_ker
 #align ideal.to_cotangent_eq_zero Ideal.toCotangent_eq_zero
 
 theorem toCotangent_surjective : Function.Surjective I.toCotangent :=

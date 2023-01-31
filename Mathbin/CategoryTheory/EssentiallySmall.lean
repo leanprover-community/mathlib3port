@@ -36,7 +36,7 @@ namespace CategoryTheory
 /-- A category is `essentially_small.{w}` if there exists
 an equivalence to some `S : Type w` with `[small_category S]`. -/
 class EssentiallySmall (C : Type u) [Category.{v} C] : Prop where
-  equiv_small_category : ∃ (S : Type w)(_ : SmallCategory S), Nonempty (C ≌ S)
+  equiv_smallCategory : ∃ (S : Type w)(_ : SmallCategory S), Nonempty (C ≌ S)
 #align category_theory.essentially_small CategoryTheory.EssentiallySmall
 
 /-- Constructor for `essentially_small C` from an explicit small category witness. -/

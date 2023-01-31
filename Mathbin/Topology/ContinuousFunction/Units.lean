@@ -43,7 +43,7 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
   invFun f :=
     { toFun := fun x =>
         ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩
-      continuous_to_fun :=
+      continuous_toFun :=
         continuous_induced_rng.2 <|
           Continuous.prod_mk (f : C(X, M)).Continuous <|
             MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
@@ -80,7 +80,7 @@ normed ring and a proof that every element of the range is a unit. -/
 noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : C(X, Rˣ)
     where
   toFun x := (h x).Unit
-  continuous_to_fun := NormedRing.isUnit_unit_continuous h
+  continuous_toFun := NormedRing.isUnit_unit_continuous h
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :

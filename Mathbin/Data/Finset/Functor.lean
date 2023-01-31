@@ -104,8 +104,7 @@ theorem image₂_def {α β γ : Type _} (f : α → β → γ) (s : Finset α) 
 instance : LawfulApplicative Finset :=
   {
     Finset.lawfulFunctor with
-    seq_left_eq := fun α β s t =>
-      by
+    seqLeft_eq := fun α β s t => by
       rw [seq_def, fmap_def, seq_left_def]
       obtain rfl | ht := t.eq_empty_or_nonempty
       · simp_rw [if_pos rfl, image_empty]
@@ -118,7 +117,7 @@ instance : LawfulApplicative Finset :=
         obtain ⟨b, hb, rfl⟩ := hf
         obtain ⟨_, _, rfl⟩ := ha
         exact hb
-    seq_right_eq := fun α β s t =>
+    seqRight_eq := fun α β s t =>
       by
       rw [seq_def, fmap_def, seq_right_def]
       obtain rfl | hs := s.eq_empty_or_nonempty
@@ -131,7 +130,7 @@ instance : LawfulApplicative Finset :=
         obtain ⟨b, hb, rfl⟩ := ha
         obtain ⟨_, _, rfl⟩ := hf
         exact hb
-    pure_seq_eq_map := fun α β f s => sup_singleton
+    pure_seq := fun α β f s => sup_singleton
     map_pure := fun α β f a => image_singleton _ _
     seq_pure := fun α β s a => sup_singleton'' _ _
     seq_assoc := fun α β γ s t u => by

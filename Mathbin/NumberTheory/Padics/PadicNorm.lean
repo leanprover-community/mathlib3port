@@ -92,7 +92,7 @@ theorem padicNorm_p (hp : 1 < p) : padicNorm p p = p⁻¹ := by
 See also `padic_norm.padic_norm_p` for a version assuming `1 < p`. -/
 @[simp]
 theorem padicNorm_p_of_prime [Fact p.Prime] : padicNorm p p = p⁻¹ :=
-  padic_norm_p <| Nat.Prime.one_lt (Fact.out _)
+  padicNorm_p <| Nat.Prime.one_lt (Fact.out _)
 #align padic_norm.padic_norm_p_of_prime padicNorm.padicNorm_p_of_prime
 
 /-- The `p`-adic norm of `q` is `1` if `q` is prime and not equal to `p`. -/
@@ -116,7 +116,7 @@ theorem padicNorm_p_lt_one (hp : 1 < p) : padicNorm p p < 1 :=
 
 See also `padic_norm.padic_norm_p_lt_one` for a version assuming `1 < p`. -/
 theorem padicNorm_p_lt_one_of_prime [Fact p.Prime] : padicNorm p p < 1 :=
-  padic_norm_p_lt_one <| Nat.Prime.one_lt (Fact.out _)
+  padicNorm_p_lt_one <| Nat.Prime.one_lt (Fact.out _)
 #align padic_norm.padic_norm_p_lt_one_of_prime padicNorm.padicNorm_p_lt_one_of_prime
 
 /-- `padic_norm p q` takes discrete values `p ^ -z` for `z : ℤ`. -/

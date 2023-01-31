@@ -419,9 +419,9 @@ instance sheafHomHasZsmul : SMul ℤ (P ⟶ Q)
               sub_left_inj] using ih }
 #align category_theory.Sheaf_hom_has_zsmul CategoryTheory.sheafHomHasZsmul
 
-instance : Sub (P ⟶ Q) where sub f g := Sheaf.hom.mk <| f.1 - g.1
+instance : Sub (P ⟶ Q) where sub f g := Sheaf.Hom.mk <| f.1 - g.1
 
-instance : Neg (P ⟶ Q) where neg f := Sheaf.hom.mk <| -f.1
+instance : Neg (P ⟶ Q) where neg f := Sheaf.Hom.mk <| -f.1
 
 instance sheafHomHasNsmul : SMul ℕ (P ⟶ Q)
     where smul n f :=
@@ -437,7 +437,7 @@ instance sheafHomHasNsmul : SMul ℕ (P ⟶ Q)
 
 instance : Zero (P ⟶ Q) where zero := Sheaf.Hom.mk 0
 
-instance : Add (P ⟶ Q) where add f g := Sheaf.hom.mk <| f.1 + g.1
+instance : Add (P ⟶ Q) where add f g := Sheaf.Hom.mk <| f.1 + g.1
 
 @[simp]
 theorem Sheaf.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.1.app U :=

@@ -54,7 +54,7 @@ unsafe def compact_relation :
     List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
   | [], ps => ([], ps)
   | b :: bs, ps =>
-    match ps.span fun ap : expr × expr => ¬ap.2 == b with
+    match ps.spanₓ fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)
@@ -77,7 +77,7 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
   let (bs, eqs) := compact_relation args (idxs.zip idxs_inst)
   let bs' := bs.filterMap id
   let eqs ←
-    eqs.mmap fun ⟨idx, inst⟩ => do
+    eqs.mapM fun ⟨idx, inst⟩ => do
         let ty := idx.local_type
         let inst_ty ← infer_type inst
         let sort u ← infer_type ty
@@ -87,7 +87,7 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
     match bs', eqs with
       | [], [] => return (Sum.inr 0, mk_true)
       | _, [] => do
-        let t : expr := bs'.ilast.local_type
+        let t : expr := bs'.getLastI.local_type
         let sort l ← infer_type t
         if l = level.zero then do
             let r ← mk_exists_lst bs' t
@@ -221,7 +221,7 @@ unsafe def mk_iff_of_inductive_prop (i : Name) (r : Name) : tactic Unit := do
     ← open_pis type |
     fail "Inductive type is not a proposition"
   let lhs := (const i univs).mk_app g
-  let shape_rhss ← constrs.mmap (constr_to_prop univs (g.take params) (g.drop params))
+  let shape_rhss ← constrs.mapM (constr_to_prop univs (g.take params) (g.drop params))
   let shape := shape_rhss.map Prod.fst
   let rhss := shape_rhss.map Prod.snd
   add_theorem_by r univ_names ((mk_iff lhs (mk_or_lst rhss)).pis g) do

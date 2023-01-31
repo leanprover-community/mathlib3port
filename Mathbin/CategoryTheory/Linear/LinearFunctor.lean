@@ -47,7 +47,7 @@ variable {R} {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditi
 
 @[simp]
 theorem map_smul {X Y : C} (r : R) (f : X ⟶ Y) : F.map (r • f) = r • F.map f :=
-  functor.linear.map_smul'
+  Functor.Linear.map_smul'
 #align category_theory.functor.map_smul CategoryTheory.Functor.map_smul
 
 instance : Linear R (𝟭 C) where

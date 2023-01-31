@@ -93,18 +93,18 @@ namespace Hindman
 /-- `FS a` is the set of finite sums in `a`, i.e. `m ∈ FS a` if `m` is the sum of a nonempty
 subsequence of `a`. We give a direct inductive definition instead of talking about subsequences. -/
 inductive fS {M} [AddSemigroup M] : Stream' M → Set M
-  | head (a : Stream' M) : FS a a.head
+  | head (a : Stream' M) : FS a a.headI
   | tail (a : Stream' M) (m : M) (h : FS a.tail m) : FS a m
-  | cons (a : Stream' M) (m : M) (h : FS a.tail m) : FS a (a.head + m)
+  | cons (a : Stream' M) (m : M) (h : FS a.tail m) : FS a (a.headI + m)
 #align hindman.FS Hindman.fS
 
 /-- `FP a` is the set of finite products in `a`, i.e. `m ∈ FP a` if `m` is the product of a nonempty
 subsequence of `a`. We give a direct inductive definition instead of talking about subsequences. -/
 @[to_additive FS]
 inductive fP {M} [Semigroup M] : Stream' M → Set M
-  | head (a : Stream' M) : FP a a.head
+  | head (a : Stream' M) : FP a a.headI
   | tail (a : Stream' M) (m : M) (h : FP a.tail m) : FP a m
-  | cons (a : Stream' M) (m : M) (h : FP a.tail m) : FP a (a.head * m)
+  | cons (a : Stream' M) (m : M) (h : FP a.tail m) : FP a (a.headI * m)
 #align hindman.FP Hindman.fP
 #align hindman.FS Hindman.fS
 
@@ -238,7 +238,7 @@ theorem fP_drop_subset_fP {M} [Semigroup M] (a : Stream' M) (n : ℕ) : fP (a.dr
 #align hindman.FS_iter_tail_sub_FS Hindman.FS_iter_tail_sub_FS
 
 @[to_additive]
-theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.nth i ∈ fP a :=
+theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.get? i ∈ fP a :=
   by
   induction' i with i ih generalizing a
   · apply FP.head
@@ -249,7 +249,7 @@ theorem fP.singleton {M} [Semigroup M] (a : Stream' M) (i : ℕ) : a.nth i ∈ f
 
 @[to_additive]
 theorem fP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
-    a.nth i * a.nth j ∈ fP a := by
+    a.get? i * a.get? j ∈ fP a := by
   refine' FP_drop_subset_FP _ i _
   rw [← Stream'.head_drop]
   apply FP.cons
@@ -263,7 +263,7 @@ theorem fP.mul_two {M} [Semigroup M] (a : Stream' M) (i j : ℕ) (ij : i < j) :
 
 @[to_additive]
 theorem fP.finset_prod {M} [CommMonoid M] (a : Stream' M) (s : Finset ℕ) (hs : s.Nonempty) :
-    (s.Prod fun i => a.nth i) ∈ fP a :=
+    (s.Prod fun i => a.get? i) ∈ fP a :=
   by
   refine' FP_drop_subset_FP _ (s.min' hs) _
   induction' s using Finset.strongInduction with s ih

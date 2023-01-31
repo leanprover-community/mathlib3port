@@ -257,7 +257,7 @@ theorem IsCoprime.pow_right (H : IsCoprime x y) : IsCoprime x (y ^ n) :=
 
 #print IsCoprime.pow /-
 theorem IsCoprime.pow (H : IsCoprime x y) : IsCoprime (x ^ m) (y ^ n) :=
-  H.pow_left.pow_right
+  H.pow_leftₓ.pow_right
 #align is_coprime.pow IsCoprime.pow
 -/
 

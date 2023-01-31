@@ -74,7 +74,7 @@ unsafe def rewrite_search (explain : parse <| optional (tk "?"))
     else tactic.skip
   let implicit_rules ← collect_rules
   let explicit_rules ←
-    (rs.getOrElse []).mmap fun ⟨_, dir, pe⟩ => do
+    (rs.getD []).mapM fun ⟨_, dir, pe⟩ => do
         let e ← to_expr' pe
         return (e, dir)
   let rules := implicit_rules ++ explicit_rules

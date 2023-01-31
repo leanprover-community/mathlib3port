@@ -123,7 +123,7 @@ def adjustToOrientation : OrthonormalBasis ι ℝ E :=
 
 theorem toBasis_adjustToOrientation :
     (e.adjustToOrientation x).toBasis = e.toBasis.adjustToOrientation x :=
-  (e.toBasis.adjustToOrientation x).to_basis_to_orthonormal_basis _
+  (e.toBasis.adjustToOrientation x).toBasis_toOrthonormalBasis _
 #align orthonormal_basis.to_basis_adjust_to_orientation OrthonormalBasis.toBasis_adjustToOrientation
 
 /-- `adjust_to_orientation` gives an orthonormal basis with the required orientation. -/
@@ -179,7 +179,7 @@ theorem finOrthonormalBasis_orientation (hn : 0 < n) (h : finrank ℝ E = n)
   by
   haveI := Fin.pos_iff_nonempty.1 hn
   haveI := finite_dimensional_of_finrank (h.symm ▸ hn : 0 < finrank ℝ E)
-  exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).orientation_adjust_to_orientation x
+  exact ((stdOrthonormalBasis _ _).reindex <| finCongr h).orientation_adjustToOrientation x
 #align orientation.fin_orthonormal_basis_orientation Orientation.finOrthonormalBasis_orientation
 
 section VolumeForm
@@ -209,7 +209,7 @@ theorem volumeForm_zero_pos [_i : Fact (finrank ℝ E = 0)] :
 #align orientation.volume_form_zero_pos Orientation.volumeForm_zero_pos
 
 theorem volumeForm_zero_neg [_i : Fact (finrank ℝ E = 0)] :
-    Orientation.volumeForm (-positive_orientation : Orientation ℝ E (Fin 0)) =
+    Orientation.volumeForm (-positiveOrientation : Orientation ℝ E (Fin 0)) =
       -AlternatingMap.constLinearEquivOfIsEmpty 1 :=
   by
   dsimp [volume_form, Or.by_cases, positive_orientation]
@@ -262,7 +262,7 @@ theorem volumeForm_neg_orientation : (-o).volumeForm = -o.volumeForm :=
   have h₂ : e.to_basis.orientation ≠ -o := by
     symm
     rw [e.to_basis.orientation_ne_iff_eq_neg, h₁]
-  rw [o.volume_form_robust e h₁, (-o).volume_form_robust_neg e h₂]
+  rw [o.volume_form_robust e h₁, (-o).volumeForm_robust_neg e h₂]
 #align orientation.volume_form_neg_orientation Orientation.volumeForm_neg_orientation
 
 theorem volumeForm_robust' (b : OrthonormalBasis (Fin n) ℝ E) (v : Fin n → E) :
@@ -295,7 +295,7 @@ theorem abs_volumeForm_apply_le (v : Fin n → E) : |o.volumeForm v| ≤ ∏ i :
 #align orientation.abs_volume_form_apply_le Orientation.abs_volumeForm_apply_le
 
 theorem volumeForm_apply_le (v : Fin n → E) : o.volumeForm v ≤ ∏ i : Fin n, ‖v i‖ :=
-  (le_abs_self _).trans (o.abs_volume_form_apply_le v)
+  (le_abs_self _).trans (o.abs_volumeForm_apply_le v)
 #align orientation.volume_form_apply_le Orientation.volumeForm_apply_le
 
 /-- Let `v` be an indexed family of `n` orthogonal vectors in an oriented `n`-dimensional
@@ -347,7 +347,7 @@ theorem volumeForm_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ
     by
     rw [← he]
     exact e.to_basis.orientation_map φ.to_linear_equiv
-  rw [(Orientation.map (Fin n.succ) φ.to_linear_equiv o).volume_form_robust (e.map φ) heφ]
+  rw [(Orientation.map (Fin n.succ) φ.to_linear_equiv o).volumeForm_robust (e.map φ) heφ]
   rw [o.volume_form_robust e he]
   simp
 #align orientation.volume_form_map Orientation.volumeForm_map

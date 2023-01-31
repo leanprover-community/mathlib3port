@@ -60,7 +60,7 @@ theorem continuousAt_oangle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2
   have hf1 : (f x).1 ≠ 0 := by simp [hx12]
   have hf2 : (f x).2 ≠ 0 := by simp [hx32]
   exact
-    (o.continuous_at_oangle hf1 hf2).comp
+    (o.continuousAt_oangle hf1 hf2).comp
       ((continuous_fst.vsub continuous_snd.fst).prod_mk
           (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
 #align euclidean_geometry.continuous_at_oangle EuclideanGeometry.continuousAt_oangle
@@ -234,7 +234,7 @@ independent. -/
 theorem oangle_ne_zero_and_ne_pi_iff_affineIndependent {p₁ p₂ p₃ : P} :
     ∡ p₁ p₂ p₃ ≠ 0 ∧ ∡ p₁ p₂ p₃ ≠ π ↔ AffineIndependent ℝ ![p₁, p₂, p₃] :=
   by
-  rw [oangle, o.oangle_ne_zero_and_ne_pi_iff_linear_independent,
+  rw [oangle, o.oangle_ne_zero_and_ne_pi_iff_linearIndependent,
     affineIndependent_iff_linearIndependent_vsub ℝ _ (1 : Fin 3), ←
     linearIndependent_equiv (finSuccAboveEquiv (1 : Fin 3)).toEquiv]
   convert Iff.rfl
@@ -354,7 +354,7 @@ theorem abs_oangle_right_toReal_lt_pi_div_two_of_dist_eq {p₁ p₂ p₃ : P}
   by
   simp_rw [dist_eq_norm_vsub] at h
   rw [oangle, ← vsub_sub_vsub_cancel_left p₃ p₂ p₁]
-  exact o.abs_oangle_sub_right_to_real_lt_pi_div_two h
+  exact o.abs_oangle_sub_right_toReal_lt_pi_div_two h
 #align euclidean_geometry.abs_oangle_right_to_real_lt_pi_div_two_of_dist_eq EuclideanGeometry.abs_oangle_right_toReal_lt_pi_div_two_of_dist_eq
 
 /-- A base angle of an isosceles triangle is acute, oriented angle-at-point form. -/
@@ -381,7 +381,7 @@ theorem oangle_eq_angle_or_eq_neg_angle {p p₁ p₂ : P} (hp₁ : p₁ ≠ p) (
 oriented angle. -/
 theorem angle_eq_abs_oangle_toReal {p p₁ p₂ : P} (hp₁ : p₁ ≠ p) (hp₂ : p₂ ≠ p) :
     ∠ p₁ p p₂ = |(∡ p₁ p p₂).toReal| :=
-  o.angle_eq_abs_oangle_to_real (vsub_ne_zero.2 hp₁) (vsub_ne_zero.2 hp₂)
+  o.angle_eq_abs_oangle_toReal (vsub_ne_zero.2 hp₁) (vsub_ne_zero.2 hp₂)
 #align euclidean_geometry.angle_eq_abs_oangle_to_real EuclideanGeometry.angle_eq_abs_oangle_toReal
 
 /-- If the sign of the oriented angle at `p` between two points is zero, either one of the points

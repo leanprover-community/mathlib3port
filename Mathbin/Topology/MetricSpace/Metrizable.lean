@@ -50,7 +50,7 @@ instance (priority := 100) PseudoMetricSpace.to_pseudoMetrizableSpace {X : Type 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X]
     [h : PseudoMetrizableSpace X] : PseudoMetricSpace X :=
-  h.exists_pseudo_metric.some.replaceTopology h.exists_pseudo_metric.some_spec.symm
+  h.exists_pseudo_metric.some.replaceTopology h.exists_pseudo_metric.choose_spec.symm
 #align topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 
 instance pseudoMetrizableSpace_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
@@ -82,7 +82,7 @@ instance (priority := 100) PseudoMetrizableSpace.firstCountableTopology
 
 instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) :
     PseudoMetrizableSpace s :=
-  inducing_coe.PseudoMetrizableSpace
+  inducing_subtype_val.PseudoMetrizableSpace
 #align topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
 
 instance pseudoMetrizableSpace_pi [∀ i, PseudoMetrizableSpace (π i)] :
@@ -114,7 +114,7 @@ instance (priority := 100) MetrizableSpace.to_pseudoMetrizableSpace [h : Metriza
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] :
     MetricSpace X :=
-  h.exists_metric.some.replaceTopology h.exists_metric.some_spec.symm
+  h.exists_metric.some.replaceTopology h.exists_metric.choose_spec.symm
 #align topological_space.metrizable_space_metric TopologicalSpace.metrizableSpaceMetric
 
 instance (priority := 100) t2SpaceOfMetrizableSpace [MetrizableSpace X] : T2Space X :=
@@ -139,7 +139,7 @@ theorem Embedding.metrizableSpace [MetrizableSpace Y] {f : X → Y} (hf : Embedd
 #align embedding.metrizable_space Embedding.metrizableSpace
 
 instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
-  embedding_subtype_coe.MetrizableSpace
+  embedding_subtype_val.MetrizableSpace
 #align topological_space.metrizable_space.subtype TopologicalSpace.MetrizableSpace.subtype
 
 instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) :=
@@ -192,7 +192,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     by
     intro UV
     rcases exists_continuous_zero_one_of_closed isClosed_closure
-        (hB.is_open UV.2.1.2).is_closed_compl (hd UV) with
+        (hB.is_open UV.2.1.2).isClosed_compl (hd UV) with
       ⟨f, hf₀, hf₁, hf01⟩
     exact
       ⟨ε UV • f, fun x hx => by simp [hf₀ (subset_closure hx)], fun x hx => by simp [hf₁ hx],
@@ -224,7 +224,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
         `F x` under `F`. Without loss of generality, `V` belongs to `B`. Choose `U ∈ B` such that
         `x ∈ V` and `closure V ⊆ U`. Then the preimage of the `(ε (U, V))`-neighborhood of `F x`
         is included by `V`. -/
-    refine' ((nhds_basis_ball.comap _).le_basis_iff hB.nhds_has_basis).2 _
+    refine' ((nhds_basis_ball.comap _).le_basis_iffₓ hB.nhds_has_basis).2 _
     rintro V ⟨hVB, hxV⟩
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
     set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩

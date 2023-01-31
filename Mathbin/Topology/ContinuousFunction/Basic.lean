@@ -32,7 +32,7 @@ When you extend this structure, make sure to extend `continuous_map_class`. -/
 @[protect_proj]
 structure ContinuousMap (α β : Type _) [TopologicalSpace α] [TopologicalSpace β] where
   toFun : α → β
-  continuous_to_fun : Continuous to_fun := by continuity
+  continuous_toFun : Continuous to_fun := by continuity
 #align continuous_map ContinuousMap
 
 -- mathport name: «exprC( , )»
@@ -71,7 +71,7 @@ theorem map_continuousWithinAt (f : F) (s : Set α) (a : α) : ContinuousWithinA
 instance : CoeTC F C(α, β) :=
   ⟨fun f =>
     { toFun := f
-      continuous_to_fun := map_continuous f }⟩
+      continuous_toFun := map_continuous f }⟩
 
 end ContinuousMapClass
 
@@ -117,7 +117,7 @@ equalities. -/
 protected def copy (f : C(α, β)) (f' : α → β) (h : f' = f) : C(α, β)
     where
   toFun := f'
-  continuous_to_fun := h.symm ▸ f.continuous_to_fun
+  continuous_toFun := h.symm ▸ f.continuous_toFun
 #align continuous_map.copy ContinuousMap.copy
 
 @[simp]
@@ -133,7 +133,7 @@ variable {α β} {f g : C(α, β)}
 
 /-- Deprecated. Use `map_continuous` instead. -/
 protected theorem continuous (f : C(α, β)) : Continuous f :=
-  f.continuous_to_fun
+  f.continuous_toFun
 #align continuous_map.continuous ContinuousMap.continuous
 
 @[continuity]
@@ -289,7 +289,7 @@ variable {α₁ α₂ β₁ β₂ : Type _} [TopologicalSpace α₁] [Topologica
 def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂)
     where
   toFun x := (f x, g x)
-  continuous_to_fun := Continuous.prod_mk f.Continuous g.Continuous
+  continuous_toFun := Continuous.prod_mk f.Continuous g.Continuous
 #align continuous_map.prod_mk ContinuousMap.prodMk
 
 /-- Given two continuous maps `f` and `g`, this is the continuous map `(x, y) ↦ (f x, g y)`. -/
@@ -297,7 +297,7 @@ def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂)
 def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂)
     where
   toFun := Prod.map f g
-  continuous_to_fun := Continuous.prod_map f.Continuous g.Continuous
+  continuous_toFun := Continuous.prod_map f.Continuous g.Continuous
 #align continuous_map.prod_map ContinuousMap.prodMap
 
 @[simp]
@@ -379,7 +379,7 @@ theorem liftCover_coe {i : ι} (x : S i) : liftCover S φ hφ hS x = φ i x :=
 
 @[simp]
 theorem liftCover_restrict {i : ι} : (liftCover S φ hφ hS).restrict (S i) = φ i :=
-  ext <| lift_cover_coe
+  ext <| liftCover_coe
 #align continuous_map.lift_cover_restrict ContinuousMap.liftCover_restrict
 
 omit hφ hS

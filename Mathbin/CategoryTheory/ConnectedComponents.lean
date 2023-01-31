@@ -148,7 +148,7 @@ instance : Faithful (decomposedTo J)
     change f = g at e
     subst e
 
-instance : EssSurj (decomposedTo J) where mem_ess_image j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
+instance : EssSurj (decomposedTo J) where mem_essImage j := ⟨⟨_, j, rfl⟩, ⟨Iso.refl _⟩⟩
 
 instance : IsEquivalence (decomposedTo J) :=
   Equivalence.ofFullyFaithfullyEssSurj _

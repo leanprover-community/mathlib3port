@@ -39,7 +39,7 @@ theorem atImInfty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im �
   Filter.HasBasis.comap UpperHalfPlane.im Filter.atTop_basis
 #align upper_half_plane.at_im_infty_basis UpperHalfPlane.atImInfty_basis
 
-theorem atImInfty_mem (S : Set ℍ) : S ∈ at_im_infty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S :=
+theorem atImInfty_mem (S : Set ℍ) : S ∈ atImInfty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S :=
   by
   simp only [at_im_infty, Filter.mem_comap', Filter.mem_atTop_sets, ge_iff_le, Set.mem_setOf_eq,
     UpperHalfPlane.coe_im]

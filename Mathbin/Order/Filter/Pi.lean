@@ -386,7 +386,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.Coprod_bot Filter.coprodᵢ_botₓ'. -/
 @[simp]
 theorem coprodᵢ_bot : Filter.coprodᵢ (fun _ => ⊥ : ∀ i, Filter (α i)) = ⊥ :=
-  Coprod_bot'
+  coprodᵢ_bot'
 #align filter.Coprod_bot Filter.coprodᵢ_bot
 
 #print Filter.NeBot.coprodᵢ /-
@@ -399,7 +399,7 @@ theorem NeBot.coprodᵢ [∀ i, Nonempty (α i)] {i : ι} (h : NeBot (f i)) : Ne
 @[instance]
 theorem coprodᵢ_neBot [∀ i, Nonempty (α i)] [Nonempty ι] (f : ∀ i, Filter (α i))
     [H : ∀ i, NeBot (f i)] : NeBot (Filter.coprodᵢ f) :=
-  (H (Classical.arbitrary ι)).coprod
+  (H (Classical.arbitrary ι)).coprodᵢ
 #align filter.Coprod_ne_bot Filter.coprodᵢ_neBot
 -/
 

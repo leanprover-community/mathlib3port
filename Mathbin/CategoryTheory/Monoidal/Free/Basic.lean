@@ -183,12 +183,12 @@ instance : MonoidalCategory (F C)
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨f₃⟩
     exact Quotient.sound (associator_naturality _ _ _)
   leftUnitor X := ⟨⟦Hom.l_hom X⟧, ⟦Hom.l_inv X⟧, Quotient.sound l_hom_inv, Quotient.sound l_inv_hom⟩
-  left_unitor_naturality' X Y := by
+  leftUnitor_naturality' X Y := by
     rintro ⟨f⟩
     exact Quotient.sound (l_naturality _)
   rightUnitor X :=
     ⟨⟦Hom.ρ_hom X⟧, ⟦Hom.ρ_inv X⟧, Quotient.sound ρ_hom_inv, Quotient.sound ρ_inv_hom⟩
-  right_unitor_naturality' X Y := by
+  rightUnitor_naturality' X Y := by
     rintro ⟨f⟩
     exact Quotient.sound (ρ_naturality _)
   pentagon' W X Y Z := Quotient.sound pentagon
@@ -248,7 +248,7 @@ theorem tensor_eq_tensor {X Y : F C} : X.tensor Y = X ⊗ Y :=
 #align category_theory.free_monoidal_category.tensor_eq_tensor CategoryTheory.FreeMonoidalCategory.tensor_eq_tensor
 
 @[simp]
-theorem unit_eq_unit : free_monoidal_category.unit = 𝟙_ (F C) :=
+theorem unit_eq_unit : FreeMonoidalCategory.unit = 𝟙_ (F C) :=
   rfl
 #align category_theory.free_monoidal_category.unit_eq_unit CategoryTheory.FreeMonoidalCategory.unit_eq_unit
 

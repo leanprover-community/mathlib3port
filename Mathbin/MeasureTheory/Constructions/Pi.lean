@@ -97,7 +97,7 @@ theorem IsCountablySpanning.pi {C : ∀ i, Set (Set (α i))} (hC : ∀ i, IsCoun
   cases nonempty_encodable (ι → ℕ)
   let e : ℕ → ι → ℕ := fun n => (decode (ι → ℕ) n).iget
   refine' ⟨fun n => pi univ fun i => s i (e n i), fun n => mem_image_of_mem _ fun i _ => h1s i _, _⟩
-  simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => s i (x i),
+  simp_rw [(surjective_decode_iget (ι → ℕ)).unionᵢ_comp fun x => pi univ fun i => s i (x i),
     Union_univ_pi s, h2s, pi_univ]
 #align is_countably_spanning.pi IsCountablySpanning.pi
 
@@ -389,7 +389,8 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
       _ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       
   ·
-    simp_rw [(surjective_decode_iget (ι → ℕ)).Union_comp fun x => pi univ fun i => (hμ i).Set (x i),
+    simp_rw [(surjective_decode_iget (ι → ℕ)).unionᵢ_comp fun x =>
+        pi univ fun i => (hμ i).Set (x i),
       Union_univ_pi fun i => (hμ i).Set, (hμ _).spanning, Set.pi_univ]
 #align measure_theory.measure.finite_spanning_sets_in.pi MeasureTheory.Measure.FiniteSpanningSetsIn.pi
 
@@ -603,7 +604,7 @@ instance [∀ i, TopologicalSpace (α i)] [∀ i, IsLocallyFiniteMeasure (μ i)]
     IsLocallyFiniteMeasure (Measure.pi μ) :=
   by
   refine' ⟨fun x => _⟩
-  choose s hxs ho hμ using fun i => (μ i).exists_is_open_measure_lt_top (x i)
+  choose s hxs ho hμ using fun i => (μ i).exists_isOpen_measure_lt_top (x i)
   refine' ⟨pi univ s, set_pi_mem_nhds finite_univ fun i hi => IsOpen.mem_nhds (ho i) (hxs i), _⟩
   rw [pi_pi]
   exact Ennreal.prod_lt_top fun i _ => (hμ i).Ne
@@ -715,7 +716,7 @@ theorem measurePreservingPiEquivPiSubtypeProd {ι : Type u} {α : ι → Type v}
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)]
     (p : ι → Prop) [DecidablePred p] :
     MeasurePreserving (MeasurableEquiv.piEquivPiSubtypeProd α p) (Measure.pi μ)
-      ((measure.pi fun i : Subtype p => μ i).Prod (measure.pi fun i => μ i)) :=
+      ((Measure.pi fun i : Subtype p => μ i).Prod (Measure.pi fun i => μ i)) :=
   by
   set e := (MeasurableEquiv.piEquivPiSubtypeProd α p).symm
   refine' measure_preserving.symm e _
@@ -738,7 +739,7 @@ theorem measurePreservingPiFinSuccAboveEquiv {n : ℕ} {α : Fin (n + 1) → Typ
     {m : ∀ i, MeasurableSpace (α i)} (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)]
     (i : Fin (n + 1)) :
     MeasurePreserving (MeasurableEquiv.piFinSuccAboveEquiv α i) (Measure.pi μ)
-      ((μ i).Prod <| measure.pi fun j => μ (i.succAbove j)) :=
+      ((μ i).Prod <| Measure.pi fun j => μ (i.succAbove j)) :=
   by
   set e := (MeasurableEquiv.piFinSuccAboveEquiv α i).symm
   refine' measure_preserving.symm e _

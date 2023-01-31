@@ -104,8 +104,8 @@ instance : AddCommMonoidWithOne PartEnat :=
   { PartEnat.addCommMonoid with
     one := 1
     natCast := some
-    nat_cast_zero := rfl
-    nat_cast_succ := fun _ => Part.ext' (true_and_iff _).symm fun _ _ => rfl }
+    natCast_zero := rfl
+    natCast_succ := fun _ => Part.ext' (true_and_iff _).symm fun _ _ => rfl }
 
 theorem some_eq_coe (n : ℕ) : some n = n :=
   rfl
@@ -228,7 +228,7 @@ instance decidableLe (x y : PartEnat) [Decidable x.Dom] [Decidable y.Dom] : Deci
       dsimp [(· ≤ ·)]
       simp only [hx, exists_prop_of_true, forall_true_iff]
   else
-    if hy : y.Dom then is_false fun h => hx <| dom_of_le_of_dom h hy
+    if hy : y.Dom then isFalse fun h => hx <| dom_of_le_of_dom h hy
     else isTrue ⟨fun h => (hy h).elim, fun h => (hy h).elim⟩
 #align part_enat.decidable_le PartEnat.decidableLe
 
@@ -238,7 +238,7 @@ def coeHom : ℕ →+ PartEnat :=
 #align part_enat.coe_hom PartEnat.coeHom
 
 @[simp]
-theorem coe_coeHom : ⇑coe_hom = coe :=
+theorem coe_coeHom : ⇑coeHom = coe :=
   rfl
 #align part_enat.coe_coe_hom PartEnat.coe_coeHom
 
@@ -610,7 +610,7 @@ noncomputable def withTopEquiv : PartEnat ≃ ℕ∞
 
 @[simp]
 theorem withTopEquiv_top : withTopEquiv ⊤ = ⊤ :=
-  to_with_top_top'
+  toWithTop_top'
 #align part_enat.with_top_equiv_top PartEnat.withTopEquiv_top
 
 @[simp]
@@ -625,12 +625,12 @@ theorem withTopEquiv_zero : withTopEquiv 0 = 0 := by
 
 @[simp]
 theorem withTopEquiv_le {x y : PartEnat} : withTopEquiv x ≤ withTopEquiv y ↔ x ≤ y :=
-  to_with_top_le
+  toWithTop_le
 #align part_enat.with_top_equiv_le PartEnat.withTopEquiv_le
 
 @[simp]
 theorem withTopEquiv_lt {x y : PartEnat} : withTopEquiv x < withTopEquiv y ↔ x < y :=
-  to_with_top_lt
+  toWithTop_lt
 #align part_enat.with_top_equiv_lt PartEnat.withTopEquiv_lt
 
 /-- `to_with_top` induces an order isomorphism between `part_enat` and `ℕ∞`. -/

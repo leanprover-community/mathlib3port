@@ -685,27 +685,27 @@ theorem isOWith_id (l : Filter E) : IsOWith ‖f‖ l f fun x => x :=
 #align continuous_linear_map.is_O_with_id ContinuousLinearMap.isOWith_id
 
 theorem isO_id (l : Filter E) : f =O[l] fun x => x :=
-  (f.is_O_with_id l).IsO
+  (f.isOWith_id l).IsO
 #align continuous_linear_map.is_O_id ContinuousLinearMap.isO_id
 
 theorem isOWith_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F)
     (l : Filter α) : IsOWith ‖g‖ l (fun x' => g (f x')) f :=
-  (g.is_O_with_id ⊤).comp_tendsto le_top
+  (g.isOWith_id ⊤).comp_tendsto le_top
 #align continuous_linear_map.is_O_with_comp ContinuousLinearMap.isOWith_comp
 
 theorem isO_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F) (l : Filter α) :
     (fun x' => g (f x')) =O[l] f :=
-  (g.is_O_with_comp f l).IsO
+  (g.isOWith_comp f l).IsO
 #align continuous_linear_map.is_O_comp ContinuousLinearMap.isO_comp
 
 theorem isOWith_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
     IsOWith ‖f‖ l (fun x' => f (x' - x)) fun x' => x' - x :=
-  f.is_O_with_comp _ l
+  f.isOWith_comp _ l
 #align continuous_linear_map.is_O_with_sub ContinuousLinearMap.isOWith_sub
 
 theorem isO_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
     (fun x' => f (x' - x)) =O[l] fun x' => x' - x :=
-  f.is_O_comp _ l
+  f.isO_comp _ l
 #align continuous_linear_map.is_O_sub ContinuousLinearMap.isO_sub
 
 end IsO
@@ -771,7 +771,7 @@ theorem mkContinuous₂_norm_le' (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃
 
 theorem mkContinuous₂_norm_le (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃] G) {C : ℝ} (h0 : 0 ≤ C)
     (hC : ∀ x y, ‖f x y‖ ≤ C * ‖x‖ * ‖y‖) : ‖f.mkContinuous₂ C hC‖ ≤ C :=
-  (f.mk_continuous₂_norm_le' hC).trans_eq <| max_eq_left h0
+  (f.mkContinuous₂_norm_le' hC).trans_eq <| max_eq_left h0
 #align linear_map.mk_continuous₂_norm_le LinearMap.mkContinuous₂_norm_le
 
 end LinearMap
@@ -1005,7 +1005,7 @@ def prodMapL : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₁ 
     have Ψ₂ : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₃ →L[𝕜] M₄ :=
       ContinuousLinearMap.snd 𝕜 (M₁ →L[𝕜] M₂) (M₃ →L[𝕜] M₄)
     Φ₁' ∘L Φ₁ ∘L Ψ₁ + Φ₂' ∘L Φ₂ ∘L Ψ₂)
-    (fun p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) => p.1.prod_map p.2)
+    (fun p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) => p.1.Prod_map p.2)
     (by
       apply funext
       rintro ⟨φ, ψ⟩
@@ -1020,14 +1020,14 @@ variable {M₁ M₂ M₃ M₄}
 
 @[simp]
 theorem prodMapL_apply (p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄)) :
-    ContinuousLinearMap.prodMapL 𝕜 M₁ M₂ M₃ M₄ p = p.1.prod_map p.2 :=
+    ContinuousLinearMap.prodMapL 𝕜 M₁ M₂ M₃ M₄ p = p.1.Prod_map p.2 :=
   rfl
 #align continuous_linear_map.prod_mapL_apply ContinuousLinearMap.prodMapL_apply
 
 variable {X : Type _} [TopologicalSpace X]
 
 theorem Continuous.prod_mapL {f : X → M₁ →L[𝕜] M₂} {g : X → M₃ →L[𝕜] M₄} (hf : Continuous f)
-    (hg : Continuous g) : Continuous fun x => (f x).prod_map (g x) :=
+    (hg : Continuous g) : Continuous fun x => (f x).Prod_map (g x) :=
   (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp (hf.prod_mk hg)
 #align continuous.prod_mapL Continuous.prod_mapL
 
@@ -1039,15 +1039,15 @@ theorem Continuous.prod_map_equivL {f : X → M₁ ≃L[𝕜] M₂} {g : X → M
 
 theorem ContinuousOn.prod_mapL {f : X → M₁ →L[𝕜] M₂} {g : X → M₃ →L[𝕜] M₄} {s : Set X}
     (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
-    ContinuousOn (fun x => (f x).prod_map (g x)) s :=
-  ((prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuous_on (hf.Prod hg) : _)
+    ContinuousOn (fun x => (f x).Prod_map (g x)) s :=
+  ((prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuousOn (hf.Prod hg) : _)
 #align continuous_on.prod_mapL ContinuousOn.prod_mapL
 
 theorem ContinuousOn.prod_map_equivL {f : X → M₁ ≃L[𝕜] M₂} {g : X → M₃ ≃L[𝕜] M₄} {s : Set X}
     (hf : ContinuousOn (fun x => (f x : M₁ →L[𝕜] M₂)) s)
     (hg : ContinuousOn (fun x => (g x : M₃ →L[𝕜] M₄)) s) :
     ContinuousOn (fun x => ((f x).Prod (g x) : M₁ × M₃ →L[𝕜] M₂ × M₄)) s :=
-  (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuous_on (hf.Prod hg)
+  (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuousOn (hf.Prod hg)
 #align continuous_on.prod_map_equivL ContinuousOn.prod_map_equivL
 
 end Prod
@@ -1243,7 +1243,7 @@ end ContinuousLinearMap
 namespace Submodule
 
 theorem norm_subtypeL_le (K : Submodule 𝕜 E) : ‖K.subtypeL‖ ≤ 1 :=
-  K.subtypeₗᵢ.norm_to_continuous_linear_map_le
+  K.subtypeₗᵢ.norm_toContinuousLinearMap_le
 #align submodule.norm_subtypeL_le Submodule.norm_subtypeL_le
 
 end Submodule
@@ -1263,11 +1263,11 @@ protected theorem lipschitz : LipschitzWith ‖(e : E →SL[σ₁₂] F)‖₊ e
 #align continuous_linear_equiv.lipschitz ContinuousLinearEquiv.lipschitz
 
 theorem isO_comp {α : Type _} (f : α → E) (l : Filter α) : (fun x' => e (f x')) =O[l] f :=
-  (e : E →SL[σ₁₂] F).is_O_comp f l
+  (e : E →SL[σ₁₂] F).isO_comp f l
 #align continuous_linear_equiv.is_O_comp ContinuousLinearEquiv.isO_comp
 
 theorem isO_sub (l : Filter E) (x : E) : (fun x' => e (x' - x)) =O[l] fun x' => x' - x :=
-  (e : E →SL[σ₁₂] F).is_O_sub l x
+  (e : E →SL[σ₁₂] F).isO_sub l x
 #align continuous_linear_equiv.is_O_sub ContinuousLinearEquiv.isO_sub
 
 end
@@ -1279,11 +1279,11 @@ variable [RingHomIsometric σ₂₁] (e : E ≃SL[σ₁₂] F)
 include σ₂₁
 
 theorem isO_comp_rev {α : Type _} (f : α → E) (l : Filter α) : f =O[l] fun x' => e (f x') :=
-  (e.symm.is_O_comp _ l).congr_left fun _ => e.symm_apply_apply _
+  (e.symm.isO_comp _ l).congr_left fun _ => e.symm_apply_apply _
 #align continuous_linear_equiv.is_O_comp_rev ContinuousLinearEquiv.isO_comp_rev
 
 theorem isO_sub_rev (l : Filter E) (x : E) : (fun x' => x' - x) =O[l] fun x' => e (x' - x) :=
-  e.is_O_comp_rev _ _
+  e.isO_comp_rev _ _
 #align continuous_linear_equiv.is_O_sub_rev ContinuousLinearEquiv.isO_sub_rev
 
 end ContinuousLinearEquiv
@@ -1563,7 +1563,7 @@ pointwise convergence is precompact: its closure is a compact set. -/
 theorem isCompact_closure_image_coe_of_bounded [ProperSpace F] {s : Set (E' →SL[σ₁₂] F)}
     (hb : Bounded s) : IsCompact (closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' s)) :=
   have : ∀ x, IsCompact (closure (apply' F σ₁₂ x '' s)) := fun x =>
-    ((apply' F σ₁₂ x).lipschitz.bounded_image hb).is_compact_closure
+    ((apply' F σ₁₂ x).lipschitz.bounded_image hb).isCompact_closure
   isCompact_closure_of_subset_compact (isCompact_pi_infinite this)
     (image_subset_iff.2 fun g hg x => subset_closure <| mem_image_of_mem _ hg)
 #align continuous_linear_map.is_compact_closure_image_coe_of_bounded ContinuousLinearMap.isCompact_closure_image_coe_of_bounded
@@ -1697,13 +1697,13 @@ section
 variable {N : ℝ≥0} (h_e : ∀ x, ‖x‖ ≤ N * ‖e x‖) [RingHomIsometric σ₁₂]
 
 -- mathport name: exprψ
-local notation "ψ" => f.extend e h_dense (uniformEmbedding_of_bound _ h_e).to_uniform_inducing
+local notation "ψ" => f.extend e h_dense (uniformEmbedding_of_bound _ h_e).to_uniformInducing
 
 /-- If a dense embedding `e : E →L[𝕜] G` expands the norm by a constant factor `N⁻¹`, then the
 norm of the extension of `f` along `e` is bounded by `N * ‖f‖`. -/
 theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
   by
-  have uni : UniformInducing e := (uniform_embedding_of_bound _ h_e).to_uniform_inducing
+  have uni : UniformInducing e := (uniform_embedding_of_bound _ h_e).to_uniformInducing
   have eq : ∀ x, ψ (e x) = f x := uniformly_extend_of_ind uni h_dense f.uniform_continuous
   by_cases N0 : 0 ≤ N
   · refine' op_norm_le_bound ψ _ (isClosed_property h_dense (isClosed_le _ _) _)
@@ -1829,7 +1829,7 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
 space is the product of the non-negative norms. -/
 @[simp]
 theorem nnnorm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c f‖₊ = ‖c‖₊ * ‖f‖₊ :=
-  Nnreal.eq <| c.norm_smul_right_apply f
+  Nnreal.eq <| c.norm_smulRight_apply f
 #align continuous_linear_map.nnnorm_smul_right_apply ContinuousLinearMap.nnnorm_smulRight_apply
 
 variable (𝕜 E Fₗ)
@@ -1858,7 +1858,7 @@ theorem norm_smulRightL_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRightL
 
 @[simp]
 theorem norm_smulRightL (c : E →L[𝕜] 𝕜) [Nontrivial Fₗ] : ‖smulRightL 𝕜 E Fₗ c‖ = ‖c‖ :=
-  ContinuousLinearMap.homothety_norm _ c.norm_smul_right_apply
+  ContinuousLinearMap.homothety_norm _ c.norm_smulRight_apply
 #align continuous_linear_map.norm_smul_rightL ContinuousLinearMap.norm_smulRightL
 
 variable (𝕜) (𝕜' : Type _)
@@ -1870,7 +1870,7 @@ variable [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 @[simp]
 theorem op_norm_mul [NormOneClass 𝕜'] : ‖mul 𝕜 𝕜'‖ = 1 :=
   haveI := NormOneClass.nontrivial 𝕜'
-  (mulₗᵢ 𝕜 𝕜').norm_to_continuous_linear_map
+  (mulₗᵢ 𝕜 𝕜').norm_toContinuousLinearMap
 #align continuous_linear_map.op_norm_mul ContinuousLinearMap.op_norm_mul
 
 end
@@ -1900,7 +1900,7 @@ variable [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [Nontr
   [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] {σ₁₂ : 𝕜 →+* 𝕜₂}
 
 theorem norm_subtypeL (K : Submodule 𝕜 E) [Nontrivial K] : ‖K.subtypeL‖ = 1 :=
-  K.subtypeₗᵢ.norm_to_continuous_linear_map
+  K.subtypeₗᵢ.norm_toContinuousLinearMap
 #align submodule.norm_subtypeL Submodule.norm_subtypeL
 
 end Submodule
@@ -1917,7 +1917,7 @@ variable [RingHomIsometric σ₂₁]
 
 protected theorem antilipschitz (e : E ≃SL[σ₁₂] F) :
     AntilipschitzWith ‖(e.symm : F →SL[σ₂₁] E)‖₊ e :=
-  e.symm.lipschitz.to_right_inverse e.left_inv
+  e.symm.lipschitz.to_rightInverse e.left_inv
 #align continuous_linear_equiv.antilipschitz ContinuousLinearEquiv.antilipschitz
 
 theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e : E ≃SL[σ₁₂] F) :
@@ -2012,8 +2012,8 @@ def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G)
     invFun := fun L => (e₄₃.symm : G →SL[σ₃₄] H).comp (L.comp (e₁₂ : E →SL[σ₁₂] F))
     map_add' := fun f g => by rw [add_comp, comp_add]
     map_smul' := fun t f => by rw [smul_comp, comp_smulₛₗ]
-    continuous_to_fun := (continuous_id.clm_comp_const _).const_clm_comp _
-    continuous_inv_fun := (continuous_id.clm_comp_const _).const_clm_comp _ }
+    continuous_toFun := (continuous_id.clm_comp_const _).const_clm_comp _
+    continuous_invFun := (continuous_id.clm_comp_const _).const_clm_comp _ }
 #align continuous_linear_equiv.arrow_congrSL ContinuousLinearEquiv.arrowCongrSL
 
 omit σ₂₁ σ₃₄ σ₁₃ σ₂₄

@@ -206,7 +206,7 @@ section add_mul
 variable [Add R] [Mul R] (c : RingCon R)
 
 instance : Add c.Quotient :=
-  c.toAddCon.HasAdd
+  c.toAddCon.Add
 
 #print RingCon.coe_add /-
 @[simp, norm_cast]
@@ -216,7 +216,7 @@ theorem coe_add (x y : R) : (↑(x + y) : c.Quotient) = ↑x + ↑y :=
 -/
 
 instance : Mul c.Quotient :=
-  c.toCon.HasMul
+  c.toCon.Mul
 
 #print RingCon.coe_mul /-
 @[simp, norm_cast]
@@ -272,7 +272,7 @@ section Smul
 variable [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R] (c : RingCon R)
 
 instance : SMul α c.Quotient :=
-  c.toCon.HasSmul
+  c.toCon.SMul
 
 /- warning: ring_con.coe_smul -> RingCon.coe_smul is a dubious translation:
 lean 3 declaration is

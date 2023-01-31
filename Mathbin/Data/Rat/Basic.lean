@@ -50,7 +50,7 @@ instance : Field ℚ :=
     mul := (· * ·)
     inv := Inv.inv
     ratCast := id
-    rat_cast_mk := fun a b h1 h2 => (num_div_den _).symm
+    ratCast_mk := fun a b h1 h2 => (num_div_den _).symm
     qsmul := (· * ·) }
 
 -- Extra instances to short-circuit type class resolution

@@ -79,7 +79,7 @@ section
 You should extend this class when you extend `Sup_hom`. -/
 class SupHomClassCat (F : Type _) (α β : outParam <| Type _) [SupSet α] [SupSet β] extends
   FunLike F α fun _ => β where
-  map_Sup (f : F) (s : Set α) : f (supₛ s) = supₛ (f '' s)
+  map_supₛ (f : F) (s : Set α) : f (supₛ s) = supₛ (f '' s)
 #align Sup_hom_class SupHomClassCat
 
 /-- `Inf_hom_class F α β` states that `F` is a type of `⨅`-preserving morphisms.
@@ -87,7 +87,7 @@ class SupHomClassCat (F : Type _) (α β : outParam <| Type _) [SupSet α] [SupS
 You should extend this class when you extend `Inf_hom`. -/
 class InfHomClassCat (F : Type _) (α β : outParam <| Type _) [InfSet α] [InfSet β] extends
   FunLike F α fun _ => β where
-  map_Inf (f : F) (s : Set α) : f (infₛ s) = infₛ (f '' s)
+  map_infₛ (f : F) (s : Set α) : f (infₛ s) = infₛ (f '' s)
 #align Inf_hom_class InfHomClassCat
 
 /-- `frame_hom_class F α β` states that `F` is a type of frame morphisms. They preserve `⊓` and `⨆`.
@@ -95,7 +95,7 @@ class InfHomClassCat (F : Type _) (α β : outParam <| Type _) [InfSet α] [InfS
 You should extend this class when you extend `frame_hom`. -/
 class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α]
   [CompleteLattice β] extends InfTopHomClass F α β where
-  map_Sup (f : F) (s : Set α) : f (supₛ s) = supₛ (f '' s)
+  map_supₛ (f : F) (s : Set α) : f (supₛ s) = supₛ (f '' s)
 #align frame_hom_class FrameHomClass
 
 /-- `complete_lattice_hom_class F α β` states that `F` is a type of complete lattice morphisms.
@@ -103,14 +103,14 @@ class FrameHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice �
 You should extend this class when you extend `complete_lattice_hom`. -/
 class CompleteLatticeHomClass (F : Type _) (α β : outParam <| Type _) [CompleteLattice α]
   [CompleteLattice β] extends InfHomClassCat F α β where
-  map_Sup (f : F) (s : Set α) : f (supₛ s) = supₛ (f '' s)
+  map_supₛ (f : F) (s : Set α) : f (supₛ s) = supₛ (f '' s)
 #align complete_lattice_hom_class CompleteLatticeHomClass
 
 end
 
-export SupHomClassCat (map_Sup)
+export SupHomClassCat (map_supₛ)
 
-export InfHomClassCat (map_Inf)
+export InfHomClassCat (map_infₛ)
 
 attribute [simp] map_Sup map_Inf
 
@@ -189,7 +189,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Sup
 instance (priority := 100) OrderIsoClass.toSupHomClass [CompleteLattice α] [CompleteLattice β]
     [OrderIsoClass F α β] : SupHomClassCat F α β :=
   { show OrderHomClass F α β from inferInstance with
-    map_Sup := fun f s =>
+    map_supₛ := fun f s =>
       eq_of_forall_ge_iff fun c => by
         simp only [← le_map_inv_iff, supₛ_le_iff, Set.ball_image_iff] }
 #align order_iso_class.to_Sup_hom_class OrderIsoClass.toSupHomClass
@@ -205,7 +205,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso_class.to_Inf
 instance (priority := 100) OrderIsoClass.toInfHomClass [CompleteLattice α] [CompleteLattice β]
     [OrderIsoClass F α β] : InfHomClassCat F α β :=
   { show OrderHomClass F α β from inferInstance with
-    map_Inf := fun f s =>
+    map_infₛ := fun f s =>
       eq_of_forall_le_iff fun c => by
         simp only [← map_inv_le_iff, le_infₛ_iff, Set.ball_image_iff] }
 #align order_iso_class.to_Inf_hom_class OrderIsoClass.toInfHomClass
@@ -245,7 +245,7 @@ instance : SupHomClassCat (SupHomCat α β) α β
     where
   coe := SupHomCat.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-  map_Sup := SupHomCat.map_Sup'
+  map_supₛ := SupHomCat.map_Sup'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -387,7 +387,7 @@ instance : InfHomClassCat (InfHomCat α β) α β
     where
   coe := InfHomCat.toFun
   coe_injective' f g h := by cases f <;> cases g <;> congr
-  map_Inf := InfHomCat.map_Inf'
+  map_infₛ := InfHomCat.map_Inf'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -528,7 +528,7 @@ instance : FrameHomClass (FrameHom α β) α β
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := f
     obtain ⟨⟨⟨_, _⟩, _⟩, _⟩ := g
     congr
-  map_Sup f := f.map_Sup'
+  map_supₛ f := f.map_Sup'
   map_inf f := f.map_inf'
   map_top f := f.map_top'
 
@@ -647,8 +647,8 @@ instance : CompleteLatticeHomClass (CompleteLatticeHom α β) α β
     where
   coe f := f.toFun
   coe_injective' f g h := by obtain ⟨⟨_, _⟩, _⟩ := f <;> obtain ⟨⟨_, _⟩, _⟩ := g <;> congr
-  map_Sup f := f.map_Sup'
-  map_Inf f := f.map_Inf'
+  map_supₛ f := f.map_Sup'
+  map_infₛ f := f.map_Inf'
 
 /-- Reinterpret a `complete_lattice_hom` as a `Sup_hom`. -/
 def toSupHom (f : CompleteLatticeHom α β) : SupHomCat α β :=
@@ -768,8 +768,8 @@ variable [SupSet α] [SupSet β] [SupSet γ]
 @[simps]
 protected def dual : SupHomCat α β ≃ InfHomCat αᵒᵈ βᵒᵈ
     where
-  toFun f := ⟨to_dual ∘ f ∘ of_dual, f.map_Sup'⟩
-  invFun f := ⟨of_dual ∘ f ∘ to_dual, f.map_Inf'⟩
+  toFun f := ⟨toDual ∘ f ∘ ofDual, f.map_Sup'⟩
+  invFun f := ⟨ofDual ∘ f ∘ toDual, f.map_Inf'⟩
   left_inv f := SupHomCat.ext fun a => rfl
   right_inv f := InfHomCat.ext fun a => rfl
 #align Sup_hom.dual SupHomCat.dual
@@ -806,10 +806,10 @@ variable [InfSet α] [InfSet β] [InfSet γ]
 protected def dual : InfHomCat α β ≃ SupHomCat αᵒᵈ βᵒᵈ
     where
   toFun f :=
-    { toFun := to_dual ∘ f ∘ of_dual
+    { toFun := toDual ∘ f ∘ ofDual
       map_Sup' := fun _ => congr_arg toDual (map_infₛ f _) }
   invFun f :=
-    { toFun := of_dual ∘ f ∘ to_dual
+    { toFun := ofDual ∘ f ∘ toDual
       map_Inf' := fun _ => congr_arg ofDual (map_supₛ f _) }
   left_inv f := InfHomCat.ext fun a => rfl
   right_inv f := SupHomCat.ext fun a => rfl

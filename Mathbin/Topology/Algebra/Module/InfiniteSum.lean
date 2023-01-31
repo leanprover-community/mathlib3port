@@ -70,7 +70,7 @@ theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι →
   by_cases hf : Summable f
   ·
     exact
-      ⟨fun h => (e.has_sum.mp ((e.summable.mpr hf).has_sum_iff.mpr h)).tsum_eq, fun h =>
+      ⟨fun h => (e.has_sum.mp ((e.summable.mpr hf).hasSum_iff.mpr h)).tsum_eq, fun h =>
         (e.has_sum.mpr (hf.has_sum_iff.mpr h)).tsum_eq⟩
   · have hf' : ¬Summable fun z => e (f z) := fun h => hf (e.summable.mp h)
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hf']

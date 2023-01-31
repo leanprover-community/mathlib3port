@@ -116,14 +116,14 @@ def completion.lift {V W : SemiNormedGroup} [CompleteSpace W] [SeparatedSpace W]
 #align SemiNormedGroup.Completion.lift SemiNormedGroup.completion.lift
 
 theorem completion.lift_comp_incl {V W : SemiNormedGroup} [CompleteSpace W] [SeparatedSpace W]
-    (f : V ⟶ W) : Completion.incl ≫ completion.lift f = f :=
+    (f : V ⟶ W) : completion.incl ≫ completion.lift f = f :=
   by
   ext
   apply NormedAddGroupHom.extension_coe
 #align SemiNormedGroup.Completion.lift_comp_incl SemiNormedGroup.completion.lift_comp_incl
 
 theorem completion.lift_unique {V W : SemiNormedGroup} [CompleteSpace W] [SeparatedSpace W]
-    (f : V ⟶ W) (g : completion.obj V ⟶ W) : Completion.incl ≫ g = f → g = completion.lift f :=
+    (f : V ⟶ W) (g : completion.obj V ⟶ W) : completion.incl ≫ g = f → g = completion.lift f :=
   fun h => (NormedAddGroupHom.extension_unique _ fun v => ((ext_iff.1 h) v).symm).symm
 #align SemiNormedGroup.Completion.lift_unique SemiNormedGroup.completion.lift_unique
 

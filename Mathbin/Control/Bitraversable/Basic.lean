@@ -68,7 +68,7 @@ class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t]
   comp_bitraverse :
     ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G]
       {α α' β β' γ γ'} (f : β → F γ) (f' : β' → F γ') (g : α → G β) (g' : α' → G β') (x : t α α'),
-      bitraverse (comp.mk ∘ map f ∘ g) (comp.mk ∘ map f' ∘ g') x =
+      bitraverse (Comp.mk ∘ map f ∘ g) (Comp.mk ∘ map f' ∘ g') x =
         Comp.mk (bitraverse f f' <$> bitraverse g g' x)
   bitraverse_eq_bimap_id :
     ∀ {α α' β β'} (f : α → β) (f' : α' → β') (x : t α α'),

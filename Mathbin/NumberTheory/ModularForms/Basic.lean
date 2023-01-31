@@ -35,7 +35,7 @@ instance UpperHalfPlane.chartedSpace : ChartedSpace ℂ ℍ :=
 #align upper_half_plane.charted_space UpperHalfPlane.chartedSpace
 
 instance UpperHalfPlane.smoothManifoldWithCorners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
-  UpperHalfPlane.openEmbedding_coe.singleton_smooth_manifold_with_corners 𝓘(ℂ)
+  UpperHalfPlane.openEmbedding_coe.singleton_smoothManifoldWithCorners 𝓘(ℂ)
 #align upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.smoothManifoldWithCorners
 
 -- mathport name: «expr↑ₘ »

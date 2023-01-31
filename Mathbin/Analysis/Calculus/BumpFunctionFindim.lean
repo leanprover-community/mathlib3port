@@ -51,7 +51,7 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     { R := d / 2
       r := d
       r_pos := half_pos d_pos
-      r_lt_R := half_lt_self d_pos }
+      r_lt_r := half_lt_self d_pos }
   let f : E → ℝ := c ∘ toEuclidean
   have f_supp : f.support ⊆ Euclidean.ball x d :=
     by
@@ -110,7 +110,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     simp_rw [← this]
     apply is_open_Union_countable
     rintro ⟨f, hf⟩
-    exact hf.2.2.1.Continuous.is_open_support
+    exact hf.2.2.1.Continuous.isOpen_support
   obtain ⟨g0, hg⟩ : ∃ g0 : ℕ → ι, T = range g0 :=
     by
     apply countable.exists_eq_range T_count
@@ -146,8 +146,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       have : BddAbove (range fun x => ‖iteratedFderiv ℝ i (fun x : E => g n x) x‖) :=
         by
         apply
-          ((g_smooth n).continuous_iterated_fderiv
-                le_top).norm.bdd_above_range_of_has_compact_support
+          ((g_smooth n).continuous_iteratedFderiv le_top).norm.bddAbove_range_of_has_compact_support
         apply HasCompactSupport.comp_left _ norm_zero
         apply (g_comp_supp n).iteratedFderiv
       rcases this with ⟨R, hR⟩

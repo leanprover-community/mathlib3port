@@ -493,11 +493,11 @@ def keys (m : HashMap α β) : List α :=
 
 theorem find_iff (m : HashMap α β) (a : α) (b : β a) :
     m.find a = some b ↔ Sigma.mk a b ∈ m.entries :=
-  m.is_valid.find_aux_iff _
+  m.is_valid.findAux_iff _
 #align hash_map.find_iff HashMap.find_iff
 
 theorem contains_iff (m : HashMap α β) (a : α) : m.contains a ↔ a ∈ m.keys :=
-  m.is_valid.contains_aux_iff _ _
+  m.is_valid.containsAux_iff _ _
 #align hash_map.contains_iff HashMap.contains_iff
 
 theorem entries_empty (hash_fn : α → Nat) (n) : (@mkHashMap α _ β hash_fn n).entries = [] :=
@@ -553,7 +553,7 @@ theorem insert_lemma (hash_fn : α → Nat) {n n'} {bkts : BucketArray α β n} 
       Sigma.mk a b ∈ l → ∀ b' : β a, Sigma.mk a b' ∈ (reinsert_aux hash_fn t c.1 c.2).asList → False
     by simpa [List.nodup_append, nd1, v'.as_list_nodup _, List.Disjoint]
   intro a b m1 b' m2
-  rcases(reinsert_aux hash_fn t c.1 c.2).mem_as_list.1 m2 with ⟨i, im⟩
+  rcases(reinsert_aux hash_fn t c.1 c.2).mem_asList.1 m2 with ⟨i, im⟩
   have : Sigma.mk a b' ∉ Array'.read t i := by
     intro m3
     have : a ∈ List.map Sigma.fst t.as_list :=
@@ -703,13 +703,13 @@ def erase (m : HashMap α β) (a : α) : HashMap α β :=
         size := size - 1
         nbuckets := n
         buckets := buckets.modify hash_fn a (eraseAux a)
-        is_valid := v.erase _ a hc }
+        is_valid := v.eraseₓ _ a hc }
     else m
 #align hash_map.erase HashMap.erase
 
 theorem mem_erase :
     ∀ (m : HashMap α β) (a a' b'),
-      (Sigma.mk a' b' : Sigma β) ∈ (m.erase a).entries ↔ a ≠ a' ∧ Sigma.mk a' b' ∈ m.entries
+      (Sigma.mk a' b' : Sigma β) ∈ (m.eraseₓ a).entries ↔ a ≠ a' ∧ Sigma.mk a' b' ∈ m.entries
   | ⟨hash_fn, size, n, bkts, v⟩, a, a', b' =>
     by
     let bkt := bkts.read hash_fn a
@@ -740,20 +740,21 @@ theorem mem_erase :
       exact Hc ((v.contains_aux_iff _ _).2 (List.mem_map_of_mem Sigma.fst m))
 #align hash_map.mem_erase HashMap.mem_erase
 
-theorem find_erase_eq (m : HashMap α β) (a : α) : (m.erase a).find a = none :=
+theorem find_erase_eq (m : HashMap α β) (a : α) : (m.eraseₓ a).find a = none :=
   by
   cases' h : (m.erase a).find a with b; · rfl
   exact absurd rfl ((mem_erase m a a b).1 ((find_iff (m.erase a) a b).1 h)).left
 #align hash_map.find_erase_eq HashMap.find_erase_eq
 
-theorem find_erase_ne (m : HashMap α β) (a a' : α) (h : a ≠ a') : (m.erase a).find a' = m.find a' :=
+theorem find_erase_ne (m : HashMap α β) (a a' : α) (h : a ≠ a') :
+    (m.eraseₓ a).find a' = m.find a' :=
   Option.eq_of_eq_some fun b' =>
     (find_iff _ _ _).trans <|
       (mem_erase m a a' b').trans <| (and_iff_right h).trans (find_iff _ _ _).symm
 #align hash_map.find_erase_ne HashMap.find_erase_ne
 
 theorem find_erase (m : HashMap α β) (a' a : α) :
-    (m.erase a).find a' = if a = a' then none else m.find a' :=
+    (m.eraseₓ a).find a' = if a = a' then none else m.find a' :=
   if h : a = a' then by subst a' <;> simp [find_erase_eq m a]
   else by rw [if_neg h] <;> exact find_erase_ne m a a' h
 #align hash_map.find_erase HashMap.find_erase

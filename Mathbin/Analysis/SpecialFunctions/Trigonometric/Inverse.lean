@@ -79,8 +79,8 @@ theorem arcsin_sin {x : ℝ} (hx₁ : -(π / 2) ≤ x) (hx₂ : x ≤ π / 2) : 
 #align real.arcsin_sin Real.arcsin_sin
 
 theorem strictMonoOn_arcsin : StrictMonoOn arcsin (Icc (-1) 1) :=
-  (Subtype.strictMono_coe _).comp_strict_mono_on <|
-    sinOrderIso.symm.StrictMono.strict_mono_on_Icc_extend _
+  (Subtype.strictMono_coe _).comp_strictMonoOn <|
+    sinOrderIso.symm.StrictMono.strictMonoOn_IccExtend _
 #align real.strict_mono_on_arcsin Real.strictMonoOn_arcsin
 
 theorem monotone_arcsin : Monotone arcsin :=
@@ -98,7 +98,7 @@ theorem arcsin_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 
 
 @[continuity]
 theorem continuous_arcsin : Continuous arcsin :=
-  continuous_subtype_coe.comp sinOrderIso.symm.Continuous.Icc_extend'
+  continuous_subtype_val.comp sinOrderIso.symm.Continuous.Icc_extend'
 #align real.continuous_arcsin Real.continuous_arcsin
 
 theorem continuousAt_arcsin {x : ℝ} : ContinuousAt arcsin x :=
@@ -297,8 +297,8 @@ def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
   right_inv' y hy := sin_arcsin hy.1.le hy.2.le
   open_source := isOpen_Ioo
   open_target := isOpen_Ioo
-  continuous_to_fun := continuous_sin.ContinuousOn
-  continuous_inv_fun := continuous_arcsin.ContinuousOn
+  continuous_toFun := continuous_sin.ContinuousOn
+  continuous_invFun := continuous_arcsin.ContinuousOn
 #align real.sin_local_homeomorph Real.sinLocalHomeomorph
 
 theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=

@@ -76,7 +76,7 @@ def recF {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) : q.p.W �
 #align mvqpf.recF Mvqpf.recF
 
 theorem recF_eq {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (a : q.p.A)
-    (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
+    (f' : q.p.drop.B a ⟹ α) (f : q.p.getLast.B a → q.p.W α) :
     recF g (q.p.wMk a f' f) = g (abs ⟨a, splitFun f' (recF g ∘ f)⟩) := by
   rw [recF, Mvpfunctor.wRec_eq] <;> rfl
 #align mvqpf.recF_eq Mvqpf.recF_eq
@@ -93,11 +93,11 @@ theorem recF_eq' {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (
 value -/
 inductive Wequiv {α : TypeVec n} : q.p.W α → q.p.W α → Prop
   |
-  ind (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f₀ f₁ : q.p.last.B a → q.p.W α) :
+  ind (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f₀ f₁ : q.p.getLast.B a → q.p.W α) :
     (∀ x, Wequiv (f₀ x) (f₁ x)) → Wequiv (q.p.wMk a f' f₀) (q.p.wMk a f' f₁)
   |
-  abs (a₀ : q.p.A) (f'₀ : q.p.drop.B a₀ ⟹ α) (f₀ : q.p.last.B a₀ → q.p.W α) (a₁ : q.p.A)
-    (f'₁ : q.p.drop.B a₁ ⟹ α) (f₁ : q.p.last.B a₁ → q.p.W α) :
+  abs (a₀ : q.p.A) (f'₀ : q.p.drop.B a₀ ⟹ α) (f₀ : q.p.getLast.B a₀ → q.p.W α) (a₁ : q.p.A)
+    (f'₁ : q.p.drop.B a₁ ⟹ α) (f₁ : q.p.getLast.B a₁ → q.p.W α) :
     abs ⟨a₀, q.p.appendContents f'₀ f₀⟩ = abs ⟨a₁, q.p.appendContents f'₁ f₁⟩ →
       Wequiv (q.p.wMk a₀ f'₀ f₀) (q.p.wMk a₁ f'₁ f₁)
   | trans (u v w : q.p.W α) : Wequiv u v → Wequiv v w → Wequiv u w
@@ -143,7 +143,8 @@ def wrepr {α : TypeVec n} : q.p.W α → q.p.W α :=
   recF (q.p.wMk' ∘ repr)
 #align mvqpf.Wrepr Mvqpf.wrepr
 
-theorem wrepr_wMk {α : TypeVec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
+theorem wrepr_wMk {α : TypeVec n} (a : q.p.A) (f' : q.p.drop.B a ⟹ α)
+    (f : q.p.getLast.B a → q.p.W α) :
     wrepr (q.p.wMk a f' f) =
       q.p.wMk' (repr (abs (appendFun id wrepr <$$> ⟨a, q.p.appendContents f' f⟩))) :=
   by rw [Wrepr, recF_eq', q.P.W_dest'_W_mk] <;> rfl
@@ -229,7 +230,7 @@ def Fix.dest : Fix F α → F (append1 α (Fix F α)) :=
 theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 α (Fix F α))) :
     Fix.rec g (Fix.mk x) = g (appendFun id (Fix.rec g) <$$> x) :=
   by
-  have : recF g ∘ fix_to_W = Fix.rec g := by
+  have : recF g ∘ fixToW = Fix.rec g := by
     apply funext
     apply Quotient.ind
     intro x
@@ -244,7 +245,7 @@ theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
   rw [← Mvpfunctor.comp_map, abs_map, ← h, abs_repr, ← append_fun_comp, id_comp, this]
 #align mvqpf.fix.rec_eq Mvqpf.Fix.rec_eq
 
-theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.last.B a → q.p.W α) :
+theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.getLast.B a → q.p.W α) :
     Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦q.p.wMk a f' f⟧ :=
   by
   have : Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.p.wMk a f' f)⟧ :=
@@ -358,7 +359,7 @@ instance mvqpfFix : Mvqpf (Fix F) where
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Dependent recursor for `fix F` -/
 def Fix.drec {β : Fix F α → Type u}
-    (g : ∀ x : F (α ::: Sigma β), β (fix.mk <| (id ::: Sigma.fst) <$$> x)) (x : Fix F α) : β x :=
+    (g : ∀ x : F (α ::: Sigma β), β (Fix.mk <| (id ::: Sigma.fst) <$$> x)) (x : Fix F α) : β x :=
   let y := @Fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x
   have : x = y.1 := by
     symm

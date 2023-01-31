@@ -79,9 +79,9 @@ instance : ReflectsIsomorphisms (n₁ : SimplicialObject C ⥤ Karoubi (ChainCom
       tauto⟩
 
 theorem compatibility_n₂_n₁_karoubi :
-    N₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
+    n₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
       karoubiFunctorCategoryEmbedding SimplexCategoryᵒᵖ C ⋙
-        N₁ ⋙
+        n₁ ⋙
           (karoubiChainComplexEquivalence (Karoubi C) ℕ).Functor ⋙
             Functor.mapHomologicalComplex (KaroubiKaroubi.equivalence C).inverse _ :=
   by

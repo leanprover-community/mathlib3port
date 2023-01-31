@@ -328,7 +328,7 @@ composition with `W.Q : C ⥤ W.localization`. -/
 @[simps]
 def functor : (W.Localization ⥤ D) ⥤ W.FunctorsInverting D :=
   FullSubcategory.lift _ ((whiskeringLeft _ _ D).obj W.q) fun F =>
-    MorphismProperty.IsInvertedBy.of_comp W W.q W.Q_inverts _
+    MorphismProperty.IsInvertedBy.of_comp W W.q W.q_inverts _
 #align category_theory.localization.construction.whiskering_left_equivalence.functor CategoryTheory.Localization.Construction.WhiskeringLeftEquivalence.functor
 
 /-- The function `(W.functors_inverting D) ⥤ (W.localization ⥤ D)` induced by
@@ -394,7 +394,7 @@ def whiskeringLeftEquivalence : W.Localization ⥤ D ≌ W.FunctorsInverting D
   inverse := WhiskeringLeftEquivalence.inverse W D
   unitIso := WhiskeringLeftEquivalence.unitIso W D
   counitIso := WhiskeringLeftEquivalence.counitIso W D
-  functor_unit_iso_comp' F := by
+  functor_unitIso_comp' F := by
     ext X
     simpa only [eq_to_hom_app, whiskering_left_equivalence.unit_iso_hom,
       whiskering_left_equivalence.counit_iso_hom, eq_to_hom_map, eq_to_hom_trans, eq_to_hom_refl]

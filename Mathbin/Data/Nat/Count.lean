@@ -44,7 +44,7 @@ theorem count_zero : count p 0 = 0 := by rw [count, List.range_zero, List.countp
 /-- A fintype instance for the set relevant to `nat.count`. Locally an instance in locale `count` -/
 def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } :=
   by
-  apply Fintype.ofFinset ((Finset.range n).filter p)
+  apply Fintype.ofFinset ((Finset.range n).filterₓ p)
   intro x
   rw [mem_filter, mem_range]
   rfl
@@ -52,7 +52,7 @@ def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } :=
 
 scoped[Count] attribute [instance] Nat.CountSet.fintype
 
-theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filter p).card :=
+theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filterₓ p).card :=
   by
   rw [count, List.countp_eq_length_filter]
   rfl
@@ -76,7 +76,7 @@ theorem count_monotone : Monotone (count p) :=
 
 theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p (a + k)) b :=
   by
-  have : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p) :=
+  have : Disjoint ((range a).filterₓ p) (((range b).map <| addLeftEmbedding a).filterₓ p) :=
     by
     apply disjoint_filter_filter
     rw [Finset.disjoint_left]

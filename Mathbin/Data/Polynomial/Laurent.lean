@@ -134,7 +134,7 @@ theorem single_zero_one_eq_one : (single 0 1 : R[T;T⁻¹]) = (1 : R[T;T⁻¹]) 
 /-- The ring homomorphism `C`, including `R` into the ring of Laurent polynomials over `R` as
 the constant Laurent polynomials. -/
 def c : R →+* R[T;T⁻¹] :=
-  single_zero_ring_hom
+  singleZeroRingHom
 #align laurent_polynomial.C LaurentPolynomial.c
 
 theorem algebraMap_apply {R A : Type _} [CommSemiring R] [Semiring A] [Algebra R A] (r : R) :
@@ -228,21 +228,21 @@ theorem Polynomial.toLaurent_c_mul_eq (r : R) (f : R[X]) :
 #align polynomial.to_laurent_C_mul_eq Polynomial.toLaurent_c_mul_eq
 
 @[simp]
-theorem Polynomial.toLaurent_x_pow (n : ℕ) : (X ^ n : R[X]).toLaurent = t n := by
+theorem Polynomial.toLaurent_x_pow (n : ℕ) : (x ^ n : R[X]).toLaurent = t n := by
   simp only [map_pow, Polynomial.toLaurent_x, T_pow, mul_one]
 #align polynomial.to_laurent_X_pow Polynomial.toLaurent_x_pow
 
 @[simp]
 theorem Polynomial.toLaurent_c_mul_x_pow (n : ℕ) (r : R) :
-    (Polynomial.c r * X ^ n).toLaurent = c r * t n := by
+    (Polynomial.c r * x ^ n).toLaurent = c r * t n := by
   simp only [_root_.map_mul, Polynomial.toLaurent_c, Polynomial.toLaurent_x_pow]
 #align polynomial.to_laurent_C_mul_X_pow Polynomial.toLaurent_c_mul_x_pow
 
 instance invertibleT (n : ℤ) : Invertible (t n : R[T;T⁻¹])
     where
   invOf := t (-n)
-  inv_of_mul_self := by rw [← T_add, add_left_neg, T_zero]
-  mul_inv_of_self := by rw [← T_add, add_right_neg, T_zero]
+  invOf_mul_self := by rw [← T_add, add_left_neg, T_zero]
+  mul_invOf_self := by rw [← T_add, add_right_neg, T_zero]
 #align laurent_polynomial.invertible_T LaurentPolynomial.invertibleT
 
 @[simp]
@@ -313,7 +313,7 @@ theorem t_mul (n : ℤ) (f : R[T;T⁻¹]) : t n * f = f * t n :=
 nonnegative degree coincide with the ones of `f`.  The terms of negative degree of `f` "vanish".
 `trunc` is a left-inverse to `polynomial.to_laurent`. -/
 def trunc : R[T;T⁻¹] →+ R[X] :=
-  (toFinsuppIso R).symm.toAddMonoidHom.comp <| comap_domain.add_monoid_hom fun a b => Int.ofNat.inj
+  (toFinsuppIso R).symm.toAddMonoidHom.comp <| comapDomain.addMonoidHom fun a b => Int.ofNat.inj
 #align laurent_polynomial.trunc LaurentPolynomial.trunc
 
 @[simp]
@@ -547,7 +547,7 @@ instance algebraPolynomial (R : Type _) [CommSemiring R] : Algebra R[X] R[T;T⁻
     smul_def' := fun f l => rfl }
 #align laurent_polynomial.algebra_polynomial LaurentPolynomial.algebraPolynomial
 
-theorem algebraMap_x_pow (n : ℕ) : algebraMap R[X] R[T;T⁻¹] (X ^ n) = t n :=
+theorem algebraMap_x_pow (n : ℕ) : algebraMap R[X] R[T;T⁻¹] (x ^ n) = t n :=
   Polynomial.toLaurent_x_pow n
 #align laurent_polynomial.algebra_map_X_pow LaurentPolynomial.algebraMap_x_pow
 

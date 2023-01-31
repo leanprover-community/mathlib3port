@@ -346,7 +346,7 @@ theorem HasCompactSupport.convolutionExistsAt {x₀ : G}
   let u := (Homeomorph.neg G).trans (Homeomorph.addRight x₀)
   let v := (Homeomorph.neg G).trans (Homeomorph.addLeft x₀)
   apply
-    ((u.is_compact_preimage.mpr h).bdd_above_image hg.norm.continuous_on).convolutionExistsAt' L
+    ((u.is_compact_preimage.mpr h).bddAbove_image hg.norm.continuous_on).convolutionExistsAt' L
       is_closed_closure.measurable_set subset_closure (hf.integrable_on_is_compact h)
   have A :
     ae_strongly_measurable (g ∘ ⇑v) (μ.restrict (tsupport fun t : G => (L (f t)) (g (x₀ - t)))) :=
@@ -355,7 +355,7 @@ theorem HasCompactSupport.convolutionExistsAt {x₀ : G}
     exact (isClosed_tsupport _).MeasurableSet
   convert
     ((v.continuous.measurable.measure_preserving
-              (μ.restrict (tsupport fun t => L (f t) (g (x₀ - t))))).ae_strongly_measurable_comp_iff
+              (μ.restrict (tsupport fun t => L (f t) (g (x₀ - t))))).aeStronglyMeasurable_comp_iff
           v.to_measurable_equiv.measurable_embedding).1
       A
   ext x

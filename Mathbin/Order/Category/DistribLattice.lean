@@ -33,7 +33,7 @@ def DistribLatticeCat :=
 namespace DistribLatticeCat
 
 instance : CoeSort DistribLatticeCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : DistribLatticeCat) : DistribLattice X :=
   X.str
@@ -87,8 +87,8 @@ def dual : DistribLatticeCat ⥤ DistribLatticeCat
 @[simps Functor inverse]
 def dualEquiv : DistribLatticeCat ≌ DistribLatticeCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align DistribLattice.dual_equiv DistribLatticeCat.dualEquiv
 
 end DistribLatticeCat

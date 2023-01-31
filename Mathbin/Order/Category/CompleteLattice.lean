@@ -30,7 +30,7 @@ def CompleteLatticeCat :=
 namespace CompleteLatticeCat
 
 instance : CoeSort CompleteLatticeCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : CompleteLatticeCat) : CompleteLattice X :=
   X.str
@@ -95,8 +95,8 @@ def dual : CompleteLatticeCat ⥤ CompleteLatticeCat
 @[simps Functor inverse]
 def dualEquiv : CompleteLatticeCat ≌ CompleteLatticeCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align CompleteLattice.dual_equiv CompleteLatticeCat.dualEquiv
 
 end CompleteLatticeCat

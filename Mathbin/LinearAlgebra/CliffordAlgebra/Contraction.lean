@@ -343,7 +343,7 @@ theorem changeForm_self_apply (x : CliffordAlgebra Q) : changeForm changeForm.ze
 @[simp]
 theorem changeForm_self :
     changeForm changeForm.zero_proof = (LinearMap.id : CliffordAlgebra Q →ₗ[R] _) :=
-  LinearMap.ext <| change_form_self_apply
+  LinearMap.ext <| changeForm_self_apply
 #align clifford_algebra.change_form_self CliffordAlgebra.changeForm_self
 
 /-- This is [bourbaki2007][] $9 Lemma 3. -/

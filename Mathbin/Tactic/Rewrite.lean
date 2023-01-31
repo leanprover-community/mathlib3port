@@ -197,7 +197,7 @@ namespace Interactive
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `eq_lemmas -/
 private unsafe def assoc_rw_goal (rs : List rw_rule) : tactic Unit :=
-  rs.mmap' fun r => do
+  rs.mapM' fun r => do
     save_info r
     let eq_lemmas ← get_rule_eqn_lemmas r
     orelse'

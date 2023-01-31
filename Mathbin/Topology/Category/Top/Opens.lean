@@ -120,7 +120,7 @@ def toTop (X : TopCat.{u}) : Opens X ⥤ TopCat
   obj U := ⟨U.val, inferInstance⟩
   map U V i :=
     ⟨fun x => ⟨x.1, i.le x.2⟩,
-      (Embedding.continuous_iff embedding_subtype_coe).2 continuous_induced_dom⟩
+      (Embedding.continuous_iff embedding_subtype_val).2 continuous_induced_dom⟩
 #align topological_space.opens.to_Top TopologicalSpace.Opens.toTop
 
 @[simp]
@@ -135,11 +135,11 @@ theorem toTop_map (X : TopCat.{u}) {U V : Opens X} {f : U ⟶ V} {x} {h} :
 def inclusion {X : TopCat.{u}} (U : Opens X) : (toTop X).obj U ⟶ X
     where
   toFun := _
-  continuous_to_fun := continuous_subtype_coe
+  continuous_toFun := continuous_subtype_val
 #align topological_space.opens.inclusion TopologicalSpace.Opens.inclusion
 
 theorem openEmbedding {X : TopCat.{u}} (U : Opens X) : OpenEmbedding (inclusion U) :=
-  IsOpen.openEmbedding_subtype_coe U.2
+  IsOpen.openEmbedding_subtype_val U.2
 #align topological_space.opens.open_embedding TopologicalSpace.Opens.openEmbedding
 
 /-- The inclusion of the top open subset (i.e. the whole space) is an isomorphism.
@@ -342,8 +342,8 @@ def IsOpenMap.functor {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) : Opens X 
 def IsOpenMap.adjunction {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) :
     Adjunction hf.Functor (TopologicalSpace.Opens.map f) :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ }
-      counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => homOfLe fun x hxU => ⟨x, hxU, rfl⟩ }
+      counit := { app := fun V => homOfLe fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction IsOpenMap.adjunction
 
 instance IsOpenMap.functorFullOfMono {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] :
@@ -414,7 +414,7 @@ theorem functor_map_eq_inf {X : TopCat} (U V : Opens X) :
 
 theorem map_functor_eq' {X U : TopCat} (f : U ⟶ X) (hf : OpenEmbedding f) (V) :
     ((Opens.map f).obj <| hf.IsOpenMap.Functor.obj V) = V :=
-  opens.ext <| Set.preimage_image_eq _ hf.inj
+  Opens.ext <| Set.preimage_image_eq _ hf.inj
 #align topological_space.opens.map_functor_eq' TopologicalSpace.Opens.map_functor_eq'
 
 @[simp]

@@ -57,7 +57,7 @@ section Rename
 
 /-- Rename all the variables in a multivariable polynomial. -/
 def rename (f : σ → τ) : MvPolynomial σ R →ₐ[R] MvPolynomial τ R :=
-  aeval (X ∘ f)
+  aeval (x ∘ f)
 #align mv_polynomial.rename MvPolynomial.rename
 
 @[simp]
@@ -80,7 +80,7 @@ theorem map_rename (f : R →+* S) (g : σ → τ) (p : MvPolynomial σ R) :
 @[simp]
 theorem rename_rename (f : σ → τ) (g : τ → α) (p : MvPolynomial σ R) :
     rename g (rename f p) = rename (g ∘ f) p :=
-  show rename g (eval₂ c (X ∘ f) p) = _
+  show rename g (eval₂ c (x ∘ f) p) = _
     by
     simp only [rename, aeval_eq_eval₂_hom]
     simp [eval₂_comp_left _ C (X ∘ f) p, (· ∘ ·), eval₂_C, eval_X]
@@ -130,11 +130,11 @@ open Classical
   `kill_compl hf` is the `alg_hom` from `R[τ]` to `R[σ]` that is left inverse to
   `rename f : R[σ] → R[τ]` and sends the variables in the complement of the range of `f` to `0`. -/
 def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
-  aeval fun i => if h : i ∈ Set.range f then X <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
+  aeval fun i => if h : i ∈ Set.range f then x <| (Equiv.ofInjective f hf).symm ⟨i, h⟩ else 0
 #align mv_polynomial.kill_compl MvPolynomial.killCompl
 
 theorem killCompl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
-  alg_hom_ext fun i => by
+  algHom_ext fun i => by
     dsimp
     rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equiv.ofInjective_symm_apply]
 #align mv_polynomial.kill_compl_comp_rename MvPolynomial.killCompl_comp_rename

@@ -277,7 +277,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
 protected noncomputable def UniformSpace.pseudoMetricSpace (X : Type _) [UniformSpace X]
     [IsCountablyGenerated (𝓤 X)] : PseudoMetricSpace X :=
   (UniformSpace.metrizable_uniformity X).some.replaceUniformity <|
-    congr_arg _ (UniformSpace.metrizable_uniformity X).some_spec.symm
+    congr_arg _ (UniformSpace.metrizable_uniformity X).choose_spec.symm
 #align uniform_space.pseudo_metric_space UniformSpace.pseudoMetricSpace
 
 /-- A `metric_space` instance compatible with a given `uniform_space` structure. -/

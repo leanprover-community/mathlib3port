@@ -274,7 +274,7 @@ Intended for use in `ex.set_info`.
 -/
 unsafe def ex_info.set (i : ex_info) (o : Option expr) (pf : Option expr) : ex_info :=
   { i with
-    orig := o.getOrElse i.pretty
+    orig := o.getD i.pretty
     Proof := pf }
 #align tactic.ring_exp.ex_info.set tactic.ring_exp.ex_info.set
 

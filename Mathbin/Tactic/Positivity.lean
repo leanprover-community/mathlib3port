@@ -303,7 +303,7 @@ unsafe def attr : user_attribute (expr → tactic strictness) Unit
   cache_cfg :=
     { mk_cache := fun ns => do
         let t ←
-          ns.mfoldl
+          ns.foldlM
               (fun (t : expr → tactic strictness) n => do
                 let t' ← eval_expr (expr → tactic strictness) (expr.const n [])
                 pure fun e => t' e ≤|≥ t e)

@@ -105,7 +105,7 @@ theorem to_ofList (l : List (Lists α)) : toList (ofList l) = l := by induction 
 @[simp]
 theorem of_toList : ∀ l : Lists' α true, ofList (toList l) = l :=
   suffices
-    ∀ (b) (h : tt = b) (l : Lists' α b),
+    ∀ (b) (h : true = b) (l : Lists' α b),
       let l' : Lists' α true := by rw [h] <;> exact l
       ofList (toList l') = l'
     from this _ rfl
@@ -380,8 +380,8 @@ mutual
   def Equiv.decidable [DecidableEq α] : ∀ l₁ l₂ : Lists α, Decidable (l₁ ~ l₂)
     | ⟨ff, l₁⟩, ⟨ff, l₂⟩ =>
       decidable_of_iff' (l₁ = l₂) <| by cases l₁ <;> refine' equiv_atom.trans (by simp [atom])
-    | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => is_false <| by rintro ⟨⟩
-    | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => is_false <| by rintro ⟨⟩
+    | ⟨ff, l₁⟩, ⟨tt, l₂⟩ => isFalse <| by rintro ⟨⟩
+    | ⟨tt, l₁⟩, ⟨ff, l₂⟩ => isFalse <| by rintro ⟨⟩
     | ⟨tt, l₁⟩, ⟨tt, l₂⟩ =>
       by
       haveI :=
@@ -423,7 +423,7 @@ mutual
       exact decidable_of_iff' _ (@Lists'.cons_subset _ ⟨_, _⟩ _ _)
   @[instance]
   def Mem.decidable [DecidableEq α] : ∀ (a : Lists α) (l : Lists' α true), Decidable (a ∈ l)
-    | a, Lists'.nil => is_false <| by rintro ⟨_, ⟨⟩, _⟩
+    | a, Lists'.nil => isFalse <| by rintro ⟨_, ⟨⟩, _⟩
     | a, Lists'.cons' b l₂ =>
       by
       haveI :=

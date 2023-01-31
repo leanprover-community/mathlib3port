@@ -77,22 +77,22 @@ theorem nth_mk (f hf) : @nth α ⟨f, hf⟩ = f :=
 #align seq.nth_mk SeqCat.nth_mk
 
 @[simp]
-theorem nth_nil (n : ℕ) : (@nil α).nth n = none :=
+theorem nth_nil (n : ℕ) : (@nil α).get? n = none :=
   rfl
 #align seq.nth_nil SeqCat.nth_nil
 
 @[simp]
-theorem nth_cons_zero (a : α) (s : SeqCat α) : (cons a s).nth 0 = some a :=
+theorem nth_cons_zero (a : α) (s : SeqCat α) : (cons a s).get? 0 = some a :=
   rfl
 #align seq.nth_cons_zero SeqCat.nth_cons_zero
 
 @[simp]
-theorem nth_cons_succ (a : α) (s : SeqCat α) (n : ℕ) : (cons a s).nth (n + 1) = s.nth n :=
+theorem nth_cons_succ (a : α) (s : SeqCat α) (n : ℕ) : (cons a s).get? (n + 1) = s.get? n :=
   rfl
 #align seq.nth_cons_succ SeqCat.nth_cons_succ
 
 @[ext]
-protected theorem ext {s t : SeqCat α} (h : ∀ n : ℕ, s.nth n = t.nth n) : s = t :=
+protected theorem ext {s t : SeqCat α} (h : ∀ n : ℕ, s.get? n = t.get? n) : s = t :=
   Subtype.eq <| funext h
 #align seq.ext SeqCat.ext
 
@@ -111,12 +111,12 @@ theorem cons_right_injective (x : α) : Function.Injective (cons x) :=
 
 /-- A sequence has terminated at position `n` if the value at position `n` equals `none`. -/
 def TerminatedAt (s : SeqCat α) (n : ℕ) : Prop :=
-  s.nth n = none
+  s.get? n = none
 #align seq.terminated_at SeqCat.TerminatedAt
 
 /-- It is decidable whether a sequence terminates at a given position. -/
 instance terminatedAtDecidable (s : SeqCat α) (n : ℕ) : Decidable (s.TerminatedAt n) :=
-  decidable_of_iff' (s.nth n).isNone <| by unfold terminated_at <;> cases s.nth n <;> simp
+  decidable_of_iff' (s.get? n).isNone <| by unfold terminated_at <;> cases s.nth n <;> simp
 #align seq.terminated_at_decidable SeqCat.terminatedAtDecidable
 
 /-- A sequence terminates if there is some position `n` at which it has terminated. -/
@@ -124,7 +124,7 @@ def Terminates (s : SeqCat α) : Prop :=
   ∃ n : ℕ, s.TerminatedAt n
 #align seq.terminates SeqCat.Terminates
 
-theorem not_terminates_iff {s : SeqCat α} : ¬s.Terminates ↔ ∀ n, (s.nth n).isSome := by
+theorem not_terminates_iff {s : SeqCat α} : ¬s.Terminates ↔ ∀ n, (s.get? n).isSome := by
   simp [terminates, terminated_at, ← Ne.def, Option.ne_none_iff_isSome]
 #align seq.not_terminates_iff SeqCat.not_terminates_iff
 
@@ -154,7 +154,7 @@ protected def Mem (a : α) (s : SeqCat α) :=
 instance : Membership α (SeqCat α) :=
   ⟨SeqCat.Mem⟩
 
-theorem le_stable (s : SeqCat α) {m n} (h : m ≤ n) : s.nth m = none → s.nth n = none :=
+theorem le_stable (s : SeqCat α) {m n} (h : m ≤ n) : s.get? m = none → s.get? n = none :=
   by
   cases' s with f al
   induction' h with n h IH
@@ -171,9 +171,9 @@ theorem terminated_stable :
 that `s.nth = some aₘ` for `m ≤ n`.
 -/
 theorem ge_stable (s : SeqCat α) {aₙ : α} {n m : ℕ} (m_le_n : m ≤ n)
-    (s_nth_eq_some : s.nth n = some aₙ) : ∃ aₘ : α, s.nth m = some aₘ :=
-  have : s.nth n ≠ none := by simp [s_nth_eq_some]
-  have : s.nth m ≠ none := mt (s.le_stable m_le_n) this
+    (s_nth_eq_some : s.get? n = some aₙ) : ∃ aₘ : α, s.get? m = some aₘ :=
+  have : s.get? n ≠ none := by simp [s_nth_eq_some]
+  have : s.get? m ≠ none := mt (s.le_stable m_le_n) this
   Option.ne_none_iff_exists'.mp this
 #align seq.ge_stable SeqCat.ge_stable
 
@@ -435,7 +435,7 @@ theorem ofList_nil : ofList [] = (nil : SeqCat α) :=
 #align seq.of_list_nil SeqCat.ofList_nil
 
 @[simp]
-theorem ofList_nth (l : List α) (n : ℕ) : (ofList l).nth n = l.nth n :=
+theorem ofList_nth (l : List α) (n : ℕ) : (ofList l).get? n = l.get? n :=
   rfl
 #align seq.of_list_nth SeqCat.ofList_nth
 
@@ -489,7 +489,7 @@ def nats : SeqCat ℕ :=
 #align seq.nats SeqCat.nats
 
 @[simp]
-theorem nats_nth (n : ℕ) : nats.nth n = some n :=
+theorem nats_nth (n : ℕ) : nats.get? n = some n :=
   rfl
 #align seq.nats_nth SeqCat.nats_nth
 
@@ -564,7 +564,7 @@ section ZipWith
 
 /-- Combine two sequences with a function -/
 def zipWith (f : α → β → γ) (s₁ : SeqCat α) (s₂ : SeqCat β) : SeqCat γ :=
-  ⟨fun n => Option.map₂ f (s₁.nth n) (s₂.nth n), fun n hn =>
+  ⟨fun n => Option.map₂ f (s₁.get? n) (s₂.get? n), fun n hn =>
     Option.map₂_eq_none_iff.2 <| (Option.map₂_eq_none_iff.1 hn).imp s₁.2 s₂.2⟩
 #align seq.zip_with SeqCat.zipWith
 
@@ -572,7 +572,7 @@ variable {s : SeqCat α} {s' : SeqCat β} {n : ℕ}
 
 @[simp]
 theorem nth_zipWith (f : α → β → γ) (s s' n) :
-    (zipWith f s s').nth n = Option.map₂ f (s.nth n) (s'.nth n) :=
+    (zipWith f s s').get? n = Option.map₂ f (s.get? n) (s'.get? n) :=
   rfl
 #align seq.nth_zip_with SeqCat.nth_zipWith
 

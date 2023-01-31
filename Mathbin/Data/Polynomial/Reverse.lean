@@ -75,7 +75,7 @@ theorem revAtFun_eq (N i : ℕ) : revAtFun N i = revAt N i :=
 
 @[simp]
 theorem revAt_invol {N i : ℕ} : (revAt N) (revAt N i) = i :=
-  rev_at_fun_invol
+  revAtFun_invol
 #align polynomial.rev_at_invol Polynomial.revAt_invol
 
 @[simp]
@@ -154,7 +154,7 @@ theorem reflect_c_mul (f : R[X]) (r : R) (N : ℕ) : reflect N (c r * f) = c r *
 #align polynomial.reflect_C_mul Polynomial.reflect_c_mul
 
 @[simp]
-theorem reflect_c_mul_x_pow (N n : ℕ) {c : R} : reflect N (c c * X ^ n) = c c * X ^ revAt N n :=
+theorem reflect_c_mul_x_pow (N n : ℕ) {c : R} : reflect N (c c * x ^ n) = c c * x ^ revAt N n :=
   by
   ext
   rw [reflect_C_mul, coeff_C_mul, coeff_C_mul, coeff_X_pow, coeff_reflect]
@@ -168,12 +168,12 @@ theorem reflect_c_mul_x_pow (N n : ℕ) {c : R} : reflect N (c c * X ^ n) = c c 
 #align polynomial.reflect_C_mul_X_pow Polynomial.reflect_c_mul_x_pow
 
 @[simp]
-theorem reflect_c (r : R) (N : ℕ) : reflect N (c r) = c r * X ^ N := by
+theorem reflect_c (r : R) (N : ℕ) : reflect N (c r) = c r * x ^ N := by
   conv_lhs => rw [← mul_one (C r), ← pow_zero X, reflect_C_mul_X_pow, rev_at_zero]
 #align polynomial.reflect_C Polynomial.reflect_c
 
 @[simp]
-theorem reflect_monomial (N n : ℕ) : reflect N ((x : R[X]) ^ n) = X ^ revAt N n := by
+theorem reflect_monomial (N n : ℕ) : reflect N ((x : R[X]) ^ n) = x ^ revAt N n := by
   rw [← one_mul (X ^ n), ← one_mul (X ^ rev_at N n), ← C_1, reflect_C_mul_X_pow]
 #align polynomial.reflect_monomial Polynomial.reflect_monomial
 

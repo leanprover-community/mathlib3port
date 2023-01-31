@@ -181,7 +181,7 @@ def ExtensionOf.max {c : Set (ExtensionOf i f)} (hchain : IsChain (· ≤ ·) c)
     le :=
       le_trans hnonempty.some.le <|
         (LinearPmap.le_sup _ <|
-            (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.some_spec, rfl⟩).1
+            (Set.mem_image _ _ _).mpr ⟨hnonempty.some, hnonempty.choose_spec, rfl⟩).1
     is_extension := fun m =>
       by
       refine' Eq.trans (hnonempty.some.is_extension m) _
@@ -208,20 +208,20 @@ instance ExtensionOf.inhabited : Inhabited (ExtensionOf i f)
         { toFun := fun x => f x.2.some
           map_add' := fun x y =>
             by
-            have eq1 : _ + _ = (x + y).1 := congr_arg₂ (· + ·) x.2.some_spec y.2.some_spec
-            rw [← map_add, ← (x + y).2.some_spec] at eq1
+            have eq1 : _ + _ = (x + y).1 := congr_arg₂ (· + ·) x.2.choose_spec y.2.choose_spec
+            rw [← map_add, ← (x + y).2.choose_spec] at eq1
             rw [← Fact.out (Function.Injective i) eq1, map_add]
           map_smul' := fun r x =>
             by
-            have eq1 : r • _ = (r • x).1 := congr_arg ((· • ·) r) x.2.some_spec
-            rw [← LinearMap.map_smul, ← (r • x).2.some_spec] at eq1
+            have eq1 : r • _ = (r • x).1 := congr_arg ((· • ·) r) x.2.choose_spec
+            rw [← LinearMap.map_smul, ← (r • x).2.choose_spec] at eq1
             rw [RingHom.id_apply, ← Fact.out (Function.Injective i) eq1, LinearMap.map_smul] }
       le := le_refl _
       is_extension := fun m =>
         by
         simp only [LinearPmap.mk_apply, LinearMap.coe_mk]
         congr
-        exact Fact.out (Function.Injective i) (⟨i m, ⟨_, rfl⟩⟩ : i.range).2.some_spec.symm }
+        exact Fact.out (Function.Injective i) (⟨i m, ⟨_, rfl⟩⟩ : i.range).2.choose_spec.symm }
 #align module.Baer.extension_of.inhabited Module.Baer.ExtensionOf.inhabited
 
 /-- Since every nonempty chain has a maximal element, by Zorn's lemma, there is a maximal
@@ -234,7 +234,7 @@ def extensionOfMax : ExtensionOf i f :=
 theorem extensionOfMax_is_max :
     ∀ a : ExtensionOf i f, extensionOfMax i f ≤ a → a = extensionOfMax i f :=
   (@zorn_nonempty_partialOrder (ExtensionOf i f) _ ⟨Inhabited.default⟩ fun c hchain hnonempty =>
-      ⟨ExtensionOf.max hchain hnonempty, ExtensionOf.le_max hchain hnonempty⟩).some_spec
+      ⟨ExtensionOf.max hchain hnonempty, ExtensionOf.le_max hchain hnonempty⟩).choose_spec
 #align module.Baer.extension_of_max_is_max Module.Baer.extensionOfMax_is_max
 
 variable {f}
@@ -259,12 +259,12 @@ def ExtensionOfMaxAdjoin.fst {y : N} (x : (extensionOfMax i f).domain ⊔ Submod
 
 /-- If `x ∈ M ⊔ ⟨y⟩`, then `x = m + r • y`, `snd` pick an arbitrary such `r`.-/
 def ExtensionOfMaxAdjoin.snd {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) : R :=
-  (ExtensionOfMaxAdjoin.aux1 i x).some_spec.some
+  (ExtensionOfMaxAdjoin.aux1 i x).choose_spec.some
 #align module.Baer.extension_of_max_adjoin.snd Module.Baer.ExtensionOfMaxAdjoin.snd
 
 theorem ExtensionOfMaxAdjoin.eqn {y : N} (x : (extensionOfMax i f).domain ⊔ Submodule.span R {y}) :
     ↑x = ↑(ExtensionOfMaxAdjoin.fst i x) + ExtensionOfMaxAdjoin.snd i x • y :=
-  (ExtensionOfMaxAdjoin.aux1 i x).some_spec.some_spec
+  (ExtensionOfMaxAdjoin.aux1 i x).choose_spec.choose_spec
 #align module.Baer.extension_of_max_adjoin.eqn Module.Baer.ExtensionOfMaxAdjoin.eqn
 
 variable (f)
@@ -291,7 +291,7 @@ def ExtensionOfMaxAdjoin.extendIdealTo (h : Module.Baer R Q) (y : N) : R →ₗ[
 theorem ExtensionOfMaxAdjoin.extendIdealTo_is_extension (h : Module.Baer R Q) (y : N) :
     ∀ (x : R) (mem : x ∈ ExtensionOfMaxAdjoin.ideal i f y),
       ExtensionOfMaxAdjoin.extendIdealTo i f h y x = ExtensionOfMaxAdjoin.idealTo i f y ⟨x, mem⟩ :=
-  (h (ExtensionOfMaxAdjoin.ideal i f y) (ExtensionOfMaxAdjoin.idealTo i f y)).some_spec
+  (h (ExtensionOfMaxAdjoin.ideal i f y) (ExtensionOfMaxAdjoin.idealTo i f y)).choose_spec
 #align module.Baer.extension_of_max_adjoin.extend_ideal_to_is_extension Module.Baer.ExtensionOfMaxAdjoin.extendIdealTo_is_extension
 
 theorem ExtensionOfMaxAdjoin.extendIdealTo_wd' (h : Module.Baer R Q) {y : N} (r : R)

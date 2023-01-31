@@ -125,7 +125,7 @@ instance isStrictTotalOrder (r : α → α → Prop) [IsStrictTotalOrder α r] :
 
 #print List.Lex.decidableRel /-
 instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r] : DecidableRel (Lex r)
-  | l₁, [] => is_false fun h => by cases h
+  | l₁, [] => isFalse fun h => by cases h
   | [], b :: l₂ => isTrue Lex.nil
   | a :: l₁, b :: l₂ => by
     haveI := DecidableRel l₁ l₂
@@ -203,7 +203,7 @@ instance LT' [LT α] : LT (List α) :=
 
 #print List.nil_lt_cons /-
 theorem nil_lt_cons [LT α] (a : α) (l : List α) : [] < a :: l :=
-  lex.nil
+  Lex.nil
 #align list.nil_lt_cons List.nil_lt_cons
 -/
 

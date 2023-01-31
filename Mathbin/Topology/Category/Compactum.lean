@@ -162,9 +162,9 @@ theorem join_distrib (X : Compactum) (uux : Ultrafilter (Ultrafilter X)) :
 instance {X : Compactum} : TopologicalSpace X
     where
   IsOpen U := ∀ F : Ultrafilter X, X.str F ∈ U → U ∈ F
-  is_open_univ _ _ := Filter.univ_sets _
-  is_open_inter S T h3 h4 h5 h6 := Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2)
-  is_open_sUnion := fun S h1 F ⟨T, hT, h2⟩ =>
+  isOpen_univ _ _ := Filter.univ_sets _
+  isOpen_inter S T h3 h4 h5 h6 := Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2)
+  isOpen_unionₛ := fun S h1 F ⟨T, hT, h2⟩ =>
     mem_of_superset (h1 T hT _ h2) (Set.subset_unionₛ_of_mem hT)
 
 theorem isClosed_iff {X : Compactum} (S : Set X) :
@@ -468,7 +468,7 @@ def compactumToCompHaus : Compactum ⥤ CompHaus
   obj X := { toTop := { α := X } }
   map X Y f :=
     { toFun := f
-      continuous_to_fun := Compactum.continuous_of_hom _ }
+      continuous_toFun := Compactum.continuous_of_hom _ }
 #align Compactum_to_CompHaus compactumToCompHaus
 
 namespace compactumToCompHaus
@@ -488,13 +488,13 @@ def isoOfTopologicalSpace {D : CompHaus} :
     where
   Hom :=
     { toFun := id
-      continuous_to_fun :=
+      continuous_toFun :=
         continuous_def.2 fun _ h => by
           rw [isOpen_iff_ultrafilter'] at h
           exact h }
   inv :=
     { toFun := id
-      continuous_to_fun :=
+      continuous_toFun :=
         continuous_def.2 fun _ h1 => by
           rw [isOpen_iff_ultrafilter']
           intro _ h2
@@ -503,7 +503,7 @@ def isoOfTopologicalSpace {D : CompHaus} :
 
 /-- The functor Compactum_to_CompHaus is essentially surjective. -/
 theorem essSurj : EssSurj compactumToCompHaus :=
-  { mem_ess_image := fun X => ⟨Compactum.ofTopologicalSpace X, ⟨isoOfTopologicalSpace⟩⟩ }
+  { mem_essImage := fun X => ⟨Compactum.ofTopologicalSpace X, ⟨isoOfTopologicalSpace⟩⟩ }
 #align Compactum_to_CompHaus.ess_surj compactumToCompHaus.essSurj
 
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/

@@ -191,7 +191,7 @@ Case conversion may be inaccurate. Consider using '#align add_submonoid.to_submo
 theorem AddSubmonoid.toSubmonoid_closure (S : Set A) :
     (AddSubmonoid.closure S).toSubmonoid = Submonoid.closure (Multiplicative.toAdd ⁻¹' S) :=
   le_antisymm
-    (AddSubmonoid.toSubmonoid.to_galois_connection.l_le <|
+    (AddSubmonoid.toSubmonoid.to_galoisConnection.l_le <|
       AddSubmonoid.closure_le.2 Submonoid.subset_closure)
     (Submonoid.closure_le.2 AddSubmonoid.subset_closure)
 #align add_submonoid.to_submonoid_closure AddSubmonoid.toSubmonoid_closure
@@ -205,7 +205,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_add_submo
 theorem Submonoid.toAddSubmonoid'_closure (S : Set (Multiplicative A)) :
     (Submonoid.closure S).toAddSubmonoid' = AddSubmonoid.closure (Additive.ofMul ⁻¹' S) :=
   le_antisymm
-    (Submonoid.toAddSubmonoid'.to_galois_connection.l_le <|
+    (Submonoid.toAddSubmonoid'.to_galoisConnection.l_le <|
       Submonoid.closure_le.2 AddSubmonoid.subset_closure)
     (AddSubmonoid.closure_le.2 Submonoid.subset_closure)
 #align submonoid.to_add_submonoid'_closure Submonoid.toAddSubmonoid'_closure
@@ -514,7 +514,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.map_supr Submonoid.map_supᵢₓ'. -/
 @[to_additive]
 theorem map_supᵢ {ι : Sort _} (f : F) (s : ι → Submonoid M) : (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supᵢ
 #align submonoid.map_supr Submonoid.map_supᵢ
 #align add_submonoid.map_supr AddSubmonoid.map_supᵢ
 
@@ -539,7 +539,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.comap_infi S
 @[to_additive]
 theorem comap_infᵢ {ι : Sort _} (f : F) (s : ι → Submonoid N) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infi
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infᵢ
 #align submonoid.comap_infi Submonoid.comap_infᵢ
 #align add_submonoid.comap_infi AddSubmonoid.comap_infᵢ
 
@@ -652,7 +652,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.comap_infi_map_of_injective Submonoid.comap_infᵢ_map_of_injectiveₓ'. -/
 @[to_additive]
 theorem comap_infᵢ_map_of_injective (S : ι → Submonoid M) : (⨅ i, (S i).map f).comap f = infᵢ S :=
-  (gciMapComap hf).u_infi_l _
+  (gciMapComap hf).u_infᵢ_l _
 #align submonoid.comap_infi_map_of_injective Submonoid.comap_infᵢ_map_of_injective
 #align add_submonoid.comap_infi_map_of_injective AddSubmonoid.comap_infᵢ_map_of_injective
 
@@ -676,7 +676,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.comap_supr_map_of_injective Submonoid.comap_supᵢ_map_of_injectiveₓ'. -/
 @[to_additive]
 theorem comap_supᵢ_map_of_injective (S : ι → Submonoid M) : (⨆ i, (S i).map f).comap f = supᵢ S :=
-  (gciMapComap hf).u_supr_l _
+  (gciMapComap hf).u_supᵢ_l _
 #align submonoid.comap_supr_map_of_injective Submonoid.comap_supᵢ_map_of_injective
 #align add_submonoid.comap_supr_map_of_injective AddSubmonoid.comap_supᵢ_map_of_injective
 
@@ -700,7 +700,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.map_strict_mono_of_injective Submonoid.map_strictMono_of_injectiveₓ'. -/
 @[to_additive]
 theorem map_strictMono_of_injective : StrictMono (map f) :=
-  (gciMapComap hf).strict_mono_l
+  (gciMapComap hf).strictMono_l
 #align submonoid.map_strict_mono_of_injective Submonoid.map_strictMono_of_injective
 #align add_submonoid.map_strict_mono_of_injective AddSubmonoid.map_strictMono_of_injective
 
@@ -783,7 +783,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.map_infi_comap_of_surjective Submonoid.map_infᵢ_comap_of_surjectiveₓ'. -/
 @[to_additive]
 theorem map_infᵢ_comap_of_surjective (S : ι → Submonoid N) : (⨅ i, (S i).comap f).map f = infᵢ S :=
-  (giMapComap hf).l_infi_u _
+  (giMapComap hf).l_infᵢ_u _
 #align submonoid.map_infi_comap_of_surjective Submonoid.map_infᵢ_comap_of_surjective
 #align add_submonoid.map_infi_comap_of_surjective AddSubmonoid.map_infᵢ_comap_of_surjective
 
@@ -807,7 +807,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.map_supr_comap_of_surjective Submonoid.map_supᵢ_comap_of_surjectiveₓ'. -/
 @[to_additive]
 theorem map_supᵢ_comap_of_surjective (S : ι → Submonoid N) : (⨆ i, (S i).comap f).map f = supᵢ S :=
-  (giMapComap hf).l_supr_u _
+  (giMapComap hf).l_supᵢ_u _
 #align submonoid.map_supr_comap_of_surjective Submonoid.map_supᵢ_comap_of_surjective
 #align add_submonoid.map_supr_comap_of_surjective AddSubmonoid.map_supᵢ_comap_of_surjective
 
@@ -831,7 +831,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strictMono_of_surjectiveₓ'. -/
 @[to_additive]
 theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
-  (giMapComap hf).strict_mono_u
+  (giMapComap hf).strictMono_u
 #align submonoid.comap_strict_mono_of_surjective Submonoid.comap_strictMono_of_surjective
 #align add_submonoid.comap_strict_mono_of_surjective AddSubmonoid.comap_strictMono_of_surjective
 

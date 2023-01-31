@@ -175,7 +175,7 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 continuous. -/
 instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B)
     where
-  to_has_continuous_add := by infer_instance
+  to_hasContinuousAdd := by infer_instance
   continuous_neg :=
     by
     refine' continuous_induced_rng.2 (continuous_pi_iff.mpr fun y => _)

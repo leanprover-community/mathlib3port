@@ -153,7 +153,7 @@ private unsafe def extract_subgoals :
                       let
                         subgoals
                           ←
-                          subgoals . mmap
+                          subgoals . mapM
                             fun
                               ⟨ subgoal , subpat ⟩
                                 =>

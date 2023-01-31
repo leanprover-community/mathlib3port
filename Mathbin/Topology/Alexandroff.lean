@@ -189,13 +189,13 @@ instance : TopologicalSpace (Alexandroff X)
   IsOpen s :=
     (∞ ∈ s → IsCompact (((coe : X → Alexandroff X) ⁻¹' s)ᶜ)) ∧
       IsOpen ((coe : X → Alexandroff X) ⁻¹' s)
-  is_open_univ := by simp
-  is_open_inter s t := by
+  isOpen_univ := by simp
+  isOpen_inter s t := by
     rintro ⟨hms, hs⟩ ⟨hmt, ht⟩
     refine' ⟨_, hs.inter ht⟩
     rintro ⟨hms', hmt'⟩
     simpa [compl_inter] using (hms hms').union (hmt hmt')
-  is_open_sUnion S ho :=
+  isOpen_unionₛ S ho :=
     by
     suffices IsOpen (coe ⁻¹' ⋃₀ S : Set X) by
       refine' ⟨_, this⟩
@@ -294,11 +294,11 @@ theorem nhds_coe_eq (x : X) : 𝓝 ↑x = map (coe : X → Alexandroff X) (𝓝 
 
 theorem nhdsWithin_coe_image (s : Set X) (x : X) :
     𝓝[coe '' s] (x : Alexandroff X) = map coe (𝓝[s] x) :=
-  (openEmbedding_coe.toEmbedding.map_nhds_within_eq _ _).symm
+  (openEmbedding_coe.toEmbedding.map_nhdsWithin_eq _ _).symm
 #align alexandroff.nhds_within_coe_image Alexandroff.nhdsWithin_coe_image
 
 theorem nhdsWithin_coe (s : Set (Alexandroff X)) (x : X) : 𝓝[s] ↑x = map coe (𝓝[coe ⁻¹' s] x) :=
-  (openEmbedding_coe.map_nhds_within_preimage_eq _ _).symm
+  (openEmbedding_coe.map_nhdsWithin_preimage_eq _ _).symm
 #align alexandroff.nhds_within_coe Alexandroff.nhdsWithin_coe
 
 theorem comap_coe_nhds (x : X) : comap (coe : X → Alexandroff X) (𝓝 x) = 𝓝 x :=
@@ -448,7 +448,7 @@ Finally, if the original space `X` is *not* compact and is a preconnected space,
 
 /-- For any topological space `X`, its one point compactification is a compact space. -/
 instance : CompactSpace (Alexandroff X)
-    where is_compact_univ :=
+    where isCompact_univ :=
     by
     have : tendsto (coe : X → Alexandroff X) (cocompact X) (𝓝 ∞) :=
       by
@@ -496,7 +496,7 @@ instance [LocallyCompactSpace X] [T2Space X] : NormalSpace (Alexandroff X) :=
 /-- If `X` is not a compact space, then `alexandroff X` is a connected space. -/
 instance [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (Alexandroff X)
     where
-  to_preconnected_space := denseEmbedding_coe.to_dense_inducing.PreconnectedSpace
+  to_preconnectedSpace := denseEmbedding_coe.to_denseInducing.PreconnectedSpace
   to_nonempty := inferInstance
 
 /-- If `X` is an infinite type with discrete topology (e.g., `ℕ`), then the identity map from

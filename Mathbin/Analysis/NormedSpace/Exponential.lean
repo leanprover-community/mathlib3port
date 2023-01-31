@@ -257,7 +257,7 @@ theorem analyticAt_exp_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.ball (0 : 𝔸
   · rw [h] at hx
     exact (Ennreal.not_lt_zero hx).elim
   · have h := pos_iff_ne_zero.mpr h
-    exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analytic_at_of_mem hx
+    exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analyticAt_of_mem hx
 #align analytic_at_exp_of_mem_ball analyticAt_exp_of_mem_ball
 
 /-- In a Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero, if `x` and `y` are
@@ -287,7 +287,7 @@ noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : Invertible (exp 𝕂 x)
     where
   invOf := exp 𝕂 (-x)
-  inv_of_mul_self :=
+  invOf_mul_self :=
     by
     have hnx : -x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
       by
@@ -295,7 +295,7 @@ noncomputable def invertibleExpOfMemBall [CharZero 𝕂] {x : 𝔸}
       exact hx
     rw [← exp_add_of_commute_of_mem_ball (Commute.neg_left <| Commute.refl x) hnx hx, neg_add_self,
       exp_zero]
-  mul_inv_of_self :=
+  mul_invOf_self :=
     by
     have hnx : -x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
       by

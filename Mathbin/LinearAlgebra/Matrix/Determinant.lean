@@ -164,7 +164,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
       simp only [det_apply', mul_apply, prod_univ_sum, mul_sum, Fintype.piFinset_univ] <;>
         rw [Finset.sum_comm]
     _ =
-        ∑ p in (@univ (n → n) _).filter Bijective,
+        ∑ p in (@univ (n → n) _).filterₓ Bijective,
           ∑ σ : Perm n, ε σ * ∏ i, M (σ i) (p i) * N (p i) i :=
       Eq.symm <|
         sum_subset (filter_subset _ _) fun f _ hbij =>
@@ -279,7 +279,7 @@ theorem det_reindex_self (e : m ≃ n) (A : Matrix m m R) : det (reindex e e A) 
 
 /-- The determinant of a permutation matrix equals its sign. -/
 @[simp]
-theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPequiv.toMatrix : Matrix n n R) = σ.sign :=
+theorem det_permutation (σ : Perm n) : Matrix.det (σ.toPEquiv.toMatrix : Matrix n n R) = σ.sign :=
   by
   rw [← Matrix.mul_one (σ.to_pequiv.to_matrix : Matrix n n R), PEquiv.toPEquiv_mul_matrix,
     det_permute, det_one, mul_one]
@@ -817,7 +817,7 @@ theorem det_succ_column {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (j : 
 /-- Determinant of 0x0 matrix -/
 @[simp]
 theorem det_fin_zero {A : Matrix (Fin 0) (Fin 0) R} : det A = 1 :=
-  det_is_empty
+  det_isEmpty
 #align matrix.det_fin_zero Matrix.det_fin_zero
 
 /-- Determinant of 1x1 matrix -/

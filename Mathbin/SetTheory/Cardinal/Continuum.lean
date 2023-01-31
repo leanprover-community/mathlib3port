@@ -30,14 +30,14 @@ open Cardinal
 
 /-- Cardinality of continuum. -/
 def continuum : Cardinal.{u} :=
-  2 ^ aleph_0.{u}
+  2 ^ aleph0.{u}
 #align cardinal.continuum Cardinal.continuum
 
 -- mathport name: cardinal.continuum
 scoped notation "𝔠" => Cardinal.continuum
 
 @[simp]
-theorem two_power_aleph0 : 2 ^ aleph_0.{u} = continuum.{u} :=
+theorem two_power_aleph0 : 2 ^ aleph0.{u} = continuum.{u} :=
   rfl
 #align cardinal.two_power_aleph_0 Cardinal.two_power_aleph0
 
@@ -160,17 +160,17 @@ theorem continuum_mul_nat {n : ℕ} (hn : n ≠ 0) : 𝔠 * n = 𝔠 :=
 
 
 @[simp]
-theorem aleph0_power_aleph0 : aleph_0.{u} ^ aleph_0.{u} = 𝔠 :=
+theorem aleph0_power_aleph0 : aleph0.{u} ^ aleph0.{u} = 𝔠 :=
   power_self_eq le_rfl
 #align cardinal.aleph_0_power_aleph_0 Cardinal.aleph0_power_aleph0
 
 @[simp]
-theorem nat_power_aleph0 {n : ℕ} (hn : 2 ≤ n) : (n ^ aleph_0.{u} : Cardinal.{u}) = 𝔠 :=
+theorem nat_power_aleph0 {n : ℕ} (hn : 2 ≤ n) : (n ^ aleph0.{u} : Cardinal.{u}) = 𝔠 :=
   nat_power_eq le_rfl hn
 #align cardinal.nat_power_aleph_0 Cardinal.nat_power_aleph0
 
 @[simp]
-theorem continuum_power_aleph0 : continuum.{u} ^ aleph_0.{u} = 𝔠 := by
+theorem continuum_power_aleph0 : continuum.{u} ^ aleph0.{u} = 𝔠 := by
   rw [← two_power_aleph_0, ← power_mul, mul_eq_left le_rfl le_rfl aleph_0_ne_zero]
 #align cardinal.continuum_power_aleph_0 Cardinal.continuum_power_aleph0
 

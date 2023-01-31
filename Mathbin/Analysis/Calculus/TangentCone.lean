@@ -50,7 +50,7 @@ variable {E : Type _} [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 def tangentConeAt (s : Set E) (x : E) : Set E :=
   { y : E |
     ∃ (c : ℕ → 𝕜)(d : ℕ → E),
-      (∀ᶠ n in at_top, x + d n ∈ s) ∧
+      (∀ᶠ n in atTop, x + d n ∈ s) ∧
         Tendsto (fun n => ‖c n‖) atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 #align tangent_cone_at tangentConeAt
 

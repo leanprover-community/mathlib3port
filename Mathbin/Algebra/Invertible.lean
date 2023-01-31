@@ -73,8 +73,8 @@ variable {α : Type u}
 /-- `invertible a` gives a two-sided multiplicative inverse of `a`. -/
 class Invertible [Mul α] [One α] (a : α) : Type u where
   invOf : α
-  inv_of_mul_self : inv_of * a = 1
-  mul_inv_of_self : a * inv_of = 1
+  invOf_mul_self : inv_of * a = 1
+  mul_invOf_self : a * inv_of = 1
 #align invertible Invertible
 -/
 
@@ -188,8 +188,8 @@ Case conversion may be inaccurate. Consider using '#align invertible.copy Invert
 def Invertible.copy [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) : Invertible s
     where
   invOf := ⅟ r
-  inv_of_mul_self := by rw [hs, invOf_mul_self]
-  mul_inv_of_self := by rw [hs, mul_invOf_self]
+  invOf_mul_self := by rw [hs, invOf_mul_self]
+  mul_invOf_self := by rw [hs, mul_invOf_self]
 #align invertible.copy Invertible.copy
 
 /- warning: unit_of_invertible -> unitOfInvertible is a dubious translation:
@@ -228,8 +228,8 @@ Case conversion may be inaccurate. Consider using '#align units.invertible Units
 def Units.invertible [Monoid α] (u : αˣ) : Invertible (u : α)
     where
   invOf := ↑u⁻¹
-  inv_of_mul_self := u.inv_mul
-  mul_inv_of_self := u.mul_inv
+  invOf_mul_self := u.inv_mul
+  mul_invOf_self := u.mul_inv
 #align units.invertible Units.invertible
 
 /- warning: inv_of_units -> invOf_units is a dubious translation:
@@ -631,8 +631,8 @@ def Invertible.map {R : Type _} {S : Type _} {F : Type _} [MulOneClass R] [MulOn
     [MonoidHomClass F R S] (f : F) (r : R) [Invertible r] : Invertible (f r)
     where
   invOf := f (⅟ r)
-  inv_of_mul_self := by rw [← map_mul, invOf_mul_self, map_one]
-  mul_inv_of_self := by rw [← map_mul, mul_invOf_self, map_one]
+  invOf_mul_self := by rw [← map_mul, invOf_mul_self, map_one]
+  mul_invOf_self := by rw [← map_mul, mul_invOf_self, map_one]
 #align invertible.map Invertible.map
 
 /- warning: map_inv_of -> map_invOf is a dubious translation:

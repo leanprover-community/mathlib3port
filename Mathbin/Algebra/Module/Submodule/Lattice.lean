@@ -372,12 +372,12 @@ instance : CompleteLattice (Submodule R M) :=
     le_inf := fun a b c => Set.subset_inter
     inf_le_left := fun a b => Set.inter_subset_left _ _
     inf_le_right := fun a b => Set.inter_subset_right _ _
-    sup := fun tt => infₛ { t | ∀ t' ∈ tt, t' ≤ t }
-    le_Sup := fun s p hs => le_Inf' fun q hq => hq _ hs
-    Sup_le := fun s p hs => infₛ_le' hs
-    inf := infₛ
-    le_Inf := fun s a => le_Inf'
-    Inf_le := fun s a => infₛ_le' }
+    supₛ := fun tt => infₛ { t | ∀ t' ∈ tt, t' ≤ t }
+    le_sup := fun s p hs => le_Inf' fun q hq => hq _ hs
+    sup_le := fun s p hs => infₛ_le' hs
+    infₛ := infₛ
+    le_inf := fun s a => le_Inf'
+    inf_le := fun s a => infₛ_le' }
 
 /- warning: submodule.inf_coe -> Submodule.inf_coe is a dubious translation:
 lean 3 declaration is

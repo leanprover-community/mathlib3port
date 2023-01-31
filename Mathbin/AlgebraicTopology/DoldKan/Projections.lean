@@ -150,7 +150,7 @@ theorem p_f_idem (q n : ℕ) : ((p q).f n : X _[n] ⟶ _) ≫ (p q).f n = (p q).
   by
   cases n
   · rw [P_f_0_eq q, comp_id]
-  · exact (higher_faces_vanish.of_P q n).comp_P_eq_self
+  · exact (higher_faces_vanish.of_P q n).comp_p_eq_self
 #align algebraic_topology.dold_kan.P_f_idem AlgebraicTopology.DoldKan.p_f_idem
 
 @[simp, reassoc.1]

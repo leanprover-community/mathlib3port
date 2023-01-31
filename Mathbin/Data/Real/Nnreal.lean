@@ -225,7 +225,7 @@ def toRealHom : ℝ≥0 →+* ℝ :=
 #align nnreal.to_real_hom Nnreal.toRealHom
 
 @[simp]
-theorem coe_toRealHom : ⇑to_real_hom = coe :=
+theorem coe_toRealHom : ⇑toRealHom = coe :=
   rfl
 #align nnreal.coe_to_real_hom Nnreal.coe_toRealHom
 
@@ -1000,7 +1000,7 @@ open Set
 variable {ι : Sort _} {f : ι → ℝ≥0}
 
 theorem le_toNnreal_of_coe_le {x : ℝ≥0} {y : ℝ} (h : ↑x ≤ y) : x ≤ y.toNnreal :=
-  (le_to_nnreal_iff_coe_le <| x.2.trans h).2 h
+  (le_toNnreal_iff_coe_le <| x.2.trans h).2 h
 #align nnreal.le_to_nnreal_of_coe_le Nnreal.le_toNnreal_of_coe_le
 
 theorem supₛ_of_not_bddAbove {s : Set ℝ≥0} (hs : ¬BddAbove s) : SupSet.supₛ s = 0 :=
@@ -1081,12 +1081,12 @@ theorem supᵢ_mul_le {a : ℝ≥0} {g : ι → ℝ≥0} {h : ℝ≥0} (H : ∀ 
 
 theorem le_infᵢ_mul_infᵢ {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, a ≤ g i * h j) :
     a ≤ infᵢ g * infᵢ h :=
-  le_infi_mul fun i => le_mul_infi <| H i
+  le_infᵢ_mul fun i => le_mul_infᵢ <| H i
 #align nnreal.le_infi_mul_infi Nnreal.le_infᵢ_mul_infᵢ
 
 theorem supᵢ_mul_supᵢ_le {a : ℝ≥0} {g h : ι → ℝ≥0} (H : ∀ i j, g i * h j ≤ a) :
     supᵢ g * supᵢ h ≤ a :=
-  supr_mul_le fun i => mul_supr_le <| H _
+  supᵢ_mul_le fun i => mul_supᵢ_le <| H _
 #align nnreal.supr_mul_supr_le Nnreal.supᵢ_mul_supᵢ_le
 
 end Csupr

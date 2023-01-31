@@ -89,7 +89,7 @@ theorem omegaLimit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω f
 #align omega_limit_mono_left omegaLimit_mono_left
 
 theorem omegaLimit_mono_right {s₁ s₂ : Set α} (hs : s₁ ⊆ s₂) : ω f ϕ s₁ ⊆ ω f ϕ s₂ :=
-  Inter₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
+  interᵢ₂_mono fun u hu => closure_mono (image2_subset Subset.rfl hs)
 #align omega_limit_mono_right omegaLimit_mono_right
 
 theorem isClosed_omegaLimit : IsClosed (ω f ϕ s) :=
@@ -177,7 +177,7 @@ theorem omegaLimit_inter : ω f ϕ (s₁ ∩ s₂) ⊆ ω f ϕ s₁ ∩ ω f ϕ 
 #align omega_limit_inter omegaLimit_inter
 
 theorem omegaLimit_interᵢ (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, ω f ϕ (p i) :=
-  subset_Inter fun i => omegaLimit_mono_right _ _ (interᵢ_subset _ _)
+  subset_interᵢ fun i => omegaLimit_mono_right _ _ (interᵢ_subset _ _)
 #align omega_limit_Inter omegaLimit_interᵢ
 
 theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s₂ :=
@@ -215,8 +215,8 @@ theorem omegaLimit_eq_interᵢ : ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 
 
 theorem omegaLimit_eq_bInter_inter {v : Set τ} (hv : v ∈ f) :
     ω f ϕ s = ⋂ u ∈ f, closure (image2 ϕ (u ∩ v) s) :=
-  Subset.antisymm (Inter₂_mono' fun u hu => ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
-    (Inter₂_mono fun u hu => closure_mono <| image2_subset (inter_subset_left _ _) Subset.rfl)
+  Subset.antisymm (interᵢ₂_mono' fun u hu => ⟨u ∩ v, inter_mem hu hv, Subset.rfl⟩)
+    (interᵢ₂_mono fun u hu => closure_mono <| image2_subset (inter_subset_left _ _) Subset.rfl)
 #align omega_limit_eq_bInter_inter omegaLimit_eq_bInter_inter
 
 theorem omegaLimit_eq_interᵢ_inter {v : Set τ} (hv : v ∈ f) :

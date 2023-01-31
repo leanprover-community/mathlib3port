@@ -142,11 +142,11 @@ theorem exists_nat_abs_mul_sub_round_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
 For any real number `ξ` and positive natural `n`, there is a fraction `q`
 such that `q.denom ≤ n` and `|ξ - q| ≤ 1/((n+1)*q.denom)`. -/
 theorem exists_rat_abs_sub_le_and_den_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
-    ∃ q : ℚ, |ξ - q| ≤ 1 / ((n + 1) * q.denom) ∧ q.denom ≤ n :=
+    ∃ q : ℚ, |ξ - q| ≤ 1 / ((n + 1) * q.den) ∧ q.den ≤ n :=
   by
   obtain ⟨j, k, hk₀, hk₁, h⟩ := exists_int_int_abs_mul_sub_le ξ n_pos
   have hk₀' : (0 : ℝ) < k := int.cast_pos.mpr hk₀
-  have hden : ((j / k : ℚ).denom : ℤ) ≤ k :=
+  have hden : ((j / k : ℚ).den : ℤ) ≤ k :=
     by
     convert le_of_dvd hk₀ (Rat.den_dvd j k)
     exact Rat.coe_int_div_eq_divInt
@@ -174,7 +174,7 @@ open Set
 /-- Given any rational approximation `q` to the irrational real number `ξ`, there is
 a good rational approximation `q'` such that `|ξ - q'| < |ξ - q|`. -/
 theorem exists_rat_abs_sub_lt_and_lt_of_irrational {ξ : ℝ} (hξ : Irrational ξ) (q : ℚ) :
-    ∃ q' : ℚ, |ξ - q'| < 1 / q'.denom ^ 2 ∧ |ξ - q'| < |ξ - q| :=
+    ∃ q' : ℚ, |ξ - q'| < 1 / q'.den ^ 2 ∧ |ξ - q'| < |ξ - q| :=
   by
   have h := abs_pos.mpr (sub_ne_zero.mpr <| Irrational.ne_rat hξ q)
   obtain ⟨m, hm⟩ := exists_nat_gt (1 / |ξ - q|)
@@ -197,11 +197,11 @@ theorem exists_rat_abs_sub_lt_and_lt_of_irrational {ξ : ℝ} (hξ : Irrational 
 /-- If `ξ` is an irrational real number, then there are infinitely many good
 rational approximations to `ξ`. -/
 theorem infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational {ξ : ℝ} (hξ : Irrational ξ) :
-    { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }.Infinite :=
+    { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }.Infinite :=
   by
   refine' Or.resolve_left (Set.finite_or_infinite _) fun h => _
   obtain ⟨q, _, hq⟩ :=
-    exists_min_image { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 } (fun q => |ξ - q|) h
+    exists_min_image { q : ℚ | |ξ - q| < 1 / q.den ^ 2 } (fun q => |ξ - q|) h
       ⟨⌊ξ⌋, by simp [abs_of_nonneg, Int.fract_lt_one]⟩
   obtain ⟨q', hmem, hbetter⟩ := exists_rat_abs_sub_lt_and_lt_of_irrational hξ q
   exact lt_irrefl _ (lt_of_le_of_lt (hq q' hmem) hbetter)
@@ -225,8 +225,8 @@ open Set
 
 /-- If `ξ` is rational, then the good rational approximations to `ξ` have bounded
 numerator and denominator. -/
-theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q| < 1 / q.denom ^ 2) :
-    q.denom ≤ ξ.denom ∧ ⌈ξ * q.denom⌉ - 1 ≤ q.num ∧ q.num ≤ ⌊ξ * q.denom⌋ + 1 :=
+theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q| < 1 / q.den ^ 2) :
+    q.den ≤ ξ.den ∧ ⌈ξ * q.den⌉ - 1 ≤ q.num ∧ q.num ≤ ⌊ξ * q.den⌋ + 1 :=
   by
   have hq₀ : (0 : ℚ) < q.denom := nat.cast_pos.mpr q.pos
   replace h : |ξ * q.denom - q.num| < 1 / q.denom
@@ -256,11 +256,10 @@ theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q|
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A rational number has only finitely many good rational approximations. -/
-theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) :
-    { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }.Finite :=
+theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) : { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }.Finite :=
   by
-  let f : ℚ → ℤ × ℕ := fun q => (q.num, q.denom)
-  set s := { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }
+  let f : ℚ → ℤ × ℕ := fun q => (q.num, q.den)
+  set s := { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }
   have hinj : Function.Injective f := by
     intro a b hab
     simp only [Prod.mk.inj_iff] at hab
@@ -284,7 +283,7 @@ end Rat
 /-- The set of good rational approximations to a real number `ξ` is infinite if and only if
 `ξ` is irrational. -/
 theorem Real.infinite_rat_abs_sub_lt_one_div_den_sq_iff_irrational (ξ : ℝ) :
-    { q : ℚ | |ξ - q| < 1 / q.denom ^ 2 }.Infinite ↔ Irrational ξ :=
+    { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }.Infinite ↔ Irrational ξ :=
   by
   refine'
     ⟨fun h => (irrational_iff_ne_rational ξ).mpr fun a b H => set.not_infinite.mpr _ h,

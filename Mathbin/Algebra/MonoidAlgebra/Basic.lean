@@ -146,7 +146,7 @@ theorem liftNc_mul {g_hom : Type _} [MulHomClass g_hom G R] (f : k →+* R) (g :
   conv_rhs => rw [← sum_single a, ← sum_single b]
   simp_rw [mul_def, (lift_nc _ g).map_finsupp_sum, lift_nc_single, Finsupp.sum_mul, Finsupp.mul_sum]
   refine' Finset.sum_congr rfl fun y hy => Finset.sum_congr rfl fun x hx => _
-  simp [mul_assoc, (h_comm hy).left_comm]
+  simp [mul_assoc, (h_comm hy).and_left_comm]
 #align monoid_algebra.lift_nc_mul MonoidAlgebra.liftNc_mul
 
 end Mul
@@ -198,8 +198,8 @@ instance : NonAssocSemiring (MonoidAlgebra k G) :=
     zero := 0
     add := (· + ·)
     natCast := fun n => single 1 n
-    nat_cast_zero := by simp [Nat.cast]
-    nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl
+    natCast_zero := by simp [Nat.cast]
+    natCast_succ := fun _ => by simp [Nat.cast] <;> rfl
     one_mul := fun f => by
       simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add,
         one_mul, sum_single]
@@ -275,8 +275,8 @@ instance [Ring k] [MulOneClass G] : NonAssocRing (MonoidAlgebra k G) :=
   { MonoidAlgebra.addCommGroup,
     MonoidAlgebra.nonAssocSemiring with
     intCast := fun z => single 1 (z : k)
-    int_cast_of_nat := fun n => by simpa
-    int_cast_neg_succ_of_nat := fun n => by simpa }
+    intCast_ofNat := fun n => by simpa
+    intCast_negSucc := fun n => by simpa }
 
 theorem int_cast_def [Ring k] [MulOneClass G] (z : ℤ) : (z : MonoidAlgebra k G) = single 1 z :=
   rfl
@@ -351,7 +351,7 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
       calc
         (f * g) x = ∑ a₁ in f.support, ∑ a₂ in g.support, F (a₁, a₂) := mul_apply f g x
         _ = ∑ p in f.support ×ˢ g.support, F p := finset.sum_product.symm
-        _ = ∑ p in (f.support ×ˢ g.support).filter fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
+        _ = ∑ p in (f.support ×ˢ g.support).filterₓ fun p : G × G => p.1 * p.2 = x, f p.1 * g p.2 :=
           (Finset.sum_filter _ _).symm
         _ = ∑ p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1 * g p.2 :=
           sum_congr
@@ -639,7 +639,7 @@ theorem ringHom_ext {R} [Semiring k] [MulOneClass G] [Semiring R] {f g : MonoidA
     (h₁ : ∀ b, f (single 1 b) = g (single 1 b)) (h_of : ∀ a, f (single a 1) = g (single a 1)) :
     f = g :=
   RingHom.coe_addMonoidHom_injective <|
-    add_hom_ext fun a b => by
+    addHom_ext fun a b => by
       rw [← one_mul a, ← mul_one b, ← single_mul_single, f.coe_add_monoid_hom, g.coe_add_monoid_hom,
         f.map_mul, g.map_mul, h₁, h_of]
 #align monoid_algebra.ring_hom_ext MonoidAlgebra.ringHom_ext
@@ -741,7 +741,7 @@ theorem algHom_ext' ⦃φ₁ φ₂ : MonoidAlgebra k G →ₐ[k] A⦄
     (h :
       (φ₁ : MonoidAlgebra k G →* A).comp (of k G) = (φ₂ : MonoidAlgebra k G →* A).comp (of k G)) :
     φ₁ = φ₂ :=
-  alg_hom_ext <| MonoidHom.congr_fun h
+  algHom_ext <| MonoidHom.congr_fun h
 #align monoid_algebra.alg_hom_ext' MonoidAlgebra.algHom_ext'
 
 variable (k G A)
@@ -1086,11 +1086,11 @@ instance : NonUnitalNonAssocSemiring (AddMonoidAlgebra k G) :=
     zero_mul := fun f => by simp only [mul_def, sum_zero_index]
     mul_zero := fun f => by simp only [mul_def, sum_zero_index, sum_zero]
     nsmul := fun n f => n • f
-    nsmul_zero' := by
+    nsmul_zero := by
       intros
       ext
       simp [-nsmul_eq_mul, add_smul]
-    nsmul_succ' := by
+    nsmul_succ := by
       intros
       ext
       simp [-nsmul_eq_mul, Nat.succ_eq_one_add, add_smul] }
@@ -1156,8 +1156,8 @@ instance : NonAssocSemiring (AddMonoidAlgebra k G) :=
     zero := 0
     add := (· + ·)
     natCast := fun n => single 0 n
-    nat_cast_zero := by simp [Nat.cast]
-    nat_cast_succ := fun _ => by simp [Nat.cast] <;> rfl
+    natCast_zero := by simp [Nat.cast]
+    natCast_succ := fun _ => by simp [Nat.cast] <;> rfl
     one_mul := fun f => by
       simp only [mul_def, one_def, sum_single_index, zero_mul, single_zero, sum_zero, zero_add,
         one_mul, sum_single]
@@ -1233,8 +1233,8 @@ instance [Ring k] [AddZeroClass G] : NonAssocRing (AddMonoidAlgebra k G) :=
   { AddMonoidAlgebra.addCommGroup,
     AddMonoidAlgebra.nonAssocSemiring with
     intCast := fun z => single 0 (z : k)
-    int_cast_of_nat := fun n => by simpa
-    int_cast_neg_succ_of_nat := fun n => by simpa }
+    intCast_ofNat := fun n => by simpa
+    intCast_negSucc := fun n => by simpa }
 
 theorem int_cast_def [Ring k] [AddZeroClass G] (z : ℤ) : (z : AddMonoidAlgebra k G) = single 0 z :=
   rfl
@@ -1694,7 +1694,7 @@ theorem algHom_ext' ⦃φ₁ φ₂ : AddMonoidAlgebra k G →ₐ[k] A⦄
       (φ₁ : AddMonoidAlgebra k G →* A).comp (of k G) =
         (φ₂ : AddMonoidAlgebra k G →* A).comp (of k G)) :
     φ₁ = φ₂ :=
-  alg_hom_ext <| MonoidHom.congr_fun h
+  algHom_ext <| MonoidHom.congr_fun h
 #align add_monoid_algebra.alg_hom_ext' AddMonoidAlgebra.algHom_ext'
 
 variable (k G A)

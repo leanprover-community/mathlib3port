@@ -105,13 +105,13 @@ theorem of_equiv {H : Type _} [Group H] (ϕ : G ≃* H) : IsPGroup p H :=
 
 theorem orderOf_coprime {n : ℕ} (hn : p.coprime n) (g : G) : (orderOf g).coprime n :=
   let ⟨k, hk⟩ := hG g
-  (hn.pow_left k).coprime_dvd_left (orderOf_dvd_of_pow_eq_one hk)
+  (hn.pow_leftₓ k).coprime_dvd_left (orderOf_dvd_of_pow_eq_one hk)
 #align is_p_group.order_of_coprime IsPGroup.orderOf_coprime
 
 /-- If `gcd(p,n) = 1`, then the `n`th power map is a bijection. -/
 noncomputable def powEquiv {n : ℕ} (hn : p.coprime n) : G ≃ G :=
   let h : ∀ g : G, (Nat.card (Subgroup.zpowers g)).coprime n := fun g =>
-    order_eq_card_zpowers' g ▸ hG.order_of_coprime hn g
+    order_eq_card_zpowers' g ▸ hG.orderOf_coprime hn g
   { toFun := (· ^ n)
     invFun := fun g => (powCoprime (h g)).symm ⟨g, Subgroup.mem_zpowers g⟩
     left_inv := fun g =>
@@ -182,7 +182,7 @@ theorem card_orbit (a : α) [Fintype (orbit G a)] : ∃ n : ℕ, card (orbit G a
   by
   let ϕ := orbit_equiv_quotient_stabilizer G a
   haveI := Fintype.ofEquiv (orbit G a) ϕ
-  haveI := (stabilizer G a).finite_index_of_finite_quotient
+  haveI := (stabilizer G a).finiteIndex_of_finite_quotient
   rw [card_congr ϕ, ← Subgroup.index_eq_card]
   exact hG.index (stabilizer G a)
 #align is_p_group.card_orbit IsPGroup.card_orbit
@@ -293,7 +293,7 @@ theorem to_inf_right {H K : Subgroup G} (hK : IsPGroup p K) : IsPGroup p (H ⊓ 
 theorem map {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Group K] (ϕ : G →* K) :
     IsPGroup p (H.map ϕ) := by
   rw [← H.subtype_range, MonoidHom.map_range]
-  exact hH.of_surjective (ϕ.restrict H).range_restrict (ϕ.restrict H).range_restrict_surjective
+  exact hH.of_surjective (ϕ.restrict H).range_restrict (ϕ.restrict H).rangeRestrict_surjective
 #align is_p_group.map IsPGroup.map
 
 theorem comap_of_ker_isPGroup {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Group K]
@@ -304,7 +304,7 @@ theorem comap_of_ker_isPGroup {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} 
   rw [Subtype.ext_iff, H.coe_pow, Subtype.coe_mk, ← ϕ.map_pow] at hj
   obtain ⟨k, hk⟩ := hϕ ⟨g.1 ^ p ^ j, hj⟩
   rwa [Subtype.ext_iff, ϕ.ker.coe_pow, Subtype.coe_mk, ← pow_mul, ← pow_add] at hk
-  exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).coe_pow]⟩
+  exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).val_pow_eq_pow_val]⟩
 #align is_p_group.comap_of_ker_is_p_group IsPGroup.comap_of_ker_isPGroup
 
 theorem ker_isPGroup_of_injective {K : Type _} [Group K] {ϕ : K →* G} (hϕ : Function.Injective ϕ) :
@@ -314,7 +314,7 @@ theorem ker_isPGroup_of_injective {K : Type _} [Group K] {ϕ : K →* G} (hϕ : 
 
 theorem comap_of_injective {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Group K] (ϕ : K →* G)
     (hϕ : Function.Injective ϕ) : IsPGroup p (H.comap ϕ) :=
-  hH.comap_of_ker_is_p_group ϕ (ker_isPGroup_of_injective hϕ)
+  hH.comap_of_ker_isPGroup ϕ (ker_isPGroup_of_injective hϕ)
 #align is_p_group.comap_of_injective IsPGroup.comap_of_injective
 
 theorem comap_subtype {H : Subgroup G} (hH : IsPGroup p H) {K : Subgroup G} :
@@ -326,7 +326,7 @@ theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPG
     [K.Normal] : IsPGroup p (H ⊔ K : Subgroup G) :=
   by
   rw [← QuotientGroup.ker_mk K, ← Subgroup.comap_map_eq]
-  apply (hH.map (QuotientGroup.mk' K)).comap_of_ker_is_p_group
+  apply (hH.map (QuotientGroup.mk' K)).comap_of_ker_isPGroup
   rwa [QuotientGroup.ker_mk]
 #align is_p_group.to_sup_of_normal_right IsPGroup.to_sup_of_normal_right
 

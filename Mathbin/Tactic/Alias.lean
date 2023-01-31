@@ -139,9 +139,9 @@ unsafe def make_left_right : Name → tactic (Name × Name)
   | Name.mk_string s p => do
     let buf : CharBuffer := s.toCharBuffer
     let parts := s.splitOn '_'
-    let (left, _ :: right) ← pure <| parts.span (· ≠ "iff")
-    let pfx (a b : String) := a.toList.isPrefixOf b.toList
-    let (suffix', right') ← pure <| right.reverse.span fun s => pfx "left" s ∨ pfx "right" s
+    let (left, _ :: right) ← pure <| parts.spanₓ (· ≠ "iff")
+    let pfx (a b : String) := a.toList.isPrefixOfₓ b.toList
+    let (suffix', right') ← pure <| right.reverse.spanₓ fun s => pfx "left" s ∨ pfx "right" s
     let right := right'.reverse
     let suffix := suffix'.reverse
     pure

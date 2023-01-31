@@ -210,7 +210,7 @@ class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u}
 @[reducible]
 def forget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]
     [ConcreteCategory D] [HasForget₂ C D] : C ⥤ D :=
-  has_forget₂.forget₂
+  HasForget₂.forget₂
 #align category_theory.forget₂ CategoryTheory.forget₂
 
 instance forget₂_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]

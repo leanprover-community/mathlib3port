@@ -146,7 +146,7 @@ theorem toPgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame :=
 #align ordinal.to_pgame_lt Ordinal.toPgame_lt
 
 theorem toPgame_nonneg (a : Ordinal) : 0 ≤ a.toPgame :=
-  zeroToPgameRelabelling.ge.trans <| to_pgame_le <| Ordinal.zero_le a
+  zeroToPgameRelabelling.ge.trans <| toPgame_le <| Ordinal.zero_le a
 #align ordinal.to_pgame_nonneg Ordinal.toPgame_nonneg
 
 @[simp]

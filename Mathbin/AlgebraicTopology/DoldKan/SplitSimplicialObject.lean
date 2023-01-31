@@ -285,7 +285,7 @@ of nondegenerate simplices of a split simplicial object and the normalized Moore
 defined as a formal direct factor of the alternating face map complex. -/
 @[simps]
 def toKaroubiNondegComplexFunctorIsoN₁ :
-    nondeg_complex_functor ⋙ toKaroubi (ChainComplex C ℕ) ≅ forget C ⋙ dold_kan.N₁ :=
+    nondegComplexFunctor ⋙ toKaroubi (ChainComplex C ℕ) ≅ forget C ⋙ DoldKan.n₁ :=
   NatIso.ofComponents (fun S => S.s.toKaroubiNondegComplexIsoN₁) fun S₁ S₂ Φ =>
     by
     ext n

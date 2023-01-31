@@ -510,25 +510,25 @@ instance reflects_colimits_subsingleton (F : C ⥤ D) :
 -- see Note [lower instance priority]
 instance (priority := 100) reflectsLimitOfReflectsLimitsOfShape (K : J ⥤ C) (F : C ⥤ D)
     [H : ReflectsLimitsOfShape J F] : ReflectsLimit K F :=
-  reflects_limits_of_shape.reflects_limit
+  ReflectsLimitsOfShape.reflectsLimit
 #align category_theory.limits.reflects_limit_of_reflects_limits_of_shape CategoryTheory.Limits.reflectsLimitOfReflectsLimitsOfShape
 
 -- see Note [lower instance priority]
 instance (priority := 100) reflectsColimitOfReflectsColimitsOfShape (K : J ⥤ C) (F : C ⥤ D)
     [H : ReflectsColimitsOfShape J F] : ReflectsColimit K F :=
-  reflects_colimits_of_shape.reflects_colimit
+  ReflectsColimitsOfShape.reflectsColimit
 #align category_theory.limits.reflects_colimit_of_reflects_colimits_of_shape CategoryTheory.Limits.reflectsColimitOfReflectsColimitsOfShape
 
 -- see Note [lower instance priority]
 instance (priority := 100) reflectsLimitsOfShapeOfReflectsLimits (J : Type w) [Category.{w'} J]
     (F : C ⥤ D) [H : ReflectsLimitsOfSize.{w', w} F] : ReflectsLimitsOfShape J F :=
-  reflects_limits_of_size.reflects_limits_of_shape
+  ReflectsLimitsOfSize.reflectsLimitsOfShape
 #align category_theory.limits.reflects_limits_of_shape_of_reflects_limits CategoryTheory.Limits.reflectsLimitsOfShapeOfReflectsLimits
 
 -- see Note [lower instance priority]
 instance (priority := 100) reflectsColimitsOfShapeOfReflectsColimits (J : Type w) [Category.{w'} J]
     (F : C ⥤ D) [H : ReflectsColimitsOfSize.{w', w} F] : ReflectsColimitsOfShape J F :=
-  reflects_colimits_of_size.reflects_colimits_of_shape
+  ReflectsColimitsOfSize.reflectsColimitsOfShape
 #align category_theory.limits.reflects_colimits_of_shape_of_reflects_colimits CategoryTheory.Limits.reflectsColimitsOfShapeOfReflectsColimits
 
 instance idReflectsLimits : ReflectsLimitsOfSize.{w, w'} (𝟭 C)
@@ -669,7 +669,7 @@ def reflectsLimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsIso
     where reflects c t := by
     apply is_limit.of_point_iso (limit.is_limit F)
     change is_iso ((cones.forget _).map ((limit.is_limit F).liftConeMorphism c))
-    apply (cones.forget F).map_is_iso _
+    apply (cones.forget F).map_isIso _
     apply is_iso_of_reflects_iso _ (cones.functoriality F G)
     refine' t.hom_is_iso (is_limit_of_preserves G (limit.is_limit F)) _
 #align category_theory.limits.reflects_limit_of_reflects_isomorphisms CategoryTheory.Limits.reflectsLimitOfReflectsIsomorphisms
@@ -775,9 +775,9 @@ def reflectsColimitOfReflectsIsomorphisms (F : J ⥤ C) (G : C ⥤ D) [ReflectsI
     by
     apply is_colimit.of_point_iso (colimit.is_colimit F)
     change is_iso ((cocones.forget _).map ((colimit.is_colimit F).descCoconeMorphism c))
-    apply (cocones.forget F).map_is_iso _
+    apply (cocones.forget F).map_isIso _
     apply is_iso_of_reflects_iso _ (cocones.functoriality F G)
-    refine' (is_colimit_of_preserves G (colimit.is_colimit F)).hom_is_iso t _
+    refine' (is_colimit_of_preserves G (colimit.is_colimit F)).hom_isIso t _
 #align category_theory.limits.reflects_colimit_of_reflects_isomorphisms CategoryTheory.Limits.reflectsColimitOfReflectsIsomorphisms
 
 /--

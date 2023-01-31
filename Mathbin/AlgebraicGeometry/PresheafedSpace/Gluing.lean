@@ -129,7 +129,7 @@ abbrev toTopGlueData : TopCat.GlueData :=
 
 theorem ι_openEmbedding [HasLimits C] (i : D.J) : OpenEmbedding (𝖣.ι i).base :=
   by
-  rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) _]
+  rw [← show _ = (𝖣.ι i).base from 𝖣.ι_gluedIso_inv (PresheafedSpace.forget _) _]
   exact
     OpenEmbedding.comp
       (TopCat.homeoOfIso (𝖣.gluedIso (PresheafedSpace.forget _)).symm).OpenEmbedding
@@ -211,9 +211,9 @@ theorem snd_invApp_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k))
     (π₂⁻¹ i, j, k) U ≫ (D.t k i).c.app _ =
       (D.t' k i j).c.app _ ≫
         (π₁⁻¹ k, j, i) (unop _) ≫
-          (D.V (k, i)).Presheaf.map (eqToHom (D.snd_inv_app_t_app' i j k U).some.symm) :=
+          (D.V (k, i)).Presheaf.map (eqToHom (D.snd_invApp_t_app' i j k U).some.symm) :=
   by
-  have e := (D.snd_inv_app_t_app' i j k U).some_spec
+  have e := (D.snd_inv_app_t_app' i j k U).choose_spec
   reassoc! e
   rw [← e]
   simp [eq_to_hom_map]
@@ -222,14 +222,14 @@ theorem snd_invApp_t_app (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k))
 variable [HasLimits C]
 
 theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
-    (Opens.map (𝖣.ι j).base).obj ((D.ι_open_embedding i).IsOpenMap.Functor.obj U) =
+    (Opens.map (𝖣.ι j).base).obj ((D.ι_openEmbedding i).IsOpenMap.Functor.obj U) =
       (D.f_open j i).openFunctor.obj
         ((Opens.map (𝖣.t j i).base).obj ((Opens.map (𝖣.f i j).base).obj U)) :=
   by
   dsimp only [opens.map, IsOpenMap.functor]
   congr 1
-  rw [← show _ = (𝖣.ι i).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) i, ←
-    show _ = (𝖣.ι j).base from 𝖣.ι_glued_iso_inv (PresheafedSpace.forget _) j, coe_comp, coe_comp,
+  rw [← show _ = (𝖣.ι i).base from 𝖣.ι_gluedIso_inv (PresheafedSpace.forget _) i, ←
+    show _ = (𝖣.ι j).base from 𝖣.ι_gluedIso_inv (PresheafedSpace.forget _) j, coe_comp, coe_comp,
     Set.image_comp, Set.preimage_comp, Set.preimage_image_eq]
   refine' Eq.trans (D.to_Top_glue_data.preimage_image_eq_image' _ _ _) _
   rw [coe_comp, Set.image_comp]
@@ -280,7 +280,7 @@ theorem opensImagePreimageMap_app (i j k : D.J) (U : Opens (D.U i).carrier) :
       ((π₁ j, i, k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
         (π₂⁻¹ j, i, k) (unop _) ≫
           (D.V (j, k)).Presheaf.map (eqToHom (opensImagePreimageMap_app' D i j k U).some) :=
-  (opensImagePreimageMap_app' D i j k U).some_spec
+  (opensImagePreimageMap_app' D i j k U).choose_spec
 #align algebraic_geometry.PresheafedSpace.glue_data.opens_image_preimage_map_app AlgebraicGeometry.PresheafedSpace.GlueData.opensImagePreimageMap_app
 
 -- This is proved separately since `reassoc` somehow timeouts.
@@ -298,7 +298,7 @@ theorem opensImagePreimageMap_app_assoc (i j k : D.J) (U : Opens (D.U i).carrier
 /-- (Implementation) Given an open subset of one of the spaces `U ⊆ Uᵢ`, the sheaf component of
 the image `ι '' U` in the glued space is the limit of this diagram. -/
 abbrev diagramOverOpen {i : D.J} (U : Opens (D.U i).carrier) : (WalkingMultispan _ _)ᵒᵖ ⥤ C :=
-  componentwiseDiagram 𝖣.diagram.multispan ((D.ι_open_embedding i).IsOpenMap.Functor.obj U)
+  componentwiseDiagram 𝖣.diagram.multispan ((D.ι_openEmbedding i).IsOpenMap.Functor.obj U)
 #align algebraic_geometry.PresheafedSpace.glue_data.diagram_over_open AlgebraicGeometry.PresheafedSpace.GlueData.diagramOverOpen
 
 /-- (Implementation)
@@ -364,7 +364,7 @@ def ιInvApp {i : D.J} (U : Opens (D.U i).carrier) :
               D.t' j k i ≫ (π₁ k, i, j) ≫ D.t k i ≫ 𝖣.f i k =
                 (pullback_symmetry _ _).Hom ≫ (π₁ j, i, k) ≫ D.t j i ≫ D.f i j :=
               by
-              rw [← 𝖣.t_fac_assoc, 𝖣.t'_comp_eq_pullback_symmetry_assoc,
+              rw [← 𝖣.t_fac_assoc, 𝖣.t'_comp_eq_pullbackSymmetry_assoc,
                 pullback_symmetry_hom_comp_snd_assoc, pullback.condition, 𝖣.t_fac_assoc]
             rw [congr_app this]
             erw [PresheafedSpace.comp_c_app_assoc (pullback_symmetry _ _).Hom]
@@ -402,7 +402,7 @@ theorem ιInvApp_π {i : D.J} (U : Opens (D.U i).carrier) :
 
 /-- The `eq_to_hom` given by `ι_inv_app_π`. -/
 abbrev ιInvAppπEqMap {i : D.J} (U : Opens (D.U i).carrier) :=
-  (D.U i).Presheaf.map (eqToIso (D.ι_inv_app_π U).some).inv
+  (D.U i).Presheaf.map (eqToIso (D.ιInvApp_π U).some).inv
 #align algebraic_geometry.PresheafedSpace.glue_data.ι_inv_app_π_eq_map AlgebraicGeometry.PresheafedSpace.GlueData.ιInvAppπEqMap
 
 /-- `ι_inv_app` is the right inverse of `D.ι i` on `U`. -/
@@ -464,13 +464,13 @@ instance componentwise_diagram_π_isIso (i : D.J) (U : Opens (D.U i).carrier) :
   use D.ι_inv_app_π_eq_map U ≫ D.ι_inv_app U
   constructor
   · apply π_ι_inv_app_eq_id
-  · rw [category.assoc, (D.ι_inv_app_π _).some_spec]
+  · rw [category.assoc, (D.ι_inv_app_π _).choose_spec]
     exact iso.inv_hom_id ((D.to_glue_data.U i).Presheaf.mapIso (eq_to_iso _))
 #align algebraic_geometry.PresheafedSpace.glue_data.componentwise_diagram_π_is_iso AlgebraicGeometry.PresheafedSpace.GlueData.componentwise_diagram_π_isIso
 
 instance ιIsOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i)
     where
-  base_open := D.ι_open_embedding i
+  base_open := D.ι_openEmbedding i
   c_iso U := by
     erw [← colimit_presheaf_obj_iso_componentwise_limit_hom_π]
     infer_instance
@@ -492,8 +492,8 @@ def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
         s.fst.base ≫ D.to_Top_glue_data.to_glue_data.ι i =
           s.snd.base ≫ D.to_Top_glue_data.to_glue_data.ι j :=
         by
-        rw [← 𝖣.ι_glued_iso_hom (PresheafedSpace.forget _) _, ←
-          𝖣.ι_glued_iso_hom (PresheafedSpace.forget _) _]
+        rw [← 𝖣.ι_gluedIso_hom (PresheafedSpace.forget _) _, ←
+          𝖣.ι_gluedIso_hom (PresheafedSpace.forget _) _]
         have := congr_arg PresheafedSpace.hom.base s.condition
         rw [comp_base, comp_base] at this
         reassoc! this
@@ -571,7 +571,7 @@ abbrev isoPresheafedSpace :
 
 theorem ι_isoPresheafedSpace_inv (i : D.J) :
     D.toPresheafedSpaceGlueData.toGlueData.ι i ≫ D.isoPresheafedSpace.inv = 𝖣.ι i :=
-  𝖣.ι_glued_iso_inv _ _
+  𝖣.ι_gluedIso_inv _ _
 #align algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpace.GlueData.ι_isoPresheafedSpace_inv
 
 instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
@@ -647,7 +647,7 @@ abbrev isoSheafedSpace : 𝖣.glued.toSheafedSpace ≅ D.toSheafedSpaceGlueData.
 
 theorem ι_isoSheafedSpace_inv (i : D.J) :
     D.toSheafedSpaceGlueData.toGlueData.ι i ≫ D.isoSheafedSpace.inv = (𝖣.ι i).1 :=
-  𝖣.ι_glued_iso_inv forgetToSheafedSpace i
+  𝖣.ι_gluedIso_inv forgetToSheafedSpace i
 #align algebraic_geometry.LocallyRingedSpace.glue_data.ι_iso_SheafedSpace_inv AlgebraicGeometry.LocallyRingedSpace.GlueData.ι_isoSheafedSpace_inv
 
 instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
@@ -662,7 +662,7 @@ instance (i j k : D.J) : PreservesLimit (cospan (𝖣.f i j) (𝖣.f i k)) forge
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J)(y : D.U i), (𝖣.ι i).1.base y = x :=
   𝖣.ι_jointly_surjective
-    ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _) ⋙ forget TopCat) x
+    ((LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forget _) ⋙ forget TopCat) x
 #align algebraic_geometry.LocallyRingedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.LocallyRingedSpace.GlueData.ι_jointly_surjective
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.

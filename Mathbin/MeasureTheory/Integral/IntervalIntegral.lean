@@ -563,7 +563,7 @@ theorem Filter.Tendsto.eventually_intervalIntegrable {f : ℝ → E} {μ : Measu
     (hfm : StronglyMeasurableAtFilter f l' μ) [TendstoIxxClass Ioc l l'] [IsMeasurablyGenerated l']
     (hμ : μ.FiniteAtFilter l') {c : E} (hf : Tendsto f l' (𝓝 c)) {u v : ι → ℝ} {lt : Filter ι}
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) : ∀ᶠ t in lt, IntervalIntegrable f μ (u t) (v t) :=
-  (hf.mono_left inf_le_left).eventually_interval_integrable_ae hfm hμ hu hv
+  (hf.mono_left inf_le_left).eventually_intervalIntegrable_ae hfm hμ hu hv
 #align filter.tendsto.eventually_interval_integrable Filter.Tendsto.eventually_intervalIntegrable
 
 /-!
@@ -664,7 +664,7 @@ theorem integral_non_aeStronglyMeasurable (hf : ¬AeStronglyMeasurable f (μ.res
 
 theorem integral_non_aeStronglyMeasurable_of_le (h : a ≤ b)
     (hf : ¬AeStronglyMeasurable f (μ.restrict (Ioc a b))) : (∫ x in a..b, f x ∂μ) = 0 :=
-  integral_non_ae_strongly_measurable <| by rwa [uIoc_of_le h]
+  integral_non_aeStronglyMeasurable <| by rwa [uIoc_of_le h]
 #align interval_integral.integral_non_ae_strongly_measurable_of_le intervalIntegral.integral_non_aeStronglyMeasurable_of_le
 
 theorem norm_integral_min_max (f : ℝ → E) :
@@ -1999,7 +1999,7 @@ theorem integral_sub_integral_sub_linear_isOCat_of_tendsto_ae_left
     measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae_left hab hmeas hf hu hv
 #align interval_integral.integral_sub_integral_sub_linear_is_o_of_tendsto_ae_left intervalIntegral.integral_sub_integral_sub_linear_isOCat_of_tendsto_ae_left
 
-open ContinuousLinearMap (fst snd smul_right sub_apply smul_right_apply coe_fst' coe_snd' map_sub)
+open ContinuousLinearMap (fst snd smul_right sub_apply smulRight_apply coe_fst' coe_snd' map_sub)
 
 /-!
 #### Strict differentiability
@@ -2047,7 +2047,7 @@ theorem integral_hasStrictFderivAt_of_tendsto_ae (hf : IntervalIntegrable f volu
       ((continuous_fst.comp continuous_fst).Tendsto ((a, b), (a, b)))
       ((continuous_snd.comp continuous_snd).Tendsto ((a, b), (a, b)))
       ((continuous_snd.comp continuous_fst).Tendsto ((a, b), (a, b)))
-  refine' (this.congr_left _).trans_is_O _
+  refine' (this.congr_left _).trans_isO _
   · intro x
     simp [sub_smul]
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
@@ -2115,7 +2115,7 @@ theorem Continuous.integral_hasStrictDerivAt {f : ℝ → E} (hf : Continuous f)
 of `u ↦ ∫ x in a..u, f x` at `b` is `f b`. -/
 theorem Continuous.deriv_integral (f : ℝ → E) (hf : Continuous f) (a b : ℝ) :
     deriv (fun u => ∫ x : ℝ in a..u, f x) b = f b :=
-  (hf.integral_has_strict_deriv_at a b).HasDerivAt.deriv
+  (hf.integral_hasStrictDerivAt a b).HasDerivAt.deriv
 #align continuous.deriv_integral Continuous.deriv_integral
 
 /-!
@@ -2264,7 +2264,7 @@ theorem integral_hasFderivWithinAt_of_tendsto_ae (hf : IntervalIntegrable f volu
     integral_sub_integral_sub_linear_is_o_of_tendsto_ae hf hmeas_a hmeas_b ha hb
       (tendsto_const_pure.mono_right FTC_filter.pure_le : tendsto _ _ (𝓝[s] a)) tendsto_fst
       (tendsto_const_pure.mono_right FTC_filter.pure_le : tendsto _ _ (𝓝[t] b)) tendsto_snd
-  refine' (this.congr_left _).trans_is_O _
+  refine' (this.congr_left _).trans_isO _
   · intro x
     simp [sub_smul]
   · exact is_O_fst_prod.norm_left.add is_O_snd_prod.norm_left
@@ -2673,7 +2673,7 @@ theorem integral_eq_sub_of_hasDerivAt_of_tendsto (hab : a < b) {fa fb}
   set F : ℝ → E := update (update f a fa) b fb
   have Fderiv : ∀ x ∈ Ioo a b, HasDerivAt F (f' x) x :=
     by
-    refine' fun x hx => (hderiv x hx).congr_of_eventually_eq _
+    refine' fun x hx => (hderiv x hx).congr_of_eventuallyEq _
     filter_upwards [Ioo_mem_nhds hx.1 hx.2]with _ hy
     simp only [F]
     rw [update_noteq hy.2.Ne, update_noteq hy.1.ne']
@@ -2921,7 +2921,7 @@ theorem integral_deriv_comp_smul_deriv {f f' : ℝ → ℝ} {g g' : ℝ → E}
     (hg : ∀ x ∈ uIcc a b, HasDerivAt g (g' (f x)) (f x)) (hf' : ContinuousOn f' (uIcc a b))
     (hg' : Continuous g') : (∫ x in a..b, f' x • (g' ∘ f) x) = (g ∘ f) b - (g ∘ f) a :=
   integral_eq_sub_of_hasDerivAt (fun x hx => (hg x hx).scomp x <| hf x hx)
-    (hf'.smul (hg'.comp_continuous_on <| HasDerivAt.continuousOn hf)).IntervalIntegrable
+    (hf'.smul (hg'.comp_continuousOn <| HasDerivAt.continuousOn hf)).IntervalIntegrable
 #align interval_integral.integral_deriv_comp_smul_deriv intervalIntegral.integral_deriv_comp_smul_deriv
 
 end Smul

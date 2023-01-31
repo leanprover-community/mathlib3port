@@ -143,8 +143,8 @@ theorem basisSets_neg (U) (hU' : U ∈ p.basis_sets) :
 
 /-- The `add_group_filter_basis` induced by the filter basis `seminorm_basis_zero`. -/
 protected def addGroupFilterBasis [Nonempty ι] : AddGroupFilterBasis E :=
-  addGroupFilterBasisOfComm p.basis_sets p.basis_sets_nonempty p.basis_sets_intersect
-    p.basis_sets_zero p.basis_sets_add p.basis_sets_neg
+  addGroupFilterBasisOfComm p.basis_sets p.basisSets_nonempty p.basisSets_intersect p.basisSets_zero
+    p.basisSets_add p.basisSets_neg
 #align seminorm_family.add_group_filter_basis SeminormFamily.addGroupFilterBasis
 
 theorem basisSets_smul_right (v : E) (U : Set E) (hU : U ∈ p.basis_sets) :
@@ -191,13 +191,13 @@ theorem basisSets_smul_left (x : 𝕜) (U : Set E) (hU : U ∈ p.basis_sets) :
 protected def moduleFilterBasis : ModuleFilterBasis 𝕜 E
     where
   toAddGroupFilterBasis := p.AddGroupFilterBasis
-  smul' := p.basis_sets_smul
-  smul_left' := p.basis_sets_smul_left
-  smul_right' := p.basis_sets_smul_right
+  smul' := p.basisSets_smul
+  smul_left' := p.basisSets_smul_left
+  smul_right' := p.basisSets_smul_right
 #align seminorm_family.module_filter_basis SeminormFamily.moduleFilterBasis
 
 theorem filter_eq_infᵢ (p : SeminormFamily 𝕜 E ι) :
-    p.ModuleFilterBasis.toFilterBasis.filter = ⨅ i, (𝓝 0).comap (p i) :=
+    p.ModuleFilterBasis.toFilterBasis.filterₓ = ⨅ i, (𝓝 0).comap (p i) :=
   by
   refine' le_antisymm (le_infᵢ fun i => _) _
   · rw [p.module_filter_basis.to_filter_basis.has_basis.le_basis_iff
@@ -288,7 +288,7 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [Nonempty ι]
 
 /-- The proposition that the topology of `E` is induced by a family of seminorms `p`. -/
 structure WithSeminorms (p : SeminormFamily 𝕜 E ι) [t : TopologicalSpace E] : Prop where
-  topology_eq_with_seminorms : t = p.ModuleFilterBasis.topology
+  topology_eq_withSeminorms : t = p.ModuleFilterBasis.topology
 #align with_seminorms WithSeminorms
 
 theorem WithSeminorms.withSeminorms_eq {p : SeminormFamily 𝕜 E ι} [t : TopologicalSpace E]
@@ -402,7 +402,7 @@ variable [Nonempty ι]
 include t
 
 theorem SeminormFamily.withSeminormsOfNhds (p : SeminormFamily 𝕜 E ι)
-    (h : 𝓝 (0 : E) = p.ModuleFilterBasis.toFilterBasis.filter) : WithSeminorms p :=
+    (h : 𝓝 (0 : E) = p.ModuleFilterBasis.toFilterBasis.filterₓ) : WithSeminorms p :=
   by
   refine'
     ⟨TopologicalAddGroup.ext inferInstance p.add_group_filter_basis.is_topological_add_group _⟩
@@ -509,7 +509,7 @@ variable [TopologicalSpace E]
 theorem WithSeminorms.isVonNBounded_iff_finset_seminorm_bounded {s : Set E} (hp : WithSeminorms p) :
     Bornology.IsVonNBounded 𝕜 s ↔ ∀ I : Finset ι, ∃ (r : _)(hr : 0 < r), ∀ x ∈ s, I.sup p x < r :=
   by
-  rw [hp.has_basis.is_vonN_bounded_basis_iff]
+  rw [hp.has_basis.isVonNBounded_basis_iff]
   constructor
   · intro h I
     simp only [id.def] at h
@@ -720,7 +720,7 @@ theorem LinearMap.withSeminormsInduced [hι : Nonempty ι] {q : SeminormFamily �
   by
   letI : TopologicalSpace E := induced f inferInstance
   letI : TopologicalAddGroup E := topological_add_group_induced f
-  rw [(q.comp f).with_seminorms_iff_nhds_eq_infi, nhds_induced, map_zero,
+  rw [(q.comp f).withSeminorms_iff_nhds_eq_infᵢ, nhds_induced, map_zero,
     q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.comap_infᵢ]
   refine' infᵢ_congr fun i => _
   exact Filter.comap_comap

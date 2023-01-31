@@ -77,13 +77,13 @@ instance : ProperSpace ℤ :=
     exact (Set.finite_Icc _ _).IsCompact⟩
 
 @[simp]
-theorem cocompact_eq : cocompact ℤ = at_bot ⊔ at_top := by
+theorem cocompact_eq : cocompact ℤ = atBot ⊔ atTop := by
   simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ←
     cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_cast_atTop, comap_abs_at_top]
 #align int.cocompact_eq Int.cocompact_eq
 
 @[simp]
-theorem cofinite_eq : (cofinite : Filter ℤ) = at_bot ⊔ at_top := by
+theorem cofinite_eq : (cofinite : Filter ℤ) = atBot ⊔ atTop := by
   rw [← cocompact_eq_cofinite, cocompact_eq]
 #align int.cofinite_eq Int.cofinite_eq
 

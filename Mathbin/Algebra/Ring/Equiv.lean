@@ -810,7 +810,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.Pi_congr_ri
 @[simp]
 theorem piCongrRight_symm {ι : Type _} {R S : ι → Type _} [∀ i, NonUnitalNonAssocSemiring (R i)]
     [∀ i, NonUnitalNonAssocSemiring (S i)] (e : ∀ i, R i ≃+* S i) :
-    (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
+    (piCongrRight e).symm = piCongrRight fun i => (e i).symm :=
   rfl
 #align ring_equiv.Pi_congr_right_symm RingEquiv.piCongrRight_symm
 
@@ -824,7 +824,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.Pi_congr_ri
 theorem piCongrRight_trans {ι : Type _} {R S T : ι → Type _} [∀ i, NonUnitalNonAssocSemiring (R i)]
     [∀ i, NonUnitalNonAssocSemiring (S i)] [∀ i, NonUnitalNonAssocSemiring (T i)]
     (e : ∀ i, R i ≃+* S i) (f : ∀ i, S i ≃+* T i) :
-    (piCongrRight e).trans (piCongrRight f) = Pi_congr_right fun i => (e i).trans (f i) :=
+    (piCongrRight e).trans (piCongrRight f) = piCongrRight fun i => (e i).trans (f i) :=
   rfl
 #align ring_equiv.Pi_congr_right_trans RingEquiv.piCongrRight_trans
 

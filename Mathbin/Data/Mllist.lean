@@ -264,7 +264,7 @@ unsafe def head [Alternative m] {α} (L : mllist m α) : m α := do
 /-- Apply a function returning values inside the monad to a monadic lazy list,
 returning only the first successful result. -/
 unsafe def mfirst [Alternative m] {α β} (L : mllist m α) (f : α → m β) : m β :=
-  (L.mfilter_map f).head
+  (L.mfilter_map f).headI
 #align tactic.mllist.mfirst tactic.mllist.mfirst
 
 end Mllist

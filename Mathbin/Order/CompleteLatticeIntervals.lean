@@ -43,7 +43,7 @@ variable [SupSet α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetSupSet [Inhabited s] : SupSet s
-    where sup t :=
+    where supₛ t :=
     if ht : supₛ (coe '' t : Set α) ∈ s then ⟨supₛ (coe '' t : Set α), ht⟩ else default
 #align subset_has_Sup subsetSupSet
 -/
@@ -76,7 +76,7 @@ variable [InfSet α]
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
 construction of the `conditionally_complete_linear_order` structure. -/
 noncomputable def subsetInfSet [Inhabited s] : InfSet s
-    where inf t :=
+    where infₛ t :=
     if ht : infₛ (coe '' t : Set α) ∈ s then ⟨infₛ (coe '' t : Set α), ht⟩ else default
 #align subset_has_Inf subsetInfSet
 -/
@@ -132,19 +132,19 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
         s) with
     le_cSup := by
       rintro t c h_bdd hct
-      have := (Subtype.mono_coe s).le_cSup_image hct h_bdd
+      have := (Subtype.mono_coe s).le_csupₛ_image hct h_bdd
       rwa [subset_supₛ_of_within s (h_Sup ⟨c, hct⟩ h_bdd)] at this
     cSup_le := by
       rintro t B ht hB
-      have := (Subtype.mono_coe s).cSup_image_le ht hB
+      have := (Subtype.mono_coe s).csupₛ_image_le ht hB
       rwa [subset_supₛ_of_within s (h_Sup ht ⟨B, hB⟩)] at this
     le_cInf := by
       intro t B ht hB
-      have := (Subtype.mono_coe s).le_cInf_image ht hB
+      have := (Subtype.mono_coe s).le_cinfₛ_image ht hB
       rwa [subset_infₛ_of_within s (h_Inf ht ⟨B, hB⟩)] at this
     cInf_le := by
       rintro t c h_bdd hct
-      have := (Subtype.mono_coe s).cInf_image_le hct h_bdd
+      have := (Subtype.mono_coe s).cinfₛ_image_le hct h_bdd
       rwa [subset_infₛ_of_within s (h_Inf ⟨c, hct⟩ h_bdd)] at this }
 #align subset_conditionally_complete_linear_order subsetConditionallyCompleteLinearOrder
 
@@ -164,8 +164,8 @@ theorem supₛ_within_of_ordConnected {s : Set α} [hs : OrdConnected s] ⦃t : 
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
   obtain ⟨B, hB⟩ : ∃ B, B ∈ upperBounds t := h_bdd
   refine' hs.out c.2 B.2 ⟨_, _⟩
-  · exact (Subtype.mono_coe s).le_cSup_image hct ⟨B, hB⟩
-  · exact (Subtype.mono_coe s).cSup_image_le ⟨c, hct⟩ hB
+  · exact (Subtype.mono_coe s).le_csupₛ_image hct ⟨B, hB⟩
+  · exact (Subtype.mono_coe s).csupₛ_image_le ⟨c, hct⟩ hB
 #align Sup_within_of_ord_connected supₛ_within_of_ordConnected
 
 /- warning: Inf_within_of_ord_connected -> infₛ_within_of_ordConnected is a dubious translation:
@@ -182,8 +182,8 @@ theorem infₛ_within_of_ordConnected {s : Set α} [hs : OrdConnected s] ⦃t : 
   obtain ⟨c, hct⟩ : ∃ c, c ∈ t := ht
   obtain ⟨B, hB⟩ : ∃ B, B ∈ lowerBounds t := h_bdd
   refine' hs.out B.2 c.2 ⟨_, _⟩
-  · exact (Subtype.mono_coe s).le_cInf_image ⟨c, hct⟩ hB
-  · exact (Subtype.mono_coe s).cInf_image_le hct ⟨B, hB⟩
+  · exact (Subtype.mono_coe s).le_cinfₛ_image ⟨c, hct⟩ hB
+  · exact (Subtype.mono_coe s).cinfₛ_image_le hct ⟨B, hB⟩
 #align Inf_within_of_ord_connected infₛ_within_of_ordConnected
 
 #print ordConnectedSubsetConditionallyCompleteLinearOrder /-

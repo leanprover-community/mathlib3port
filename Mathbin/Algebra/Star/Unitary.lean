@@ -330,7 +330,7 @@ theorem coe_neg (U : unitary R) : ↑(-U) = (-U : R) :=
 #align unitary.coe_neg unitary.coe_neg
 
 instance : HasDistribNeg (unitary R) :=
-  Subtype.coe_injective.HasDistribNeg _ coe_neg (unitary R).coe_mul
+  Subtype.coe_injective.HasDistribNeg _ coe_neg (unitary R).val_mul
 
 end Ring
 

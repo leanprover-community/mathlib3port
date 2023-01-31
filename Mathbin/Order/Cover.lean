@@ -695,7 +695,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Wcovby.{max u2 u1} (Prod.{u1, u2} β α) (Prod.instPreorderProd.{u1, u2} β α (PartialOrder.toPreorder.{u1} β _inst_2) (PartialOrder.toPreorder.{u2} α _inst_1)) (Prod.swap.{u2, u1} α β x) (Prod.swap.{u2, u1} α β y)) (Wcovby.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2)) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_wcovby_swap Prod.swap_wcovby_swapₓ'. -/
 @[simp]
-theorem swap_wcovby_swap : x.swap ⩿ y.swap ↔ x ⩿ y :=
+theorem swap_wcovby_swap : x.symm ⩿ y.symm ↔ x ⩿ y :=
   apply_wcovby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_wcovby_swap Prod.swap_wcovby_swap
 
@@ -706,7 +706,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Covby.{max u2 u1} (Prod.{u1, u2} β α) (Preorder.toLT.{max u2 u1} (Prod.{u1, u2} β α) (Prod.instPreorderProd.{u1, u2} β α (PartialOrder.toPreorder.{u1} β _inst_2) (PartialOrder.toPreorder.{u2} α _inst_1))) (Prod.swap.{u2, u1} α β x) (Prod.swap.{u2, u1} α β y)) (Covby.{max u2 u1} (Prod.{u2, u1} α β) (Preorder.toLT.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_covby_swap Prod.swap_covby_swapₓ'. -/
 @[simp]
-theorem swap_covby_swap : x.swap ⋖ y.swap ↔ x ⋖ y :=
+theorem swap_covby_swap : x.symm ⋖ y.symm ↔ x ⋖ y :=
   apply_covby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_covby_swap Prod.swap_covby_swap
 

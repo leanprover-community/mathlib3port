@@ -191,7 +191,7 @@ theorem mk_ne_zero_of_degree_lt (hf : Monic f) {g : R[X]} (h0 : g ≠ 0) (hd : d
 
 theorem mk_ne_zero_of_natDegree_lt (hf : Monic f) {g : R[X]} (h0 : g ≠ 0)
     (hd : natDegree g < natDegree f) : mk f g ≠ 0 :=
-  mk_eq_zero.Not.2 <| hf.not_dvd_of_nat_degree_lt h0 hd
+  mk_eq_zero.Not.2 <| hf.not_dvd_of_natDegree_lt h0 hd
 #align adjoin_root.mk_ne_zero_of_nat_degree_lt AdjoinRoot.mk_ne_zero_of_natDegree_lt
 
 @[simp]
@@ -324,13 +324,13 @@ theorem liftHom_of {x : R} : liftHom f a hfx (of f x) = algebraMap _ _ x :=
 section AdjoinInv
 
 @[simp]
-theorem root_is_inv (r : R) : of _ r * root (c r * X - 1) = 1 := by
+theorem root_is_inv (r : R) : of _ r * root (c r * x - 1) = 1 := by
   convert sub_eq_zero.1 ((eval₂_sub _).symm.trans <| eval₂_root <| C r * X - 1) <;>
     simp only [eval₂_mul, eval₂_C, eval₂_X, eval₂_one]
 #align adjoin_root.root_is_inv AdjoinRoot.root_is_inv
 
 theorem algHom_subsingleton {S : Type _} [CommRing S] [Algebra R S] {r : R} :
-    Subsingleton (AdjoinRoot (c r * X - 1) →ₐ[R] S) :=
+    Subsingleton (AdjoinRoot (c r * x - 1) →ₐ[R] S) :=
   ⟨fun f g =>
     algHom_ext
       (@inv_unique _ _ (algebraMap R S r) _ _
@@ -383,7 +383,7 @@ theorem coe_injective' [Fact (Irreducible f)] : Function.Injective (coe : K → 
 variable (f)
 
 theorem mul_div_root_cancel [Fact (Irreducible f)] :
-    (X - c (root f)) * (f.map (of f) / (X - c (root f))) = f.map (of f) :=
+    (x - c (root f)) * (f.map (of f) / (x - c (root f))) = f.map (of f) :=
   mul_div_eq_iff_isRoot.2 <| isRoot_root _
 #align adjoin_root.mul_div_root_cancel AdjoinRoot.mul_div_root_cancel
 

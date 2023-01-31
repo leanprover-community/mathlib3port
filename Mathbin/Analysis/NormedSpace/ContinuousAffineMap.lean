@@ -110,7 +110,7 @@ theorem map_vadd (f : P →A[R] Q) (p : P) (v : V) : f (v +ᵥ p) = f.contLinear
 
 @[simp]
 theorem contLinear_map_vsub (f : P →A[R] Q) (p₁ p₂ : P) : f.contLinear (p₁ -ᵥ p₂) = f p₁ -ᵥ f p₂ :=
-  f.toAffineMap.linear_map_vsub p₁ p₂
+  f.toAffineMap.linearMap_vsub p₁ p₂
 #align continuous_affine_map.cont_linear_map_vsub ContinuousAffineMap.contLinear_map_vsub
 
 @[simp]

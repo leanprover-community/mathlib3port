@@ -154,7 +154,7 @@ def Short.ofIsEmpty {l r xL xR} [IsEmpty l] [IsEmpty r] : Short (mk l r xL xR) :
 #align pgame.short.of_is_empty Pgame.Short.ofIsEmpty
 
 instance short0 : Short 0 :=
-  short.of_is_empty
+  Short.ofIsEmpty
 #align pgame.short_0 Pgame.short0
 
 instance short1 : Short 1 :=

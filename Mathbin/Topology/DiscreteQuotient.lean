@@ -138,7 +138,7 @@ theorem proj_quotientMap : QuotientMap S.proj :=
 #align discrete_quotient.proj_quotient_map DiscreteQuotient.proj_quotientMap
 
 theorem proj_continuous : Continuous S.proj :=
-  S.proj_quotient_map.Continuous
+  S.proj_quotientMap.Continuous
 #align discrete_quotient.proj_continuous DiscreteQuotient.proj_continuous
 
 instance : DiscreteTopology S :=
@@ -465,7 +465,7 @@ def discreteQuotient : DiscreteQuotient X
     where
   Rel a b := f b = f a
   Equiv := ⟨by tauto, by tauto, fun a b c h1 h2 => by rw [h2, h1]⟩
-  clopen x := f.IsLocallyConstant.is_clopen_fiber _
+  clopen x := f.IsLocallyConstant.isClopen_fiber _
 #align locally_constant.discrete_quotient LocallyConstant.discreteQuotient
 
 /-- The (locally constant) function from the discrete quotient associated to a locally constant

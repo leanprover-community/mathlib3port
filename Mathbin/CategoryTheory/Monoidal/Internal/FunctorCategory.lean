@@ -122,7 +122,7 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D)
 /-- The unit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
 -/
 @[simps]
-def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
+def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
   NatIso.ofComponents
     (fun A =>
       { Hom :=
@@ -154,7 +154,7 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
 /-- The counit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
 -/
 @[simps]
-def counitIso : inverse ⋙ Functor ≅ 𝟭 (C ⥤ Mon_ D) :=
+def counitIso : inverse ⋙ functor ≅ 𝟭 (C ⥤ Mon_ D) :=
   NatIso.ofComponents
     (fun A =>
       NatIso.ofComponents
@@ -219,7 +219,7 @@ def inverse : (C ⥤ CommMon_ D) ⥤ CommMon_ (C ⥤ D)
 /-- The unit for the equivalence `CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D`.
 -/
 @[simps]
-def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
+def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
   NatIso.ofComponents
     (fun A =>
       { Hom :=
@@ -251,7 +251,7 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ Functor ⋙ inverse :=
 /-- The counit for the equivalence `CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D`.
 -/
 @[simps]
-def counitIso : inverse ⋙ Functor ≅ 𝟭 (C ⥤ CommMon_ D) :=
+def counitIso : inverse ⋙ functor ≅ 𝟭 (C ⥤ CommMon_ D) :=
   NatIso.ofComponents
     (fun A =>
       NatIso.ofComponents

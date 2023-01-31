@@ -361,7 +361,7 @@ theorem Memℒp.uniformIntegrableOfIdentDistrib {ι : Type _} {f : ι → α →
     UniformIntegrable f p μ :=
   by
   have hfmeas : ∀ i, ae_strongly_measurable (f i) μ := fun i =>
-    (hf i).ae_strongly_measurable_iff.2 hℒp.1
+    (hf i).aeStronglyMeasurable_iff.2 hℒp.1
   set g : ι → α → E := fun i => (hfmeas i).some
   have hgmeas : ∀ i, strongly_measurable (g i) := fun i => (Exists.choose_spec <| hfmeas i).1
   have hgeq : ∀ i, g i =ᵐ[μ] f i := fun i => (Exists.choose_spec <| hfmeas i).2.symm

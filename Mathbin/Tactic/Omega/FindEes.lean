@@ -48,17 +48,17 @@ private unsafe def mk_eqelim_state (eqs les : List Term) : tactic EeState :=
 
 /-- Get the current list of equality constraints. -/
 unsafe def get_eqs : eqelim (List Term) :=
-  ee_state.eqs <$> get
+  EeState.eqs <$> get
 #align omega.get_eqs omega.get_eqs
 
 /-- Get the current list of inequality constraints. -/
 unsafe def get_les : eqelim (List Term) :=
-  ee_state.les <$> get
+  EeState.les <$> get
 #align omega.get_les omega.get_les
 
 /-- Get the current sequence of equality elimiation steps. -/
 unsafe def get_ees : eqelim (List Ee) :=
-  ee_state.ees <$> get
+  EeState.ees <$> get
 #align omega.get_ees omega.get_ees
 
 /-- Update the list of equality constraints. -/
@@ -146,7 +146,7 @@ unsafe def find_min_coeff_core : List Int → eqelim (Int × Nat)
     along with the coefficient's variable index and the term itself.
     If the coefficient is negative, negate both the coefficient and the term
     before returning them. -/
-unsafe def find_min_coeff (t : Term) : eqelim (Int × Nat × term) := do
+unsafe def find_min_coeff (t : Term) : eqelim (Int × Nat × Term) := do
   let (i, n) ← find_min_coeff_core t.snd
   if 0 < i then pure (i, n, t) else add_ee ee.neg >> pure (-i, n, t)
 #align omega.find_min_coeff omega.find_min_coeff

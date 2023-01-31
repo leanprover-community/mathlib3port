@@ -67,7 +67,7 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
   g := Full.preimage (hf.g ≫ (F.objObjPreimageIso hf.z).inv)
   w := Faithful.map_injective F <| by simp [reassoc_of hf.w]
   IsLimit :=
-    reflects_limit.reflects <|
+    ReflectsLimit.reflects <|
       IsLimit.ofConeEquiv (Cones.postcomposeEquivalence (compNatIso F : _)) <|
         IsLimit.ofIsoLimit
           (is_limit.of_iso_limit
@@ -88,7 +88,7 @@ instance (priority := 100) NormalMono.regularMono (f : X ⟶ Y) [I : NormalMono 
 
 /-- If `f` is a normal mono, then any map `k : W ⟶ Y` such that `k ≫ normal_mono.g = 0` induces
     a morphism `l : W ⟶ X` such that `l ≫ f = k`. -/
-def NormalMono.lift' {W : C} (f : X ⟶ Y) [NormalMono f] (k : W ⟶ Y) (h : k ≫ normal_mono.g = 0) :
+def NormalMono.lift' {W : C} (f : X ⟶ Y) [NormalMono f] (k : W ⟶ Y) (h : k ≫ NormalMono.g = 0) :
     { l : W ⟶ X // l ≫ f = k } :=
   KernelFork.IsLimit.lift' NormalMono.isLimit _ h
 #align category_theory.normal_mono.lift' CategoryTheory.NormalMono.lift'
@@ -176,7 +176,7 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
   g := Full.preimage ((F.objObjPreimageIso hf.w).Hom ≫ hf.g)
   w := Faithful.map_injective F <| by simp [hf.w]
   IsColimit :=
-    reflects_colimit.reflects <|
+    ReflectsColimit.reflects <|
       IsColimit.ofCoconeEquiv (Cocones.precomposeEquivalence (compNatIso F).symm) <|
         IsColimit.ofIsoColimit
           (is_colimit.of_iso_colimit
@@ -197,7 +197,7 @@ instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] 
 
 /-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
     induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
-def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : normal_epi.g ≫ k = 0) :
+def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : NormalEpi.g ≫ k = 0) :
     { l : Y ⟶ W // f ≫ l = k } :=
   CokernelCofork.IsColimit.desc' NormalEpi.isColimit _ h
 #align category_theory.normal_epi.desc' CategoryTheory.NormalEpi.desc'

@@ -92,7 +92,7 @@ theorem of_algebraMap_eq [Algebra R A]
 /-- See note [partially-applied ext lemmas]. -/
 theorem of_algebraMap_eq' [Algebra R A]
     (h : algebraMap R A = (algebraMap S A).comp (algebraMap R S)) : IsScalarTower R S A :=
-  of_algebra_map_eq <| RingHom.ext_iff.1 h
+  of_algebraMap_eq <| RingHom.ext_iff.1 h
 #align is_scalar_tower.of_algebra_map_eq' IsScalarTower.of_algebraMap_eq'
 
 variable (R S A)
@@ -154,20 +154,20 @@ variable (R)
 @[simp]
 theorem AlgHom.comp_algebraMap_of_tower (f : A →ₐ[S] B) :
     (f : A →+* B).comp (algebraMap R A) = algebraMap R B :=
-  RingHom.ext f.map_algebra_map
+  RingHom.ext f.map_algebraMap
 #align alg_hom.comp_algebra_map_of_tower AlgHom.comp_algebraMap_of_tower
 
 variable (R) {S A B}
 
 -- conflicts with is_scalar_tower.subalgebra
 instance (priority := 999) subsemiring (U : Subsemiring S) : IsScalarTower U S A :=
-  of_algebra_map_eq fun x => rfl
+  of_algebraMap_eq fun x => rfl
 #align is_scalar_tower.subsemiring IsScalarTower.subsemiring
 
 @[nolint instance_priority]
 instance of_ring_hom {R A B : Type _} [CommSemiring R] [CommSemiring A] [CommSemiring B]
     [Algebra R A] [Algebra R B] (f : A →ₐ[R] B) :
-    @IsScalarTower R A B _ f.toRingHom.toAlgebra.toHasSmul _ :=
+    @IsScalarTower R A B _ f.toRingHom.toAlgebra.toSMul _ :=
   letI := (f : A →+* B).toAlgebra
   of_algebra_map_eq fun x => (f.commutes x).symm
 #align is_scalar_tower.of_ring_hom IsScalarTower.of_ring_hom

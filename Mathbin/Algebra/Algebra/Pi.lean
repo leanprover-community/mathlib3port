@@ -160,7 +160,7 @@ theorem piCongrRight_refl {R ι : Type _} {A : ι → Type _} [CommSemiring R] [
 @[simp]
 theorem piCongrRight_symm {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R]
     [∀ i, Semiring (A₁ i)] [∀ i, Semiring (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
-    (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
+    (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (piCongrRight e).symm = piCongrRight fun i => (e i).symm :=
   rfl
 #align alg_equiv.Pi_congr_right_symm AlgEquiv.piCongrRight_symm
 
@@ -169,7 +169,7 @@ theorem piCongrRight_trans {R ι : Type _} {A₁ A₂ A₃ : ι → Type _} [Com
     [∀ i, Semiring (A₁ i)] [∀ i, Semiring (A₂ i)] [∀ i, Semiring (A₃ i)] [∀ i, Algebra R (A₁ i)]
     [∀ i, Algebra R (A₂ i)] [∀ i, Algebra R (A₃ i)] (e₁ : ∀ i, A₁ i ≃ₐ[R] A₂ i)
     (e₂ : ∀ i, A₂ i ≃ₐ[R] A₃ i) :
-    (piCongrRight e₁).trans (piCongrRight e₂) = Pi_congr_right fun i => (e₁ i).trans (e₂ i) :=
+    (piCongrRight e₁).trans (piCongrRight e₂) = piCongrRight fun i => (e₁ i).trans (e₂ i) :=
   rfl
 #align alg_equiv.Pi_congr_right_trans AlgEquiv.piCongrRight_trans
 

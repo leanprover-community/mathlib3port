@@ -170,7 +170,7 @@ def c : R →+* MvPolynomial σ R :=
 
 variable (R σ)
 
-theorem algebraMap_eq : algebraMap R (MvPolynomial σ R) = C :=
+theorem algebraMap_eq : algebraMap R (MvPolynomial σ R) = c :=
   rfl
 #align mv_polynomial.algebra_map_eq MvPolynomial.algebraMap_eq
 
@@ -326,7 +326,7 @@ theorem monomial_zero {s : σ →₀ ℕ} : monomial s (0 : R) = 0 :=
 #align mv_polynomial.monomial_zero MvPolynomial.monomial_zero
 
 @[simp]
-theorem monomial_zero' : (monomial (0 : σ →₀ ℕ) : R → MvPolynomial σ R) = C :=
+theorem monomial_zero' : (monomial (0 : σ →₀ ℕ) : R → MvPolynomial σ R) = c :=
   rfl
 #align mv_polynomial.monomial_zero' MvPolynomial.monomial_zero'
 
@@ -447,7 +447,7 @@ theorem hom_eq_hom [Semiring S₂] (f g : MvPolynomial σ R →+* S₂) (hC : f.
   RingHom.congr_fun (ringHom_ext' hC hX) p
 #align mv_polynomial.hom_eq_hom MvPolynomial.hom_eq_hom
 
-theorem is_id (f : MvPolynomial σ R →+* MvPolynomial σ R) (hC : f.comp c = C)
+theorem is_id (f : MvPolynomial σ R →+* MvPolynomial σ R) (hC : f.comp c = c)
     (hX : ∀ n : σ, f (x n) = x n) (p : MvPolynomial σ R) : f p = p :=
   hom_eq_hom f (RingHom.id _) hC hX p
 #align mv_polynomial.is_id MvPolynomial.is_id
@@ -534,7 +534,7 @@ theorem support_smul [DistribMulAction R S₁] {a : R} {f : MvPolynomial σ S₁
 #align mv_polynomial.support_smul MvPolynomial.support_smul
 
 theorem support_sum {α : Type _} {s : Finset α} {f : α → MvPolynomial σ R} :
-    (∑ x in s, f x).support ⊆ s.bUnion fun x => (f x).support :=
+    (∑ x in s, f x).support ⊆ s.bunionᵢ fun x => (f x).support :=
   Finsupp.support_finset_sum
 #align mv_polynomial.support_sum MvPolynomial.support_sum
 
@@ -561,7 +561,7 @@ theorem sum_def {A} [AddCommMonoid A] {p : MvPolynomial σ R} {b : (σ →₀ �
 #align mv_polynomial.sum_def MvPolynomial.sum_def
 
 theorem support_mul (p q : MvPolynomial σ R) :
-    (p * q).support ⊆ p.support.bUnion fun a => q.support.bUnion fun b => {a + b} := by
+    (p * q).support ⊆ p.support.bunionᵢ fun a => q.support.bunionᵢ fun b => {a + b} := by
   convert AddMonoidAlgebra.support_mul p q <;> ext <;> convert Iff.rfl
 #align mv_polynomial.support_mul MvPolynomial.support_mul
 
@@ -1410,7 +1410,7 @@ theorem aeval_c (r : R) : aeval f (c r) = algebraMap R S₁ r :=
   eval₂_c _ _ _
 #align mv_polynomial.aeval_C MvPolynomial.aeval_c
 
-theorem aeval_unique (φ : MvPolynomial σ R →ₐ[R] S₁) : φ = aeval (φ ∘ X) :=
+theorem aeval_unique (φ : MvPolynomial σ R →ₐ[R] S₁) : φ = aeval (φ ∘ x) :=
   by
   ext i
   simp
@@ -1484,12 +1484,12 @@ theorem aeval_zero' (p : MvPolynomial σ R) :
 #align mv_polynomial.aeval_zero' MvPolynomial.aeval_zero'
 
 @[simp]
-theorem eval_zero : eval (0 : σ → R) = constant_coeff :=
+theorem eval_zero : eval (0 : σ → R) = constantCoeff :=
   eval₂Hom_zero _
 #align mv_polynomial.eval_zero MvPolynomial.eval_zero
 
 @[simp]
-theorem eval_zero' : eval (fun _ => 0 : σ → R) = constant_coeff :=
+theorem eval_zero' : eval (fun _ => 0 : σ → R) = constantCoeff :=
   eval₂Hom_zero _
 #align mv_polynomial.eval_zero' MvPolynomial.eval_zero'
 

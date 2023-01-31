@@ -101,7 +101,7 @@ theorem submartingale_iff_expected_stoppedValue_mono [IsFiniteMeasure μ] (hadp 
         IsStoppingTime 𝒢 τ →
           IsStoppingTime 𝒢 π →
             τ ≤ π → (∃ N, ∀ x, π x ≤ N) → μ[stoppedValue f τ] ≤ μ[stoppedValue f π] :=
-  ⟨fun hf _ _ hτ hπ hle ⟨N, hN⟩ => hf.expected_stopped_value_mono hτ hπ hle hN,
+  ⟨fun hf _ _ hτ hπ hle ⟨N, hN⟩ => hf.expected_stoppedValue_mono hτ hπ hle hN,
     submartingaleOfExpectedStoppedValueMono hadp hint⟩
 #align measure_theory.submartingale_iff_expected_stopped_value_mono MeasureTheory.submartingale_iff_expected_stoppedValue_mono
 

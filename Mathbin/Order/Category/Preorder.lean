@@ -40,7 +40,7 @@ instance : BundledHom @OrderHom where
 deriving instance LargeCategory, ConcreteCategory for PreorderCat
 
 instance : CoeSort PreorderCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled Preorder from the underlying type and typeclass. -/
 def of (α : Type _) [Preorder α] : PreorderCat :=
@@ -83,8 +83,8 @@ def dual : PreorderCat ⥤ PreorderCat where
 @[simps Functor inverse]
 def dualEquiv : PreorderCat ≌ PreorderCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Preorder.dual_equiv PreorderCat.dualEquiv
 
 end PreorderCat

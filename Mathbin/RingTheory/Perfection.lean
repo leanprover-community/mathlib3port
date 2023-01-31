@@ -188,7 +188,7 @@ variable (R p)
 instance perfectRing : PerfectRing (Ring.Perfection R p) p
     where
   pthRoot' := pthRoot R p
-  frobenius_pth_root' := congr_fun <| congr_arg RingHom.toFun <| @frobenius_pthRoot R _ p _ _
+  frobenius_pthRoot' := congr_fun <| congr_arg RingHom.toFun <| @frobenius_pthRoot R _ p _ _
   pth_root_frobenius' := congr_fun <| congr_arg RingHom.toFun <| @pthRoot_frobenius R _ p _ _
 #align perfection.perfect_ring Perfection.perfectRing
 
@@ -414,7 +414,7 @@ instance : CommRing (ModP K v O hv p) :=
 include hp hvp
 
 instance : CharP (ModP K v O hv p) p :=
-  CharP.quotient O p <| mt hv.one_of_is_unit <| (map_natCast (algebraMap O K) p).symm ▸ hvp.1
+  CharP.quotient O p <| mt hv.one_of_isUnit <| (map_natCast (algebraMap O K) p).symm ▸ hvp.1
 
 instance : Nontrivial (ModP K v O hv p) :=
   CharP.nontrivial_of_char_ne_one hp.1.ne_one
@@ -506,7 +506,7 @@ theorem preVal_eq_zero {x : ModP K v O hv p} : preVal K v O hv p x = 0 ↔ x = 0
       by
       rw [← v_p_lt_pre_val, hvx] at hx0
       exact not_lt_zero' hx0,
-    fun hx => hx.symm ▸ pre_val_zero⟩
+    fun hx => hx.symm ▸ preVal_zero⟩
 #align mod_p.pre_val_eq_zero ModP.preVal_eq_zero
 
 variable (hv hvp)
@@ -608,7 +608,7 @@ theorem valAux_zero : valAux K v O hv p 0 = 0 :=
 #align pre_tilt.val_aux_zero PreTilt.valAux_zero
 
 theorem valAux_one : valAux K v O hv p 1 = 1 :=
-  (val_aux_eq <| show coeff (ModP K v O hv p) p 0 1 ≠ 0 from one_ne_zero).trans <|
+  (valAux_eq <| show coeff (ModP K v O hv p) p 0 1 ≠ 0 from one_ne_zero).trans <|
     by
     rw [pow_zero, pow_one, RingHom.map_one, ← (Ideal.Quotient.mk _).map_one, ModP.preVal_mk,
       RingHom.map_one, v.map_one]

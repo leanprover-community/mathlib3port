@@ -96,7 +96,7 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
 theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
     UniqueMul A B a0 b0 ↔ ∃! (ab : _)(_ : ab ∈ A ×ˢ B), ab.1 * ab.2 = a0 * b0 :=
   ⟨fun _ => ⟨(a0, b0), ⟨Finset.mem_product.mpr ⟨aA, bB⟩, rfl, by simp⟩, by simpa⟩, fun h =>
-    h.elim2
+    h.elim₂
       (by
         rintro ⟨x1, x2⟩ _ _ J x y hx hy l
         rcases prod.mk.inj_iff.mp (J (a0, b0) (Finset.mk_mem_product aA bB) rfl) with ⟨rfl, rfl⟩
@@ -192,7 +192,7 @@ end UniqueMul
 finite subsets of `A` have the `unique_add` property, with respect to some element of their
 sum `A + B`. -/
 class UniqueSums (G) [Add G] : Prop where
-  unique_add_of_nonempty :
+  uniqueAdd_of_nonempty :
     ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ a0 ∈ A, ∃ b0 ∈ B, UniqueAdd A B a0 b0
 #align unique_sums UniqueSums
 -/
@@ -202,7 +202,7 @@ class UniqueSums (G) [Add G] : Prop where
 finite subsets of `G` have the `unique_mul` property, with respect to some element of their
 product `A * B`. -/
 class UniqueProds (G) [Mul G] : Prop where
-  unique_mul_of_nonempty :
+  uniqueMul_of_nonempty :
     ∀ {A B : Finset G} (hA : A.Nonempty) (hB : B.Nonempty), ∃ a0 ∈ A, ∃ b0 ∈ B, UniqueMul A B a0 b0
 #align unique_prods UniqueProds
 -/
@@ -212,7 +212,7 @@ attribute [to_additive] UniqueProds
 namespace Multiplicative
 
 instance {M} [Add M] [UniqueSums M] : UniqueProds (Multiplicative M)
-    where unique_mul_of_nonempty A B hA hB :=
+    where uniqueMul_of_nonempty A B hA hB :=
     by
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
@@ -224,7 +224,7 @@ end Multiplicative
 namespace Additive
 
 instance {M} [Mul M] [UniqueProds M] : UniqueSums (Additive M)
-    where unique_add_of_nonempty A B hA hB :=
+    where uniqueAdd_of_nonempty A B hA hB :=
     by
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
@@ -258,7 +258,7 @@ is 'very monotone', then `A` also has `unique_prods`. -/
 instance (priority := 100) Covariants.to_uniqueProds {A} [Mul A] [LinearOrder A]
     [CovariantClass A A (· * ·) (· ≤ ·)] [CovariantClass A A (Function.swap (· * ·)) (· < ·)]
     [ContravariantClass A A (· * ·) (· ≤ ·)] : UniqueProds A
-    where unique_mul_of_nonempty A B hA hB :=
+    where uniqueMul_of_nonempty A B hA hB :=
     ⟨_, A.min'_mem ‹_›, _, B.min'_mem ‹_›, fun a b ha hb ab =>
       eq_and_eq_of_le_of_le_of_mul_le (Finset.min'_le _ _ ‹_›) (Finset.min'_le _ _ ‹_›) ab.le⟩
 #align covariants.to_unique_prods Covariants.to_uniqueProds

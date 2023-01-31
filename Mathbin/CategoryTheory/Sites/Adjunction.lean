@@ -93,12 +93,12 @@ and `F` preserves the correct limits. -/
 def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
   Adjunction.mkOfHomEquiv
     { homEquiv := composeEquiv J adj
-      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm' := fun X' X Y f g =>
         by
         ext1
         dsimp
         simp
-      hom_equiv_naturality_right' := fun X Y Y' f g =>
+      homEquiv_naturality_right' := fun X Y Y' f g =>
         by
         ext1
         dsimp

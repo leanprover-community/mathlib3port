@@ -165,7 +165,7 @@ theorem coeFn_inj {φ₁ φ₂ : A →ₐ[R] B} : (φ₁ : A → B) = φ₂ ↔ 
 #align alg_hom.coe_fn_inj AlgHom.coeFn_inj
 
 theorem coe_ringHom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →+* B) := fun φ₁ φ₂ H =>
-  coe_fn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_arg _ H
+  coeFn_injective <| show ((φ₁ : A →+* B) : A → B) = ((φ₂ : A →+* B) : A → B) from congr_arg _ H
 #align alg_hom.coe_ring_hom_injective AlgHom.coe_ringHom_injective
 
 theorem coe_monoidHom_injective : Function.Injective (coe : (A →ₐ[R] B) → A →* B) :=
@@ -476,7 +476,7 @@ def toIntAlgHom [Ring R] [Ring S] [Algebra ℤ R] [Algebra ℤ S] (f : R →+* S
 /-- Reinterpret a `ring_hom` as a `ℚ`-algebra homomorphism. This actually yields an equivalence,
 see `ring_hom.equiv_rat_alg_hom`. -/
 def toRatAlgHom [Ring R] [Ring S] [Algebra ℚ R] [Algebra ℚ S] (f : R →+* S) : R →ₐ[ℚ] S :=
-  { f with commutes' := f.map_rat_algebra_map }
+  { f with commutes' := f.map_rat_algebraMap }
 #align ring_hom.to_rat_alg_hom RingHom.toRatAlgHom
 
 @[simp]

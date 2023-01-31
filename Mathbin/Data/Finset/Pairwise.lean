@@ -116,7 +116,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjointₓ'. -/
 theorem pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint {α ι} [SemilatticeInf α] [OrderBot α]
     [DecidableEq ι] {l : List ι} {f : ι → α} (hl : (l.toFinset : Set ι).PairwiseDisjoint f)
-    (hn : l.Nodup) : l.Pairwise (_root_.disjoint on f) :=
+    (hn : l.Nodup) : l.Pairwise (Disjoint on f) :=
   pairwise_of_coe_toFinset_pairwise hl hn
 #align list.pairwise_disjoint_of_coe_to_finset_pairwise_disjoint List.pairwise_disjoint_of_coe_toFinset_pairwiseDisjoint
 
@@ -128,7 +128,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjointₓ'. -/
 theorem pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint {α ι} [SemilatticeInf α] [OrderBot α]
     [DecidableEq ι] {l : List ι} {f : ι → α} (hn : l.Nodup) :
-    (l.toFinset : Set ι).PairwiseDisjoint f ↔ l.Pairwise (_root_.disjoint on f) :=
+    (l.toFinset : Set ι).PairwiseDisjoint f ↔ l.Pairwise (Disjoint on f) :=
   pairwise_iff_coe_toFinset_pairwise hn (symmetric_disjoint.comap f)
 #align list.pairwise_disjoint_iff_coe_to_finset_pairwise_disjoint List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint
 

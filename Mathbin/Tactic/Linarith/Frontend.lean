@@ -170,7 +170,7 @@ the type of the variables in the comparison, e.g. `(a : ℚ) < 1` and `(b : ℤ)
 Returns a map from a type to a list of comparisons over that type.
 -/
 unsafe def partition_by_type (l : List expr) : tactic (rb_lmap expr expr) :=
-  l.mfoldl
+  l.foldlM
     (fun m h => do
       let tp ← ineq_prf_tp h
       return <| m tp h)
@@ -206,7 +206,7 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr)
         prove_false_by_linarith cfg (hyp_set t) <|>
           try_linarith_on_lists cfg (rb_map.values (hyp_set t))
       | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
-  let preprocessors := cfg.preprocessors.getOrElse default_preprocessors
+  let preprocessors := cfg.preprocessors.getD default_preprocessors
   let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors
   do
   let hyps ← preprocess preprocessors hyps
@@ -220,7 +220,7 @@ unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr)
 to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
-  hyps.mfilter fun h => do
+  hyps.filterM fun h => do
     let ht ← infer_type h
     match get_contr_lemma_name_and_type ht with
       | some (_, htype) => succeeds <| unify htype restr_type
@@ -309,7 +309,7 @@ Config options:
 -/
 unsafe def tactic.interactive.linarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
     (hyps : parse pexpr_list ?) (cfg : linarith_config := { }) : tactic Unit :=
-  tactic.linarith red.isSome restr.isSome (hyps.getOrElse []) cfg
+  tactic.linarith red.isSome restr.isSome (hyps.getD []) cfg
 #align tactic.interactive.linarith tactic.interactive.linarith
 
 add_hint_tactic linarith
@@ -384,10 +384,9 @@ in `linarith`. The preprocessing is as follows:
 -/
 unsafe def tactic.interactive.nlinarith (red : parse (tk "!")?) (restr : parse (tk "only")?)
     (hyps : parse pexpr_list ?) (cfg : linarith_config := { }) : tactic Unit :=
-  tactic.linarith red.isSome restr.isSome (hyps.getOrElse [])
+  tactic.linarith red.isSome restr.isSome (hyps.getD [])
     { cfg with
-      preprocessors :=
-        some <| cfg.preprocessors.getOrElse default_preprocessors ++ [nlinarith_extras] }
+      preprocessors := some <| cfg.preprocessors.getD default_preprocessors ++ [nlinarith_extras] }
 #align tactic.interactive.nlinarith tactic.interactive.nlinarith
 
 add_hint_tactic nlinarith

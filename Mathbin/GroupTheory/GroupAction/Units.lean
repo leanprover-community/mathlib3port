@@ -67,7 +67,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] {a : α} (h : IsUnit.{u1} α _inst_1 a), Eq.{succ u1} α (HSMul.hSMul.{u1, u1, u1} (Units.{u1} α _inst_1) α α (instHSMul.{u1, u1} (Units.{u1} α _inst_1) α (Units.instSMulUnits.{u1, u1} α α _inst_1 (MulAction.toSMul.{u1, u1} α α _inst_1 (Monoid.toMulAction.{u1} α _inst_1)))) (Inv.inv.{u1} (Units.{u1} α _inst_1) (Units.instInvUnits.{u1} α _inst_1) (IsUnit.unit.{u1} α _inst_1 a h)) a) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align is_unit.inv_smul IsUnit.inv_smulₓ'. -/
 theorem IsUnit.inv_smul [Monoid α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a = 1 :=
-  h.coe_inv_mul
+  h.val_inv_mul
 #align is_unit.inv_smul IsUnit.inv_smul
 
 @[to_additive]

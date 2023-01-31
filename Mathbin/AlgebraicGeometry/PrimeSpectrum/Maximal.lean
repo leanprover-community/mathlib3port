@@ -95,7 +95,7 @@ variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R
 viewed as subalgebras of its field of fractions. -/
 theorem infᵢ_localization_eq_bot :
     (⨅ v : MaximalSpectrum R,
-        Localization.subalgebra.ofField K _ v.asIdeal.prime_compl_le_non_zero_divisors) =
+        Localization.subalgebra.ofField K _ v.asIdeal.primeCompl_le_nonZeroDivisors) =
       ⊥ :=
   by
   ext x
@@ -136,7 +136,7 @@ variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R
 viewed as subalgebras of its field of fractions. -/
 theorem infᵢ_localization_eq_bot :
     (⨅ v : PrimeSpectrum R,
-        Localization.subalgebra.ofField K _ <| v.asIdeal.prime_compl_le_non_zero_divisors) =
+        Localization.subalgebra.ofField K _ <| v.asIdeal.primeCompl_le_nonZeroDivisors) =
       ⊥ :=
   by
   ext x

@@ -84,7 +84,7 @@ as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
 def posTangentConeAt (s : Set E) (x : E) : Set E :=
   { y : E |
     ∃ (c : ℕ → ℝ)(d : ℕ → E),
-      (∀ᶠ n in at_top, x + d n ∈ s) ∧
+      (∀ᶠ n in atTop, x + d n ∈ s) ∧
         Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
 #align pos_tangent_cone_at posTangentConeAt
 
@@ -149,7 +149,7 @@ theorem IsLocalMaxOn.hasFderivWithinAt_nonpos {s : Set E} (h : IsLocalMaxOn f s 
 of `s` at `a`, then `f' y ≤ 0`. -/
 theorem IsLocalMaxOn.fderivWithin_nonpos {s : Set E} (h : IsLocalMaxOn f s a) {y}
     (hy : y ∈ posTangentConeAt s a) : (fderivWithin ℝ f s a : E → ℝ) y ≤ 0 :=
-  if hf : DifferentiableWithinAt ℝ f s a then h.has_fderiv_within_at_nonpos hf.HasFderivWithinAt hy
+  if hf : DifferentiableWithinAt ℝ f s a then h.hasFderivWithinAt_nonpos hf.HasFderivWithinAt hy
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -160,7 +160,7 @@ both `y` and `-y` belong to the positive tangent cone of `s` at `a`, then `f' y 
 theorem IsLocalMaxOn.hasFderivWithinAt_eq_zero {s : Set E} (h : IsLocalMaxOn f s a)
     (hf : HasFderivWithinAt f f' s a) {y} (hy : y ∈ posTangentConeAt s a)
     (hy' : -y ∈ posTangentConeAt s a) : f' y = 0 :=
-  le_antisymm (h.has_fderiv_within_at_nonpos hf hy) <| by
+  le_antisymm (h.hasFderivWithinAt_nonpos hf hy) <| by
     simpa using h.has_fderiv_within_at_nonpos hf hy'
 #align is_local_max_on.has_fderiv_within_at_eq_zero IsLocalMaxOn.hasFderivWithinAt_eq_zero
 
@@ -170,7 +170,7 @@ theorem IsLocalMaxOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMaxOn f s a) {
     (hy : y ∈ posTangentConeAt s a) (hy' : -y ∈ posTangentConeAt s a) :
     (fderivWithin ℝ f s a : E → ℝ) y = 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then
-    h.has_fderiv_within_at_eq_zero hf.HasFderivWithinAt hy hy'
+    h.hasFderivWithinAt_eq_zero hf.HasFderivWithinAt hy hy'
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -187,7 +187,7 @@ theorem IsLocalMinOn.hasFderivWithinAt_nonneg {s : Set E} (h : IsLocalMinOn f s 
 of `s` at `a`, then `0 ≤ f' y`. -/
 theorem IsLocalMinOn.fderivWithin_nonneg {s : Set E} (h : IsLocalMinOn f s a) {y}
     (hy : y ∈ posTangentConeAt s a) : (0 : ℝ) ≤ (fderivWithin ℝ f s a : E → ℝ) y :=
-  if hf : DifferentiableWithinAt ℝ f s a then h.has_fderiv_within_at_nonneg hf.HasFderivWithinAt hy
+  if hf : DifferentiableWithinAt ℝ f s a then h.hasFderivWithinAt_nonneg hf.HasFderivWithinAt hy
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -207,7 +207,7 @@ theorem IsLocalMinOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMinOn f s a) {
     (hy : y ∈ posTangentConeAt s a) (hy' : -y ∈ posTangentConeAt s a) :
     (fderivWithin ℝ f s a : E → ℝ) y = 0 :=
   if hf : DifferentiableWithinAt ℝ f s a then
-    h.has_fderiv_within_at_eq_zero hf.HasFderivWithinAt hy hy'
+    h.hasFderivWithinAt_eq_zero hf.HasFderivWithinAt hy hy'
   else by
     rw [fderivWithin_zero_of_not_differentiableWithinAt hf]
     rfl
@@ -217,25 +217,25 @@ theorem IsLocalMinOn.fderivWithin_eq_zero {s : Set E} (h : IsLocalMinOn f s a) {
 theorem IsLocalMin.hasFderivAt_eq_zero (h : IsLocalMin f a) (hf : HasFderivAt f f' a) : f' = 0 :=
   by
   ext y
-  apply (h.on univ).has_fderiv_within_at_eq_zero hf.has_fderiv_within_at <;>
+  apply (h.on univ).hasFderivWithinAt_eq_zero hf.has_fderiv_within_at <;>
       rw [posTangentConeAt_univ] <;>
     apply mem_univ
 #align is_local_min.has_fderiv_at_eq_zero IsLocalMin.hasFderivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.fderiv_eq_zero (h : IsLocalMin f a) : fderiv ℝ f a = 0 :=
-  if hf : DifferentiableAt ℝ f a then h.has_fderiv_at_eq_zero hf.HasFderivAt
+  if hf : DifferentiableAt ℝ f a then h.hasFderivAt_eq_zero hf.HasFderivAt
   else fderiv_zero_of_not_differentiableAt hf
 #align is_local_min.fderiv_eq_zero IsLocalMin.fderiv_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.hasFderivAt_eq_zero (h : IsLocalMax f a) (hf : HasFderivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 <| h.neg.has_fderiv_at_eq_zero hf.neg
+  neg_eq_zero.1 <| h.neg.hasFderivAt_eq_zero hf.neg
 #align is_local_max.has_fderiv_at_eq_zero IsLocalMax.hasFderivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.fderiv_eq_zero (h : IsLocalMax f a) : fderiv ℝ f a = 0 :=
-  if hf : DifferentiableAt ℝ f a then h.has_fderiv_at_eq_zero hf.HasFderivAt
+  if hf : DifferentiableAt ℝ f a then h.hasFderivAt_eq_zero hf.HasFderivAt
   else fderiv_zero_of_not_differentiableAt hf
 #align is_local_max.fderiv_eq_zero IsLocalMax.fderiv_eq_zero
 
@@ -263,18 +263,18 @@ theorem IsLocalMin.hasDerivAt_eq_zero (h : IsLocalMin f a) (hf : HasDerivAt f f'
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.deriv_eq_zero (h : IsLocalMin f a) : deriv f a = 0 :=
-  if hf : DifferentiableAt ℝ f a then h.has_deriv_at_eq_zero hf.HasDerivAt
+  if hf : DifferentiableAt ℝ f a then h.hasDerivAt_eq_zero hf.HasDerivAt
   else deriv_zero_of_not_differentiableAt hf
 #align is_local_min.deriv_eq_zero IsLocalMin.deriv_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.hasDerivAt_eq_zero (h : IsLocalMax f a) (hf : HasDerivAt f f' a) : f' = 0 :=
-  neg_eq_zero.1 <| h.neg.has_deriv_at_eq_zero hf.neg
+  neg_eq_zero.1 <| h.neg.hasDerivAt_eq_zero hf.neg
 #align is_local_max.has_deriv_at_eq_zero IsLocalMax.hasDerivAt_eq_zero
 
 /-- **Fermat's Theorem**: the derivative of a function at a local maximum equals zero. -/
 theorem IsLocalMax.deriv_eq_zero (h : IsLocalMax f a) : deriv f a = 0 :=
-  if hf : DifferentiableAt ℝ f a then h.has_deriv_at_eq_zero hf.HasDerivAt
+  if hf : DifferentiableAt ℝ f a then h.hasDerivAt_eq_zero hf.HasDerivAt
   else deriv_zero_of_not_differentiableAt hf
 #align is_local_max.deriv_eq_zero IsLocalMax.deriv_eq_zero
 
@@ -332,7 +332,7 @@ theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hf
 theorem exists_hasDerivAt_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
     (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
-  ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
+  ⟨c, cmem, hc.hasDerivAt_eq_zero <| hff' c cmem⟩
 #align exists_has_deriv_at_eq_zero exists_hasDerivAt_eq_zero
 
 /-- **Rolle's Theorem** `deriv` version -/
@@ -359,7 +359,7 @@ theorem exists_hasDerivAt_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (�
     rw [eq_lim_at_right_extendFrom_Ioo hab hfb]
     exact eq_lim_at_left_extendFrom_Ioo hab hfa
   use c, hc
-  apply (hcextr.congr _).has_deriv_at_eq_zero (hff' c hc)
+  apply (hcextr.congr _).hasDerivAt_eq_zero (hff' c hc)
   rw [eventually_eq_iff_exists_mem]
   exact ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extendFrom_extends this⟩
 #align exists_has_deriv_at_eq_zero' exists_hasDerivAt_eq_zero'
@@ -410,7 +410,7 @@ theorem card_roots_toFinset_le_card_roots_derivative_diff_roots_succ (p : ℝ[X]
 one. -/
 theorem card_roots_toFinset_le_derivative (p : ℝ[X]) :
     p.roots.toFinset.card ≤ p.derivative.roots.toFinset.card + 1 :=
-  p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ.trans <|
+  p.card_roots_toFinset_le_card_roots_derivative_diff_roots_succ.trans <|
     add_le_add_right (Finset.card_mono <| Finset.sdiff_subset _ _) _
 #align polynomial.card_roots_to_finset_le_derivative Polynomial.card_roots_toFinset_le_derivative
 
@@ -432,7 +432,7 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
           ((p.derivative.roots.toFinset \ p.roots.toFinset).card + 1) :=
       add_le_add
         (Finset.sum_le_sum fun x hx => rootMultiplicity_sub_one_le_derivative_rootMultiplicity _ _)
-        p.card_roots_to_finset_le_card_roots_derivative_diff_roots_succ
+        p.card_roots_toFinset_le_card_roots_derivative_diff_roots_succ
     _ ≤
         (∑ x in p.roots.toFinset, p.derivative.roots.count x) +
           ((∑ x in p.derivative.roots.toFinset \ p.roots.toFinset, p.derivative.roots.count x) +

@@ -113,7 +113,7 @@ theorem m_unionᵢ (v : VectorMeasure α M) {f : ℕ → Set α} (hf₁ : ∀ i,
 theorem of_disjoint_unionᵢ_nat [T2Space M] (v : VectorMeasure α M) {f : ℕ → Set α}
     (hf₁ : ∀ i, MeasurableSet (f i)) (hf₂ : Pairwise (Disjoint on f)) :
     v (⋃ i, f i) = ∑' i, v (f i) :=
-  (v.m_Union hf₁ hf₂).tsum_eq.symm
+  (v.m_unionᵢ hf₁ hf₂).tsum_eq.symm
 #align measure_theory.vector_measure.of_disjoint_Union_nat MeasureTheory.VectorMeasure.of_disjoint_unionᵢ_nat
 
 theorem coe_injective : @Function.Injective (VectorMeasure α M) (Set α → M) coeFn := fun v w h =>
@@ -235,13 +235,13 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
 theorem of_unionᵢ_nonneg {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
     [OrderClosedTopology M] {v : VectorMeasure α M} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) (hf₃ : ∀ i, 0 ≤ v (f i)) : 0 ≤ v (⋃ i, f i) :=
-  (v.of_disjoint_Union_nat hf₁ hf₂).symm ▸ tsum_nonneg hf₃
+  (v.of_disjoint_unionᵢ_nat hf₁ hf₂).symm ▸ tsum_nonneg hf₃
 #align measure_theory.vector_measure.of_Union_nonneg MeasureTheory.VectorMeasure.of_unionᵢ_nonneg
 
 theorem of_unionᵢ_nonpos {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
     [OrderClosedTopology M] {v : VectorMeasure α M} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) (hf₃ : ∀ i, v (f i) ≤ 0) : v (⋃ i, f i) ≤ 0 :=
-  (v.of_disjoint_Union_nat hf₁ hf₂).symm ▸ tsum_nonpos hf₃
+  (v.of_disjoint_unionᵢ_nat hf₁ hf₂).symm ▸ tsum_nonpos hf₃
 #align measure_theory.vector_measure.of_Union_nonpos MeasureTheory.VectorMeasure.of_unionᵢ_nonpos
 
 theorem of_nonneg_disjoint_union_eq_zero {s : SignedMeasure α} {A B : Set α} (h : Disjoint A B)
@@ -279,7 +279,7 @@ def smul (r : R) (v : VectorMeasure α M) : VectorMeasure α M
   measureOf' := r • v
   empty' := by rw [Pi.smul_apply, Empty, smul_zero]
   not_measurable' _ hi := by rw [Pi.smul_apply, v.not_measurable hi, smul_zero]
-  m_Union' _ hf₁ hf₂ := HasSum.const_smul (v.m_Union hf₁ hf₂)
+  m_Union' _ hf₁ hf₂ := HasSum.const_smul (v.m_unionᵢ hf₁ hf₂)
 #align measure_theory.vector_measure.smul MeasureTheory.VectorMeasure.smul
 
 instance : SMul R (VectorMeasure α M) :=
@@ -325,7 +325,7 @@ def add (v w : VectorMeasure α M) : VectorMeasure α M
   measureOf' := v + w
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi, w.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.add (v.m_Union hf₁ hf₂) (w.m_Union hf₁ hf₂)
+  m_Union' f hf₁ hf₂ := HasSum.add (v.m_unionᵢ hf₁ hf₂) (w.m_unionᵢ hf₁ hf₂)
 #align measure_theory.vector_measure.add MeasureTheory.VectorMeasure.add
 
 instance : Add (VectorMeasure α M) :=
@@ -366,7 +366,7 @@ def neg (v : VectorMeasure α M) : VectorMeasure α M
   measureOf' := -v
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.neg <| v.m_Union hf₁ hf₂
+  m_Union' f hf₁ hf₂ := HasSum.neg <| v.m_unionᵢ hf₁ hf₂
 #align measure_theory.vector_measure.neg MeasureTheory.VectorMeasure.neg
 
 instance : Neg (VectorMeasure α M) :=
@@ -387,7 +387,7 @@ def sub (v w : VectorMeasure α M) : VectorMeasure α M
   measureOf' := v - w
   empty' := by simp
   not_measurable' _ hi := by simp [v.not_measurable hi, w.not_measurable hi]
-  m_Union' f hf₁ hf₂ := HasSum.sub (v.m_Union hf₁ hf₂) (w.m_Union hf₁ hf₂)
+  m_Union' f hf₁ hf₂ := HasSum.sub (v.m_unionᵢ hf₁ hf₂) (w.m_unionᵢ hf₁ hf₂)
 #align measure_theory.vector_measure.sub MeasureTheory.VectorMeasure.sub
 
 instance : Sub (VectorMeasure α M) :=
@@ -574,7 +574,7 @@ section
 
 /-- A vector measure over `ℝ≥0∞` is a measure. -/
 def ennrealToMeasure {m : MeasurableSpace α} (v : VectorMeasure α ℝ≥0∞) : Measure α :=
-  ofMeasurable (fun s _ => v s) v.Empty fun f hf₁ hf₂ => v.of_disjoint_Union_nat hf₁ hf₂
+  ofMeasurable (fun s _ => v s) v.Empty fun f hf₁ hf₂ => v.of_disjoint_unionᵢ_nat hf₁ hf₂
 #align measure_theory.vector_measure.ennreal_to_measure MeasureTheory.VectorMeasure.ennrealToMeasure
 
 theorem ennrealToMeasure_apply {m : MeasurableSpace α} {v : VectorMeasure α ℝ≥0∞} {s : Set α}
@@ -658,7 +658,7 @@ def mapRange (v : VectorMeasure α M) (f : M →+ N) (hf : Continuous f) : Vecto
   measureOf' s := f (v s)
   empty' := by rw [Empty, AddMonoidHom.map_zero]
   not_measurable' i hi := by rw [not_measurable v hi, AddMonoidHom.map_zero]
-  m_Union' g hg₁ hg₂ := HasSum.map (v.m_Union hg₁ hg₂) f hf
+  m_Union' g hg₁ hg₂ := HasSum.map (v.m_unionᵢ hg₁ hg₂) f hf
 #align measure_theory.vector_measure.map_range MeasureTheory.VectorMeasure.mapRange
 
 @[simp]

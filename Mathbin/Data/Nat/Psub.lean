@@ -52,12 +52,12 @@ def psub (m : ℕ) : ℕ → Option ℕ
 -/
 
 #print Nat.pred_eq_ppred /-
-theorem pred_eq_ppred (n : ℕ) : pred n = (ppred n).getOrElse 0 := by cases n <;> rfl
+theorem pred_eq_ppred (n : ℕ) : pred n = (ppred n).getD 0 := by cases n <;> rfl
 #align nat.pred_eq_ppred Nat.pred_eq_ppred
 -/
 
 #print Nat.sub_eq_psub /-
-theorem sub_eq_psub (m : ℕ) : ∀ n, m - n = (psub m n).getOrElse 0
+theorem sub_eq_psub (m : ℕ) : ∀ n, m - n = (psub m n).getD 0
   | 0 => rfl
   | n + 1 => (pred_eq_ppred (m - n)).trans <| by rw [sub_eq_psub, psub] <;> cases psub m n <;> rfl
 #align nat.sub_eq_psub Nat.sub_eq_psub

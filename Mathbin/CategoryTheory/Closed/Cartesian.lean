@@ -68,7 +68,7 @@ at once, rather than just for this one.
 -/
 def terminalExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] :
     Exponentiable (⊤_ C) :=
-  unit_closed
+  unitClosed
 #align category_theory.terminal_exponentiable CategoryTheory.terminalExponentiable
 
 /-- A category `C` is cartesian closed if it has finite products and every object is exponentiable.
@@ -237,7 +237,7 @@ def expTerminalIsoSelf [Exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
 
 /-- The internal element which points at the given morphism. -/
 def internalizeHom (f : A ⟶ Y) : ⊤_ C ⟶ A ⟹ Y :=
-  CartesianClosed.curry (limits.prod.fst ≫ f)
+  CartesianClosed.curry (Limits.prod.fst ≫ f)
 #align category_theory.internalize_hom CategoryTheory.internalizeHom
 
 section Pre

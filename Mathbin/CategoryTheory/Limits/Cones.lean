@@ -192,7 +192,7 @@ def equiv (F : J ⥤ C) : Cone F ≅ ΣX, F.cones.obj X
 
 /-- A map to the vertex of a cone naturally induces a cone by composition. -/
 @[simps]
-def extensions (c : Cone F) : yoneda.obj c.x ⋙ ulift_functor.{u₁} ⟶ F.cones
+def extensions (c : Cone F) : yoneda.obj c.x ⋙ uliftFunctor.{u₁} ⟶ F.cones
     where app X f := (const J).map f.down ≫ c.π
 #align category_theory.limits.cone.extensions CategoryTheory.Limits.Cone.extensions
 
@@ -234,7 +234,7 @@ def equiv (F : J ⥤ C) : Cocone F ≅ ΣX, F.cocones.obj X
 
 /-- A map from the vertex of a cocone naturally induces a cocone by composition. -/
 @[simps]
-def extensions (c : Cocone F) : coyoneda.obj (op c.x) ⋙ ulift_functor.{u₁} ⟶ F.cocones
+def extensions (c : Cocone F) : coyoneda.obj (op c.x) ⋙ uliftFunctor.{u₁} ⟶ F.cocones
     where app X f := c.ι ≫ (const J).map f.down
 #align category_theory.limits.cocone.extensions CategoryTheory.Limits.Cocone.extensions
 
@@ -446,8 +446,7 @@ instance reflects_cone_isomorphism (F : C ⥤ D) [ReflectsIsomorphisms F] (K : J
   by
   constructor
   intros
-  haveI : is_iso (F.map f.hom) :=
-    (cones.forget (K ⋙ F)).map_is_iso ((cones.functoriality K F).map f)
+  haveI : is_iso (F.map f.hom) := (cones.forget (K ⋙ F)).map_isIso ((cones.functoriality K F).map f)
   haveI := reflects_isomorphisms.reflects F f.hom
   apply cone_iso_of_hom_iso
 #align category_theory.limits.cones.reflects_cone_isomorphism CategoryTheory.Limits.Cones.reflects_cone_isomorphism
@@ -664,7 +663,7 @@ instance reflects_cocone_isomorphism (F : C ⥤ D) [ReflectsIsomorphisms F] (K :
   constructor
   intros
   haveI : is_iso (F.map f.hom) :=
-    (cocones.forget (K ⋙ F)).map_is_iso ((cocones.functoriality K F).map f)
+    (cocones.forget (K ⋙ F)).map_isIso ((cocones.functoriality K F).map f)
   haveI := reflects_isomorphisms.reflects F f.hom
   apply cocone_iso_of_hom_iso
 #align category_theory.limits.cocones.reflects_cocone_isomorphism CategoryTheory.Limits.Cocones.reflects_cocone_isomorphism
@@ -924,7 +923,7 @@ def coconeEquivalenceOpConeOp : Cocone F ≌ (Cone F.op)ᵒᵖ
           (by
             dsimp
             simp))
-  functor_unit_iso_comp' c := by
+  functor_unitIso_comp' c := by
     apply Quiver.Hom.unop_inj
     ext
     dsimp

@@ -138,7 +138,7 @@ theorem tendstoInMeasureOfTendstoAe [IsFiniteMeasure μ] (hf : ∀ n, AeStrongly
   have hg : ae_strongly_measurable g μ := aeStronglyMeasurableOfTendstoAe _ hf hfg
   refine' tendsto_in_measure.congr (fun i => (hf i).ae_eq_mk.symm) hg.ae_eq_mk.symm _
   refine'
-    tendsto_in_measure_of_tendsto_ae_of_strongly_measurable (fun i => (hf i).strongly_measurable_mk)
+    tendsto_in_measure_of_tendsto_ae_of_strongly_measurable (fun i => (hf i).stronglyMeasurable_mk)
       hg.strongly_measurable_mk _
   have hf_eq_ae : ∀ᵐ x ∂μ, ∀ n, (hf n).mk (f n) x = f n x :=
     ae_all_iff.mpr fun n => (hf n).ae_eq_mk.symm
@@ -331,7 +331,7 @@ theorem tendstoInMeasureOfTendstoSnormOfNeTop (hp_ne_zero : p ≠ 0) (hp_ne_top 
   refine' tendsto_in_measure.congr (fun i => (hf i).ae_eq_mk.symm) hg.ae_eq_mk.symm _
   refine'
     tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable hp_ne_zero hp_ne_top
-      (fun i => (hf i).strongly_measurable_mk) hg.strongly_measurable_mk _
+      (fun i => (hf i).stronglyMeasurable_mk) hg.strongly_measurable_mk _
   have : (fun n => snorm ((hf n).mk (f n) - hg.mk g) p μ) = fun n => snorm (f n - g) p μ :=
     by
     ext1 n

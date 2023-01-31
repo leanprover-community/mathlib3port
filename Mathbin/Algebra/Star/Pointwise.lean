@@ -128,14 +128,14 @@ theorem union_star [Star α] : (s ∪ t)⋆ = s⋆ ∪ t⋆ :=
 #print Set.interᵢ_star /-
 @[simp]
 theorem interᵢ_star {ι : Sort _} [Star α] (s : ι → Set α) : (⋂ i, s i)⋆ = ⋂ i, (s i)⋆ :=
-  preimage_Inter
+  preimage_interᵢ
 #align set.Inter_star Set.interᵢ_star
 -/
 
 #print Set.unionᵢ_star /-
 @[simp]
 theorem unionᵢ_star {ι : Sort _} [Star α] (s : ι → Set α) : (⋃ i, s i)⋆ = ⋃ i, (s i)⋆ :=
-  preimage_Union
+  preimage_unionᵢ
 #align set.Union_star Set.unionᵢ_star
 -/
 
@@ -153,7 +153,7 @@ theorem compl_star [Star α] : (sᶜ)⋆ = s⋆ᶜ :=
 @[simp]
 instance [InvolutiveStar α] : InvolutiveStar (Set α)
     where
-  star := Star.star
+  unit := Star.star
   star_involutive s := by simp only [← star_preimage, preimage_preimage, star_star, preimage_id']
 
 #print Set.star_subset_star /-

@@ -951,12 +951,12 @@ theorem lmul'_apply_tmul (a b : S) : lmul' R (a ⊗ₜ[R] b) = a * b :=
 
 @[simp]
 theorem lmul'_comp_includeLeft : (lmul' R : _ →ₐ[R] S).comp includeLeft = AlgHom.id R S :=
-  AlgHom.ext <| _root_.mul_one
+  AlgHom.ext <| mul_one
 #align algebra.tensor_product.lmul'_comp_include_left Algebra.TensorProduct.lmul'_comp_includeLeft
 
 @[simp]
 theorem lmul'_comp_includeRight : (lmul' R : _ →ₐ[R] S).comp includeRight = AlgHom.id R S :=
-  AlgHom.ext <| _root_.one_mul
+  AlgHom.ext <| one_mul
 #align algebra.tensor_product.lmul'_comp_include_right Algebra.TensorProduct.lmul'_comp_includeRight
 
 /-- If `S` is commutative, for a pair of morphisms `f : A →ₐ[R] S`, `g : B →ₐ[R] S`,
@@ -1109,7 +1109,7 @@ theorem Subalgebra.finiteDimensional_sup {K L : Type _} [Field K] [CommRing L] [
     FiniteDimensional K ↥(E1 ⊔ E2) :=
   by
   rw [← E1.range_val, ← E2.range_val, ← Algebra.TensorProduct.productMap_range]
-  exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finite_dimensional_range
+  exact (Algebra.TensorProduct.productMap E1.val E2.val).toLinearMap.finiteDimensional_range
 #align subalgebra.finite_dimensional_sup Subalgebra.finiteDimensional_sup
 
 namespace TensorProduct.Algebra

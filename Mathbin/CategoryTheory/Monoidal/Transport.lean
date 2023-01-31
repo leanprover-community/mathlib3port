@@ -105,7 +105,7 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D
       dsimp
       rw [tensor_id, tensor_id]
     simp only [category.id_comp, category.assoc]
-  left_unitor_naturality' X Y f := by
+  leftUnitor_naturality' X Y f := by
     dsimp
     simp only [functor.map_comp, Functor.map_id, category.assoc]
     erw [← e.counit_iso.hom.naturality]
@@ -113,7 +113,7 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D
     congr 2
     rw [e.inverse.map_id, id_tensor_comp_tensor_id_assoc, ← tensor_id_comp_id_tensor_assoc,
       left_unitor_naturality]
-  right_unitor_naturality' X Y f := by
+  rightUnitor_naturality' X Y f := by
     dsimp
     simp only [functor.map_comp, Functor.map_id, category.assoc]
     erw [← e.counit_iso.hom.naturality]
@@ -246,10 +246,10 @@ end
 def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e)
     where
   toLaxMonoidalFunctor := laxToTransported e
-  ε_is_iso := by
+  ε_isIso := by
     dsimp
     infer_instance
-  μ_is_iso X Y := by
+  μ_isIso X Y := by
     dsimp
     infer_instance
 #align category_theory.monoidal.to_transported CategoryTheory.Monoidal.toTransported

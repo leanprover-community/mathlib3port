@@ -645,10 +645,10 @@ variable (D)
 @[simps]
 def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D
     where
-  obj P := ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
+  obj P := ⟨J.sheafify P, J.sheafify_isSheaf P⟩
   map P Q η := ⟨J.sheafifyMap η⟩
-  map_id' P := Sheaf.Hom.ext _ _ <| J.sheafify_map_id _
-  map_comp' P Q R f g := Sheaf.Hom.ext _ _ <| J.sheafify_map_comp _ _
+  map_id' P := Sheaf.Hom.ext _ _ <| J.sheafifyMap_id _
+  map_comp' P Q R f g := Sheaf.Hom.ext _ _ <| J.sheafifyMap_comp _ _
 #align category_theory.presheaf_to_Sheaf CategoryTheory.presheafToSheaf
 
 instance presheafToSheaf_preservesZeroMorphisms [Preadditive D] :
@@ -665,12 +665,12 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
     { homEquiv := fun P Q =>
         { toFun := fun e => J.toSheafify P ≫ e.val
           invFun := fun e => ⟨J.sheafifyLift e Q.2⟩
-          left_inv := fun e => Sheaf.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm
-          right_inv := fun e => J.to_sheafify_sheafify_lift _ _ }
-      hom_equiv_naturality_left_symm' := by
+          left_inv := fun e => Sheaf.Hom.ext _ _ <| (J.sheafifyLift_unique _ _ _ rfl).symm
+          right_inv := fun e => J.toSheafify_sheafifyLift _ _ }
+      homEquiv_naturality_left_symm' := by
         intro P Q R η γ; ext1; dsimp; symm
         apply J.sheafify_map_sheafify_lift
-      hom_equiv_naturality_right' := fun P Q R η γ =>
+      homEquiv_naturality_right' := fun P Q R η γ =>
         by
         dsimp
         rw [category.assoc] }

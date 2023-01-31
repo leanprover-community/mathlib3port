@@ -67,7 +67,7 @@ scoped[Interval] notation "[" a ", " b "]" => Set.uIcc a b
 
 #print Set.dual_uIcc /-
 @[simp]
-theorem dual_uIcc (a b : α) : [toDual a, toDual b] = of_dual ⁻¹' [a, b] :=
+theorem dual_uIcc (a b : α) : [toDual a, toDual b] = ofDual ⁻¹' [a, b] :=
   dual_Icc
 #align set.dual_uIcc Set.dual_uIcc
 -/

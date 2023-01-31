@@ -107,7 +107,7 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → F
         l fun row =>
             if h : row = n then pure (⟨row, h⟩ : Vector α n)
             else interaction_monad.fail "Rows must be of equal length"
-      pure ⟨l, n, fun i j => (l _ i).nth j⟩
+      pure ⟨l, n, fun i j => (l _ i).get? j⟩
     | Sum.inr n => pure ⟨0, n, finZeroElim⟩
 #align matrix.entry_parser matrix.entry_parser
 
@@ -197,7 +197,7 @@ end DotProduct
 section ColRow
 
 @[simp]
-theorem col_empty (v : Fin 0 → α) : col v = vec_empty :=
+theorem col_empty (v : Fin 0 → α) : col v = vecEmpty :=
   empty_eq _
 #align matrix.col_empty Matrix.col_empty
 
@@ -246,12 +246,12 @@ theorem cons_transpose (v : n' → α) (A : Matrix (Fin m) n' α) :
 
 @[simp]
 theorem head_transpose (A : Matrix m' (Fin n.succ) α) :
-    vecHead (of.symm Aᵀ) = vec_head ∘ of.symm A :=
+    vecHead (of.symm Aᵀ) = vecHead ∘ of.symm A :=
   rfl
 #align matrix.head_transpose Matrix.head_transpose
 
 @[simp]
-theorem tail_transpose (A : Matrix m' (Fin n.succ) α) : vecTail (of.symm Aᵀ) = (vec_tail ∘ A)ᵀ :=
+theorem tail_transpose (A : Matrix m' (Fin n.succ) α) : vecTail (of.symm Aᵀ) = (vecTail ∘ A)ᵀ :=
   by
   ext (i j)
   rfl
@@ -357,7 +357,7 @@ theorem cons_mulVec [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (w : 
 
 @[simp]
 theorem mulVec_cons {α} [CommSemiring α] (A : m' → Fin n.succ → α) (x : α) (v : Fin n → α) :
-    mulVec (of A) (vecCons x v) = x • vec_head ∘ A + mulVec (of (vec_tail ∘ A)) v :=
+    mulVec (of A) (vecCons x v) = x • vecHead ∘ A + mulVec (of (vecTail ∘ A)) v :=
   by
   ext i
   simp [mul_vec, mul_comm]

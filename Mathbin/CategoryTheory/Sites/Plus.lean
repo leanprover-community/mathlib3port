@@ -124,8 +124,8 @@ def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D
     where
   obj P := J.diagram P X
   map P Q η := J.diagramNatTrans η X
-  map_id' P := J.diagram_nat_trans_id _ _
-  map_comp' P Q R η γ := J.diagram_nat_trans_comp _ _ _
+  map_id' P := J.diagramNatTrans_id _ _
+  map_comp' P Q R η γ := J.diagramNatTrans_comp _ _ _
 #align category_theory.grothendieck_topology.diagram_functor CategoryTheory.GrothendieckTopology.diagramFunctor
 
 variable {D}

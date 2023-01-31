@@ -92,7 +92,7 @@ theorem TopologicalSemiring.to_topologicalRing [TopologicalSpace α] [NonAssocRi
 -- See note [lower instance priority]
 instance (priority := 100) TopologicalRing.to_topologicalAddGroup [NonUnitalNonAssocRing α]
     [TopologicalSpace α] [TopologicalRing α] : TopologicalAddGroup α :=
-  { TopologicalRing.to_topologicalSemiring.to_has_continuous_add,
+  { TopologicalRing.to_topologicalSemiring.to_hasContinuousAdd,
     TopologicalRing.to_hasContinuousNeg with }
 #align topological_ring.to_topological_add_group TopologicalRing.to_topologicalAddGroup
 
@@ -184,7 +184,7 @@ instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousAdd 
     HasContinuousAdd αᵐᵒᵖ
     where continuous_add :=
     continuous_induced_rng.2 <|
-      (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
+      (@continuous_add α _ _ _).comp (continuous_unop.Prod_map continuous_unop)
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
     TopologicalSemiring αᵐᵒᵖ where
@@ -432,7 +432,7 @@ instance : PartialOrder (RingTopology α) :=
 local notation "cont" => @Continuous _ _
 
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
-  let Inf_S' := infₛ (to_topological_space '' S)
+  let Inf_S' := infₛ (toTopologicalSpace '' S)
   { toTopologicalSpace := Inf_S'
     continuous_add := by
       apply continuous_infₛ_rng.2
@@ -463,12 +463,12 @@ The supremum of two ring topologies `s` and `t` is the infimum of the family of 
 contained in the intersection of `s` and `t`. -/
 instance : CompleteSemilatticeInf (RingTopology α) :=
   { RingTopology.partialOrder with
-    inf := defInf
-    Inf_le := fun S a haS =>
+    infₛ := defInf
+    inf_le := fun S a haS =>
       by
       apply topological_space.complete_lattice.Inf_le
       use a, ⟨haS, rfl⟩
-    le_Inf := by
+    le_inf := by
       intro S a hab
       apply topological_space.complete_lattice.le_Inf
       rintro _ ⟨b, hbS, rfl⟩
@@ -496,8 +496,8 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β
 def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
     where
   toTopologicalSpace := t.toTopologicalSpace
-  to_topological_add_group :=
-    @TopologicalRing.to_topologicalAddGroup _ _ t.toTopologicalSpace t.to_topological_ring
+  to_topologicalAddGroup :=
+    @TopologicalRing.to_topologicalAddGroup _ _ t.toTopologicalSpace t.to_topologicalRing
 #align ring_topology.to_add_group_topology RingTopology.toAddGroupTopology
 
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/

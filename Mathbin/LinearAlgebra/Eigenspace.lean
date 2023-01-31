@@ -142,7 +142,7 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
       intro h
       rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq
       cases hq
-    _ = (aeval f (c q.leadingCoeff * X + c (q.coeff 0))).ker :=
+    _ = (aeval f (c q.leadingCoeff * x + c (q.coeff 0))).ker :=
       by
       rw [C_mul', aeval_def]
       simp [algebraMap, Algebra.toRingHom]
@@ -215,7 +215,7 @@ noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
   Set.Finite.fintype
     (by
       have h : minpoly K f ≠ 0 := minpoly.ne_zero f.is_integral
-      convert (minpoly K f).root_set_finite K
+      convert (minpoly K f).rootSet_finite K
       ext μ
       have : μ ∈ { μ : K | f.eigenspace μ = ⊥ → False } ↔ ¬f.eigenspace μ = ⊥ := by tauto
       convert rfl.mpr this
@@ -236,7 +236,7 @@ theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V]
 
 noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
     Inhabited f.Eigenvalues :=
-  ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.some_spec⟩⟩
+  ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.choose_spec⟩⟩
 
 /-- The eigenspaces of a linear operator form an independent family of subspaces of `V`.  That is,
 any eigenspace has trivial intersection with the span of all the other eigenspaces. -/

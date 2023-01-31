@@ -167,7 +167,7 @@ instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
 -/
 def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C
     where
-  obj := F ∘ discrete.as
+  obj := F ∘ Discrete.as
   map X Y f :=
     by
     trace
@@ -191,7 +191,7 @@ composition of two discrete functors.
 -/
 @[simps]
 def functorComp {I : Type u₁} {J : Type u₁'} (f : J → C) (g : I → J) :
-    Discrete.functor (f ∘ g) ≅ Discrete.functor (discrete.mk ∘ g) ⋙ Discrete.functor f :=
+    Discrete.functor (f ∘ g) ≅ Discrete.functor (Discrete.mk ∘ g) ⋙ Discrete.functor f :=
   NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 #align category_theory.discrete.functor_comp CategoryTheory.Discrete.functorComp
 
@@ -236,8 +236,8 @@ theorem natIso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discret
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
   `discrete.functor (F.obj)`. -/
 @[simp]
-def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functor (F.obj ∘ discrete.mk) :=
-  nat_iso fun i =>
+def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functor (F.obj ∘ Discrete.mk) :=
+  natIso fun i =>
     by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
@@ -248,7 +248,7 @@ def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functo
 @[simp]
 def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : I → C) (G : C ⥤ D) :
     Discrete.functor F ⋙ G ≅ Discrete.functor (G.obj ∘ F) :=
-  nat_iso fun i => Iso.refl _
+  natIso fun i => Iso.refl _
 #align category_theory.discrete.comp_nat_iso_discrete CategoryTheory.Discrete.compNatIsoDiscrete
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
@@ -259,8 +259,8 @@ an equivalence between the corresponding `discrete` categories.
 @[simps]
 def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ Discrete J
     where
-  Functor := Discrete.functor (discrete.mk ∘ (e : I → J))
-  inverse := Discrete.functor (discrete.mk ∘ (e.symm : J → I))
+  Functor := Discrete.functor (Discrete.mk ∘ (e : I → J))
+  inverse := Discrete.functor (Discrete.mk ∘ (e.symm : J → I))
   unitIso :=
     Discrete.natIso fun i =>
       eqToIso
@@ -281,8 +281,8 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
 @[simps]
 def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) : α ≃ β
     where
-  toFun := discrete.as ∘ h.Functor.obj ∘ discrete.mk
-  invFun := discrete.as ∘ h.inverse.obj ∘ discrete.mk
+  toFun := Discrete.as ∘ h.Functor.obj ∘ Discrete.mk
+  invFun := Discrete.as ∘ h.inverse.obj ∘ Discrete.mk
   left_inv a := by simpa using eq_of_hom (h.unit_iso.app (discrete.mk a)).2
   right_inv a := by simpa using eq_of_hom (h.counit_iso.app (discrete.mk a)).1
 #align category_theory.discrete.equiv_of_equivalence CategoryTheory.Discrete.equivOfEquivalence

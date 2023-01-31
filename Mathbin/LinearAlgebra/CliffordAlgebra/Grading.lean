@@ -146,7 +146,7 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
 
 theorem supᵢ_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
   by
-  rw [← (DirectSum.Decomposition.isInternal (even_odd Q)).submodule_supr_eq_top, eq_comm]
+  rw [← (DirectSum.Decomposition.isInternal (even_odd Q)).submodule_supᵢ_eq_top, eq_comm]
   calc
     (⨆ (i : ZMod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
         ⨆ i : Σi : ZMod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
@@ -170,7 +170,7 @@ of vectors. -/
 theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     (hr :
       ∀ (v) (h : v ∈ (ι Q).range ^ n.val),
-        P v (Submodule.mem_supᵢ_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
+        P v (Submodule.mem_supᵢ_of_mem ⟨n.val, n.nat_cast_zMod_val⟩ h))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},

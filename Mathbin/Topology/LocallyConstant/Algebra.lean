@@ -190,8 +190,8 @@ instance [AddMonoidWithOne Y] : AddMonoidWithOne (LocallyConstant X Y) :=
   { LocallyConstant.addMonoid,
     LocallyConstant.hasOne with
     natCast := fun n => const X n
-    nat_cast_zero := by ext <;> simp [Nat.cast]
-    nat_cast_succ := fun _ => by ext <;> simp [Nat.cast] }
+    natCast_zero := by ext <;> simp [Nat.cast]
+    natCast_succ := fun _ => by ext <;> simp [Nat.cast] }
 
 @[to_additive]
 instance [CommMonoid Y] : CommMonoid (LocallyConstant X Y) :=

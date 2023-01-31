@@ -165,7 +165,7 @@ theorem Convex.openSegment_interior_closure_subset_interior {s : Set E} (hs : Co
 
 theorem Convex.openSegment_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ interior s) (hy : y ∈ s) : openSegment 𝕜 x y ⊆ interior s :=
-  hs.open_segment_interior_closure_subset_interior hx (subset_closure hy)
+  hs.openSegment_interior_closure_subset_interior hx (subset_closure hy)
 #align convex.open_segment_interior_self_subset_interior Convex.openSegment_interior_self_subset_interior
 
 theorem Convex.openSegment_closure_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
@@ -177,7 +177,7 @@ theorem Convex.openSegment_closure_interior_subset_interior {s : Set E} (hs : Co
 
 theorem Convex.openSegment_self_interior_subset_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E}
     (hx : x ∈ s) (hy : y ∈ interior s) : openSegment 𝕜 x y ⊆ interior s :=
-  hs.open_segment_closure_interior_subset_interior (subset_closure hx) hy
+  hs.openSegment_closure_interior_subset_interior (subset_closure hx) hy
 #align convex.open_segment_self_interior_subset_interior Convex.openSegment_self_interior_subset_interior
 
 /-- If `x ∈ closure s` and `y ∈ interior s`, then the segment `(x, y]` is included in `interior s`.
@@ -211,7 +211,7 @@ theorem Convex.add_smul_mem_interior {s : Set E} (hs : Convex 𝕜 s) {x y : E} 
 /-- In a topological vector space, the interior of a convex set is convex. -/
 protected theorem Convex.interior {s : Set E} (hs : Convex 𝕜 s) : Convex 𝕜 (interior s) :=
   convex_iff_openSegment_subset.mpr fun x hx y hy =>
-    hs.open_segment_closure_interior_subset_interior (interior_subset_closure hx) hy
+    hs.openSegment_closure_interior_subset_interior (interior_subset_closure hx) hy
 #align convex.interior Convex.interior
 
 /-- In a topological vector space, the closure of a convex set is convex. -/
@@ -274,7 +274,7 @@ theorem Set.Finite.compact_convexHull {s : Set E} (hs : s.Finite) : IsCompact (c
 /-- Convex hull of a finite set is closed. -/
 theorem Set.Finite.isClosed_convexHull [T2Space E] {s : Set E} (hs : s.Finite) :
     IsClosed (convexHull ℝ s) :=
-  hs.compact_convex_hull.IsClosed
+  hs.compact_convexHull.IsClosed
 #align set.finite.is_closed_convex_hull Set.Finite.isClosed_convexHull
 
 open AffineMap

@@ -490,7 +490,7 @@ instance : CompleteLattice (Submonoid M) :=
     top := ⊤
     le_top := fun S x hx => mem_top x
     inf := (· ⊓ ·)
-    inf := InfSet.infₛ
+    infₛ := InfSet.infₛ
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩
     inf_le_left := fun a b x => And.left
     inf_le_right := fun a b x => And.right }
@@ -544,7 +544,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.mem_closure Submonoid.mem_closureₓ'. -/
 @[to_additive]
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Submonoid M, s ⊆ S → x ∈ S :=
-  mem_Inf
+  mem_infₛ
 #align submonoid.mem_closure Submonoid.mem_closure
 #align add_submonoid.mem_closure AddSubmonoid.mem_closure
 
@@ -773,7 +773,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.closure_Union Submonoid.closure_unionᵢₓ'. -/
 @[to_additive]
 theorem closure_unionᵢ {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
-  (Submonoid.gi M).gc.l_supr
+  (Submonoid.gi M).gc.l_supᵢ
 #align submonoid.closure_Union Submonoid.closure_unionᵢ
 #align add_submonoid.closure_Union AddSubmonoid.closure_unionᵢ
 
@@ -869,7 +869,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_3 : MulOneClass.{u1} N] (f : MonoidHom.{u2, u1} M N _inst_1 _inst_3), Eq.{succ u2} (Submonoid.{u2} M _inst_1) (MonoidHom.eqLocusM.{u2, u1} M N _inst_1 _inst_3 f f) (Top.top.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instTopSubmonoid.{u2} M _inst_1))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_mlocus_same MonoidHom.eqLocusM_sameₓ'. -/
 @[simp, to_additive]
-theorem eqLocusM_same (f : M →* N) : f.eqMlocus f = ⊤ :=
+theorem eqLocusM_same (f : M →* N) : f.eqLocus f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
 #align monoid_hom.eq_mlocus_same MonoidHom.eqLocusM_same
 #align add_monoid_hom.eq_mlocus_same AddMonoidHom.eqLocusM_same
@@ -884,7 +884,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_on_mclos
 @[to_additive
       "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]
 theorem eqOn_closureM {f g : M →* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
-  show closure s ≤ f.eqMlocus g from closure_le.2 h
+  show closure s ≤ f.eqLocus g from closure_le.2 h
 #align monoid_hom.eq_on_mclosure MonoidHom.eqOn_closureM
 #align add_monoid_hom.eq_on_mclosure AddMonoidHom.eqOn_closureM
 
@@ -909,7 +909,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_of_eq_on
 @[to_additive]
 theorem eq_of_eqOn_denseM {s : Set M} (hs : closure s = ⊤) {f g : M →* N} (h : s.EqOn f g) :
     f = g :=
-  eq_of_eq_on_mtop <| hs ▸ eqOn_closureM h
+  eq_of_eqOn_topM <| hs ▸ eqOn_closureM h
 #align monoid_hom.eq_of_eq_on_mdense MonoidHom.eq_of_eqOn_denseM
 #align add_monoid_hom.eq_of_eq_on_mdense AddMonoidHom.eq_of_eqOn_denseM
 

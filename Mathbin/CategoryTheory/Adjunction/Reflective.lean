@@ -102,7 +102,7 @@ theorem mem_essImage_of_unit_isSplitMono [Reflective i] {A : C}
     [IsSplitMono ((ofRightAdjoint i).Unit.app A)] : A ∈ i.essImage :=
   by
   let η : 𝟭 C ⟶ left_adjoint i ⋙ i := (of_right_adjoint i).Unit
-  haveI : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_is_iso
+  haveI : is_iso (η.app (i.obj ((left_adjoint i).obj A))) := (i.obj_mem_ess_image _).unit_isIso
   have : epi (η.app A) := by
     apply epi_of_epi (retraction (η.app A)) _
     rw [show retraction _ ≫ η.app A = _ from η.naturality (retraction (η.app A))]
@@ -176,7 +176,7 @@ def equivEssImageOfReflective [Reflective i] : D ≌ i.EssImageSubcategory
   Functor := i.toEssImage
   inverse := i.essImageInclusion ⋙ (leftAdjoint i : _)
   unitIso :=
-    NatIso.ofComponents (fun X => (as_iso <| (ofRightAdjoint i).counit.app X).symm)
+    NatIso.ofComponents (fun X => (asIso <| (ofRightAdjoint i).counit.app X).symm)
       (by
         intro X Y f
         dsimp

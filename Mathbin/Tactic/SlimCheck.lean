@@ -142,7 +142,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
     summarize_instance <| b v
   | e@(app f x) => do
     let q(Testable $(p)) ← infer_type e
-    let xs ← e.get_app_args.mmapFilter (try_core ∘ summarize_instance)
+    let xs ← e.get_app_args.filterMapM (try_core ∘ summarize_instance)
     pure <| instance_tree.node e p xs
   | e => do
     failed
@@ -151,7 +151,7 @@ unsafe def summarize_instance : expr → tactic instance_tree
 /-- format a `instance_tree` -/
 unsafe def instance_tree.to_format : instance_tree → tactic format
   | instance_tree.node n p xs => do
-    let xs ← format.join <$> xs.mmap fun t => flip format.indent 2 <$> instance_tree.to_format t
+    let xs ← format.join <$> xs.mapM fun t => flip format.indent 2 <$> instance_tree.to_format t
     let ys ← f!"testable ({← p})"
     f!"+ {(← n)} :{(← format.indent ys 2)}
         {← xs}"

@@ -31,7 +31,7 @@ open Classical Topology Nat BigOperators uniformity Nnreal Ennreal
 variable {α : Type _} {β : Type _} {ι : Type _}
 
 theorem tendsto_norm_atTop_atTop : Tendsto (norm : ℝ → ℝ) atTop atTop :=
-  tendsto_abs_at_top_at_top
+  tendsto_abs_atTop_atTop
 #align tendsto_norm_at_top_at_top tendsto_norm_atTop_atTop
 
 theorem summable_of_absolute_convergence_real {f : ℕ → ℝ} :
@@ -96,7 +96,7 @@ theorem continuousAt_inv {𝕜 : Type _} [NontriviallyNormedField 𝕜] {x : �
 end NormedField
 
 theorem isOCat_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
-    (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
+    (fun n : ℕ => r₁ ^ n) =o[atTop] fun n => r₂ ^ n :=
   have H : 0 < r₂ := h₁.trans_lt h₂
   (isOCat_of_tendsto fun n hn => False.elim <| H.ne' <| pow_eq_zero hn) <|
     (tendsto_pow_atTop_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr
@@ -104,12 +104,12 @@ theorem isOCat_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : 
 #align is_o_pow_pow_of_lt_left isOCat_pow_pow_of_lt_left
 
 theorem isO_pow_pow_of_le_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ ≤ r₂) :
-    (fun n : ℕ => r₁ ^ n) =O[at_top] fun n => r₂ ^ n :=
+    (fun n : ℕ => r₁ ^ n) =O[atTop] fun n => r₂ ^ n :=
   h₂.eq_or_lt.elim (fun h => h ▸ isO_refl _ _) fun h => (isOCat_pow_pow_of_lt_left h₁ h).IsO
 #align is_O_pow_pow_of_le_left isO_pow_pow_of_le_left
 
 theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
-    (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
+    (fun n : ℕ => r₁ ^ n) =o[atTop] fun n => r₂ ^ n :=
   by
   refine' (is_o.of_norm_left _).of_norm_right
   exact (isOCat_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
@@ -151,7 +151,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_»
               `f
               " =o["
-              `at_top
+              `atTop
               "] "
               (Term.app `pow [`a])))
             ","
@@ -163,7 +163,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=o[_]_»
               `f
               " =o["
-              `at_top
+              `atTop
               "] "
               (Term.app `pow [`a])))
             ","
@@ -175,7 +175,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_»
               `f
               " =O["
-              `at_top
+              `atTop
               "] "
               (Term.app `pow [`a])))
             ","
@@ -187,7 +187,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
              (Asymptotics.Analysis.Asymptotics.Asymptotics.«term_=O[_]_»
               `f
               " =O["
-              `at_top
+              `atTop
               "] "
               (Term.app `pow [`a])))
             ","
@@ -247,7 +247,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
               (Std.ExtendedBinder.extBinders
                (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) []))
               " in "
-              `at_top
+              `atTop
               ", "
               («term_≤_»
                («term|___|» (group "|") (Term.app `f [`n]) (group) "|")
@@ -264,7 +264,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
               (Std.ExtendedBinder.extBinders
                (Std.ExtendedBinder.extBinder (Lean.binderIdent `n) []))
               " in "
-              `at_top
+              `atTop
               ", "
               («term_≤_»
                («term|___|» (group "|") (Term.app `f [`n]) (group) "|")
@@ -1756,21 +1756,21 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
       :
         TFAE
           [
-            ∃ a ∈ Ioo - R R , f =o[ at_top ] pow a
+            ∃ a ∈ Ioo - R R , f =o[ atTop ] pow a
               ,
-              ∃ a ∈ Ioo 0 R , f =o[ at_top ] pow a
+              ∃ a ∈ Ioo 0 R , f =o[ atTop ] pow a
               ,
-              ∃ a ∈ Ioo - R R , f =O[ at_top ] pow a
+              ∃ a ∈ Ioo - R R , f =O[ atTop ] pow a
               ,
-              ∃ a ∈ Ioo 0 R , f =O[ at_top ] pow a
+              ∃ a ∈ Ioo 0 R , f =O[ atTop ] pow a
               ,
               ∃ a < R , ∃ ( C : _ ) ( h₀ : 0 < C ∨ 0 < R ) , ∀ n , | f n | ≤ C * a ^ n
               ,
               ∃ a ∈ Ioo 0 R , ∃ C > 0 , ∀ n , | f n | ≤ C * a ^ n
               ,
-              ∃ a < R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
+              ∃ a < R , ∀ᶠ n in atTop , | f n | ≤ a ^ n
               ,
-              ∃ a ∈ Ioo 0 R , ∀ᶠ n in at_top , | f n | ≤ a ^ n
+              ∃ a ∈ Ioo 0 R , ∀ᶠ n in atTop , | f n | ≤ a ^ n
             ]
     :=
       by
@@ -1850,7 +1850,7 @@ theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
 
 /-- For any natural `k` and a real `r > 1` we have `n ^ k = o(r ^ n)` as `n → ∞`. -/
 theorem isOCat_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ}
-    (hr : 1 < r) : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => r ^ n :=
+    (hr : 1 < r) : (fun n => n ^ k : ℕ → R) =o[atTop] fun n => r ^ n :=
   by
   have : tendsto (fun x : ℝ => x ^ k) (𝓝[>] 1) (𝓝 1) :=
     ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).mono_left inf_le_left
@@ -1870,14 +1870,14 @@ theorem isOCat_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : �
 
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
 theorem isOCat_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
-    (coe : ℕ → R) =o[at_top] fun n => r ^ n := by
+    (coe : ℕ → R) =o[atTop] fun n => r ^ n := by
   simpa only [pow_one] using @isOCat_pow_const_const_pow_of_one_lt R _ 1 _ hr
 #align is_o_coe_const_pow_of_one_lt isOCat_coe_const_pow_of_one_lt
 
 /-- If `‖r₁‖ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
 theorem isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ)
     {r₁ : R} {r₂ : ℝ} (h : ‖r₁‖ < r₂) :
-    (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[at_top] fun n => r₂ ^ n :=
+    (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[atTop] fun n => r₂ ^ n :=
   by
   by_cases h0 : r₁ = 0
   · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
@@ -2189,7 +2189,7 @@ end NormedRingGeometric
 
 theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGroup α]
     [CompleteSpace α] {f : ℕ → α} {r : ℝ} (hr₁ : r < 1)
-    (h : ∀ᶠ n in at_top, ‖f (n + 1)‖ ≤ r * ‖f n‖) : Summable f :=
+    (h : ∀ᶠ n in atTop, ‖f (n + 1)‖ ≤ r * ‖f n‖) : Summable f :=
   by
   by_cases hr₀ : 0 ≤ r
   · rw [eventually_at_top] at h
@@ -2211,7 +2211,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
 #align summable_of_ratio_norm_eventually_le summable_of_ratio_norm_eventually_le
 
 theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedAddCommGroup α] [CompleteSpace α]
-    {f : ℕ → α} {l : ℝ} (hl₁ : l < 1) (hf : ∀ᶠ n in at_top, f n ≠ 0)
+    {f : ℕ → α} {l : ℝ} (hl₁ : l < 1) (hf : ∀ᶠ n in atTop, f n ≠ 0)
     (h : Tendsto (fun n => ‖f (n + 1)‖ / ‖f n‖) atTop (𝓝 l)) : Summable f :=
   by
   rcases exists_between hl₁ with ⟨r, hr₀, hr₁⟩
@@ -2221,8 +2221,8 @@ theorem summable_of_ratio_test_tendsto_lt_one {α : Type _} [NormedAddCommGroup 
 #align summable_of_ratio_test_tendsto_lt_one summable_of_ratio_test_tendsto_lt_one
 
 theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCommGroup α] {f : ℕ → α}
-    {r : ℝ} (hr : 1 < r) (hf : ∃ᶠ n in at_top, ‖f n‖ ≠ 0)
-    (h : ∀ᶠ n in at_top, r * ‖f n‖ ≤ ‖f (n + 1)‖) : ¬Summable f :=
+    {r : ℝ} (hr : 1 < r) (hf : ∃ᶠ n in atTop, ‖f n‖ ≠ 0)
+    (h : ∀ᶠ n in atTop, r * ‖f n‖ ≤ ‖f (n + 1)‖) : ¬Summable f :=
   by
   rw [eventually_at_top] at h
   rcases h with ⟨N₀, hN₀⟩
@@ -2321,7 +2321,7 @@ theorem Monotone.cauchySeq_alternating_series_of_tendsto_zero (hfa : Monotone f)
 theorem Monotone.tendsto_alternating_series_of_tendsto_zero (hfa : Monotone f)
     (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchySeq_tendsto_of_complete <| hfa.cauchy_seq_alternating_series_of_tendsto_zero hf0
+  cauchySeq_tendsto_of_complete <| hfa.cauchySeq_alternating_series_of_tendsto_zero hf0
 #align monotone.tendsto_alternating_series_of_tendsto_zero Monotone.tendsto_alternating_series_of_tendsto_zero
 
 /-- The **alternating series test** for antitone sequences.
@@ -2337,7 +2337,7 @@ theorem Antitone.cauchySeq_alternating_series_of_tendsto_zero (hfa : Antitone f)
 theorem Antitone.tendsto_alternating_series_of_tendsto_zero (hfa : Antitone f)
     (hf0 : Tendsto f atTop (𝓝 0)) :
     ∃ l, Tendsto (fun n => ∑ i in range (n + 1), (-1) ^ i * f i) atTop (𝓝 l) :=
-  cauchySeq_tendsto_of_complete <| hfa.cauchy_seq_alternating_series_of_tendsto_zero hf0
+  cauchySeq_tendsto_of_complete <| hfa.cauchySeq_alternating_series_of_tendsto_zero hf0
 #align antitone.tendsto_alternating_series_of_tendsto_zero Antitone.tendsto_alternating_series_of_tendsto_zero
 
 end
@@ -2371,6 +2371,6 @@ theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n
 
 theorem Real.tendsto_pow_div_factorial_atTop (x : ℝ) :
     Tendsto (fun n => x ^ n / n ! : ℕ → ℝ) atTop (𝓝 0) :=
-  (Real.summable_pow_div_factorial x).tendsto_at_top_zero
+  (Real.summable_pow_div_factorial x).tendsto_atTop_zero
 #align real.tendsto_pow_div_factorial_at_top Real.tendsto_pow_div_factorial_atTop
 

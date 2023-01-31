@@ -52,10 +52,10 @@ variable (R : Type _) [CommRing R]
 Although the coefficients are integers, it is convenient to work over an arbitrary commutative ring.
 -/
 def bernsteinPolynomial (n ν : ℕ) : R[X] :=
-  choose n ν * X ^ ν * (1 - X) ^ (n - ν)
+  choose n ν * x ^ ν * (1 - x) ^ (n - ν)
 #align bernstein_polynomial bernsteinPolynomial
 
-example : bernsteinPolynomial ℤ 3 2 = 3 * X ^ 2 - 3 * X ^ 3 :=
+example : bernsteinPolynomial ℤ 3 2 = 3 * x ^ 2 - 3 * x ^ 3 :=
   by
   norm_num [bernsteinPolynomial, choose]
   ring
@@ -78,12 +78,12 @@ theorem map (f : R →+* S) (n ν : ℕ) :
 end
 
 theorem flip (n ν : ℕ) (h : ν ≤ n) :
-    (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
+    (bernsteinPolynomial R n ν).comp (1 - x) = bernsteinPolynomial R n (n - ν) := by
   simp [bernsteinPolynomial, h, tsub_tsub_assoc, mul_right_comm]
 #align bernstein_polynomial.flip bernsteinPolynomial.flip
 
 theorem flip' (n ν : ℕ) (h : ν ≤ n) :
-    bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
+    bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - x) := by
   simp [← flip _ _ _ h, Polynomial.comp_assoc]
 #align bernstein_polynomial.flip' bernsteinPolynomial.flip'
 
@@ -315,7 +315,7 @@ theorem linearIndependent (n : ℕ) :
 
 theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
-    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n :=
+    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (x + (1 - x)) ^ n :=
       by
       rw [add_pow]
       simp only [bernsteinPolynomial, mul_comm, mul_assoc, mul_left_comm]
@@ -327,7 +327,7 @@ open Polynomial
 
 open MvPolynomial
 
-theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν) = n • X :=
+theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν) = n • x :=
   by
   -- We calculate the `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
   -- either directly or by using the binomial theorem.
@@ -373,7 +373,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
 
 theorem sum_mul_smul (n : ℕ) :
     (∑ ν in Finset.range (n + 1), (ν * (ν - 1)) • bernsteinPolynomial R n ν) =
-      (n * (n - 1)) • X ^ 2 :=
+      (n * (n - 1)) • x ^ 2 :=
   by
   -- We calculate the second `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
   -- either directly or by using the binomial theorem.

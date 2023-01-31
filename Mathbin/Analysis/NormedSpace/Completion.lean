@@ -74,7 +74,7 @@ theorem coe_toComplL : ⇑(toComplL : E →L[𝕜] Completion E) = coe :=
 @[simp]
 theorem norm_toComplL {𝕜 E : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
     [NormedSpace 𝕜 E] [Nontrivial E] : ‖(toComplL : E →L[𝕜] Completion E)‖ = 1 :=
-  (toComplₗᵢ : E →ₗᵢ[𝕜] Completion E).norm_to_continuous_linear_map
+  (toComplₗᵢ : E →ₗᵢ[𝕜] Completion E).norm_toContinuousLinearMap
 #align uniform_space.completion.norm_to_complL UniformSpace.Completion.norm_toComplL
 
 section Algebra

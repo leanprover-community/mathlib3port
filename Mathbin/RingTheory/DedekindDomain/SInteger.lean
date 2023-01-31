@@ -71,7 +71,7 @@ def integer : Subalgebra R K :=
     (⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring).copy
         { x : K | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation x ≤ 1 } <|
       Set.ext fun _ => by simpa only [SetLike.mem_coe, Subring.mem_infᵢ] with
-    algebra_map_mem' := fun x v _ => v.valuation_le_one x }
+    algebraMap_mem' := fun x v _ => v.valuation_le_one x }
 #align set.integer Set.integer
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (v «expr ∉ » S) -/

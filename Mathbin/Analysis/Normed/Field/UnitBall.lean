@@ -194,8 +194,8 @@ instance [NormedDivisionRing 𝕜] : HasDistribNeg (sphere (0 : 𝕜) 1) :=
 
 instance [NormedDivisionRing 𝕜] : TopologicalGroup (sphere (0 : 𝕜) 1)
     where
-  to_has_continuous_mul := (Submonoid.unitSphere 𝕜).HasContinuousMul
-  continuous_inv := (continuous_subtype_coe.inv₀ ne_zero_of_mem_unit_sphere).subtype_mk _
+  to_hasContinuousMul := (Submonoid.unitSphere 𝕜).HasContinuousMul
+  continuous_inv := (continuous_subtype_val.inv₀ ne_zero_of_mem_unit_sphere).subtype_mk _
 
 instance [NormedField 𝕜] : CommGroup (sphere (0 : 𝕜) 1) :=
   { Metric.sphere.group, SubmonoidClass.toCommMonoid (Submonoid.unitSphere 𝕜) with }

@@ -132,7 +132,7 @@ theorem Ico_map_valMinAbs_natAbs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] (a 
 private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
     (a ^ (p / 2) * (p / 2)! : ZMod p) =
-      (-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
+      (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
         (p / 2)! :=
   calc
     (a ^ (p / 2) * (p / 2)! : ZMod p) = ∏ x in Ico 1 (p / 2).succ, a * x := by
@@ -147,19 +147,19 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
         simp only [nat_cast_nat_abs_val_min_abs]
         split_ifs <;> simp
     _ =
-        (-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
+        (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
           ∏ x in Ico 1 (p / 2).succ, (a * x : ZMod p).valMinAbs.natAbs :=
       by
       have :
         (∏ x in Ico 1 (p / 2).succ, if (a * x : ZMod p).val ≤ p / 2 then (1 : ZMod p) else -1) =
-          ∏ x in (Ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2, -1 :=
+          ∏ x in (Ico 1 (p / 2).succ).filterₓ fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2, -1 :=
         prod_bij_ne_one (fun x _ _ => x)
           (fun x => by split_ifs <;> simp_all (config := { contextual := true }))
           (fun _ _ _ _ _ _ => id) (fun b h _ => ⟨b, by simp_all [-not_le]⟩)
           (by intros <;> split_ifs  at * <;> simp_all)
       rw [prod_mul_distrib, this] <;> simp
     _ =
-        (-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
+        (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
           (p / 2)! :=
       by
       rw [← prod_nat_cast, Finset.prod_eq_multiset_prod,
@@ -171,7 +171,7 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
 theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
     (a ^ (p / 2) : ZMod p) =
-      (-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card :=
+      (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card :=
   (mul_left_inj'
         (show ((p / 2)! : ZMod p) ≠ 0 by
           rw [Ne.def, CharP.cast_eq_zero_iff (ZMod p) p, hp.1.dvd_factorial, not_le] <;>
@@ -183,25 +183,25 @@ theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : �
   than `p/2` such that `(a * x) % p > p / 2` -/
 theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a : ZMod p) ≠ 0) :
     legendreSym p a =
-      (-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card :=
+      (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card :=
   by
   haveI hp' : Fact (p % 2 = 1) := ⟨nat.prime.mod_two_eq_one_iff_ne_two.mpr hp⟩
   have :
     (legendreSym p a : ZMod p) =
-      (((-1) ^ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card : ℤ) :
+      (((-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card : ℤ) :
         ZMod p) :=
     by rw [legendreSym.eq_pow, gauss_lemma_aux p ha0] <;> simp
   cases legendreSym.eq_one_or_neg_one p ha0 <;>
       cases
         neg_one_pow_eq_or ℤ
-          ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card <;>
+          ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card <;>
     simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
 #align zmod.gauss_lemma ZMod.gauss_lemma
 
 private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ}
     (hap : (a : ZMod p) ≠ 0) :
     ((∑ x in Ico 1 (p / 2).succ, a * x : ℕ) : ZMod 2) =
-      (((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card +
+      (((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card +
           ∑ x in Ico 1 (p / 2).succ, x) +
         (∑ x in Ico 1 (p / 2).succ, a * x / p : ℕ) :=
   have hp2 : (p : ZMod 2) = (1 : ℕ) := (eq_iff_modEq_nat _).2 hp2.1
@@ -224,7 +224,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
                   ZMod 2) :=
             by simp only [(val_eq_ite_val_min_abs _).symm] <;> simp [Nat.cast_sum]
           _ =
-              ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card +
+              ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card +
                 (∑ x in Ico 1 (p / 2).succ, (a * x : ZMod p).valMinAbs.natAbs : ℕ) :=
             by simp [ite_cast, add_comm, sum_add_distrib, Finset.sum_ite, hp2, Nat.cast_sum]
           _ = _ := by
@@ -238,7 +238,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
 
 theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℕ} (ha2 : a % 2 = 1)
     (hap : (a : ZMod p) ≠ 0) :
-    ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a * x : ZMod p).val).card ≡
+    ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card ≡
       ∑ x in Ico 1 (p / 2).succ, x * a / p [MOD 2] :=
   have ha2 : (a : ZMod 2) = (1 : ℕ) := (eq_iff_modEq_nat _).2 ha2
   (eq_iff_modEq_nat 2).1 <|
@@ -249,10 +249,10 @@ theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : �
 #align zmod.eisenstein_lemma_aux ZMod.eisenstein_lemma_aux
 
 theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
-    a / b = ((Ico 1 c.succ).filter fun x => x * b ≤ a).card :=
+    a / b = ((Ico 1 c.succ).filterₓ fun x => x * b ≤ a).card :=
   calc
     a / b = (Ico 1 (a / b).succ).card := by simp
-    _ = ((Ico 1 c.succ).filter fun x => x * b ≤ a).card :=
+    _ = ((Ico 1 c.succ).filterₓ fun x => x * b ≤ a).card :=
       congr_arg _ <|
         Finset.ext fun x =>
           by
@@ -266,12 +266,13 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
   rectangle `(0, p/2) × (0, q/2)`  -/
 private theorem sum_Ico_eq_card_lt {p q : ℕ} :
     (∑ a in Ico 1 (p / 2).succ, a * q / p) =
-      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q).card :=
+      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ =>
+          x.2 * p ≤ x.1 * q).card :=
   if hp0 : p = 0 then by simp [hp0, Finset.ext_iff]
   else
     calc
       (∑ a in Ico 1 (p / 2).succ, a * q / p) =
-          ∑ a in Ico 1 (p / 2).succ, ((Ico 1 (q / 2).succ).filter fun x => x * p ≤ a * q).card :=
+          ∑ a in Ico 1 (p / 2).succ, ((Ico 1 (q / 2).succ).filterₓ fun x => x * p ≤ a * q).card :=
         Finset.sum_congr rfl fun x hx =>
           div_eq_filter_card (Nat.pos_of_ne_zero hp0)
             (calc
@@ -313,8 +314,9 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
       p / 2 * (q / 2) :=
   by
   have hswap :
-    ((Ico 1 (q / 2).succ ×ˢ Ico 1 (p / 2).succ).filter fun x : ℕ × ℕ => x.2 * q ≤ x.1 * p).card =
-      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p).card :=
+    ((Ico 1 (q / 2).succ ×ˢ Ico 1 (p / 2).succ).filterₓ fun x : ℕ × ℕ => x.2 * q ≤ x.1 * p).card =
+      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ =>
+          x.1 * q ≤ x.2 * p).card :=
     card_congr (fun x _ => Prod.swap x)
       (fun ⟨_, _⟩ => by
         simp (config := { contextual := true }) only [mem_filter, and_self_iff, Prod.swap_prod_mk,
@@ -328,8 +330,8 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
           simp (config := { contextual := true }) only [mem_filter, eq_self_iff_true, and_self_iff,
             exists_prop_of_true, Prod.swap_prod_mk, forall_true_iff, mem_product]⟩
   have hdisj :
-    Disjoint ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q)
-      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) :=
+    Disjoint ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q)
+      ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) :=
     by
     apply disjoint_filter.2 fun x hx hpq hqp => _
     have hxp : x.1 < p :=
@@ -342,8 +344,8 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
     rw [val_cast_of_lt hxp, val_zero] at this
     simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_and_iff, mem_product] using hx
   have hunion :
-    (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪
-        (Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filter fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) =
+    (((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ => x.2 * p ≤ x.1 * q) ∪
+        (Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ => x.1 * q ≤ x.2 * p) =
       Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ :=
     Finset.ext fun x => by
       have := le_total (x.2 * p) (x.1 * q) <;>

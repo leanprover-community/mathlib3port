@@ -41,7 +41,7 @@ variable [Semiring R] {p q r : R[X]}
 @[elab_as_elim]
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c a))
     (h_add : ∀ p q, M p → M q → M (p + q))
-    (h_monomial : ∀ (n : ℕ) (a : R), M (c a * X ^ n) → M (c a * X ^ (n + 1))) : M p :=
+    (h_monomial : ∀ (n : ℕ) (a : R), M (c a * x ^ n) → M (c a * x ^ (n + 1))) : M p :=
   by
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
     intro n a

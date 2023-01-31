@@ -109,12 +109,12 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let (params, app (app r f) g) ← mk_local_pis t
   let (arg_rels, R) ← get_lift_fun r
   let args ←
-    (enum arg_rels).mmap fun ⟨n, a⟩ =>
+    (enum arg_rels).mapM fun ⟨n, a⟩ =>
         Prod.mk <$> mk_local_def (mkSimpleName ("a_" ++ repr n)) a.in_type <*> pure a
   let a_vars ← return <| Prod.fst <$> args
   let p ← head_beta (app_of_list f a_vars)
   let p_data ← return <| mark_occurences (app R p) params
-  let p_vars ← return <| List.map Prod.fst (p_data.filter fun x => ↑x.2)
+  let p_vars ← return <| List.map Prod.fst (p_data.filterₓ fun x => ↑x.2)
   let u ← return <| collect_univ_params (app R p) ∩ u'
   let pat ←
     mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u)
@@ -126,7 +126,7 @@ unsafe def analyse_decls : List Name → tactic (List rule_data) :=
   mapM fun n => do
     let d ← get_decl n
     let c ← return d.univ_params.length
-    let ls ← (repeat () c).mmap fun _ => mk_fresh_name
+    let ls ← (repeat () c).mapM fun _ => mk_fresh_name
     analyse_rule ls (const n (ls level.param))
 #align transfer.analyse_decls transfer.analyse_decls
 
@@ -174,7 +174,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
             first
             (rds.map fun rd => do
               let (l, m) ← match_pattern rd.pat e semireducible
-              let level_map ← rd.uparams.mmap fun l => Prod.mk l <$> mk_meta_univ
+              let level_map ← rd.uparams.mapM fun l => Prod.mk l <$> mk_meta_univ
               let inst_univ ←
                 return fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
               let (ps, args) ← return <| split_params_args (rd.params.map (Prod.map inst_univ id)) m
@@ -187,17 +187,17 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
       ((-- Argument has function type
                 -- Transfer argument
                 zip
-                rd.args args).mmap
+                rd.args args).mapM
             fun ⟨⟨_, d⟩, e⟩ => do
             let (args, r) ← get_lift_fun (i d.relation)
             let ((a_vars, b_vars), (R_vars, bnds)) ←
-              ((enum args).mmap fun ⟨n, arg⟩ => do
+              ((enum args).mapM fun ⟨n, arg⟩ => do
                     let a ← mk_local_def (s! "a{n}") arg.in_type
                     let b ← mk_local_def (s! "b{n}") arg.out_type
                     let R ← mk_local_def (s! "R{n}") (arg.relation a b)
                     return ((a, b), (R, [a, b, R]))) >>=
                   return ∘ Prod.map unzip unzip ∘ unzip
-            let rds' ← R_vars.mmap (analyse_rule [])
+            let rds' ← R_vars.mapM (analyse_rule [])
             let a ← return <| i e
             let a' ← head_beta (app_of_list a a_vars)
             let (b, pr, ms) ← compute_transfer (rds ++ rds') (ctxt ++ a_vars) (app r a')
@@ -226,7 +226,7 @@ unsafe def tactic.transfer (ds : List Name) : tactic Unit := do
   -- Setup final tactic state
       exact
       ((const `iff.mpr [] : expr) tgt new_tgt pr new_pr)
-  let ms ← ms.mmap fun m => get_assignment m >> return [] <|> return [m]
+  let ms ← ms.mapM fun m => get_assignment m >> return [] <|> return [m]
   let gs ← get_goals
   set_goals (ms ++ new_pr :: gs)
 #align tactic.transfer tactic.transfer

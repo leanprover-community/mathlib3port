@@ -780,7 +780,7 @@ theorem measurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) :
 
 theorem aeMeasurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) :
     AeMeasurable (fun x => c • f x) μ ↔ AeMeasurable f μ :=
-  (IsUnit.mk0 c hc).ae_measurable_const_smul_iff
+  (IsUnit.mk0 c hc).aeMeasurable_const_smul_iff
 #align ae_measurable_const_smul_iff₀ aeMeasurable_const_smul_iff₀
 
 end MulAction

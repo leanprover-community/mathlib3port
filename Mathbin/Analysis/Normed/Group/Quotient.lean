@@ -301,7 +301,7 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
         erw [QuotientAddGroup.preimage_image_mk]
         apply isOpen_unionᵢ
         rintro ⟨s, s_in⟩
-        exact (continuous_add_right s).is_open_preimage _ is_open_ball
+        exact (continuous_add_right s).isOpen_preimage _ is_open_ball
       · exact ⟨(0 : M), mem_ball_self ε_pos, (mk' S).map_zero⟩⟩
 #align quotient_nhd_basis quotient_nhd_basis
 
@@ -498,7 +498,7 @@ theorem lift_unique {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
 
 /-- `S.normed_mk` satisfies `is_quotient`. -/
 theorem isQuotientQuotient (S : AddSubgroup M) : IsQuotient S.normedMk :=
-  ⟨S.surjective_normed_mk, fun m => by simpa [S.ker_normed_mk] using quotient_norm_mk_eq _ m⟩
+  ⟨S.surjective_normedMk, fun m => by simpa [S.ker_normed_mk] using quotient_norm_mk_eq _ m⟩
 #align normed_add_group_hom.is_quotient_quotient NormedAddGroupHom.isQuotientQuotient
 
 theorem IsQuotient.norm_lift {f : NormedAddGroupHom M N} (hquot : IsQuotient f) {ε : ℝ} (hε : 0 < ε)
@@ -651,7 +651,7 @@ instance Ideal.Quotient.semiNormedCommRing : SemiNormedCommRing (R ⧸ I) :=
       le_of_forall_pos_le_add fun ε hε =>
         by
         have :=
-          ((nhds_basis_ball.prod_nhds nhds_basis_ball).tendsto_iff nhds_basis_ball).mp
+          ((nhds_basis_ball.prod_nhds nhds_basis_ball).tendsto_iffₓ nhds_basis_ball).mp
             (real.continuous_mul.tendsto (‖x‖, ‖y‖)) ε hε
         simp only [Set.mem_prod, mem_ball, and_imp, Prod.forall, exists_prop, Prod.exists] at this
         rcases this with ⟨ε₁, ε₂, ⟨h₁, h₂⟩, h⟩

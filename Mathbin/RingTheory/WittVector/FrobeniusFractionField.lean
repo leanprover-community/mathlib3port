@@ -74,7 +74,7 @@ open Polynomial
 
 /-- The root of this polynomial determines the `n+1`st coefficient of our solution. -/
 def succNthDefiningPoly (n : ℕ) (a₁ a₂ : 𝕎 k) (bs : Fin (n + 1) → k) : Polynomial k :=
-  X ^ p * c (a₁.coeff 0 ^ p ^ (n + 1)) - X * c (a₂.coeff 0 ^ p ^ (n + 1)) +
+  x ^ p * c (a₁.coeff 0 ^ p ^ (n + 1)) - x * c (a₂.coeff 0 ^ p ^ (n + 1)) +
     c
       (a₁.coeff (n + 1) * (bs 0 ^ p) ^ p ^ (n + 1) +
             nthRemainder p n (fun v => bs v ^ p) (truncateFun (n + 1) a₁) -

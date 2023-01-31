@@ -465,7 +465,7 @@ the truncated expectation) along the sequence `c^n`, for any `c > 1`, up to a gi
 This follows from a variance control. -/
 theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
     ∀ᵐ ω,
-      ∀ᶠ n : ℕ in at_top,
+      ∀ᶠ n : ℕ in atTop,
         |(∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) -
               𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]| <
           ε * ⌊c ^ n⌋₊ :=
@@ -519,7 +519,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
           exact (hindep hkl).comp (A k).Measurable (A l).Measurable
       _ =
           ∑ j in range (u (N - 1)),
-            (∑ i in (range N).filter fun i => j < u i, ((u i : ℝ) ^ 2)⁻¹) * Var[Y j] :=
+            (∑ i in (range N).filterₓ fun i => j < u i, ((u i : ℝ) ^ 2)⁻¹) * Var[Y j] :=
         by
         simp_rw [mul_sum, sum_mul, sum_sigma']
         refine'
@@ -602,7 +602,7 @@ theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
     ∀ᵐ ω,
       (fun n : ℕ =>
           (∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) -
-            𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]) =o[at_top]
+            𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]) =o[atTop]
         fun n : ℕ => (⌊c ^ n⌋₊ : ℝ) :=
   by
   obtain ⟨v, -, v_pos, v_lim⟩ :
@@ -622,7 +622,7 @@ omit hindep hnonneg
 /-- The expectation of the truncated version of `Xᵢ` behaves asymptotically like the whole
 expectation. This follows from convergence and Cesaro averaging. -/
 theorem strong_law_aux3 :
-    (fun n => 𝔼[∑ i in range n, truncation (X i) i] - n * 𝔼[X 0]) =o[at_top] (coe : ℕ → ℝ) :=
+    (fun n => 𝔼[∑ i in range n, truncation (X i) i] - n * 𝔼[X 0]) =o[atTop] (coe : ℕ → ℝ) :=
   by
   have A : tendsto (fun i => 𝔼[truncation (X i) i]) at_top (𝓝 𝔼[X 0]) :=
     by
@@ -644,7 +644,7 @@ include hindep hnonneg
 fact that the truncated and the original expectations have the same asymptotic behavior. -/
 theorem strong_law_aux4 {c : ℝ} (c_one : 1 < c) :
     ∀ᵐ ω,
-      (fun n : ℕ => (∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[at_top]
+      (fun n : ℕ => (∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[atTop]
         fun n : ℕ => (⌊c ^ n⌋₊ : ℝ) :=
   by
   filter_upwards [strong_law_aux2 X hint hindep hident hnonneg c_one]with ω hω
@@ -662,7 +662,7 @@ almost surely coincide at all but finitely many steps. This follows from a proba
 and Borel-Cantelli. -/
 theorem strong_law_aux5 :
     ∀ᵐ ω,
-      (fun n : ℕ => (∑ i in range n, truncation (X i) i ω) - ∑ i in range n, X i ω) =o[at_top]
+      (fun n : ℕ => (∑ i in range n, truncation (X i) i ω) - ∑ i in range n, X i ω) =o[atTop]
         fun n : ℕ => (n : ℝ) :=
   by
   have A : (∑' j : ℕ, ℙ { ω | X j ω ∈ Set.Ioi (j : ℝ) }) < ∞ :=
@@ -784,7 +784,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
     Tendsto (fun n => snorm (fun ω => (∑ i in range n, X i ω) / n - 𝔼[X 0]) p ℙ) atTop (𝓝 0) :=
   by
   have hmeas : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
-    (hident i).ae_strongly_measurable_iff.2 hℒp.1
+    (hident i).aeStronglyMeasurable_iff.2 hℒp.1
   have hint : integrable (X 0) ℙ := hℒp.integrable hp
   have havg : ∀ n, ae_strongly_measurable (fun ω => (∑ i in range n, X i ω) / n) ℙ :=
     by

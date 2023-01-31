@@ -49,7 +49,7 @@ structure OplaxNatTrans (F G : OplaxFunctor B C) where
   naturality {a b : B} (f : a ⟶ b) : F.map f ≫ app b ⟶ app a ≫ G.map f
   naturality_naturality' :
     ∀ {a b : B} {f g : a ⟶ b} (η : f ⟶ g),
-      F.map₂ η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.map₂ η := by
+      F.zipWith η ▷ app b ≫ naturality g = naturality f ≫ app a ◁ G.zipWith η := by
     obviously
   naturality_id' :
     ∀ a : B,
@@ -98,14 +98,15 @@ variable {a b c : B} {a' : C}
 
 @[simp, reassoc.1]
 theorem whiskerLeft_naturality_naturality (f : a' ⟶ G.obj a) {g h : a ⟶ b} (β : g ⟶ h) :
-    f ◁ G.map₂ β ▷ θ.app b ≫ f ◁ θ.naturality h = f ◁ θ.naturality g ≫ f ◁ θ.app a ◁ H.map₂ β := by
-  simp_rw [← bicategory.whisker_left_comp, naturality_naturality]
+    f ◁ G.zipWith β ▷ θ.app b ≫ f ◁ θ.naturality h =
+      f ◁ θ.naturality g ≫ f ◁ θ.app a ◁ H.zipWith β :=
+  by simp_rw [← bicategory.whisker_left_comp, naturality_naturality]
 #align category_theory.oplax_nat_trans.whisker_left_naturality_naturality CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_naturality
 
 @[simp, reassoc.1]
 theorem whiskerRight_naturality_naturality {f g : a ⟶ b} (β : f ⟶ g) (h : G.obj b ⟶ a') :
-    F.map₂ β ▷ η.app b ▷ h ≫ η.naturality g ▷ h =
-      η.naturality f ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map₂ β ▷ h ≫ (α_ _ _ _).inv :=
+    F.zipWith β ▷ η.app b ▷ h ≫ η.naturality g ▷ h =
+      η.naturality f ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.zipWith β ▷ h ≫ (α_ _ _ _).inv :=
   by rw [← comp_whisker_right, naturality_naturality, comp_whisker_right, whisker_assoc]
 #align category_theory.oplax_nat_trans.whisker_right_naturality_naturality CategoryTheory.OplaxNatTrans.whiskerRight_naturality_naturality
 

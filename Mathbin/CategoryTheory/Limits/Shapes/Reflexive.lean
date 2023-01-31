@@ -74,12 +74,12 @@ noncomputable def commonSection (f g : A ⟶ B) [IsReflexivePair f g] : B ⟶ A 
 
 @[simp, reassoc.1]
 theorem section_comp_left (f g : A ⟶ B) [IsReflexivePair f g] : commonSection f g ≫ f = 𝟙 B :=
-  (IsReflexivePair.common_section f g).some_spec.1
+  (IsReflexivePair.common_section f g).choose_spec.1
 #align category_theory.section_comp_left CategoryTheory.section_comp_left
 
 @[simp, reassoc.1]
 theorem section_comp_right (f g : A ⟶ B) [IsReflexivePair f g] : commonSection f g ≫ g = 𝟙 B :=
-  (IsReflexivePair.common_section f g).some_spec.2
+  (IsReflexivePair.common_section f g).choose_spec.2
 #align category_theory.section_comp_right CategoryTheory.section_comp_right
 
 /-- Get the common retraction for a coreflexive pair. -/
@@ -90,13 +90,13 @@ noncomputable def commonRetraction (f g : A ⟶ B) [IsCoreflexivePair f g] : B �
 @[simp, reassoc.1]
 theorem left_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
     f ≫ commonRetraction f g = 𝟙 A :=
-  (IsCoreflexivePair.common_retraction f g).some_spec.1
+  (IsCoreflexivePair.common_retraction f g).choose_spec.1
 #align category_theory.left_comp_retraction CategoryTheory.left_comp_retraction
 
 @[simp, reassoc.1]
 theorem right_comp_retraction (f g : A ⟶ B) [IsCoreflexivePair f g] :
     g ≫ commonRetraction f g = 𝟙 A :=
-  (IsCoreflexivePair.common_retraction f g).some_spec.2
+  (IsCoreflexivePair.common_retraction f g).choose_spec.2
 #align category_theory.right_comp_retraction CategoryTheory.right_comp_retraction
 
 /-- If `f,g` is a kernel pair for some morphism `q`, then it is reflexive. -/

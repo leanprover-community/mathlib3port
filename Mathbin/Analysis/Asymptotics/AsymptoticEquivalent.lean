@@ -105,13 +105,13 @@ theorem IsEquivalent.refl : u ~[l] u :=
 
 @[symm]
 theorem IsEquivalent.symm (h : u ~[l] v) : v ~[l] u :=
-  (h.IsO.trans_is_O h.is_O_symm).symm
+  (h.IsOCat.trans_isO h.isO_symm).symm
 #align asymptotics.is_equivalent.symm Asymptotics.IsEquivalent.symm
 
 @[trans]
 theorem IsEquivalent.trans {l : Filter α} {u v w : α → β} (huv : u ~[l] v) (hvw : v ~[l] w) :
     u ~[l] w :=
-  (huv.IsO.trans_is_O hvw.IsO).triangle hvw.IsO
+  (huv.IsOCat.trans_isO hvw.IsO).triangle hvw.IsOCat
 #align asymptotics.is_equivalent.trans Asymptotics.IsEquivalent.trans
 
 theorem IsEquivalent.congr_left {u v w : α → β} {l : Filter α} (huv : u ~[l] v) (huw : u =ᶠ[l] w) :
@@ -182,7 +182,7 @@ theorem IsEquivalent.sub_isOCat (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] 
 #align asymptotics.is_equivalent.sub_is_o Asymptotics.IsEquivalent.sub_isOCat
 
 theorem IsOCat.add_isEquivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
-  add_comm v u ▸ hv.add_is_o hu
+  add_comm v u ▸ hv.add_isOCat hu
 #align asymptotics.is_o.add_is_equivalent Asymptotics.IsOCat.add_isEquivalent
 
 theorem IsOCat.isEquivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
@@ -266,7 +266,7 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
       (habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
     ext
     rw [Pi.mul_apply, mul_comm, mul_smul, ← smul_sub]
-  refine' (is_o_congr this.symm <| eventually_eq.rfl).mp ((is_O_refl b l).smul_is_o _)
+  refine' (is_o_congr this.symm <| eventually_eq.rfl).mp ((is_O_refl b l).smul_isOCat _)
   rcases huv.is_O.exists_pos with ⟨C, hC, hCuv⟩
   rw [is_equivalent] at *
   rw [is_o_iff] at *
@@ -331,12 +331,12 @@ variable {α β : Type _} [NormedLinearOrderedField β] {u v : α → β} {l : F
 theorem IsEquivalent.tendsto_atTop [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atTop) :
     Tendsto v l atTop :=
   let ⟨φ, hφ, h⟩ := huv.symm.exists_eq_mul
-  Tendsto.congr' h.symm (mul_comm u φ ▸ hu.at_top_mul zero_lt_one hφ)
+  Tendsto.congr' h.symm (mul_comm u φ ▸ hu.atTop_mul zero_lt_one hφ)
 #align asymptotics.is_equivalent.tendsto_at_top Asymptotics.IsEquivalent.tendsto_atTop
 
 theorem IsEquivalent.tendsto_atTop_iff [OrderTopology β] (huv : u ~[l] v) :
     Tendsto u l atTop ↔ Tendsto v l atTop :=
-  ⟨huv.tendsto_at_top, huv.symm.tendsto_at_top⟩
+  ⟨huv.tendsto_atTop, huv.symm.tendsto_atTop⟩
 #align asymptotics.is_equivalent.tendsto_at_top_iff Asymptotics.IsEquivalent.tendsto_atTop_iff
 
 theorem IsEquivalent.tendsto_atBot [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atBot) :
@@ -350,7 +350,7 @@ theorem IsEquivalent.tendsto_atBot [OrderTopology β] (huv : u ~[l] v) (hu : Ten
 
 theorem IsEquivalent.tendsto_atBot_iff [OrderTopology β] (huv : u ~[l] v) :
     Tendsto u l atBot ↔ Tendsto v l atBot :=
-  ⟨huv.tendsto_at_bot, huv.symm.tendsto_at_bot⟩
+  ⟨huv.tendsto_atBot, huv.symm.tendsto_atBot⟩
 #align asymptotics.is_equivalent.tendsto_at_bot_iff Asymptotics.IsEquivalent.tendsto_atBot_iff
 
 end NormedLinearOrderedField

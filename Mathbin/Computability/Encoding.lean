@@ -95,8 +95,8 @@ theorem inclusionBoolΓ'_injective : Function.Injective inclusionBoolΓ' :=
 /-- An encoding function of the positive binary numbers in bool. -/
 def encodePosNum : PosNum → List Bool
   | PosNum.one => [true]
-  | PosNum.bit0 n => ff::encode_pos_num n
-  | PosNum.bit1 n => tt::encode_pos_num n
+  | PosNum.bit0 n => false::encode_pos_num n
+  | PosNum.bit1 n => true::encode_pos_num n
 #align computability.encode_pos_num Computability.encodePosNum
 
 /-- An encoding function of the binary numbers in bool. -/
@@ -191,7 +191,7 @@ def finEncodingNatΓ' : FinEncoding ℕ :=
 /-- A unary encoding function of ℕ in bool. -/
 def unaryEncodeNat : Nat → List Bool
   | 0 => []
-  | n + 1 => tt::unary_encode_nat n
+  | n + 1 => true::unary_encode_nat n
 #align computability.unary_encode_nat Computability.unaryEncodeNat
 
 /-- A unary decoding function from `list bool` to ℕ. -/

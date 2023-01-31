@@ -78,7 +78,7 @@ instance : BoundedContinuousMapClass (α →ᵇ β) α β
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
   map_bounded f := f.map_bounded'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -89,7 +89,7 @@ instance : CoeFun (α →ᵇ β) fun _ => α → β :=
 instance [BoundedContinuousMapClass F α β] : CoeTC F (α →ᵇ β) :=
   ⟨fun f =>
     { toFun := f
-      continuous_to_fun := map_continuous f
+      continuous_toFun := map_continuous f
       map_bounded' := map_bounded f }⟩
 
 @[simp]
@@ -347,7 +347,7 @@ theorem continuous_eval : Continuous fun p : (α →ᵇ β) × α => p.1 p.2 :=
 
 /-- Bounded continuous functions taking values in a complete space form a complete space. -/
 instance [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
-  complete_of_cauchy_seq_tendsto fun (f : ℕ → α →ᵇ β) (hf : CauchySeq f) =>
+  complete_of_cauchySeq_tendsto fun (f : ℕ → α →ᵇ β) (hf : CauchySeq f) =>
     by
     /- We have to show that `f n` converges to a bounded continuous function.
       For this, we prove pointwise convergence to define the limit, then check
@@ -457,7 +457,7 @@ discrete topology, so we only need to verify boundedness. -/
 def extend (f : α ↪ δ) (g : α →ᵇ β) (h : δ →ᵇ β) : δ →ᵇ β
     where
   toFun := extend f g h
-  continuous_to_fun := continuous_of_discreteTopology
+  continuous_toFun := continuous_of_discreteTopology
   map_bounded' :=
     by
     rw [← bounded_range_iff, range_extend f.injective, Metric.bounded_union]
@@ -1514,7 +1514,7 @@ variable [NormedSpace 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarAddMonoid (α →ᵇ β)
     where
-  star f := f.comp star starNormedAddGroupHom.lipschitz
+  unit f := f.comp star starNormedAddGroupHom.lipschitz
   star_involutive f := ext fun x => star_star (f x)
   star_add f g := ext fun x => star_add (f x) (g x)
 
@@ -1581,7 +1581,7 @@ instance : SemilatticeInf (α →ᵇ β) :=
     BoundedContinuousFunction.partialOrder with
     inf := fun f g =>
       { toFun := fun t => f t ⊓ g t
-        continuous_to_fun := f.Continuous.inf g.Continuous
+        continuous_toFun := f.Continuous.inf g.Continuous
         map_bounded' := by
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded
@@ -1599,7 +1599,7 @@ instance : SemilatticeSup (α →ᵇ β) :=
     BoundedContinuousFunction.partialOrder with
     sup := fun f g =>
       { toFun := fun t => f t ⊔ g t
-        continuous_to_fun := f.Continuous.sup g.Continuous
+        continuous_toFun := f.Continuous.sup g.Continuous
         map_bounded' := by
           obtain ⟨C₁, hf⟩ := f.bounded
           obtain ⟨C₂, hg⟩ := g.bounded

@@ -66,11 +66,11 @@ theorem sqrt_eq_iff_sq_eq : sqrt x = y ↔ y ^ 2 = x :=
 #align nnreal.sqrt_eq_iff_sq_eq Nnreal.sqrt_eq_iff_sq_eq
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ x ≤ y ^ 2 :=
-  sqrt.to_galois_connection _ _
+  sqrt.to_galoisConnection _ _
 #align nnreal.sqrt_le_iff Nnreal.sqrt_le_iff
 
 theorem le_sqrt_iff : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
-  (sqrt.symm.to_galois_connection _ _).symm
+  (sqrt.symm.to_galoisConnection _ _).symm
 #align nnreal.le_sqrt_iff Nnreal.le_sqrt_iff
 
 @[simp]
@@ -134,7 +134,7 @@ namespace Real
 /-- An auxiliary sequence of rational numbers that converges to `real.sqrt (mk f)`.
 Currently this sequence is not used in `mathlib`.  -/
 def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
-  | 0 => mkRat (f 0).num.toNat.sqrt (f 0).denom.sqrt
+  | 0 => mkRat (f 0).num.toNat.sqrt (f 0).den.sqrt
   | n + 1 =>
     let s := sqrt_aux n
     max 0 <| (s + f (n + 1) / s) / 2

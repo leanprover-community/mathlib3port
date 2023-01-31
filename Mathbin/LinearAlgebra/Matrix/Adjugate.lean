@@ -328,7 +328,7 @@ theorem adjugate_one : adjugate (1 : Matrix n n α) = 1 :=
 
 @[simp]
 theorem adjugate_diagonal (v : n → α) :
-    adjugate (diagonal v) = diagonal fun i => ∏ j in Finset.univ.erase i, v j :=
+    adjugate (diagonal v) = diagonal fun i => ∏ j in Finset.univ.eraseₓ i, v j :=
   by
   ext
   simp only [adjugate_def, cramer_apply, diagonal_transpose]

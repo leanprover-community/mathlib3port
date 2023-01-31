@@ -44,7 +44,7 @@ in the definition, then prove it for any `f` in `tendsto_at_top_is_lub`.
 
 This property holds for linear orders with order topology as well as their products. -/
 class SupConvergenceClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
-  tendsto_coe_at_top_is_lub : ∀ (a : α) (s : Set α), IsLUB s a → Tendsto (coe : s → α) atTop (𝓝 a)
+  tendsto_coe_atTop_isLUB : ∀ (a : α) (s : Set α), IsLUB s a → Tendsto (coe : s → α) atTop (𝓝 a)
 #align Sup_convergence_class SupConvergenceClass
 
 /-- We say that `α` is an `Inf_convergence_class` if the following holds. Let `f : ι → α` be a
@@ -54,7 +54,7 @@ as `x → -∞` (formally, at the filter `filter.at_bot`). We require this for `
 
 This property holds for linear orders with order topology as well as their products. -/
 class InfConvergenceClass (α : Type _) [Preorder α] [TopologicalSpace α] : Prop where
-  tendsto_coe_at_bot_is_glb : ∀ (a : α) (s : Set α), IsGLB s a → Tendsto (coe : s → α) atBot (𝓝 a)
+  tendsto_coe_atBot_isGLB : ∀ (a : α) (s : Set α), IsGLB s a → Tendsto (coe : s → α) atBot (𝓝 a)
 #align Inf_convergence_class InfConvergenceClass
 
 instance OrderDual.supConvergenceClass [Preorder α] [TopologicalSpace α] [InfConvergenceClass α] :

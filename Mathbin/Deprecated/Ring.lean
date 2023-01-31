@@ -206,7 +206,7 @@ include rα rβ
 #print RingHom.of /-
 /-- Interpret `f : α → β` with `is_semiring_hom f` as a ring homomorphism. -/
 def of {f : α → β} (hf : IsSemiringHom f) : α →+* β :=
-  { MonoidHom.of hf.to_is_monoid_hom, AddMonoidHom.of hf.to_is_add_monoid_hom with toFun := f }
+  { MonoidHom.of hf.to_isMonoidHom, AddMonoidHom.of hf.to_isAddMonoidHom with toFun := f }
 #align ring_hom.of RingHom.of
 -/
 
@@ -243,7 +243,7 @@ but is expected to have type
   forall {α : Type.{u2}} {γ : Type.{u1}} [_inst_1 : Ring.{u2} α] [_inst_2 : Ring.{u1} γ] (g : RingHom.{u2, u1} α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2))), IsRingHom.{u2, u1} α γ _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2))) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : α) => γ) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2))) α γ (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)))) (NonUnitalNonAssocSemiring.toMul.{u1} γ (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} γ (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2))) α γ (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} γ (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2))) α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2)) (RingHom.instRingHomClassRingHom.{u2, u1} α γ (NonAssocRing.toNonAssocSemiring.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)) (NonAssocRing.toNonAssocSemiring.{u1} γ (Ring.toNonAssocRing.{u1} γ _inst_2)))))) g)
 Case conversion may be inaccurate. Consider using '#align ring_hom.to_is_ring_hom RingHom.to_isRingHomₓ'. -/
 theorem to_isRingHom {α γ} [Ring α] [Ring γ] (g : α →+* γ) : IsRingHom g :=
-  IsRingHom.of_semiring g.to_is_semiring_hom
+  IsRingHom.of_semiring g.to_isSemiringHom
 #align ring_hom.to_is_ring_hom RingHom.to_isRingHom
 
 end RingHom

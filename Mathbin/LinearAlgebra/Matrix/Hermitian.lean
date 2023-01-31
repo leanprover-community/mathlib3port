@@ -96,7 +96,7 @@ theorem isHermitian_transpose_add_self (A : Matrix n n α) : (Aᴴ + A).IsHermit
 
 @[simp]
 theorem isHermitian_zero : (0 : Matrix n n α).IsHermitian :=
-  conj_transpose_zero
+  conjTranspose_zero
 #align matrix.is_hermitian_zero Matrix.isHermitian_zero
 
 @[simp]
@@ -188,7 +188,7 @@ variable [Semiring α] [StarRing α] [Semiring β] [StarRing β]
 
 @[simp]
 theorem isHermitian_one [DecidableEq n] : (1 : Matrix n n α).IsHermitian :=
-  conj_transpose_one
+  conjTranspose_one
 #align matrix.is_hermitian_one Matrix.isHermitian_one
 
 end Semiring

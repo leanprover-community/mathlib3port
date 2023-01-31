@@ -121,7 +121,7 @@ theorem subset_convexJoin_right (h : s.Nonempty) : t ⊆ convexJoin 𝕜 s t := 
 #align subset_convex_join_right subset_convexJoin_right
 
 theorem convexJoin_subset (hs : s ⊆ u) (ht : t ⊆ u) (hu : Convex 𝕜 u) : convexJoin 𝕜 s t ⊆ u :=
-  Union₂_subset fun x hx => Union₂_subset fun y hy => hu.segment_subset (hs hx) (ht hy)
+  unionᵢ₂_subset fun x hx => unionᵢ₂_subset fun y hy => hu.segment_subset (hs hx) (ht hy)
 #align convex_join_subset convexJoin_subset
 
 theorem convexJoin_subset_convexHull (s t : Set E) : convexJoin 𝕜 s t ⊆ convexHull 𝕜 (s ∪ t) :=
@@ -262,7 +262,7 @@ theorem convexHull_union (hs : s.Nonempty) (ht : t.Nonempty) :
   by
   rw [← convexHull_convexHull_union_left, ← convexHull_convexHull_union_right]
   exact
-    (convex_convexHull 𝕜 s).convex_hull_union (convex_convexHull 𝕜 t) hs.convex_hull ht.convex_hull
+    (convex_convexHull 𝕜 s).convexHull_union (convex_convexHull 𝕜 t) hs.convex_hull ht.convex_hull
 #align convex_hull_union convexHull_union
 
 end LinearOrderedField

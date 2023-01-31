@@ -50,7 +50,7 @@ theorem closedBall_ae_eq_ball {x : AddCircle T} {ε : ℝ} : closedBall x ε =�
       by
       simp_rw [volume_closed_ball]
       refine' Ennreal.tendsto_ofReal (tendsto.min tendsto_const_nhds <| tendsto.const_mul _ _)
-      convert (@monotone_id ℝ _).tendsto_nhds_within_Iio ε
+      convert (@monotone_id ℝ _).tendsto_nhdsWithin_Iio ε
       simp
     refine'
       le_of_tendsto this (mem_nhds_within_Iio_iff_exists_Ioo_subset.mpr ⟨0, hε, fun r hr => _⟩)

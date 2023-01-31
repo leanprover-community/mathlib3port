@@ -366,7 +366,7 @@ There exists a maximal totally ordered set of `α`.
 Note that we do not require `α` to be partially ordered by `r`. -/
 theorem maxChain_spec : IsMaxChain r (maxChain r) :=
   by_contradiction fun h =>
-    let ⟨h₁, H⟩ := chainClosure_maxChain.IsChain.super_chain_succ_chain h
+    let ⟨h₁, H⟩ := chainClosure_maxChain.IsChain.superChain_succChain h
     H.Ne (chainClosure_maxChain.succ_fixpoint_iff.mpr rfl).symm
 #align max_chain_spec maxChain_spec
 -/

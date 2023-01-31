@@ -161,12 +161,12 @@ theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U 
 /-- The neighborhood function of a `group_filter_basis` -/
 @[to_additive "The neighborhood function of a `add_group_filter_basis`"]
 def n (B : GroupFilterBasis G) : G → Filter G := fun x =>
-  map (fun y => x * y) B.toFilterBasis.filter
+  map (fun y => x * y) B.toFilterBasis.filterₓ
 #align group_filter_basis.N GroupFilterBasis.n
 #align add_group_filter_basis.N AddGroupFilterBasis.n
 
 @[simp, to_additive]
-theorem n_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
+theorem n_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filterₓ := by
   simp only [N, one_mul, map_id']
 #align group_filter_basis.N_one GroupFilterBasis.n_one
 #align add_group_filter_basis.N_zero AddGroupFilterBasis.n_zero
@@ -213,7 +213,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
 
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) :
-    @nhds G B.topology (1 : G) = B.toFilterBasis.filter :=
+    @nhds G B.topology (1 : G) = B.toFilterBasis.filterₓ :=
   by
   rw [B.nhds_eq]
   simp only [N, one_mul]

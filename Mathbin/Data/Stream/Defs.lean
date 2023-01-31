@@ -106,7 +106,7 @@ def zip (f : α → β → δ) (s₁ : Stream' α) (s₂ : Stream' β) : Stream'
 
 #print Stream'.enum /-
 /-- Enumerate a stream by tagging each element with its index. -/
-def enum (s : Stream' α) : Stream' (ℕ × α) := fun n => (n, s.nth n)
+def enum (s : Stream' α) : Stream' (ℕ × α) := fun n => (n, s.get? n)
 #align stream.enum Stream'.enum
 -/
 

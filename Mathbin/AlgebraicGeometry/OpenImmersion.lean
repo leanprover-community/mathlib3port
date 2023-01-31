@@ -726,7 +726,7 @@ namespace SheafedSpace.IsOpenImmersion
 
 instance (priority := 100) of_isIso {X Y : SheafedSpace.{v} C} (f : X ⟶ Y) [IsIso f] :
     SheafedSpace.IsOpenImmersion f :=
-  @PresheafedSpace.IsOpenImmersion.ofIsIso _ f (SheafedSpace.forgetToPresheafedSpace.map_is_iso _)
+  @PresheafedSpace.IsOpenImmersion.ofIsIso _ f (SheafedSpace.forgetToPresheafedSpace.map_isIso _)
 #align algebraic_geometry.SheafedSpace.is_open_immersion.of_is_iso AlgebraicGeometry.SheafedSpace.IsOpenImmersion.of_isIso
 
 instance comp {X Y Z : SheafedSpace C} (f : X ⟶ Y) (g : Y ⟶ Z) [SheafedSpace.IsOpenImmersion f]
@@ -904,11 +904,11 @@ theorem sigma_ι_openEmbedding : OpenEmbedding (colimit.ι F i).base :=
   simp_rw [← category.assoc, TopCat.openEmbedding_iff_comp_isIso,
     TopCat.openEmbedding_iff_isIso_comp]
   dsimp
-  exact openEmbedding_sigma_mk
+  exact openEmbedding_sigmaMk
 #align algebraic_geometry.SheafedSpace.is_open_immersion.sigma_ι_open_embedding AlgebraicGeometry.SheafedSpace.IsOpenImmersion.sigma_ι_openEmbedding
 
 theorem image_preimage_is_empty (j : Discrete ι) (h : i ≠ j) (U : Opens (F.obj i)) :
-    (Opens.map (colimit.ι (F ⋙ SheafedSpace.forget_to_PresheafedSpace) j).base).obj
+    (Opens.map (colimit.ι (F ⋙ SheafedSpace.forgetToPresheafedSpace) j).base).obj
         ((Opens.map (preservesColimitIso SheafedSpace.forgetToPresheafedSpace F).inv.base).obj
           ((sigma_ι_openEmbedding F i).IsOpenMap.Functor.obj U)) =
       ∅ :=
@@ -1113,7 +1113,7 @@ instance forgetPreservesPullbackOfLeft :
 
 instance forgetToPresheafedSpacePreservesPullbackOfLeft :
     PreservesLimit (cospan f g)
-      (LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace) :=
+      (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace) :=
   preservesLimitOfPreservesLimitCone (pullbackConeOfLeftIsLimit f g)
     (by
       apply (is_limit_map_cone_pullback_cone_equiv _ _).symm.toFun
@@ -1122,14 +1122,12 @@ instance forgetToPresheafedSpacePreservesPullbackOfLeft :
 
 instance forgetToPresheafedSpacePreservesOpenImmersion :
     PresheafedSpace.IsOpenImmersion
-      ((LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace).map
-        f) :=
+      ((LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace).map f) :=
   H
 #align algebraic_geometry.LocallyRingedSpace.is_open_immersion.forget_to_PresheafedSpace_preserves_open_immersion AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.forgetToPresheafedSpacePreservesOpenImmersion
 
 instance forgetToTopPreservesPullbackOfLeft :
-    PreservesLimit (cospan f g)
-      (LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget _) :=
+    PreservesLimit (cospan f g) (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forget _) :=
   by
   change
     preserves_limit _
@@ -1154,7 +1152,7 @@ instance forgetPreservesPullbackOfRight :
 
 instance forgetToPresheafedSpacePreservesPullbackOfRight :
     PreservesLimit (cospan g f)
-      (LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace) :=
+      (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace) :=
   preservesPullbackSymmetry _ _ _
 #align algebraic_geometry.LocallyRingedSpace.is_open_immersion.forget_to_PresheafedSpace_preserves_pullback_of_right AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.forgetToPresheafedSpacePreservesPullbackOfRight
 
@@ -1165,13 +1163,13 @@ instance forgetReflectsPullbackOfRight :
 
 instance forgetToPresheafedSpaceReflectsPullbackOfLeft :
     ReflectsLimit (cospan f g)
-      (LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace) :=
+      (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace) :=
   reflectsLimitOfReflectsIsomorphisms _ _
 #align algebraic_geometry.LocallyRingedSpace.is_open_immersion.forget_to_PresheafedSpace_reflects_pullback_of_left AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.forgetToPresheafedSpaceReflectsPullbackOfLeft
 
 instance forgetToPresheafedSpaceReflectsPullbackOfRight :
     ReflectsLimit (cospan g f)
-      (LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace) :=
+      (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace) :=
   reflectsLimitOfReflectsIsomorphisms _ _
 #align algebraic_geometry.LocallyRingedSpace.is_open_immersion.forget_to_PresheafedSpace_reflects_pullback_of_right AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.forgetToPresheafedSpaceReflectsPullbackOfRight
 
@@ -1306,9 +1304,9 @@ variable [∀ x, HasPullback (𝒰.map x ≫ f) g]
 def affineCover (X : Scheme) : OpenCover X
     where
   J := X.carrier
-  obj x := spec.obj <| Opposite.op (X.local_affine x).some_spec.some
+  obj x := spec.obj <| Opposite.op (X.local_affine x).choose_spec.some
   map x :=
-    ((X.local_affine x).some_spec.some_spec.some.inv ≫ X.toLocallyRingedSpace.of_restrict _ : _)
+    ((X.local_affine x).choose_spec.choose_spec.some.inv ≫ X.toLocallyRingedSpace.of_restrict _ : _)
   f x := x
   IsOpen x :=
     by
@@ -1340,7 +1338,7 @@ def OpenCover.bind (f : ∀ x : 𝒰.J, OpenCover (𝒰.obj x)) : OpenCover X
   f x := ⟨_, (f _).f (𝒰.Covers x).some⟩
   Covers x := by
     let y := (𝒰.covers x).some
-    have hy : (𝒰.map (𝒰.f x)).val.base y = x := (𝒰.covers x).some_spec
+    have hy : (𝒰.map (𝒰.f x)).val.base y = x := (𝒰.covers x).choose_spec
     rcases(f (𝒰.f x)).Covers y with ⟨z, hz⟩
     change x ∈ Set.range ((f (𝒰.f x)).map ((f (𝒰.f x)).f y) ≫ 𝒰.map (𝒰.f x)).1.base
     use z
@@ -1411,7 +1409,7 @@ def OpenCover.add {X : Scheme} (𝒰 : X.OpenCover) {Y : Scheme} (f : Y ⟶ X) [
 attribute [local reducible] CommRingCat.of CommRingCat.ofHom
 
 instance val_base_isIso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] : IsIso f.1.base :=
-  Scheme.forgetToTop.map_is_iso f
+  Scheme.forgetToTop.map_isIso f
 #align algebraic_geometry.Scheme.val_base_is_iso AlgebraicGeometry.Scheme.val_base_isIso
 
 instance basic_open_isOpenImmersion {R : CommRingCat} (f : R) :
@@ -1448,7 +1446,7 @@ def affineBasisCover (X : Scheme) : OpenCover X :=
 
 /-- The coordinate ring of a component in the `affine_basis_cover`. -/
 def affineBasisCoverRing (X : Scheme) (i : X.affineBasisCover.J) : CommRingCat :=
-  CommRingCat.of <| @Localization.Away (X.local_affine i.1).some_spec.some _ i.2
+  CommRingCat.of <| @Localization.Away (X.local_affine i.1).choose_spec.some _ i.2
 #align algebraic_geometry.Scheme.affine_basis_cover_ring AlgebraicGeometry.Scheme.affineBasisCoverRing
 
 theorem affineBasisCover_obj (X : Scheme) (i : X.affineBasisCover.J) :
@@ -1457,7 +1455,7 @@ theorem affineBasisCover_obj (X : Scheme) (i : X.affineBasisCover.J) :
 #align algebraic_geometry.Scheme.affine_basis_cover_obj AlgebraicGeometry.Scheme.affineBasisCover_obj
 
 theorem affineBasisCover_map_range (X : Scheme) (x : X.carrier)
-    (r : (X.local_affine x).some_spec.some) :
+    (r : (X.local_affine x).choose_spec.some) :
     Set.range (X.affineBasisCover.map ⟨x, r⟩).1.base =
       (X.affineCover.map x).1.base '' (PrimeSpectrum.basicOpen r).1 :=
   by
@@ -1481,7 +1479,7 @@ theorem affineBasisCover_is_basis (X : Scheme) :
       rw [← e] at haU
       exact haU
     rcases prime_spectrum.is_basis_basic_opens.exists_subset_of_mem_open hxU'
-        ((X.affine_cover.map (X.affine_cover.f a)).1.base.continuous_to_fun.is_open_preimage _
+        ((X.affine_cover.map (X.affine_cover.f a)).1.base.continuous_toFun.isOpen_preimage _
           hU) with
       ⟨_, ⟨_, ⟨s, rfl⟩, rfl⟩, hxV, hVU⟩
     refine' ⟨_, ⟨⟨_, s⟩, rfl⟩, _, _⟩ <;> erw [affine_basis_cover_map_range]
@@ -1512,7 +1510,7 @@ def OpenCover.finiteSubcover {X : Scheme} (𝒰 : OpenCover X) [H : CompactSpace
       obj := fun x => 𝒰.obj (𝒰.f x.1)
       map := fun x => 𝒰.map (𝒰.f x.1)
       f := fun x => (h x).some
-      Covers := fun x => (h x).some_spec }
+      Covers := fun x => (h x).choose_spec }
 #align algebraic_geometry.Scheme.open_cover.finite_subcover AlgebraicGeometry.Scheme.OpenCover.finiteSubcover
 
 instance [H : CompactSpace X.carrier] : Fintype 𝒰.finiteSubcover.J :=
@@ -1627,8 +1625,8 @@ instance (priority := 100) of_isIso [IsIso g] : IsOpenImmersion g :=
 
 theorem to_iso {X Y : Scheme} (f : X ⟶ Y) [h : IsOpenImmersion f] [Epi f.1.base] : IsIso f :=
   @isIso_of_reflects_iso _ _ f
-    (Scheme.forget_to_LocallyRingedSpace ⋙
-      LocallyRingedSpace.forget_to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace)
+    (Scheme.forgetToLocallyRingedSpace ⋙
+      LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace)
     (@PresheafedSpace.IsOpenImmersion.to_iso _ f.1 h _) _
 #align algebraic_geometry.is_open_immersion.to_iso AlgebraicGeometry.IsOpenImmersion.to_iso
 
@@ -1684,7 +1682,7 @@ instance forget_map_isOpenImmersion : LocallyRingedSpace.IsOpenImmersion (forget
   ⟨H.base_open, H.c_iso⟩
 #align algebraic_geometry.is_open_immersion.forget_map_is_open_immersion AlgebraicGeometry.IsOpenImmersion.forget_map_isOpenImmersion
 
-instance hasLimitCospanForgetOfLeft : HasLimit (cospan f g ⋙ Scheme.forget_to_LocallyRingedSpace) :=
+instance hasLimitCospanForgetOfLeft : HasLimit (cospan f g ⋙ Scheme.forgetToLocallyRingedSpace) :=
   by
   apply has_limit_of_iso (diagramIsoCospan.{u} _).symm
   change has_limit (cospan (forget.map f) (forget.map g))
@@ -1884,7 +1882,7 @@ theorem app_eq_invApp_app_of_comp_eq {X Y U : Scheme} (f : Y ⟶ U) (g : U ⟶ X
       g.invApp _ ≫
         fg.1.c.app _ ≫
           Y.Presheaf.map
-            (eq_to_hom <| IsOpenImmersion.app_eq_inv_app_app_of_comp_eq_aux f g fg H V).op :=
+            (eqToHom <| IsOpenImmersion.app_eq_inv_app_app_of_comp_eq_aux f g fg H V).op :=
   by
   subst H
   rw [Scheme.comp_val_c_app, category.assoc, Scheme.hom.inv_app,
@@ -1900,7 +1898,7 @@ theorem lift_app {X Y U : Scheme} (f : U ⟶ Y) (g : X ⟶ Y) [h : IsOpenImmersi
       f.invApp _ ≫
         g.1.c.app _ ≫
           X.Presheaf.map
-            (eq_to_hom <|
+            (eqToHom <|
                 IsOpenImmersion.app_eq_inv_app_app_of_comp_eq_aux _ _ _
                   (IsOpenImmersion.lift_fac f g H).symm V).op :=
   IsOpenImmersion.app_eq_invApp_app_of_comp_eq _ _ _ _ _
@@ -1992,7 +1990,7 @@ theorem Scheme.restrictFunctor_map_app_aux {U V : Opens X.carrier} (i : U ⟶ V)
 
 theorem Scheme.restrictFunctor_map_app {U V : Opens X.carrier} (i : U ⟶ V) (W : Opens V) :
     (X.restrictFunctor.map i).1.1.c.app (op W) =
-      X.Presheaf.map (hom_of_le <| X.restrict_functor_map_app_aux i W).op :=
+      X.Presheaf.map (homOfLe <| X.restrictFunctor_map_app_aux i W).op :=
   by
   have e₁ :=
     Scheme.congr_app (X.restrict_functor_map_of_restrict i)
@@ -2014,7 +2012,7 @@ isomorphic to the structure sheaf. -/
 @[simps]
 def Scheme.restrictFunctorΓ : X.restrictFunctor.op ⋙ (Over.forget X).op ⋙ Scheme.Γ ≅ X.Presheaf :=
   NatIso.ofComponents
-    (fun U => X.Presheaf.mapIso ((eqToIso (unop U).open_embedding_obj_top).symm.op : _))
+    (fun U => X.Presheaf.mapIso ((eqToIso (unop U).openEmbedding_obj_top).symm.op : _))
     (by
       intro U V i
       dsimp [-Subtype.val_eq_coe, -Scheme.restrict_functor_map_left]
@@ -2072,7 +2070,7 @@ theorem Scheme.OpenCover.unionᵢ_range {X : Scheme} (𝒰 : X.OpenCover) :
 
 theorem Scheme.OpenCover.supᵢ_opensRange {X : Scheme} (𝒰 : X.OpenCover) :
     (⨆ i, (𝒰.map i).opensRange) = ⊤ :=
-  opens.ext <| by
+  Opens.ext <| by
     rw [opens.coe_supr]
     exact 𝒰.Union_range
 #align algebraic_geometry.Scheme.open_cover.supr_opens_range AlgebraicGeometry.Scheme.OpenCover.supᵢ_opensRange
@@ -2120,7 +2118,7 @@ def Scheme.openCoverOfSuprEqTop {s : Type _} (X : Scheme) (U : s → Opens X.car
   Covers x := by
     erw [Subtype.range_coe]
     have : x ∈ ⨆ i, U i := hU.symm ▸ show x ∈ (⊤ : opens X.carrier) by triv
-    exact (opens.mem_supr.mp this).some_spec
+    exact (opens.mem_supr.mp this).choose_spec
 #align algebraic_geometry.Scheme.open_cover_of_supr_eq_top AlgebraicGeometry.Scheme.openCoverOfSuprEqTop
 
 section MorphismRestrict
@@ -2266,9 +2264,9 @@ theorem morphismRestrict_c_app {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier
 
 theorem Γ_map_morphismRestrict {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier) :
     Scheme.Γ.map (f ∣_ U).op =
-      Y.Presheaf.map (eq_to_hom <| U.open_embedding_obj_top.symm).op ≫
+      Y.Presheaf.map (eqToHom <| U.openEmbedding_obj_top.symm).op ≫
         f.1.c.app (op U) ≫
-          X.Presheaf.map (eq_to_hom <| ((Opens.map f.val.base).obj U).open_embedding_obj_top).op :=
+          X.Presheaf.map (eqToHom <| ((Opens.map f.val.base).obj U).openEmbedding_obj_top).op :=
   by
   rw [Scheme.Γ_map_op, morphism_restrict_c_app f U ⊤, f.val.c.naturality_assoc]
   erw [← X.presheaf.map_comp]
@@ -2334,13 +2332,13 @@ def morphismRestrictRestrictBasicOpen {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.
     (r : Y.Presheaf.obj (op U)) :
     Arrow.mk
         (f ∣_ U ∣_
-          (Y.restrict _).basicOpen (Y.Presheaf.map (eqToHom U.open_embedding_obj_top).op r)) ≅
+          (Y.restrict _).basicOpen (Y.Presheaf.map (eqToHom U.openEmbedding_obj_top).op r)) ≅
       Arrow.mk (f ∣_ Y.basicOpen r) :=
   by
   refine' morphism_restrict_restrict _ _ _ ≪≫ morphism_restrict_eq _ _
   have e := Scheme.preimage_basic_open (Y.of_restrict U.open_embedding) r
   erw [Scheme.of_restrict_val_c_app, opens.adjunction_counit_app_self, eq_to_hom_op] at e
-  rw [← (Y.restrict U.open_embedding).basic_open_res_eq _ (eq_to_hom U.inclusion_map_eq_top).op, ←
+  rw [← (Y.restrict U.open_embedding).basicOpen_res_eq _ (eq_to_hom U.inclusion_map_eq_top).op, ←
     comp_apply]
   erw [← Y.presheaf.map_comp]
   rw [eq_to_hom_op, eq_to_hom_op, eq_to_hom_map, eq_to_hom_trans]

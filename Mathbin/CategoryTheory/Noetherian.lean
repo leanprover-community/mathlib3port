@@ -40,17 +40,17 @@ which does not have infinite increasing sequences of subobjects.
 See https://stacks.math.columbia.edu/tag/0FCG
 -/
 class NoetherianObject (X : C) : Prop where
-  subobject_gt_well_founded : WellFounded ((· > ·) : Subobject X → Subobject X → Prop)
+  subobject_gt_wellFounded : WellFounded ((· > ·) : Subobject X → Subobject X → Prop)
 #align category_theory.noetherian_object CategoryTheory.NoetherianObject
 
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_well_founded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
 /-- An artinian object is an object
 which does not have infinite decreasing sequences of subobjects.
 
 See https://stacks.math.columbia.edu/tag/0FCF
 -/
 class ArtinianObject (X : C) : Prop where
-  subobject_lt_well_founded : WellFounded ((· < ·) : Subobject X → Subobject X → Prop)
+  subobject_lt_wellFounded : WellFounded ((· < ·) : Subobject X → Subobject X → Prop)
 #align category_theory.artinian_object CategoryTheory.ArtinianObject
 
 variable (C)
@@ -97,7 +97,7 @@ noncomputable def simpleSubobjectArrow {X : C} [ArtinianObject X] (h : ¬IsZero 
 #align category_theory.simple_subobject_arrow CategoryTheory.simpleSubobjectArrow
 
 instance {X : C} [ArtinianObject X] (h : ¬IsZero X) : Simple (simpleSubobject h) :=
-  (exists_simple_subobject h).some_spec
+  (exists_simple_subobject h).choose_spec
 
 end CategoryTheory
 

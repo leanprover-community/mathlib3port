@@ -111,7 +111,7 @@ theorem tendsto_abv_eval₂_atTop {R S k α : Type _} [Semiring R] [Ring S] [Lin
     simpa [abv_mul abv] using hz.const_mul_at_top ((abv_pos abv).2 hc)
   · intro p hpd ihp hf
     rw [leading_coeff_mul_X] at hf
-    simpa [abv_mul abv] using (ihp hf).at_top_mul_at_top hz
+    simpa [abv_mul abv] using (ihp hf).atTop_mul_atTop hz
   · intro p a hd ihp hf
     rw [add_comm, leading_coeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
     refine' tendsto_at_top_of_add_const_right (abv (-f a)) _
@@ -136,12 +136,12 @@ variable {α R : Type _} [NormedRing R] [IsAbsoluteValue (norm : R → ℝ)]
 
 theorem tendsto_norm_atTop (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R}
     (hz : Tendsto (fun x => ‖z x‖) l atTop) : Tendsto (fun x => ‖p.eval (z x)‖) l atTop :=
-  p.tendsto_abv_at_top norm h hz
+  p.tendsto_abv_atTop norm h hz
 #align polynomial.tendsto_norm_at_top Polynomial.tendsto_norm_atTop
 
 theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ‖p.eval x‖ ≤ ‖p.eval y‖ :=
   if hp0 : 0 < degree p then
-    p.Continuous.norm.exists_forall_le <| p.tendsto_norm_at_top hp0 tendsto_norm_cocompact_atTop
+    p.Continuous.norm.exists_forall_le <| p.tendsto_norm_atTop hp0 tendsto_norm_cocompact_atTop
   else ⟨p.coeff 0, by rw [eq_C_of_degree_le_zero (le_of_not_gt hp0)] <;> simp⟩
 #align polynomial.exists_forall_norm_le Polynomial.exists_forall_norm_le
 
@@ -155,7 +155,7 @@ open Multiset
 
 theorem eq_one_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (hB : B < 0) (h1 : p.Monic)
     (h2 : Splits f p) (h3 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) : p = 1 :=
-  h1.nat_degree_eq_zero_iff_eq_one.mp
+  h1.natDegree_eq_zero_iff_eq_one.mp
     (by
       contrapose! hB
       rw [← h1.nat_degree_map f, nat_degree_eq_card_roots' h2] at hB

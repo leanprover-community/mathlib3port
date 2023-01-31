@@ -76,7 +76,7 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
 variable {M} {u}
 
 instance structure : L.Structure ((u : Filter α).product M) :=
-  language.quotient_structure
+  Language.quotientStructure
 #align first_order.language.ultraproduct.Structure FirstOrder.Language.Ultraproduct.structure
 
 theorem funMap_cast {n : ℕ} (f : L.Functions n) (x : Fin n → ∀ a, M a) :

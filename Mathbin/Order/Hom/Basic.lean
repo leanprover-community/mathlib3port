@@ -859,7 +859,7 @@ def dualIso (α β : Type _) [Preorder α] [Preorder β] : (α →o β) ≃o (α
 /-- Lift an order homomorphism `f : α →o β` to an order homomorphism `with_bot α →o with_bot β`. -/
 @[simps (config := { fullyApplied := false })]
 protected def withBotMap (f : α →o β) : WithBot α →o WithBot β :=
-  ⟨WithBot.map f, f.mono.with_bot_map⟩
+  ⟨WithBot.map f, f.mono.withBot_map⟩
 #align order_hom.with_bot_map OrderHom.withBotMap
 -/
 
@@ -867,7 +867,7 @@ protected def withBotMap (f : α →o β) : WithBot α →o WithBot β :=
 /-- Lift an order homomorphism `f : α →o β` to an order homomorphism `with_top α →o with_top β`. -/
 @[simps (config := { fullyApplied := false })]
 protected def withTopMap (f : α →o β) : WithTop α →o WithTop β :=
-  ⟨WithTop.map f, f.mono.with_top_map⟩
+  ⟨WithTop.map f, f.mono.withTop_map⟩
 #align order_hom.with_top_map OrderHom.withTopMap
 -/
 
@@ -1015,7 +1015,7 @@ protected def withBotMap (f : α ↪o β) : WithBot α ↪o WithBot β :=
 /-- A version of `with_top.map` for order embeddings. -/
 @[simps (config := { fullyApplied := false })]
 protected def withTopMap (f : α ↪o β) : WithTop α ↪o WithTop β :=
-  { f.dual.with_bot_map.dual with toFun := WithTop.map f }
+  { f.dual.withBot_map.dual with toFun := WithTop.map f }
 #align order_embedding.with_top_map OrderEmbedding.withTopMap
 -/
 
@@ -1443,7 +1443,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β], Eq.{max (succ u2) (succ u1)} (OrderIso.{max u2 u1, max u2 u1} (Prod.{u1, u2} β α) (Prod.{u2, u1} α β) (Prod.instLEProd.{u1, u2} β α _inst_2 _inst_1) (Prod.instLEProd.{u2, u1} α β _inst_1 _inst_2)) (OrderIso.symm.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.instLEProd.{u2, u1} α β _inst_1 _inst_2) (Prod.instLEProd.{u1, u2} β α _inst_2 _inst_1) (OrderIso.prodComm.{u2, u1} α β _inst_1 _inst_2)) (OrderIso.prodComm.{u1, u2} β α _inst_2 _inst_1)
 Case conversion may be inaccurate. Consider using '#align order_iso.prod_comm_symm OrderIso.prodComm_symmₓ'. -/
 @[simp]
-theorem prodComm_symm : (prodComm : α × β ≃o β × α).symm = prod_comm :=
+theorem prodComm_symm : (prodComm : α × β ≃o β × α).symm = prodComm :=
   rfl
 #align order_iso.prod_comm_symm OrderIso.prodComm_symm
 
@@ -1463,7 +1463,7 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : LE.{u1} α], Eq.{succ u1} (forall (ᾰ : α), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u1} (OrderDual.{u1} α)) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} α (OrderDual.{u1} (OrderDual.{u1} α))) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} α (OrderDual.{u1} (OrderDual.{u1} α))) α (OrderDual.{u1} (OrderDual.{u1} α)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} α (OrderDual.{u1} (OrderDual.{u1} α)))) (RelEmbedding.toEmbedding.{u1, u1} α (OrderDual.{u1} (OrderDual.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : OrderDual.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : OrderDual.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.instLEOrderDual.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u1, u1} α (OrderDual.{u1} (OrderDual.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : OrderDual.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : OrderDual.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.instLEOrderDual.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (OrderIso.dualDual.{u1} α _inst_1)))) (Function.comp.{succ u1, succ u1, succ u1} α (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α))) (OrderDual.{u1} α) (fun (_x : OrderDual.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} α) => OrderDual.{u1} (OrderDual.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α))) (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α))) (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} α) (OrderDual.{u1} (OrderDual.{u1} α))))) (OrderDual.toDual.{u1} (OrderDual.{u1} α))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (OrderDual.{u1} α)) α (OrderDual.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} α (OrderDual.{u1} α)))) (OrderDual.toDual.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align order_iso.coe_dual_dual OrderIso.coe_dualDualₓ'. -/
 @[simp]
-theorem coe_dualDual : ⇑(dualDual α) = to_dual ∘ to_dual :=
+theorem coe_dualDual : ⇑(dualDual α) = toDual ∘ toDual :=
   rfl
 #align order_iso.coe_dual_dual OrderIso.coe_dualDual
 
@@ -1474,7 +1474,7 @@ but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : LE.{u1} α], Eq.{succ u1} (forall (ᾰ : OrderDual.{u1} (OrderDual.{u1} α)), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} (OrderDual.{u1} α)) => α) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) α) (OrderDual.{u1} (OrderDual.{u1} α)) (fun (_x : OrderDual.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} (OrderDual.{u1} α)) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) α) (OrderDual.{u1} (OrderDual.{u1} α)) α (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) α)) (RelEmbedding.toEmbedding.{u1, u1} (OrderDual.{u1} (OrderDual.{u1} α)) α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : OrderDual.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : OrderDual.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.instLEOrderDual.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u1, u1} (OrderDual.{u1} (OrderDual.{u1} α)) α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : OrderDual.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : OrderDual.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.instLEOrderDual.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : α) => LE.le.{u1} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (OrderIso.symm.{u1, u1} α (OrderDual.{u1} (OrderDual.{u1} α)) _inst_1 (OrderDual.instLEOrderDual.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) (OrderIso.dualDual.{u1} α _inst_1))))) (Function.comp.{succ u1, succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α) α (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) (fun (_x : OrderDual.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} α) => α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) α (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} α) α) (OrderDual.{u1} α) α (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} α) α))) (OrderDual.ofDual.{u1} α)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α)) (OrderDual.{u1} (OrderDual.{u1} α)) (fun (_x : OrderDual.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} (OrderDual.{u1} α)) => OrderDual.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α)) (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α)) (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} α)))) (OrderDual.ofDual.{u1} (OrderDual.{u1} α))))
 Case conversion may be inaccurate. Consider using '#align order_iso.coe_dual_dual_symm OrderIso.coe_dualDual_symmₓ'. -/
 @[simp]
-theorem coe_dualDual_symm : ⇑(dualDual α).symm = of_dual ∘ of_dual :=
+theorem coe_dualDual_symm : ⇑(dualDual α).symm = ofDual ∘ ofDual :=
   rfl
 #align order_iso.coe_dual_dual_symm OrderIso.coe_dualDual_symm
 
@@ -1590,7 +1590,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)) (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9141 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.9143 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.9141 x._@.Mathlib.Order.Hom.Basic._hyg.9143) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9163 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.9165 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.9163 x._@.Mathlib.Order.Hom.Basic._hyg.9165) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9141 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.9143 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.9141 x._@.Mathlib.Order.Hom.Basic._hyg.9143) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9163 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.9165 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.9163 x._@.Mathlib.Order.Hom.Basic._hyg.9165) (OrderIso.toRelIsoLT.{u2, u1} α β _inst_1 _inst_2 e))) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e)) x)
 Case conversion may be inaccurate. Consider using '#align order_iso.to_rel_iso_lt_apply OrderIso.toRelIsoLT_applyₓ'. -/
 @[simp]
-theorem toRelIsoLT_apply (e : α ≃o β) (x : α) : e.toRelIsoLt x = e x :=
+theorem toRelIsoLT_apply (e : α ≃o β) (x : α) : e.toRelIsoLT x = e x :=
   rfl
 #align order_iso.to_rel_iso_lt_apply OrderIso.toRelIsoLT_apply
 
@@ -1601,7 +1601,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Eq.{max (succ u2) (succ u1)} (RelIso.{u1, u2} β α (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9163 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.9165 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.9163 x._@.Mathlib.Order.Hom.Basic._hyg.9165) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9141 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.9143 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.9141 x._@.Mathlib.Order.Hom.Basic._hyg.9143)) (RelIso.symm.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9141 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.9143 : α) => LT.lt.{u2} α (Preorder.toLT.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.9141 x._@.Mathlib.Order.Hom.Basic._hyg.9143) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.9163 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.9165 : β) => LT.lt.{u1} β (Preorder.toLT.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.9163 x._@.Mathlib.Order.Hom.Basic._hyg.9165) (OrderIso.toRelIsoLT.{u2, u1} α β _inst_1 _inst_2 e)) (OrderIso.toRelIsoLT.{u1, u2} β α _inst_2 _inst_1 (OrderIso.symm.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2) e))
 Case conversion may be inaccurate. Consider using '#align order_iso.to_rel_iso_lt_symm OrderIso.toRelIsoLT_symmₓ'. -/
 @[simp]
-theorem toRelIsoLT_symm (e : α ≃o β) : e.toRelIsoLt.symm = e.symm.toRelIsoLt :=
+theorem toRelIsoLT_symm (e : α ≃o β) : e.toRelIsoLT.symm = e.symm.toRelIsoLT :=
   rfl
 #align order_iso.to_rel_iso_lt_symm OrderIso.toRelIsoLT_symm
 
@@ -1931,8 +1931,8 @@ Case conversion may be inaccurate. Consider using '#align disjoint_map_order_iso
 @[simp]
 theorem disjoint_map_orderIso_iff [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β]
     {a b : α} (f : α ≃o β) : Disjoint (f a) (f b) ↔ Disjoint a b :=
-  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h =>
-    h.map_order_iso f⟩
+  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_orderIso f.symm, fun h =>
+    h.map_orderIso f⟩
 #align disjoint_map_order_iso_iff disjoint_map_orderIso_iff
 
 /- warning: codisjoint_map_order_iso_iff -> codisjoint_map_orderIso_iff is a dubious translation:
@@ -1944,8 +1944,8 @@ Case conversion may be inaccurate. Consider using '#align codisjoint_map_order_i
 @[simp]
 theorem codisjoint_map_orderIso_iff [SemilatticeSup α] [OrderTop α] [SemilatticeSup β] [OrderTop β]
     {a b : α} (f : α ≃o β) : Codisjoint (f a) (f b) ↔ Codisjoint a b :=
-  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h =>
-    h.map_order_iso f⟩
+  ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_orderIso f.symm, fun h =>
+    h.map_orderIso f⟩
 #align codisjoint_map_order_iso_iff codisjoint_map_orderIso_iff
 
 namespace WithBot
@@ -2016,7 +2016,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α], Eq.{succ u1} (forall (a : WithBot.{u1} (OrderDual.{u1} α)), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithBot.{u1} (OrderDual.{u1} α)) => OrderDual.{u1} (WithTop.{u1} α)) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithTop.{u1} α))) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithBot.{u1} (OrderDual.{u1} α)) => OrderDual.{u1} (WithTop.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithTop.{u1} α))) (WithBot.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithTop.{u1} α)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithTop.{u1} α)))) (RelEmbedding.toEmbedding.{u1, u1} (WithBot.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithTop.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : WithBot.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : WithBot.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : OrderDual.{u1} (WithTop.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : OrderDual.{u1} (WithTop.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (WithTop.{u1} α)) (OrderDual.instLEOrderDual.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u1, u1} (WithBot.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithTop.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : WithBot.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : WithBot.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithBot.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : OrderDual.{u1} (WithTop.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : OrderDual.{u1} (WithTop.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (WithTop.{u1} α)) (OrderDual.instLEOrderDual.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (WithBot.toDualTopEquiv.{u1} α _inst_1)))) (Function.comp.{succ u1, succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α))) (WithTop.{u1} α) (fun (_x : WithTop.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithTop.{u1} α) => OrderDual.{u1} (WithTop.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α))) (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α))) (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} α) (OrderDual.{u1} (WithTop.{u1} α))))) (OrderDual.toDual.{u1} (WithTop.{u1} α))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (fun (_x : WithBot.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithBot.{u1} (OrderDual.{u1} α)) => WithTop.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)) (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} (OrderDual.{u1} α)) (WithTop.{u1} α)))) (WithBot.ofDual.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align with_bot.coe_to_dual_top_equiv_eq WithBot.coe_toDualTopEquiv_eqₓ'. -/
 theorem coe_toDualTopEquiv_eq [LE α] :
-    (WithBot.toDualTopEquiv : WithBot αᵒᵈ → (WithTop α)ᵒᵈ) = to_dual ∘ WithBot.ofDual :=
+    (WithBot.toDualTopEquiv : WithBot αᵒᵈ → (WithTop α)ᵒᵈ) = toDual ∘ WithBot.ofDual :=
   funext fun _ => rfl
 #align with_bot.coe_to_dual_top_equiv_eq WithBot.coe_toDualTopEquiv_eq
 
@@ -2089,7 +2089,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LE.{u1} α], Eq.{succ u1} (forall (a : WithTop.{u1} (OrderDual.{u1} α)), (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithTop.{u1} (OrderDual.{u1} α)) => OrderDual.{u1} (WithBot.{u1} α)) a) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithBot.{u1} α))) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithTop.{u1} (OrderDual.{u1} α)) => OrderDual.{u1} (WithBot.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithBot.{u1} α))) (WithTop.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithBot.{u1} α)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithBot.{u1} α)))) (RelEmbedding.toEmbedding.{u1, u1} (WithTop.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithBot.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : WithTop.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : WithTop.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : OrderDual.{u1} (WithBot.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : OrderDual.{u1} (WithBot.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (WithBot.{u1} α)) (OrderDual.instLEOrderDual.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u1, u1} (WithTop.{u1} (OrderDual.{u1} α)) (OrderDual.{u1} (WithBot.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : WithTop.{u1} (OrderDual.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : WithTop.{u1} (OrderDual.{u1} α)) => LE.le.{u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithTop.le.{u1} (OrderDual.{u1} α) (OrderDual.instLEOrderDual.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : OrderDual.{u1} (WithBot.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : OrderDual.{u1} (WithBot.{u1} α)) => LE.le.{u1} (OrderDual.{u1} (WithBot.{u1} α)) (OrderDual.instLEOrderDual.{u1} (WithBot.{u1} α) (WithBot.le.{u1} α _inst_1)) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (WithTop.toDualBotEquiv.{u1} α _inst_1)))) (Function.comp.{succ u1, succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α)) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α))) (WithBot.{u1} α) (fun (_x : WithBot.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithBot.{u1} α) => OrderDual.{u1} (WithBot.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α))) (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α)) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α))) (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α)) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithBot.{u1} α) (OrderDual.{u1} (WithBot.{u1} α))))) (OrderDual.toDual.{u1} (WithBot.{u1} α))) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (fun (_x : WithTop.{u1} (OrderDual.{u1} α)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : WithTop.{u1} (OrderDual.{u1} α)) => WithBot.{u1} α) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)) (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (WithTop.{u1} (OrderDual.{u1} α)) (WithBot.{u1} α)))) (WithTop.ofDual.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_to_dual_bot_equiv_eq WithTop.coe_toDualBotEquivₓ'. -/
 theorem coe_toDualBotEquiv [LE α] :
-    (WithTop.toDualBotEquiv : WithTop αᵒᵈ → (WithBot α)ᵒᵈ) = to_dual ∘ WithTop.ofDual :=
+    (WithTop.toDualBotEquiv : WithTop αᵒᵈ → (WithBot α)ᵒᵈ) = toDual ∘ WithTop.ofDual :=
   funext fun _ => rfl
 #align with_top.coe_to_dual_bot_equiv_eq WithTop.coe_toDualBotEquiv
 
@@ -2103,7 +2103,7 @@ variable [PartialOrder α] [PartialOrder β] [PartialOrder γ]
 /-- A version of `equiv.option_congr` for `with_top`. -/
 @[simps apply]
 def withTopCongr (e : α ≃o β) : WithTop α ≃o WithTop β :=
-  { e.toOrderEmbedding.with_top_map with toEquiv := e.toEquiv.optionCongr }
+  { e.toOrderEmbedding.withTop_map with toEquiv := e.toEquiv.optionCongr }
 #align order_iso.with_top_congr OrderIso.withTopCongr
 -/
 
@@ -2122,7 +2122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.with_top_congr_symm OrderIso.withTopCongr_symmₓ'. -/
 @[simp]
 theorem withTopCongr_symm (e : α ≃o β) : e.withTopCongr.symm = e.symm.withTopCongr :=
-  RelIso.toEquiv_injective e.toEquiv.option_congr_symm
+  RelIso.toEquiv_injective e.toEquiv.optionCongr_symm
 #align order_iso.with_top_congr_symm OrderIso.withTopCongr_symm
 
 /- warning: order_iso.with_top_congr_trans -> OrderIso.withTopCongr_trans is a dubious translation:
@@ -2134,14 +2134,14 @@ Case conversion may be inaccurate. Consider using '#align order_iso.with_top_con
 @[simp]
 theorem withTopCongr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
     e₁.withTopCongr.trans e₂.withTopCongr = (e₁.trans e₂).withTopCongr :=
-  RelIso.toEquiv_injective <| e₁.toEquiv.option_congr_trans e₂.toEquiv
+  RelIso.toEquiv_injective <| e₁.toEquiv.optionCongr_trans e₂.toEquiv
 #align order_iso.with_top_congr_trans OrderIso.withTopCongr_trans
 
 #print OrderIso.withBotCongr /-
 /-- A version of `equiv.option_congr` for `with_bot`. -/
 @[simps apply]
 def withBotCongr (e : α ≃o β) : WithBot α ≃o WithBot β :=
-  { e.toOrderEmbedding.with_bot_map with toEquiv := e.toEquiv.optionCongr }
+  { e.toOrderEmbedding.withBot_map with toEquiv := e.toEquiv.optionCongr }
 #align order_iso.with_bot_congr OrderIso.withBotCongr
 -/
 
@@ -2160,7 +2160,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.with_bot_congr_symm OrderIso.withBotCongr_symmₓ'. -/
 @[simp]
 theorem withBotCongr_symm (e : α ≃o β) : e.withBotCongr.symm = e.symm.withBotCongr :=
-  RelIso.toEquiv_injective e.toEquiv.option_congr_symm
+  RelIso.toEquiv_injective e.toEquiv.optionCongr_symm
 #align order_iso.with_bot_congr_symm OrderIso.withBotCongr_symm
 
 /- warning: order_iso.with_bot_congr_trans -> OrderIso.withBotCongr_trans is a dubious translation:
@@ -2172,7 +2172,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso.with_bot_con
 @[simp]
 theorem withBotCongr_trans (e₁ : α ≃o β) (e₂ : β ≃o γ) :
     e₁.withBotCongr.trans e₂.withBotCongr = (e₁.trans e₂).withBotCongr :=
-  RelIso.toEquiv_injective <| e₁.toEquiv.option_congr_trans e₂.toEquiv
+  RelIso.toEquiv_injective <| e₁.toEquiv.optionCongr_trans e₂.toEquiv
 #align order_iso.with_bot_congr_trans OrderIso.withBotCongr_trans
 
 end OrderIso
@@ -2190,7 +2190,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Lattice.{u2} α] [_inst_2 : Lattice.{u1} β] [_inst_3 : BoundedOrder.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1))))] [_inst_4 : BoundedOrder.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β _inst_2))))] (f : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)))) (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β _inst_2))))) {x : α} {y : α}, (IsCompl.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)) _inst_3 x y) -> (IsCompl.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (SemilatticeInf.toPartialOrder.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) (Lattice.toSemilatticeInf.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) x) _inst_2)) _inst_4 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β _inst_2)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β _inst_2)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) f)) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β _inst_2)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α _inst_1)))) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β _inst_2)))) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) f)) y))
 Case conversion may be inaccurate. Consider using '#align order_iso.is_compl OrderIso.isComplₓ'. -/
 theorem OrderIso.isCompl {x y : α} (h : IsCompl x y) : IsCompl (f x) (f y) :=
-  ⟨h.1.map_order_iso _, h.2.map_order_iso _⟩
+  ⟨h.1.map_orderIso _, h.2.map_orderIso _⟩
 #align order_iso.is_compl OrderIso.isCompl
 
 /- warning: order_iso.is_compl_iff -> OrderIso.isCompl_iff is a dubious translation:

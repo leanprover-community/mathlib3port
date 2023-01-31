@@ -613,7 +613,7 @@ theorem Matrix.isAdjointPair_equiv (P : Matrix n n R) (h : IsUnit P) :
     (Pᵀ ⬝ J ⬝ P).IsAdjointPair (Pᵀ ⬝ J ⬝ P) A₁ A₁ ↔
       J.IsAdjointPair J (P ⬝ A₁ ⬝ P⁻¹) (P ⬝ A₁ ⬝ P⁻¹) :=
   by
-  have h' : IsUnit P.det := P.is_unit_iff_is_unit_det.mp h
+  have h' : IsUnit P.det := P.isUnit_iff_isUnit_det.mp h
   let u := P.nonsing_inv_unit h'
   let v := Pᵀ.nonsingInvUnit (P.is_unit_det_transpose h')
   let x := A₁ᵀ * Pᵀ * J
@@ -727,7 +727,7 @@ theorem Matrix.Nondegenerate.toLinearMap₂' {M : Matrix ι ι R₁} (h : M.Nond
 @[simp]
 theorem Matrix.separatingLeft_toLinearMap₂'_iff {M : Matrix ι ι R₁} :
     M.toLinearMap₂'.SeparatingLeft ↔ M.Nondegenerate :=
-  ⟨fun h v hv => h v fun w => (M.to_linear_map₂'_apply' _ _).trans <| hv w,
+  ⟨fun h v hv => h v fun w => (M.toLinearMap₂'_apply' _ _).trans <| hv w,
     Matrix.Nondegenerate.toLinearMap₂'⟩
 #align matrix.separating_left_to_linear_map₂'_iff Matrix.separatingLeft_toLinearMap₂'_iff
 

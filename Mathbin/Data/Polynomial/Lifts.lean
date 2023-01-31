@@ -103,8 +103,8 @@ theorem x_mem_lifts (f : R →+* S) : (x : S[X]) ∈ lifts f :=
 #align polynomial.X_mem_lifts Polynomial.x_mem_lifts
 
 /-- The polynomial `X ^ n` lifts. -/
-theorem x_pow_mem_lifts (f : R →+* S) (n : ℕ) : (X ^ n : S[X]) ∈ lifts f :=
-  ⟨X ^ n, by
+theorem x_pow_mem_lifts (f : R →+* S) (n : ℕ) : (x ^ n : S[X]) ∈ lifts f :=
+  ⟨x ^ n, by
     simp only [coe_map_ring_hom, map_pow, Set.mem_univ, Subsemiring.coe_top, eq_self_iff_true,
       map_X, and_self_iff]⟩
 #align polynomial.X_pow_mem_lifts Polynomial.x_pow_mem_lifts
@@ -128,7 +128,7 @@ theorem monomial_mem_lifts {s : S} (n : ℕ) (h : s ∈ Set.range f) : monomial 
 #align polynomial.monomial_mem_lifts Polynomial.monomial_mem_lifts
 
 /-- If `p` lifts then `p.erase n` lifts. -/
-theorem erase_mem_lifts {p : S[X]} (n : ℕ) (h : p ∈ lifts f) : p.erase n ∈ lifts f :=
+theorem erase_mem_lifts {p : S[X]} (n : ℕ) (h : p ∈ lifts f) : p.eraseₓ n ∈ lifts f :=
   by
   rw [lifts_iff_ring_hom_srange, mem_map_srange] at h⊢
   intro k

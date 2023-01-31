@@ -86,7 +86,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.multiset_nonc
 @[to_additive]
 theorem multiset_noncommProd_mem (K : Subgroup G) (g : Multiset G) (comm) :
     (∀ a ∈ g, a ∈ K) → g.noncommProd comm ∈ K :=
-  K.toSubmonoid.multiset_noncomm_prod_mem g comm
+  K.toSubmonoid.multiset_noncommProd_mem g comm
 #align subgroup.multiset_noncomm_prod_mem Subgroup.multiset_noncommProd_mem
 #align add_subgroup.multiset_noncomm_sum_mem AddSubgroup.multiset_noncommSum_mem
 
@@ -115,7 +115,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.noncomm_prod_
 @[to_additive]
 theorem noncommProd_mem (K : Subgroup G) {ι : Type _} {t : Finset ι} {f : ι → G} (comm) :
     (∀ c ∈ t, f c ∈ K) → t.noncommProd f comm ∈ K :=
-  K.toSubmonoid.noncomm_prod_mem t f comm
+  K.toSubmonoid.noncommProd_mem t f comm
 #align subgroup.noncomm_prod_mem Subgroup.noncommProd_mem
 #align add_subgroup.noncomm_sum_mem AddSubgroup.noncommSum_mem
 
@@ -196,7 +196,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.eq_top_of_car
 theorem eq_top_of_card_eq [Fintype H] [Fintype G] (h : Fintype.card H = Fintype.card G) : H = ⊤ :=
   by
   haveI : Fintype (H : Set G) := ‹Fintype H›
-  rw [SetLike.ext'_iff, coe_top, ← Finset.coe_univ, ← (H : Set G).coe_to_finset, Finset.coe_inj, ←
+  rw [SetLike.ext'_iff, coe_top, ← Finset.coe_univ, ← (H : Set G).coe_toFinset, Finset.coe_inj, ←
     Finset.card_eq_iff_eq_univ, ← h, Set.toFinset_card]
   congr
 #align subgroup.eq_top_of_card_eq Subgroup.eq_top_of_card_eq

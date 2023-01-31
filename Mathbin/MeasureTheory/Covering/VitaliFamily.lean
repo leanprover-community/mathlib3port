@@ -140,11 +140,11 @@ protected def covering : α × Set α → Set α := fun p => p.2
 #align vitali_family.fine_subfamily_on.covering VitaliFamily.FineSubfamilyOn.covering
 
 theorem index_subset : ∀ p : α × Set α, p ∈ h.index → p.1 ∈ s :=
-  h.exists_disjoint_covering_ae.some_spec.1
+  h.exists_disjoint_covering_ae.choose_spec.1
 #align vitali_family.fine_subfamily_on.index_subset VitaliFamily.FineSubfamilyOn.index_subset
 
 theorem covering_disjoint : h.index.PairwiseDisjoint h.covering :=
-  h.exists_disjoint_covering_ae.some_spec.2.1
+  h.exists_disjoint_covering_ae.choose_spec.2.1
 #align vitali_family.fine_subfamily_on.covering_disjoint VitaliFamily.FineSubfamilyOn.covering_disjoint
 
 theorem covering_disjoint_subtype : Pairwise (Disjoint on fun x : h.index => h.covering x) :=
@@ -152,15 +152,15 @@ theorem covering_disjoint_subtype : Pairwise (Disjoint on fun x : h.index => h.c
 #align vitali_family.fine_subfamily_on.covering_disjoint_subtype VitaliFamily.FineSubfamilyOn.covering_disjoint_subtype
 
 theorem covering_mem {p : α × Set α} (hp : p ∈ h.index) : h.covering p ∈ f p.1 :=
-  (h.exists_disjoint_covering_ae.some_spec.2.2.1 p hp).2
+  (h.exists_disjoint_covering_ae.choose_spec.2.2.1 p hp).2
 #align vitali_family.fine_subfamily_on.covering_mem VitaliFamily.FineSubfamilyOn.covering_mem
 
 theorem covering_mem_family {p : α × Set α} (hp : p ∈ h.index) : h.covering p ∈ v.setsAt p.1 :=
-  (h.exists_disjoint_covering_ae.some_spec.2.2.1 p hp).1
+  (h.exists_disjoint_covering_ae.choose_spec.2.2.1 p hp).1
 #align vitali_family.fine_subfamily_on.covering_mem_family VitaliFamily.FineSubfamilyOn.covering_mem_family
 
 theorem measure_diff_bUnion : μ (s \ ⋃ p ∈ h.index, h.covering p) = 0 :=
-  h.exists_disjoint_covering_ae.some_spec.2.2.2
+  h.exists_disjoint_covering_ae.choose_spec.2.2.2
 #align vitali_family.fine_subfamily_on.measure_diff_bUnion VitaliFamily.FineSubfamilyOn.measure_diff_bUnion
 
 theorem index_countable [SecondCountableTopology α] : h.index.Countable :=
@@ -188,7 +188,7 @@ theorem measure_le_tsum_of_absolutelyContinuous [SecondCountableTopology α] {ρ
 #align vitali_family.fine_subfamily_on.measure_le_tsum_of_absolutely_continuous VitaliFamily.FineSubfamilyOn.measure_le_tsum_of_absolutelyContinuous
 
 theorem measure_le_tsum [SecondCountableTopology α] : μ s ≤ ∑' x : h.index, μ (h.covering x) :=
-  h.measure_le_tsum_of_absolutely_continuous Measure.AbsolutelyContinuous.rfl
+  h.measure_le_tsum_of_absolutelyContinuous Measure.AbsolutelyContinuous.rfl
 #align vitali_family.fine_subfamily_on.measure_le_tsum VitaliFamily.FineSubfamilyOn.measure_le_tsum
 
 end FineSubfamilyOn
@@ -263,7 +263,7 @@ instance filterAt_neBot (x : α) : (v.filterAt x).ne_bot :=
 
 theorem eventually_filterAt_iff {x : α} {P : Set α → Prop} :
     (∀ᶠ a in v.filterAt x, P a) ↔ ∃ ε > (0 : ℝ), ∀ a ∈ v.setsAt x, a ⊆ closedBall x ε → P a :=
-  v.mem_filter_at_iff
+  v.mem_filterAt_iff
 #align vitali_family.eventually_filter_at_iff VitaliFamily.eventually_filterAt_iff
 
 theorem eventually_filterAt_mem_sets (x : α) : ∀ᶠ a in v.filterAt x, a ∈ v.setsAt x :=

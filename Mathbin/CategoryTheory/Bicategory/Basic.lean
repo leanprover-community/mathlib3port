@@ -126,9 +126,8 @@ class Bicategory (B : Type u) extends CategoryStruct.{v} B where
   -- right unitor:
   rightUnitor {a b : B} (f : a ⟶ b) : f ≫ 𝟙 b ≅ f
   -- axioms for left whiskering:
-  whisker_left_id' : ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), «expr ◁ » f (𝟙 g) = 𝟙 (f ≫ g) := by
-    obviously
-  whisker_left_comp' :
+  whiskerLeft_id' : ∀ {a b c} (f : a ⟶ b) (g : b ⟶ c), «expr ◁ » f (𝟙 g) = 𝟙 (f ≫ g) := by obviously
+  whiskerLeft_comp' :
     ∀ {a b c} (f : a ⟶ b) {g h i : b ⟶ c} (η : g ⟶ h) (θ : h ⟶ i),
       «expr ◁ » f (η ≫ θ) = «expr ◁ » f η ≫ «expr ◁ » f θ := by
     obviously
@@ -148,11 +147,11 @@ class Bicategory (B : Type u) extends CategoryStruct.{v} B where
     ∀ {a b c} {f g h : a ⟶ b} (η : f ⟶ g) (θ : g ⟶ h) (i : b ⟶ c),
       «expr ▷ » (η ≫ θ) i = «expr ▷ » η i ≫ «expr ▷ » θ i := by
     obviously
-  whisker_right_id' :
+  whiskerRight_id' :
     ∀ {a b} {f g : a ⟶ b} (η : f ⟶ g),
       «expr ▷ » η (𝟙 b) = ((exprρ_) f).Hom ≫ η ≫ ((exprρ_) g).inv := by
     obviously
-  whisker_right_comp' :
+  whiskerRight_comp' :
     ∀ {a b c d} {f f' : a ⟶ b} (η : f ⟶ f') (g : b ⟶ c) (h : c ⟶ d),
       «expr ▷ » η (g ≫ h) =
         ((exprα_) f g h).inv ≫ «expr ▷ » («expr ▷ » η g) h ≫ ((exprα_) f' g h).Hom := by

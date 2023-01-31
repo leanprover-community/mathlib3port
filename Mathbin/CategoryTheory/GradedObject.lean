@@ -128,7 +128,7 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
             ext
             simp)).trans
       (comapComp _ _ _).symm
-  functor_unit_iso_comp' X := by
+  functor_unitIso_comp' X := by
     ext b
     dsimp
     simp
@@ -183,7 +183,7 @@ theorem shiftFunctor_map_apply {β : Type _} [AddCommGroup β] (s : β)
 #align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shiftFunctor_map_apply
 
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :
-    HasZeroMorphisms.{max w v} (GradedObject β C) where HasZero X Y := { zero := fun b => 0 }
+    HasZeroMorphisms.{max w v} (GradedObject β C) where Zero X Y := { zero := fun b => 0 }
 #align category_theory.graded_object.has_zero_morphisms CategoryTheory.GradedObject.hasZeroMorphisms
 
 @[simp]

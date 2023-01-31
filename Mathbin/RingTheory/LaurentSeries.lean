@@ -240,7 +240,7 @@ theorem coe_c (r : R) : ((c R r : PowerSeries R) : LaurentSeries R) = HahnSeries
 
 @[simp]
 theorem coe_x : ((x : PowerSeries R) : LaurentSeries R) = single 1 1 :=
-  of_power_series_X
+  ofPowerSeries_x
 #align power_series.coe_X PowerSeries.coe_x
 
 @[simp, norm_cast]

@@ -127,7 +127,7 @@ def indexOfHom (f : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f }) : ι 
 
 theorem indexOfHom_spec (f : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f }) :
     f.1 = U (indexOfHom U f) :=
-  f.2.2.some_spec
+  f.2.2.choose_spec
 #align Top.presheaf.presieve_of_covering.index_of_hom_spec TopCat.Presheaf.presieveOfCovering.indexOfHom_spec
 
 end PresieveOfCovering

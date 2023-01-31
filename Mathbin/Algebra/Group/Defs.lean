@@ -698,10 +698,10 @@ to `0 : ℕ`).
 /-- An `add_monoid` is an `add_semigroup` with an element `0` such that `0 + a = a + 0 = a`. -/
 class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
   nsmul : ℕ → M → M := nsmulRec
-  nsmul_zero' : ∀ x, nsmul 0 x = 0 := by
+  nsmul_zero : ∀ x, nsmul 0 x = 0 := by
     intros
     rfl
-  nsmul_succ' :
+  nsmul_succ :
     ∀ (n : ℕ) (x), nsmul n.succ x = x +
           nsmul n x := by
     intros
@@ -714,10 +714,10 @@ class AddMonoid (M : Type u) extends AddSemigroup M, AddZeroClass M where
 @[to_additive]
 class Monoid (M : Type u) extends Semigroup M, MulOneClass M where
   npow : ℕ → M → M := npowRec
-  npow_zero' : ∀ x, npow 0 x = 1 := by
+  npow_zero : ∀ x, npow 0 x = 1 := by
     intros
     rfl
-  npow_succ' :
+  npow_succ :
     ∀ (n : ℕ) (x), npow n.succ x = x * npow n
             x := by
     intros

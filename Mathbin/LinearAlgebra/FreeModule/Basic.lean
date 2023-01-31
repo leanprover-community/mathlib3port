@@ -110,7 +110,7 @@ noncomputable def constr {S : Type z} [Semiring S] [Module S N] [SMulCommClass R
 
 instance (priority := 100) noZeroSMulDivisors [NoZeroDivisors R] : NoZeroSMulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M
-  b.NoZeroSmulDivisors
+  b.NoZeroSMulDivisors
 #align module.free.no_zero_smul_divisors Module.Free.noZeroSMulDivisors
 
 instance [Nontrivial M] : Nonempty (Module.Free.ChooseBasisIndex R M) :=
@@ -119,7 +119,7 @@ instance [Nontrivial M] : Nonempty (Module.Free.ChooseBasisIndex R M) :=
 variable {R M N}
 
 theorem ofEquiv (e : M ≃ₗ[R] N) : Module.Free R N :=
-  of_basis <| (chooseBasis R M).map e
+  ofBasis <| (chooseBasis R M).map e
 #align module.free.of_equiv Module.Free.ofEquiv
 
 /-- A variation of `of_equiv`: the assumption `module.free R P` here is explicit rather than an
@@ -137,7 +137,7 @@ instance self : Module.Free R R :=
 #align module.free.self Module.Free.self
 
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
-  of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
+  ofBasis <| (chooseBasis R M).Prod (chooseBasis R N)
 #align module.free.prod Module.Free.prod
 
 /-- The product of finitely many free modules is free. -/
@@ -177,7 +177,7 @@ instance (priority := 100) ofSubsingleton' [Subsingleton R] : Module.Free R N :=
 
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
-  of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
+  ofBasis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
 
 instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]

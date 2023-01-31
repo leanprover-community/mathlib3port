@@ -1111,7 +1111,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.restrict_preimage_surjective Set.restrictPreimage_surjectiveₓ'. -/
 theorem restrictPreimage_surjective (hf : Surjective f) : Surjective (t.restrictPreimage f) :=
   fun x =>
-  ⟨⟨_, show f (hf x).some ∈ t from (hf x).some_spec.symm ▸ x.2⟩, Subtype.ext (hf x).some_spec⟩
+  ⟨⟨_, show f (hf x).some ∈ t from (hf x).choose_spec.symm ▸ x.2⟩, Subtype.ext (hf x).choose_spec⟩
 #align set.restrict_preimage_surjective Set.restrictPreimage_surjective
 
 /- warning: set.restrict_preimage_bijective -> Set.restrictPreimage_bijective is a dubious translation:
@@ -1121,7 +1121,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (t : Set.{u1} β) {f : α -> β}, (Function.Bijective.{succ u2, succ u1} α β f) -> (Function.Bijective.{succ u2, succ u1} (Set.Elem.{u2} α (Set.preimage.{u2, u1} α β f t)) (Set.Elem.{u1} β t) (Set.restrictPreimage.{u2, u1} α β t f))
 Case conversion may be inaccurate. Consider using '#align set.restrict_preimage_bijective Set.restrictPreimage_bijectiveₓ'. -/
 theorem restrictPreimage_bijective (hf : Bijective f) : Bijective (t.restrictPreimage f) :=
-  ⟨t.restrict_preimage_injective hf.1, t.restrict_preimage_surjective hf.2⟩
+  ⟨t.restrictPreimage_injective hf.1, t.restrictPreimage_surjective hf.2⟩
 #align set.restrict_preimage_bijective Set.restrictPreimage_bijective
 
 /- warning: function.injective.restrict_preimage -> Function.Injective.restrictPreimage is a dubious translation:
@@ -1555,7 +1555,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Set.{u2} α), Set.SurjOn.{u2, u1} α β f s (Set.image.{u2, u1} α β f s)
 Case conversion may be inaccurate. Consider using '#align set.surj_on_image Set.surjOn_imageₓ'. -/
 theorem surjOn_image (f : α → β) (s : Set α) : SurjOn f s (f '' s) :=
-  subset.rfl
+  Subset.rfl
 #align set.surj_on_image Set.surjOn_image
 
 /- warning: set.surj_on.comap_nonempty -> Set.SurjOn.comap_nonempty is a dubious translation:
@@ -1740,7 +1740,7 @@ theorem SurjOn.image_eq_of_mapsTo (h₁ : SurjOn f s t) (h₂ : MapsTo f s t) : 
 #print Set.image_eq_iff_surjOn_mapsTo /-
 theorem image_eq_iff_surjOn_mapsTo : f '' s = t ↔ s.SurjOn f t ∧ s.MapsTo f t :=
   by
-  refine' ⟨_, fun h => h.1.image_eq_of_maps_to h.2⟩
+  refine' ⟨_, fun h => h.1.image_eq_of_mapsTo h.2⟩
   rintro rfl
   exact ⟨s.surj_on_image f, s.maps_to_image f⟩
 #align set.image_eq_iff_surj_on_maps_to Set.image_eq_iff_surjOn_mapsTo
@@ -1799,7 +1799,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} {s : Set.{u3} α} {f : α -> β} {g₁ : β -> γ} {g₂ : β -> γ}, Iff (Set.EqOn.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g₁ f) (Function.comp.{succ u3, succ u1, succ u2} α β γ g₂ f) s) (Set.EqOn.{u1, u2} β γ g₁ g₂ (Set.image.{u3, u1} α β f s))
 Case conversion may be inaccurate. Consider using '#align set.eq_on_comp_right_iff Set.eqOn_comp_right_iffₓ'. -/
 theorem eqOn_comp_right_iff : s.EqOn (g₁ ∘ f) (g₂ ∘ f) ↔ (f '' s).EqOn g₁ g₂ :=
-  (s.surj_on_image f).cancel_right <| s.maps_to_image f
+  (s.surjOn_image f).cancel_right <| s.mapsTo_image f
 #align set.eq_on_comp_right_iff Set.eqOn_comp_right_iff
 
 /-! ### Bijectivity -/
@@ -1894,7 +1894,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.maps_to.inter_bij_on Set.MapsTo.inter_bijOnₓ'. -/
 theorem MapsTo.inter_bijOn (h₁ : MapsTo f s₁ t₁) (h₂ : BijOn f s₂ t₂) (h₃ : s₂ ∩ f ⁻¹' t₁ ⊆ s₁) :
     BijOn f (s₁ ∩ s₂) (t₁ ∩ t₂) :=
-  inter_comm s₂ s₁ ▸ inter_comm t₂ t₁ ▸ h₂.inter_maps_to h₁ h₃
+  inter_comm s₂ s₁ ▸ inter_comm t₂ t₁ ▸ h₂.inter_mapsTo h₁ h₃
 #align set.maps_to.inter_bij_on Set.MapsTo.inter_bijOn
 
 /- warning: set.bij_on.inter -> Set.BijOn.inter is a dubious translation:
@@ -1967,12 +1967,12 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s t) -> (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f s) t)
 Case conversion may be inaccurate. Consider using '#align set.bij_on.image_eq Set.BijOn.image_eqₓ'. -/
 theorem BijOn.image_eq (h : BijOn f s t) : f '' s = t :=
-  h.SurjOn.image_eq_of_maps_to h.MapsTo
+  h.SurjOn.image_eq_of_mapsTo h.MapsTo
 #align set.bij_on.image_eq Set.BijOn.image_eq
 
 #print Set.bijOn_id /-
 theorem bijOn_id (s : Set α) : BijOn id s s :=
-  ⟨s.maps_to_id, s.inj_on_id, s.surj_on_id⟩
+  ⟨s.mapsTo_id, s.injOn_id, s.surjOn_id⟩
 #align set.bij_on_id Set.bijOn_id
 -/
 
@@ -1988,7 +1988,7 @@ theorem BijOn.comp (hg : BijOn g t p) (hf : BijOn f s t) : BijOn (g ∘ f) s p :
 
 #print Set.BijOn.iterate /-
 theorem BijOn.iterate {f : α → α} {s : Set α} (h : BijOn f s s) : ∀ n, BijOn (f^[n]) s s
-  | 0 => s.bij_on_id
+  | 0 => s.bijOn_id
   | n + 1 => (bij_on.iterate n).comp h
 #align set.bij_on.iterate Set.BijOn.iterate
 -/
@@ -2054,7 +2054,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β}, (Set.BijOn.{u2, u1} α β f s t) -> (Function.Bijective.{succ u2, succ u1} α β f) -> (Set.BijOn.{u2, u1} α β f (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) t))
 Case conversion may be inaccurate. Consider using '#align set.bij_on.compl Set.BijOn.complₓ'. -/
 theorem BijOn.compl (hst : BijOn f s t) (hf : Bijective f) : BijOn f (sᶜ) (tᶜ) :=
-  ⟨hst.SurjOn.maps_to_compl hf.1, hf.1.InjOn _, hst.MapsTo.surj_on_compl hf.2⟩
+  ⟨hst.SurjOn.mapsTo_compl hf.1, hf.1.InjOn _, hst.MapsTo.surjOn_compl hf.2⟩
 #align set.bij_on.compl Set.BijOn.compl
 
 /-! ### left inverse -/
@@ -2415,7 +2415,7 @@ theorem InvOn.symm (h : InvOn f' f s t) : InvOn f f' t s :=
 
 #print Set.invOn_id /-
 theorem invOn_id (s : Set α) : InvOn id id s s :=
-  ⟨s.left_inv_on_id, s.right_inv_on_id⟩
+  ⟨s.leftInvOn_id, s.rightInvOn_id⟩
 #align set.inv_on_id Set.invOn_id
 -/
 
@@ -2571,7 +2571,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.inj_on.inv_fun_on_image Set.InjOn.invFunOn_imageₓ'. -/
 theorem InjOn.invFunOn_image [Nonempty α] (h : InjOn f s₂) (ht : s₁ ⊆ s₂) :
     invFunOn f s₂ '' (f '' s₁) = s₁ :=
-  h.left_inv_on_inv_fun_on.image_image' ht
+  h.leftInvOn_invFunOn.image_image' ht
 #align set.inj_on.inv_fun_on_image Set.InjOn.invFunOn_image
 
 /- warning: set.surj_on.right_inv_on_inv_fun_on -> Set.SurjOn.rightInvOn_invFunOn is a dubious translation:
@@ -2581,7 +2581,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.SurjOn.{u2, u1} α β f s t) -> (Set.RightInvOn.{u2, u1} α β (Function.invFunOn.{u2, u1} α β _inst_1 f s) f t)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.right_inv_on_inv_fun_on Set.SurjOn.rightInvOn_invFunOnₓ'. -/
 theorem SurjOn.rightInvOn_invFunOn [Nonempty α] (h : SurjOn f s t) :
-    RightInvOn (invFunOn f s) f t := fun y hy => inv_fun_on_eq <| mem_image_iff_bex.1 <| h hy
+    RightInvOn (invFunOn f s) f t := fun y hy => invFunOn_eq <| mem_image_iff_bex.1 <| h hy
 #align set.surj_on.right_inv_on_inv_fun_on Set.SurjOn.rightInvOn_invFunOn
 
 /- warning: set.bij_on.inv_on_inv_fun_on -> Set.BijOn.invOn_invFunOn is a dubious translation:
@@ -2591,7 +2591,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.BijOn.{u2, u1} α β f s t) -> (Set.InvOn.{u2, u1} α β (Function.invFunOn.{u2, u1} α β _inst_1 f s) f s t)
 Case conversion may be inaccurate. Consider using '#align set.bij_on.inv_on_inv_fun_on Set.BijOn.invOn_invFunOnₓ'. -/
 theorem BijOn.invOn_invFunOn [Nonempty α] (h : BijOn f s t) : InvOn (invFunOn f s) f s t :=
-  ⟨h.InjOn.left_inv_on_inv_fun_on, h.SurjOn.right_inv_on_inv_fun_on⟩
+  ⟨h.InjOn.leftInvOn_invFunOn, h.SurjOn.rightInvOn_invFunOn⟩
 #align set.bij_on.inv_on_inv_fun_on Set.BijOn.invOn_invFunOn
 
 /- warning: set.surj_on.inv_on_inv_fun_on -> Set.SurjOn.invOn_invFunOn is a dubious translation:
@@ -2615,7 +2615,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Set.{u2} α} {t : Set.{u1} β} {f : α -> β} [_inst_1 : Nonempty.{succ u2} α], (Set.SurjOn.{u2, u1} α β f s t) -> (Set.MapsTo.{u1, u2} β α (Function.invFunOn.{u2, u1} α β _inst_1 f s) t s)
 Case conversion may be inaccurate. Consider using '#align set.surj_on.maps_to_inv_fun_on Set.SurjOn.mapsTo_invFunOnₓ'. -/
 theorem SurjOn.mapsTo_invFunOn [Nonempty α] (h : SurjOn f s t) : MapsTo (invFunOn f s) t s :=
-  fun y hy => mem_preimage.2 <| inv_fun_on_mem <| mem_image_iff_bex.1 <| h hy
+  fun y hy => mem_preimage.2 <| invFunOn_mem <| mem_image_iff_bex.1 <| h hy
 #align set.surj_on.maps_to_inv_fun_on Set.SurjOn.mapsTo_invFunOn
 
 /- warning: set.surj_on.bij_on_subset -> Set.SurjOn.bijOn_subset is a dubious translation:
@@ -2911,7 +2911,7 @@ Case conversion may be inaccurate. Consider using '#align set.piecewise_range_co
 @[simp]
 theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ range f)]
     (g₁ g₂ : α → β) : (range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
-  eq_on.comp_eq <| piecewise_eqOn _ _ _
+  eqOn.comp_eq <| piecewise_eqOn _ _ _
 #align set.piecewise_range_comp Set.piecewise_range_comp
 
 /- warning: set.maps_to.piecewise_ite -> Set.MapsTo.piecewise_ite is a dubious translation:
@@ -3056,7 +3056,7 @@ theorem injective_piecewise_iff {f g : α → β} :
       InjOn f s ∧ InjOn g (sᶜ) ∧ ∀ x ∈ s, ∀ (y) (_ : y ∉ s), f x ≠ g y :=
   by
   rw [injective_iff_inj_on_univ, ← union_compl_self s, inj_on_union (@disjoint_compl_right _ _ s),
-    (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]
+    (piecewise_eq_on s f g).injOn_iff, (piecewise_eq_on_compl s f g).injOn_iff]
   refine' and_congr Iff.rfl (and_congr Iff.rfl <| forall₄_congr fun x hx y hy => _)
   rw [piecewise_eq_of_mem s f g hx, piecewise_eq_of_not_mem s f g hy]
 #align set.injective_piecewise_iff Set.injective_piecewise_iff
@@ -3331,8 +3331,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.semiconj.bij_on_image Function.Semiconj.bijOn_imageₓ'. -/
 theorem bijOn_image (h : Semiconj f fa fb) (ha : BijOn fa s t) (hf : InjOn f t) :
     BijOn fb (f '' s) (f '' t) :=
-  ⟨h.maps_to_image ha.MapsTo, h.inj_on_image ha.InjOn (ha.image_eq.symm ▸ hf),
-    h.surj_on_image ha.SurjOn⟩
+  ⟨h.mapsTo_image ha.MapsTo, h.injOn_image ha.InjOn (ha.image_eq.symm ▸ hf),
+    h.surjOn_image ha.SurjOn⟩
 #align function.semiconj.bij_on_image Function.Semiconj.bijOn_image
 
 /- warning: function.semiconj.bij_on_range -> Function.Semiconj.bijOn_range is a dubious translation:
@@ -3544,7 +3544,7 @@ protected theorem bijOn (h : ∀ a, e a ∈ t ↔ a ∈ s) : BijOn e s t :=
 
 #print Equiv.invOn /-
 theorem invOn : InvOn e e.symm t s :=
-  ⟨e.right_inverse_symm.LeftInvOn _, e.left_inverse_symm.LeftInvOn _⟩
+  ⟨e.rightInverse_symm.LeftInvOn _, e.leftInverse_symm.LeftInvOn _⟩
 #align equiv.inv_on Equiv.invOn
 -/
 
@@ -3555,12 +3555,12 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β) {s : Set.{u2} α}, Set.BijOn.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) e) s (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α β (Equiv.instEquivLikeEquiv.{succ u2, succ u1} α β))) e) s)
 Case conversion may be inaccurate. Consider using '#align equiv.bij_on_image Equiv.bijOn_imageₓ'. -/
 theorem bijOn_image : BijOn e s (e '' s) :=
-  (e.Injective.InjOn _).bij_on_image
+  (e.Injective.InjOn _).bijOn_image
 #align equiv.bij_on_image Equiv.bijOn_image
 
 #print Equiv.bijOn_symm_image /-
 theorem bijOn_symm_image : BijOn e.symm (e '' s) s :=
-  e.bij_on_image.symm e.InvOn
+  e.bijOn_image.symm e.InvOn
 #align equiv.bij_on_symm_image Equiv.bijOn_symm_image
 -/
 

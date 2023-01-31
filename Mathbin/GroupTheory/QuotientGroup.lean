@@ -95,7 +95,7 @@ theorem mk'_apply (x : G) : mk' N x = x :=
 #align quotient_add_group.mk'_apply quotientAddGroup.mk'_apply
 
 @[to_additive]
-theorem mk'_surjective : surjective <| mk' N :=
+theorem mk'_surjective : Surjective <| mk' N :=
   @mk_surjective _ _ N
 #align quotient_group.mk'_surjective QuotientGroup.mk'_surjective
 #align quotient_add_group.mk'_surjective quotientAddGroup.mk'_surjective
@@ -445,7 +445,7 @@ For a `computable` version, see `quotient_group.quotient_ker_equiv_of_right_inve
 @[to_additive
       "The canonical isomorphism `G/(ker φ) ≃+ H` induced by a surjection `φ : G →+ H`.\n\nFor a `computable` version, see `quotient_add_group.quotient_ker_equiv_of_right_inverse`."]
 noncomputable def quotientKerEquivOfSurjective (hφ : Surjective φ) : G ⧸ ker φ ≃* H :=
-  quotientKerEquivOfRightInverse φ _ hφ.HasRightInverse.some_spec
+  quotientKerEquivOfRightInverse φ _ hφ.HasRightInverse.choose_spec
 #align quotient_group.quotient_ker_equiv_of_surjective QuotientGroup.quotientKerEquivOfSurjective
 #align quotient_add_group.quotient_ker_equiv_of_surjective quotientAddGroup.quotientKerEquivOfSurjective
 

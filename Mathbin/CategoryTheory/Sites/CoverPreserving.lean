@@ -189,7 +189,7 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
   introv hx he
   obtain ⟨X', e⟩ := hF f₁
   apply (ℱ.1.mapIso e.op).toEquiv.Injective
-  simp only [iso.op_hom, iso.to_equiv_fun, ℱ.1.map_iso_hom, ← functor_to_types.map_comp_apply]
+  simp only [iso.op_hom, iso.to_equiv_fun, ℱ.1.mapIso_hom, ← functor_to_types.map_comp_apply]
   simpa using
     hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂
       (F.map_injective <| by simpa using he)

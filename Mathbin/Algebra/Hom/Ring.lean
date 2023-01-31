@@ -1287,7 +1287,7 @@ but is expected to have type
   forall {α : Type.{u1}} {rα : NonAssocSemiring.{u1} α}, Eq.{succ u1} (forall (ᾰ : α), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : α) => α) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} α α rα rα) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : α) => α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} α α rα rα) α α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α rα)) (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α rα)) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} α α rα rα) α α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α rα) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α rα) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} α α rα rα) α α rα rα (RingHom.instRingHomClassRingHom.{u1, u1} α α rα rα)))) (OfNat.ofNat.{u1} (RingHom.{u1, u1} α α rα rα) 1 (One.toOfNat1.{u1} (RingHom.{u1, u1} α α rα rα) (Monoid.toOne.{u1} (RingHom.{u1, u1} α α rα rα) (RingHom.instMonoidRingHom.{u1} α rα))))) (id.{succ u1} α)
 Case conversion may be inaccurate. Consider using '#align ring_hom.coe_one RingHom.coe_oneₓ'. -/
 @[simp]
-theorem coe_one : ⇑(1 : α →+* α) = _root_.id :=
+theorem coe_one : ⇑(1 : α →+* α) = id :=
   rfl
 #align ring_hom.coe_one RingHom.coe_one
 

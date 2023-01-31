@@ -116,7 +116,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   simp only [id.def] at bE
   have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n :=
     by
-    refine' bE.1.to_has_basis _ _
+    refine' bE.1.to_hasBasis _ _
     · intro n _
       use n + 1
       simp only [Ne.def, Nat.succ_ne_zero, not_false_iff, Nat.cast_add, Nat.cast_one, true_and_iff]
@@ -137,7 +137,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
       (continuous_const_smul (n : 𝕜)).ContinuousAt
     simp only [ContinuousAt, map_zero, smul_zero] at hcont
-    rw [bE.1.tendsto_left_iff] at hcont
+    rw [bE.1.tendsto_left_iffₓ] at hcont
     rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
     refine' ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
     simp [← mul_smul, hn]
@@ -187,7 +187,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : Continuous f :=
   (uniform_continuous_of_continuous_at_zero f <|
-      f.continuous_at_zero_of_locally_bounded hf).Continuous
+      f.continuousAt_zero_of_locally_bounded hf).Continuous
 #align linear_map.continuous_of_locally_bounded LinearMap.continuous_of_locally_bounded
 
 end IsROrC

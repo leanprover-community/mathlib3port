@@ -80,7 +80,7 @@ add_tactic_doc
 using `linter`, i.e., if there is no `nolint` attribute. -/
 unsafe def should_be_linted (linter : Name) (decl : Name) : tactic Bool := do
   let c ← nolint_attr.get_cache
-  pure <| linter ∉ (c decl).getOrElse []
+  pure <| linter ∉ (c decl).getD []
 #align should_be_linted should_be_linted
 
 /-- A linting test for the `#lint` command.
@@ -106,8 +106,8 @@ unsafe structure linter where
 /-- Takes a list of names that resolve to declarations of type `linter`,
 and produces a list of linters. -/
 unsafe def get_linters (l : List Name) : tactic (List (Name × linter)) :=
-  l.mmap fun n =>
-    Prod.mk n.last <$> (mk_const n >>= eval_expr linter) <|> fail f! "invalid linter: {n}"
+  l.mapM fun n =>
+    Prod.mk n.getLast <$> (mk_const n >>= eval_expr linter) <|> fail f! "invalid linter: {n}"
 #align get_linters get_linters
 
 /-- Defines the user attribute `linter` for adding a linter to the default set.

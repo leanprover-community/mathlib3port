@@ -30,7 +30,7 @@ open Real Topology ComplexConjugate
   `log 0 = 0`-/
 @[pp_nodot]
 noncomputable def log (x : ℂ) : ℂ :=
-  x.abs.log + arg x * I
+  x.abs.log + arg x * i
 #align complex.log Complex.log
 
 theorem log_re (x : ℂ) : x.log.re = x.abs.log := by simp [log]
@@ -98,13 +98,13 @@ theorem log_zero : log 0 = 0 := by simp [log]
 theorem log_one : log 1 = 0 := by simp [log]
 #align complex.log_one Complex.log_one
 
-theorem log_neg_one : log (-1) = π * I := by simp [log]
+theorem log_neg_one : log (-1) = π * i := by simp [log]
 #align complex.log_neg_one Complex.log_neg_one
 
-theorem log_i : log i = π / 2 * I := by simp [log]
+theorem log_i : log i = π / 2 * i := by simp [log]
 #align complex.log_I Complex.log_i
 
-theorem log_neg_i : log (-I) = -(π / 2) * I := by simp [log]
+theorem log_neg_i : log (-i) = -(π / 2) * i := by simp [log]
 #align complex.log_neg_I Complex.log_neg_i
 
 theorem log_conj_eq_ite (x : ℂ) : log (conj x) = if x.arg = π then log x else conj (log x) :=
@@ -136,10 +136,10 @@ theorem log_inv_eq_ite (x : ℂ) : log x⁻¹ = if x.arg = π then -conj (log x)
 theorem log_inv (x : ℂ) (hx : x.arg ≠ π) : log x⁻¹ = -log x := by rw [log_inv_eq_ite, if_neg hx]
 #align complex.log_inv Complex.log_inv
 
-theorem two_pi_i_ne_zero : (2 * π * I : ℂ) ≠ 0 := by norm_num [Real.pi_ne_zero, I_ne_zero]
+theorem two_pi_i_ne_zero : (2 * π * i : ℂ) ≠ 0 := by norm_num [Real.pi_ne_zero, I_ne_zero]
 #align complex.two_pi_I_ne_zero Complex.two_pi_i_ne_zero
 
-theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * I) :=
+theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * i) :=
   by
   constructor
   · intro h
@@ -156,7 +156,7 @@ theorem exp_eq_exp_iff_exp_sub_eq_one {x y : ℂ} : exp x = exp y ↔ exp (x - y
   rw [exp_sub, div_eq_one_iff_eq (exp_ne_zero _)]
 #align complex.exp_eq_exp_iff_exp_sub_eq_one Complex.exp_eq_exp_iff_exp_sub_eq_one
 
-theorem exp_eq_exp_iff_exists_int {x y : ℂ} : exp x = exp y ↔ ∃ n : ℤ, x = y + n * (2 * π * I) := by
+theorem exp_eq_exp_iff_exists_int {x y : ℂ} : exp x = exp y ↔ ∃ n : ℤ, x = y + n * (2 * π * i) := by
   simp only [exp_eq_exp_iff_exp_sub_eq_one, exp_eq_one_iff, sub_eq_iff_eq_add']
 #align complex.exp_eq_exp_iff_exists_int Complex.exp_eq_exp_iff_exists_int
 
@@ -180,7 +180,7 @@ alias countable_preimage_exp ↔ _ _root_.set.countable.preimage_cexp
 #align set.countable.preimage_cexp Set.Countable.preimage_cexp
 
 theorem tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 <| Real.log (abs z) - π * I) :=
+    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 <| Real.log (abs z) - π * i) :=
   by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at
@@ -209,7 +209,7 @@ theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
 #align complex.continuous_within_at_log_of_re_neg_of_im_zero Complex.continuousWithinAt_log_of_re_neg_of_im_zero
 
 theorem tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * I) := by
+    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * i) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using
     (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 #align complex.tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero

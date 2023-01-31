@@ -384,7 +384,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.prod_fiberwise Finset.prod_fiberwiseₓ'. -/
 @[to_additive]
 theorem Finset.prod_fiberwise [DecidableEq β] [Fintype β] [CommMonoid γ] (s : Finset α) (f : α → β)
-    (g : α → γ) : (∏ b : β, ∏ a in s.filter fun a => f a = b, g a) = ∏ a in s, g a :=
+    (g : α → γ) : (∏ b : β, ∏ a in s.filterₓ fun a => f a = b, g a) = ∏ a in s, g a :=
   Finset.prod_fiberwise_of_maps_to (fun x _ => mem_univ _) _
 #align finset.prod_fiberwise Finset.prod_fiberwise
 #align finset.sum_fiberwise Finset.sum_fiberwise

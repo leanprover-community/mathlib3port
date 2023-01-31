@@ -104,7 +104,7 @@ theorem continuous_mul_right (a : M) : Continuous fun b : M => b * a :=
 @[to_additive]
 theorem ContinuousOn.mul {f g : X → M} {s : Set X} (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
     ContinuousOn (fun x => f x * g x) s :=
-  (continuous_mul.comp_continuous_on (hf.Prod hg) : _)
+  (continuous_mul.comp_continuousOn (hf.Prod hg) : _)
 #align continuous_on.mul ContinuousOn.mul
 #align continuous_on.add ContinuousOn.add
 
@@ -780,7 +780,7 @@ open Function
 
 @[to_additive]
 theorem LocallyFinite.exists_finset_mulSupport {M : Type _} [CommMonoid M] {f : ι → X → M}
-    (hf : LocallyFinite fun i => mul_support <| f i) (x₀ : X) :
+    (hf : LocallyFinite fun i => mulSupport <| f i) (x₀ : X) :
     ∃ I : Finset ι, ∀ᶠ x in 𝓝 x₀, (mulSupport fun i => f i x) ⊆ I :=
   by
   rcases hf x₀ with ⟨U, hxU, hUf⟩
@@ -794,7 +794,7 @@ theorem LocallyFinite.exists_finset_mulSupport {M : Type _} [CommMonoid M] {f : 
 theorem finprod_eventually_eq_prod {M : Type _} [CommMonoid M] {f : ι → X → M}
     (hf : LocallyFinite fun i => mulSupport (f i)) (x : X) :
     ∃ s : Finset ι, ∀ᶠ y in 𝓝 x, (∏ᶠ i, f i y) = ∏ i in s, f i y :=
-  let ⟨I, hI⟩ := hf.exists_finset_mul_support x
+  let ⟨I, hI⟩ := hf.exists_finset_mulSupport x
   ⟨I, hI.mono fun y hy => finprod_eq_prod_of_mulSupport_subset _ fun i hi => hy hi⟩
 #align finprod_eventually_eq_prod finprod_eventually_eq_prod
 #align finsum_eventually_eq_sum finsum_eventually_eq_sum

@@ -50,7 +50,7 @@ namespace Ideal
 structure PrimePair (P : Type _) [Preorder P] where
   i : Ideal P
   f : Pfilter P
-  is_compl_I_F : IsCompl (I : Set P) F
+  isCompl_i_f : IsCompl (I : Set P) F
 #align order.ideal.prime_pair Order.Ideal.PrimePair
 
 namespace PrimePair
@@ -58,11 +58,11 @@ namespace PrimePair
 variable [Preorder P] (IF : PrimePair P)
 
 theorem compl_i_eq_f : (IF.i : Set P)ᶜ = IF.f :=
-  IF.is_compl_I_F.compl_eq
+  IF.isCompl_i_f.compl_eq
 #align order.ideal.prime_pair.compl_I_eq_F Order.Ideal.PrimePair.compl_i_eq_f
 
 theorem compl_f_eq_i : (IF.f : Set P)ᶜ = IF.i :=
-  IF.is_compl_I_F.eq_compl.symm
+  IF.isCompl_i_f.eq_compl.symm
 #align order.ideal.prime_pair.compl_F_eq_I Order.Ideal.PrimePair.compl_f_eq_i
 
 theorem i_isProper : IsProper IF.i := by
@@ -72,15 +72,15 @@ theorem i_isProper : IsProper IF.i := by
 #align order.ideal.prime_pair.I_is_proper Order.Ideal.PrimePair.i_isProper
 
 theorem disjoint : Disjoint (IF.i : Set P) IF.f :=
-  IF.is_compl_I_F.Disjoint
+  IF.isCompl_i_f.Disjoint
 #align order.ideal.prime_pair.disjoint Order.Ideal.PrimePair.disjoint
 
 theorem i_union_f : (IF.i : Set P) ∪ IF.f = Set.univ :=
-  IF.is_compl_I_F.sup_eq_top
+  IF.isCompl_i_f.sup_eq_top
 #align order.ideal.prime_pair.I_union_F Order.Ideal.PrimePair.i_union_f
 
 theorem f_union_i : (IF.f : Set P) ∪ IF.i = Set.univ :=
-  IF.is_compl_I_F.symm.sup_eq_top
+  IF.isCompl_i_f.symm.sup_eq_top
 #align order.ideal.prime_pair.F_union_I Order.Ideal.PrimePair.f_union_i
 
 end PrimePair
@@ -101,11 +101,11 @@ variable [Preorder P]
 def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
   { i
     f := h.compl_filter.toPfilter
-    is_compl_I_F := isCompl_compl }
+    isCompl_i_f := isCompl_compl }
 #align order.ideal.is_prime.to_prime_pair Order.Ideal.IsPrime.toPrimePair
 
 theorem PrimePair.i_isPrime (IF : PrimePair P) : IsPrime IF.i :=
-  { IF.I_is_proper with
+  { IF.i_isProper with
     compl_filter := by
       rw [IF.compl_I_eq_F]
       exact IF.F.is_pfilter }
@@ -229,7 +229,7 @@ class IsPrime (F : Pfilter P) : Prop where
 def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
   { i := h.compl_ideal.toIdeal
     f
-    is_compl_I_F := isCompl_compl.symm }
+    isCompl_i_f := isCompl_compl.symm }
 #align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
 
 theorem Order.Ideal.PrimePair.f_isPrime (IF : Ideal.PrimePair P) : IsPrime IF.f :=

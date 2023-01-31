@@ -195,11 +195,11 @@ instance isAlgebraic_of_empty_relations {symb : ℕ → Type _} : IsAlgebraic �
 #align first_order.language.is_algebraic_of_empty_relations FirstOrder.Language.isAlgebraic_of_empty_relations
 
 instance isRelational_empty : IsRelational Language.empty :=
-  language.is_relational_of_empty_functions
+  Language.isRelational_of_empty_functions
 #align first_order.language.is_relational_empty FirstOrder.Language.isRelational_empty
 
 instance isAlgebraic_empty : IsAlgebraic Language.empty :=
-  language.is_algebraic_of_empty_relations
+  Language.isAlgebraic_of_empty_relations
 #align first_order.language.is_algebraic_empty FirstOrder.Language.isAlgebraic_empty
 
 instance isRelational_sum [L.IsRelational] [L'.IsRelational] : IsRelational (L.Sum L') :=
@@ -475,7 +475,7 @@ instance homClass : HomClass L (M →[L] N) M N
 #align first_order.language.hom.hom_class FirstOrder.Language.Hom.homClass
 
 instance [L.IsAlgebraic] : StrongHomClass L (M →[L] N) M N :=
-  hom_class.strong_hom_class_of_is_algebraic
+  HomClass.strongHomClassOfIsAlgebraic
 
 instance hasCoeToFun : CoeFun (M →[L] N) fun _ => M → N :=
   FunLike.hasCoeToFun
@@ -599,7 +599,7 @@ theorem map_rel (φ : M ↪[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n → M
 
 /-- A first-order embedding is also a first-order homomorphism. -/
 def toHom : (M ↪[L] N) → M →[L] N :=
-  hom_class.to_hom
+  HomClass.toHom
 #align first_order.language.embedding.to_hom FirstOrder.Language.Embedding.toHom
 
 @[simp]
@@ -771,12 +771,12 @@ theorem map_rel (φ : M ≃[L] N) {n : ℕ} (r : L.Relations n) (x : Fin n → M
 
 /-- A first-order equivalence is also a first-order embedding. -/
 def toEmbedding : (M ≃[L] N) → M ↪[L] N :=
-  strong_hom_class.to_embedding
+  StrongHomClass.toEmbedding
 #align first_order.language.equiv.to_embedding FirstOrder.Language.Equiv.toEmbedding
 
 /-- A first-order equivalence is also a first-order homomorphism. -/
 def toHom : (M ≃[L] N) → M →[L] N :=
-  hom_class.to_hom
+  HomClass.toHom
 #align first_order.language.equiv.to_hom FirstOrder.Language.Equiv.toHom
 
 @[simp]
@@ -908,14 +908,14 @@ variable [Language.empty.Structure M] [Language.empty.Structure N]
 
 @[simp]
 theorem empty.nonempty_embedding_iff :
-    Nonempty (M ↪[language.empty] N) ↔ Cardinal.lift.{w'} (#M) ≤ Cardinal.lift.{w} (#N) :=
+    Nonempty (M ↪[Language.empty] N) ↔ Cardinal.lift.{w'} (#M) ≤ Cardinal.lift.{w} (#N) :=
   trans ⟨Nonempty.map fun f => f.toEmbedding, Nonempty.map fun f => { toEmbedding := f }⟩
     Cardinal.lift_mk_le'.symm
 #align first_order.language.empty.nonempty_embedding_iff FirstOrder.Language.empty.nonempty_embedding_iff
 
 @[simp]
 theorem empty.nonempty_equiv_iff :
-    Nonempty (M ≃[language.empty] N) ↔ Cardinal.lift.{w'} (#M) = Cardinal.lift.{w} (#N) :=
+    Nonempty (M ≃[Language.empty] N) ↔ Cardinal.lift.{w'} (#M) = Cardinal.lift.{w} (#N) :=
   trans ⟨Nonempty.map fun f => f.toEquiv, Nonempty.map fun f => { toEquiv := f }⟩
     Cardinal.lift_mk_eq'.symm
 #align first_order.language.empty.nonempty_equiv_iff FirstOrder.Language.empty.nonempty_equiv_iff
@@ -939,17 +939,17 @@ instance (priority := 100) strongHomClassEmpty {F M N} [FunLike F M fun _ => N] 
 
 /-- Makes a `language.empty.hom` out of any function. -/
 @[simps]
-def Function.emptyHom (f : M → N) : M →[language.empty] N where toFun := f
+def Function.emptyHom (f : M → N) : M →[Language.empty] N where toFun := f
 #align function.empty_hom Function.emptyHom
 
 /-- Makes a `language.empty.embedding` out of any function. -/
 @[simps]
-def Embedding.empty (f : M ↪ N) : M ↪[language.empty] N where toEmbedding := f
+def Embedding.empty (f : M ↪ N) : M ↪[Language.empty] N where toEmbedding := f
 #align embedding.empty Embedding.empty
 
 /-- Makes a `language.empty.equiv` out of any function. -/
 @[simps]
-def Equiv.empty (f : M ≃ N) : M ≃[language.empty] N where toEquiv := f
+def Equiv.empty (f : M ≃ N) : M ≃[Language.empty] N where toEquiv := f
 #align equiv.empty Equiv.empty
 
 end Empty

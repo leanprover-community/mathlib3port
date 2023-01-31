@@ -251,14 +251,14 @@ def drop : Mvpfunctor n where
 from a `n+1`-ary functor -/
 def last : PFunctor where
   A := P.A
-  B a := (P.B a).last
+  B a := (P.B a).getLast
 #align mvpfunctor.last Mvpfunctor.last
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- append arrows of a polynomial functor application -/
 @[reducible]
 def appendContents {α : TypeVec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α)
-    (f : P.last.B a → β) : P.B a ⟹ (α ::: β) :=
+    (f : P.getLast.B a → β) : P.B a ⟹ (α ::: β) :=
   splitFun f' f
 #align mvpfunctor.append_contents Mvpfunctor.appendContents
 

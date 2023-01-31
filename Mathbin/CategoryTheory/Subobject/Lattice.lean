@@ -340,7 +340,7 @@ open ZeroObject
 
 /-- The object underlying `⊥ : subobject B` is (up to isomorphism) the zero object. -/
 def botCoeIsoZero {B : C} : ((⊥ : Subobject B) : C) ≅ 0 :=
-  bot_coe_iso_initial ≪≫ initialIsInitial.uniqueUpToIso HasZeroObject.zeroIsInitial
+  botCoeIsoInitial ≪≫ initialIsInitial.uniqueUpToIso HasZeroObject.zeroIsInitial
 #align category_theory.subobject.bot_coe_iso_zero CategoryTheory.Subobject.botCoeIsoZero
 
 variable [HasZeroMorphisms C]
@@ -695,9 +695,9 @@ theorem le_inf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ 
 
 instance {B : C} : CompleteSemilatticeInf (Subobject B) :=
   { Subobject.partialOrder B with
-    inf := inf
-    Inf_le := inf_le
-    le_Inf := le_inf }
+    infₛ := inf
+    inf_le := inf_le
+    le_inf := le_inf }
 
 end Inf
 
@@ -769,9 +769,9 @@ theorem sup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ 
 
 instance {B : C} : CompleteSemilatticeSup (Subobject B) :=
   { Subobject.partialOrder B with
-    sup := sup
-    le_Sup := le_sup
-    Sup_le := sup_le }
+    supₛ := sup
+    le_sup := le_sup
+    sup_le := sup_le }
 
 end Sup
 

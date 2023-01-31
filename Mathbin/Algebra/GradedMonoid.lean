@@ -251,8 +251,8 @@ instance GMonoid.toMonoid [AddMonoid ι] [GMonoid A] : Monoid (GradedMonoid A)
   one := 1
   mul := (· * ·)
   npow n a := GradedMonoid.mk _ (GMonoid.gnpow n a.snd)
-  npow_zero' a := GMonoid.gnpow_zero' a
-  npow_succ' n a := GMonoid.gnpow_succ' n a
+  npow_zero a := GMonoid.gnpow_zero' a
+  npow_succ n a := GMonoid.gnpow_succ' n a
   one_mul := GMonoid.one_mul
   mul_one := GMonoid.mul_one
   mul_assoc := GMonoid.mul_assoc
@@ -481,7 +481,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : AddMonoid.{u2} ι] (fι : α -> ι), Eq.{succ u2} ι (List.dProdIndex.{u2, u1} ι α _inst_1 (List.nil.{u1} α) fι) (OfNat.ofNat.{u2} ι 0 (Zero.toOfNat0.{u2} ι (AddMonoid.toZero.{u2} ι _inst_1)))
 Case conversion may be inaccurate. Consider using '#align list.dprod_index_nil List.dProdIndex_nilₓ'. -/
 @[simp]
-theorem List.dProdIndex_nil (fι : α → ι) : ([] : List α).dprodIndex fι = 0 :=
+theorem List.dProdIndex_nil (fι : α → ι) : ([] : List α).dProdIndex fι = 0 :=
   rfl
 #align list.dprod_index_nil List.dProdIndex_nil
 
@@ -493,7 +493,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.dprod_index_cons List.dProdIndex_consₓ'. -/
 @[simp]
 theorem List.dProdIndex_cons (a : α) (l : List α) (fι : α → ι) :
-    (a :: l).dprodIndex fι = fι a + l.dprodIndex fι :=
+    (a :: l).dProdIndex fι = fι a + l.dProdIndex fι :=
   rfl
 #align list.dprod_index_cons List.dProdIndex_cons
 
@@ -503,7 +503,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddMonoid.{u1} ι] (l : List.{u2} α) (fι : α -> ι), Eq.{succ u1} ι (List.dProdIndex.{u1, u2} ι α _inst_1 l fι) (List.sum.{u1} ι (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1)) (AddMonoid.toZero.{u1} ι _inst_1) (List.map.{u2, u1} α ι fι l))
 Case conversion may be inaccurate. Consider using '#align list.dprod_index_eq_map_sum List.dProdIndex_eq_map_sumₓ'. -/
-theorem List.dProdIndex_eq_map_sum (l : List α) (fι : α → ι) : l.dprodIndex fι = (l.map fι).Sum :=
+theorem List.dProdIndex_eq_map_sum (l : List α) (fι : α → ι) : l.dProdIndex fι = (l.map fι).Sum :=
   by
   dsimp only [List.dProdIndex]
   induction l
@@ -517,7 +517,7 @@ This is a dependent version of `(l.map fA).prod`.
 
 For a list `l : list α`, this computes the product of `fA a` over `a`, where each `fA` is of type
 `A (fι a)`. -/
-def List.dProd (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) : A (l.dprodIndex fι) :=
+def List.dProd (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) : A (l.dProdIndex fι) :=
   l.foldrRecOn _ _ GradedMonoid.GOne.one fun i x a ha => GradedMonoid.GMul.mul (fA a) x
 #align list.dprod List.dProd
 -/
@@ -530,7 +530,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.dprod_nil List.dProd_nilₓ'. -/
 @[simp]
 theorem List.dProd_nil (fι : α → ι) (fA : ∀ a, A (fι a)) :
-    (List.nil : List α).dprod fι fA = GradedMonoid.GOne.one :=
+    (List.nil : List α).dProd fι fA = GradedMonoid.GOne.one :=
   rfl
 #align list.dprod_nil List.dProd_nil
 
@@ -544,7 +544,7 @@ Case conversion may be inaccurate. Consider using '#align list.dprod_cons List.d
 -- is nicer in the goal view.
 @[simp]
 theorem List.dProd_cons (fι : α → ι) (fA : ∀ a, A (fι a)) (a : α) (l : List α) :
-    (a :: l).dprod fι fA = (GradedMonoid.GMul.mul (fA a) (l.dprod fι fA) : _) :=
+    (a :: l).dProd fι fA = (GradedMonoid.GMul.mul (fA a) (l.dProd fι fA) : _) :=
   rfl
 #align list.dprod_cons List.dProd_cons
 
@@ -555,7 +555,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u3}} {A : ι -> Type.{u1}} [_inst_1 : AddMonoid.{u2} ι] [_inst_2 : GradedMonoid.GMonoid.{u2, u1} ι A _inst_1] (l : List.{u3} α) (fι : α -> ι) (fA : forall (a : α), A (fι a)), Eq.{max (succ u2) (succ u1)} (GradedMonoid.{u2, u1} ι A) (GradedMonoid.mk.{u2, u1} ι A (List.dProdIndex.{u2, u3} ι α _inst_1 l fι) (List.dProd.{u2, u3, u1} ι α A _inst_1 _inst_2 l fι fA)) (List.prod.{max u2 u1} (GradedMonoid.{u2, u1} ι A) (GradedMonoid.GMul.toMul.{u2, u1} ι A (AddZeroClass.toAdd.{u2} ι (AddMonoid.toAddZeroClass.{u2} ι _inst_1)) (GradedMonoid.GMonoid.toGMul.{u2, u1} ι A _inst_1 _inst_2)) (GradedMonoid.GOne.toOne.{u2, u1} ι A (AddMonoid.toZero.{u2} ι _inst_1) (GradedMonoid.GMonoid.toGOne.{u2, u1} ι A _inst_1 _inst_2)) (List.map.{u3, max u1 u2} α (GradedMonoid.{u2, u1} ι A) (fun (a : α) => GradedMonoid.mk.{u2, u1} ι A (fι a) (fA a)) l))
 Case conversion may be inaccurate. Consider using '#align graded_monoid.mk_list_dprod GradedMonoid.mk_list_dProdₓ'. -/
 theorem GradedMonoid.mk_list_dProd (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
-    GradedMonoid.mk _ (l.dprod fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).Prod :=
+    GradedMonoid.mk _ (l.dProd fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).Prod :=
   by
   induction l
   · simp
@@ -572,7 +572,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align graded_monoid.list_prod_map_eq_dprod GradedMonoid.list_prod_map_eq_dProdₓ'. -/
 /-- A variant of `graded_monoid.mk_list_dprod` for rewriting in the other direction. -/
 theorem GradedMonoid.list_prod_map_eq_dProd (l : List α) (f : α → GradedMonoid A) :
-    (l.map f).Prod = GradedMonoid.mk _ (l.dprod (fun i => (f i).1) fun i => (f i).2) :=
+    (l.map f).Prod = GradedMonoid.mk _ (l.dProd (fun i => (f i).1) fun i => (f i).2) :=
   by
   rw [GradedMonoid.mk_list_dProd, GradedMonoid.mk]
   simp_rw [Sigma.eta]
@@ -586,7 +586,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align graded_monoid.list_prod_of_fn_eq_dprod GradedMonoid.list_prod_ofFn_eq_dProdₓ'. -/
 theorem GradedMonoid.list_prod_ofFn_eq_dProd {n : ℕ} (f : Fin n → GradedMonoid A) :
     (List.ofFn f).Prod =
-      GradedMonoid.mk _ ((List.finRange n).dprod (fun i => (f i).1) fun i => (f i).2) :=
+      GradedMonoid.mk _ ((List.finRange n).dProd (fun i => (f i).1) fun i => (f i).2) :=
   by rw [List.ofFn_eq_map, GradedMonoid.list_prod_map_eq_dProd]
 #align graded_monoid.list_prod_of_fn_eq_dprod GradedMonoid.list_prod_ofFn_eq_dProd
 
@@ -646,7 +646,7 @@ Case conversion may be inaccurate. Consider using '#align list.dprod_monoid List
 /-- When all the indexed types are the same, the dependent product is just the regular product. -/
 @[simp]
 theorem List.dProd_monoid {α} [AddMonoid ι] [Monoid R] (l : List α) (fι : α → ι) (fA : α → R) :
-    (l.dprod fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) :=
+    (l.dProd fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) :=
   by
   induction l
   · rw [List.dProd_nil, List.map_nil, List.prod_nil]
@@ -836,7 +836,7 @@ coercions. -/
 @[simp]
 theorem SetLike.coe_list_dProd (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι)
     (fA : ∀ a, A (fι a)) (l : List α) :
-    ↑(l.dprod fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) :=
+    ↑(l.dProd fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) :=
   by
   induction l
   · rw [List.dProd_nil, coe_ghas_one, List.map_nil, List.prod_nil]
@@ -854,9 +854,9 @@ Case conversion may be inaccurate. Consider using '#align set_like.list_dprod_eq
 /-- A version of `list.coe_dprod_set_like` with `subtype.mk`. -/
 theorem SetLike.list_dProd_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α → ι) (fA : ∀ a, A (fι a))
     (l : List α) :
-    (l.dprod fι fA : (fun i => ↥(A i)) _) =
+    (l.dProd fι fA : (fun i => ↥(A i)) _) =
       ⟨List.prod (l.map fun a => fA a),
-        (l.dprod_index_eq_map_sum fι).symm ▸
+        (l.dProdIndex_eq_map_sum fι).symm ▸
           list_prod_map_mem_graded l _ _ fun i hi => (fA i).Prop⟩ :=
   Subtype.ext <| SetLike.coe_list_dProd _ _ _ _
 #align set_like.list_dprod_eq SetLike.list_dProd_eq

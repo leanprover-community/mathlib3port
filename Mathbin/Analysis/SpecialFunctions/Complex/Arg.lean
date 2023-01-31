@@ -64,7 +64,7 @@ theorem cos_arg {x : ℂ} (hx : x ≠ 0) : Real.cos (arg x) = x.re / x.abs :=
 #align complex.cos_arg Complex.cos_arg
 
 @[simp]
-theorem abs_mul_exp_arg_mul_i (x : ℂ) : ↑(abs x) * exp (arg x * I) = x :=
+theorem abs_mul_exp_arg_mul_i (x : ℂ) : ↑(abs x) * exp (arg x * i) = x :=
   by
   rcases eq_or_ne x 0 with (rfl | hx)
   · simp
@@ -73,11 +73,11 @@ theorem abs_mul_exp_arg_mul_i (x : ℂ) : ↑(abs x) * exp (arg x * I) = x :=
 #align complex.abs_mul_exp_arg_mul_I Complex.abs_mul_exp_arg_mul_i
 
 @[simp]
-theorem abs_mul_cos_add_sin_mul_i (x : ℂ) : (abs x * (cos (arg x) + sin (arg x) * I) : ℂ) = x := by
+theorem abs_mul_cos_add_sin_mul_i (x : ℂ) : (abs x * (cos (arg x) + sin (arg x) * i) : ℂ) = x := by
   rw [← exp_mul_I, abs_mul_exp_arg_mul_I]
 #align complex.abs_mul_cos_add_sin_mul_I Complex.abs_mul_cos_add_sin_mul_i
 
-theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z :=
+theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * i) = z :=
   by
   refine' ⟨fun hz => ⟨arg z, _⟩, _⟩
   ·
@@ -90,14 +90,14 @@ theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z 
 #align complex.abs_eq_one_iff Complex.abs_eq_one_iff
 
 @[simp]
-theorem range_exp_mul_i : (range fun x : ℝ => exp (x * I)) = Metric.sphere 0 1 :=
+theorem range_exp_mul_i : (range fun x : ℝ => exp (x * i)) = Metric.sphere 0 1 :=
   by
   ext x
   simp only [mem_sphere_zero_iff_norm, norm_eq_abs, abs_eq_one_iff, mem_range]
 #align complex.range_exp_mul_I Complex.range_exp_mul_i
 
 theorem arg_mul_cos_add_sin_mul_i {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) :
-    arg (r * (cos θ + sin θ * I)) = θ :=
+    arg (r * (cos θ + sin θ * i)) = θ :=
   by
   simp only [arg, map_mul, abs_cos_add_sin_mul_I, abs_of_nonneg hr.le, mul_one]
   simp only [of_real_mul_re, of_real_mul_im, neg_im, ← of_real_cos, ← of_real_sin, ←
@@ -121,7 +121,7 @@ theorem arg_mul_cos_add_sin_mul_i {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
         linarith, exact hsin, exact hcos.not_le]
 #align complex.arg_mul_cos_add_sin_mul_I Complex.arg_mul_cos_add_sin_mul_i
 
-theorem arg_cos_add_sin_mul_i {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) : arg (cos θ + sin θ * I) = θ := by
+theorem arg_cos_add_sin_mul_i {θ : ℝ} (hθ : θ ∈ Ioc (-π) π) : arg (cos θ + sin θ * i) = θ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I zero_lt_one hθ]
 #align complex.arg_cos_add_sin_mul_I Complex.arg_cos_add_sin_mul_i
 
@@ -215,7 +215,7 @@ theorem arg_i : arg i = π / 2 := by simp [arg, le_refl]
 #align complex.arg_I Complex.arg_i
 
 @[simp]
-theorem arg_neg_i : arg (-I) = -(π / 2) := by simp [arg, le_refl]
+theorem arg_neg_i : arg (-i) = -(π / 2) := by simp [arg, le_refl]
 #align complex.arg_neg_I Complex.arg_neg_i
 
 @[simp]
@@ -450,7 +450,7 @@ theorem arg_neg_coe_angle {x : ℂ} (hx : x ≠ 0) : (arg (-x) : Real.Angle) = a
 #align complex.arg_neg_coe_angle Complex.arg_neg_coe_angle
 
 theorem arg_mul_cos_add_sin_mul_i_eq_toIocMod {r : ℝ} (hr : 0 < r) (θ : ℝ) :
-    arg (r * (cos θ + sin θ * I)) = toIocMod (-π) Real.two_pi_pos θ :=
+    arg (r * (cos θ + sin θ * i)) = toIocMod (-π) Real.two_pi_pos θ :=
   by
   have hi : toIocMod (-π) Real.two_pi_pos θ ∈ Ioc (-π) π :=
     by
@@ -461,12 +461,12 @@ theorem arg_mul_cos_add_sin_mul_i_eq_toIocMod {r : ℝ} (hr : 0 < r) (θ : ℝ) 
 #align complex.arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_mul_cos_add_sin_mul_i_eq_toIocMod
 
 theorem arg_cos_add_sin_mul_i_eq_toIocMod (θ : ℝ) :
-    arg (cos θ + sin θ * I) = toIocMod (-π) Real.two_pi_pos θ := by
+    arg (cos θ + sin θ * i) = toIocMod (-π) Real.two_pi_pos θ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod zero_lt_one]
 #align complex.arg_cos_add_sin_mul_I_eq_to_Ioc_mod Complex.arg_cos_add_sin_mul_i_eq_toIocMod
 
 theorem arg_mul_cos_add_sin_mul_i_sub {r : ℝ} (hr : 0 < r) (θ : ℝ) :
-    arg (r * (cos θ + sin θ * I)) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ :=
+    arg (r * (cos θ + sin θ * i)) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ :=
   by
   rw [arg_mul_cos_add_sin_mul_I_eq_to_Ioc_mod hr, toIocMod_sub_self, toIocDiv_eq_neg_floor,
     zsmul_eq_mul]
@@ -474,12 +474,12 @@ theorem arg_mul_cos_add_sin_mul_i_sub {r : ℝ} (hr : 0 < r) (θ : ℝ) :
 #align complex.arg_mul_cos_add_sin_mul_I_sub Complex.arg_mul_cos_add_sin_mul_i_sub
 
 theorem arg_cos_add_sin_mul_i_sub (θ : ℝ) :
-    arg (cos θ + sin θ * I) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ := by
+    arg (cos θ + sin θ * i) - θ = 2 * π * ⌊(π - θ) / (2 * π)⌋ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_sub zero_lt_one]
 #align complex.arg_cos_add_sin_mul_I_sub Complex.arg_cos_add_sin_mul_i_sub
 
 theorem arg_mul_cos_add_sin_mul_i_coe_angle {r : ℝ} (hr : 0 < r) (θ : Real.Angle) :
-    (arg (r * (Real.Angle.cos θ + Real.Angle.sin θ * I)) : Real.Angle) = θ :=
+    (arg (r * (Real.Angle.cos θ + Real.Angle.sin θ * i)) : Real.Angle) = θ :=
   by
   induction θ using Real.Angle.induction_on
   rw [Real.Angle.cos_coe, Real.Angle.sin_coe, Real.Angle.angle_eq_iff_two_pi_dvd_sub]
@@ -488,7 +488,7 @@ theorem arg_mul_cos_add_sin_mul_i_coe_angle {r : ℝ} (hr : 0 < r) (θ : Real.An
 #align complex.arg_mul_cos_add_sin_mul_I_coe_angle Complex.arg_mul_cos_add_sin_mul_i_coe_angle
 
 theorem arg_cos_add_sin_mul_i_coe_angle (θ : Real.Angle) :
-    (arg (Real.Angle.cos θ + Real.Angle.sin θ * I) : Real.Angle) = θ := by
+    (arg (Real.Angle.cos θ + Real.Angle.sin θ * i) : Real.Angle) = θ := by
   rw [← one_mul (_ + _), ← of_real_one, arg_mul_cos_add_sin_mul_I_coe_angle zero_lt_one]
 #align complex.arg_cos_add_sin_mul_I_coe_angle Complex.arg_cos_add_sin_mul_i_coe_angle
 

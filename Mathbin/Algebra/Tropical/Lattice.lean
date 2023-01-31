@@ -58,21 +58,21 @@ instance [SemilatticeSup R] : SemilatticeSup (Tropical R) :=
 instance [Lattice R] : Lattice (Tropical R) :=
   { Tropical.semilatticeInf, Tropical.semilatticeSup with }
 
-instance [SupSet R] : SupSet (Tropical R) where sup s := trop (supₛ (untrop '' s))
+instance [SupSet R] : SupSet (Tropical R) where supₛ s := trop (supₛ (untrop '' s))
 
-instance [InfSet R] : InfSet (Tropical R) where inf s := trop (infₛ (untrop '' s))
+instance [InfSet R] : InfSet (Tropical R) where infₛ s := trop (infₛ (untrop '' s))
 
 instance [ConditionallyCompleteLattice R] : ConditionallyCompleteLattice (Tropical R) :=
   { Tropical.hasSup, Tropical.hasInf,
     Tropical.lattice with
     le_cSup := fun s x hs hx =>
-      le_csupₛ (untrop_monotone.map_bdd_above hs) (Set.mem_image_of_mem untrop hx)
+      le_csupₛ (untrop_monotone.map_bddAbove hs) (Set.mem_image_of_mem untrop hx)
     cSup_le := fun s x hs hx =>
-      csupₛ_le (hs.image untrop) (untrop_monotone.mem_upper_bounds_image hx)
+      csupₛ_le (hs.image untrop) (untrop_monotone.mem_upperBounds_image hx)
     le_cInf := fun s x hs hx =>
-      le_cinfₛ (hs.image untrop) (untrop_monotone.mem_lower_bounds_image hx)
+      le_cinfₛ (hs.image untrop) (untrop_monotone.mem_lowerBounds_image hx)
     cInf_le := fun s x hs hx =>
-      cinfₛ_le (untrop_monotone.map_bdd_below hs) (Set.mem_image_of_mem untrop hx) }
+      cinfₛ_le (untrop_monotone.map_bddBelow hs) (Set.mem_image_of_mem untrop hx) }
 
 instance [ConditionallyCompleteLinearOrder R] : ConditionallyCompleteLinearOrder (Tropical R) :=
   { Tropical.conditionallyCompleteLattice, Tropical.linearOrder with }

@@ -267,7 +267,7 @@ def coeff (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ) : E :=
 
 theorem mkPiField_coeff_eq (p : FormalMultilinearSeries 𝕜 𝕜 E) (n : ℕ) :
     ContinuousMultilinearMap.mkPiField 𝕜 (Fin n) (p.coeff n) = p n :=
-  (p n).mk_pi_field_apply_one_eq_self
+  (p n).mkPiField_apply_one_eq_self
 #align formal_multilinear_series.mk_pi_field_coeff_eq FormalMultilinearSeries.mkPiField_coeff_eq
 
 @[simp]

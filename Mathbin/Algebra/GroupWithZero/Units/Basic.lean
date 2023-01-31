@@ -396,7 +396,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.exists0 Units.exists0ₓ'. -/
 /-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
 theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
-  ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_coe g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ =>
+  ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_val g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ =>
     ⟨Units.mk0 g hg, pg⟩⟩
 #align units.exists0 Units.exists0
 

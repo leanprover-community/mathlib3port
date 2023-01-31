@@ -47,7 +47,7 @@ instance : IsAffine (⊤_ Scheme.{u}) :=
   isAffineOfIso (PreservesTerminal.iso Scheme.spec).inv
 
 instance : HasFiniteLimits Scheme :=
-  has_finite_limits_of_has_terminal_and_pullbacks
+  hasFiniteLimitsOfHasTerminalAndPullbacks
 
 section Initial
 
@@ -78,7 +78,7 @@ def emptyIsInitial : IsInitial (∅ : Scheme.{u}) :=
 #align algebraic_geometry.empty_is_initial AlgebraicGeometry.emptyIsInitial
 
 @[simp]
-theorem emptyIsInitial_to : emptyIsInitial.to = Scheme.empty_to :=
+theorem emptyIsInitial_to : emptyIsInitial.to = Scheme.emptyTo :=
   rfl
 #align algebraic_geometry.empty_is_initial_to AlgebraicGeometry.emptyIsInitial_to
 
@@ -119,12 +119,12 @@ instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpt
 
 /-- A scheme is initial if its underlying space is empty . -/
 noncomputable def isInitialOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsInitial X :=
-  emptyIsInitial.of_iso (as_iso <| emptyIsInitial.to _)
+  emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.is_initial_of_is_empty AlgebraicGeometry.isInitialOfIsEmpty
 
 /-- `Spec 0` is the initial object in the category of schemes. -/
 noncomputable def specPunitIsInitial : IsInitial (Scheme.spec.obj (op <| CommRingCat.of PUnit)) :=
-  emptyIsInitial.of_iso (as_iso <| emptyIsInitial.to _)
+  emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.Spec_punit_is_initial AlgebraicGeometry.specPunitIsInitial
 
 instance (priority := 100) isAffineOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=

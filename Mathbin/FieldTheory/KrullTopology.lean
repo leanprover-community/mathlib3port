@@ -236,7 +236,7 @@ theorem IntermediateField.fixingSubgroup_isOpen {K L : Type _} [Field K] [Field 
 theorem IntermediateField.fixingSubgroup_isClosed {K L : Type _} [Field K] [Field L] [Algebra K L]
     (E : IntermediateField K L) [FiniteDimensional K E] :
     IsClosed (E.fixingSubgroup : Set (L ≃ₐ[K] L)) :=
-  OpenSubgroup.isClosed ⟨E.fixingSubgroup, E.fixing_subgroup_is_open⟩
+  OpenSubgroup.isClosed ⟨E.fixingSubgroup, E.fixingSubgroup_isOpen⟩
 #align intermediate_field.fixing_subgroup_is_closed IntermediateField.fixingSubgroup_isClosed
 
 /-- If `L/K` is an algebraic extension, then the Krull topology on `L ≃ₐ[K] L` is Hausdorff. -/

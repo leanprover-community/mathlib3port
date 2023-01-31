@@ -153,7 +153,7 @@ abbrev isoLocallyRingedSpace :
 
 theorem ι_isoLocallyRingedSpace_inv (i : D.J) :
     D.toLocallyRingedSpaceGlueData.toGlueData.ι i ≫ D.isoLocallyRingedSpace.inv = 𝖣.ι i :=
-  𝖣.ι_glued_iso_inv forgetToLocallyRingedSpace i
+  𝖣.ι_gluedIso_inv forgetToLocallyRingedSpace i
 #align algebraic_geometry.Scheme.glue_data.ι_iso_LocallyRingedSpace_inv AlgebraicGeometry.Scheme.GlueData.ι_isoLocallyRingedSpace_inv
 
 instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
@@ -164,7 +164,7 @@ instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) :=
 
 theorem ι_jointly_surjective (x : 𝖣.glued.carrier) :
     ∃ (i : D.J)(y : (D.U i).carrier), (D.ι i).1.base y = x :=
-  𝖣.ι_jointly_surjective (forget_to_Top ⋙ forget TopCat) x
+  𝖣.ι_jointly_surjective (forgetToTop ⋙ forget TopCat) x
 #align algebraic_geometry.Scheme.glue_data.ι_jointly_surjective AlgebraicGeometry.Scheme.GlueData.ι_jointly_surjective
 
 @[simp, reassoc.1]
@@ -243,7 +243,7 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).carrier) (y : (D.U j).carrier) :
 
 theorem isOpen_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) :=
   by
-  rw [← (TopCat.homeoOfIso D.iso_carrier.symm).is_open_preimage]
+  rw [← (TopCat.homeoOfIso D.iso_carrier.symm).isOpen_preimage]
   rw [TopCat.GlueData.isOpen_iff]
   apply forall_congr'
   intro i
@@ -257,7 +257,7 @@ def openCover (D : Scheme.GlueData) : OpenCover D.glued
   obj := D.U
   map := D.ι
   f x := (D.ι_jointly_surjective x).some
-  Covers x := ⟨_, (D.ι_jointly_surjective x).some_spec.some_spec⟩
+  Covers x := ⟨_, (D.ι_jointly_surjective x).choose_spec.choose_spec⟩
 #align algebraic_geometry.Scheme.glue_data.open_cover AlgebraicGeometry.Scheme.GlueData.openCover
 
 end GlueData
@@ -423,8 +423,8 @@ theorem fromGlued_open_map : IsOpenMap 𝒰.fromGlued.1.base :=
 #align algebraic_geometry.Scheme.open_cover.from_glued_open_map AlgebraicGeometry.Scheme.OpenCover.fromGlued_open_map
 
 theorem fromGlued_openEmbedding : OpenEmbedding 𝒰.fromGlued.1.base :=
-  openEmbedding_of_continuous_injective_open (by continuity) 𝒰.from_glued_injective
-    𝒰.from_glued_open_map
+  openEmbedding_of_continuous_injective_open (by continuity) 𝒰.fromGlued_injective
+    𝒰.fromGlued_open_map
 #align algebraic_geometry.Scheme.open_cover.from_glued_open_embedding AlgebraicGeometry.Scheme.OpenCover.fromGlued_openEmbedding
 
 instance : Epi 𝒰.fromGlued.val.base :=
@@ -438,7 +438,7 @@ instance : Epi 𝒰.fromGlued.val.base :=
   exact h
 
 instance fromGlued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
-  SheafedSpace.IsOpenImmersion.of_stalk_iso _ 𝒰.from_glued_open_embedding
+  SheafedSpace.IsOpenImmersion.of_stalk_iso _ 𝒰.fromGlued_openEmbedding
 #align algebraic_geometry.Scheme.open_cover.from_glued_open_immersion AlgebraicGeometry.Scheme.OpenCover.fromGlued_open_immersion
 
 instance : IsIso 𝒰.fromGlued :=

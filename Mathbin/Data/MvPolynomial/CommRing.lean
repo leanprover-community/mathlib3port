@@ -155,7 +155,7 @@ theorem hom_c (f : MvPolynomial σ ℤ →+* S) (n : ℤ) : f (c n) = (n : S) :=
 is determined by the evaluations f(X_1), f(X_2), ... -/
 @[simp]
 theorem eval₂_hom_x {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →+* S) (x : MvPolynomial R ℤ) :
-    eval₂ c (f ∘ X) x = f x :=
+    eval₂ c (f ∘ x) x = f x :=
   MvPolynomial.induction_on x
     (fun n => by
       rw [hom_C f, eval₂_C]
@@ -172,7 +172,7 @@ theorem eval₂_hom_x {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
 functions out of the type `σ`, -/
 def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S)
     where
-  toFun f := ⇑f ∘ X
+  toFun f := ⇑f ∘ x
   invFun f := eval₂Hom (Int.castRingHom S) f
   left_inv f := RingHom.ext <| eval₂_hom_x _ _
   right_inv f := funext fun x => by simp only [coe_eval₂_hom, Function.comp_apply, eval₂_X]

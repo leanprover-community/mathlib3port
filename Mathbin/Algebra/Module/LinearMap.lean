@@ -343,7 +343,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_3 : AddCommMonoid.{u2} M] [_inst_10 : Module.{u1, u2} R M _inst_1 _inst_3], Eq.{succ u2} (forall (a : M), (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : M) => M) a) (FunLike.coe.{succ u2, succ u2, succ u2} (LinearMap.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) M M _inst_3 _inst_3 _inst_10 _inst_10) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : M) => M) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u2, u2} R R M M _inst_1 _inst_1 _inst_3 _inst_3 _inst_10 _inst_10 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (LinearMap.id.{u1, u2} R M _inst_1 _inst_3 _inst_10)) (id.{succ u2} M)
 Case conversion may be inaccurate. Consider using '#align linear_map.id_coe LinearMap.id_coeₓ'. -/
 @[simp, norm_cast]
-theorem id_coe : ((LinearMap.id : M →ₗ[R] M) : M → M) = _root_.id :=
+theorem id_coe : ((LinearMap.id : M →ₗ[R] M) : M → M) = id :=
   rfl
 #align linear_map.id_coe LinearMap.id_coe
 
@@ -1547,7 +1547,7 @@ instance : Module S (M →ₛₗ[σ₁₂] M₂)
   zero_smul f := ext fun x => zero_smul _ _
 
 instance [NoZeroSMulDivisors S M₂] : NoZeroSMulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
-  coe_injective.NoZeroSmulDivisors _ rfl coe_smul
+  coe_injective.NoZeroSMulDivisors _ rfl coe_smul
 
 end Module
 
@@ -1614,7 +1614,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_2], Eq.{succ u2} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : M) => M) ᾰ) (FunLike.coe.{succ u2, succ u2, succ u2} (Module.End.{u1, u2} R M _inst_1 _inst_2 _inst_4) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : M) => M) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u2, u2} R R M M _inst_1 _inst_1 _inst_2 _inst_2 _inst_4 _inst_4 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (OfNat.ofNat.{u2} (Module.End.{u1, u2} R M _inst_1 _inst_2 _inst_4) 1 (One.toOfNat1.{u2} (Module.End.{u1, u2} R M _inst_1 _inst_2 _inst_4) (LinearMap.instOneEnd.{u1, u2} R M _inst_1 _inst_2 _inst_4)))) (id.{succ u2} M)
 Case conversion may be inaccurate. Consider using '#align linear_map.coe_one LinearMap.coe_oneₓ'. -/
-theorem coe_one : ⇑(1 : Module.End R M) = _root_.id :=
+theorem coe_one : ⇑(1 : Module.End R M) = id :=
   rfl
 #align linear_map.coe_one LinearMap.coe_one
 
@@ -1652,8 +1652,8 @@ instance Module.End.semiring : Semiring (Module.End R M) :=
     left_distrib := fun f g h => comp_add _ _ _
     right_distrib := fun f g h => add_comp _ _ _
     natCast := fun n => n • 1
-    nat_cast_zero := AddMonoid.nsmul_zero _
-    nat_cast_succ := fun n => (AddMonoid.nsmul_succ n 1).trans (add_comm _ _) }
+    natCast_zero := AddMonoid.nsmul_zero _
+    natCast_succ := fun n => (AddMonoid.nsmul_succ n 1).trans (add_comm _ _) }
 #align module.End.semiring Module.End.semiring
 -/
 
@@ -1674,8 +1674,8 @@ instance Module.End.ring : Ring (Module.End R N₁) :=
   { Module.End.semiring,
     LinearMap.addCommGroup with
     intCast := fun z => z • 1
-    int_cast_of_nat := ofNat_zsmul _
-    int_cast_neg_succ_of_nat := negSucc_zsmul _ }
+    intCast_ofNat := ofNat_zsmul _
+    intCast_negSucc := negSucc_zsmul _ }
 #align module.End.ring Module.End.ring
 -/
 

@@ -299,7 +299,7 @@ Case conversion may be inaccurate. Consider using '#align is_monoid_hom.comp IsM
       "The composite of two additive monoid homomorphisms is an additive monoid\nhomomorphism."]
 theorem comp (hf : IsMonoidHom f) {γ} [MulOneClass γ] {g : β → γ} (hg : IsMonoidHom g) :
     IsMonoidHom (g ∘ f) :=
-  { IsMulHom.comp hf.to_is_mul_hom hg.to_is_mul_hom with
+  { IsMulHom.comp hf.to_isMulHom hg.to_isMulHom with
     map_one := show g _ = 1 by rw [hf.map_one, hg.map_one] }
 #align is_monoid_hom.comp IsMonoidHom.comp
 #align is_add_monoid_hom.comp IsAddMonoidHom.comp
@@ -403,14 +403,14 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Group.{u1} α] [_inst_2 : Group.{u2} β] {f : α -> β}, (IsGroupHom.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (x : α) (y : α), Eq.{succ u2} β (f (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x y)) (HMul.hMul.{u2, u2, u2} β β β (instHMul.{u2} β (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β (DivInvMonoid.toMonoid.{u2} β (Group.toDivInvMonoid.{u2} β _inst_2))))) (f x) (f y)))
 Case conversion may be inaccurate. Consider using '#align is_group_hom.map_mul IsGroupHom.map_mul'ₓ'. -/
 theorem map_mul' : ∀ x y, f (x * y) = f x * f y :=
-  hf.to_is_mul_hom.map_mul
+  hf.to_isMulHom.map_mul
 #align is_group_hom.map_mul IsGroupHom.map_mul'
 
 #print IsGroupHom.to_isMonoidHom /-
 /-- A group homomorphism is a monoid homomorphism. -/
 @[to_additive "An additive group homomorphism is an additive monoid homomorphism."]
 theorem to_isMonoidHom : IsMonoidHom f :=
-  hf.to_is_mul_hom.to_is_monoid_hom
+  hf.to_isMulHom.to_isMonoidHom
 #align is_group_hom.to_is_monoid_hom IsGroupHom.to_isMonoidHom
 #align is_add_group_hom.to_is_add_monoid_hom IsAddGroupHom.to_isAddMonoidHom
 -/
@@ -424,7 +424,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.map_one I
 /-- A group homomorphism sends 1 to 1. -/
 @[to_additive "An additive group homomorphism sends 0 to 0."]
 theorem map_one : f 1 = 1 :=
-  hf.to_is_monoid_hom.map_one
+  hf.to_isMonoidHom.map_one
 #align is_group_hom.map_one IsGroupHom.map_one
 #align is_add_group_hom.map_zero IsAddGroupHom.map_zero
 
@@ -473,7 +473,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.comp IsGr
       "The composition of two additive group homomorphisms is an additive\ngroup homomorphism."]
 theorem comp (hf : IsGroupHom f) {γ} [Group γ] {g : β → γ} (hg : IsGroupHom g) :
     IsGroupHom (g ∘ f) :=
-  { IsMulHom.comp hf.to_is_mul_hom hg.to_is_mul_hom with }
+  { IsMulHom.comp hf.to_isMulHom hg.to_isMulHom with }
 #align is_group_hom.comp IsGroupHom.comp
 #align is_add_group_hom.comp IsAddGroupHom.comp
 
@@ -503,7 +503,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.mul IsGro
       "The sum of two additive group homomorphisms is an additive group homomorphism\nif the target is commutative."]
 theorem mul {α β} [Group α] [CommGroup β] {f g : α → β} (hf : IsGroupHom f) (hg : IsGroupHom g) :
     IsGroupHom fun a => f a * g a :=
-  { map_mul := (hf.to_is_mul_hom.mul hg.to_is_mul_hom).map_mul }
+  { map_mul := (hf.to_isMulHom.mul hg.to_isMulHom).map_mul }
 #align is_group_hom.mul IsGroupHom.mul
 #align is_add_group_hom.add IsAddGroupHom.add
 
@@ -518,7 +518,7 @@ Case conversion may be inaccurate. Consider using '#align is_group_hom.inv IsGro
       "The negation of an additive group homomorphism is an additive group homomorphism\nif the target is commutative."]
 theorem inv {α β} [Group α] [CommGroup β] {f : α → β} (hf : IsGroupHom f) :
     IsGroupHom fun a => (f a)⁻¹ :=
-  { map_mul := hf.to_is_mul_hom.inv.map_mul }
+  { map_mul := hf.to_isMulHom.inv.map_mul }
 #align is_group_hom.inv IsGroupHom.inv
 #align is_add_group_hom.neg IsAddGroupHom.neg
 
@@ -641,7 +641,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M], IsMonoidHom.{u1, u1} (Units.{u1} M _inst_1) M (Units.instMulOneClassUnits.{u1} M _inst_1) (Monoid.toMulOneClass.{u1} M _inst_1) (fun (x._@.Mathlib.Deprecated.Group._hyg.1912 : Units.{u1} M _inst_1) => Units.val.{u1} M _inst_1 x._@.Mathlib.Deprecated.Group._hyg.1912)
 Case conversion may be inaccurate. Consider using '#align units.coe_is_monoid_hom Units.coe_isMonoidHomₓ'. -/
 theorem coe_isMonoidHom : IsMonoidHom (coe : Mˣ → M) :=
-  (coeHom M).is_monoid_hom_coe
+  (coeHom M).isMonoidHom_coe
 #align units.coe_is_monoid_hom Units.coe_isMonoidHom
 
 end Units
@@ -688,28 +688,28 @@ theorem Multiplicative.isMulHom [Add α] [Add β] {f : α → β} (hf : IsAddHom
 -- defeq abuse
 theorem Additive.isAddMonoidHom [MulOneClass α] [MulOneClass β] {f : α → β} (hf : IsMonoidHom f) :
     @IsAddMonoidHom (Additive α) (Additive β) _ _ f :=
-  { Additive.isAddHom hf.to_is_mul_hom with map_zero := hf.map_one }
+  { Additive.isAddHom hf.to_isMulHom with map_zero := hf.map_one }
 #align additive.is_add_monoid_hom Additive.isAddMonoidHom
 -/
 
 #print Multiplicative.isMonoidHom /-
 theorem Multiplicative.isMonoidHom [AddZeroClass α] [AddZeroClass β] {f : α → β}
     (hf : IsAddMonoidHom f) : @IsMonoidHom (Multiplicative α) (Multiplicative β) _ _ f :=
-  { Multiplicative.isMulHom hf.to_is_add_hom with map_one := IsAddMonoidHom.map_zero hf }
+  { Multiplicative.isMulHom hf.to_isAddHom with map_one := IsAddMonoidHom.map_zero hf }
 #align multiplicative.is_monoid_hom Multiplicative.isMonoidHom
 -/
 
 #print Additive.isAddGroupHom /-
 theorem Additive.isAddGroupHom [Group α] [Group β] {f : α → β} (hf : IsGroupHom f) :
     @IsAddGroupHom (Additive α) (Additive β) _ _ f :=
-  { map_add := hf.to_is_mul_hom.map_mul }
+  { map_add := hf.to_isMulHom.map_mul }
 #align additive.is_add_group_hom Additive.isAddGroupHom
 -/
 
 #print Multiplicative.isGroupHom /-
 theorem Multiplicative.isGroupHom [AddGroup α] [AddGroup β] {f : α → β} (hf : IsAddGroupHom f) :
     @IsGroupHom (Multiplicative α) (Multiplicative β) _ _ f :=
-  { map_mul := hf.to_is_add_hom.map_add }
+  { map_mul := hf.to_isAddHom.map_add }
 #align multiplicative.is_group_hom Multiplicative.isGroupHom
 -/
 

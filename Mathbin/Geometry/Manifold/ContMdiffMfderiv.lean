@@ -66,7 +66,7 @@ theorem ContMdiffWithinAt.mdifferentiableWithinAt (hf : ContMdiffWithinAt I I' n
   by
   suffices h : MdifferentiableWithinAt I I' f (s ∩ f ⁻¹' (extChartAt I' (f x)).source) x
   · rwa [mdifferentiableWithinAt_inter'] at h
-    apply hf.1.preimage_mem_nhds_within
+    apply hf.1.preimage_mem_nhdsWithin
     exact extChartAt_source_mem_nhds I' (f x)
   rw [mdifferentiableWithinAt_iff]
   exact ⟨hf.1.mono (inter_subset_left _ _), (hf.2.DifferentiableWithinAt hn).mono (by mfld_set_tac)⟩
@@ -135,7 +135,7 @@ theorem ContMdiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   · have A := (tangentBundleModelSpaceHomeomorph H I).Continuous
     rw [continuous_iff_continuousOn_univ] at A
     have B :=
-      ((tangentBundleModelSpaceHomeomorph H' I').symm.Continuous.comp_continuous_on h).comp' A
+      ((tangentBundleModelSpaceHomeomorph H' I').symm.Continuous.comp_continuousOn h).comp' A
     have :
       univ ∩ ⇑(tangentBundleModelSpaceHomeomorph H I) ⁻¹' (Prod.fst ⁻¹' s) =
         TangentBundle.proj I H ⁻¹' s :=
@@ -517,7 +517,7 @@ theorem contMdiffAt_iff_target {f : N → Z.toVectorBundleCore.TotalSpace} {x : 
   rw [contMdiffAt_iff_target, and_congr_left_iff]
   refine' fun hf => ⟨fun h => Z'.continuous_proj.continuous_at.comp h, fun h => _⟩
   exact
-    (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).continuous_at_of_comp_left h
+    (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).continuousAt_of_comp_left h
       (mem_chart_source _ _) (h.prod hf.continuous_at.snd)
 #align basic_smooth_vector_bundle_core.cont_mdiff_at_iff_target BasicSmoothVectorBundleCore.contMdiffAt_iff_target
 
@@ -549,7 +549,7 @@ theorem smooth_proj : Smooth (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj
 
 theorem contMdiffOn_proj {s : Set Z.toVectorBundleCore.TotalSpace} :
     ContMdiffOn (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj s :=
-  Z.cont_mdiff_proj.ContMdiffOn
+  Z.contMdiff_proj.ContMdiffOn
 #align basic_smooth_vector_bundle_core.cont_mdiff_on_proj BasicSmoothVectorBundleCore.contMdiffOn_proj
 
 theorem smoothOn_proj {s : Set Z.toVectorBundleCore.TotalSpace} :
@@ -559,24 +559,24 @@ theorem smoothOn_proj {s : Set Z.toVectorBundleCore.TotalSpace} :
 
 theorem contMdiffAt_proj {p : Z.toVectorBundleCore.TotalSpace} :
     ContMdiffAt (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj p :=
-  Z.cont_mdiff_proj.ContMdiffAt
+  Z.contMdiff_proj.ContMdiffAt
 #align basic_smooth_vector_bundle_core.cont_mdiff_at_proj BasicSmoothVectorBundleCore.contMdiffAt_proj
 
 theorem smoothAt_proj {p : Z.toVectorBundleCore.TotalSpace} :
     SmoothAt (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj p :=
-  Z.cont_mdiff_at_proj
+  Z.contMdiffAt_proj
 #align basic_smooth_vector_bundle_core.smooth_at_proj BasicSmoothVectorBundleCore.smoothAt_proj
 
 theorem contMdiffWithinAt_proj {s : Set Z.toVectorBundleCore.TotalSpace}
     {p : Z.toVectorBundleCore.TotalSpace} :
     ContMdiffWithinAt (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj s p :=
-  Z.cont_mdiff_at_proj.ContMdiffWithinAt
+  Z.contMdiffAt_proj.ContMdiffWithinAt
 #align basic_smooth_vector_bundle_core.cont_mdiff_within_at_proj BasicSmoothVectorBundleCore.contMdiffWithinAt_proj
 
 theorem smoothWithinAt_proj {s : Set Z.toVectorBundleCore.TotalSpace}
     {p : Z.toVectorBundleCore.TotalSpace} :
     SmoothWithinAt (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj s p :=
-  Z.cont_mdiff_within_at_proj
+  Z.contMdiffWithinAt_proj
 #align basic_smooth_vector_bundle_core.smooth_within_at_proj BasicSmoothVectorBundleCore.smoothWithinAt_proj
 
 /-- If an element of `E'` is invariant under all coordinate changes, then one can define a

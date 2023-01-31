@@ -89,7 +89,7 @@ def get : PosNum → Tree α → Option α
 /-- Retrieves an element from the tree, or the provided default value
 if the index is invalid. See `tree.get`. -/
 def getOrElse (n : PosNum) (t : Tree α) (v : α) : α :=
-  (t.get n).getOrElse v
+  (t.get n).getD v
 #align tree.get_or_else Tree.getOrElse
 
 /- warning: tree.map -> Tree.map is a dubious translation:
@@ -140,8 +140,8 @@ theorem height_le_numNodes : ∀ x : Tree α, x.height ≤ x.numNodes
   | nil => le_rfl
   | node _ a b =>
     Nat.succ_le_succ
-      (max_le (trans a.height_le_num_nodes <| a.numNodes.le_add_right _)
-        (trans b.height_le_num_nodes <| b.numNodes.le_add_left _))
+      (max_le (trans a.height_le_numNodes <| a.numNodes.le_add_right _)
+        (trans b.height_le_numNodes <| b.numNodes.le_add_left _))
 #align tree.height_le_num_nodes Tree.height_le_numNodes
 
 /-- The left child of the tree, or `nil` if the tree is `nil` -/

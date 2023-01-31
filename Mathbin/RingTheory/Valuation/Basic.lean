@@ -411,7 +411,7 @@ theorem of_eq {v' : Valuation R Γ₀} (h : v = v') : v.IsEquiv v' := by subst h
 
 theorem map {v' : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f) (inf : Injective f)
     (h : v.IsEquiv v') : (v.map f hf).IsEquiv (v'.map f hf) :=
-  let H : StrictMono f := hf.strict_mono_of_injective inf
+  let H : StrictMono f := hf.strictMono_of_injective inf
   fun r s =>
   calc
     f (v r) ≤ f (v s) ↔ v r ≤ v s := by rw [H.le_iff_le]
@@ -604,7 +604,7 @@ theorem isEquiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
              («term_<_» (Term.app `v' [(«term_-_» `x "-" (num "1"))]) "<" (num "1"))))]
           "]")
          "."
-         `Tfae)))
+         `TFAE)))
       (Command.declValSimple
        ":="
        (Term.byTactic
@@ -720,7 +720,7 @@ theorem
             ∀ { x } , v x - 1 < 1 ↔ v' x - 1 < 1
           ]
         .
-        Tfae
+        TFAE
   :=
     by
       tfae_have 1 ↔ 2
@@ -1012,7 +1012,7 @@ theorem top_iff [Nontrivial Γ₀] (v : AddValuation K Γ₀) {x : K} : v x = �
 #align add_valuation.top_iff AddValuation.top_iff
 
 theorem ne_top_iff [Nontrivial Γ₀] (v : AddValuation K Γ₀) {x : K} : v x ≠ ⊤ ↔ x ≠ 0 :=
-  v.ne_zero_iff
+  v.neZero_iff
 #align add_valuation.ne_top_iff AddValuation.ne_top_iff
 
 /-- A ring homomorphism `S → R` induces a map `add_valuation R Γ₀ → add_valuation S Γ₀`. -/
@@ -1180,7 +1180,7 @@ def onQuot {J : Ideal R} (hJ : J ≤ supp v) : AddValuation (R ⧸ J) Γ₀ :=
 @[simp]
 theorem onQuot_comap_eq {J : Ideal R} (hJ : J ≤ supp v) :
     (v.onQuot hJ).comap (Ideal.Quotient.mk J) = v :=
-  v.on_quot_comap_eq hJ
+  v.onQuot_comap_eq hJ
 #align add_valuation.on_quot_comap_eq AddValuation.onQuot_comap_eq
 
 theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) :
@@ -1196,7 +1196,7 @@ theorem self_le_supp_comap (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) :
 @[simp]
 theorem comap_onQuot_eq (J : Ideal R) (v : AddValuation (R ⧸ J) Γ₀) :
     (v.comap (Ideal.Quotient.mk J)).onQuot (v.self_le_supp_comap J) = v :=
-  v.comap_on_quot_eq J
+  v.comap_onQuot_eq J
 #align add_valuation.comap_on_quot_eq AddValuation.comap_onQuot_eq
 
 /-- The quotient valuation on R/J has support supp(v)/J if J ⊆ supp v. -/

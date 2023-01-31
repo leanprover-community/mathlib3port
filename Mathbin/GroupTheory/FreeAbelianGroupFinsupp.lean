@@ -141,8 +141,7 @@ open IsFreeGroup
 /-- Isomorphic free groups have equivalent bases (`is_free_group` variant`). -/
 def Equiv.ofIsFreeGroupEquiv {G H : Type _} [Group G] [Group H] [IsFreeGroup G] [IsFreeGroup H]
     (e : G ≃* H) : Generators G ≃ Generators H :=
-  equiv.of_free_group_equiv <|
-    MulEquiv.trans (toFreeGroup G).symm <| MulEquiv.trans e <| toFreeGroup H
+  Equiv.ofFreeGroupEquiv <| MulEquiv.trans (toFreeGroup G).symm <| MulEquiv.trans e <| toFreeGroup H
 #align free_abelian_group.equiv.of_is_free_group_equiv FreeAbelianGroup.Equiv.ofIsFreeGroupEquiv
 
 variable {X}

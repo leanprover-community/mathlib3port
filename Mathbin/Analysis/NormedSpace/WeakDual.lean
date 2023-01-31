@@ -180,8 +180,7 @@ theorem toNormedDual_eq_iff (x' y' : WeakDual 𝕜 E) : x'.toNormedDual = y'.toN
   WeakDual.toNormedDual.Injective.eq_iff
 #align weak_dual.to_normed_dual_eq_iff WeakDual.toNormedDual_eq_iff
 
-theorem isClosed_closedBall (x' : Dual 𝕜 E) (r : ℝ) :
-    IsClosed (to_normed_dual ⁻¹' closedBall x' r) :=
+theorem isClosed_closedBall (x' : Dual 𝕜 E) (r : ℝ) : IsClosed (toNormedDual ⁻¹' closedBall x' r) :=
   isClosed_induced_iff'.2 (ContinuousLinearMap.is_weak_closed_closedBall x' r)
 #align weak_dual.is_closed_closed_ball WeakDual.isClosed_closedBall
 
@@ -195,7 +194,7 @@ variable (𝕜)
 /-- The polar set `polar 𝕜 s` of `s : set E` seen as a subset of the dual of `E` with the
 weak-star topology is `weak_dual.polar 𝕜 s`. -/
 def polar (s : Set E) : Set (WeakDual 𝕜 E) :=
-  to_normed_dual ⁻¹' polar 𝕜 s
+  toNormedDual ⁻¹' polar 𝕜 s
 #align weak_dual.polar WeakDual.polar
 
 theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈ s, ‖f x‖ ≤ 1 } :=
@@ -215,13 +214,13 @@ variable {𝕜}
 /-- While the coercion `coe_fn : weak_dual 𝕜 E → (E → 𝕜)` is not a closed map, it sends *bounded*
 closed sets to closed sets. -/
 theorem isClosed_image_coe_of_bounded_of_closed {s : Set (WeakDual 𝕜 E)}
-    (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) :
+    (hb : Bounded (Dual.toWeakDual ⁻¹' s)) (hc : IsClosed s) :
     IsClosed ((coeFn : WeakDual 𝕜 E → E → 𝕜) '' s) :=
   ContinuousLinearMap.isClosed_image_coe_of_bounded_of_weak_closed hb (isClosed_induced_iff'.1 hc)
 #align weak_dual.is_closed_image_coe_of_bounded_of_closed WeakDual.isClosed_image_coe_of_bounded_of_closed
 
 theorem isCompact_of_bounded_of_closed [ProperSpace 𝕜] {s : Set (WeakDual 𝕜 E)}
-    (hb : Bounded (dual.to_weak_dual ⁻¹' s)) (hc : IsClosed s) : IsCompact s :=
+    (hb : Bounded (Dual.toWeakDual ⁻¹' s)) (hc : IsClosed s) : IsCompact s :=
   (Embedding.isCompact_iff_isCompact_image FunLike.coe_injective.embedding_induced).mpr <|
     ContinuousLinearMap.isCompact_image_coe_of_bounded_of_closed_image hb <|
       isClosed_image_coe_of_bounded_of_closed hb hc
@@ -254,7 +253,7 @@ theorem isCompact_polar [ProperSpace 𝕜] {s : Set E} (s_nhd : s ∈ 𝓝 (0 : 
 /-- The **Banach-Alaoglu theorem**: closed balls of the dual of a normed space `E` are compact in
 the weak-star topology. -/
 theorem isCompact_closedBall [ProperSpace 𝕜] (x' : Dual 𝕜 E) (r : ℝ) :
-    IsCompact (to_normed_dual ⁻¹' closedBall x' r) :=
+    IsCompact (toNormedDual ⁻¹' closedBall x' r) :=
   isCompact_of_bounded_of_closed bounded_closedBall (isClosed_closedBall x' r)
 #align weak_dual.is_compact_closed_ball WeakDual.isCompact_closedBall
 

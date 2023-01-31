@@ -250,7 +250,7 @@ continuous at `x₀` *when `ι → α` is equipped with the topology of uniform 
 very useful for developping the equicontinuity API, but it should not be used directly for other
 purposes. -/
 theorem equicontinuousAt_iff_continuousAt {F : ι → X → α} {x₀ : X} :
-    EquicontinuousAt F x₀ ↔ ContinuousAt (of_fun ∘ Function.swap F : X → ι →ᵤ α) x₀ := by
+    EquicontinuousAt F x₀ ↔ ContinuousAt (ofFun ∘ Function.swap F : X → ι →ᵤ α) x₀ := by
   rw [ContinuousAt, (UniformFun.hasBasis_nhds ι α _).tendsto_right_iff] <;> rfl
 #align equicontinuous_at_iff_continuous_at equicontinuousAt_iff_continuousAt
 
@@ -259,7 +259,7 @@ continuous *when `ι → α` is equipped with the topology of uniform convergenc
 very useful for developping the equicontinuity API, but it should not be used directly for other
 purposes. -/
 theorem equicontinuous_iff_continuous {F : ι → X → α} :
-    Equicontinuous F ↔ Continuous (of_fun ∘ Function.swap F : X → ι →ᵤ α) := by
+    Equicontinuous F ↔ Continuous (ofFun ∘ Function.swap F : X → ι →ᵤ α) := by
   simp_rw [Equicontinuous, continuous_iff_continuousAt, equicontinuousAt_iff_continuousAt]
 #align equicontinuous_iff_continuous equicontinuous_iff_continuous
 
@@ -268,7 +268,7 @@ uniformly continuous *when `ι → α` is equipped with the uniform structure of
 This is very useful for developping the equicontinuity API, but it should not be used directly
 for other purposes. -/
 theorem uniformEquicontinuous_iff_uniformContinuous {F : ι → β → α} :
-    UniformEquicontinuous F ↔ UniformContinuous (of_fun ∘ Function.swap F : β → ι →ᵤ α) := by
+    UniformEquicontinuous F ↔ UniformContinuous (ofFun ∘ Function.swap F : β → ι →ᵤ α) := by
   rw [UniformContinuous, (UniformFun.hasBasis_uniformity ι α).tendsto_right_iff] <;> rfl
 #align uniform_equicontinuous_iff_uniform_continuous uniformEquicontinuous_iff_uniformContinuous
 
@@ -419,7 +419,7 @@ theorem Equicontinuous.closure {A : Set <| X → α} (hA : A.Equicontinuous) :
 family `𝓕` is equicontinuous, then the limit is continuous. -/
 theorem Filter.Tendsto.continuous_of_equicontinuous_at {l : Filter ι} [l.ne_bot] {F : ι → X → α}
     {f : X → α} (h₁ : Tendsto F l (𝓝 f)) (h₂ : Equicontinuous F) : Continuous f :=
-  continuous_iff_continuousAt.mpr fun x => h₁.continuous_at_of_equicontinuous_at (h₂ x)
+  continuous_iff_continuousAt.mpr fun x => h₁.continuousAt_of_equicontinuousAt (h₂ x)
 #align filter.tendsto.continuous_of_equicontinuous_at Filter.Tendsto.continuous_of_equicontinuous_at
 
 /-- A version of `uniform_equicontinuous.closure` applicable to subsets of types which embed

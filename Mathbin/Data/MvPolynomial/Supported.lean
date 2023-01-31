@@ -40,7 +40,7 @@ variable (R)
 
 /-- The set of polynomials whose variables are contained in `s` as a `subalgebra` over `R`. -/
 noncomputable def supported (s : Set σ) : Subalgebra R (MvPolynomial σ R) :=
-  Algebra.adjoin R (X '' s)
+  Algebra.adjoin R (x '' s)
 #align mv_polynomial.supported MvPolynomial.supported
 
 variable {σ R}
@@ -97,7 +97,7 @@ theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R (↑p.var
 
 variable (s)
 
-theorem supported_eq_adjoin_x : supported R s = Algebra.adjoin R (X '' s) :=
+theorem supported_eq_adjoin_x : supported R s = Algebra.adjoin R (x '' s) :=
   rfl
 #align mv_polynomial.supported_eq_adjoin_X MvPolynomial.supported_eq_adjoin_x
 

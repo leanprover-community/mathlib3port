@@ -219,15 +219,14 @@ theorem ofModuleMonoidAlgebra_obj_ρ (M : ModuleCat.{u} (MonoidAlgebra k G)) :
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIsoAddEquiv {M : ModuleCat.{u} (MonoidAlgebra k G)} :
-    (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≃+ M :=
+    (ofModuleMonoidAlgebra ⋙ toModuleMonoidAlgebra).obj M ≃+ M :=
   by
   dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' (Representation.ofModule k G ↥M).asModuleEquiv.trans (RestrictScalars.addEquiv _ _ _)
 #align Rep.counit_iso_add_equiv Rep.counitIsoAddEquiv
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
-def unitIsoAddEquiv {V : Rep k G} :
-    V ≃+ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V :=
+def unitIsoAddEquiv {V : Rep k G} : V ≃+ (toModuleMonoidAlgebra ⋙ ofModuleMonoidAlgebra).obj V :=
   by
   dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
   refine' V.ρ.as_module_equiv.symm.trans _
@@ -236,7 +235,7 @@ def unitIsoAddEquiv {V : Rep k G} :
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
-    (of_Module_monoid_algebra ⋙ to_Module_monoid_algebra).obj M ≅ M :=
+    (ofModuleMonoidAlgebra ⋙ toModuleMonoidAlgebra).obj M ≅ M :=
   LinearEquiv.toModuleIso'
     { counitIsoAddEquiv with
       map_smul' := fun r x => by
@@ -254,7 +253,7 @@ theorem unit_iso_comm (V : Rep k G) (g : G) (x : V) :
 #align Rep.unit_iso_comm Rep.unit_iso_comm
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
-def unitIso (V : Rep k G) : V ≅ (to_Module_monoid_algebra ⋙ of_Module_monoid_algebra).obj V :=
+def unitIso (V : Rep k G) : V ≅ (toModuleMonoidAlgebra ⋙ ofModuleMonoidAlgebra).obj V :=
   Action.mkIso
     (LinearEquiv.toModuleIso'
       { unitIsoAddEquiv with

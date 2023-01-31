@@ -712,7 +712,7 @@ theorem Ideal.dvdNotUnit_iff_lt {I J : Ideal A} : DvdNotUnit I J ↔ J < I :=
 #align ideal.dvd_not_unit_iff_lt Ideal.dvdNotUnit_iff_lt
 
 instance : WfDvdMonoid (Ideal A)
-    where well_founded_dvd_not_unit :=
+    where wellFounded_dvdNotUnit :=
     by
     have : WellFounded ((· > ·) : Ideal A → Ideal A → Prop) :=
       isNoetherian_iff_wellFounded.mp (isNoetherianRing_iff.mp IsDedekindDomain.isNoetherianRing)
@@ -792,7 +792,7 @@ theorem Ideal.pow_lt_self (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) (e :
 
 theorem Ideal.exists_mem_pow_not_mem_pow_succ (I : Ideal A) (hI0 : I ≠ ⊥) (hI1 : I ≠ ⊤) (e : ℕ) :
     ∃ x ∈ I ^ e, x ∉ I ^ (e + 1) :=
-  SetLike.exists_of_lt (I.strict_anti_pow hI0 hI1 e.lt_succ_self)
+  SetLike.exists_of_lt (I.strictAnti_pow hI0 hI1 e.lt_succ_self)
 #align ideal.exists_mem_pow_not_mem_pow_succ Ideal.exists_mem_pow_not_mem_pow_succ
 
 open UniqueFactorizationMonoid
@@ -1070,7 +1070,7 @@ theorem irreducible : Irreducible v.asIdeal :=
   UniqueFactorizationMonoid.irreducible_iff_prime.mpr v.Prime
 #align is_dedekind_domain.height_one_spectrum.irreducible IsDedekindDomain.HeightOneSpectrum.irreducible
 
-theorem associates_irreducible : _root_.irreducible <| Associates.mk v.asIdeal :=
+theorem associates_irreducible : Irreducible <| Associates.mk v.asIdeal :=
   (Associates.irreducible_mk _).mpr v.Irreducible
 #align is_dedekind_domain.height_one_spectrum.associates_irreducible IsDedekindDomain.HeightOneSpectrum.associates_irreducible
 
@@ -1090,7 +1090,7 @@ variable (R K)
 non-zero prime ideals viewed as subalgebras of its field of fractions. -/
 theorem infᵢ_localization_eq_bot [Algebra R K] [hK : IsFractionRing R K] :
     (⨅ v : HeightOneSpectrum R,
-        Localization.subalgebra.ofField K _ v.asIdeal.prime_compl_le_non_zero_divisors) =
+        Localization.subalgebra.ofField K _ v.asIdeal.primeCompl_le_nonZeroDivisors) =
       ⊥ :=
   by
   ext x

@@ -166,19 +166,19 @@ theorem comp_left (h : Commute f g) (h' : Commute f' g) : Commute (f ∘ f') g :
 
 #print Function.Commute.id_right /-
 theorem id_right : Commute f id :=
-  semiconj.id_right
+  Semiconj.id_right
 #align function.commute.id_right Function.Commute.id_right
 -/
 
 #print Function.Commute.id_left /-
 theorem id_left : Commute id f :=
-  semiconj.id_left
+  Semiconj.id_left
 #align function.commute.id_left Function.Commute.id_left
 -/
 
 #print Function.Commute.option_map /-
 theorem option_map {f g : α → α} : Commute f g → Commute (Option.map f) (Option.map g) :=
-  semiconj.option_map
+  Semiconj.option_map
 #align function.commute.option_map Function.Commute.option_map
 -/
 

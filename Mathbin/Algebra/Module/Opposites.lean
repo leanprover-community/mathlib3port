@@ -99,7 +99,7 @@ but is expected to have type
   forall (R : Type.{u1}) {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] [_inst_3 : Module.{u1, u2} R M _inst_1 _inst_2], Eq.{succ u2} (AddEquiv.{u2, u2} M (MulOpposite.{u2} M) (AddZeroClass.toAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (AddZeroClass.toAdd.{u2} (MulOpposite.{u2} M) (AddMonoid.toAddZeroClass.{u2} (MulOpposite.{u2} M) (AddCommMonoid.toAddMonoid.{u2} (MulOpposite.{u2} M) (MulOpposite.instAddCommMonoidMulOpposite.{u2} M _inst_2))))) (LinearEquiv.toAddEquiv.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (RingHomInvPair.ids.{u1} R _inst_1) (RingHomInvPair.ids.{u1} R _inst_1) M (MulOpposite.{u2} M) _inst_2 (MulOpposite.instAddCommMonoidMulOpposite.{u2} M _inst_2) _inst_3 (MulOpposite.module.{u1, u2} R M _inst_1 _inst_2 _inst_3) (MulOpposite.opLinearEquiv.{u1, u2} R M _inst_1 _inst_2 _inst_3)) (MulOpposite.opAddEquiv.{u2} M (AddZeroClass.toAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))))
 Case conversion may be inaccurate. Consider using '#align mul_opposite.op_linear_equiv_to_add_equiv MulOpposite.opLinearEquiv_toAddEquivₓ'. -/
 @[simp]
-theorem opLinearEquiv_toAddEquiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = op_add_equiv :=
+theorem opLinearEquiv_toAddEquiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = opAddEquiv :=
   rfl
 #align mul_opposite.op_linear_equiv_to_add_equiv MulOpposite.opLinearEquiv_toAddEquiv
 

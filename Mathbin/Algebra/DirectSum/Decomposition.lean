@@ -100,7 +100,7 @@ protected theorem Decomposition.inductionOn {p : M → Prop} (h_zero : p 0)
 #align direct_sum.decomposition.induction_on DirectSum.Decomposition.inductionOn
 
 @[simp]
-theorem Decomposition.decompose'_eq : decomposition.decompose' = decompose ℳ :=
+theorem Decomposition.decompose'_eq : Decomposition.decompose' = decompose ℳ :=
   rfl
 #align direct_sum.decomposition.decompose'_eq DirectSum.Decomposition.decompose'_eq
 

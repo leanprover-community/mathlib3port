@@ -138,7 +138,7 @@ theorem addMeasure {f : α → β} (hμ : AeMeasurable f μ) (hν : AeMeasurable
 @[measurability]
 protected theorem union [Countable ι] {s : ι → Set α} (h : ∀ i, AeMeasurable f (μ.restrict (s i))) :
     AeMeasurable f (μ.restrict (⋃ i, s i)) :=
-  (sumMeasure h).monoMeasure <| restrict_Union_le
+  (sumMeasure h).monoMeasure <| restrict_unionᵢ_le
 #align ae_measurable.Union AeMeasurable.union
 
 @[simp]
@@ -293,7 +293,7 @@ theorem MeasurableEmbedding.aeMeasurable_comp_iff {g : β → γ} (hg : Measurab
 
 theorem aeMeasurable_restrict_iff_comap_subtype {s : Set α} (hs : MeasurableSet s) {μ : Measure α}
     {f : α → β} : AeMeasurable f (μ.restrict s) ↔ AeMeasurable (f ∘ coe : s → β) (comap coe μ) := by
-  rw [← map_comap_subtype_coe hs, (MeasurableEmbedding.subtype_coe hs).ae_measurable_map_iff]
+  rw [← map_comap_subtype_coe hs, (MeasurableEmbedding.subtype_coe hs).aeMeasurable_map_iff]
 #align ae_measurable_restrict_iff_comap_subtype aeMeasurable_restrict_iff_comap_subtype
 
 @[simp, to_additive]
@@ -321,7 +321,7 @@ theorem aeMeasurableRestrictOfMeasurableSubtype {s : Set α} (hs : MeasurableSet
 
 theorem aeMeasurable_map_equiv_iff (e : α ≃ᵐ β) {f : β → γ} :
     AeMeasurable f (μ.map e) ↔ AeMeasurable (f ∘ e) μ :=
-  e.MeasurableEmbedding.ae_measurable_map_iff
+  e.MeasurableEmbedding.aeMeasurable_map_iff
 #align ae_measurable_map_equiv_iff aeMeasurable_map_equiv_iff
 
 end

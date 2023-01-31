@@ -82,7 +82,7 @@ but is expected to have type
   forall {M : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : SMul.{u1, u3} M α] [_inst_2 : SMul.{u1, u2} M β] (a : M) (x : Sum.{u3, u2} α β), Eq.{max (succ u3) (succ u2)} (Sum.{u2, u3} β α) (Sum.swap.{u3, u2} α β (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u3, u2} α β) (Sum.{u3, u2} α β) (instHSMul.{u1, max u3 u2} M (Sum.{u3, u2} α β) (Sum.instSMulSum.{u1, u3, u2} M α β _inst_1 _inst_2)) a x)) (HSMul.hSMul.{u1, max u3 u2, max u3 u2} M (Sum.{u2, u3} β α) (Sum.{u2, u3} β α) (instHSMul.{u1, max u3 u2} M (Sum.{u2, u3} β α) (Sum.instSMulSum.{u1, u2, u3} M β α _inst_2 _inst_1)) a (Sum.swap.{u3, u2} α β x))
 Case conversion may be inaccurate. Consider using '#align sum.smul_swap Sum.smul_swapₓ'. -/
 @[simp, to_additive]
-theorem smul_swap : (a • x).swap = a • x.swap := by cases x <;> rfl
+theorem smul_swap : (a • x).symm = a • x.symm := by cases x <;> rfl
 #align sum.smul_swap Sum.smul_swap
 #align sum.vadd_swap Sum.vadd_swap
 

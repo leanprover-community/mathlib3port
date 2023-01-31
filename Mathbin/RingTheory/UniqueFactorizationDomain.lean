@@ -40,10 +40,10 @@ condition on divisibility and to the ascending chain condition on
 principal ideals in an integral domain.
   -/
 class WfDvdMonoid (α : Type _) [CommMonoidWithZero α] : Prop where
-  well_founded_dvd_not_unit : WellFounded (@DvdNotUnit α _)
+  wellFounded_dvdNotUnit : WellFounded (@DvdNotUnit α _)
 #align wf_dvd_monoid WfDvdMonoid
 
-export WfDvdMonoid (well_founded_dvd_not_unit)
+export WfDvdMonoid (wellFounded_dvdNotUnit)
 
 -- see Note [lower instance priority]
 instance (priority := 100) IsNoetherianRing.wfDvdMonoid [CommRing α] [IsDomain α]
@@ -1508,7 +1508,7 @@ theorem factors_prod (a : Associates α) : a.factors.Prod = a :=
 #align associates.factors_prod Associates.factors_prod
 
 theorem prod_factors [Nontrivial α] (s : FactorSet α) : s.Prod.factors = s :=
-  factor_set.unique <| factors_prod _
+  FactorSet.unique <| factors_prod _
 #align associates.prod_factors Associates.prod_factors
 
 @[nontriviality]

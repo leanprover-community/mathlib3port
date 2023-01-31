@@ -223,7 +223,7 @@ theorem stereoInvFun_ne_north_pole (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) :
 #align stereo_inv_fun_ne_north_pole stereoInvFun_ne_north_pole
 
 theorem continuous_stereoInvFun (hv : ‖v‖ = 1) : Continuous (stereoInvFun hv) :=
-  continuous_induced_rng.2 (contDiff_stereoInvFunAux.Continuous.comp continuous_subtype_coe)
+  continuous_induced_rng.2 (contDiff_stereoInvFunAux.Continuous.comp continuous_subtype_val)
 #align continuous_stereo_inv_fun continuous_stereoInvFun
 
 variable [CompleteSpace E]
@@ -313,10 +313,10 @@ def stereographic (hv : ‖v‖ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ �
   right_inv' w _ := stereo_right_inv hv w
   open_source := isOpen_compl_singleton
   open_target := isOpen_univ
-  continuous_to_fun :=
-    continuousOn_stereoToFun.comp continuous_subtype_coe.ContinuousOn fun w h =>
+  continuous_toFun :=
+    continuousOn_stereoToFun.comp continuous_subtype_val.ContinuousOn fun w h =>
       h ∘ Subtype.ext ∘ Eq.symm ∘ (inner_eq_norm_mul_iff_of_norm_one hv (by simp)).mp
-  continuous_inv_fun := (continuous_stereoInvFun hv).ContinuousOn
+  continuous_invFun := (continuous_stereoInvFun hv).ContinuousOn
 #align stereographic stereographic
 
 theorem stereographic_apply (hv : ‖v‖ = 1) (x : sphere (0 : E) 1) :
@@ -460,7 +460,7 @@ theorem contMdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
   by
   rw [contMdiff_iff]
   constructor
-  · exact continuous_subtype_coe
+  · exact continuous_subtype_val
   · intro v _
     let U :=
       (-- Again, removing type ascription...
@@ -613,7 +613,7 @@ instance : LieGroup (𝓡 1) circle
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
 theorem contMdiff_expMapCircle : ContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
-  (contDiff_exp.comp (contDiff_id.smul contDiff_const)).ContMdiff.cod_restrict_sphere _
+  (contDiff_exp.comp (contDiff_id.smul contDiff_const)).ContMdiff.codRestrict_sphere _
 #align cont_mdiff_exp_map_circle contMdiff_expMapCircle
 
 end circle

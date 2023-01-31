@@ -1564,14 +1564,14 @@ theorem Orthonormal.equiv_apply {ι' : Type _} {v : Basis ι 𝕜 E} (hv : Ortho
 @[simp]
 theorem Orthonormal.equiv_refl {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) :
     hv.Equiv hv (Equiv.refl ι) = LinearIsometryEquiv.refl 𝕜 E :=
-  v.ext_linear_isometry_equiv fun i => by
+  v.ext_linearIsometryEquiv fun i => by
     simp only [Orthonormal.equiv_apply, Equiv.coe_refl, id.def, LinearIsometryEquiv.coe_refl]
 #align orthonormal.equiv_refl Orthonormal.equiv_refl
 
 @[simp]
 theorem Orthonormal.equiv_symm {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'}
     (hv' : Orthonormal 𝕜 v') (e : ι ≃ ι') : (hv.Equiv hv' e).symm = hv'.Equiv hv e.symm :=
-  v'.ext_linear_isometry_equiv fun i =>
+  v'.ext_linearIsometryEquiv fun i =>
     (hv.Equiv hv' e).Injective <| by
       simp only [LinearIsometryEquiv.apply_symm_apply, Orthonormal.equiv_apply, e.apply_symm_apply]
 #align orthonormal.equiv_symm Orthonormal.equiv_symm
@@ -1580,7 +1580,7 @@ theorem Orthonormal.equiv_symm {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {
 theorem Orthonormal.equiv_trans {v : Basis ι 𝕜 E} (hv : Orthonormal 𝕜 v) {v' : Basis ι' 𝕜 E'}
     (hv' : Orthonormal 𝕜 v') (e : ι ≃ ι') {v'' : Basis ι'' 𝕜 E''} (hv'' : Orthonormal 𝕜 v'')
     (e' : ι' ≃ ι'') : (hv.Equiv hv' e).trans (hv'.Equiv hv'' e') = hv.Equiv hv'' (e.trans e') :=
-  v.ext_linear_isometry_equiv fun i => by
+  v.ext_linearIsometryEquiv fun i => by
     simp only [LinearIsometryEquiv.trans_apply, Orthonormal.equiv_apply, e.coe_trans]
 #align orthonormal.equiv_trans Orthonormal.equiv_trans
 
@@ -2674,7 +2674,7 @@ theorem Submodule.isClosed_orthogonal : IsClosed (Kᗮ : Set E) :=
 
 /-- In a complete space, the orthogonal complement of any submodule `K` is complete. -/
 instance [CompleteSpace E] : CompleteSpace Kᗮ :=
-  K.is_closed_orthogonal.complete_space_coe
+  K.isClosed_orthogonal.completeSpace_coe
 
 variable (𝕜 E)
 
@@ -2718,12 +2718,12 @@ theorem Submodule.inf_orthogonal (K₁ K₂ : Submodule 𝕜 E) : K₁ᗮ ⊓ K�
 subspace orthogonal to the sup. -/
 theorem Submodule.infᵢ_orthogonal {ι : Type _} (K : ι → Submodule 𝕜 E) :
     (⨅ i, (K i)ᗮ) = (supᵢ K)ᗮ :=
-  (Submodule.orthogonal_gc 𝕜 E).l_supr.symm
+  (Submodule.orthogonal_gc 𝕜 E).l_supᵢ.symm
 #align submodule.infi_orthogonal Submodule.infᵢ_orthogonal
 
 /-- The inf of a set of orthogonal subspaces equals the subspace orthogonal to the sup. -/
 theorem Submodule.Inf_orthogonal (s : Set <| Submodule 𝕜 E) : (⨅ K ∈ s, Kᗮ) = (supₛ s)ᗮ :=
-  (Submodule.orthogonal_gc 𝕜 E).l_Sup.symm
+  (Submodule.orthogonal_gc 𝕜 E).l_supₛ.symm
 #align submodule.Inf_orthogonal Submodule.Inf_orthogonal
 
 @[simp]

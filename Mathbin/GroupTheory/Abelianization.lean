@@ -268,7 +268,7 @@ open Subgroup
 
 /-- Representatives `(g₁, g₂) : G × G` of commutator_set `⁅g₁, g₂⁆ ∈ G`. -/
 def commutatorRepresentatives : Set (G × G) :=
-  Set.range fun g : commutatorSet G => (g.2.some, g.2.some_spec.some)
+  Set.range fun g : commutatorSet G => (g.2.some, g.2.choose_spec.some)
 #align commutator_representatives commutatorRepresentatives
 
 instance [Finite (commutatorSet G)] : Finite (commutatorRepresentatives G) :=

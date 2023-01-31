@@ -42,7 +42,7 @@ instance bundledHom : BundledHom @NormedAddGroupHom :=
 deriving instance LargeCategory, ConcreteCategory for SemiNormedGroup
 
 instance : CoeSort SemiNormedGroup (Type u) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `SemiNormedGroup` from the underlying type and typeclass. -/
 def of (M : Type u) [SeminormedAddCommGroup M] : SemiNormedGroup :=
@@ -120,7 +120,7 @@ def SemiNormedGroup₁ : Type (u + 1) :=
 namespace SemiNormedGroup₁
 
 instance : CoeSort SemiNormedGroup₁ (Type u) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance : LargeCategory.{u} SemiNormedGroup₁
     where
@@ -212,7 +212,7 @@ instance ofUnique (V : Type u) [SeminormedAddCommGroup V] [i : Unique V] :
 
 instance : Limits.HasZeroMorphisms.{u, u + 1} SemiNormedGroup₁
     where
-  HasZero X Y := { zero := ⟨0, NormedAddGroupHom.NormNoninc.zero⟩ }
+  Zero X Y := { zero := ⟨0, NormedAddGroupHom.NormNoninc.zero⟩ }
   comp_zero' X Y f Z := by
     ext
     rfl

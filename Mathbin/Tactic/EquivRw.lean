@@ -320,7 +320,7 @@ The maximum search depth for rewriting in subexpressions is controlled by
 -/
 unsafe def equiv_rw (l : parse pexpr_list_or_texpr) (locat : parse location)
     (cfg : equiv_rw_cfg := { }) : itactic := do
-  let es ← l.mmap fun e => to_expr e
+  let es ← l.mapM fun e => to_expr e
   match locat with
     | loc.wildcard => do
       equiv_rw_target_aux cfg tt es

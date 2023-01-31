@@ -372,7 +372,7 @@ def isComplEquivProj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ x : p
   toFun q := ⟨linearProjOfIsCompl p q q.2, linearProjOfIsCompl_apply_left q.2⟩
   invFun f := ⟨(f : E →ₗ[R] p).ker, isCompl_of_proj f.2⟩
   left_inv := fun ⟨q, hq⟩ => by simp only [linear_proj_of_is_compl_ker, Subtype.coe_mk]
-  right_inv := fun ⟨f, hf⟩ => Subtype.eq <| f.linear_proj_of_is_compl_of_proj hf
+  right_inv := fun ⟨f, hf⟩ => Subtype.eq <| f.linearProjOfIsCompl_of_proj hf
 #align submodule.is_compl_equiv_proj Submodule.isComplEquivProj
 
 @[simp]
@@ -435,7 +435,7 @@ def codRestrict {f : M →ₗ[S] M} (h : IsProj m f) : M →ₗ[S] m :=
 
 @[simp]
 theorem codRestrict_apply {f : M →ₗ[S] M} (h : IsProj m f) (x : M) : ↑(h.codRestrict x) = f x :=
-  f.cod_restrict_apply m x
+  f.codRestrict_apply m x
 #align linear_map.is_proj.cod_restrict_apply LinearMap.IsProj.codRestrict_apply
 
 @[simp]
@@ -447,7 +447,7 @@ theorem codRestrict_apply_cod {f : M →ₗ[S] M} (h : IsProj m f) (x : m) : h.c
 #align linear_map.is_proj.cod_restrict_apply_cod LinearMap.IsProj.codRestrict_apply_cod
 
 theorem codRestrict_ker {f : M →ₗ[S] M} (h : IsProj m f) : h.codRestrict.ker = f.ker :=
-  f.ker_cod_restrict m _
+  f.ker_codRestrict m _
 #align linear_map.is_proj.cod_restrict_ker LinearMap.IsProj.codRestrict_ker
 
 theorem isCompl {f : E →ₗ[R] E} (h : IsProj p f) : IsCompl p f.ker :=

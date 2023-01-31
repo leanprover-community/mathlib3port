@@ -187,7 +187,7 @@ unsafe def check_unused_arguments (d : declaration) : Option (List ℕ) :=
   if l = [] then none
   else
     let l2 := check_unused_arguments_aux [] 1 d.type.pi_arity d.type
-    (l.filter fun n => n ∈ l2).reverse
+    (l.filterₓ fun n => n ∈ l2).reverse
 #align check_unused_arguments check_unused_arguments
 
 /-- Check for unused arguments, and print them with their position, variable name, type and whether
@@ -203,13 +203,13 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
     return none
   let ns := ns.iget
   let (ds, _) ← get_pi_binders d.type
-  let ns := ns.map fun n => (n, (ds.nth <| n - 1).iget)
-  let ns := ns.filter fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
+  let ns := ns.map fun n => (n, (ds.get? <| n - 1).iget)
+  let ns := ns.filterₓ fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
   let ff ← return ns.Empty |
     return none
-  let ds' ← ds.mmap pp
+  let ds' ← ds.mapM pp
   let ns ←
-    ns.mmap fun ⟨n, b⟩ =>
+    ns.mapM fun ⟨n, b⟩ =>
         (fun s =>
             to_fmt "argument " ++ to_fmt n ++ ": " ++ s ++
               if (ds.countp fun b' => b.type = b'.type) ≥ 2 then " (duplicate)" else "") <$>
@@ -355,7 +355,7 @@ unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Nam
     match e with
     | e@(sort u) => l.insert u.params.toList
     | e@(const nm us) =>
-      if nm.getPrefix = nm₀ ∧ nm.last.startsWith "_proof_" then l
+      if nm.getPrefix = nm₀ ∧ nm.getLast.startsWith "_proof_" then l
       else l.union <| rb_set.of_list <| us.map fun u : level => u.params.toList
     | _ => l
 #align expr.univ_params_grouped expr.univ_params_grouped
@@ -367,11 +367,11 @@ unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Nam
 unsafe def bad_params : rb_set (List Name) → List Name
   | l =>
     let good_levels : name_set :=
-      l.fold mk_name_set fun us prev => if us.length = 1 then prev.insert us.head else prev
+      l.fold mk_name_set fun us prev => if us.length = 1 then prev.insert us.headI else prev
     if good_levels.Empty then l.fold [] List.union
     else
       bad_params <|
-        rb_set.of_list <| l.toList.map fun us => us.filter fun nm => !good_levels.contains nm
+        rb_set.of_list <| l.toList.map fun us => us.filterₓ fun nm => !good_levels.contains nm
 #align bad_params bad_params
 
 /-- Checks whether all universe levels `u` in the type of `d` are "good".
@@ -484,7 +484,7 @@ unsafe def find_unused_have_suffices_macros : expr → tactic (List String)
           (· ++ ·)
           (if m = `suffices ∧ ¬bd then ["unnecessary suffices " ++ ppnm ++ " : " ++ vt] else []) <$>
         ((· ++ ·) <$> find_unused_have_suffices_macros l <*> find_unused_have_suffices_macros arg)
-  | macro md l => List.join <$> l.mmap find_unused_have_suffices_macros
+  | macro md l => List.join <$> l.mapM find_unused_have_suffices_macros
   | _ => return []
 #align find_unused_have_suffices_macros find_unused_have_suffices_macros
 
@@ -539,10 +539,10 @@ unsafe def unprintable_interactive (d : declaration) : tactic (Option String) :=
   match d.to_name with
   | Name.mk_string _ (Name.mk_string "interactive" (Name.mk_string _ Name.anonymous)) => do
     let (ds, _) ← mk_local_pis d.type
-    let ds ← ds.mfilter fun d => not <$> succeeds (interactive.param_desc d.local_type)
+    let ds ← ds.filterM fun d => not <$> succeeds (interactive.param_desc d.local_type)
     let ff ← return ds.Empty |
       return none
-    let ds ← ds.mmap (pp ∘ to_binder)
+    let ds ← ds.mapM (pp ∘ to_binder)
     return <| some <| ds tt
   | _ => return none
 #align unprintable_interactive unprintable_interactive
@@ -596,7 +596,7 @@ unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option String) := do
     | some (el, er) => do
       let li := li fun i => d - i - 1
       let-- fixing for the actual de-Bruijn indexes
-      l := (ln li).filter fun t => el t.2 && er t.2
+      l := (ln li).filterₓ fun t => el t.2 && er t.2
       if l = [] then return none
         else
           return <|

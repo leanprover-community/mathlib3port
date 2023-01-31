@@ -157,7 +157,7 @@ def Profinite.toCompHausEquivalence (X : CompHaus.{u}) (Y : Profinite.{u}) :
   toFun f := f.comp ⟨Quotient.mk'', continuous_quotient_mk'⟩
   invFun g :=
     { toFun := Continuous.connectedComponentsLift g.2
-      continuous_to_fun := Continuous.connectedComponentsLift_continuous g.2 }
+      continuous_toFun := Continuous.connectedComponentsLift_continuous g.2 }
   left_inv f := ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
   right_inv f := ContinuousMap.ext fun x => rfl
 #align Profinite.to_CompHaus_equivalence Profinite.toCompHausEquivalence
@@ -310,8 +310,8 @@ def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
   right_inv x := by
     change (f.inv ≫ f.hom) x = x
     rw [iso.inv_hom_id, coe_id, id.def]
-  continuous_to_fun := f.Hom.Continuous
-  continuous_inv_fun := f.inv.Continuous
+  continuous_toFun := f.Hom.Continuous
+  continuous_invFun := f.inv.Continuous
 #align Profinite.homeo_of_iso Profinite.homeoOfIso
 
 /-- The equivalence between isomorphisms in `Profinite` and homeomorphisms

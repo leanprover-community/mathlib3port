@@ -173,7 +173,7 @@ section Ext
 variable [Finite ι] [DecidableEq ι] [AddCommMonoid M] [Module R M] {f g : (∀ i, φ i) →ₗ[R] M}
 
 theorem pi_ext (h : ∀ i x, f (Pi.single i x) = g (Pi.single i x)) : f = g :=
-  to_add_monoid_hom_injective <| AddMonoidHom.functions_ext _ _ _ h
+  toAddMonoidHom_injective <| AddMonoidHom.functions_ext _ _ _ h
 #align linear_map.pi_ext LinearMap.pi_ext
 
 theorem pi_ext_iff : f = g ↔ ∀ i x, f (Pi.single i x) = g (Pi.single i x) :=
@@ -364,13 +364,13 @@ theorem piCongrRight_refl : (piCongrRight fun j => refl R (φ j)) = refl _ _ :=
 
 @[simp]
 theorem piCongrRight_symm (e : ∀ i, φ i ≃ₗ[R] ψ i) :
-    (piCongrRight e).symm = Pi_congr_right fun i => (e i).symm :=
+    (piCongrRight e).symm = piCongrRight fun i => (e i).symm :=
   rfl
 #align linear_equiv.Pi_congr_right_symm LinearEquiv.piCongrRight_symm
 
 @[simp]
 theorem piCongrRight_trans (e : ∀ i, φ i ≃ₗ[R] ψ i) (f : ∀ i, ψ i ≃ₗ[R] χ i) :
-    (piCongrRight e).trans (piCongrRight f) = Pi_congr_right fun i => (e i).trans (f i) :=
+    (piCongrRight e).trans (piCongrRight f) = piCongrRight fun i => (e i).trans (f i) :=
   rfl
 #align linear_equiv.Pi_congr_right_trans LinearEquiv.piCongrRight_trans
 
@@ -414,7 +414,7 @@ Otherwise, `S = ℕ` shows that the equivalence is additive.
 See note [bundled maps over different rings]. -/
 def piRing : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
   (LinearMap.lsum R (fun i : ι => R) S).symm.trans
-    (Pi_congr_right fun i => LinearMap.ringLmapEquivSelf R S M)
+    (piCongrRight fun i => LinearMap.ringLmapEquivSelf R S M)
 #align linear_equiv.pi_ring LinearEquiv.piRing
 
 variable {ι R M}

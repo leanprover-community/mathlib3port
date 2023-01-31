@@ -35,7 +35,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       ∀ a : ℝ,
         1 < a →
           ∃ c : ℕ → ℕ,
-            (∀ᶠ n in at_top, (c (n + 1) : ℝ) ≤ a * c n) ∧
+            (∀ᶠ n in atTop, (c (n + 1) : ℝ) ≤ a * c n) ∧
               Tendsto c atTop atTop ∧ Tendsto (fun n => u (c n) / c n) atTop (𝓝 l)) :
     Tendsto (fun n => u n / n) atTop (𝓝 l) :=
   by
@@ -276,7 +276,7 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
 /-- The sum of `1/(c^i)^2` above a threshold `j` is comparable to `1/j^2`, up to a multiplicative
 constant. -/
 theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc : 1 < c) :
-    (∑ i in (range N).filter fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 :=
+    (∑ i in (range N).filterₓ fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 :=
   by
   have cpos : 0 < c := zero_lt_one.trans hc
   have A : 0 < c⁻¹ ^ 2 := sq_pos_of_pos (inv_pos.2 cpos)
@@ -290,7 +290,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]
     simpa using pow_le_pow hc.le one_le_two
   calc
-    (∑ i in (range N).filter fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤
+    (∑ i in (range N).filterₓ fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤
         ∑ i in Ico ⌊Real.log j / Real.log c⌋₊ N, 1 / (c ^ i) ^ 2 :=
       by
       refine'
@@ -361,14 +361,14 @@ theorem mul_pow_le_nat_floor_pow {c : ℝ} (hc : 1 < c) (i : ℕ) : (1 - c⁻¹)
 /-- The sum of `1/⌊c^i⌋₊^2` above a threshold `j` is comparable to `1/j^2`, up to a multiplicative
 constant. -/
 theorem sum_div_nat_floor_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc : 1 < c) :
-    (∑ i in (range N).filter fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
+    (∑ i in (range N).filterₓ fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
       c ^ 5 * (c - 1)⁻¹ ^ 3 / j ^ 2 :=
   by
   have cpos : 0 < c := zero_lt_one.trans hc
   have A : 0 < 1 - c⁻¹ := sub_pos.2 (inv_lt_one hc)
   calc
-    (∑ i in (range N).filter fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
-        ∑ i in (range N).filter fun i => j < c ^ i, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2 :=
+    (∑ i in (range N).filterₓ fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
+        ∑ i in (range N).filterₓ fun i => j < c ^ i, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2 :=
       by
       apply sum_le_sum_of_subset_of_nonneg
       · intro i hi
@@ -377,7 +377,7 @@ theorem sum_div_nat_floor_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c :
           hi.2.trans_le (Nat.floor_le (pow_nonneg cpos.le _))
       · intro i hi hident
         exact div_nonneg zero_le_one (sq_nonneg _)
-    _ ≤ ∑ i in (range N).filter fun i => j < c ^ i, (1 - c⁻¹)⁻¹ ^ 2 * (1 / (c ^ i) ^ 2) :=
+    _ ≤ ∑ i in (range N).filterₓ fun i => j < c ^ i, (1 - c⁻¹)⁻¹ ^ 2 * (1 / (c ^ i) ^ 2) :=
       by
       apply sum_le_sum fun i hi => _
       rw [mul_div_assoc', mul_one, div_le_div_iff]; rotate_left

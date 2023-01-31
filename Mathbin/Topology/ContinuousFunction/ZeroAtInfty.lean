@@ -81,7 +81,7 @@ instance : ZeroAtInftyContinuousMapClass C₀(α, β) α β
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
   zero_at_infty f := f.zero_at_infty'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -92,7 +92,7 @@ instance : CoeFun C₀(α, β) fun _ => α → β :=
 instance : CoeTC F C₀(α, β) :=
   ⟨fun f =>
     { toFun := f
-      continuous_to_fun := map_continuous f
+      continuous_toFun := map_continuous f
       zero_at_infty' := zero_at_infty f }⟩
 
 @[simp]
@@ -110,7 +110,7 @@ to fix definitional equalities. -/
 protected def copy (f : C₀(α, β)) (f' : α → β) (h : f' = f) : C₀(α, β)
     where
   toFun := f'
-  continuous_to_fun := by
+  continuous_toFun := by
     rw [h]
     exact f.continuous_to_fun
   zero_at_infty' := by
@@ -138,7 +138,7 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β)
     where
   toFun f :=
     { toFun := f
-      continuous_to_fun := f.Continuous
+      continuous_toFun := f.Continuous
       zero_at_infty' := by simp }
   invFun f := f
   left_inv f := by
@@ -368,7 +368,7 @@ section Uniform
 variable [UniformSpace β] [UniformSpace γ] [Zero γ] [ZeroAtInftyContinuousMapClass F β γ]
 
 theorem uniformContinuous (f : F) : UniformContinuous (f : β → γ) :=
-  (map_continuous f).uniform_continuous_of_zero_at_infty (zero_at_infty f)
+  (map_continuous f).uniformContinuous_of_zero_at_infty (zero_at_infty f)
 #align zero_at_infty_continuous_map.uniform_continuous ZeroAtInftyContinuousMap.uniformContinuous
 
 end Uniform
@@ -546,9 +546,9 @@ counterparts on `α →ᵇ β`. Ultimately, when `β` is a C⋆-ring, then so is
 variable [TopologicalSpace β] [AddMonoid β] [StarAddMonoid β] [HasContinuousStar β]
 
 instance : Star C₀(α, β)
-    where star f :=
+    where unit f :=
     { toFun := fun x => star (f x)
-      continuous_to_fun := (map_continuous f).star
+      continuous_toFun := (map_continuous f).unit
       zero_at_infty' := by
         simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
 

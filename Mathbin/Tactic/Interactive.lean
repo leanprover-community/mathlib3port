@@ -44,7 +44,7 @@ unsafe def try_for (max : parse parser.pexpr) (tac : itactic) : tactic Unit := d
 /-- Multiple `subst`. `substs x y z` is the same as `subst x, subst y, subst z`. -/
 unsafe def substs (l : parse (parser.many ident)) : tactic Unit :=
   propagate_tags <|
-    (l.mmap' fun h => get_local h >>= tactic.subst) >> try (tactic.reflexivity reducible)
+    (l.mapM' fun h => get_local h >>= tactic.subst) >> try (tactic.reflexivity reducible)
 #align tactic.interactive.substs tactic.interactive.substs
 
 add_tactic_doc
@@ -196,7 +196,7 @@ of Coq. -/
 unsafe def replace (h : parse (parser.optional ident))
     (q₁ : parse (parser.optional (tk ":" *> texpr)))
     (q₂ : parse <| parser.optional (tk ":=" *> texpr)) : tactic Unit := do
-  let h := h.getOrElse `this
+  let h := h.getD `this
   let old ← try_core (get_local h)
   have h q₁ q₂
   match old, q₂ with
@@ -308,7 +308,7 @@ unsafe def source_fields (missing : List Name) (e : pexpr) : tactic (List (Name 
   let t ← infer_type e
   let struct_n : Name := t.get_app_fn.const_name
   let fields ← expanded_field_list struct_n
-  let exp_fields := fields.filter fun x => x.2 ∈ missing
+  let exp_fields := fields.filterₓ fun x => x.2 ∈ missing
   exp_fields fun ⟨p, n⟩ => (Prod.mk n ∘ to_pexpr) <$> mk_mapp (n p) [none, some e]
 #align tactic.interactive.source_fields tactic.interactive.source_fields
 
@@ -330,13 +330,13 @@ unsafe def refine_one (str : structure_instance_info) :
   let tgt ← target >>= whnf
   let struct_n : Name := tgt.get_app_fn.const_name
   let exp_fields ← expanded_field_list struct_n
-  let missing_f := exp_fields.filter fun f => (f.2 : Name) ∉ str.field_names
+  let missing_f := exp_fields.filterₓ fun f => (f.2 : Name) ∉ str.field_names
   let (src_field_names, src_field_vals) ←
-    (@List.unzip Name _ ∘ List.join) <$> str.sources.mmap (source_fields <| missing_f.map Prod.snd)
-  let provided := exp_fields.filter fun f => (f.2 : Name) ∈ str.field_names
-  let missing_f' := missing_f.filter fun x => x.2 ∉ src_field_names
+    (@List.unzip Name _ ∘ List.join) <$> str.sources.mapM (source_fields <| missing_f.map Prod.snd)
+  let provided := exp_fields.filterₓ fun f => (f.2 : Name) ∈ str.field_names
+  let missing_f' := missing_f.filterₓ fun x => x.2 ∉ src_field_names
   let vs ← mk_mvar_list missing_f'.length
-  let (field_values, new_goals) ← List.unzip <$> (str.field_values.mmap collect_struct : tactic _)
+  let (field_values, new_goals) ← List.unzip <$> (str.field_values.mapM collect_struct : tactic _)
   let e' ←
     to_expr <|
         pexpr.mk_structure_instance
@@ -362,7 +362,7 @@ unsafe def refine_recursively : expr × structure_instance_info → tactic (List
     set_goals [e]
     let rs ← refine_one str
     let gs ← get_goals
-    let gs' ← rs.mmap refine_recursively
+    let gs' ← rs.mapM refine_recursively
     return <| gs' ++ gs
 #align tactic.interactive.refine_recursively tactic.interactive.refine_recursively
 
@@ -405,7 +405,7 @@ unsafe def refine_struct : parse texpr → tactic Unit
     let (x, xs) ← collect_struct e
     refine x
     let gs ← get_goals
-    let xs' ← xs.mmap refine_recursively
+    let xs' ← xs.mapM refine_recursively
     set_goals (xs' ++ gs)
 #align tactic.interactive.refine_struct tactic.interactive.refine_struct
 
@@ -514,8 +514,8 @@ unsafe def get_current_field : tactic Name := do
 
 unsafe def field (n : parse ident) (tac : itactic) : tactic Unit := do
   let gs ← get_goals
-  let ts ← gs.mmap get_tag
-  let ([g], gs') ← pure <| (List.zip gs ts).partition fun x => x.snd.nth 1 = some n
+  let ts ← gs.mapM get_tag
+  let ([g], gs') ← pure <| (List.zip gs ts).partitionₓ fun x => x.snd.get? 1 = some n
   set_goals [g.1]
   tac
   done
@@ -663,8 +663,8 @@ unsafe def h_generalize (rev : parse (parser.optional (tk "!")))
   interactive.generalize h' () (to_pexpr e, n)
   let asm ← get_local h'
   let v ← get_local n
-  let hs ← es.mmap fun ⟨e, _⟩ => mk_app `eq [e, v]
-  (eqs_h [e]).mmap' fun ⟨h, e⟩ => do
+  let hs ← es.mapM fun ⟨e, _⟩ => mk_app `eq [e, v]
+  (eqs_h [e]).mapM' fun ⟨h, e⟩ => do
       let h ← if h ≠ `_ then pure h else get_unused_name `h
       () <$ note h none eq_h
   hs fun h => do
@@ -900,7 +900,7 @@ unsafe def set (h_simp : parse (parser.optional (tk "!"))) (a : parse ident)
     (rev_name : parse opt_dir_with) := do
   let tp ←
     i_to_expr <|
-        let t := tp.getOrElse pexpr.mk_placeholder
+        let t := tp.getD pexpr.mk_placeholder
         ``(($(t) : Sort _))
   let pv ← to_expr ``(($(pv) : $(tp)))
   let tp ← instantiate_mvars tp
@@ -924,7 +924,7 @@ add_tactic_doc
 /-- `clear_except h₀ h₁` deletes all the assumptions it can except for `h₀` and `h₁`.
 -/
 unsafe def clear_except (xs : parse (parser.many ident)) : tactic Unit := do
-  let n ← xs.mmap (try_core ∘ get_local) >>= revert_lst ∘ List.filterMap id
+  let n ← xs.mapM (try_core ∘ get_local) >>= revert_lst ∘ List.filterMap id
   let ls ← local_context
   ls <| try ∘ tactic.clear
   intron_no_renames n
@@ -956,7 +956,7 @@ private unsafe def format_binders : List Name × BinderInfo × expr → tactic f
   | (ns, BinderInfo.implicit, t) => indent_bindents "{" "}" ns t
   | (ns, BinderInfo.strict_implicit, t) => indent_bindents "⦃" "⦄" ns t
   | ([n], BinderInfo.inst_implicit, t) =>
-    if "_".isPrefixOf n.toString then indent_bindents "[" "]" none t
+    if "_".isPrefixOfₓ n.toString then indent_bindents "[" "]" none t
     else indent_bindents "[" "]" [n] t
   | (ns, BinderInfo.inst_implicit, t) => indent_bindents "[" "]" ns t
   | (ns, BinderInfo.aux_decl, t) => indent_bindents "(" ")" ns t
@@ -1141,7 +1141,7 @@ add_tactic_doc
 /-- `revert_deps n₁ n₂ ...` reverts all the hypotheses that depend on one of `n₁, n₂, ...`
 It does not revert `n₁, n₂, ...` themselves (unless they depend on another `nᵢ`). -/
 unsafe def revert_deps (ns : parse (parser.many ident)) : tactic Unit :=
-  propagate_tags <| (ns.mmap get_local >>= revert_reverse_dependencies_of_hyps) >> skip
+  propagate_tags <| (ns.mapM get_local >>= revert_reverse_dependencies_of_hyps) >> skip
 #align tactic.interactive.revert_deps tactic.interactive.revert_deps
 
 add_tactic_doc
@@ -1176,7 +1176,7 @@ add_tactic_doc
 /-- `clear_value n₁ n₂ ...` clears the bodies of the local definitions `n₁, n₂ ...`, changing them
 into regular hypotheses. A hypothesis `n : α := t` is changed to `n : α`. -/
 unsafe def clear_value (ns : parse (parser.many ident)) : tactic Unit :=
-  propagate_tags <| ns.reverse.mmap get_local >>= tactic.clear_value
+  propagate_tags <| ns.reverse.mapM get_local >>= tactic.clear_value
 #align tactic.interactive.clear_value tactic.interactive.clear_value
 
 add_tactic_doc

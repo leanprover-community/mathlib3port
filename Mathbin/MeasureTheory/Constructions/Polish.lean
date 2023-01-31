@@ -100,7 +100,7 @@ theorem IsOpen.analyticSet_image {β : Type _} [TopologicalSpace β] [PolishSpac
   by
   rw [image_eq_range]
   haveI : PolishSpace s := hs.polish_space
-  exact analytic_set_range_of_polish_space (f_cont.comp continuous_subtype_coe)
+  exact analytic_set_range_of_polish_space (f_cont.comp continuous_subtype_val)
 #align is_open.analytic_set_image IsOpen.analyticSet_image
 
 /-- A set is analytic if and only if it is the continuous image of some Polish space. -/
@@ -139,7 +139,7 @@ theorem AnalyticSet.image_of_continuousOn {β : Type _} [TopologicalSpace β] {s
 
 theorem AnalyticSet.image_of_continuous {β : Type _} [TopologicalSpace β] {s : Set α}
     (hs : AnalyticSet s) {f : α → β} (hf : Continuous f) : AnalyticSet (f '' s) :=
-  hs.image_of_continuous_on hf.ContinuousOn
+  hs.image_of_continuousOn hf.ContinuousOn
 #align measure_theory.analytic_set.image_of_continuous MeasureTheory.AnalyticSet.image_of_continuous
 
 /-- A countable intersection of analytic sets is analytic. -/
@@ -163,7 +163,7 @@ theorem AnalyticSet.interᵢ [hι : Nonempty ι] [Countable ι] [T2Space α] {s 
       isClosed_eq ((f_cont n).comp (continuous_apply n)) ((f_cont i₀).comp (continuous_apply i₀))
   haveI : PolishSpace t := t_closed.polish_space
   let F : t → α := fun x => f i₀ ((x : γ) i₀)
-  have F_cont : Continuous F := (f_cont i₀).comp ((continuous_apply i₀).comp continuous_subtype_coe)
+  have F_cont : Continuous F := (f_cont i₀).comp ((continuous_apply i₀).comp continuous_subtype_val)
   have F_range : range F = ⋂ n : ι, s n :=
     by
     apply subset.antisymm
@@ -216,7 +216,7 @@ theorem IsClosed.analyticSet [PolishSpace α] {s : Set α} (hs : IsClosed s) : A
   by
   haveI : PolishSpace s := hs.polish_space
   rw [← @Subtype.range_val α s]
-  exact analytic_set_range_of_polish_space continuous_subtype_coe
+  exact analytic_set_range_of_polish_space continuous_subtype_val
 #align is_closed.analytic_set IsClosed.analyticSet
 
 /-- Given a Borel-measurable set in a Polish space, there exists a finer Polish topology making
@@ -485,8 +485,8 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
     by
     intro p
     apply
-      analytic_set.measurably_separable ((hb.is_open p.1.1.2).analytic_set_image f_cont)
-        ((hb.is_open p.1.2.2).analytic_set_image f_cont)
+      analytic_set.measurably_separable ((hb.is_open p.1.1.2).analyticSet_image f_cont)
+        ((hb.is_open p.1.2.2).analyticSet_image f_cont)
     exact Disjoint.image p.2 (f_inj.inj_on univ) (subset_univ _) (subset_univ _)
   choose q hq1 hq2 q_meas using this
   -- define sets `E i` and `F n` as in the proof sketch above
@@ -504,7 +504,7 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
       intro b
       refine' is_closed_closure.measurable_set.inter _
       refine' MeasurableSet.interᵢ fun s => _
-      exact MeasurableSet.interᵢ fun hs => (q_meas _).diff (q_meas _)
+      exact MeasurableSet.interᵢ fun hs => (q_meas _).diffₓ (q_meas _)
     have F_meas : ∀ n, MeasurableSet (F n) := by
       intro n
       refine' MeasurableSet.unionᵢ fun s => _
@@ -671,8 +671,8 @@ theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injectiv
     MeasurableEmbedding f :=
   { Injective := f_inj
     Measurable := f_cont.Measurable
-    measurable_set_image' := fun u hu =>
-      hu.image_of_continuous_on_inj_on f_cont.ContinuousOn (f_inj.InjOn _) }
+    measurableSet_image' := fun u hu =>
+      hu.image_of_continuousOn_injOn f_cont.ContinuousOn (f_inj.InjOn _) }
 #align continuous.measurable_embedding Continuous.measurableEmbedding
 
 /-- If `s` is Borel-measurable in a Polish space and `f` is continuous injective on `s`, then
@@ -681,10 +681,10 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
     (f_inj : InjOn f s) : MeasurableEmbedding (s.restrict f) :=
   { Injective := injOn_iff_injective.1 f_inj
     Measurable := (continuousOn_iff_continuous_restrict.1 f_cont).Measurable
-    measurable_set_image' := by
+    measurableSet_image' := by
       intro u hu
       have A : MeasurableSet ((coe : s → γ) '' u) :=
-        (MeasurableEmbedding.subtype_coe hs).measurable_set_image.2 hu
+        (MeasurableEmbedding.subtype_coe hs).measurableSet_image.2 hu
       have B : MeasurableSet (f '' ((coe : s → γ) '' u)) :=
         A.image_of_continuous_on_inj_on (f_cont.mono (Subtype.coe_image_subset s u))
           (f_inj.mono (Subtype.coe_image_subset s u))
@@ -697,7 +697,7 @@ theorem Measurable.measurableEmbedding [SecondCountableTopology β] (f_meas : Me
     (f_inj : Injective f) : MeasurableEmbedding f :=
   { Injective := f_inj
     Measurable := f_meas
-    measurable_set_image' := fun u hu => hu.image_of_measurable_inj_on f_meas (f_inj.InjOn _) }
+    measurableSet_image' := fun u hu => hu.image_of_measurable_injOn f_meas (f_inj.InjOn _) }
 #align measurable.measurable_embedding Measurable.measurableEmbedding
 
 omit tβ
@@ -755,7 +755,7 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
         ((fun i => f i x) '' u n) ×ˢ ((fun i => f i x) '' u n) :=
     fun x => hu.map.prod hu.map
   simp_rw [and_iff_right (hl.map _),
-    Filter.HasBasis.le_basis_iff (this _).to_has_basis Metric.uniformity_basis_dist_inv_nat_succ,
+    Filter.HasBasis.le_basis_iff (this _).to_hasBasis Metric.uniformity_basis_dist_inv_nat_succ,
     Set.setOf_forall]
   refine' MeasurableSet.bInter Set.countable_univ fun K _ => _
   simp_rw [Set.setOf_exists]

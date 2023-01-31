@@ -110,7 +110,7 @@ theorem degreeLt_mono {m n : ℕ} (H : m ≤ n) : degreeLt R m ≤ degreeLt R n 
 #align polynomial.degree_lt_mono Polynomial.degreeLt_mono
 
 theorem degreeLt_eq_span_x_pow {n : ℕ} :
-    degreeLt R n = Submodule.span R ↑((Finset.range n).image fun n => X ^ n : Finset R[X]) :=
+    degreeLt R n = Submodule.span R ↑((Finset.range n).image fun n => x ^ n : Finset R[X]) :=
   by
   apply le_antisymm
   · intro p hp
@@ -207,8 +207,8 @@ theorem coeff_mem_frange (p : R[X]) (n : ℕ) (h : p.coeff n ≠ 0) : p.coeff n 
 #align polynomial.coeff_mem_frange Polynomial.coeff_mem_frange
 
 theorem geom_sum_x_comp_x_add_one_eq_sum (n : ℕ) :
-    (∑ i in range n, (x : R[X]) ^ i).comp (X + 1) =
-      (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * X ^ i :=
+    (∑ i in range n, (x : R[X]) ^ i).comp (x + 1) =
+      (Finset.range n).Sum fun i : ℕ => (n.choose (i + 1) : R[X]) * x ^ i :=
   by
   ext i
   trans (n.choose (i + 1) : R); swap
@@ -815,7 +815,7 @@ theorem eq_zero_of_polynomial_mem_map_range (I : Ideal R[X]) (x : ((Quotient.mk 
     by
     obtain ⟨f, hf⟩ :=
       mem_image_of_mem_map_of_surjective (Polynomial.mapRingHom i)
-        (Polynomial.map_surjective _ ((Quotient.mk' I).comp C).range_restrict_surjective) this
+        (Polynomial.map_surjective _ ((Quotient.mk' I).comp C).rangeRestrict_surjective) this
     refine' sub_add_cancel (C y) f ▸ I.add_mem (hi' _ : C y - f ∈ I) hf.1
     rw [RingHom.mem_ker, RingHom.map_sub, hf.2, sub_eq_zero, coe_map_ring_hom, map_C]
   exact hx
@@ -923,7 +923,7 @@ end Prime
 namespace Polynomial
 
 instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R] : WfDvdMonoid R[X]
-    where well_founded_dvd_not_unit := by
+    where wellFounded_dvdNotUnit := by
     classical
       refine'
         RelHomClass.wellFounded
@@ -931,7 +931,7 @@ instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R
               ((if p = 0 then ⊤ else ↑p.degree : WithTop (WithBot ℕ)), p.leadingCoeff), _⟩ :
             DvdNotUnit →r Prod.Lex (· < ·) DvdNotUnit)
           (Prod.lex_wf (WithTop.wellFounded_lt <| WithBot.wellFounded_lt Nat.lt_wfRel)
-            ‹WfDvdMonoid R›.well_founded_dvd_not_unit)
+            ‹WfDvdMonoid R›.wellFounded_dvdNotUnit)
       rintro a b ⟨ane0, ⟨c, ⟨not_unit_c, rfl⟩⟩⟩
       rw [Polynomial.degree_mul, if_neg ane0]
       split_ifs with hac
@@ -964,17 +964,17 @@ protected theorem Polynomial.isNoetherianRing [IsNoetherianRing R] : IsNoetheria
           (Set.range I.leadingCoeffNth) ⟨_, ⟨0, rfl⟩⟩
       have hm : M ∈ Set.range I.leadingCoeffNth := WellFounded.min_mem _ _ _
       let ⟨N, HN⟩ := hm
-      let ⟨s, hs⟩ := I.is_fg_degree_le N
+      let ⟨s, hs⟩ := I.is_fg_degreeLe N
       have hm2 : ∀ k, I.leadingCoeffNth k ≤ M := fun k =>
-        Or.cases_on (le_or_lt k N) (fun h => HN ▸ I.leading_coeff_nth_mono h) fun h x hx =>
+        Or.cases_on (le_or_lt k N) (fun h => HN ▸ I.leadingCoeffNth_mono h) fun h x hx =>
           by_contradiction fun hxm =>
             have : ¬M < I.leadingCoeffNth k := by
               refine' WellFounded.not_lt_min (wellFounded_submodule_gt _ _) _ _ _ <;> exact ⟨k, rfl⟩
-            this ⟨HN ▸ I.leading_coeff_nth_mono (le_of_lt h), fun H => hxm (H hx)⟩
+            this ⟨HN ▸ I.leadingCoeffNth_mono (le_of_lt h), fun H => hxm (H hx)⟩
       have hs2 : ∀ {x}, x ∈ I.degreeLe N → x ∈ Ideal.span (↑s : Set R[X]) :=
         hs ▸ fun x hx =>
           Submodule.span_induction hx (fun _ hx => Ideal.subset_span hx) (Ideal.zero_mem _)
-            (fun _ _ => Ideal.add_mem _) fun c f hf => f.C_mul' c ▸ Ideal.mul_mem_left _ _ hf
+            (fun _ _ => Ideal.add_mem _) fun c f hf => f.c_mul' c ▸ Ideal.mul_mem_left _ _ hf
       ⟨s,
         le_antisymm
             (Ideal.span_le.2 fun x hx =>
@@ -1060,7 +1060,7 @@ theorem exists_irreducible_of_natDegree_pos {R : Type u} [CommRing R] [IsDomain 
 
 theorem exists_irreducible_of_natDegree_ne_zero {R : Type u} [CommRing R] [IsDomain R]
     [WfDvdMonoid R] {f : R[X]} (hf : f.natDegree ≠ 0) : ∃ g, Irreducible g ∧ g ∣ f :=
-  exists_irreducible_of_nat_degree_pos <| Nat.pos_of_ne_zero hf
+  exists_irreducible_of_natDegree_pos <| Nat.pos_of_ne_zero hf
 #align polynomial.exists_irreducible_of_nat_degree_ne_zero Polynomial.exists_irreducible_of_natDegree_ne_zero
 
 theorem linearIndependent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :

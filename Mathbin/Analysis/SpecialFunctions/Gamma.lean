@@ -73,7 +73,7 @@ namespace Real
 
 /-- Asymptotic bound for the `Γ` function integrand. -/
 theorem Gamma_integrand_isOCat (s : ℝ) :
-    (fun x : ℝ => exp (-x) * x ^ s) =o[at_top] fun x : ℝ => exp (-(1 / 2) * x) :=
+    (fun x : ℝ => exp (-x) * x ^ s) =o[atTop] fun x : ℝ => exp (-(1 / 2) * x) :=
   by
   refine' is_o_of_tendsto (fun x hx => _) _
   · exfalso
@@ -87,7 +87,7 @@ theorem Gamma_integrand_isOCat (s : ℝ) :
     left
     ring
   rw [this]
-  exact (tendsto_exp_mul_div_rpow_atTop s (1 / 2) one_half_pos).inv_tendsto_at_top
+  exact (tendsto_exp_mul_div_rpow_atTop s (1 / 2) one_half_pos).inv_tendsto_atTop
 #align real.Gamma_integrand_is_o Real.Gamma_integrand_isOCat
 
 /-- The Euler integral for the `Γ` function converges for positive real `s`. -/
@@ -478,7 +478,7 @@ def dGammaIntegrandReal (s x : ℝ) : ℝ :=
 #align dGamma_integrand_real dGammaIntegrandReal
 
 theorem dGamma_integrand_isOCat_atTop (s : ℝ) :
-    (fun x : ℝ => exp (-x) * log x * x ^ (s - 1)) =o[at_top] fun x => exp (-(1 / 2) * x) :=
+    (fun x : ℝ => exp (-x) * log x * x ^ (s - 1)) =o[atTop] fun x => exp (-(1 / 2) * x) :=
   by
   refine' is_o_of_tendsto (fun x hx => _) _
   · exfalso
@@ -667,7 +667,7 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s + m ≠ 0) : Diffe
   by
   let n := ⌊1 - s.re⌋₊ + 1
   have hn : 1 - s.re < n := by exact_mod_cast Nat.lt_floor_add_one (1 - s.re)
-  apply (differentiable_at_Gamma_aux s n hn hs).congr_of_eventually_eq
+  apply (differentiable_at_Gamma_aux s n hn hs).congr_of_eventuallyEq
   let S := { t : ℂ | 1 - t.re < n }
   have : S ∈ 𝓝 s := by
     rw [mem_nhds_iff]
@@ -856,7 +856,7 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     congr 2 <;> exact set_integral_congr measurableSet_Ioi fun x hx => fpow (by assumption) _ hx
 #align real.Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma Real.gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma
 
-theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ Gamma) :=
+theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ gamma) :=
   by
   refine' convex_on_iff_forall_pos.mpr ⟨convex_Ioi _, fun x hx y hy a b ha hb hab => _⟩
   have : b = 1 - a := by linarith; subst this

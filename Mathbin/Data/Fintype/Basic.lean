@@ -354,7 +354,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] {s : Finset.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] {a : α}, Eq.{succ u1} (Finset.{u1} α) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s a)) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) a (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s))
 Case conversion may be inaccurate. Consider using '#align finset.compl_erase Finset.compl_eraseₓ'. -/
 @[simp]
-theorem compl_erase : s.erase aᶜ = insert a (sᶜ) :=
+theorem compl_erase : s.eraseₓ aᶜ = insert a (sᶜ) :=
   by
   ext
   simp only [or_iff_not_imp_left, mem_insert, not_and, mem_compl, mem_erase]
@@ -367,7 +367,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] {s : Finset.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] {a : α}, Eq.{succ u1} (Finset.{u1} α) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) a s)) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_2 a b) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) s) a)
 Case conversion may be inaccurate. Consider using '#align finset.compl_insert Finset.compl_insertₓ'. -/
 @[simp]
-theorem compl_insert : insert a sᶜ = sᶜ.erase a :=
+theorem compl_insert : insert a sᶜ = sᶜ.eraseₓ a :=
   by
   ext
   simp only [not_or, mem_insert, iff_self_iff, mem_compl, mem_erase]
@@ -392,7 +392,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.compl_filter Finset.compl_filterₓ'. -/
 @[simp]
 theorem compl_filter (p : α → Prop) [DecidablePred p] [∀ x, Decidable ¬p x] :
-    univ.filter pᶜ = univ.filter fun x => ¬p x :=
+    univ.filterₓ pᶜ = univ.filterₓ fun x => ¬p x :=
   (filter_not _ _).symm
 #align finset.compl_filter Finset.compl_filter
 
@@ -412,7 +412,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Fintype.{u1} α] [_inst_2 : DecidableEq.{succ u1} α] (a : α), Eq.{succ u1} (Finset.{u1} α) (HasCompl.compl.{u1} (Finset.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)) (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_2 a b) (Finset.univ.{u1} α _inst_1) a)
 Case conversion may be inaccurate. Consider using '#align finset.compl_singleton Finset.compl_singletonₓ'. -/
-theorem compl_singleton (a : α) : ({a} : Finset α)ᶜ = univ.erase a := by
+theorem compl_singleton (a : α) : ({a} : Finset α)ᶜ = univ.eraseₓ a := by
   rw [compl_eq_univ_sdiff, sdiff_singleton_eq_erase]
 #align finset.compl_singleton Finset.compl_singleton
 
@@ -493,7 +493,7 @@ theorem piecewise_compl [DecidableEq α] (s : Finset α) [∀ i : α, Decidable 
 #print Finset.piecewise_erase_univ /-
 @[simp]
 theorem piecewise_erase_univ {δ : α → Sort _} [DecidableEq α] (a : α) (f g : ∀ a, δ a) :
-    (Finset.univ.erase a).piecewise f g = Function.update f a (g a) := by
+    (Finset.univ.eraseₓ a).piecewise f g = Function.update f a (g a) := by
   rw [← compl_singleton, piecewise_compl, piecewise_singleton]
 #align finset.piecewise_erase_univ Finset.piecewise_erase_univ
 -/
@@ -512,7 +512,7 @@ theorem univ_map_equiv_to_embedding {α β : Type _} [Fintype α] [Fintype β] (
 #print Finset.univ_filter_exists /-
 @[simp]
 theorem univ_filter_exists (f : α → β) [Fintype β] [DecidablePred fun y => ∃ x, f x = y]
-    [DecidableEq β] : (Finset.univ.filter fun y => ∃ x, f x = y) = Finset.univ.image f :=
+    [DecidableEq β] : (Finset.univ.filterₓ fun y => ∃ x, f x = y) = Finset.univ.image f :=
   by
   ext
   simp
@@ -522,13 +522,13 @@ theorem univ_filter_exists (f : α → β) [Fintype β] [DecidablePred fun y => 
 #print Finset.univ_filter_mem_range /-
 /-- Note this is a special case of `(finset.image_preimage f univ _).symm`. -/
 theorem univ_filter_mem_range (f : α → β) [Fintype β] [DecidablePred fun y => y ∈ Set.range f]
-    [DecidableEq β] : (Finset.univ.filter fun y => y ∈ Set.range f) = Finset.univ.image f :=
+    [DecidableEq β] : (Finset.univ.filterₓ fun y => y ∈ Set.range f) = Finset.univ.image f :=
   univ_filter_exists f
 #align finset.univ_filter_mem_range Finset.univ_filter_mem_range
 -/
 
 #print Finset.coe_filter_univ /-
-theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filter p : Set α) = { x | p x } :=
+theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filterₓ p : Set α) = { x | p x } :=
   by rw [coe_filter, coe_univ, Set.sep_univ]
 #align finset.coe_filter_univ Finset.coe_filter_univ
 -/
@@ -820,7 +820,7 @@ def invOfMemRange : α :=
 #print Function.Embedding.left_inv_of_invOfMemRange /-
 @[simp]
 theorem left_inv_of_invOfMemRange : f (f.invOfMemRange b) = b :=
-  f.Injective.left_inv_of_inv_of_mem_range b
+  f.Injective.left_inv_of_invOfMemRange b
 #align function.embedding.left_inv_of_inv_of_mem_range Function.Embedding.left_inv_of_invOfMemRange
 -/
 
@@ -832,7 +832,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_invOfMemRangeₓ'. -/
 @[simp]
 theorem right_inv_of_invOfMemRange (a : α) : f.invOfMemRange ⟨f a, Set.mem_range_self a⟩ = a :=
-  f.Injective.right_inv_of_inv_of_mem_range a
+  f.Injective.right_inv_of_invOfMemRange a
 #align function.embedding.right_inv_of_inv_of_mem_range Function.Embedding.right_inv_of_invOfMemRange
 
 /- warning: function.embedding.inv_fun_restrict -> Function.Embedding.invFun_restrict is a dubious translation:
@@ -1167,7 +1167,7 @@ theorem toFinset_eq_univ [Fintype α] [Fintype s] : s.toFinset = Finset.univ ↔
 #print Set.to_finset_set_of /-
 @[simp]
 theorem to_finset_set_of [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype { x | p x }] :
-    { x | p x }.toFinset = Finset.univ.filter p :=
+    { x | p x }.toFinset = Finset.univ.filterₓ p :=
   by
   ext
   simp
@@ -1229,7 +1229,7 @@ theorem toFinset_insert [DecidableEq α] {a : α} {s : Set α} [Fintype ↥(inse
 
 #print Set.filter_mem_univ_eq_toFinset /-
 theorem filter_mem_univ_eq_toFinset [Fintype α] (s : Set α) [Fintype s] [DecidablePred (· ∈ s)] :
-    Finset.univ.filter (· ∈ s) = s.toFinset := by
+    Finset.univ.filterₓ (· ∈ s) = s.toFinset := by
   ext
   simp only [mem_filter, Finset.mem_univ, true_and_iff, mem_to_finset]
 #align set.filter_mem_univ_eq_to_finset Set.filter_mem_univ_eq_toFinset
@@ -1530,7 +1530,7 @@ theorem Fintype.univ_Prop : (Finset.univ : Finset Prop) = {True, False} :=
 
 #print Subtype.fintype /-
 instance Subtype.fintype (p : α → Prop) [DecidablePred p] [Fintype α] : Fintype { x // p x } :=
-  Fintype.subtype (univ.filter p) (by simp)
+  Fintype.subtype (univ.filterₓ p) (by simp)
 #align subtype.fintype Subtype.fintype
 -/
 

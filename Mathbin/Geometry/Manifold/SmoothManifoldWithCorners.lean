@@ -139,8 +139,8 @@ structure ModelWithCorners (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : T
   LocalEquiv H E where
   source_eq : source = univ
   unique_diff' : UniqueDiffOn 𝕜 to_local_equiv.target
-  continuous_to_fun : Continuous to_fun := by continuity
-  continuous_inv_fun : Continuous inv_fun := by continuity
+  continuous_toFun : Continuous to_fun := by continuity
+  continuous_invFun : Continuous inv_fun := by continuity
 #align model_with_corners ModelWithCorners
 
 attribute [simp, mfld_simps] ModelWithCorners.source_eq
@@ -152,8 +152,8 @@ def modelWithCornersSelf (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Typ
   toLocalEquiv := LocalEquiv.refl E
   source_eq := rfl
   unique_diff' := uniqueDiffOn_univ
-  continuous_to_fun := continuous_id
-  continuous_inv_fun := continuous_id
+  continuous_toFun := continuous_id
+  continuous_invFun := continuous_id
 #align model_with_corners_self modelWithCornersSelf
 
 -- mathport name: model_with_corners_self
@@ -191,8 +191,8 @@ def Simps.symmApply (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _) 
 #align model_with_corners.simps.symm_apply ModelWithCorners.Simps.symmApply
 
 initialize_simps_projections ModelWithCorners (to_local_equiv_to_fun → apply,
-  to_local_equiv_inv_fun → symm_apply, to_local_equiv_source → source, to_local_equiv_target →
-  target, -toLocalEquiv)
+  to_local_equiv_inv_fun → symm_apply, toLocalEquiv_source → source, toLocalEquiv_target → target,
+  -toLocalEquiv)
 
 -- Register a few lemmas to make sure that `simp` puts expressions in normal form
 @[simp, mfld_simps]
@@ -219,7 +219,7 @@ theorem mk_symm (e : LocalEquiv H E) (a b c d) :
 
 @[continuity]
 protected theorem continuous : Continuous I :=
-  I.continuous_to_fun
+  I.continuous_toFun
 #align model_with_corners.continuous ModelWithCorners.continuous
 
 protected theorem continuousAt {x} : ContinuousAt I x :=
@@ -232,7 +232,7 @@ protected theorem continuousWithinAt {s x} : ContinuousWithinAt I s x :=
 
 @[continuity]
 theorem continuous_symm : Continuous I.symm :=
-  I.continuous_inv_fun
+  I.continuous_invFun
 #align model_with_corners.continuous_symm ModelWithCorners.continuous_symm
 
 theorem continuousAt_symm {x} : ContinuousAt I.symm x :=
@@ -279,7 +279,7 @@ theorem symm_comp_self : I.symm ∘ I = id :=
 #align model_with_corners.symm_comp_self ModelWithCorners.symm_comp_self
 
 protected theorem rightInvOn : RightInvOn I.symm I (range I) :=
-  I.LeftInverse.right_inv_on_range
+  I.LeftInverse.rightInvOn_range
 #align model_with_corners.right_inv_on ModelWithCorners.rightInvOn
 
 @[simp, mfld_simps]
@@ -312,7 +312,7 @@ theorem map_nhds_eq (x : H) : map I (𝓝 x) = 𝓝[range I] I x :=
 #align model_with_corners.map_nhds_eq ModelWithCorners.map_nhds_eq
 
 theorem map_nhdsWithin_eq (s : Set H) (x : H) : map I (𝓝[s] x) = 𝓝[I '' s] I x :=
-  I.ClosedEmbedding.toEmbedding.map_nhds_within_eq s x
+  I.ClosedEmbedding.toEmbedding.map_nhdsWithin_eq s x
 #align model_with_corners.map_nhds_within_eq ModelWithCorners.map_nhdsWithin_eq
 
 theorem image_mem_nhdsWithin {x : H} {s : Set H} (hs : s ∈ 𝓝 x) : I '' s ∈ 𝓝[range I] I x :=
@@ -425,8 +425,8 @@ def ModelWithCorners.prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Ty
     source := { x | x.1 ∈ I.source ∧ x.2 ∈ I'.source }
     source_eq := by simp only [set_of_true, mfld_simps]
     unique_diff' := I.unique_diff'.Prod I'.unique_diff'
-    continuous_to_fun := I.continuous_to_fun.prod_map I'.continuous_to_fun
-    continuous_inv_fun := I.continuous_inv_fun.prod_map I'.continuous_inv_fun }
+    continuous_toFun := I.continuous_toFun.Prod_map I'.continuous_toFun
+    continuous_invFun := I.continuous_invFun.Prod_map I'.continuous_invFun }
 #align model_with_corners.prod ModelWithCorners.prod
 
 /-- Given a finite family of `model_with_corners` `I i` on `(E i, H i)`, we define the model with
@@ -440,8 +440,8 @@ def ModelWithCorners.pi {𝕜 : Type u} [NontriviallyNormedField 𝕜] {ι : Typ
   toLocalEquiv := LocalEquiv.pi fun i => (I i).toLocalEquiv
   source_eq := by simp only [Set.pi_univ, mfld_simps]
   unique_diff' := UniqueDiffOn.pi ι E _ _ fun i _ => (I i).unique_diff'
-  continuous_to_fun := continuous_pi fun i => (I i).Continuous.comp (continuous_apply i)
-  continuous_inv_fun := continuous_pi fun i => (I i).continuous_symm.comp (continuous_apply i)
+  continuous_toFun := continuous_pi fun i => (I i).Continuous.comp (continuous_apply i)
+  continuous_invFun := continuous_pi fun i => (I i).continuous_symm.comp (continuous_apply i)
 #align model_with_corners.pi ModelWithCorners.pi
 
 /-- Special case of product model with corners, which is trivial on the second factor. This shows up
@@ -771,7 +771,7 @@ theorem LocalHomeomorph.singleton_smoothManifoldWithCorners {𝕜 : Type _} [Non
     (h : e.source = Set.univ) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ (e.singletonChartedSpace h) :=
   @SmoothManifoldWithCorners.mk' _ _ _ _ _ _ _ _ _ _ (id _) <|
-    e.singleton_has_groupoid h (contDiffGroupoid ∞ I)
+    e.singleton_hasGroupoid h (contDiffGroupoid ∞ I)
 #align local_homeomorph.singleton_smooth_manifold_with_corners LocalHomeomorph.singleton_smoothManifoldWithCorners
 
 theorem OpenEmbedding.singleton_smoothManifoldWithCorners {𝕜 : Type _} [NontriviallyNormedField 𝕜]
@@ -779,7 +779,7 @@ theorem OpenEmbedding.singleton_smoothManifoldWithCorners {𝕜 : Type _} [Nontr
     (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [Nonempty M] {f : M → H}
     (h : OpenEmbedding f) :
     @SmoothManifoldWithCorners 𝕜 _ E _ _ H _ I M _ h.singletonChartedSpace :=
-  (h.toLocalHomeomorph f).singleton_smooth_manifold_with_corners I (by simp)
+  (h.toLocalHomeomorph f).singleton_smoothManifoldWithCorners I (by simp)
 #align open_embedding.singleton_smooth_manifold_with_corners OpenEmbedding.singleton_smoothManifoldWithCorners
 
 namespace TopologicalSpace.Opens
@@ -895,7 +895,7 @@ theorem nhdsWithin_extend_target_eq {y : M} (hy : y ∈ f.source) :
 
 theorem continuousAt_extend_symm' {x : E} (h : x ∈ (f.extend I).target) :
     ContinuousAt (f.extend I).symm x :=
-  ContinuousAt.comp (f.continuous_at_symm h.2) I.continuous_symm.ContinuousAt
+  ContinuousAt.comp (f.continuousAt_symm h.2) I.continuous_symm.ContinuousAt
 #align local_homeomorph.continuous_at_extend_symm' LocalHomeomorph.continuousAt_extend_symm'
 
 theorem continuousAt_extend_symm {x : M} (h : x ∈ f.source) :
@@ -932,7 +932,7 @@ theorem map_extend_nhdsWithin_eq_image {y : M} (hy : y ∈ f.source) :
       map e (𝓝[s] y) = map e (𝓝[e.source ∩ s] y) :=
         congr_arg (map e) (nhdsWithin_inter_of_mem (extend_source_mem_nhds_within f I hy)).symm
       _ = 𝓝[e '' (e.source ∩ s)] e y :=
-        ((f.extend I).LeftInvOn.mono <| inter_subset_left _ _).map_nhds_within_eq
+        ((f.extend I).LeftInvOn.mono <| inter_subset_left _ _).map_nhdsWithin_eq
           ((f.extend I).left_inv <| by rwa [f.extend_source])
           (continuous_at_extend_symm f I hy).ContinuousWithinAt
           (continuous_at_extend f I hy).ContinuousWithinAt
@@ -950,7 +950,7 @@ theorem map_extend_symm_nhdsWithin {y : M} (hy : y ∈ f.source) :
     map (f.extend I).symm (𝓝[(f.extend I).symm ⁻¹' s ∩ range I] f.extend I y) = 𝓝[s] y :=
   by
   rw [← map_extend_nhds_within f I hy, map_map, map_congr, map_id]
-  exact (f.extend I).LeftInvOn.EqOn.eventually_eq_of_mem (extend_source_mem_nhds_within _ _ hy)
+  exact (f.extend I).LeftInvOn.EqOn.eventuallyEq_of_mem (extend_source_mem_nhds_within _ _ hy)
 #align local_homeomorph.map_extend_symm_nhds_within LocalHomeomorph.map_extend_symm_nhdsWithin
 
 theorem map_extend_symm_nhdsWithin_range {y : M} (hy : y ∈ f.source) :

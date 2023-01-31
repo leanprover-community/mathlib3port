@@ -148,7 +148,7 @@ instance (T : Monad C) : Full (Monad.comparison T.adj)
     where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
 instance (T : Monad C) : EssSurj (Monad.comparison T.adj)
-    where mem_ess_image X :=
+    where mem_essImage X :=
     ⟨{  a := X.a
         a := X.a
         unit' := by simpa using X.unit
@@ -200,7 +200,7 @@ instance (G : Comonad C) : Full (Comonad.comparison G.adj)
     where preimage X Y f := ⟨f.f, by simpa using f.h⟩
 
 instance (G : Comonad C) : EssSurj (Comonad.comparison G.adj)
-    where mem_ess_image X :=
+    where mem_essImage X :=
     ⟨{  a := X.a
         a := X.a
         counit' := by simpa using X.counit

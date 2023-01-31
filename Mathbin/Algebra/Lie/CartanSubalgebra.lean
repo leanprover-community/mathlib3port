@@ -54,7 +54,7 @@ class IsCartanSubalgebra : Prop where
 #align lie_subalgebra.is_cartan_subalgebra LieSubalgebra.IsCartanSubalgebra
 
 instance [H.IsCartanSubalgebra] : LieAlgebra.IsNilpotent R H :=
-  is_cartan_subalgebra.nilpotent
+  IsCartanSubalgebra.nilpotent
 
 @[simp]
 theorem centralizer_eq_self_of_isCartanSubalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] :

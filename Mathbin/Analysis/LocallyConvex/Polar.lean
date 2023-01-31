@@ -89,7 +89,7 @@ theorem polar_gc :
 
 @[simp]
 theorem polar_unionᵢ {ι} {s : ι → Set E} : B.polar (⋃ i, s i) = ⋂ i, B.polar (s i) :=
-  B.polar_gc.l_supr
+  B.polar_gc.l_supᵢ
 #align linear_map.polar_Union LinearMap.polar_unionᵢ
 
 @[simp]

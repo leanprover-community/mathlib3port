@@ -494,7 +494,7 @@ def neTopEquivNnreal : { a | a ≠ ∞ } ≃ ℝ≥0
 #align ennreal.ne_top_equiv_nnreal Ennreal.neTopEquivNnreal
 
 theorem cinfi_ne_top [InfSet α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠ ∞ }, f x) = ⨅ x : ℝ≥0, f x :=
-  Eq.symm <| neTopEquivNnreal.symm.Surjective.infi_congr _ fun x => rfl
+  Eq.symm <| neTopEquivNnreal.symm.Surjective.infᵢ_congr _ fun x => rfl
 #align ennreal.cinfi_ne_top Ennreal.cinfi_ne_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
@@ -539,7 +539,7 @@ def ofNnrealHom : ℝ≥0 →+* ℝ≥0∞ :=
 #align ennreal.of_nnreal_hom Ennreal.ofNnrealHom
 
 @[simp]
-theorem coe_ofNnrealHom : ⇑of_nnreal_hom = coe :=
+theorem coe_ofNnrealHom : ⇑ofNnrealHom = coe :=
   rfl
 #align ennreal.coe_of_nnreal_hom Ennreal.coe_ofNnrealHom
 
@@ -1015,8 +1015,8 @@ theorem unionᵢ_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ :=
 
 @[simp]
 theorem unionᵢ_Iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
-  Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
-    Union_Iio_coe_nat ▸ unionᵢ_mono fun n => Iio_subset_Iic_self
+  Subset.antisymm (unionᵢ_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
+    unionᵢ_Iio_coe_nat ▸ unionᵢ_mono fun n => Iio_subset_Iic_self
 #align ennreal.Union_Iic_coe_nat Ennreal.unionᵢ_Iic_coe_nat
 
 @[simp]
@@ -2014,7 +2014,7 @@ def orderIsoIicCoe (a : ℝ≥0) : Iic (a : ℝ≥0∞) ≃o Iic a :=
   OrderIso.symm
     { toFun := fun x => ⟨x, coe_le_coe.2 x.2⟩
       invFun := fun x => ⟨Ennreal.toNnreal x, coe_le_coe.1 <| coe_toNnreal_le_self.trans x.2⟩
-      left_inv := fun x => Subtype.ext <| to_nnreal_coe
+      left_inv := fun x => Subtype.ext <| toNnreal_coe
       right_inv := fun x => Subtype.ext <| coe_toNnreal (ne_top_of_le_ne_top coe_ne_top x.2)
       map_rel_iff' := fun x y => by
         simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, coe_coe, coe_le_coe, Subtype.coe_le_coe] }
@@ -2277,11 +2277,11 @@ theorem toReal_min {a b : ℝ≥0∞} (hr : a ≠ ∞) (hp : b ≠ ∞) :
 #align ennreal.to_real_min Ennreal.toReal_min
 
 theorem toReal_sup {a b : ℝ≥0∞} : a ≠ ∞ → b ≠ ∞ → (a ⊔ b).toReal = a.toReal ⊔ b.toReal :=
-  to_real_max
+  toReal_max
 #align ennreal.to_real_sup Ennreal.toReal_sup
 
 theorem toReal_inf {a b : ℝ≥0∞} : a ≠ ∞ → b ≠ ∞ → (a ⊓ b).toReal = a.toReal ⊓ b.toReal :=
-  to_real_min
+  toReal_min
 #align ennreal.to_real_inf Ennreal.toReal_inf
 
 theorem toNnreal_pos_iff : 0 < a.toNnreal ↔ 0 < a ∧ a < ∞ := by
@@ -2531,7 +2531,7 @@ protected theorem dichotomy (p : ℝ≥0∞) [Fact (1 ≤ p)] : p = ∞ ∨ 1 �
 
 theorem toReal_pos_iff_ne_top (p : ℝ≥0∞) [Fact (1 ≤ p)] : 0 < p.toReal ↔ p ≠ ∞ :=
   ⟨fun h hp =>
-    let this : (0 : ℝ) ≠ 0 := top_to_real ▸ (hp ▸ h.Ne : 0 ≠ ∞.toReal)
+    let this : (0 : ℝ) ≠ 0 := top_toReal ▸ (hp ▸ h.Ne : 0 ≠ ∞.toReal)
     this rfl,
     fun h => zero_lt_one.trans_le (p.dichotomy.resolve_left h)⟩
 #align ennreal.to_real_pos_iff_ne_top Ennreal.toReal_pos_iff_ne_top
@@ -2662,7 +2662,7 @@ theorem infᵢ_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]
 See also `ennreal.infi_mul` that assumes `[nonempty ι]` but does not require `x ≠ 0`. -/
 theorem infᵢ_mul_of_ne {ι} {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h0 : x ≠ 0) (h : x ≠ ∞) :
     infᵢ f * x = ⨅ i, f i * x :=
-  le_antisymm mul_right_mono.map_infi_le
+  le_antisymm mul_right_mono.map_infᵢ_le
     ((Ennreal.div_le_iff_le_mul (Or.inl h0) <| Or.inl h).mp <|
       le_infᵢ fun i => (Ennreal.div_le_iff_le_mul (Or.inl h0) <| Or.inl h).mpr <| infᵢ_le _ _)
 #align ennreal.infi_mul_of_ne Ennreal.infᵢ_mul_of_ne
@@ -2734,7 +2734,7 @@ theorem image_coe_nnreal_ennreal (h : t.OrdConnected) : (coe '' t : Set ℝ≥0�
 #align set.ord_connected.image_coe_nnreal_ennreal Set.OrdConnected.image_coe_nnreal_ennreal
 
 theorem preimage_ennreal_ofReal (h : u.OrdConnected) : (Ennreal.ofReal ⁻¹' u).OrdConnected :=
-  h.preimage_coe_nnreal_ennreal.preimage_real_to_nnreal
+  h.preimage_coe_nnreal_ennreal.preimage_real_toNnreal
 #align set.ord_connected.preimage_ennreal_of_real Set.OrdConnected.preimage_ennreal_ofReal
 
 theorem image_ennreal_ofReal (h : s.OrdConnected) : (Ennreal.ofReal '' s).OrdConnected := by

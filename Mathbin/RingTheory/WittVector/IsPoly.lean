@@ -139,7 +139,7 @@ This is subtle and Lean's elaborator doesn't like it because of the HO unificati
 so it is easier (and prettier) to put it in a tactic script.
 -/
 unsafe def ghost_calc (ids' : parse ident_*) : tactic Unit := do
-  let ids ← ids'.mmap fun n => get_local n <|> tactic.intro n
+  let ids ← ids'.mapM fun n => get_local n <|> tactic.intro n
   let q(@Eq (WittVector _ $(R)) _ _) ← target
   match ids with
     | [x] => refine `(is_poly.ext _ _ _ _ $(x))

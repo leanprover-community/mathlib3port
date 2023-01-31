@@ -98,7 +98,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : (Set.{u2} α) -> (Filter.{u1} β)}, (Monotone.{u2, u1} (Set.{u2} α) (Filter.{u1} β) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β)) g) -> (forall {s : Set.{u1} β}, Iff (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s (Filter.lift.{u2, u1} α β f g)) (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) t f) (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s (g t)))))
 Case conversion may be inaccurate. Consider using '#align filter.mem_lift_sets Filter.mem_lift_setsₓ'. -/
 theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ t ∈ f, s ∈ g t :=
-  (f.basis_sets.mem_lift_iff (fun s => (g s).basis_sets) hg).trans <| by
+  (f.basis_sets.mem_lift_iffₓ (fun s => (g s).basis_sets) hg).trans <| by
     simp only [id, exists_mem_subset_iff]
 #align filter.mem_lift_sets Filter.mem_lift_sets
 
@@ -313,7 +313,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : (Set.{u2} α) -> (Filter.{u1} β)}, (Monotone.{u2, u1} (Set.{u2} α) (Filter.{u1} β) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β)) g) -> (Iff (Filter.NeBot.{u1} β (Filter.lift.{u2, u1} α β f g)) (forall (s : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s f) -> (Filter.NeBot.{u1} β (g s))))
 Case conversion may be inaccurate. Consider using '#align filter.lift_ne_bot_iff Filter.lift_neBot_iffₓ'. -/
-theorem lift_neBot_iff (hm : Monotone g) : (ne_bot <| f.lift g) ↔ ∀ s ∈ f, NeBot (g s) := by
+theorem lift_neBot_iff (hm : Monotone g) : (NeBot <| f.lift g) ↔ ∀ s ∈ f, NeBot (g s) := by
   simp only [ne_bot_iff, Ne.def, ← empty_mem_iff_bot, mem_lift_sets hm, not_exists]
 #align filter.lift_ne_bot_iff Filter.lift_neBot_iff
 
@@ -493,7 +493,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {h : (Set.{u2} α) -> (Set.{u1} β)}, (Monotone.{u2, u1} (Set.{u2} α) (Set.{u1} β) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) h) -> (Eq.{succ u1} (Set.{u1} β) (Set.interₛ.{u1} β (setOf.{u1} (Set.{u1} β) (fun (s : Set.{u1} β) => Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s (Filter.lift'.{u2, u1} α β f h)))) (Set.interᵢ.{u1, succ u2} β (Set.{u2} α) (fun (s : Set.{u2} α) => Set.interᵢ.{u1, 0} β (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s f) (fun (H : Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s f) => h s))))
 Case conversion may be inaccurate. Consider using '#align filter.sInter_lift'_sets Filter.interₛ_lift'_setsₓ'. -/
 theorem interₛ_lift'_sets (hh : Monotone h) : ⋂₀ { s | s ∈ f.lift' h } = ⋂ s ∈ f, h s :=
-  (interₛ_lift_sets (monotone_principal.comp hh)).trans <| Inter₂_congr fun s hs => cinfₛ_Ici
+  (interₛ_lift_sets (monotone_principal.comp hh)).trans <| interᵢ₂_congr fun s hs => cinfₛ_Ici
 #align filter.sInter_lift'_sets Filter.interₛ_lift'_sets
 
 /- warning: filter.lift'_le -> Filter.lift'_le is a dubious translation:
@@ -750,7 +750,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.lift'_infi Filter.lift'_infᵢₓ'. -/
 theorem lift'_infᵢ [Nonempty ι] {f : ι → Filter α} {g : Set α → Set β}
     (hg : ∀ s t, g (s ∩ t) = g s ∩ g t) : (infᵢ f).lift' g = ⨅ i, (f i).lift' g :=
-  lift_infi fun s t => by rw [inf_principal, (· ∘ ·), ← hg]
+  lift_infᵢ fun s t => by rw [inf_principal, (· ∘ ·), ← hg]
 #align filter.lift'_infi Filter.lift'_infᵢ
 
 /- warning: filter.lift'_infi_of_map_univ -> Filter.lift'_infᵢ_of_map_univ is a dubious translation:

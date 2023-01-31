@@ -85,7 +85,7 @@ theorem count_not_eq_count (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (b
 #print List.Chain'.count_false_eq_count_true /-
 theorem count_false_eq_count_true (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) :
     count false l = count true l :=
-  hl.count_bnot_eq_count h2 true
+  hl.count_not_eq_count h2 true
 #align list.chain'.count_ff_eq_count_tt List.Chain'.count_false_eq_count_true
 -/
 
@@ -105,14 +105,14 @@ theorem count_not_le_count_add_one (hl : Chain' (· ≠ ·) l) (b : Bool) :
 #print List.Chain'.count_false_le_count_true_add_one /-
 theorem count_false_le_count_true_add_one (hl : Chain' (· ≠ ·) l) :
     count false l ≤ count true l + 1 :=
-  hl.count_bnot_le_count_add_one true
+  hl.count_not_le_count_add_one true
 #align list.chain'.count_ff_le_count_tt_add_one List.Chain'.count_false_le_count_true_add_one
 -/
 
 #print List.Chain'.count_true_le_count_false_add_one /-
 theorem count_true_le_count_false_add_one (hl : Chain' (· ≠ ·) l) :
     count true l ≤ count false l + 1 :=
-  hl.count_bnot_le_count_add_one false
+  hl.count_not_le_count_add_one false
 #align list.chain'.count_tt_le_count_ff_add_one List.Chain'.count_true_le_count_false_add_one
 -/
 
@@ -126,7 +126,7 @@ theorem two_mul_count_bool_of_even (hl : Chain' (· ≠ ·) l) (h2 : Even (lengt
 #print List.Chain'.two_mul_count_bool_eq_ite /-
 theorem two_mul_count_bool_eq_ite (hl : Chain' (· ≠ ·) l) (b : Bool) :
     2 * count b l =
-      if Even (length l) then length l else if b ∈ l.head' then length l + 1 else length l - 1 :=
+      if Even (length l) then length l else if b ∈ l.head? then length l + 1 else length l - 1 :=
   by
   by_cases h2 : Even (length l)
   · rw [if_pos h2, hl.two_mul_count_bool_of_even h2]

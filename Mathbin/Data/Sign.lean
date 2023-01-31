@@ -62,7 +62,7 @@ theorem neg_eq_neg_one : neg = -1 :=
 
 #print SignType.pos_eq_one /-
 @[simp]
-theorem pos_eq_one : Pos = 1 :=
+theorem pos_eq_one : pos = 1 :=
   rfl
 #align sign_type.pos_eq_one SignType.pos_eq_one
 -/

@@ -130,7 +130,7 @@ theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective 
     ({ g ∈ univ | g ^ n = g₀ } : Finset G).card ≤ (nthRoots n (f g₀)).card :=
   by
   haveI : DecidableEq R := Classical.decEq _
-  refine' le_trans _ (nth_roots n (f g₀)).to_finset_card_le
+  refine' le_trans _ (nth_roots n (f g₀)).toFinset_card_le
   apply card_le_card_of_inj_on f
   · intro g hg
     rw [sep_def, mem_filter] at hg
@@ -198,7 +198,7 @@ variable [Fintype G]
 
 theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H}
     (hx : x ∈ Set.range f) (hy : y ∈ Set.range f) :
-    (univ.filter fun g => f g = x).card = (univ.filter fun g => f g = y).card :=
+    (univ.filterₓ fun g => f g = x).card = (univ.filterₓ fun g => f g = y).card :=
   by
   rcases hx with ⟨x, rfl⟩
   rcases hy with ⟨y, rfl⟩

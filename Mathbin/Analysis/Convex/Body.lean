@@ -130,7 +130,7 @@ theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (
 
 instance : DistribMulAction ℝ (ConvexBody V)
     where
-  toHasSmul := ConvexBody.hasSmul
+  toSMul := ConvexBody.hasSmul
   one_smul K := by
     ext
     simp only [coe_smul, one_smul]

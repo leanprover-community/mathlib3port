@@ -40,7 +40,7 @@ variable {R : Type _} [Semiring R] (p q : R[X])
 
 /-- mirror of a polynomial: reverses the coefficients while preserving `polynomial.nat_degree` -/
 noncomputable def mirror :=
-  p.reverse * X ^ p.natTrailingDegree
+  p.reverse * x ^ p.natTrailingDegree
 #align polynomial.mirror Polynomial.mirror
 
 @[simp]

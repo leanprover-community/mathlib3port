@@ -192,8 +192,8 @@ Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.w
 protected def WithTop.MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneClass R]
     [DecidableEq R] [Nontrivial R] [MulZeroOneClass S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S)
     (hf : Function.Injective f) : WithTop R →*₀ WithTop S :=
-  { f.toZeroHom.with_top_map,
-    f.toMonoidHom.toOneHom.with_top_map with
+  { f.toZeroHom.withTop_map,
+    f.toMonoidHom.toOneHom.withTop_map with
     toFun := WithTop.map f
     map_mul' := fun x y =>
       by
@@ -274,8 +274,7 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.with_top_map 
 protected def WithTop.RingHom.withTopMap {R S : Type _} [CanonicallyOrderedCommSemiring R]
     [DecidableEq R] [Nontrivial R] [CanonicallyOrderedCommSemiring S] [DecidableEq S] [Nontrivial S]
     (f : R →+* S) (hf : Function.Injective f) : WithTop R →+* WithTop S :=
-  { f.toMonoidWithZeroHom.with_top_map hf, f.toAddMonoidHom.with_top_map with
-    toFun := WithTop.map f }
+  { f.toMonoidWithZeroHom.withTop_map hf, f.toAddMonoidHom.withTop_map with toFun := WithTop.map f }
 #align ring_hom.with_top_map WithTop.RingHom.withTopMap
 
 end WithTop

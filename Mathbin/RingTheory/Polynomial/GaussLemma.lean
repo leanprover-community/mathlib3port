@@ -53,7 +53,7 @@ include hinj hf
 
 theorem IsPrimitive.isUnit_iff_isUnit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) :=
   by
-  refine' ⟨(map_ring_hom φ).is_unit_map, fun h => _⟩
+  refine' ⟨(map_ring_hom φ).isUnit_map, fun h => _⟩
   rcases is_unit_iff.1 h with ⟨_, ⟨u, rfl⟩, hu⟩
   have hdeg := degree_C u.ne_zero
   rw [hu, degree_map_eq_of_injective hinj] at hdeg
@@ -67,7 +67,7 @@ theorem IsPrimitive.irreducible_of_irreducible_map_of_injective (h_irr : Irreduc
   refine'
     ⟨fun h => h_irr.not_unit (IsUnit.map (map_ring_hom φ) h), fun a b h =>
       (h_irr.is_unit_or_is_unit <| by rw [h, Polynomial.map_mul]).imp _ _⟩
-  all_goals apply ((is_primitive_of_dvd hf _).is_unit_iff_is_unit_map_of_injective hinj).mpr
+  all_goals apply ((is_primitive_of_dvd hf _).isUnit_iff_isUnit_map_of_injective hinj).mpr
   exacts[Dvd.intro _ h.symm, Dvd.intro_left _ h.symm]
 #align polynomial.is_primitive.irreducible_of_irreducible_map_of_injective Polynomial.IsPrimitive.irreducible_of_irreducible_map_of_injective
 
@@ -79,7 +79,7 @@ variable {K : Type _} [Field K] [Algebra R K] [IsFractionRing R K]
 
 theorem IsPrimitive.isUnit_iff_isUnit_map {p : R[X]} (hp : p.IsPrimitive) :
     IsUnit p ↔ IsUnit (p.map (algebraMap R K)) :=
-  hp.is_unit_iff_is_unit_map_of_injective (IsFractionRing.injective _ _)
+  hp.isUnit_iff_isUnit_map_of_injective (IsFractionRing.injective _ _)
 #align polynomial.is_primitive.is_unit_iff_is_unit_map Polynomial.IsPrimitive.isUnit_iff_isUnit_map
 
 variable [IsDomain R]
@@ -176,7 +176,7 @@ theorem isUnit_or_eq_zero_of_isUnit_integerNormalization_primPart {p : K[X]} (h0
   obtain ⟨⟨c, c0⟩, hc⟩ := integer_normalization_map_to_map R⁰ p
   rw [Subtype.coe_mk, Algebra.smul_def, algebra_map_apply] at hc
   apply isUnit_of_mul_isUnit_right
-  rw [← hc, (integer_normalization R⁰ p).eq_C_content_mul_prim_part, ← hu, ← RingHom.map_mul,
+  rw [← hc, (integer_normalization R⁰ p).eq_c_content_mul_primPart, ← hu, ← RingHom.map_mul,
     is_unit_iff]
   refine'
     ⟨algebraMap R K ((integer_normalization R⁰ p).content * ↑u), isUnit_iff_ne_zero.2 fun con => _,
@@ -215,8 +215,8 @@ theorem IsPrimitive.irreducible_iff_irreducible_map_fraction_map {p : R[X]} (hp 
       normalize.map_mul, normalize_content, normalize_content, ←
       mul_one (normalize c * normalize d), ← hp.content_eq_one, ← content_C, ← content_C, ←
       content_mul, ← content_mul, ← content_mul, h1]
-  rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_C_content_mul_prim_part,
-    (integer_normalization R⁰ b).eq_C_content_mul_prim_part, mul_assoc, mul_comm _ (C _ * _), ←
+  rw [← RingHom.map_mul, eq_comm, (integer_normalization R⁰ a).eq_c_content_mul_primPart,
+    (integer_normalization R⁰ b).eq_c_content_mul_primPart, mul_assoc, mul_comm _ (C _ * _), ←
     mul_assoc, ← mul_assoc, ← RingHom.map_mul, ← hu, RingHom.map_mul, mul_assoc, mul_assoc, ←
     mul_assoc (C ↑u)] at h1
   have h0 : a ≠ 0 ∧ b ≠ 0 := by

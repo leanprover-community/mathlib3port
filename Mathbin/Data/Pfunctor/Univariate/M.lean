@@ -22,7 +22,7 @@ universe u v w
 
 open Nat Function
 
-open List hiding head'
+open List hiding head?
 
 variable (F : PFunctor.{u})
 
@@ -138,7 +138,7 @@ theorem P_corec (i : X) (n : ℕ) : Agree (sCorec f i n) (sCorec f i (succ n)) :
 
 /-- `path F` provides indices to access internal nodes in `corec F` -/
 def Path (F : PFunctor.{u}) :=
-  List F.Idx
+  List F.IdxCat
 #align pfunctor.approx.path PFunctor.Approx.Path
 
 instance Path.inhabited : Inhabited (Path F) :=
@@ -256,7 +256,7 @@ def children (x : M F) (i : F.B (head x)) : M F :=
 
 /-- select a subtree using a `i : F.Idx` or return an arbitrary tree if
 `i` designates no subtree of `x` -/
-def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
+def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.IdxCat) (x : M F) : M F :=
   if H' : i.1 = head x then children x (cast (congr_arg _ <| by simp only [head, H'] <;> rfl) i.2)
   else default
 #align pfunctor.M.ichildren PFunctor.M.ichildren
@@ -527,7 +527,7 @@ theorem children_mk {a} (x : F.B a → M F) (i : F.B (head (M.mk ⟨a, x⟩))) :
 #align pfunctor.M.children_mk PFunctor.M.children_mk
 
 @[simp]
-theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : F.Idx) :
+theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : F.IdxCat) :
     ichildren i (M.mk x) = x.iget i :=
   by
   dsimp only [ichildren, PFunctor.Obj.iget]
@@ -630,7 +630,7 @@ local infixl:50 " ~ " => R
 /-- Bisimulation is the standard proof technique for equality between
 infinite tree-like structures -/
 structure IsBisimulation : Prop where
-  head : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a'
+  headI : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a'
   tail : ∀ {a} {f f' : F.B a → M F}, M.mk ⟨a, f⟩ ~ M.mk ⟨a, f'⟩ → ∀ i : F.B a, f i ~ f' i
 #align pfunctor.M.is_bisimulation PFunctor.M.IsBisimulation
 

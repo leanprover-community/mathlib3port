@@ -189,14 +189,14 @@ open Classical
 If there is no finite basis on `M`, the result is `1` instead.
 -/
 protected irreducible_def det : (M →ₗ[A] M) →* A :=
-  if H : ∃ s : Finset M, Nonempty (Basis s A M) then LinearMap.detAux (Trunc.mk H.some_spec.some)
+  if H : ∃ s : Finset M, Nonempty (Basis s A M) then LinearMap.detAux (Trunc.mk H.choose_spec.some)
   else 1
 #align linear_map.det LinearMap.det
 
 theorem coe_det [DecidableEq M] :
     ⇑(LinearMap.det : (M →ₗ[A] M) →* A) =
       if H : ∃ s : Finset M, Nonempty (Basis s A M) then
-        LinearMap.detAux (Trunc.mk H.some_spec.some)
+        LinearMap.detAux (Trunc.mk H.choose_spec.some)
       else 1 :=
   by
   ext
@@ -697,6 +697,6 @@ theorem Basis.det_unitsSmul_self (w : ι → Rˣ) : e.det (e.units_smul w) = ∏
 @[simp]
 theorem Basis.det_isUnitSmul {w : ι → R} (hw : ∀ i, IsUnit (w i)) :
     e.det (e.isUnitSmul hw) = ∏ i, w i :=
-  e.det_units_smul_self _
+  e.det_unitsSmul_self _
 #align basis.det_is_unit_smul Basis.det_isUnitSmul
 

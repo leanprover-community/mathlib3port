@@ -53,7 +53,7 @@ alias Set.restrictPreimage_embedding ← Embedding.restrictPreimage
 theorem Set.restrictPreimage_openEmbedding (s : Set β) (h : OpenEmbedding f) :
     OpenEmbedding (s.restrictPreimage f) :=
   ⟨h.1.restrictPreimage s,
-    (s.range_restrict_preimage f).symm ▸ continuous_subtype_coe.is_open_preimage _ h.2⟩
+    (s.range_restrictPreimage f).symm ▸ continuous_subtype_val.isOpen_preimage _ h.2⟩
 #align set.restrict_preimage_open_embedding Set.restrictPreimage_openEmbedding
 
 alias Set.restrictPreimage_openEmbedding ← OpenEmbedding.restrictPreimage
@@ -62,7 +62,7 @@ alias Set.restrictPreimage_openEmbedding ← OpenEmbedding.restrictPreimage
 theorem Set.restrictPreimage_closedEmbedding (s : Set β) (h : ClosedEmbedding f) :
     ClosedEmbedding (s.restrictPreimage f) :=
   ⟨h.1.restrictPreimage s,
-    (s.range_restrict_preimage f).symm ▸ inducing_coe.is_closed_preimage _ h.2⟩
+    (s.range_restrictPreimage f).symm ▸ inducing_subtype_val.isClosed_preimage _ h.2⟩
 #align set.restrict_preimage_closed_embedding Set.restrictPreimage_closedEmbedding
 
 alias Set.restrictPreimage_closedEmbedding ← ClosedEmbedding.restrictPreimage
@@ -99,8 +99,8 @@ theorem isOpen_iff_inter_of_supᵢ_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsO
 theorem isOpen_iff_coe_preimage_of_supᵢ_eq_top (s : Set β) :
     IsOpen s ↔ ∀ i, IsOpen (coe ⁻¹' s : Set (U i)) :=
   by
-  simp_rw [(U _).2.open_embedding_subtype_coe.open_iff_image_open,
-    Set.image_preimage_eq_inter_range, Subtype.range_coe]
+  simp_rw [(U _).2.openEmbedding_subtype_val.open_iff_image_open, Set.image_preimage_eq_inter_range,
+    Subtype.range_coe]
   apply isOpen_iff_inter_of_supᵢ_eq_top
   assumption
 #align is_open_iff_coe_preimage_of_supr_eq_top isOpen_iff_coe_preimage_of_supᵢ_eq_top
@@ -138,7 +138,7 @@ theorem inducing_iff_inducing_of_supᵢ_eq_top (h : Continuous f) :
         (show f x ∈ supᵢ U by
           rw [hU]
           triv)
-    erw [← OpenEmbedding.map_nhds_eq (h.1 _ (U i).2).open_embedding_subtype_coe ⟨x, hi⟩]
+    erw [← OpenEmbedding.map_nhds_eq (h.1 _ (U i).2).openEmbedding_subtype_val ⟨x, hi⟩]
     rw [(H i) ⟨x, hi⟩, Filter.subtype_coe_map_comap, Function.comp_apply, Subtype.coe_mk,
       inf_eq_left, Filter.le_principal_iff]
     exact Filter.preimage_mem_comap ((U i).2.mem_nhds hi)

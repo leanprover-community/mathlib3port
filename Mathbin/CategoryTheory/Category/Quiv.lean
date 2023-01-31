@@ -78,7 +78,7 @@ def free : Quiv.{v, u} ⥤ Cat.{max u v, u}
   map V W F :=
     { obj := fun X => F.obj X
       map := fun X Y f => F.mapPath f
-      map_comp' := fun X Y Z f g => F.map_path_comp f g }
+      map_comp' := fun X Y Z f g => F.mapPath_comp f g }
   map_id' V := by
     change (show paths V ⥤ _ from _) = _
     ext
@@ -125,7 +125,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
             congr
             ext (X Y f)
             exact category.id_comp _ }
-      hom_equiv_naturality_left_symm' := fun V W C f g =>
+      homEquiv_naturality_left_symm' := fun V W C f g =>
         by
         change (show paths V ⥤ _ from _) = _
         ext

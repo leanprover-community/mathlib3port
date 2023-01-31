@@ -345,7 +345,7 @@ theorem integral_eq {m : MeasurableSpace α} (μ : Measure α) (f : α →ₛ F)
 
 theorem integral_eq_sum_filter [DecidablePred fun x : F => x ≠ 0] {m : MeasurableSpace α}
     (f : α →ₛ F) (μ : Measure α) :
-    f.integral μ = ∑ x in f.range.filter fun x => x ≠ 0, (μ (f ⁻¹' {x})).toReal • x :=
+    f.integral μ = ∑ x in f.range.filterₓ fun x => x ≠ 0, (μ (f ⁻¹' {x})).toReal • x :=
   by
   rw [integral_def, set_to_simple_func_eq_sum_filter]
   simp_rw [weighted_smul_apply]
@@ -354,7 +354,7 @@ theorem integral_eq_sum_filter [DecidablePred fun x : F => x ≠ 0] {m : Measura
 
 /-- The Bochner integral is equal to a sum over any set that includes `f.range` (except `0`). -/
 theorem integral_eq_sum_of_subset [DecidablePred fun x : F => x ≠ 0] {f : α →ₛ F} {s : Finset F}
-    (hs : (f.range.filter fun x => x ≠ 0) ⊆ s) :
+    (hs : (f.range.filterₓ fun x => x ≠ 0) ⊆ s) :
     f.integral μ = ∑ x in s, (μ (f ⁻¹' {x})).toReal • x :=
   by
   rw [simple_func.integral_eq_sum_filter, Finset.sum_subset hs]
@@ -669,7 +669,7 @@ theorem integral_eq_norm_posPart_sub (f : α →₁ₛ[μ] ℝ) : integral f = �
     filter_upwards [ae_eq₁, ae_eq₂]with _ h₁ h₂
     show _ = _ - _
     rw [← h₁, ← h₂]
-    have := (to_simple_func f).pos_part_sub_neg_part
+    have := (to_simple_func f).posPart_sub_negPart
     conv_lhs => rw [← this]
     rfl
   · exact (simple_func.integrable f).posPart.congr ae_eq₁
@@ -1644,7 +1644,7 @@ theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AeMeasura
       congr 1
       exact measure.map_congr hφ.ae_eq_mk
     _ = ∫ x, g (hφ.mk φ x) ∂μ :=
-      integral_map_of_stronglyMeasurable hφ.measurable_mk hfm.strongly_measurable_mk
+      integral_map_of_stronglyMeasurable hφ.measurable_mk hfm.stronglyMeasurable_mk
     _ = ∫ x, g (φ x) ∂μ := integral_congr_ae (hφ.ae_eq_mk.symm.fun_comp _)
     _ = ∫ x, f (φ x) ∂μ := integral_congr_ae <| ae_eq_comp hφ hfm.ae_eq_mk.symm
     

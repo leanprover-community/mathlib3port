@@ -169,7 +169,7 @@ theorem to_rightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Funct
 
 theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by
-  refine' ((uniformity_basis_edist.comap _).le_basis_iff uniformity_basis_edist).2 fun ε h₀ => _
+  refine' ((uniformity_basis_edist.comap _).le_basis_iffₓ uniformity_basis_edist).2 fun ε h₀ => _
   refine' ⟨K⁻¹ * ε, Ennreal.mul_pos (Ennreal.inv_ne_zero.2 Ennreal.coe_ne_top) h₀.ne', _⟩
   refine' fun x hx => (hf x.1 x.2).trans_lt _
   rw [mul_comm, ← div_eq_mul_inv] at hx
@@ -190,19 +190,19 @@ protected theorem uniformEmbedding {α : Type _} {β : Type _} [EmetricSpace α]
 
 theorem isComplete_range [CompleteSpace α] (hf : AntilipschitzWith K f)
     (hfc : UniformContinuous f) : IsComplete (range f) :=
-  (hf.UniformInducing hfc).is_complete_range
+  (hf.UniformInducing hfc).isComplete_range
 #align antilipschitz_with.is_complete_range AntilipschitzWith.isComplete_range
 
 theorem isClosed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
     {f : α → β} {K : ℝ≥0} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     IsClosed (range f) :=
-  (hf.is_complete_range hfc).IsClosed
+  (hf.isComplete_range hfc).IsClosed
 #align antilipschitz_with.is_closed_range AntilipschitzWith.isClosed_range
 
 theorem closedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
     {f : α → β} [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     ClosedEmbedding f :=
-  { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.is_closed_range hfc }
+  { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.isClosed_range hfc }
 #align antilipschitz_with.closed_embedding AntilipschitzWith.closedEmbedding
 
 theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
@@ -266,6 +266,6 @@ theorem LipschitzWith.to_rightInverse [PseudoEmetricSpace α] [PseudoEmetricSpac
 @[protected]
 theorem LipschitzWith.properSpace [PseudoMetricSpace α] [MetricSpace β] [ProperSpace β] {K : ℝ≥0}
     {f : α ≃ₜ β} (hK : LipschitzWith K f) : ProperSpace α :=
-  (hK.to_right_inverse f.right_inv).ProperSpace f.symm.Continuous f.symm.Surjective
+  (hK.to_rightInverse f.right_inv).ProperSpace f.symm.Continuous f.symm.Surjective
 #align lipschitz_with.proper_space LipschitzWith.properSpace
 

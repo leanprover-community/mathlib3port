@@ -160,8 +160,8 @@ def LinearEquiv.toContinuousLinearEquivOfBounds (e : E ≃ₛₗ[σ] F) (C_to C_
     (h_to : ∀ x, ‖e x‖ ≤ C_to * ‖x‖) (h_inv : ∀ x : F, ‖e.symm x‖ ≤ C_inv * ‖x‖) : E ≃SL[σ] F
     where
   toLinearEquiv := e
-  continuous_to_fun := AddMonoidHomClass.continuous_of_bound e C_to h_to
-  continuous_inv_fun := AddMonoidHomClass.continuous_of_bound e.symm C_inv h_inv
+  continuous_toFun := AddMonoidHomClass.continuous_of_bound e C_to h_to
+  continuous_invFun := AddMonoidHomClass.continuous_of_bound e.symm C_inv h_inv
 #align linear_equiv.to_continuous_linear_equiv_of_bounds LinearEquiv.toContinuousLinearEquivOfBounds
 
 end

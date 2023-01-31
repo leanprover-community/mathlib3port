@@ -206,7 +206,7 @@ theorem norm_eqOn_closedBall_of_isMaxOn {f : E → F} {z : E} {r : ℝ}
   have hball : maps_to e (ball 0 1) (ball z r) :=
     by
     refine'
-      ((lipschitzWith_lineMap z w).maps_to_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
+      ((lipschitzWith_lineMap z w).mapsTo_ball (mt nndist_eq_zero.1 hne) 0 1).mono subset.rfl _
     simpa only [line_map_apply_zero, mul_one, coe_nndist] using ball_subset_ball hw
   exact
     norm_max_aux₃ hr (hd.comp hde.diff_cont_on_cl hball)

@@ -88,21 +88,21 @@ variable (t : Set α)
 
 @[simp]
 theorem toOuterMeasure_uniformOfFinset_apply :
-    (uniformOfFinset s hs).toOuterMeasure t = (s.filter (· ∈ t)).card / s.card :=
+    (uniformOfFinset s hs).toOuterMeasure t = (s.filterₓ (· ∈ t)).card / s.card :=
   calc
     (uniformOfFinset s hs).toOuterMeasure t = ∑' x, if x ∈ t then uniformOfFinset s hs x else 0 :=
       toOuterMeasure_apply (uniformOfFinset s hs) t
     _ = ∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_congr fun x => by
         simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, Ennreal.coe_nat]
-    _ = ∑ x in s.filter (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
+    _ = ∑ x in s.filterₓ (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h)
-    _ = ∑ x in s.filter (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
+    _ = ∑ x in s.filterₓ (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
       Finset.sum_congr rfl fun x hx =>
         by
         let this : x ∈ s ∧ x ∈ t := by simpa using hx
         simp only [this, and_self_iff, if_true]
-    _ = (s.filter (· ∈ t)).card / s.card :=
+    _ = (s.filterₓ (· ∈ t)).card / s.card :=
       by
       have : (s.card : ℝ≥0∞) ≠ 0 :=
         Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
@@ -112,7 +112,7 @@ theorem toOuterMeasure_uniformOfFinset_apply :
 
 @[simp]
 theorem toMeasure_uniformOfFinset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
-    (uniformOfFinset s hs).toMeasure t = (s.filter (· ∈ t)).card / s.card :=
+    (uniformOfFinset s hs).toMeasure t = (s.filterₓ (· ∈ t)).card / s.card :=
   (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_uniformOfFinset_apply hs t)
 #align pmf.to_measure_uniform_of_finset_apply Pmf.toMeasure_uniformOfFinset_apply
 
@@ -167,7 +167,7 @@ section OfMultiset
   elements in `s` that are `a`. -/
 def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
   ⟨fun a => s.count a / s.card,
-    Ennreal.summable.has_sum_iff.2
+    Ennreal.summable.hasSum_iff.2
       (calc
         (∑' b : α, (s.count b : ℝ≥0∞) / s.card) = s.card⁻¹ * ∑' b, s.count b := by
           simp_rw [Ennreal.div_eq_inv_mul, Ennreal.tsum_mul_left]
@@ -209,7 +209,7 @@ variable (t : Set α)
 
 @[simp]
 theorem toOuterMeasure_ofMultiset_apply :
-    (ofMultiset s hs).toOuterMeasure t = (∑' x, (s.filter (· ∈ t)).count x) / s.card :=
+    (ofMultiset s hs).toOuterMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
   by
   rw [div_eq_mul_inv, ← Ennreal.tsum_mul_right, to_outer_measure_apply]
   refine' tsum_congr fun x => _
@@ -218,7 +218,7 @@ theorem toOuterMeasure_ofMultiset_apply :
 
 @[simp]
 theorem toMeasure_ofMultiset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
-    (ofMultiset s hs).toMeasure t = (∑' x, (s.filter (· ∈ t)).count x) / s.card :=
+    (ofMultiset s hs).toMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
   (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_ofMultiset_apply hs t)
 #align pmf.to_measure_of_multiset_apply Pmf.toMeasure_ofMultiset_apply
 

@@ -765,7 +765,7 @@ protected theorem continuous [TopologicalSpace Y] {f : X → Y} (hf : IsLocallyC
 
 theorem iff_continuous {_ : TopologicalSpace Y} [DiscreteTopology Y] (f : X → Y) :
     IsLocallyConstant f ↔ Continuous f :=
-  ⟨IsLocallyConstant.continuous, fun h s => h.is_open_preimage s (isOpen_discrete _)⟩
+  ⟨IsLocallyConstant.continuous, fun h s => h.isOpen_preimage s (isOpen_discrete _)⟩
 #align is_locally_constant.iff_continuous IsLocallyConstant.iff_continuous
 
 theorem of_constant (f : X → Y) (h : ∀ x y, f x = f y) : IsLocallyConstant f :=
@@ -814,12 +814,12 @@ theorem apply_eq_of_isPreconnected {f : X → Y} (hf : IsLocallyConstant f) {s :
 
 theorem apply_eq_of_preconnectedSpace [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f)
     (x y : X) : f x = f y :=
-  hf.apply_eq_of_is_preconnected isPreconnected_univ trivial trivial
+  hf.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial
 #align is_locally_constant.apply_eq_of_preconnected_space IsLocallyConstant.apply_eq_of_preconnectedSpace
 
 theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
     f = Function.const X (f x) :=
-  funext fun y => hf.apply_eq_of_preconnected_space y x
+  funext fun y => hf.apply_eq_of_preconnectedSpace y x
 #align is_locally_constant.eq_const IsLocallyConstant.eq_const
 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : IsLocallyConstant f) :
@@ -830,7 +830,7 @@ theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : I
 #align is_locally_constant.exists_eq_const IsLocallyConstant.exists_eq_const
 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
-  ⟨fun h x y => h.apply_eq_of_is_preconnected isPreconnected_univ trivial trivial, of_constant _⟩
+  ⟨fun h x y => h.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial, of_constant _⟩
 #align is_locally_constant.iff_is_const IsLocallyConstant.iff_is_const
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
@@ -1052,12 +1052,12 @@ theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.range f).
 
 theorem apply_eq_of_isPreconnected (f : LocallyConstant X Y) {s : Set X} (hs : IsPreconnected s)
     {x y : X} (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
-  f.IsLocallyConstant.apply_eq_of_is_preconnected hs hx hy
+  f.IsLocallyConstant.apply_eq_of_isPreconnected hs hx hy
 #align locally_constant.apply_eq_of_is_preconnected LocallyConstant.apply_eq_of_isPreconnected
 
 theorem apply_eq_of_preconnectedSpace [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) :
     f x = f y :=
-  f.IsLocallyConstant.apply_eq_of_is_preconnected isPreconnected_univ trivial trivial
+  f.IsLocallyConstant.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial
 #align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnectedSpace
 
 theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = const X (f x) :=

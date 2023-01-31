@@ -198,7 +198,7 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
     exact summable_of_ne_finset_zero this
   · exact hfq
   · apply memℓp_infty
-    obtain ⟨A, hA⟩ := (hfq.summable hq).tendsto_cofinite_zero.bdd_above_range_of_cofinite
+    obtain ⟨A, hA⟩ := (hfq.summable hq).tendsto_cofinite_zero.bddAbove_range_of_cofinite
     use A ^ q.to_real⁻¹
     rintro x ⟨i, rfl⟩
     have : 0 ≤ ‖f i‖ ^ q.to_real := Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
@@ -712,7 +712,7 @@ theorem Memℓp.star_iff {f : ∀ i, E i} : Memℓp (star f) p ↔ Memℓp f p :
   ⟨fun h => star_star f ▸ Memℓp.star_mem h, Memℓp.star_mem⟩
 #align mem_ℓp.star_iff Memℓp.star_iff
 
-instance : Star (lp E p) where star f := ⟨(star f : ∀ i, E i), f.property.star_mem⟩
+instance : Star (lp E p) where unit f := ⟨(star f : ∀ i, E i), f.property.star_mem⟩
 
 @[simp]
 theorem coeFn_star (f : lp E p) : ⇑(star f) = star f :=
@@ -934,7 +934,7 @@ instance Pi.algebraOfNormedAlgebra : Algebra 𝕜 (∀ i, B i) :=
 #align pi.algebra_of_normed_algebra Pi.algebraOfNormedAlgebra
 
 instance PreLp.algebra : Algebra 𝕜 (PreLp B) :=
-  _root_.pi.algebra_of_normed_algebra
+  Pi.algebraOfNormedAlgebra
 #align pre_lp.algebra PreLp.algebra
 
 variable [∀ i, NormOneClass (B i)]
@@ -952,7 +952,7 @@ with extra structure. -/
 def lpInftySubalgebra : Subalgebra 𝕜 (PreLp B) :=
   { lpInftySubring B with
     carrier := { f | Memℓp f ∞ }
-    algebra_map_mem' := algebraMap_memℓp_infty }
+    algebraMap_mem' := algebraMap_memℓp_infty }
 #align lp_infty_subalgebra lpInftySubalgebra
 
 variable {𝕜 B}

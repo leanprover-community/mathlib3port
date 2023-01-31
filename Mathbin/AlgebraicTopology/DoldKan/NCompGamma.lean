@@ -179,22 +179,22 @@ end Γ₂N₁
 
 /-- The compatibility isomorphism relating `N₂ ⋙ Γ₂` and `N₁ ⋙ Γ₂`. -/
 @[simps]
-def compatibilityΓ₂N₁Γ₂N₂ : toKaroubi (SimplicialObject C) ⋙ N₂ ⋙ Γ₂ ≅ N₁ ⋙ Γ₂ :=
-  eqToIso (Functor.congr_obj (functorExtension₁_comp_whiskeringLeft_toKaroubi _ _) (N₁ ⋙ Γ₂))
+def compatibilityΓ₂N₁Γ₂N₂ : toKaroubi (SimplicialObject C) ⋙ n₂ ⋙ Γ₂ ≅ n₁ ⋙ Γ₂ :=
+  eqToIso (Functor.congr_obj (functorExtension₁_comp_whiskeringLeft_toKaroubi _ _) (n₁ ⋙ Γ₂))
 #align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂ AlgebraicTopology.DoldKan.compatibilityΓ₂N₁Γ₂N₂
 
 namespace Γ₂N₂
 
 /-- The natural transformation `N₂ ⋙ Γ₂ ⟶ 𝟭 (simplicial_object C)`. -/
 def natTrans : (n₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ ⟶ 𝟭 _ :=
-  ((whiskeringLeft _ _ _).obj _).Preimage (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.nat_trans)
+  ((whiskeringLeft _ _ _).obj _).Preimage (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans)
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans AlgebraicTopology.DoldKan.Γ₂N₂.natTrans
 
 theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
     Γ₂N₂.natTrans.app P =
-      (N₂ ⋙ Γ₂).map P.decompIdI ≫
-        (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.nat_trans).app P.x ≫ P.decompIdP :=
-  whiskeringLeft_obj_preimage_app (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.nat_trans) P
+      (n₂ ⋙ Γ₂).map P.decompIdI ≫
+        (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.x ≫ P.decompIdP :=
+  whiskeringLeft_obj_preimage_app (compatibilityΓ₂N₁Γ₂N₂.Hom ≫ Γ₂N₁.natTrans) P
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app
 
 end Γ₂N₂
@@ -241,7 +241,7 @@ theorem identity_n₂_objectwise (P : Karoubi (SimplicialObject C)) :
 #align algebraic_topology.dold_kan.identity_N₂_objectwise AlgebraicTopology.DoldKan.identity_n₂_objectwise
 
 theorem identity_n₂ :
-    ((𝟙 (n₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ n₂Γ₂.inv) ≫ Γ₂N₂.nat_trans ◫ 𝟙 n₂ : N₂ ⟶ N₂) =
+    ((𝟙 (n₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ n₂Γ₂.inv) ≫ Γ₂N₂.natTrans ◫ 𝟙 n₂ : n₂ ⟶ n₂) =
       𝟙 n₂ :=
   by
   ext P : 2

@@ -554,10 +554,10 @@ instance : CommMonoid (A →*[n] β) where
     { toFun := fun x => f x ^ m
       map_prod_eq_map_prod' := fun s t hsA htA hs ht h => by
         rw [prod_map_pow, prod_map_pow, map_prod_eq_map_prod f hsA htA hs ht h] }
-  npow_zero' f := by
+  npow_zero f := by
     ext x
     exact pow_zero _
-  npow_succ' n f := by
+  npow_succ n f := by
     ext x
     exact pow_succ _ _
 

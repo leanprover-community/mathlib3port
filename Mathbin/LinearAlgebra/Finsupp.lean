@@ -1141,7 +1141,7 @@ theorem Span.finsupp_total_repr {w : Set M} (x : span R w) :
     Finsupp.total w M R coe (Span.repr R w x) = x :=
   by
   rw [Span.repr]
-  exact ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some_spec
+  exact ((Finsupp.mem_span_iff_total _ _ _).mp x.2).choose_spec
 #align span.finsupp_total_repr Span.finsupp_total_repr
 
 end
@@ -1228,7 +1228,7 @@ theorem splittingOfFinsuppSurjective_splits (f : M →ₗ[R] α →₀ R) (s : S
   dsimp [splitting_of_finsupp_surjective]
   congr
   rw [sum_single_index, one_smul]
-  · exact (s (Finsupp.single x 1)).some_spec
+  · exact (s (Finsupp.single x 1)).choose_spec
   · rw [zero_smul]
 #align linear_map.splitting_of_finsupp_surjective_splits LinearMap.splittingOfFinsuppSurjective_splits
 
@@ -1256,7 +1256,7 @@ theorem splittingOfFunOnFintypeSurjective_splits [Fintype α] (f : M →ₗ[R] �
   ext (x y)
   dsimp [splitting_of_fun_on_fintype_surjective]
   rw [linear_equiv_fun_on_finite_symm_single, Finsupp.sum_single_index, one_smul,
-    (s (Finsupp.single x 1)).some_spec, Finsupp.single_eq_pi_single]
+    (s (Finsupp.single x 1)).choose_spec, Finsupp.single_eq_pi_single]
   rw [zero_smul]
 #align linear_map.splitting_of_fun_on_fintype_surjective_splits LinearMap.splittingOfFunOnFintypeSurjective_splits
 

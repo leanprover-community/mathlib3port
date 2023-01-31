@@ -38,7 +38,7 @@ variable {n : ℕ} {α : Type u} {a : Array' n α}
 
 theorem rev_list_reverse_aux :
     ∀ (i) (h : i ≤ n) (t : List α),
-      (a.iterateAux (fun _ => (· :: ·)) i h []).reverseCore t =
+      (a.iterateAux (fun _ => (· :: ·)) i h []).reverseAux t =
         a.revIterateAux (fun _ => (· :: ·)) i h t
   | 0, h, t => rfl
   | i + 1, h, t => rev_list_reverse_aux i _ _
@@ -193,7 +193,7 @@ theorem toList_get? {i v} : List.get? a.toList i = some v ↔ ∃ h, a.read ⟨i
   · exact ⟨ll.symm ▸ h, to_list_nth_le _ _ _⟩
 #align array.to_list_nth Array'.toList_get?
 
-theorem write_toList {i v} : (a.write i v).toList = a.toList.updateNth i v :=
+theorem write_toList {i v} : (a.write i v).toList = a.toList.set i v :=
   List.ext_nthLe (by simp) fun j h₁ h₂ =>
     by
     have h₃ : j < n := by simpa using h₁
@@ -235,7 +235,7 @@ theorem toList_toArray (a : Array' n α) : HEq a.toList.toArray a :=
         (fun m (e : a.toList.length = m) =>
           HEq (DArray.mk fun v => a.toList.nthLe v.1 v.2)
             (@DArray.mk m (fun _ => α) fun v => a.toList.nthLe v.1 <| e.symm ▸ v.2))
-        a.to_list_length HEq.rfl) <|
+        a.toList_length HEq.rfl) <|
     DArray.ext fun ⟨i, h⟩ => toList_nthLe i h _
 #align array.to_list_to_array Array'.toList_toArray
 

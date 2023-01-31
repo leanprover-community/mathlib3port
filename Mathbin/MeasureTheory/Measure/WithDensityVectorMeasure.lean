@@ -91,7 +91,7 @@ theorem withDensityᵥ_neg : μ.withDensityᵥ (-f) = -μ.withDensityᵥ f :=
 #align measure_theory.with_densityᵥ_neg MeasureTheory.withDensityᵥ_neg
 
 theorem withDensityᵥ_neg' : (μ.withDensityᵥ fun x => -f x) = -μ.withDensityᵥ f :=
-  with_densityᵥ_neg
+  withDensityᵥ_neg
 #align measure_theory.with_densityᵥ_neg' MeasureTheory.withDensityᵥ_neg'
 
 @[simp]
@@ -178,7 +178,7 @@ theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) :
 
 theorem Integrable.withDensityᵥ_eq_iff {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) :
     μ.withDensityᵥ f = μ.withDensityᵥ g ↔ f =ᵐ[μ] g :=
-  ⟨fun hfg => hf.ae_eq_of_with_densityᵥ_eq hg hfg, fun h => WithDensityᵥEq.congr_ae h⟩
+  ⟨fun hfg => hf.ae_eq_of_withDensityᵥ_eq hg hfg, fun h => WithDensityᵥEq.congr_ae h⟩
 #align measure_theory.integrable.with_densityᵥ_eq_iff MeasureTheory.Integrable.withDensityᵥ_eq_iff
 
 section SignedMeasure

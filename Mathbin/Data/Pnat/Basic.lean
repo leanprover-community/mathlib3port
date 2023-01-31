@@ -42,7 +42,7 @@ theorem one_add_natPred (n : ℕ+) : 1 + n.natPred = n := by
 #print PNat.natPred_add_one /-
 @[simp]
 theorem natPred_add_one (n : ℕ+) : n.natPred + 1 = n :=
-  (add_comm _ _).trans n.one_add_nat_pred
+  (add_comm _ _).trans n.one_add_natPred
 #align pnat.nat_pred_add_one PNat.natPred_add_one
 -/
 
@@ -105,14 +105,14 @@ theorem succPNat_mono : Monotone succPNat :=
 
 #print Nat.succPNat_lt_succPNat /-
 @[simp]
-theorem succPNat_lt_succPNat {m n : ℕ} : m.succPnat < n.succPnat ↔ m < n :=
+theorem succPNat_lt_succPNat {m n : ℕ} : m.succPNat < n.succPNat ↔ m < n :=
   succPNat_strictMono.lt_iff_lt
 #align nat.succ_pnat_lt_succ_pnat Nat.succPNat_lt_succPNat
 -/
 
 #print Nat.succPNat_le_succPNat /-
 @[simp]
-theorem succPNat_le_succPNat {m n : ℕ} : m.succPnat ≤ n.succPnat ↔ m ≤ n :=
+theorem succPNat_le_succPNat {m n : ℕ} : m.succPNat ≤ n.succPNat ↔ m ≤ n :=
   succPNat_strictMono.le_iff_le
 #align nat.succ_pnat_le_succ_pnat Nat.succPNat_le_succPNat
 -/
@@ -437,7 +437,7 @@ but is expected to have type
   forall {a : PNat} {b : PNat}, (LT.lt.{0} PNat (Preorder.toLT.{0} PNat (PartialOrder.toPreorder.{0} PNat (OrderedCancelCommMonoid.toPartialOrder.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))) a b) -> (Eq.{1} PNat (HAdd.hAdd.{0, 0, 0} PNat PNat PNat (instHAdd.{0} PNat instPNatAdd) a (HSub.hSub.{0, 0, 0} PNat PNat PNat (instHSub.{0} PNat PNat.instSubPNat) b a)) b)
 Case conversion may be inaccurate. Consider using '#align pnat.add_sub_of_lt PNat.add_sub_of_ltₓ'. -/
 theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b := fun h =>
-  Eq <| by
+  eq <| by
     rw [add_coe, sub_coe, if_pos h]
     exact add_tsub_cancel_of_le h.le
 #align pnat.add_sub_of_lt PNat.add_sub_of_lt

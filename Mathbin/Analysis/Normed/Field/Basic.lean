@@ -193,13 +193,13 @@ theorem one_le_nnnorm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ‖(1 : �
 theorem Filter.Tendsto.zero_mul_isBoundedUnder_le {f g : ι → α} {l : Filter ι}
     (hf : Tendsto f l (𝓝 0)) (hg : IsBoundedUnder (· ≤ ·) l (norm ∘ g)) :
     Tendsto (fun x => f x * g x) l (𝓝 0) :=
-  hf.op_zero_is_bounded_under_le hg (· * ·) norm_mul_le
+  hf.op_zero_isBoundedUnder_le hg (· * ·) norm_mul_le
 #align filter.tendsto.zero_mul_is_bounded_under_le Filter.Tendsto.zero_mul_isBoundedUnder_le
 
 theorem Filter.IsBoundedUnderLe.mul_tendsto_zero {f g : ι → α} {l : Filter ι}
     (hf : IsBoundedUnder (· ≤ ·) l (norm ∘ f)) (hg : Tendsto g l (𝓝 0)) :
     Tendsto (fun x => f x * g x) l (𝓝 0) :=
-  hg.op_zero_is_bounded_under_le hf (flip (· * ·)) fun x y =>
+  hg.op_zero_isBoundedUnder_le hf (flip (· * ·)) fun x y =>
     (norm_mul_le y x).trans_eq (mul_comm _ _)
 #align filter.is_bounded_under_le.mul_tendsto_zero Filter.IsBoundedUnderLe.mul_tendsto_zero
 
@@ -357,7 +357,7 @@ theorem norm_pow_le [NormOneClass α] (a : α) (n : ℕ) : ‖a ^ n‖ ≤ ‖a�
   Nat.recOn n (by simp only [pow_zero, norm_one]) fun n hn => norm_pow_le' a n.succ_pos
 #align norm_pow_le norm_pow_le
 
-theorem eventually_norm_pow_le (a : α) : ∀ᶠ n : ℕ in at_top, ‖a ^ n‖ ≤ ‖a‖ ^ n :=
+theorem eventually_norm_pow_le (a : α) : ∀ᶠ n : ℕ in atTop, ‖a ^ n‖ ≤ ‖a‖ ^ n :=
   eventually_atTop.mpr ⟨1, fun b h => norm_pow_le' a (Nat.succ_le_iff.mp h)⟩
 #align eventually_norm_pow_le eventually_norm_pow_le
 
@@ -787,7 +787,7 @@ theorem nnnorm_norm [SeminormedAddCommGroup α] (a : α) : ‖‖a‖‖₊ = �
 theorem NormedAddCommGroup.tendsto_atTop [Nonempty α] [SemilatticeSup α] {β : Type _}
     [SeminormedAddCommGroup β] {f : α → β} {b : β} :
     Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N ≤ n → ‖f n - b‖ < ε :=
-  (atTop_basis.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
+  (atTop_basis.tendsto_iffₓ Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top NormedAddCommGroup.tendsto_atTop
 
 /-- A variant of `normed_add_comm_group.tendsto_at_top` that
@@ -796,7 +796,7 @@ uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 theorem NormedAddCommGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoMaxOrder α]
     {β : Type _} [SeminormedAddCommGroup β] {f : α → β} {b : β} :
     Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N < n → ‖f n - b‖ < ε :=
-  (atTop_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
+  (atTop_basis_Ioi.tendsto_iffₓ Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top' NormedAddCommGroup.tendsto_at_top'
 
 instance : NormedCommRing ℤ :=

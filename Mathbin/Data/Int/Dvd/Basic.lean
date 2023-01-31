@@ -71,8 +71,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.le_of_dvd Int.le_of_dvdₓ'. -/
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
-  | (m : ℕ), _, ⟨n, rfl⟩, H =>
-    coe_nat_le_coe_nat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
+  | (m : ℕ), _, ⟨n, rfl⟩, H => ofNat_le_ofNat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
   | -[m+1], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt <| negSucc_lt_zero _) (ofNat_zero_le _)
 #align int.le_of_dvd Int.le_of_dvd
 

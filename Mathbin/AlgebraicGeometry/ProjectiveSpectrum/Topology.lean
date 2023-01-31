@@ -256,17 +256,17 @@ theorem vanishingIdeal_union (t t' : Set (ProjectiveSpectrum 𝒜)) :
 
 theorem zeroLocus_supᵢ_ideal {γ : Sort _} (I : γ → Ideal A) :
     zeroLocus _ ((⨆ i, I i : Ideal A) : Set A) = ⋂ i, zeroLocus 𝒜 (I i) :=
-  (gc_ideal 𝒜).l_supr
+  (gc_ideal 𝒜).l_supᵢ
 #align projective_spectrum.zero_locus_supr_ideal ProjectiveSpectrum.zeroLocus_supᵢ_ideal
 
 theorem zeroLocus_supᵢ_homogeneousIdeal {γ : Sort _} (I : γ → HomogeneousIdeal 𝒜) :
     zeroLocus _ ((⨆ i, I i : HomogeneousIdeal 𝒜) : Set A) = ⋂ i, zeroLocus 𝒜 (I i) :=
-  (gc_homogeneousIdeal 𝒜).l_supr
+  (gc_homogeneousIdeal 𝒜).l_supᵢ
 #align projective_spectrum.zero_locus_supr_homogeneous_ideal ProjectiveSpectrum.zeroLocus_supᵢ_homogeneousIdeal
 
 theorem zeroLocus_unionᵢ {γ : Sort _} (s : γ → Set A) :
     zeroLocus 𝒜 (⋃ i, s i) = ⋂ i, zeroLocus 𝒜 (s i) :=
-  (gc_set 𝒜).l_supr
+  (gc_set 𝒜).l_supᵢ
 #align projective_spectrum.zero_locus_Union ProjectiveSpectrum.zeroLocus_unionᵢ
 
 theorem zeroLocus_bUnion (s : Set (Set A)) :
@@ -276,7 +276,7 @@ theorem zeroLocus_bUnion (s : Set (Set A)) :
 theorem vanishingIdeal_unionᵢ {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
   HomogeneousIdeal.toIdeal_injective <| by
-    convert (gc_ideal 𝒜).u_infi <;> exact HomogeneousIdeal.toIdeal_infᵢ _
+    convert (gc_ideal 𝒜).u_infᵢ <;> exact HomogeneousIdeal.toIdeal_infᵢ _
 #align projective_spectrum.vanishing_ideal_Union ProjectiveSpectrum.vanishingIdeal_unionᵢ
 
 theorem zeroLocus_inf (I J : Ideal A) :

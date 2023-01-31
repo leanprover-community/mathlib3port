@@ -81,7 +81,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2
           support := g.support.Sigma fun i => ((b i).repr (g i)).support
-          mem_support_to_fun := fun ix =>
+          mem_support_toFun := fun ix =>
             by
             simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
             intro b hg
@@ -90,7 +90,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
         { toFun := fun i =>
             (b i).repr.symm (g.comapDomain _ (Set.injOn_of_injective sigma_mk_injective _))
           support := g.support.image Sigma.fst
-          mem_support_to_fun := fun i =>
+          mem_support_toFun := fun i =>
             by
             rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
             simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply,

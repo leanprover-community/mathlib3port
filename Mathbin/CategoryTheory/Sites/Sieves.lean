@@ -312,14 +312,14 @@ instance : CompleteLattice (Sieve X)
       downward_closed' := fun _ _ _ p _ => False.elim p }
   sup := Sieve.union
   inf := Sieve.inter
-  sup := Sieve.sup
-  inf := Sieve.inf
-  le_Sup 𝒮 S hS Y f hf := ⟨S, hS, hf⟩
-  Sup_le ℰ S hS Y f := by
+  supₛ := Sieve.sup
+  infₛ := Sieve.inf
+  le_sup 𝒮 S hS Y f hf := ⟨S, hS, hf⟩
+  sup_le ℰ S hS Y f := by
     rintro ⟨R, hR, hf⟩
     apply hS R hR _ hf
-  Inf_le _ _ hS _ _ h := h _ hS
-  le_Inf _ _ hS _ _ hf _ hR := hS _ hR _ hf
+  inf_le _ _ hS _ _ h := h _ hS
+  le_inf _ _ hS _ _ hf _ hR := hS _ hR _ hf
   le_sup_left _ _ _ _ := Or.inl
   le_sup_right _ _ _ _ := Or.inr
   sup_le _ _ _ a b _ _ hf := hf.elim (a _) (b _)

@@ -399,7 +399,7 @@ theorem imageSubobject_zero_arrow : (imageSubobject (0 : X ⟶ Y)).arrow = 0 :=
 
 @[simp]
 theorem imageSubobject_zero {A B : C} : imageSubobject (0 : A ⟶ B) = ⊥ :=
-  Subobject.eq_of_comm (imageSubobjectIso _ ≪≫ image_zero ≪≫ Subobject.botCoeIsoZero.symm) (by simp)
+  Subobject.eq_of_comm (imageSubobjectIso _ ≪≫ imageZero ≪≫ Subobject.botCoeIsoZero.symm) (by simp)
 #align category_theory.limits.image_subobject_zero CategoryTheory.Limits.imageSubobject_zero
 
 end

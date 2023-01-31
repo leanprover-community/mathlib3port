@@ -93,7 +93,7 @@ theorem HasLimit.mk {F : J ⥤ C} (d : LimitCone F) : HasLimit F :=
 
 /-- Use the axiom of choice to extract explicit `limit_cone F` from `has_limit F`. -/
 def getLimitCone (F : J ⥤ C) [HasLimit F] : LimitCone F :=
-  Classical.choice <| has_limit.exists_limit
+  Classical.choice <| HasLimit.exists_limit
 #align category_theory.limits.get_limit_cone CategoryTheory.Limits.getLimitCone
 
 variable (J C)
@@ -291,7 +291,7 @@ def limit.homIso (F : J ⥤ C) [HasLimit F] (W : C) :
 @[simp]
 theorem limit.homIso_hom (F : J ⥤ C) [HasLimit F] {W : C} (f : ULift (W ⟶ limit F)) :
     (limit.homIso F W).Hom f = (const J).map f.down ≫ (Limit.cone F).π :=
-  (limit.isLimit F).hom_iso_hom f
+  (limit.isLimit F).homIso_hom f
 #align category_theory.limits.limit.hom_iso_hom CategoryTheory.Limits.limit.homIso_hom
 
 /-- The isomorphism (in `Type`) between
@@ -581,13 +581,13 @@ and cones over `F` with cone point `W`
 is natural in `F`.
 -/
 def limYoneda :
-    limUnder ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u₁} ≅ CategoryTheory.cones J C :=
+    lim ⋙ yoneda ⋙ (whiskeringRight _ _ _).obj uliftFunctor.{u₁} ≅ CategoryTheory.cones J C :=
   NatIso.ofComponents (fun F => NatIso.ofComponents (fun W => limit.homIso F (unop W)) (by tidy))
     (by tidy)
 #align category_theory.limits.lim_yoneda CategoryTheory.Limits.limYoneda
 
 /-- The constant functor and limit functor are adjoint to each other-/
-def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ limUnder
+def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim
     where
   homEquiv c g :=
     { toFun := fun f => limit.lift _ ⟨c, f⟩
@@ -604,8 +604,8 @@ def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ limUnder
         { app := limit.π _
           naturality' := by tidy }
       naturality' := fun _ _ _ => by tidy }
-  hom_equiv_unit' c g f := limit.hom_ext fun j => by simp
-  hom_equiv_counit' c g f := NatTrans.ext _ _ <| funext fun j => rfl
+  homEquiv_unit' c g f := limit.hom_ext fun j => by simp
+  homEquiv_counit' c g f := NatTrans.ext _ _ <| funext fun j => rfl
 #align category_theory.limits.const_lim_adj CategoryTheory.Limits.constLimAdj
 
 instance : IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
@@ -671,7 +671,7 @@ theorem HasColimit.mk {F : J ⥤ C} (d : ColimitCocone F) : HasColimit F :=
 
 /-- Use the axiom of choice to extract explicit `colimit_cocone F` from `has_colimit F`. -/
 def getColimitCocone (F : J ⥤ C) [HasColimit F] : ColimitCocone F :=
-  Classical.choice <| has_colimit.exists_colimit
+  Classical.choice <| HasColimit.exists_colimit
 #align category_theory.limits.get_colimit_cocone CategoryTheory.Limits.getColimitCocone
 
 variable (J C)
@@ -876,7 +876,7 @@ def colimit.homIso (F : J ⥤ C) [HasColimit F] (W : C) :
 @[simp]
 theorem colimit.homIso_hom (F : J ⥤ C) [HasColimit F] {W : C} (f : ULift (colimit F ⟶ W)) :
     (colimit.homIso F W).Hom f = (Colimit.cocone F).ι ≫ (const J).map f.down :=
-  (colimit.isColimit F).hom_iso_hom f
+  (colimit.isColimit F).homIso_hom f
 #align category_theory.limits.colimit.hom_iso_hom CategoryTheory.Limits.colimit.homIso_hom
 
 /-- The isomorphism (in `Type`) between
@@ -1212,8 +1212,8 @@ def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J
   counit :=
     { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩
       naturality' := by tidy }
-  hom_equiv_unit' _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
-  hom_equiv_counit' _ _ _ := colimit.hom_ext fun _ => by simp
+  homEquiv_unit' _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
+  homEquiv_counit' _ _ _ := colimit.hom_ext fun _ => by simp
 #align category_theory.limits.colim_const_adj CategoryTheory.Limits.colimConstAdj
 
 instance : IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=

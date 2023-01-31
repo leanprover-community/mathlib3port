@@ -85,7 +85,7 @@ theorem forgetToLocallyRingedSpace_preimage {X Y : Scheme} (f : X ⟶ Y) :
 /-- The forgetful functor from `Scheme` to `Top`. -/
 @[simps]
 def forgetToTop : Scheme ⥤ TopCat :=
-  Scheme.forget_to_LocallyRingedSpace ⋙ LocallyRingedSpace.forget_to_Top
+  Scheme.forgetToLocallyRingedSpace ⋙ LocallyRingedSpace.forgetToTop
 #align algebraic_geometry.Scheme.forget_to_Top AlgebraicGeometry.Scheme.forgetToTop
 
 @[simp]
@@ -147,14 +147,14 @@ theorem app_eq {X Y : Scheme} (f : X ⟶ Y) {U V : Opens Y.carrier} (e : U = V) 
 
 instance is_locallyRingedSpace_iso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] :
     @IsIso LocallyRingedSpace _ _ _ f :=
-  forgetToLocallyRingedSpace.map_is_iso f
+  forgetToLocallyRingedSpace.map_isIso f
 #align algebraic_geometry.Scheme.is_LocallyRingedSpace_iso AlgebraicGeometry.Scheme.is_locallyRingedSpace_iso
 
 @[simp]
 theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrier) :
     (inv f).val.c.app (op U) =
       X.Presheaf.map
-          (eq_to_hom <| by
+          (eqToHom <| by
                 rw [is_iso.hom_inv_id]
                 ext1
                 rfl :

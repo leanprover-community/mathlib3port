@@ -127,7 +127,7 @@ structure BumpCovering (ι X : Type _) [TopologicalSpace X] (s : Set X := univ) 
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun
   le_one' : to_fun ≤ 1
-  eventually_eq_one' : ∀ x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
+  eventuallyEq_one' : ∀ x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
 #align bump_covering BumpCovering
 
 variable {ι : Type u} {X : Type v} [TopologicalSpace X]
@@ -170,11 +170,11 @@ theorem sum_le_one (x : X) : (∑ᶠ i, f i x) ≤ 1 :=
 #align partition_of_unity.sum_le_one PartitionOfUnity.sum_le_one
 
 theorem sum_nonneg (x : X) : 0 ≤ ∑ᶠ i, f i x :=
-  finsum_nonneg fun i => f.Nonneg i x
+  finsum_nonneg fun i => f.NonNeg i x
 #align partition_of_unity.sum_nonneg PartitionOfUnity.sum_nonneg
 
 theorem le_one (i : ι) (x : X) : f i x ≤ 1 :=
-  (single_le_finsum i (f.LocallyFinite.point_finite x) fun j => f.Nonneg j x).trans (f.sum_le_one x)
+  (single_le_finsum i (f.LocallyFinite.point_finite x) fun j => f.NonNeg j x).trans (f.sum_le_one x)
 #align partition_of_unity.le_one PartitionOfUnity.le_one
 
 /-- If `f` is a partition of unity on `s : set X` and `g : X → E` is continuous at every point of
@@ -261,7 +261,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s
     simp [hx]
   nonneg' := le_update_iff.2 ⟨fun x => zero_le_one, fun _ _ => le_rfl⟩
   le_one' := update_le_iff.2 ⟨le_rfl, fun _ _ _ => zero_le_one⟩
-  eventually_eq_one' x _ := ⟨i, by simp⟩
+  eventuallyEq_one' x _ := ⟨i, by simp⟩
 #align bump_covering.single BumpCovering.single
 
 @[simp]
@@ -312,7 +312,7 @@ theorem exists_isSubordinate_of_locallyFinite_of_prop [NormalSpace X] (p : (X �
         (hf01 i x).2, fun x hx => _⟩,
       hfp, fun i => subset.trans (closure_mono (hsupp i)) (hVU i)⟩
   rcases mem_Union.1 (hsW hx) with ⟨i, hi⟩
-  exact ⟨i, ((hf1 i).mono subset_closure).eventually_eq_of_mem ((hWo i).mem_nhds hi)⟩
+  exact ⟨i, ((hf1 i).mono subset_closure).eventuallyEq_of_mem ((hWo i).mem_nhds hi)⟩
 #align bump_covering.exists_is_subordinate_of_locally_finite_of_prop BumpCovering.exists_isSubordinate_of_locallyFinite_of_prop
 
 /-- If `X` is a normal topological space and `U i`, `i : ι`, is a locally finite open covering of a
@@ -360,15 +360,15 @@ theorem exists_isSubordinate [NormalSpace X] [ParacompactSpace X] (hs : IsClosed
 
 /-- Index of a bump function such that `fs i =ᶠ[𝓝 x] 1`. -/
 def ind (x : X) (hx : x ∈ s) : ι :=
-  (f.eventually_eq_one' x hx).some
+  (f.eventuallyEq_one' x hx).some
 #align bump_covering.ind BumpCovering.ind
 
 theorem eventuallyEq_one (x : X) (hx : x ∈ s) : f (f.ind x hx) =ᶠ[𝓝 x] 1 :=
-  (f.eventually_eq_one' x hx).some_spec
+  (f.eventuallyEq_one' x hx).choose_spec
 #align bump_covering.eventually_eq_one BumpCovering.eventuallyEq_one
 
 theorem ind_apply (x : X) (hx : x ∈ s) : f (f.ind x hx) x = 1 :=
-  (f.eventually_eq_one x hx).eq_of_nhds
+  (f.eventuallyEq_one x hx).eq_of_nhds
 #align bump_covering.ind_apply BumpCovering.ind_apply
 
 /-- Partition of unity defined by a `bump_covering`. We use this auxiliary definition to prove some
@@ -390,12 +390,12 @@ theorem toPouFun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x 
 #align bump_covering.to_pou_fun_zero_of_zero BumpCovering.toPouFun_zero_of_zero
 
 theorem support_toPouFun_subset (i : ι) : support (f.toPouFun i) ⊆ support (f i) := fun x =>
-  mt <| f.to_pou_fun_zero_of_zero
+  mt <| f.toPouFun_zero_of_zero
 #align bump_covering.support_to_pou_fun_subset BumpCovering.support_toPouFun_subset
 
 theorem toPouFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-    f.toPouFun i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
+    f.toPouFun i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j x :=
   by
   refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
   rw [Ne.def, sub_eq_self] at hj
@@ -425,7 +425,7 @@ theorem sum_toPouFun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1 -
 
 theorem exists_finset_toPouFun_eventuallyEq (i : ι) (x : X) :
     ∃ t : Finset ι,
-      f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
+      f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j :=
   by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
@@ -455,10 +455,10 @@ of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
 def toPartitionOfUnity : PartitionOfUnity ι X s
     where
-  toFun i := ⟨f.toPouFun i, f.continuous_to_pou_fun i⟩
-  locally_finite' := f.LocallyFinite.Subset f.support_to_pou_fun_subset
+  toFun i := ⟨f.toPouFun i, f.continuous_toPouFun i⟩
+  locally_finite' := f.LocallyFinite.Subset f.support_toPouFun_subset
   nonneg' i x :=
-    mul_nonneg (f.Nonneg i x) (finprod_cond_nonneg fun j hj => sub_nonneg.2 <| f.le_one j x)
+    mul_nonneg (f.NonNeg i x) (finprod_cond_nonneg fun j hj => sub_nonneg.2 <| f.le_one j x)
   sum_eq_one' x hx :=
     by
     simp only [ContinuousMap.coe_mk, sum_to_pou_fun_eq, sub_eq_self]
@@ -479,34 +479,34 @@ theorem toPartitionOfUnity_apply (i : ι) (x : X) :
 
 theorem toPartitionOfUnity_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-    f.toPartitionOfUnity i x = f i x * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j x :=
-  f.to_pou_fun_eq_mul_prod i x t ht
+    f.toPartitionOfUnity i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j x :=
+  f.toPouFun_eq_mul_prod i x t ht
 #align bump_covering.to_partition_of_unity_eq_mul_prod BumpCovering.toPartitionOfUnity_eq_mul_prod
 
 theorem exists_finset_toPartitionOfUnity_eventuallyEq (i : ι) (x : X) :
     ∃ t : Finset ι,
-      f.toPartitionOfUnity i =ᶠ[𝓝 x] f i * ∏ j in t.filter fun j => WellOrderingRel j i, 1 - f j :=
-  f.exists_finset_to_pou_fun_eventually_eq i x
+      f.toPartitionOfUnity i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j :=
+  f.exists_finset_toPouFun_eventuallyEq i x
 #align bump_covering.exists_finset_to_partition_of_unity_eventually_eq BumpCovering.exists_finset_toPartitionOfUnity_eventuallyEq
 
 theorem toPartitionOfUnity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) :
     f.toPartitionOfUnity i x = 0 :=
-  f.to_pou_fun_zero_of_zero h
+  f.toPouFun_zero_of_zero h
 #align bump_covering.to_partition_of_unity_zero_of_zero BumpCovering.toPartitionOfUnity_zero_of_zero
 
 theorem support_toPartitionOfUnity_subset (i : ι) :
     support (f.toPartitionOfUnity i) ⊆ support (f i) :=
-  f.support_to_pou_fun_subset i
+  f.support_toPouFun_subset i
 #align bump_covering.support_to_partition_of_unity_subset BumpCovering.support_toPartitionOfUnity_subset
 
 theorem sum_toPartitionOfUnity_eq (x : X) :
     (∑ᶠ i, f.toPartitionOfUnity i x) = 1 - ∏ᶠ i, 1 - f i x :=
-  f.sum_to_pou_fun_eq x
+  f.sum_toPouFun_eq x
 #align bump_covering.sum_to_partition_of_unity_eq BumpCovering.sum_toPartitionOfUnity_eq
 
 theorem IsSubordinate.toPartitionOfUnity {f : BumpCovering ι X s} {U : ι → Set X}
     (h : f.IsSubordinate U) : f.toPartitionOfUnity.IsSubordinate U := fun i =>
-  Subset.trans (closure_mono <| f.support_to_partition_of_unity_subset i) (h i)
+  Subset.trans (closure_mono <| f.support_toPartitionOfUnity_subset i) (h i)
 #align bump_covering.is_subordinate.to_partition_of_unity BumpCovering.IsSubordinate.toPartitionOfUnity
 
 end BumpCovering

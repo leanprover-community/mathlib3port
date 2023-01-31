@@ -226,7 +226,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUnion Finset.product_eq_bunionᵢₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_eq_bunionᵢ [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s ×ˢ t = s.bUnion fun a => t.image fun b => (a, b) :=
+    s ×ˢ t = s.bunionᵢ fun a => t.image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
       exists_and_left, exists_eq_right, exists_eq_left]
@@ -240,7 +240,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUnion_right Finset.product_eq_bunionᵢ_rightₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_eq_bunionᵢ_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
-    s ×ˢ t = t.bUnion fun b => s.image fun a => (a, b) :=
+    s ×ˢ t = t.bunionᵢ fun b => s.image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
     simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
       exists_and_left, exists_eq_right, exists_eq_left]
@@ -256,7 +256,7 @@ Case conversion may be inaccurate. Consider using '#align finset.product_bUnion 
 /-- See also `finset.sup_product_left`. -/
 @[simp]
 theorem product_bunionᵢ [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
-    (s ×ˢ t).bUnion f = s.bUnion fun a => t.bUnion fun b => f (a, b) := by
+    (s ×ˢ t).bunionᵢ f = s.bunionᵢ fun a => t.bunionᵢ fun b => f (a, b) := by
   classical simp_rw [product_eq_bUnion, bUnion_bUnion, image_bUnion]
 #align finset.product_bUnion Finset.product_bunionᵢ
 
@@ -281,7 +281,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [DecidablePred q] :
-    ((s ×ˢ t).filter fun x : α × β => p x.1 ∧ q x.2) = s.filter p ×ˢ t.filter q :=
+    ((s ×ˢ t).filterₓ fun x : α × β => p x.1 ∧ q x.2) = s.filterₓ p ×ˢ t.filterₓ q :=
   by
   ext ⟨a, b⟩
   simp only [mem_filter, mem_product]
@@ -297,7 +297,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_product_left (p : α → Prop) [DecidablePred p] :
-    ((s ×ˢ t).filter fun x : α × β => p x.1) = s.filter p ×ˢ t := by
+    ((s ×ˢ t).filterₓ fun x : α × β => p x.1) = s.filterₓ p ×ˢ t := by
   simpa using filter_product p fun _ => True
 #align finset.filter_product_left Finset.filter_product_left
 
@@ -305,7 +305,7 @@ theorem filter_product_left (p : α → Prop) [DecidablePred p] :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.filter_product_right /-
 theorem filter_product_right (q : β → Prop) [DecidablePred q] :
-    ((s ×ˢ t).filter fun x : α × β => q x.2) = s ×ˢ t.filter q := by
+    ((s ×ˢ t).filterₓ fun x : α × β => q x.2) = s ×ˢ t.filterₓ q := by
   simpa using filter_product (fun _ : α => True) q
 #align finset.filter_product_right Finset.filter_product_right
 -/
@@ -319,9 +319,9 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop)
     [DecidablePred p] [DecidablePred q] :
-    ((s ×ˢ t).filter fun x : α × β => p x.1 ↔ q x.2).card =
-      (s.filter p).card * (t.filter q).card +
-        (s.filter (Not ∘ p)).card * (t.filter (Not ∘ q)).card :=
+    ((s ×ˢ t).filterₓ fun x : α × β => p x.1 ↔ q x.2).card =
+      (s.filterₓ p).card * (t.filterₓ q).card +
+        (s.filterₓ (Not ∘ p)).card * (t.filterₓ (Not ∘ q)).card :=
   by
   classical
     rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
@@ -588,7 +588,7 @@ variable [DecidableEq α] (s t : Finset α)
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
 `a ∈ s`. -/
 def diag :=
-  (s ×ˢ s).filter fun a : α × α => a.fst = a.snd
+  (s ×ˢ s).filterₓ fun a : α × α => a.fst = a.snd
 #align finset.diag Finset.diag
 -/
 
@@ -597,7 +597,7 @@ def diag :=
 /-- Given a finite set `s`, the off-diagonal, `s.off_diag` is the set of pairs `(a, b)` with `a ≠ b`
 for `a, b ∈ s`. -/
 def offDiag :=
-  (s ×ˢ s).filter fun a : α × α => a.fst ≠ a.snd
+  (s ×ˢ s).filterₓ fun a : α × α => a.fst ≠ a.snd
 #align finset.off_diag Finset.offDiag
 -/
 

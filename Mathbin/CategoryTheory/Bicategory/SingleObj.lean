@@ -66,13 +66,13 @@ instance : Bicategory (MonoidalSingleObj C)
   whisker_assoc' := by
     intros
     rw [associator_inv_naturality, iso.hom_inv_id_assoc]
-  whisker_right_comp' := by
+  whiskerRight_comp' := by
     intros
     rw [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
   id_whisker_left' := by
     intros
     rw [left_unitor_inv_naturality, iso.hom_inv_id_assoc]
-  whisker_right_id' := by
+  whiskerRight_id' := by
     intros
     rw [right_unitor_inv_naturality, iso.hom_inv_id_assoc]
   pentagon' := by

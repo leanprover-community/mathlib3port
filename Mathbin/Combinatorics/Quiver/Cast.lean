@@ -176,7 +176,7 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {u' : U} (hu : Eq.{succ u1} U u u'), Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 u' u') (Quiver.Path.cast.{u2, u1} U _inst_1 u u u' u' hu hu (Quiver.Path.nil.{succ u2, u1} U _inst_1 u)) (Quiver.Path.nil.{succ u2, u1} U _inst_1 u')
 Case conversion may be inaccurate. Consider using '#align quiver.path.cast_nil Quiver.Path.cast_nilₓ'. -/
 @[simp]
-theorem Path.cast_nil {u u' : U} (hu : u = u') : (Path.nil : Path u u).cast hu hu = path.nil :=
+theorem Path.cast_nil {u u' : U} (hu : u = u') : (Path.nil : Path u u).cast hu hu = Path.nil :=
   by
   subst_vars
   rfl
@@ -265,7 +265,7 @@ but is expected to have type
   forall {U : Type.{u1}} [_inst_1 : Quiver.{succ u2, u1} U] {u : U} {v : U} (p : Quiver.Path.{succ u2, u1} U _inst_1 u v) (hzero : Eq.{1} Nat (Quiver.Path.length.{u1, succ u2} U _inst_1 u v p) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))), Eq.{max (succ u2) (succ u1)} (Quiver.Path.{succ u2, u1} U _inst_1 v v) (Quiver.Path.cast.{u2, u1} U _inst_1 u v v v (Quiver.Path.eq_of_length_zero.{succ u2, u1} U _inst_1 u v p hzero) (rfl.{succ u1} U v) p) (Quiver.Path.nil.{succ u2, u1} U _inst_1 v)
 Case conversion may be inaccurate. Consider using '#align quiver.eq_nil_of_length_zero Quiver.eq_nil_of_length_zeroₓ'. -/
 theorem eq_nil_of_length_zero {u v : U} (p : Path u v) (hzero : p.length = 0) :
-    p.cast (eq_of_length_zero p hzero) rfl = path.nil := by
+    p.cast (eq_of_length_zero p hzero) rfl = Path.nil := by
   cases p <;> simpa only [Nat.succ_ne_zero, length_cons] using hzero
 #align quiver.eq_nil_of_length_zero Quiver.eq_nil_of_length_zero
 

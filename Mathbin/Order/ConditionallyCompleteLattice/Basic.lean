@@ -58,10 +58,10 @@ noncomputable instance {α : Type _} [InfSet α] : InfSet (WithTop α) :=
   ⟨fun S => if S ⊆ {⊤} then ⊤ else ↑(infₛ (coe ⁻¹' S : Set α))⟩
 
 noncomputable instance {α : Type _} [SupSet α] : SupSet (WithBot α) :=
-  ⟨(@WithTop.hasInf αᵒᵈ _).inf⟩
+  ⟨(@WithTop.hasInf αᵒᵈ _).infₛ⟩
 
 noncomputable instance {α : Type _} [Preorder α] [InfSet α] : InfSet (WithBot α) :=
-  ⟨(@WithTop.hasSup αᵒᵈ _ _).sup⟩
+  ⟨(@WithTop.hasSup αᵒᵈ _ _).supₛ⟩
 
 #print WithTop.infₛ_empty /-
 @[simp]
@@ -240,7 +240,7 @@ boundedness.-/
 class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α,
   Bot α where
   bot_le : ∀ x : α, ⊥ ≤ x
-  cSup_empty : Sup ∅ = ⊥
+  supₛ_empty : Sup ∅ = ⊥
 #align conditionally_complete_linear_order_bot ConditionallyCompleteLinearOrderBot
 -/
 
@@ -273,7 +273,7 @@ instance (priority := 100) CompleteLattice.toConditionallyCompleteLattice [Compl
 instance (priority := 100) CompleteLinearOrder.toConditionallyCompleteLinearOrderBot {α : Type _}
     [CompleteLinearOrder α] : ConditionallyCompleteLinearOrderBot α :=
   { CompleteLattice.toConditionallyCompleteLattice, ‹CompleteLinearOrder α› with
-    cSup_empty := supₛ_empty }
+    supₛ_empty := supₛ_empty }
 #align complete_linear_order.to_conditionally_complete_linear_order_bot CompleteLinearOrder.toConditionallyCompleteLinearOrderBot
 -/
 
@@ -288,14 +288,14 @@ noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) 
     [i₂ : OrderBot α] [h : IsWellOrder α (· < ·)] : ConditionallyCompleteLinearOrderBot α :=
   { i₁, i₂,
     LinearOrder.toLattice with
-    inf := fun s => if hs : s.Nonempty then h.wf.min s hs else ⊥
+    infₛ := fun s => if hs : s.Nonempty then h.wf.min s hs else ⊥
     cInf_le := fun s a hs has => by
       have s_ne : s.nonempty := ⟨a, has⟩
       simpa [s_ne] using not_lt.1 (h.wf.not_lt_min s s_ne has)
     le_cInf := fun s a hs has => by
       simp only [hs, dif_pos]
       exact has (h.wf.min_mem s hs)
-    sup := fun s => if hs : (upperBounds s).Nonempty then h.wf.min _ hs else ⊥
+    supₛ := fun s => if hs : (upperBounds s).Nonempty then h.wf.min _ hs else ⊥
     le_cSup := fun s a hs has =>
       by
       have h's : (upperBounds s).Nonempty := hs
@@ -306,7 +306,7 @@ noncomputable def IsWellOrder.conditionallyCompleteLinearOrderBot (α : Type _) 
       have h's : (upperBounds s).Nonempty := ⟨a, has⟩
       simp only [h's, dif_pos]
       simpa using h.wf.not_lt_min _ h's has
-    cSup_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
+    supₛ_empty := by simpa using eq_bot_iff.2 (not_lt.1 <| h.wf.not_lt_min _ _ <| mem_univ ⊥) }
 #align is_well_order.conditionally_complete_linear_order_bot IsWellOrder.conditionallyCompleteLinearOrderBot
 -/
 
@@ -372,13 +372,12 @@ def conditionallyCompleteLatticeOfSupₛ (α : Type _) [H1 : PartialOrder α] [H
       (isLUB_supₛ (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
             ⟨c, forall_insert_of_forall (forall_eq.mpr hcb) hca⟩).1
         (forall_insert_of_forall (forall_eq.mpr hcb) hca)
-    inf := fun s => supₛ (lowerBounds s)
+    infₛ := fun s => supₛ (lowerBounds s)
     cSup_le := fun s a hs ha => (isLUB_supₛ s ⟨a, ha⟩ hs).2 ha
     le_cSup := fun s a hs ha => (isLUB_supₛ s hs ⟨a, ha⟩).1 ha
     cInf_le := fun s a hs ha =>
       (isLUB_supₛ (lowerBounds s) (Nonempty.bddAbove_lowerBounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
-    le_cInf := fun s a hs ha =>
-      (isLUB_supₛ (lowerBounds s) hs.bdd_above_lower_bounds ⟨a, ha⟩).1 ha }
+    le_cInf := fun s a hs ha => (isLUB_supₛ (lowerBounds s) hs.bddAbove_lowerBounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Sup conditionallyCompleteLatticeOfSupₛ
 -/
 
@@ -426,13 +425,12 @@ def conditionallyCompleteLatticeOfInfₛ (α : Type _) [H1 : PartialOrder α] [H
       (isGLB_infₛ (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
             ⟨c, forall_insert_of_forall (forall_eq.mpr hbc) hac⟩).1
         (forall_insert_of_forall (forall_eq.mpr hbc) hac)
-    sup := fun s => infₛ (upperBounds s)
+    supₛ := fun s => infₛ (upperBounds s)
     le_cInf := fun s a hs ha => (isGLB_infₛ s ⟨a, ha⟩ hs).2 ha
     cInf_le := fun s a hs ha => (isGLB_infₛ s hs ⟨a, ha⟩).1 ha
     le_cSup := fun s a hs ha =>
       (isGLB_infₛ (upperBounds s) (Nonempty.bddBelow_upperBounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
-    cSup_le := fun s a hs ha =>
-      (isGLB_infₛ (upperBounds s) hs.bdd_below_upper_bounds ⟨a, ha⟩).1 ha }
+    cSup_le := fun s a hs ha => (isGLB_infₛ (upperBounds s) hs.bddBelow_upperBounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Inf conditionallyCompleteLatticeOfInfₛ
 -/
 
@@ -697,7 +695,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {a : α} [_inst_2 : Nonempty.{u2} ι] {f : ι -> α}, (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) (Set.range.{u1, u2} α ι f) a) -> (Eq.{succ u1} α (supᵢ.{u1, u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (i : ι) => f i)) a)
 Case conversion may be inaccurate. Consider using '#align is_lub.csupr_eq IsLUB.csupᵢ_eqₓ'. -/
 theorem IsLUB.csupᵢ_eq [Nonempty ι] {f : ι → α} (H : IsLUB (range f) a) : (⨆ i, f i) = a :=
-  H.cSup_eq (range_nonempty f)
+  H.csupₛ_eq (range_nonempty f)
 #align is_lub.csupr_eq IsLUB.csupᵢ_eq
 
 /- warning: is_lub.csupr_set_eq -> IsLUB.csupᵢ_set_eq is a dubious translation:
@@ -719,7 +717,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_greatest.cSup_eq IsGreatest.csupₛ_eqₓ'. -/
 /-- A greatest element of a set is the supremum of this set. -/
 theorem IsGreatest.csupₛ_eq (H : IsGreatest s a) : supₛ s = a :=
-  H.IsLub.cSup_eq H.Nonempty
+  H.IsLUB.csupₛ_eq H.Nonempty
 #align is_greatest.cSup_eq IsGreatest.csupₛ_eq
 
 /- warning: is_greatest.Sup_mem -> IsGreatest.csupₛ_mem is a dubious translation:
@@ -729,7 +727,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α} {a : α}, (IsGreatest.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s a) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) s) s)
 Case conversion may be inaccurate. Consider using '#align is_greatest.Sup_mem IsGreatest.csupₛ_memₓ'. -/
 theorem IsGreatest.csupₛ_mem (H : IsGreatest s a) : supₛ s ∈ s :=
-  H.cSup_eq.symm ▸ H.1
+  H.csupₛ_eq.symm ▸ H.1
 #align is_greatest.Sup_mem IsGreatest.csupₛ_mem
 
 /- warning: is_glb.cInf_eq -> IsGLB.cinfₛ_eq is a dubious translation:
@@ -749,7 +747,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {a : α} [_inst_2 : Nonempty.{u2} ι] {f : ι -> α}, (IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) (Set.range.{u1, u2} α ι f) a) -> (Eq.{succ u1} α (infᵢ.{u1, u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => f i)) a)
 Case conversion may be inaccurate. Consider using '#align is_glb.cinfi_eq IsGLB.cinfᵢ_eqₓ'. -/
 theorem IsGLB.cinfᵢ_eq [Nonempty ι] {f : ι → α} (H : IsGLB (range f) a) : (⨅ i, f i) = a :=
-  H.cInf_eq (range_nonempty f)
+  H.cinfₛ_eq (range_nonempty f)
 #align is_glb.cinfi_eq IsGLB.cinfᵢ_eq
 
 /- warning: is_glb.cinfi_set_eq -> IsGLB.cinfᵢ_set_eq is a dubious translation:
@@ -771,7 +769,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_least.cInf_eq IsLeast.cinfₛ_eqₓ'. -/
 /-- A least element of a set is the infimum of this set. -/
 theorem IsLeast.cinfₛ_eq (H : IsLeast s a) : infₛ s = a :=
-  H.IsGlb.cInf_eq H.Nonempty
+  H.IsGLB.cinfₛ_eq H.Nonempty
 #align is_least.cInf_eq IsLeast.cinfₛ_eq
 
 /- warning: is_least.Inf_mem -> IsLeast.cinfₛ_mem is a dubious translation:
@@ -781,7 +779,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α} {a : α}, (IsLeast.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s a) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) s) s)
 Case conversion may be inaccurate. Consider using '#align is_least.Inf_mem IsLeast.cinfₛ_memₓ'. -/
 theorem IsLeast.cinfₛ_mem (H : IsLeast s a) : infₛ s ∈ s :=
-  H.cInf_eq.symm ▸ H.1
+  H.cinfₛ_eq.symm ▸ H.1
 #align is_least.Inf_mem IsLeast.cinfₛ_mem
 
 /- warning: subset_Icc_cInf_cSup -> subset_Icc_cinfₛ_csupₛ is a dubious translation:
@@ -822,7 +820,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_lower_bounds_eq_cInf csupₛ_lower_bounds_eq_cinfₛₓ'. -/
 theorem csupₛ_lower_bounds_eq_cinfₛ {s : Set α} (h : BddBelow s) (hs : s.Nonempty) :
     supₛ (lowerBounds s) = infₛ s :=
-  (isLUB_csupₛ h <| hs.mono fun x hx y hy => hy hx).unique (isGLB_cinfₛ hs h).IsLub
+  (isLUB_csupₛ h <| hs.mono fun x hx y hy => hy hx).unique (isGLB_cinfₛ hs h).IsLUB
 #align cSup_lower_bounds_eq_cInf csupₛ_lower_bounds_eq_cinfₛ
 
 /- warning: cInf_upper_bounds_eq_cSup -> cinfₛ_upper_bounds_eq_csupₛ is a dubious translation:
@@ -833,7 +831,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_upper_bounds_eq_cSup cinfₛ_upper_bounds_eq_csupₛₓ'. -/
 theorem cinfₛ_upper_bounds_eq_csupₛ {s : Set α} (h : BddAbove s) (hs : s.Nonempty) :
     infₛ (upperBounds s) = supₛ s :=
-  (isGLB_cinfₛ h <| hs.mono fun x hx y hy => hy hx).unique (isLUB_csupₛ hs h).IsGlb
+  (isGLB_cinfₛ h <| hs.mono fun x hx y hy => hy hx).unique (isLUB_csupₛ hs h).IsGLB
 #align cInf_upper_bounds_eq_cSup cinfₛ_upper_bounds_eq_csupₛ
 
 /- warning: not_mem_of_lt_cInf -> not_mem_of_lt_cinfₛ is a dubious translation:
@@ -938,7 +936,7 @@ Case conversion may be inaccurate. Consider using '#align cSup_singleton csupₛ
 /-- The supremum of a singleton is the element of the singleton-/
 @[simp]
 theorem csupₛ_singleton (a : α) : supₛ {a} = a :=
-  isGreatest_singleton.cSup_eq
+  isGreatest_singleton.csupₛ_eq
 #align cSup_singleton csupₛ_singleton
 
 /- warning: cInf_singleton -> cinfₛ_singleton is a dubious translation:
@@ -950,7 +948,7 @@ Case conversion may be inaccurate. Consider using '#align cInf_singleton cinfₛ
 /-- The infimum of a singleton is the element of the singleton-/
 @[simp]
 theorem cinfₛ_singleton (a : α) : infₛ {a} = a :=
-  isLeast_singleton.cInf_eq
+  isLeast_singleton.cinfₛ_eq
 #align cInf_singleton cinfₛ_singleton
 
 /- warning: cSup_pair -> csupₛ_pair is a dubious translation:
@@ -961,7 +959,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_pair csupₛ_pairₓ'. -/
 @[simp]
 theorem csupₛ_pair (a b : α) : supₛ {a, b} = a ⊔ b :=
-  (@isLUB_pair _ _ a b).cSup_eq (insert_nonempty _ _)
+  (@isLUB_pair _ _ a b).csupₛ_eq (insert_nonempty _ _)
 #align cSup_pair csupₛ_pair
 
 /- warning: cInf_pair -> cinfₛ_pair is a dubious translation:
@@ -972,7 +970,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_pair cinfₛ_pairₓ'. -/
 @[simp]
 theorem cinfₛ_pair (a b : α) : infₛ {a, b} = a ⊓ b :=
-  (@isGLB_pair _ _ a b).cInf_eq (insert_nonempty _ _)
+  (@isGLB_pair _ _ a b).cinfₛ_eq (insert_nonempty _ _)
 #align cInf_pair cinfₛ_pair
 
 /- warning: cInf_le_cSup -> cinfₛ_le_csupₛ is a dubious translation:
@@ -997,7 +995,7 @@ Case conversion may be inaccurate. Consider using '#align cSup_union csupₛ_uni
 that all sets are bounded above and nonempty.-/
 theorem csupₛ_union (hs : BddAbove s) (sne : s.Nonempty) (ht : BddAbove t) (tne : t.Nonempty) :
     supₛ (s ∪ t) = supₛ s ⊔ supₛ t :=
-  ((isLUB_csupₛ sne hs).union (isLUB_csupₛ tne ht)).cSup_eq sne.inl
+  ((isLUB_csupₛ sne hs).union (isLUB_csupₛ tne ht)).csupₛ_eq sne.inl
 #align cSup_union csupₛ_union
 
 /- warning: cInf_union -> cinfₛ_union is a dubious translation:
@@ -1048,7 +1046,7 @@ Case conversion may be inaccurate. Consider using '#align cSup_insert csupₛ_in
 /-- The supremum of insert a s is the maximum of a and the supremum of s, if s is
 nonempty and bounded above.-/
 theorem csupₛ_insert (hs : BddAbove s) (sne : s.Nonempty) : supₛ (insert a s) = a ⊔ supₛ s :=
-  ((isLUB_csupₛ sne hs).insert a).cSup_eq (insert_nonempty a s)
+  ((isLUB_csupₛ sne hs).insert a).csupₛ_eq (insert_nonempty a s)
 #align cSup_insert csupₛ_insert
 
 /- warning: cInf_insert -> cinfₛ_insert is a dubious translation:
@@ -1071,7 +1069,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_Icc cinfₛ_Iccₓ'. -/
 @[simp]
 theorem cinfₛ_Icc (h : a ≤ b) : infₛ (Icc a b) = a :=
-  (isGLB_Icc h).cInf_eq (nonempty_Icc.2 h)
+  (isGLB_Icc h).cinfₛ_eq (nonempty_Icc.2 h)
 #align cInf_Icc cinfₛ_Icc
 
 /- warning: cInf_Ici -> cinfₛ_Ici is a dubious translation:
@@ -1082,7 +1080,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_Ici cinfₛ_Iciₓ'. -/
 @[simp]
 theorem cinfₛ_Ici : infₛ (Ici a) = a :=
-  isLeast_Ici.cInf_eq
+  isLeast_Ici.cinfₛ_eq
 #align cInf_Ici cinfₛ_Ici
 
 /- warning: cInf_Ico -> cinfₛ_Ico is a dubious translation:
@@ -1093,7 +1091,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_Ico cinfₛ_Icoₓ'. -/
 @[simp]
 theorem cinfₛ_Ico (h : a < b) : infₛ (Ico a b) = a :=
-  (isGLB_Ico h).cInf_eq (nonempty_Ico.2 h)
+  (isGLB_Ico h).cinfₛ_eq (nonempty_Ico.2 h)
 #align cInf_Ico cinfₛ_Ico
 
 /- warning: cInf_Ioc -> cinfₛ_Ioc is a dubious translation:
@@ -1104,7 +1102,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_Ioc cinfₛ_Iocₓ'. -/
 @[simp]
 theorem cinfₛ_Ioc [DenselyOrdered α] (h : a < b) : infₛ (Ioc a b) = a :=
-  (isGLB_Ioc h).cInf_eq (nonempty_Ioc.2 h)
+  (isGLB_Ioc h).cinfₛ_eq (nonempty_Ioc.2 h)
 #align cInf_Ioc cinfₛ_Ioc
 
 /- warning: cInf_Ioi -> cinfₛ_Ioi is a dubious translation:
@@ -1127,7 +1125,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_Ioo cinfₛ_Iooₓ'. -/
 @[simp]
 theorem cinfₛ_Ioo [DenselyOrdered α] (h : a < b) : infₛ (Ioo a b) = a :=
-  (isGLB_Ioo h).cInf_eq (nonempty_Ioo.2 h)
+  (isGLB_Ioo h).cinfₛ_eq (nonempty_Ioo.2 h)
 #align cInf_Ioo cinfₛ_Ioo
 
 /- warning: cSup_Icc -> csupₛ_Icc is a dubious translation:
@@ -1138,7 +1136,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_Icc csupₛ_Iccₓ'. -/
 @[simp]
 theorem csupₛ_Icc (h : a ≤ b) : supₛ (Icc a b) = b :=
-  (isLUB_Icc h).cSup_eq (nonempty_Icc.2 h)
+  (isLUB_Icc h).csupₛ_eq (nonempty_Icc.2 h)
 #align cSup_Icc csupₛ_Icc
 
 /- warning: cSup_Ico -> csupₛ_Ico is a dubious translation:
@@ -1149,7 +1147,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_Ico csupₛ_Icoₓ'. -/
 @[simp]
 theorem csupₛ_Ico [DenselyOrdered α] (h : a < b) : supₛ (Ico a b) = b :=
-  (isLUB_Ico h).cSup_eq (nonempty_Ico.2 h)
+  (isLUB_Ico h).csupₛ_eq (nonempty_Ico.2 h)
 #align cSup_Ico csupₛ_Ico
 
 /- warning: cSup_Iic -> csupₛ_Iic is a dubious translation:
@@ -1160,7 +1158,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_Iic csupₛ_Iicₓ'. -/
 @[simp]
 theorem csupₛ_Iic : supₛ (Iic a) = a :=
-  isGreatest_Iic.cSup_eq
+  isGreatest_Iic.csupₛ_eq
 #align cSup_Iic csupₛ_Iic
 
 /- warning: cSup_Iio -> csupₛ_Iio is a dubious translation:
@@ -1183,7 +1181,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_Ioc csupₛ_Iocₓ'. -/
 @[simp]
 theorem csupₛ_Ioc (h : a < b) : supₛ (Ioc a b) = b :=
-  (isLUB_Ioc h).cSup_eq (nonempty_Ioc.2 h)
+  (isLUB_Ioc h).csupₛ_eq (nonempty_Ioc.2 h)
 #align cSup_Ioc csupₛ_Ioc
 
 /- warning: cSup_Ioo -> csupₛ_Ioo is a dubious translation:
@@ -1194,7 +1192,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_Ioo csupₛ_Iooₓ'. -/
 @[simp]
 theorem csupₛ_Ioo [DenselyOrdered α] (h : a < b) : supₛ (Ioo a b) = b :=
-  (isLUB_Ioo h).cSup_eq (nonempty_Ioo.2 h)
+  (isLUB_Ioo h).csupₛ_eq (nonempty_Ioo.2 h)
 #align cSup_Ioo csupₛ_Ioo
 
 /- warning: csupr_le -> csupᵢ_le is a dubious translation:
@@ -1564,7 +1562,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Set.{u1} α} {b : α} [_inst_2 : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9097 : α) (x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9099 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9097 x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9099)], (Set.Nonempty.{u1} α s) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) b (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (lowerBounds.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1))))) s)))
 Case conversion may be inaccurate. Consider using '#align le_cInf_iff' le_cinfₛ_iff'ₓ'. -/
 theorem le_cinfₛ_iff' (hs : s.Nonempty) : b ≤ infₛ s ↔ b ∈ lowerBounds s :=
-  le_isGLB_iff (isLeast_cinfₛ hs).IsGlb
+  le_isGLB_iff (isLeast_cinfₛ hs).IsGLB
 #align le_cInf_iff' le_cinfₛ_iff'
 
 /- warning: Inf_mem -> cinfₛ_mem is a dubious translation:
@@ -1595,7 +1593,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.map_Inf MonotoneOn.map_cinfₛₓ'. -/
 theorem MonotoneOn.map_cinfₛ {β : Type _} [ConditionallyCompleteLattice β] {f : α → β}
     (hf : MonotoneOn f s) (hs : s.Nonempty) : f (infₛ s) = infₛ (f '' s) :=
-  (hf.map_is_least (isLeast_cinfₛ hs)).cInf_eq.symm
+  (hf.map_isLeast (isLeast_cinfₛ hs)).cinfₛ_eq.symm
 #align monotone_on.map_Inf MonotoneOn.map_cinfₛ
 
 /- warning: monotone.map_Inf -> Monotone.map_cinfₛ is a dubious translation:
@@ -1606,7 +1604,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone.map_Inf Monotone.map_cinfₛₓ'. -/
 theorem Monotone.map_cinfₛ {β : Type _} [ConditionallyCompleteLattice β] {f : α → β}
     (hf : Monotone f) (hs : s.Nonempty) : f (infₛ s) = infₛ (f '' s) :=
-  (hf.map_is_least (isLeast_cinfₛ hs)).cInf_eq.symm
+  (hf.map_isLeast (isLeast_cinfₛ hs)).cinfₛ_eq.symm
 #align monotone.map_Inf Monotone.map_cinfₛ
 
 end ConditionallyCompleteLinearOrder
@@ -1663,7 +1661,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_univ cinfₛ_univₓ'. -/
 @[simp]
 theorem cinfₛ_univ : infₛ (univ : Set α) = ⊥ :=
-  isLeast_univ.cInf_eq
+  isLeast_univ.cinfₛ_eq
 #align cInf_univ cinfₛ_univ
 
 /- warning: is_lub_cSup' -> isLUB_csupₛ' is a dubious translation:
@@ -1968,12 +1966,12 @@ theorem isGLB_infₛ (s : Set (WithTop α)) : IsGLB s (infₛ s) :=
 noncomputable instance : CompleteLinearOrder (WithTop α) :=
   { WithTop.linearOrder, WithTop.lattice, WithTop.orderTop,
     WithTop.orderBot with
-    sup := supₛ
-    le_Sup := fun s => (isLUB_supₛ s).1
-    Sup_le := fun s => (isLUB_supₛ s).2
-    inf := infₛ
-    le_Inf := fun s => (isGLB_infₛ s).2
-    Inf_le := fun s => (isGLB_infₛ s).1 }
+    supₛ := supₛ
+    le_sup := fun s => (isLUB_supₛ s).1
+    sup_le := fun s => (isLUB_supₛ s).2
+    infₛ := infₛ
+    le_inf := fun s => (isGLB_infₛ s).2
+    inf_le := fun s => (isGLB_infₛ s).1 }
 
 /- warning: with_top.coe_Sup -> WithTop.coe_supₛ is a dubious translation:
 lean 3 declaration is
@@ -2028,7 +2026,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone.cSup_image_le Monotone.csupₛ_image_leₓ'. -/
 theorem csupₛ_image_le {s : Set α} (hs : s.Nonempty) {B : α} (hB : B ∈ upperBounds s) :
     supₛ (f '' s) ≤ f B :=
-  csupₛ_le (Nonempty.image f hs) (h_mono.mem_upper_bounds_image hB)
+  csupₛ_le (Nonempty.image f hs) (h_mono.mem_upperBounds_image hB)
 #align monotone.cSup_image_le Monotone.csupₛ_image_le
 
 /- warning: monotone.cInf_image_le -> Monotone.cinfₛ_image_le is a dubious translation:
@@ -2068,7 +2066,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_connection.l_cSup GaloisConnection.l_csupₛₓ'. -/
 theorem l_csupₛ (gc : GaloisConnection l u) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) :
     l (supₛ s) = ⨆ x : s, l x :=
-  Eq.symm <| IsLUB.csupᵢ_set_eq (gc.is_lub_l_image <| isLUB_csupₛ hne hbdd) hne
+  Eq.symm <| IsLUB.csupᵢ_set_eq (gc.isLUB_l_image <| isLUB_csupₛ hne hbdd) hne
 #align galois_connection.l_cSup GaloisConnection.l_csupₛ
 
 /- warning: galois_connection.l_cSup' -> GaloisConnection.l_csupₛ' is a dubious translation:
@@ -2113,7 +2111,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_connection.u_cInf GaloisConnection.u_cinfₛₓ'. -/
 theorem u_cinfₛ (gc : GaloisConnection l u) {s : Set β} (hne : s.Nonempty) (hbdd : BddBelow s) :
     u (infₛ s) = ⨅ x : s, u x :=
-  gc.dual.l_cSup hne hbdd
+  gc.dual.l_csupₛ hne hbdd
 #align galois_connection.u_cInf GaloisConnection.u_cinfₛ
 
 /- warning: galois_connection.u_cInf' -> GaloisConnection.u_cinfₛ' is a dubious translation:
@@ -2124,7 +2122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_connection.u_cInf' GaloisConnection.u_cinfₛ'ₓ'. -/
 theorem u_cinfₛ' (gc : GaloisConnection l u) {s : Set β} (hne : s.Nonempty) (hbdd : BddBelow s) :
     u (infₛ s) = infₛ (u '' s) :=
-  gc.dual.l_cSup' hne hbdd
+  gc.dual.l_csupₛ' hne hbdd
 #align galois_connection.u_cInf' GaloisConnection.u_cinfₛ'
 
 /- warning: galois_connection.u_cinfi -> GaloisConnection.u_cinfᵢ is a dubious translation:
@@ -2135,7 +2133,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_connection.u_cinfi GaloisConnection.u_cinfᵢₓ'. -/
 theorem u_cinfᵢ (gc : GaloisConnection l u) {f : ι → β} (hf : BddBelow (range f)) :
     u (⨅ i, f i) = ⨅ i, u (f i) :=
-  gc.dual.l_csupr hf
+  gc.dual.l_csupᵢ hf
 #align galois_connection.u_cinfi GaloisConnection.u_cinfᵢ
 
 /- warning: galois_connection.u_cinfi_set -> GaloisConnection.u_cinfᵢ_set is a dubious translation:
@@ -2146,7 +2144,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_connection.u_cinfi_set GaloisConnection.u_cinfᵢ_setₓ'. -/
 theorem u_cinfᵢ_set (gc : GaloisConnection l u) {s : Set γ} {f : γ → β} (hf : BddBelow (f '' s))
     (hne : s.Nonempty) : u (⨅ i : s, f i) = ⨅ i : s, u (f i) :=
-  gc.dual.l_csupr_set hf hne
+  gc.dual.l_csupᵢ_set hf hne
 #align galois_connection.u_cinfi_set GaloisConnection.u_cinfᵢ_set
 
 end GaloisConnection
@@ -2163,7 +2161,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_cSup OrderIso.map_csupₛₓ'. -/
 theorem map_csupₛ (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) :
     e (supₛ s) = ⨆ x : s, e x :=
-  e.to_galois_connection.l_cSup hne hbdd
+  e.to_galoisConnection.l_csupₛ hne hbdd
 #align order_iso.map_cSup OrderIso.map_csupₛ
 
 /- warning: order_iso.map_cSup' -> OrderIso.map_csupₛ' is a dubious translation:
@@ -2174,7 +2172,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_cSup' OrderIso.map_csupₛ'ₓ'. -/
 theorem map_csupₛ' (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddAbove s) :
     e (supₛ s) = supₛ (e '' s) :=
-  e.to_galois_connection.l_cSup' hne hbdd
+  e.to_galoisConnection.l_csupₛ' hne hbdd
 #align order_iso.map_cSup' OrderIso.map_csupₛ'
 
 /- warning: order_iso.map_csupr -> OrderIso.map_csupᵢ is a dubious translation:
@@ -2185,7 +2183,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_csupr OrderIso.map_csupᵢₓ'. -/
 theorem map_csupᵢ (e : α ≃o β) {f : ι → α} (hf : BddAbove (range f)) :
     e (⨆ i, f i) = ⨆ i, e (f i) :=
-  e.to_galois_connection.l_csupr hf
+  e.to_galoisConnection.l_csupᵢ hf
 #align order_iso.map_csupr OrderIso.map_csupᵢ
 
 /- warning: order_iso.map_csupr_set -> OrderIso.map_csupᵢ_set is a dubious translation:
@@ -2196,7 +2194,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_csupr_set OrderIso.map_csupᵢ_setₓ'. -/
 theorem map_csupᵢ_set (e : α ≃o β) {s : Set γ} {f : γ → α} (hf : BddAbove (f '' s))
     (hne : s.Nonempty) : e (⨆ i : s, f i) = ⨆ i : s, e (f i) :=
-  e.to_galois_connection.l_csupr_set hf hne
+  e.to_galoisConnection.l_csupᵢ_set hf hne
 #align order_iso.map_csupr_set OrderIso.map_csupᵢ_set
 
 /- warning: order_iso.map_cInf -> OrderIso.map_cinfₛ is a dubious translation:
@@ -2207,7 +2205,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_cInf OrderIso.map_cinfₛₓ'. -/
 theorem map_cinfₛ (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddBelow s) :
     e (infₛ s) = ⨅ x : s, e x :=
-  e.dual.map_cSup hne hbdd
+  e.dual.map_csupₛ hne hbdd
 #align order_iso.map_cInf OrderIso.map_cinfₛ
 
 /- warning: order_iso.map_cInf' -> OrderIso.map_cinfₛ' is a dubious translation:
@@ -2218,7 +2216,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_cInf' OrderIso.map_cinfₛ'ₓ'. -/
 theorem map_cinfₛ' (e : α ≃o β) {s : Set α} (hne : s.Nonempty) (hbdd : BddBelow s) :
     e (infₛ s) = infₛ (e '' s) :=
-  e.dual.map_cSup' hne hbdd
+  e.dual.map_csupₛ' hne hbdd
 #align order_iso.map_cInf' OrderIso.map_cinfₛ'
 
 /- warning: order_iso.map_cinfi -> OrderIso.map_cinfᵢ is a dubious translation:
@@ -2229,7 +2227,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_cinfi OrderIso.map_cinfᵢₓ'. -/
 theorem map_cinfᵢ (e : α ≃o β) {f : ι → α} (hf : BddBelow (range f)) :
     e (⨅ i, f i) = ⨅ i, e (f i) :=
-  e.dual.map_csupr hf
+  e.dual.map_csupᵢ hf
 #align order_iso.map_cinfi OrderIso.map_cinfᵢ
 
 /- warning: order_iso.map_cinfi_set -> OrderIso.map_cinfᵢ_set is a dubious translation:
@@ -2240,7 +2238,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.map_cinfi_set OrderIso.map_cinfᵢ_setₓ'. -/
 theorem map_cinfᵢ_set (e : α ≃o β) {s : Set γ} {f : γ → α} (hf : BddBelow (f '' s))
     (hne : s.Nonempty) : e (⨅ i : s, f i) = ⨅ i : s, e (f i) :=
-  e.dual.map_csupr_set hf hne
+  e.dual.map_csupᵢ_set hf hne
 #align order_iso.map_cinfi_set OrderIso.map_cinfᵢ_set
 
 end OrderIso
@@ -2284,7 +2282,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u3} α] [_inst_2 : ConditionallyCompleteLattice.{u1} β] [_inst_3 : ConditionallyCompleteLattice.{u2} γ] {s : Set.{u3} α} {t : Set.{u1} β} {l : α -> β -> γ} {u₁ : β -> γ -> α} {u₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u2} α γ (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1)))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_3)))) (Function.swap.{succ u3, succ u1, succ u2} α β (fun (ᾰ : α) (ᾰ : β) => γ) l b) (u₁ b)) -> (forall (a : α), GaloisConnection.{u1, u2} (OrderDual.{u1} β) γ (OrderDual.preorder.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_3)))) (Function.comp.{succ u1, succ u1, succ u2} (OrderDual.{u1} β) β γ (l a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) β))) (OrderDual.ofDual.{u1} β))) (Function.comp.{succ u2, succ u1, succ u1} γ β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (u₂ a))) -> (Set.Nonempty.{u3} α s) -> (BddAbove.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1)))) s) -> (Set.Nonempty.{u1} β t) -> (BddBelow.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) t) -> (Eq.{succ u2} γ (SupSet.supₛ.{u2} γ (ConditionallyCompleteLattice.toSupSet.{u2} γ _inst_3) (Set.image2.{u3, u1, u2} α β γ l s t)) (l (SupSet.supₛ.{u3} α (ConditionallyCompleteLattice.toSupSet.{u3} α _inst_1) s) (InfSet.infₛ.{u1} β (ConditionallyCompleteLattice.toInfSet.{u1} β _inst_2) t)))
 Case conversion may be inaccurate. Consider using '#align cSup_image2_eq_cSup_cInf csupₛ_image2_eq_csupₛ_cinfₛₓ'. -/
 theorem csupₛ_image2_eq_csupₛ_cinfₛ (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) :
+    (h₂ : ∀ a, GaloisConnection (l a ∘ ofDual) (toDual ∘ u₂ a)) :
     s.Nonempty → BddAbove s → t.Nonempty → BddBelow t → supₛ (image2 l s t) = l (supₛ s) (infₛ t) :=
   @csupₛ_image2_eq_csupₛ_csupₛ _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align cSup_image2_eq_cSup_cInf csupₛ_image2_eq_csupₛ_cinfₛ
@@ -2295,8 +2293,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u3} α] [_inst_2 : ConditionallyCompleteLattice.{u1} β] [_inst_3 : ConditionallyCompleteLattice.{u2} γ] {s : Set.{u3} α} {t : Set.{u1} β} {l : α -> β -> γ} {u₁ : β -> γ -> α} {u₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u2} (OrderDual.{u3} α) γ (OrderDual.preorder.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1))))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_3)))) (Function.comp.{succ u3, succ u3, succ u2} (OrderDual.{u3} α) α γ (Function.swap.{succ u3, succ u1, succ u2} α β (fun (ᾰ : α) (ᾰ : β) => γ) l b) (FunLike.coe.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} (OrderDual.{u3} α) α) (OrderDual.{u3} α) (fun (_x : OrderDual.{u3} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u3} α) => α) _x) (EmbeddingLike.toFunLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} (OrderDual.{u3} α) α) (OrderDual.{u3} α) α (EquivLike.toEmbeddingLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} (OrderDual.{u3} α) α) (OrderDual.{u3} α) α (Equiv.instEquivLikeEquiv.{succ u3, succ u3} (OrderDual.{u3} α) α))) (OrderDual.ofDual.{u3} α))) (Function.comp.{succ u2, succ u3, succ u3} γ α (OrderDual.{u3} α) (FunLike.coe.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} α (OrderDual.{u3} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u3} α) _x) (EmbeddingLike.toFunLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} α (OrderDual.{u3} α)) α (OrderDual.{u3} α) (EquivLike.toEmbeddingLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} α (OrderDual.{u3} α)) α (OrderDual.{u3} α) (Equiv.instEquivLikeEquiv.{succ u3, succ u3} α (OrderDual.{u3} α)))) (OrderDual.toDual.{u3} α)) (u₁ b))) -> (forall (a : α), GaloisConnection.{u1, u2} β γ (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_3)))) (l a) (u₂ a)) -> (Set.Nonempty.{u3} α s) -> (BddBelow.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1)))) s) -> (Set.Nonempty.{u1} β t) -> (BddAbove.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) t) -> (Eq.{succ u2} γ (SupSet.supₛ.{u2} γ (ConditionallyCompleteLattice.toSupSet.{u2} γ _inst_3) (Set.image2.{u3, u1, u2} α β γ l s t)) (l (InfSet.infₛ.{u3} α (ConditionallyCompleteLattice.toInfSet.{u3} α _inst_1) s) (SupSet.supₛ.{u1} β (ConditionallyCompleteLattice.toSupSet.{u1} β _inst_2) t)))
 Case conversion may be inaccurate. Consider using '#align cSup_image2_eq_cInf_cSup csupₛ_image2_eq_cinfₛ_csupₛₓ'. -/
-theorem csupₛ_image2_eq_cinfₛ_csupₛ
-    (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
+theorem csupₛ_image2_eq_cinfₛ_csupₛ (h₁ : ∀ b, GaloisConnection (swap l b ∘ ofDual) (toDual ∘ u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) :
     s.Nonempty → BddBelow s → t.Nonempty → BddAbove t → supₛ (image2 l s t) = l (infₛ s) (supₛ t) :=
   @csupₛ_image2_eq_csupₛ_csupₛ αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
@@ -2308,9 +2305,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} [_inst_1 : ConditionallyCompleteLattice.{u3} α] [_inst_2 : ConditionallyCompleteLattice.{u1} β] [_inst_3 : ConditionallyCompleteLattice.{u2} γ] {s : Set.{u3} α} {t : Set.{u1} β} {l : α -> β -> γ} {u₁ : β -> γ -> α} {u₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u2} (OrderDual.{u3} α) γ (OrderDual.preorder.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1))))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_3)))) (Function.comp.{succ u3, succ u3, succ u2} (OrderDual.{u3} α) α γ (Function.swap.{succ u3, succ u1, succ u2} α β (fun (ᾰ : α) (ᾰ : β) => γ) l b) (FunLike.coe.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} (OrderDual.{u3} α) α) (OrderDual.{u3} α) (fun (_x : OrderDual.{u3} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u3} α) => α) _x) (EmbeddingLike.toFunLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} (OrderDual.{u3} α) α) (OrderDual.{u3} α) α (EquivLike.toEmbeddingLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} (OrderDual.{u3} α) α) (OrderDual.{u3} α) α (Equiv.instEquivLikeEquiv.{succ u3, succ u3} (OrderDual.{u3} α) α))) (OrderDual.ofDual.{u3} α))) (Function.comp.{succ u2, succ u3, succ u3} γ α (OrderDual.{u3} α) (FunLike.coe.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} α (OrderDual.{u3} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u3} α) _x) (EmbeddingLike.toFunLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} α (OrderDual.{u3} α)) α (OrderDual.{u3} α) (EquivLike.toEmbeddingLike.{succ u3, succ u3, succ u3} (Equiv.{succ u3, succ u3} α (OrderDual.{u3} α)) α (OrderDual.{u3} α) (Equiv.instEquivLikeEquiv.{succ u3, succ u3} α (OrderDual.{u3} α)))) (OrderDual.toDual.{u3} α)) (u₁ b))) -> (forall (a : α), GaloisConnection.{u1, u2} (OrderDual.{u1} β) γ (OrderDual.preorder.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) (PartialOrder.toPreorder.{u2} γ (SemilatticeInf.toPartialOrder.{u2} γ (Lattice.toSemilatticeInf.{u2} γ (ConditionallyCompleteLattice.toLattice.{u2} γ _inst_3)))) (Function.comp.{succ u1, succ u1, succ u2} (OrderDual.{u1} β) β γ (l a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) β))) (OrderDual.ofDual.{u1} β))) (Function.comp.{succ u2, succ u1, succ u1} γ β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (u₂ a))) -> (Set.Nonempty.{u3} α s) -> (BddBelow.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (ConditionallyCompleteLattice.toLattice.{u3} α _inst_1)))) s) -> (Set.Nonempty.{u1} β t) -> (BddBelow.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) t) -> (Eq.{succ u2} γ (SupSet.supₛ.{u2} γ (ConditionallyCompleteLattice.toSupSet.{u2} γ _inst_3) (Set.image2.{u3, u1, u2} α β γ l s t)) (l (InfSet.infₛ.{u3} α (ConditionallyCompleteLattice.toInfSet.{u3} α _inst_1) s) (InfSet.infₛ.{u1} β (ConditionallyCompleteLattice.toInfSet.{u1} β _inst_2) t)))
 Case conversion may be inaccurate. Consider using '#align cSup_image2_eq_cInf_cInf csupₛ_image2_eq_cinfₛ_cinfₛₓ'. -/
-theorem csupₛ_image2_eq_cinfₛ_cinfₛ
-    (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) :
+theorem csupₛ_image2_eq_cinfₛ_cinfₛ (h₁ : ∀ b, GaloisConnection (swap l b ∘ ofDual) (toDual ∘ u₁ b))
+    (h₂ : ∀ a, GaloisConnection (l a ∘ ofDual) (toDual ∘ u₂ a)) :
     s.Nonempty → BddBelow s → t.Nonempty → BddBelow t → supₛ (image2 l s t) = l (infₛ s) (infₛ t) :=
   @csupₛ_image2_eq_csupₛ_csupₛ αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align cSup_image2_eq_cInf_cInf csupₛ_image2_eq_cinfₛ_cinfₛ
@@ -2335,7 +2331,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : ConditionallyCompleteLattice.{u2} α] [_inst_2 : ConditionallyCompleteLattice.{u1} β] [_inst_3 : ConditionallyCompleteLattice.{u3} γ] {s : Set.{u2} α} {t : Set.{u1} β} {u : α -> β -> γ} {l₁ : β -> γ -> α} {l₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u2} γ α (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_3)))) (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1)))) (l₁ b) (Function.swap.{succ u2, succ u1, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) u b)) -> (forall (a : α), GaloisConnection.{u3, u1} γ (OrderDual.{u1} β) (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_3)))) (OrderDual.preorder.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) (Function.comp.{succ u3, succ u1, succ u1} γ β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (l₂ a)) (Function.comp.{succ u1, succ u1, succ u3} (OrderDual.{u1} β) β γ (u a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) β))) (OrderDual.ofDual.{u1} β)))) -> (Set.Nonempty.{u2} α s) -> (BddBelow.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1)))) s) -> (Set.Nonempty.{u1} β t) -> (BddAbove.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) t) -> (Eq.{succ u3} γ (InfSet.infₛ.{u3} γ (ConditionallyCompleteLattice.toInfSet.{u3} γ _inst_3) (Set.image2.{u2, u1, u3} α β γ u s t)) (u (InfSet.infₛ.{u2} α (ConditionallyCompleteLattice.toInfSet.{u2} α _inst_1) s) (SupSet.supₛ.{u1} β (ConditionallyCompleteLattice.toSupSet.{u1} β _inst_2) t)))
 Case conversion may be inaccurate. Consider using '#align cInf_image2_eq_cInf_cSup cinfₛ_image2_eq_cinfₛ_csupₛₓ'. -/
 theorem cinfₛ_image2_eq_cinfₛ_csupₛ (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
-    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) :
+    (h₂ : ∀ a, GaloisConnection (toDual ∘ l₂ a) (u a ∘ ofDual)) :
     s.Nonempty → BddBelow s → t.Nonempty → BddAbove t → infₛ (image2 u s t) = u (infₛ s) (supₛ t) :=
   @cinfₛ_image2_eq_cinfₛ_cinfₛ _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align cInf_image2_eq_cInf_cSup cinfₛ_image2_eq_cinfₛ_csupₛ
@@ -2346,8 +2342,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : ConditionallyCompleteLattice.{u2} α] [_inst_2 : ConditionallyCompleteLattice.{u1} β] [_inst_3 : ConditionallyCompleteLattice.{u3} γ] {s : Set.{u2} α} {t : Set.{u1} β} {u : α -> β -> γ} {l₁ : β -> γ -> α} {l₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u2} γ (OrderDual.{u2} α) (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_3)))) (OrderDual.preorder.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1))))) (Function.comp.{succ u3, succ u2, succ u2} γ α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) (l₁ b)) (Function.comp.{succ u2, succ u2, succ u3} (OrderDual.{u2} α) α γ (Function.swap.{succ u2, succ u1, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) u b) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α)))) -> (forall (a : α), GaloisConnection.{u3, u1} γ β (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_3)))) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) (l₂ a) (u a)) -> (Set.Nonempty.{u2} α s) -> (BddAbove.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1)))) s) -> (Set.Nonempty.{u1} β t) -> (BddBelow.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) t) -> (Eq.{succ u3} γ (InfSet.infₛ.{u3} γ (ConditionallyCompleteLattice.toInfSet.{u3} γ _inst_3) (Set.image2.{u2, u1, u3} α β γ u s t)) (u (SupSet.supₛ.{u2} α (ConditionallyCompleteLattice.toSupSet.{u2} α _inst_1) s) (InfSet.infₛ.{u1} β (ConditionallyCompleteLattice.toInfSet.{u1} β _inst_2) t)))
 Case conversion may be inaccurate. Consider using '#align cInf_image2_eq_cSup_cInf cinfₛ_image2_eq_csupₛ_cinfₛₓ'. -/
-theorem cinfₛ_image2_eq_csupₛ_cinfₛ
-    (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
+theorem cinfₛ_image2_eq_csupₛ_cinfₛ (h₁ : ∀ b, GaloisConnection (toDual ∘ l₁ b) (swap u b ∘ ofDual))
     (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) :
     s.Nonempty → BddAbove s → t.Nonempty → BddBelow t → infₛ (image2 u s t) = u (supₛ s) (infₛ t) :=
   @cinfₛ_image2_eq_cinfₛ_cinfₛ αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
@@ -2359,9 +2354,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : ConditionallyCompleteLattice.{u2} α] [_inst_2 : ConditionallyCompleteLattice.{u1} β] [_inst_3 : ConditionallyCompleteLattice.{u3} γ] {s : Set.{u2} α} {t : Set.{u1} β} {u : α -> β -> γ} {l₁ : β -> γ -> α} {l₂ : α -> γ -> β}, (forall (b : β), GaloisConnection.{u3, u2} γ (OrderDual.{u2} α) (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_3)))) (OrderDual.preorder.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1))))) (Function.comp.{succ u3, succ u2, succ u2} γ α (OrderDual.{u2} α) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => OrderDual.{u2} α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} α (OrderDual.{u2} α)) α (OrderDual.{u2} α) (Equiv.instEquivLikeEquiv.{succ u2, succ u2} α (OrderDual.{u2} α)))) (OrderDual.toDual.{u2} α)) (l₁ b)) (Function.comp.{succ u2, succ u2, succ u3} (OrderDual.{u2} α) α γ (Function.swap.{succ u2, succ u1, succ u3} α β (fun (ᾰ : α) (ᾰ : β) => γ) u b) (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) (fun (_x : OrderDual.{u2} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u2} α) => α) _x) (EmbeddingLike.toFunLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (EquivLike.toEmbeddingLike.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (OrderDual.{u2} α) α) (OrderDual.{u2} α) α (Equiv.instEquivLikeEquiv.{succ u2, succ u2} (OrderDual.{u2} α) α))) (OrderDual.ofDual.{u2} α)))) -> (forall (a : α), GaloisConnection.{u3, u1} γ (OrderDual.{u1} β) (PartialOrder.toPreorder.{u3} γ (SemilatticeInf.toPartialOrder.{u3} γ (Lattice.toSemilatticeInf.{u3} γ (ConditionallyCompleteLattice.toLattice.{u3} γ _inst_3)))) (OrderDual.preorder.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2))))) (Function.comp.{succ u3, succ u1, succ u1} γ β (OrderDual.{u1} β) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (fun (_x : β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : β) => OrderDual.{u1} β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} β (OrderDual.{u1} β)) β (OrderDual.{u1} β) (Equiv.instEquivLikeEquiv.{succ u1, succ u1} β (OrderDual.{u1} β)))) (OrderDual.toDual.{u1} β)) (l₂ a)) (Function.comp.{succ u1, succ u1, succ u3} (OrderDual.{u1} β) β γ (u a) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) (fun (_x : OrderDual.{u1} β) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : OrderDual.{u1} β) => β) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (EquivLike.toEmbeddingLike.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} (OrderDual.{u1} β) β) (OrderDual.{u1} β) β (Equiv.instEquivLikeEquiv.{succ u1, succ u1} (OrderDual.{u1} β) β))) (OrderDual.ofDual.{u1} β)))) -> (Set.Nonempty.{u2} α s) -> (BddAbove.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1)))) s) -> (Set.Nonempty.{u1} β t) -> (BddAbove.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (ConditionallyCompleteLattice.toLattice.{u1} β _inst_2)))) t) -> (Eq.{succ u3} γ (InfSet.infₛ.{u3} γ (ConditionallyCompleteLattice.toInfSet.{u3} γ _inst_3) (Set.image2.{u2, u1, u3} α β γ u s t)) (u (SupSet.supₛ.{u2} α (ConditionallyCompleteLattice.toSupSet.{u2} α _inst_1) s) (SupSet.supₛ.{u1} β (ConditionallyCompleteLattice.toSupSet.{u1} β _inst_2) t)))
 Case conversion may be inaccurate. Consider using '#align cInf_image2_eq_cSup_cSup cinfₛ_image2_eq_csupₛ_csupₛₓ'. -/
-theorem cinfₛ_image2_eq_csupₛ_csupₛ
-    (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
-    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) :
+theorem cinfₛ_image2_eq_csupₛ_csupₛ (h₁ : ∀ b, GaloisConnection (toDual ∘ l₁ b) (swap u b ∘ ofDual))
+    (h₂ : ∀ a, GaloisConnection (toDual ∘ l₂ a) (u a ∘ ofDual)) :
     s.Nonempty → BddAbove s → t.Nonempty → BddAbove t → infₛ (image2 u s t) = u (supₛ s) (supₛ t) :=
   @cinfₛ_image2_eq_cinfₛ_cinfₛ αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align cInf_image2_eq_cSup_cSup cinfₛ_image2_eq_csupₛ_csupₛ
@@ -2420,8 +2414,8 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
     [ConditionallyCompleteLattice α] : CompleteLattice (WithTop (WithBot α)) :=
   { WithTop.hasInf, WithTop.hasSup, WithTop.boundedOrder,
     WithTop.lattice with
-    le_Sup := fun S a haS => (WithTop.isLUB_supₛ' ⟨a, haS⟩).1 haS
-    Sup_le := fun S a ha => by
+    le_sup := fun S a haS => (WithTop.isLUB_supₛ' ⟨a, haS⟩).1 haS
+    sup_le := fun S a ha => by
       cases' S.eq_empty_or_nonempty with h
       · show ite _ _ _ ≤ a
         split_ifs
@@ -2437,7 +2431,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
           rw [h]
           rintro b ⟨⟩
       · refine' (WithTop.isLUB_supₛ' h).2 ha
-    Inf_le := fun S a haS =>
+    inf_le := fun S a haS =>
       show ite _ _ _ ≤ a by
         split_ifs
         · cases' a with a
@@ -2450,7 +2444,7 @@ noncomputable instance WithTop.WithBot.completeLattice {α : Type _}
             use ⊥
             intro b hb
             exact bot_le
-    le_Inf := fun S a haS => (WithTop.isGLB_infₛ' ⟨a, haS⟩).2 haS }
+    le_inf := fun S a haS => (WithTop.isGLB_infₛ' ⟨a, haS⟩).2 haS }
 #align with_top.with_bot.complete_lattice WithTop.WithBot.completeLattice
 -/
 
@@ -2466,10 +2460,10 @@ noncomputable instance WithBot.WithTop.completeLattice {α : Type _}
     [ConditionallyCompleteLattice α] : CompleteLattice (WithBot (WithTop α)) :=
   { WithBot.hasInf, WithBot.hasSup, WithBot.boundedOrder,
     WithBot.lattice with
-    le_Sup := (@WithTop.WithBot.completeLattice αᵒᵈ _).Inf_le
-    Sup_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Inf
-    Inf_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_Sup
-    le_Inf := (@WithTop.WithBot.completeLattice αᵒᵈ _).Sup_le }
+    le_sup := (@WithTop.WithBot.completeLattice αᵒᵈ _).inf_le
+    sup_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_inf
+    inf_le := (@WithTop.WithBot.completeLattice αᵒᵈ _).le_sup
+    le_inf := (@WithTop.WithBot.completeLattice αᵒᵈ _).sup_le }
 #align with_bot.with_top.complete_lattice WithBot.WithTop.completeLattice
 -/
 

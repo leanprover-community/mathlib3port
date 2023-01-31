@@ -59,7 +59,7 @@ if every preimage `f ⁻¹' {x}` is measurable, and the range is finite. This st
 a function with these properties. -/
 structure SimpleFunc.{u, v} (α : Type u) [MeasurableSpace α] (β : Type v) where
   toFun : α → β
-  measurable_set_fiber' : ∀ x, MeasurableSet (to_fun ⁻¹' {x})
+  measurableSet_fiber' : ∀ x, MeasurableSet (to_fun ⁻¹' {x})
   finite_range' : (Set.range to_fun).Finite
 #align measure_theory.simple_func MeasureTheory.SimpleFunc
 
@@ -90,7 +90,7 @@ theorem finite_range (f : α →ₛ β) : (Set.range f).Finite :=
 #align measure_theory.simple_func.finite_range MeasureTheory.SimpleFunc.finite_range
 
 theorem measurableSet_fiber (f : α →ₛ β) (x : β) : MeasurableSet (f ⁻¹' {x}) :=
-  f.measurable_set_fiber' x
+  f.measurableSet_fiber' x
 #align measure_theory.simple_func.measurable_set_fiber MeasureTheory.SimpleFunc.measurableSet_fiber
 
 @[simp]
@@ -101,7 +101,7 @@ theorem apply_mk (f : α → β) (h h') (x : α) : SimpleFunc.mk f h h' x = f x 
 /-- Simple function defined on the empty type. -/
 def ofIsEmpty [IsEmpty α] : α →ₛ β where
   toFun := isEmptyElim
-  measurable_set_fiber' x := Subsingleton.measurableSet
+  measurableSet_fiber' x := Subsingleton.measurableSet
   finite_range' := by simp [range_eq_empty]
 #align measure_theory.simple_func.of_is_empty MeasureTheory.SimpleFunc.ofIsEmpty
 
@@ -121,7 +121,7 @@ theorem mem_range_self (f : α →ₛ β) (x : α) : f x ∈ f.range :=
 
 @[simp]
 theorem coe_range (f : α →ₛ β) : (↑f.range : Set β) = Set.range f :=
-  f.finite_range.coe_to_finset
+  f.finite_range.coe_toFinset
 #align measure_theory.simple_func.coe_range MeasureTheory.SimpleFunc.coe_range
 
 theorem mem_range_of_measure_ne_zero {f : α →ₛ β} {x : β} {μ : Measure α} (H : μ (f ⁻¹' {x}) ≠ 0) :
@@ -234,7 +234,7 @@ protected theorem aeMeasurable [MeasurableSpace β] {μ : Measure α} (f : α �
 
 protected theorem sum_measure_preimage_singleton (f : α →ₛ β) {μ : Measure α} (s : Finset β) :
     (∑ y in s, μ (f ⁻¹' {y})) = μ (f ⁻¹' ↑s) :=
-  sum_measure_preimage_singleton _ fun _ _ => f.measurable_set_fiber _
+  sum_measure_preimage_singleton _ fun _ _ => f.measurableSet_fiber _
 #align measure_theory.simple_func.sum_measure_preimage_singleton MeasureTheory.SimpleFunc.sum_measure_preimage_singleton
 
 theorem sum_range_measure_preimage_singleton (f : α →ₛ β) (μ : Measure α) :
@@ -292,15 +292,15 @@ theorem range_indicator {s : Set α} (hs : MeasurableSet s) (hs_nonempty : s.Non
 
 theorem measurable_bind [MeasurableSpace γ] (f : α →ₛ β) (g : β → α → γ)
     (hg : ∀ b, Measurable (g b)) : Measurable fun a => g (f a) a := fun s hs =>
-  f.measurable_set_cut (fun a b => g b a ∈ s) fun b => hg b hs
+  f.measurableSet_cut (fun a b => g b a ∈ s) fun b => hg b hs
 #align measure_theory.simple_func.measurable_bind MeasureTheory.SimpleFunc.measurable_bind
 
 /-- If `f : α →ₛ β` is a simple function and `g : β → α →ₛ γ` is a family of simple functions,
 then `f.bind g` binds the first argument of `g` to `f`. In other words, `f.bind g a = g (f a) a`. -/
 def bind (f : α →ₛ β) (g : β → α →ₛ γ) : α →ₛ γ :=
   ⟨fun a => g (f a) a, fun c =>
-    f.measurable_set_cut (fun a b => g b a = c) fun b => (g b).measurable_set_preimage {c},
-    (f.finite_range.bUnion fun b _ => (g b).finite_range).Subset <| by
+    f.measurableSet_cut (fun a b => g b a = c) fun b => (g b).measurableSet_preimage {c},
+    (f.finite_range.bunionᵢ fun b _ => (g b).finite_range).Subset <| by
       rintro _ ⟨a, rfl⟩ <;> simp <;> exact ⟨a, a, rfl⟩⟩
 #align measure_theory.simple_func.bind MeasureTheory.SimpleFunc.bind
 
@@ -339,7 +339,7 @@ theorem map_const (g : β → γ) (b : β) : (const α b).map g = const α (g b)
 #align measure_theory.simple_func.map_const MeasureTheory.SimpleFunc.map_const
 
 theorem map_preimage (f : α →ₛ β) (g : β → γ) (s : Set γ) :
-    f.map g ⁻¹' s = f ⁻¹' ↑(f.range.filter fun b => g b ∈ s) :=
+    f.map g ⁻¹' s = f ⁻¹' ↑(f.range.filterₓ fun b => g b ∈ s) :=
   by
   simp only [coe_range, sep_mem_eq, Set.mem_range, Function.comp_apply, coe_map, Finset.coe_filter,
     ← mem_preimage, inter_comm, preimage_inter_range]
@@ -347,7 +347,7 @@ theorem map_preimage (f : α →ₛ β) (g : β → γ) (s : Set γ) :
 #align measure_theory.simple_func.map_preimage MeasureTheory.SimpleFunc.map_preimage
 
 theorem map_preimage_singleton (f : α →ₛ β) (g : β → γ) (c : γ) :
-    f.map g ⁻¹' {c} = f ⁻¹' ↑(f.range.filter fun b => g b = c) :=
+    f.map g ⁻¹' {c} = f ⁻¹' ↑(f.range.filterₓ fun b => g b = c) :=
   map_preimage _ _ _
 #align measure_theory.simple_func.map_preimage_singleton MeasureTheory.SimpleFunc.map_preimage_singleton
 
@@ -356,7 +356,7 @@ def comp [MeasurableSpace β] (f : β →ₛ γ) (g : α → β) (hgm : Measurab
     where
   toFun := f ∘ g
   finite_range' := f.finite_range.Subset <| Set.range_comp_subset_range _ _
-  measurable_set_fiber' z := hgm (f.measurable_set_fiber z)
+  measurableSet_fiber' z := hgm (f.measurableSet_fiber z)
 #align measure_theory.simple_func.comp MeasureTheory.SimpleFunc.comp
 
 @[simp]
@@ -378,7 +378,7 @@ def extend [MeasurableSpace β] (f₁ : α →ₛ γ) (g : α → β) (hg : Meas
   finite_range' :=
     (f₁.finite_range.union <| f₂.finite_range.Subset (image_subset_range _ _)).Subset
       (range_extend_subset _ _ _)
-  measurable_set_fiber' := by
+  measurableSet_fiber' := by
     letI : MeasurableSpace γ := ⊤; haveI : MeasurableSingletonClass γ := ⟨fun _ => trivial⟩
     exact fun x => hg.measurable_extend f₁.measurable f₂.measurable (measurable_set_singleton _)
 #align measure_theory.simple_func.extend MeasureTheory.SimpleFunc.extend
@@ -868,7 +868,7 @@ section Eapprox
 
 /-- A sequence of `ℝ≥0∞`s such that its range is the set of non-negative rational numbers. -/
 def ennrealRatEmbed (n : ℕ) : ℝ≥0∞ :=
-  Ennreal.ofReal ((Encodable.decode ℚ n).getOrElse (0 : ℚ))
+  Ennreal.ofReal ((Encodable.decode ℚ n).getD (0 : ℚ))
 #align measure_theory.simple_func.ennreal_rat_embed MeasureTheory.SimpleFunc.ennrealRatEmbed
 
 theorem ennrealRatEmbed_encode (q : ℚ) : ennrealRatEmbed (Encodable.encode q) = Real.toNnreal q :=
@@ -1130,7 +1130,7 @@ theorem lintegral_mono {f g : α →ₛ ℝ≥0∞} (hfg : f ≤ g) (hμν : μ 
     _ ≤ (f ⊔ g).lintegral μ := le_sup_lintegral _ _
     _ = g.lintegral μ := by rw [sup_of_le_right hfg]
     _ ≤ g.lintegral ν :=
-      Finset.sum_le_sum fun y hy => Ennreal.mul_left_mono <| hμν _ (g.measurable_set_preimage _)
+      Finset.sum_le_sum fun y hy => Ennreal.mul_left_mono <| hμν _ (g.measurableSet_preimage _)
     
 #align measure_theory.simple_func.lintegral_mono MeasureTheory.SimpleFunc.lintegral_mono
 
@@ -1148,7 +1148,7 @@ theorem lintegral_eq_of_measure_preimage [MeasurableSpace β] {f : α →ₛ ℝ
 /-- If two simple functions are equal a.e., then their `lintegral`s are equal. -/
 theorem lintegral_congr {f g : α →ₛ ℝ≥0∞} (h : f =ᵐ[μ] g) : f.lintegral μ = g.lintegral μ :=
   lintegral_eq_of_measure_preimage fun y =>
-    measure_congr <| eventually.set_eq <| h.mono fun x hx => by simp [hx]
+    measure_congr <| Eventually.set_eq <| h.mono fun x hx => by simp [hx]
 #align measure_theory.simple_func.lintegral_congr MeasureTheory.SimpleFunc.lintegral_congr
 
 theorem lintegral_map' {β} [MeasurableSpace β] {μ' : Measure β} (f : α →ₛ ℝ≥0∞) (g : β →ₛ ℝ≥0∞)
@@ -1172,7 +1172,7 @@ section FinMeasSupp
 open Finset Function
 
 theorem support_eq [MeasurableSpace α] [Zero β] (f : α →ₛ β) :
-    support f = ⋃ y ∈ f.range.filter fun y => y ≠ 0, f ⁻¹' {y} :=
+    support f = ⋃ y ∈ f.range.filterₓ fun y => y ≠ 0, f ⁻¹' {y} :=
   Set.ext fun x => by
     simp only [mem_support, Set.mem_preimage, mem_filter, mem_range_self, true_and_iff, exists_prop,
       mem_Union, Set.mem_range, mem_singleton_iff, exists_eq_right']
@@ -1518,7 +1518,7 @@ theorem supᵢ_lintegral_le {ι : Sort _} (f : ι → α → ℝ≥0∞) :
     (⨆ i, ∫⁻ a, f i a ∂μ) ≤ ∫⁻ a, ⨆ i, f i a ∂μ :=
   by
   simp only [← supᵢ_apply]
-  exact (monotone_lintegral μ).le_map_supr
+  exact (monotone_lintegral μ).le_map_supᵢ
 #align measure_theory.supr_lintegral_le MeasureTheory.supᵢ_lintegral_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1526,7 +1526,7 @@ theorem supᵢ_lintegral_le {ι : Sort _} (f : ι → α → ℝ≥0∞) :
 theorem supr₂_lintegral_le {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
     (⨆ (i) (j), ∫⁻ a, f i j a ∂μ) ≤ ∫⁻ a, ⨆ (i) (j), f i j a ∂μ :=
   by
-  convert (monotone_lintegral μ).le_map_supr₂ f
+  convert (monotone_lintegral μ).le_map_supᵢ₂ f
   ext1 a
   simp only [supᵢ_apply]
 #align measure_theory.supr₂_lintegral_le MeasureTheory.supr₂_lintegral_le
@@ -1535,13 +1535,13 @@ theorem le_infᵢ_lintegral {ι : Sort _} (f : ι → α → ℝ≥0∞) :
     (∫⁻ a, ⨅ i, f i a ∂μ) ≤ ⨅ i, ∫⁻ a, f i a ∂μ :=
   by
   simp only [← infᵢ_apply]
-  exact (monotone_lintegral μ).map_infi_le
+  exact (monotone_lintegral μ).map_infᵢ_le
 #align measure_theory.le_infi_lintegral MeasureTheory.le_infᵢ_lintegral
 
 theorem le_infi₂_lintegral {ι : Sort _} {ι' : ι → Sort _} (f : ∀ i, ι' i → α → ℝ≥0∞) :
     (∫⁻ a, ⨅ (i) (h : ι' i), f i h a ∂μ) ≤ ⨅ (i) (h : ι' i), ∫⁻ a, f i h a ∂μ :=
   by
-  convert (monotone_lintegral μ).map_infi₂_le f
+  convert (monotone_lintegral μ).map_infᵢ₂_le f
   ext1 a
   simp only [infᵢ_apply]
 #align measure_theory.le_infi₂_lintegral MeasureTheory.le_infi₂_lintegral
@@ -2677,7 +2677,7 @@ section DiracAndCount
 
 instance (priority := 10) MeasurableSpace.Top.measurableSingletonClass {α : Type _} :
     @MeasurableSingletonClass α (⊤ : MeasurableSpace α)
-    where measurable_set_singleton i := MeasurableSpace.measurableSet_top
+    where measurableSet_singleton i := MeasurableSpace.measurableSet_top
 #align measurable_space.top.measurable_singleton_class MeasurableSpace.Top.measurableSingletonClass
 
 variable [MeasurableSpace α]

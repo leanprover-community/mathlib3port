@@ -178,12 +178,12 @@ def continuousLinearMap :
     simp_rw [Prod.mk.inj_iff, eq_self_iff_true, true_and_iff]
     ext v
     simp only [comp_apply, Trivialization.continuousLinearMapAt_symmL, h₁, h₂]
-  open_target := (e₁.open_base_set.inter e₂.open_base_set).Prod isOpen_univ
+  open_target := (e₁.open_baseSet.inter e₂.open_baseSet).Prod isOpen_univ
   baseSet := e₁.baseSet ∩ e₂.baseSet
-  open_base_set := e₁.open_base_set.inter e₂.open_base_set
+  open_baseSet := e₁.open_baseSet.inter e₂.open_baseSet
   source_eq := rfl
   target_eq := rfl
-  proj_to_fun := fun ⟨x, f⟩ h => rfl
+  proj_toFun := fun ⟨x, f⟩ h => rfl
 #align pretrivialization.continuous_linear_map Pretrivialization.continuousLinearMap
 
 instance continuousLinearMap.isLinear [∀ x, HasContinuousAdd (E₂ x)]
@@ -268,7 +268,7 @@ def Bundle.ContinuousLinearMap.vectorPrebundle :
     infer_instance
   pretrivializationAt x :=
     Pretrivialization.continuousLinearMap σ (trivializationAt F₁ E₁ x) (trivializationAt F₂ E₂ x)
-  mem_base_pretrivialization_at x :=
+  mem_base_pretrivializationAt x :=
     ⟨mem_baseSet_trivializationAt F₁ E₁ x, mem_baseSet_trivializationAt F₂ E₂ x⟩
   pretrivialization_mem_atlas x := ⟨trivializationAt F₁ E₁ x, trivializationAt F₂ E₂ x, _, _, rfl⟩
   exists_coord_change :=

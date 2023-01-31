@@ -634,8 +634,8 @@ instance [LinearOrder R] [OrderTop R] [Zero R] : AddMonoidWithOne (Tropical R) :
   { Tropical.hasOne,
     Tropical.addCommMonoid with
     natCast := fun n => if n = 0 then 0 else 1
-    nat_cast_zero := rfl
-    nat_cast_succ := fun n => (untrop_inj_iff _ _).1 (by cases n <;> simp [Nat.cast]) }
+    natCast_zero := rfl
+    natCast_succ := fun n => (untrop_inj_iff _ _).1 (by cases n <;> simp [Nat.cast]) }
 
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
   ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
@@ -704,8 +704,8 @@ instance [AddMonoid R] : Monoid (Tropical R) :=
   { Tropical.mulOneClass,
     Tropical.semigroup with
     npow := fun n x => x ^ n
-    npow_zero' := fun _ => untrop_injective <| zero_smul _ _
-    npow_succ' := fun _ _ => untrop_injective <| succ_nsmul _ _ }
+    npow_zero := fun _ => untrop_injective <| zero_smul _ _
+    npow_succ := fun _ _ => untrop_injective <| succ_nsmul _ _ }
 
 #print Tropical.trop_nsmul /-
 @[simp]

@@ -31,7 +31,7 @@ namespace Rat
 numerator and the square root (on natural numbers) of the denominator. -/
 @[pp_nodot]
 def sqrt (q : ℚ) : ℚ :=
-  Rat.mk (Int.sqrt q.num) (Nat.sqrt q.denom)
+  Rat.mk (Int.sqrt q.num) (Nat.sqrt q.den)
 #align rat.sqrt Rat.sqrt
 -/
 

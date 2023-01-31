@@ -90,7 +90,7 @@ namespace WalkingCospan
 
 /-- The type of arrows for the diagram indexing a pullback. -/
 abbrev Hom : WalkingCospan → WalkingCospan → Type :=
-  wide_pullback_shape.hom
+  WidePullbackShape.Hom
 #align category_theory.limits.walking_cospan.hom CategoryTheory.Limits.WalkingCospan.Hom
 
 /-- The left arrow of the walking cospan. -/
@@ -119,7 +119,7 @@ namespace WalkingSpan
 
 /-- The type of arrows for the diagram indexing a pushout. -/
 abbrev Hom : WalkingSpan → WalkingSpan → Type :=
-  wide_pushout_shape.hom
+  WidePushoutShape.Hom
 #align category_theory.limits.walking_span.hom CategoryTheory.Limits.WalkingSpan.Hom
 
 /-- The left arrow of the walking span. -/
@@ -151,7 +151,7 @@ variable {C : Type u} [Category.{v} C]
 /-- To construct an isomorphism of cones over the walking cospan,
 it suffices to construct an isomorphism
 of the cone points and check it commutes with the legs to `left` and `right`. -/
-def WalkingCospan.ext {F : walking_cospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x)
+def WalkingCospan.ext {F : WalkingCospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x)
     (w₁ : s.π.app WalkingCospan.left = i.Hom ≫ t.π.app WalkingCospan.left)
     (w₂ : s.π.app WalkingCospan.right = i.Hom ≫ t.π.app WalkingCospan.right) : s ≅ t :=
   by
@@ -171,7 +171,7 @@ def WalkingCospan.ext {F : walking_cospan ⥤ C} {s t : Cone F} (i : s.x ≅ t.x
 /-- To construct an isomorphism of cocones over the walking span,
 it suffices to construct an isomorphism
 of the cocone points and check it commutes with the legs from `left` and `right`. -/
-def WalkingSpan.ext {F : walking_span ⥤ C} {s t : Cocone F} (i : s.x ≅ t.x)
+def WalkingSpan.ext {F : WalkingSpan ⥤ C} {s t : Cocone F} (i : s.x ≅ t.x)
     (w₁ : s.ι.app WalkingCospan.left ≫ i.Hom = t.ι.app WalkingCospan.left)
     (w₂ : s.ι.app WalkingCospan.right ≫ i.Hom = t.ι.app WalkingCospan.right) : s ≅ t :=
   by
@@ -189,13 +189,13 @@ def WalkingSpan.ext {F : walking_span ⥤ C} {s t : Cocone F} (i : s.x ≅ t.x)
 #align category_theory.limits.walking_span.ext CategoryTheory.Limits.WalkingSpan.ext
 
 /-- `cospan f g` is the functor from the walking cospan hitting `f` and `g`. -/
-def cospan {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) : walking_cospan ⥤ C :=
+def cospan {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) : WalkingCospan ⥤ C :=
   WidePullbackShape.wideCospan Z (fun j => WalkingPair.casesOn j X Y) fun j =>
     WalkingPair.casesOn j f g
 #align category_theory.limits.cospan CategoryTheory.Limits.cospan
 
 /-- `span f g` is the functor from the walking span hitting `f` and `g`. -/
-def span {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) : walking_span ⥤ C :=
+def span {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) : WalkingSpan ⥤ C :=
   WidePushoutShape.wideSpan X (fun j => WalkingPair.casesOn j Y Z) fun j =>
     WalkingPair.casesOn j f g
 #align category_theory.limits.span CategoryTheory.Limits.span
@@ -265,13 +265,13 @@ theorem span_map_id {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) (w : WalkingSpan) :
 
 /-- Every diagram indexing an pullback is naturally isomorphic (actually, equal) to a `cospan` -/
 @[simps (config := { rhsMd := semireducible })]
-def diagramIsoCospan (F : walking_cospan ⥤ C) : F ≅ cospan (F.map inl) (F.map inr) :=
+def diagramIsoCospan (F : WalkingCospan ⥤ C) : F ≅ cospan (F.map inl) (F.map inr) :=
   NatIso.ofComponents (fun j => eqToIso (by tidy)) (by tidy)
 #align category_theory.limits.diagram_iso_cospan CategoryTheory.Limits.diagramIsoCospan
 
 /-- Every diagram indexing a pushout is naturally isomorphic (actually, equal) to a `span` -/
 @[simps (config := { rhsMd := semireducible })]
-def diagramIsoSpan (F : walking_span ⥤ C) : F ≅ span (F.map fst) (F.map snd) :=
+def diagramIsoSpan (F : WalkingSpan ⥤ C) : F ≅ span (F.map fst) (F.map snd) :=
   NatIso.ofComponents (fun j => eqToIso (by tidy)) (by tidy)
 #align category_theory.limits.diagram_iso_span CategoryTheory.Limits.diagramIsoSpan
 
@@ -1060,7 +1060,7 @@ end PushoutCocone
     If you're thinking about using this, have a look at `has_pullbacks_of_has_limit_cospan`,
     which you may find to be an easier way of achieving your goal. -/
 @[simps]
-def Cone.ofPullbackCone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) : Cone F
+def Cone.ofPullbackCone {F : WalkingCospan ⥤ C} (t : PullbackCone (F.map inl) (F.map inr)) : Cone F
     where
   x := t.x
   π := t.π ≫ (diagramIsoCospan F).inv
@@ -1074,7 +1074,7 @@ def Cone.ofPullbackCone {F : walking_cospan ⥤ C} (t : PullbackCone (F.map inl)
     If you're thinking about using this, have a look at `has_pushouts_of_has_colimit_span`, which
     you may find to be an easiery way of achieving your goal.  -/
 @[simps]
-def Cocone.ofPushoutCocone {F : walking_span ⥤ C} (t : PushoutCocone (F.map fst) (F.map snd)) :
+def Cocone.ofPushoutCocone {F : WalkingSpan ⥤ C} (t : PushoutCocone (F.map fst) (F.map snd)) :
     Cocone F where
   x := t.x
   ι := (diagramIsoSpan F).Hom ≫ t.ι
@@ -1083,7 +1083,7 @@ def Cocone.ofPushoutCocone {F : walking_span ⥤ C} (t : PushoutCocone (F.map fs
 /-- Given `F : walking_cospan ⥤ C`, which is really the same as `cospan (F.map inl) (F.map inr)`,
     and a cone on `F`, we get a pullback cone on `F.map inl` and `F.map inr`. -/
 @[simps]
-def PullbackCone.ofCone {F : walking_cospan ⥤ C} (t : Cone F) : PullbackCone (F.map inl) (F.map inr)
+def PullbackCone.ofCone {F : WalkingCospan ⥤ C} (t : Cone F) : PullbackCone (F.map inl) (F.map inr)
     where
   x := t.x
   π := t.π ≫ (diagramIsoCospan F).Hom
@@ -1092,7 +1092,7 @@ def PullbackCone.ofCone {F : walking_cospan ⥤ C} (t : Cone F) : PullbackCone (
 /-- A diagram `walking_cospan ⥤ C` is isomorphic to some `pullback_cone.mk` after
 composing with `diagram_iso_cospan`. -/
 @[simps]
-def PullbackCone.isoMk {F : walking_cospan ⥤ C} (t : Cone F) :
+def PullbackCone.isoMk {F : WalkingCospan ⥤ C} (t : Cone F) :
     (Cones.postcompose (diagramIsoCospan.{v} _).Hom).obj t ≅
       PullbackCone.mk (t.π.app WalkingCospan.left) (t.π.app WalkingCospan.right)
         ((t.π.naturality inl).symm.trans (t.π.naturality inr : _)) :=
@@ -1105,7 +1105,7 @@ def PullbackCone.isoMk {F : walking_cospan ⥤ C} (t : Cone F) :
 /-- Given `F : walking_span ⥤ C`, which is really the same as `span (F.map fst) (F.map snd)`,
     and a cocone on `F`, we get a pushout cocone on `F.map fst` and `F.map snd`. -/
 @[simps]
-def PushoutCocone.ofCocone {F : walking_span ⥤ C} (t : Cocone F) :
+def PushoutCocone.ofCocone {F : WalkingSpan ⥤ C} (t : Cocone F) :
     PushoutCocone (F.map fst) (F.map snd) where
   x := t.x
   ι := (diagramIsoSpan F).inv ≫ t.ι
@@ -1114,7 +1114,7 @@ def PushoutCocone.ofCocone {F : walking_span ⥤ C} (t : Cocone F) :
 /-- A diagram `walking_span ⥤ C` is isomorphic to some `pushout_cocone.mk` after composing with
 `diagram_iso_span`. -/
 @[simps]
-def PushoutCocone.isoMk {F : walking_span ⥤ C} (t : Cocone F) :
+def PushoutCocone.isoMk {F : WalkingSpan ⥤ C} (t : Cocone F) :
     (Cocones.precompose (diagramIsoSpan.{v} _).inv).obj t ≅
       PushoutCocone.mk (t.ι.app WalkingSpan.left) (t.ι.app WalkingSpan.right)
         ((t.ι.naturality fst).trans (t.ι.naturality snd).symm) :=
@@ -1394,7 +1394,7 @@ isomorphism `pullback f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
 def pullback.congrHom {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂)
     [HasPullback f₁ g₁] [HasPullback f₂ g₂] : pullback f₁ g₁ ≅ pullback f₂ g₂ :=
-  as_iso <| pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simp [h₁]) (by simp [h₂])
+  asIso <| pullback.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simp [h₁]) (by simp [h₂])
 #align category_theory.limits.pullback.congr_hom CategoryTheory.Limits.pullback.congrHom
 
 @[simp]
@@ -1440,7 +1440,7 @@ isomorphism `pushout f₁ g₁ ≅ pullback f₂ g₂` -/
 @[simps Hom]
 def pushout.congrHom {X Y Z : C} {f₁ f₂ : X ⟶ Y} {g₁ g₂ : X ⟶ Z} (h₁ : f₁ = f₂) (h₂ : g₁ = g₂)
     [HasPushout f₁ g₁] [HasPushout f₂ g₂] : pushout f₁ g₁ ≅ pushout f₂ g₂ :=
-  as_iso <| pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simp [h₁]) (by simp [h₂])
+  asIso <| pushout.map _ _ _ _ (𝟙 _) (𝟙 _) (𝟙 _) (by simp [h₁]) (by simp [h₂])
 #align category_theory.limits.pushout.congr_hom CategoryTheory.Limits.pushout.congrHom
 
 @[simp]
@@ -1606,14 +1606,14 @@ def pushoutSymmetry [HasPushout f g] : pushout f g ≅ pushout g f :=
 @[simp, reassoc.1]
 theorem inl_comp_pushoutSymmetry_hom [HasPushout f g] :
     pushout.inl ≫ (pushoutSymmetry f g).Hom = pushout.inr :=
-  (colimit.isColimit (span f g)).comp_cocone_point_unique_up_to_iso_hom
+  (colimit.isColimit (span f g)).comp_coconePointUniqueUpToIso_hom
     (PushoutCocone.flipIsColimit (pushoutIsPushout g f)) _
 #align category_theory.limits.inl_comp_pushout_symmetry_hom CategoryTheory.Limits.inl_comp_pushoutSymmetry_hom
 
 @[simp, reassoc.1]
 theorem inr_comp_pushoutSymmetry_hom [HasPushout f g] :
     pushout.inr ≫ (pushoutSymmetry f g).Hom = pushout.inl :=
-  (colimit.isColimit (span f g)).comp_cocone_point_unique_up_to_iso_hom
+  (colimit.isColimit (span f g)).comp_coconePointUniqueUpToIso_hom
     (PushoutCocone.flipIsColimit (pushoutIsPushout g f)) _
 #align category_theory.limits.inr_comp_pushout_symmetry_hom CategoryTheory.Limits.inr_comp_pushoutSymmetry_hom
 
@@ -2298,7 +2298,7 @@ noncomputable def pushoutLeftPushoutInrIso :
 theorem inl_pushoutLeftPushoutInrIso_inv :
     pushout.inl ≫ (pushoutLeftPushoutInrIso f g g').inv = pushout.inl ≫ pushout.inl :=
   ((bigSquareIsPushout g g' _ _ f _ _ pushout.condition pushout.condition (pushoutIsPushout _ _)
-          (pushoutIsPushout _ _)).comp_cocone_point_unique_up_to_iso_inv
+          (pushoutIsPushout _ _)).comp_coconePointUniqueUpToIso_inv
       (pushoutIsPushout _ _) WalkingSpan.left :
     _)
 #align category_theory.limits.inl_pushout_left_pushout_inr_iso_inv CategoryTheory.Limits.inl_pushoutLeftPushoutInrIso_inv
@@ -2307,7 +2307,7 @@ theorem inl_pushoutLeftPushoutInrIso_inv :
 theorem inr_pushoutLeftPushoutInrIso_hom :
     pushout.inr ≫ (pushoutLeftPushoutInrIso f g g').Hom = pushout.inr :=
   ((bigSquareIsPushout g g' _ _ f _ _ pushout.condition pushout.condition (pushoutIsPushout _ _)
-          (pushoutIsPushout _ _)).comp_cocone_point_unique_up_to_iso_hom
+          (pushoutIsPushout _ _)).comp_coconePointUniqueUpToIso_hom
       (pushoutIsPushout _ _) WalkingSpan.right :
     _)
 #align category_theory.limits.inr_pushout_left_pushout_inr_iso_hom CategoryTheory.Limits.inr_pushoutLeftPushoutInrIso_hom
@@ -2709,7 +2709,7 @@ theorem inl_inl_pushoutAssoc_hom :
   trans f₁ ≫ l₁
   · congr 1
     exact
-      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _
+      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_hom _
         walking_cospan.left
   · exact pushout.inl_desc _ _ _
 #align category_theory.limits.inl_inl_pushout_assoc_hom CategoryTheory.Limits.inl_inl_pushoutAssoc_hom
@@ -2721,7 +2721,7 @@ theorem inr_inl_pushoutAssoc_hom :
   trans f₂ ≫ l₁
   · congr 1
     exact
-      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_hom _
+      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_hom _
         walking_cospan.left
   · exact pushout.inr_desc _ _ _
 #align category_theory.limits.inr_inl_pushout_assoc_hom CategoryTheory.Limits.inr_inl_pushoutAssoc_hom
@@ -2733,7 +2733,7 @@ theorem inr_inr_pushoutAssoc_inv :
   trans f₄ ≫ l₂'
   · congr 1
     exact
-      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_cocone_point_unique_up_to_iso_inv
+      (pushout_pushout_left_is_pushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_inv
         (pushout_pushout_right_is_pushout g₁ g₂ g₃ g₄) walking_cospan.right
   · exact pushout.inr_desc _ _ _
 #align category_theory.limits.inr_inr_pushout_assoc_inv CategoryTheory.Limits.inr_inr_pushoutAssoc_inv
@@ -2787,13 +2787,13 @@ theorem hasPushouts_of_hasColimit_span
 
 /-- The duality equivalence `walking_spanᵒᵖ ≌ walking_cospan` -/
 @[simps]
-def walkingSpanOpEquiv : walking_spanᵒᵖ ≌ walking_cospan :=
+def walkingSpanOpEquiv : WalkingSpanᵒᵖ ≌ WalkingCospan :=
   widePushoutShapeOpEquiv _
 #align category_theory.limits.walking_span_op_equiv CategoryTheory.Limits.walkingSpanOpEquiv
 
 /-- The duality equivalence `walking_cospanᵒᵖ ≌ walking_span` -/
 @[simps]
-def walkingCospanOpEquiv : walking_cospanᵒᵖ ≌ walking_span :=
+def walkingCospanOpEquiv : WalkingCospanᵒᵖ ≌ WalkingSpan :=
   widePullbackShapeOpEquiv _
 #align category_theory.limits.walking_cospan_op_equiv CategoryTheory.Limits.walkingCospanOpEquiv
 

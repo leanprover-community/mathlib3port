@@ -159,7 +159,7 @@ See note [reducible non-instances].
 -/
 @[reducible]
 theorem of_ringEquiv (e : R₁ ≃+* R₂) : RingHomInvPair (↑e : R₁ →+* R₂) ↑e.symm :=
-  ⟨e.symm_to_ring_hom_comp_to_ring_hom, e.symm.symm_to_ring_hom_comp_to_ring_hom⟩
+  ⟨e.symm_toRingHom_comp_toRingHom, e.symm.symm_toRingHom_comp_toRingHom⟩
 #align ring_hom_inv_pair.of_ring_equiv RingHomInvPair.of_ringEquiv
 
 /- warning: ring_hom_inv_pair.symm -> RingHomInvPair.symm is a dubious translation:

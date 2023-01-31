@@ -87,7 +87,7 @@ variable [Lattice α] [OrderBot α]
 def ofErase [DecidableEq α] {a : α} (parts : Finset α) (sup_indep : parts.SupIndep id)
     (sup_parts : parts.sup id = a) : Finpartition a
     where
-  parts := parts.erase ⊥
+  parts := parts.eraseₓ ⊥
   SupIndep := sup_indep.Subset (erase_subset _ _)
   sup_parts := (sup_erase_bot _).trans sup_parts
   not_bot_mem := not_mem_erase _ _
@@ -295,7 +295,7 @@ instance : HasInf (Finpartition a) :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
-    (P ⊓ Q).parts = ((P.parts ×ˢ Q.parts).image fun bc : α × α => bc.1 ⊓ bc.2).erase ⊥ :=
+    (P ⊓ Q).parts = ((P.parts ×ˢ Q.parts).image fun bc : α × α => bc.1 ⊓ bc.2).eraseₓ ⊥ :=
   rfl
 #align finpartition.parts_inf Finpartition.parts_inf
 
@@ -360,7 +360,7 @@ finpartition of `a` obtained by juxtaposing all the subpartitions. -/
 @[simps]
 def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finpartition a
     where
-  parts := P.parts.attach.bUnion fun i => (Q i.1 i.2).parts
+  parts := P.parts.attach.bunionᵢ fun i => (Q i.1 i.2).parts
   SupIndep := by
     rw [sup_indep_iff_pairwise_disjoint]
     rintro a ha b hb h
@@ -467,7 +467,7 @@ theorem exists_mem {a : α} (ha : a ∈ s) : ∃ t ∈ P.parts, a ∈ t :=
   exact mem_sup.1 ha
 #align finpartition.exists_mem Finpartition.exists_mem
 
-theorem bunionᵢ_parts : P.parts.bUnion id = s :=
+theorem bunionᵢ_parts : P.parts.bunionᵢ id = s :=
   (sup_eq_bunionᵢ _ _).symm.trans P.sup_parts
 #align finpartition.bUnion_parts Finpartition.bunionᵢ_parts
 
@@ -522,7 +522,7 @@ section Atomise
 /-- Cuts `s` along the finsets in `F`: Two elements of `s` will be in the same part if they are
 in the same finsets of `F`. -/
 def atomise (s : Finset α) (F : Finset (Finset α)) : Finpartition s :=
-  ofErase (F.powerset.image fun Q => s.filter fun i => ∀ t ∈ F, t ∈ Q ↔ i ∈ t)
+  ofErase (F.powerset.image fun Q => s.filterₓ fun i => ∀ t ∈ F, t ∈ Q ↔ i ∈ t)
     (Set.PairwiseDisjoint.supIndep fun x hx y hy h =>
       disjoint_left.mpr fun z hz1 hz2 =>
         h (by
@@ -556,7 +556,7 @@ variable {F : Finset (Finset α)}
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (Q «expr ⊆ » F) -/
 theorem mem_atomise :
     t ∈ (atomise s F).parts ↔
-      t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filter fun i => ∀ u ∈ F, u ∈ Q ↔ i ∈ u) = t :=
+      t.Nonempty ∧ ∃ (Q : _)(_ : Q ⊆ F), (s.filterₓ fun i => ∀ u ∈ F, u ∈ Q ↔ i ∈ u) = t :=
   by
   simp only [atomise, of_erase, bot_eq_empty, mem_erase, mem_image, nonempty_iff_ne_empty,
     mem_singleton, and_comm', mem_powerset, exists_prop]
@@ -574,7 +574,7 @@ theorem card_atomise_le : (atomise s F).parts.card ≤ 2 ^ F.card :=
 #align finpartition.card_atomise_le Finpartition.card_atomise_le
 
 theorem bunionᵢ_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
-    ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).bUnion id = t :=
+    ((atomise s F).parts.filterₓ fun u => u ⊆ t ∧ u.Nonempty).bunionᵢ id = t :=
   by
   ext a
   refine' mem_bUnion.trans ⟨fun ⟨u, hu, ha⟩ => (mem_filter.1 hu).2.1 ha, fun ha => _⟩
@@ -586,10 +586,10 @@ theorem bunionᵢ_filter_atomise (ht : t ∈ F) (hts : t ⊆ s) :
 #align finpartition.bUnion_filter_atomise Finpartition.bunionᵢ_filter_atomise
 
 theorem card_filter_atomise_le_two_pow (ht : t ∈ F) :
-    ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty).card ≤ 2 ^ (F.card - 1) :=
+    ((atomise s F).parts.filterₓ fun u => u ⊆ t ∧ u.Nonempty).card ≤ 2 ^ (F.card - 1) :=
   by
   suffices h :
-    ((atomise s F).parts.filter fun u => u ⊆ t ∧ u.Nonempty) ⊆
+    ((atomise s F).parts.filterₓ fun u => u ⊆ t ∧ u.Nonempty) ⊆
       (F.erase t).powerset.image fun P => s.filter fun i => ∀ x ∈ F, x ∈ insert t P ↔ i ∈ x
   · refine' (card_le_of_subset h).trans (card_image_le.trans _)
     rw [card_powerset, card_erase_of_mem ht]

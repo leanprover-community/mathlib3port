@@ -361,7 +361,7 @@ theorem split : Split f g := by
 
 @[reassoc.1]
 theorem comp_eq_zero : f ≫ g = 0 :=
-  h.split.1.some_spec.some_spec.2.2.1
+  h.split.1.choose_spec.choose_spec.2.2.1
 #align category_theory.splitting.comp_eq_zero CategoryTheory.Splitting.comp_eq_zero
 
 variable [HasKernels 𝒜] [HasImages 𝒜] [HasZeroObject 𝒜] [HasCokernels 𝒜]

@@ -39,7 +39,7 @@ variable {ι α : Type _} [Fintype α] [DecidableEq α] [Nonempty α]
 each further intersecting family takes at most half of the sets that are in no previous family. -/
 theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Finset (Finset α))
     (hf : ∀ i ∈ s, (f i : Set (Finset α)).Intersecting) :
-    (s.bUnion f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) :=
+    (s.bunionᵢ f).card ≤ 2 ^ card α - 2 ^ (card α - s.card) :=
   by
   obtain hs | hs := le_total (card α) s.card
   · rw [tsub_eq_zero_of_le hs, pow_zero]

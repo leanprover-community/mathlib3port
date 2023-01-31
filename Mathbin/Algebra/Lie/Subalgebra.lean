@@ -364,7 +364,7 @@ noncomputable def equivRangeOfInjective (h : Function.Injective f) : L ≃ₗ⁅
   LieEquiv.ofBijective f.range_restrict
     ⟨fun x y hxy => by
       simp only [Subtype.mk_eq_mk, range_restrict_apply] at hxy
-      exact h hxy, f.surjective_range_restrict⟩
+      exact h hxy, f.surjective_rangeRestrict⟩
 #align lie_hom.equiv_range_of_injective LieHom.equivRangeOfInjective
 
 @[simp]
@@ -783,7 +783,7 @@ theorem span_empty : lieSpan R L (∅ : Set L) = ⊥ :=
 
 @[simp]
 theorem span_univ : lieSpan R L (Set.univ : Set L) = ⊤ :=
-  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lie_span
+  eq_top_iff.2 <| SetLike.le_def.2 <| subset_lieSpan
 #align lie_subalgebra.span_univ LieSubalgebra.span_univ
 
 variable {L}
@@ -793,7 +793,7 @@ theorem span_union (s t : Set L) : lieSpan R L (s ∪ t) = lieSpan R L s ⊔ lie
 #align lie_subalgebra.span_union LieSubalgebra.span_union
 
 theorem span_unionᵢ {ι} (s : ι → Set L) : lieSpan R L (⋃ i, s i) = ⨆ i, lieSpan R L (s i) :=
-  (LieSubalgebra.gi R L).gc.l_supr
+  (LieSubalgebra.gi R L).gc.l_supᵢ
 #align lie_subalgebra.span_Union LieSubalgebra.span_unionᵢ
 
 end LieSpan

@@ -48,7 +48,7 @@ variable {α : Type _}
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
 theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x b b'}
     (hc : b ∈ c) (hb : x ∈ b) (hc' : b' ∈ c) (hb' : x ∈ b') : b = b' :=
-  (H x).unique2 hc hb hc' hb'
+  (H x).unique₂ hc hb hc' hb'
 #align setoid.eq_of_mem_eqv_class Setoid.eq_of_mem_eqv_class
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
@@ -56,12 +56,12 @@ theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
 def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : Setoid α :=
   ⟨fun x y => ∀ s ∈ c, x ∈ s → y ∈ s,
     ⟨fun _ _ _ hx => hx, fun x y h s hs hy =>
-      (H x).elim2 fun t ht hx _ =>
+      (H x).elim₂ fun t ht hx _ =>
         have : s = t := eq_of_mem_eqv_class H hs hy ht (h t ht hx)
         this.symm ▸ hx,
       fun x y z h1 h2 s hs hx =>
-      (H y).elim2 fun t ht hy _ =>
-        (H z).elim2 fun t' ht' hz _ =>
+      (H y).elim₂ fun t ht hy _ =>
+        (H z).elim₂ fun t' ht' hz _ =>
           have hst : s = t := eq_of_mem_eqv_class H hs (h1 _ hs hx) ht hy
           have htt' : t = t' := eq_of_mem_eqv_class H ht (h2 _ ht hy) ht' hz
           (hst.trans htt').symm ▸ hz⟩⟩
@@ -141,7 +141,7 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
   Set.ext fun x =>
     ⟨fun hs' => symm' (mkClasses c H) fun b' hb' h' => eq_of_mem_eqv_class H hs hy hb' h' ▸ hs',
       fun hx =>
-      (H x).elim2 fun b' hc' hb' h' =>
+      (H x).elim₂ fun b' hc' hb' h' =>
         (eq_of_mem_eqv_class H hs hy hc' <| hx b' hc' hb').symm ▸ hb'⟩
 #align setoid.eq_eqv_class_of_mem Setoid.eq_eqv_class_of_mem
 
@@ -150,7 +150,7 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
     partitioning α are elements of the set of sets. -/
 theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {y} :
     { x | (mkClasses c H).Rel x y } ∈ c :=
-  (H y).elim2 fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
+  (H y).elim₂ fun b hc hy hb => eq_eqv_class_of_mem H hc hy ▸ hc
 #align setoid.eqv_class_mem Setoid.eqv_class_mem
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
@@ -167,7 +167,7 @@ theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c),
 theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) :
     c.PairwiseDisjoint id := fun b₁ h₁ b₂ h₂ h =>
   Set.disjoint_left.2 fun x hx1 hx2 =>
-    (H x).elim2 fun b hc hx hb => h <| eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
+    (H x).elim₂ fun b hc hx hb => h <| eq_of_mem_eqv_class H h₁ hx1 h₂ hx2
 #align setoid.eqv_classes_disjoint Setoid.eqv_classes_disjoint
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
@@ -242,7 +242,7 @@ theorem exists_of_mem_partition {c : Set (Set α)} (hc : IsPartition c) {s} (hs 
 theorem classes_mkClasses (c : Set (Set α)) (hc : IsPartition c) : (mkClasses c hc.2).classes = c :=
   Set.ext fun s =>
     ⟨fun ⟨y, hs⟩ =>
-      (hc.2 y).elim2 fun b hm hb hy => by
+      (hc.2 y).elim₂ fun b hm hb hy => by
         rwa [show s = b from
             hs.symm ▸
               Set.ext fun x =>
@@ -304,7 +304,7 @@ def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c :
     Finpartition (Set.univ : Set α) where
   parts := c
   SupIndep := Finset.supIndep_iff_pairwiseDisjoint.mpr <| eqv_classes_disjoint hc.2
-  sup_parts := c.sup_id_set_eq_sUnion.trans hc.sUnion_eq_univ
+  sup_parts := c.sup_id_set_eq_unionₛ.trans hc.unionₛ_eq_univ
   not_bot_mem := hc.left
 #align setoid.is_partition.finpartition Setoid.IsPartition.finpartition
 
@@ -314,7 +314,7 @@ end Setoid
 theorem Finpartition.isPartition_parts {α} (f : Finpartition (Set.univ : Set α)) :
     Setoid.IsPartition (f.parts : Set (Set α)) :=
   ⟨f.not_bot_mem,
-    Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_sUnion.symm.trans f.sup_parts)
+    Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_unionₛ.symm.trans f.sup_parts)
       f.SupIndep.PairwiseDisjoint⟩
 #align finpartition.is_partition_parts Finpartition.isPartition_parts
 
@@ -341,9 +341,9 @@ noncomputable def IndexedPartition.mk' {ι α : Type _} (s : ι → Set α)
     where
   eq_of_mem x i j hxi hxj := by_contradiction fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
   some i := (Nonempty i).some
-  some_mem i := (Nonempty i).some_spec
+  some_mem i := (Nonempty i).choose_spec
   index x := (ex x).some
-  mem_index x := (ex x).some_spec
+  mem_index x := (ex x).choose_spec
 #align indexed_partition.mk' IndexedPartition.mk'
 
 namespace IndexedPartition
@@ -439,7 +439,7 @@ theorem equivQuotient_symm_proj_apply (x : α) : hs.equivQuotient.symm (hs.proj 
 #align indexed_partition.equiv_quotient_symm_proj_apply IndexedPartition.equivQuotient_symm_proj_apply
 
 theorem equivQuotient_index : hs.equivQuotient ∘ hs.index = hs.proj :=
-  funext hs.equiv_quotient_index_apply
+  funext hs.equivQuotient_index_apply
 #align indexed_partition.equiv_quotient_index IndexedPartition.equivQuotient_index
 
 /-- A map choosing a representative for each element of the quotient associated to an indexed

@@ -91,7 +91,7 @@ the sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
 theorem equivalentSumSquares {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (Q : QuadraticForm ℂ M) (hQ : (associated Q).Nondegenerate) :
     Equivalent Q (weightedSumSquares ℂ (1 : Fin (FiniteDimensional.finrank ℂ M) → ℂ)) :=
-  let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
+  let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares_units_of_nondegenerate' hQ
   ⟨hw₁.trans (isometrySumSquaresUnits w)⟩
 #align quadratic_form.equivalent_sum_squares QuadraticForm.equivalentSumSquares
 

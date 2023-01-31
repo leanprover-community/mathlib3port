@@ -36,22 +36,22 @@ open Topology
 variable {α β γ : Type _} [LinearOrderedRing α] [FloorRing α]
 
 theorem tendsto_floor_atTop : Tendsto (floor : α → ℤ) atTop atTop :=
-  floor_mono.tendsto_at_top_at_top fun b =>
+  floor_mono.tendsto_atTop_atTop fun b =>
     ⟨(b + 1 : ℤ), by
       rw [floor_int_cast]
       exact (lt_add_one _).le⟩
 #align tendsto_floor_at_top tendsto_floor_atTop
 
 theorem tendsto_floor_atBot : Tendsto (floor : α → ℤ) atBot atBot :=
-  floor_mono.tendsto_at_bot_at_bot fun b => ⟨b, (floor_intCast _).le⟩
+  floor_mono.tendsto_atBot_atBot fun b => ⟨b, (floor_intCast _).le⟩
 #align tendsto_floor_at_bot tendsto_floor_atBot
 
 theorem tendsto_ceil_atTop : Tendsto (ceil : α → ℤ) atTop atTop :=
-  ceil_mono.tendsto_at_top_at_top fun b => ⟨b, (ceil_intCast _).ge⟩
+  ceil_mono.tendsto_atTop_atTop fun b => ⟨b, (ceil_intCast _).ge⟩
 #align tendsto_ceil_at_top tendsto_ceil_atTop
 
 theorem tendsto_ceil_atBot : Tendsto (ceil : α → ℤ) atBot atBot :=
-  ceil_mono.tendsto_at_bot_at_bot fun b =>
+  ceil_mono.tendsto_atBot_atBot fun b =>
     ⟨(b - 1 : ℤ), by
       rw [ceil_int_cast]
       exact (sub_one_lt _).le⟩

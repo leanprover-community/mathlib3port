@@ -105,7 +105,7 @@ theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsT
 
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
     e ∈ p.edges ↔ e ∈ G.edgeSet :=
-  ⟨fun h => p.edges_subset_edge_set h, fun he => by simpa using (h e he).ge⟩
+  ⟨fun h => p.edges_subset_edgeSet h, fun he => by simpa using (h e he).ge⟩
 #align simple_graph.walk.is_eulerian.mem_edges_iff SimpleGraph.Walk.IsEulerian.mem_edges_iff
 
 /-- The edge set of an Eulerian graph is finite. -/
@@ -149,8 +149,8 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
 
 theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V}
     {p : G.Walk u v} (ht : p.IsEulerian) {s}
-    (h : s = (Finset.univ : Finset V).filter fun v => Odd (G.degree v)) : s.card = 0 ∨ s.card = 2 :=
-  by
+    (h : s = (Finset.univ : Finset V).filterₓ fun v => Odd (G.degree v)) :
+    s.card = 0 ∨ s.card = 2 := by
   subst s
   simp only [Nat.odd_iff_not_even, Finset.card_eq_zero]
   simp only [ht.even_degree_iff, Ne.def, not_forall, not_and, Classical.not_not, exists_prop]

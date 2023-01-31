@@ -60,7 +60,7 @@ variable {M R}
 variable [MulSemiringAction M R]
 
 @[simp]
-theorem smul_x (m : M) : (m • X : R[X]) = X :=
+theorem smul_x (m : M) : (m • x : R[X]) = x :=
   (smul_eq_map R m).symm ▸ map_x _
 #align polynomial.smul_X Polynomial.smul_x
 

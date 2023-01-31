@@ -94,10 +94,10 @@ def LinearExtension (α : Type u) : Type u :=
 noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α)
     where
   le := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some
-  le_refl := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.1.1
-  le_trans := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.1.1.2.1
-  le_antisymm := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.1.2.1
-  le_total := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some.2.1
+  le_refl := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.1.1.1.1
+  le_trans := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.1.1.2.1
+  le_antisymm := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.1.2.1
+  le_total := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.2.1
   decidableLe := Classical.decRel _
 
 /- warning: to_linear_extension -> toLinearExtension is a dubious translation:
@@ -111,7 +111,7 @@ def toLinearExtension {α : Type u} [PartialOrder α] :
     ((· ≤ ·) : α → α → Prop) →r ((· ≤ ·) : LinearExtension α → LinearExtension α → Prop)
     where
   toFun x := x
-  map_rel' a b := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some_spec.some_spec _ _
+  map_rel' a b := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.choose_spec _ _
 #align to_linear_extension toLinearExtension
 
 instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=

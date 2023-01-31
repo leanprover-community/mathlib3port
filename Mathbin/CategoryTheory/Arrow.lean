@@ -185,12 +185,12 @@ instance isIso_right [IsIso sq] : IsIso sq.right
 
 @[simp]
 theorem inv_left [IsIso sq] : (inv sq).left = inv sq.left :=
-  is_iso.eq_inv_of_hom_inv_id <| by rw [← comma.comp_left, is_iso.hom_inv_id, id_left]
+  IsIso.eq_inv_of_hom_inv_id <| by rw [← comma.comp_left, is_iso.hom_inv_id, id_left]
 #align category_theory.arrow.inv_left CategoryTheory.Arrow.inv_left
 
 @[simp]
 theorem inv_right [IsIso sq] : (inv sq).right = inv sq.right :=
-  is_iso.eq_inv_of_hom_inv_id <| by rw [← comma.comp_right, is_iso.hom_inv_id, id_right]
+  IsIso.eq_inv_of_hom_inv_id <| by rw [← comma.comp_right, is_iso.hom_inv_id, id_right]
 #align category_theory.arrow.inv_right CategoryTheory.Arrow.inv_right
 
 @[simp]
@@ -279,7 +279,7 @@ def rightFunc : Arrow C ⥤ C :=
 
 /-- The natural transformation from `left_func` to `right_func`, given by the arrow itself. -/
 @[simps]
-def leftToRight : (leftFunc : Arrow C ⥤ C) ⟶ right_func where app f := f.Hom
+def leftToRight : (leftFunc : Arrow C ⥤ C) ⟶ rightFunc where app f := f.Hom
 #align category_theory.arrow.left_to_right CategoryTheory.Arrow.leftToRight
 
 end Arrow

@@ -335,21 +335,21 @@ theorem TendstoUniformlyOnFilter.prod {ι' β' : Type _} [UniformSpace β'] {F' 
     (h' : TendstoUniformlyOnFilter F' f' q p') :
     TendstoUniformlyOnFilter (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a))
       (p.Prod q) p' :=
-  fun u hu => ((h.prod_map h') u hu).diag_of_prod_right
+  fun u hu => ((h.Prod_map h') u hu).diag_of_prod_right
 #align tendsto_uniformly_on_filter.prod TendstoUniformlyOnFilter.prod
 
 theorem TendstoUniformlyOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'}
     {p' : Filter ι'} (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s) :
     TendstoUniformlyOn (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a))
       (p.Prod p') s :=
-  (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
+  (congr_arg _ s.inter_self).mp ((h.Prod_map h').comp fun a => (a, a))
 #align tendsto_uniformly_on.prod TendstoUniformlyOn.prod
 
 theorem TendstoUniformly.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'}
     {p' : Filter ι'} (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
     TendstoUniformly (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a))
       (p.Prod p') :=
-  (h.prod_map h').comp fun a => (a, a)
+  (h.Prod_map h').comp fun a => (a, a)
 #align tendsto_uniformly.prod TendstoUniformly.prod
 
 /-- Uniform convergence on a filter `p'` to a constant function is equivalent to convergence in
@@ -399,7 +399,7 @@ theorem Filter.Tendsto.tendstoUniformlyOnFilter_const {g : ι → β} {b : β} (
   rw [tendstoUniformlyOnFilter_iff_tendsto]
   rw [Uniform.tendsto_nhds_right] at hg
   exact
-    (hg.comp (tendsto_fst.comp ((@tendsto_id ι p).prod_map (@tendsto_id α p')))).congr fun x => by
+    (hg.comp (tendsto_fst.comp ((@tendsto_id ι p).Prod_map (@tendsto_id α p')))).congr fun x => by
       simp
 #align filter.tendsto.tendsto_uniformly_on_filter_const Filter.Tendsto.tendstoUniformlyOnFilter_const
 
@@ -407,7 +407,7 @@ theorem Filter.Tendsto.tendstoUniformlyOnFilter_const {g : ι → β} {b : β} (
 `λ n, λ a, g n` converges to the constant function `λ a, b` on any set `s` -/
 theorem Filter.Tendsto.tendstoUniformlyOn_const {g : ι → β} {b : β} (hg : Tendsto g p (𝓝 b))
     (s : Set α) : TendstoUniformlyOn (fun n : ι => fun a : α => g n) (fun a : α => b) p s :=
-  tendstoUniformlyOn_iff_tendstoUniformlyOnFilter.mpr (hg.tendsto_uniformly_on_filter_const (𝓟 s))
+  tendstoUniformlyOn_iff_tendstoUniformlyOnFilter.mpr (hg.tendstoUniformlyOnFilter_const (𝓟 s))
 #align filter.tendsto.tendsto_uniformly_on_const Filter.Tendsto.tendstoUniformlyOn_const
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -521,7 +521,7 @@ theorem UniformCauchySeqOnFilter.tendstoUniformlyOnFilter_of_tendsto [NeBot p]
 theorem UniformCauchySeqOn.tendstoUniformlyOn_of_tendsto [NeBot p] (hF : UniformCauchySeqOn F p s)
     (hF' : ∀ x : α, x ∈ s → Tendsto (fun n => F n x) p (𝓝 (f x))) : TendstoUniformlyOn F f p s :=
   tendstoUniformlyOn_iff_tendstoUniformlyOnFilter.mpr
-    (hF.UniformCauchySeqOnFilter.tendsto_uniformly_on_filter_of_tendsto hF')
+    (hF.UniformCauchySeqOnFilter.tendstoUniformlyOnFilter_of_tendsto hF')
 #align uniform_cauchy_seq_on.tendsto_uniformly_on_of_tendsto UniformCauchySeqOn.tendstoUniformlyOn_of_tendsto
 
 theorem UniformCauchySeqOnFilter.mono_left {p'' : Filter ι} (hf : UniformCauchySeqOnFilter F p p')
@@ -592,7 +592,7 @@ theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
 theorem UniformCauchySeqOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'}
     {p' : Filter ι'} (h : UniformCauchySeqOn F p s) (h' : UniformCauchySeqOn F' p' s) :
     UniformCauchySeqOn (fun (i : ι × ι') a => (F i.fst a, F' i.snd a)) (p ×ᶠ p') s :=
-  (congr_arg _ s.inter_self).mp ((h.prod_map h').comp fun a => (a, a))
+  (congr_arg _ s.inter_self).mp ((h.Prod_map h').comp fun a => (a, a))
 #align uniform_cauchy_seq_on.prod UniformCauchySeqOn.prod
 
 theorem UniformCauchySeqOn.prod' {β' : Type _} [UniformSpace β'] {F' : ι → α → β'}
@@ -741,7 +741,7 @@ theorem tendstoLocallyUniformlyOn_unionᵢ {S : γ → Set α} (hS : ∀ i, IsOp
   rintro v hv x ⟨_, ⟨i, rfl⟩, hi : x ∈ S i⟩
   obtain ⟨t, ht, ht'⟩ := h i v hv x hi
   refine' ⟨t, _, ht'⟩
-  rw [(hS _).nhds_within_eq hi] at ht
+  rw [(hS _).nhdsWithin_eq hi] at ht
   exact mem_nhdsWithin_of_mem_nhds ht
 #align tendsto_locally_uniformly_on_Union tendstoLocallyUniformlyOn_unionᵢ
 

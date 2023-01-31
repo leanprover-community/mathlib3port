@@ -292,11 +292,11 @@ instance [Monoid α] : MonoidWithZero (WithZero α) :=
   { WithZero.mulZeroOneClass,
     WithZero.semigroupWithZero with
     npow := fun n x => x ^ n
-    npow_zero' := fun x =>
+    npow_zero := fun x =>
       match x with
       | none => rfl
       | some x => congr_arg some <| pow_zero _
-    npow_succ' := fun n x =>
+    npow_succ := fun n x =>
       match x with
       | none => rfl
       | some x => congr_arg some <| pow_succ _ _ }
@@ -424,8 +424,8 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne (WithZero α) :=
   { WithZero.addMonoid,
     WithZero.hasOne with
     natCast := fun n => if n = 0 then 0 else (n.cast : α)
-    nat_cast_zero := rfl
-    nat_cast_succ := fun n => by
+    natCast_zero := rfl
+    natCast_succ := fun n => by
       cases n
       show (((1 : ℕ) : α) : WithZero α) = 0 + 1; · rw [Nat.cast_one, coe_one, zero_add]
       show (((n + 2 : ℕ) : α) : WithZero α) = ((n + 1 : ℕ) : α) + 1

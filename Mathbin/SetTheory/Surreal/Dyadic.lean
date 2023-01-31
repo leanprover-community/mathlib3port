@@ -102,7 +102,7 @@ theorem numeric_powHalf (n) : (powHalf n).Numeric :=
 #align pgame.numeric_pow_half Pgame.numeric_powHalf
 
 theorem powHalf_succ_lt_powHalf (n : ℕ) : powHalf (n + 1) < powHalf n :=
-  (numeric_powHalf (n + 1)).lt_move_right default
+  (numeric_powHalf (n + 1)).lt_moveRight default
 #align pgame.pow_half_succ_lt_pow_half Pgame.powHalf_succ_lt_powHalf
 
 theorem powHalf_succ_le_powHalf (n : ℕ) : powHalf (n + 1) ≤ powHalf n :=

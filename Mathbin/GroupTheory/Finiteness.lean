@@ -190,7 +190,7 @@ theorem Monoid.fg_of_surjective {M' : Type _} [Monoid M'] [Monoid.Fg M] (f : M �
 @[to_additive]
 instance Monoid.fg_range {M' : Type _} [Monoid M'] [Monoid.Fg M] (f : M →* M') :
     Monoid.Fg f.mrange :=
-  Monoid.fg_of_surjective f.mrangeRestrict f.mrange_restrict_surjective
+  Monoid.fg_of_surjective f.mrangeRestrict f.mrangeRestrict_surjective
 #align monoid.fg_range Monoid.fg_range
 #align add_monoid.fg_range AddMonoid.fg_range
 
@@ -367,7 +367,7 @@ theorem Group.fg_of_surjective {G' : Type _} [Group G'] [hG : Group.Fg G] {f : G
 
 @[to_additive]
 instance Group.fg_range {G' : Type _} [Group G'] [Group.Fg G] (f : G →* G') : Group.Fg f.range :=
-  Group.fg_of_surjective f.range_restrict_surjective
+  Group.fg_of_surjective f.rangeRestrict_surjective
 #align group.fg_range Group.fg_range
 #align add_group.fg_range AddGroup.fg_range
 
@@ -425,7 +425,7 @@ theorem Group.rank_le_of_surjective [Group.Fg G] [Group.Fg G'] (f : G →* G')
 
 @[to_additive]
 theorem Group.rank_range_le [Group.Fg G] {f : G →* G'} : Group.rank f.range ≤ Group.rank G :=
-  Group.rank_le_of_surjective f.range_restrict f.range_restrict_surjective
+  Group.rank_le_of_surjective f.range_restrict f.rangeRestrict_surjective
 #align group.rank_range_le Group.rank_range_le
 #align add_group.rank_range_le AddGroup.rank_range_le
 

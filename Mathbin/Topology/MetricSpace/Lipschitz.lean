@@ -544,7 +544,7 @@ theorem edist_lt_of_edist_lt_div (hf : LipschitzOnWith K f s) {x y : α} (hx : x
 
 protected theorem comp {g : β → γ} {t : Set β} {Kg : ℝ≥0} (hg : LipschitzOnWith Kg g t)
     (hf : LipschitzOnWith K f s) (hmaps : MapsTo f s t) : LipschitzOnWith (Kg * K) (g ∘ f) s :=
-  lipschitzOnWith_iff_restrict.mpr <| hg.to_restrict.comp (hf.to_restrict_maps_to hmaps)
+  lipschitzOnWith_iff_restrict.mpr <| hg.to_restrict.comp (hf.to_restrict_mapsTo hmaps)
 #align lipschitz_on_with.comp LipschitzOnWith.comp
 
 end Emetric

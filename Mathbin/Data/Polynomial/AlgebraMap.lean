@@ -44,13 +44,13 @@ variable [Semiring A] [Algebra R A]
 instance algebraOfAlgebra : Algebra R A[X]
     where
   smul_def' r p :=
-    to_finsupp_injective <|
+    toFinsupp_injective <|
       by
       dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       rw [to_finsupp_smul, to_finsupp_mul, to_finsupp_C]
       exact Algebra.smul_def' _ _
   commutes' r p :=
-    to_finsupp_injective <|
+    toFinsupp_injective <|
       by
       dsimp only [RingHom.toFun_eq_coe, RingHom.comp_apply]
       simp_rw [to_finsupp_mul, to_finsupp_C]
@@ -252,12 +252,12 @@ theorem aeval_comp {A : Type _} [CommSemiring A] [Algebra R A] (x : A) :
 #align polynomial.aeval_comp Polynomial.aeval_comp
 
 theorem aeval_algHom (f : A →ₐ[R] B) (x : A) : aeval (f x) = f.comp (aeval x) :=
-  alg_hom_ext <| by simp only [aeval_X, AlgHom.comp_apply]
+  algHom_ext <| by simp only [aeval_X, AlgHom.comp_apply]
 #align polynomial.aeval_alg_hom Polynomial.aeval_algHom
 
 @[simp]
 theorem aeval_x_left : aeval (x : R[X]) = AlgHom.id R R[X] :=
-  alg_hom_ext <| aeval_x x
+  algHom_ext <| aeval_x x
 #align polynomial.aeval_X_left Polynomial.aeval_x_left
 
 theorem aeval_x_left_apply (p : R[X]) : aeval x p = p :=
@@ -473,7 +473,7 @@ when evaluated at `r`.
 
 This is the key step in our proof of the Cayley-Hamilton theorem.
 -/
-theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 :=
+theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (x - c r)).eval r = 0 :=
   by
   simp only [eval, eval₂, RingHom.id_apply]
   have bound :=
@@ -494,7 +494,7 @@ theorem eval_mul_x_sub_c {p : R[X]} (r : R) : (p * (X - c r)).eval r = 0 :=
   simp [sum_range_sub', coeff_monomial]
 #align polynomial.eval_mul_X_sub_C Polynomial.eval_mul_x_sub_c
 
-theorem not_isUnit_x_sub_c [Nontrivial R] (r : R) : ¬IsUnit (X - c r) :=
+theorem not_isUnit_x_sub_c [Nontrivial R] (r : R) : ¬IsUnit (x - c r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ => zero_ne_one' R <| by erw [← eval_mul_X_sub_C, hgf, eval_one]
 #align polynomial.not_is_unit_X_sub_C Polynomial.not_isUnit_x_sub_c
 

@@ -378,8 +378,8 @@ theorem lhopital_zero_nhds (hff' : ∀ᶠ x in 𝓝 a, HasDerivAt f (f' x) x)
 #align has_deriv_at.lhopital_zero_nhds HasDerivAt.lhopital_zero_nhds
 
 /-- L'Hôpital's rule for approaching +∞, `has_deriv_at` version -/
-theorem lhopital_zero_atTop (hff' : ∀ᶠ x in at_top, HasDerivAt f (f' x) x)
-    (hgg' : ∀ᶠ x in at_top, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in at_top, g' x ≠ 0)
+theorem lhopital_zero_atTop (hff' : ∀ᶠ x in atTop, HasDerivAt f (f' x) x)
+    (hgg' : ∀ᶠ x in atTop, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in atTop, g' x ≠ 0)
     (hftop : Tendsto f atTop (𝓝 0)) (hgtop : Tendsto g atTop (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) atTop l) : Tendsto (fun x => f x / g x) atTop l :=
   by
@@ -399,8 +399,8 @@ theorem lhopital_zero_atTop (hff' : ∀ᶠ x in at_top, HasDerivAt f (f' x) x)
 #align has_deriv_at.lhopital_zero_at_top HasDerivAt.lhopital_zero_atTop
 
 /-- L'Hôpital's rule for approaching -∞, `has_deriv_at` version -/
-theorem lhopital_zero_atBot (hff' : ∀ᶠ x in at_bot, HasDerivAt f (f' x) x)
-    (hgg' : ∀ᶠ x in at_bot, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in at_bot, g' x ≠ 0)
+theorem lhopital_zero_atBot (hff' : ∀ᶠ x in atBot, HasDerivAt f (f' x) x)
+    (hgg' : ∀ᶠ x in atBot, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in atBot, g' x ≠ 0)
     (hfbot : Tendsto f atBot (𝓝 0)) (hgbot : Tendsto g atBot (𝓝 0))
     (hdiv : Tendsto (fun x => f' x / g' x) atBot l) : Tendsto (fun x => f x / g x) atBot l :=
   by
@@ -485,8 +485,8 @@ theorem lhopital_zero_nhds (hdf : ∀ᶠ x in 𝓝 a, DifferentiableAt ℝ f x)
 #align deriv.lhopital_zero_nhds deriv.lhopital_zero_nhds
 
 /-- **L'Hôpital's rule** for approaching +∞, `deriv` version -/
-theorem lhopital_zero_atTop (hdf : ∀ᶠ x : ℝ in at_top, DifferentiableAt ℝ f x)
-    (hg' : ∀ᶠ x : ℝ in at_top, deriv g x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
+theorem lhopital_zero_atTop (hdf : ∀ᶠ x : ℝ in atTop, DifferentiableAt ℝ f x)
+    (hg' : ∀ᶠ x : ℝ in atTop, deriv g x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
     (hgtop : Tendsto g atTop (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atTop l) :
     Tendsto (fun x => f x / g x) atTop l :=
   by
@@ -502,8 +502,8 @@ theorem lhopital_zero_atTop (hdf : ∀ᶠ x : ℝ in at_top, DifferentiableAt �
 #align deriv.lhopital_zero_at_top deriv.lhopital_zero_atTop
 
 /-- **L'Hôpital's rule** for approaching -∞, `deriv` version -/
-theorem lhopital_zero_atBot (hdf : ∀ᶠ x : ℝ in at_bot, DifferentiableAt ℝ f x)
-    (hg' : ∀ᶠ x : ℝ in at_bot, deriv g x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))
+theorem lhopital_zero_atBot (hdf : ∀ᶠ x : ℝ in atBot, DifferentiableAt ℝ f x)
+    (hg' : ∀ᶠ x : ℝ in atBot, deriv g x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))
     (hgbot : Tendsto g atBot (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atBot l) :
     Tendsto (fun x => f x / g x) atBot l :=
   by

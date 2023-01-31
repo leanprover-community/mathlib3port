@@ -86,7 +86,7 @@ theorem reClm_norm : ‖(reClm : K →L[ℝ] ℝ)‖ = 1 :=
 
 @[simp, is_R_or_C_simps]
 theorem conjCle_norm : ‖(@conjCle K _ : K →L[ℝ] K)‖ = 1 :=
-  (@conjLie K _).toLinearIsometry.norm_to_continuous_linear_map
+  (@conjLie K _).toLinearIsometry.norm_toContinuousLinearMap
 #align is_R_or_C.conj_cle_norm IsROrC.conjCle_norm
 
 @[simp, is_R_or_C_simps]

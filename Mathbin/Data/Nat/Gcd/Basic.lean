@@ -886,12 +886,12 @@ but is expected to have type
   forall {m : Nat} {k : Nat} (n : Nat), (Nat.coprime m k) -> (Nat.coprime m (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) k n))
 Case conversion may be inaccurate. Consider using '#align nat.coprime.pow_right Nat.coprime.pow_rightₓ'. -/
 theorem coprime.pow_right {m k : ℕ} (n : ℕ) (H1 : coprime k m) : coprime k (m ^ n) :=
-  (H1.symm.pow_left n).symm
+  (H1.symm.pow_leftₓ n).symm
 #align nat.coprime.pow_right Nat.coprime.pow_right
 
 #print Nat.coprime.pow /-
 theorem coprime.pow {k l : ℕ} (m n : ℕ) (H1 : coprime k l) : coprime (k ^ m) (l ^ n) :=
-  (H1.pow_left _).pow_right _
+  (H1.pow_leftₓ _).pow_right _
 #align nat.coprime.pow Nat.coprime.pow
 -/
 
@@ -902,7 +902,7 @@ theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) :
   by
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero hn.ne'
   rw [pow_succ, Nat.coprime_mul_iff_left]
-  exact ⟨And.left, fun hab => ⟨hab, hab.pow_left _⟩⟩
+  exact ⟨And.left, fun hab => ⟨hab, hab.pow_leftₓ _⟩⟩
 #align nat.coprime_pow_left_iff Nat.coprime_pow_left_iff
 -/
 

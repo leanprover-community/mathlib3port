@@ -131,7 +131,7 @@ theorem toAffineMap_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.toAffineMap = e'.toAffi
 
 @[ext]
 theorem ext {e e' : P₁ ≃ᵃ[k] P₂} (h : ∀ x, e x = e' x) : e = e' :=
-  to_affine_map_injective <| AffineMap.ext h
+  toAffineMap_injective <| AffineMap.ext h
 #align affine_equiv.ext AffineEquiv.ext
 
 theorem coeFn_injective : @Injective (P₁ ≃ᵃ[k] P₂) (P₁ → P₂) coeFn := fun e e' H =>
@@ -380,7 +380,7 @@ theorem symm_trans_self (e : P₁ ≃ᵃ[k] P₂) : e.symm.trans e = refl k P₂
 @[simp]
 theorem apply_lineMap (e : P₁ ≃ᵃ[k] P₂) (a b : P₁) (c : k) :
     e (AffineMap.lineMap a b c) = AffineMap.lineMap (e a) (e b) c :=
-  e.toAffineMap.apply_line_map a b c
+  e.toAffineMap.apply_lineMap a b c
 #align affine_equiv.apply_line_map AffineEquiv.apply_lineMap
 
 omit V₂
@@ -572,7 +572,7 @@ theorem pointReflection_apply (x y : P₁) : pointReflection k x y = x -ᵥ y +�
 
 @[simp]
 theorem pointReflection_symm (x : P₁) : (pointReflection k x).symm = pointReflection k x :=
-  to_equiv_injective <| Equiv.pointReflection_symm x
+  toEquiv_injective <| Equiv.pointReflection_symm x
 #align affine_equiv.point_reflection_symm AffineEquiv.pointReflection_symm
 
 @[simp]
@@ -641,22 +641,22 @@ include V₁
 
 theorem lineMap_vadd (v v' : V₁) (p : P₁) (c : k) :
     lineMap v v' c +ᵥ p = lineMap (v +ᵥ p) (v' +ᵥ p) c :=
-  (vaddConst k p).apply_line_map v v' c
+  (vaddConst k p).apply_lineMap v v' c
 #align affine_map.line_map_vadd AffineMap.lineMap_vadd
 
 theorem lineMap_vsub (p₁ p₂ p₃ : P₁) (c : k) :
     lineMap p₁ p₂ c -ᵥ p₃ = lineMap (p₁ -ᵥ p₃) (p₂ -ᵥ p₃) c :=
-  (vaddConst k p₃).symm.apply_line_map p₁ p₂ c
+  (vaddConst k p₃).symm.apply_lineMap p₁ p₂ c
 #align affine_map.line_map_vsub AffineMap.lineMap_vsub
 
 theorem vsub_lineMap (p₁ p₂ p₃ : P₁) (c : k) :
     p₁ -ᵥ lineMap p₂ p₃ c = lineMap (p₁ -ᵥ p₂) (p₁ -ᵥ p₃) c :=
-  (constVsub k p₁).apply_line_map p₂ p₃ c
+  (constVsub k p₁).apply_lineMap p₂ p₃ c
 #align affine_map.vsub_line_map AffineMap.vsub_lineMap
 
 theorem vadd_lineMap (v : V₁) (p₁ p₂ : P₁) (c : k) :
     v +ᵥ lineMap p₁ p₂ c = lineMap (v +ᵥ p₁) (v +ᵥ p₂) c :=
-  (constVadd k P₁ v).apply_line_map p₁ p₂ c
+  (constVadd k P₁ v).apply_lineMap p₁ p₂ c
 #align affine_map.vadd_line_map AffineMap.vadd_lineMap
 
 variable {R' : Type _} [CommRing R'] [Module R' V₁]

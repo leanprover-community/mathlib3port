@@ -65,7 +65,7 @@ noncomputable section
 @[ext]
 structure HahnSeries (Γ : Type _) (R : Type _) [PartialOrder Γ] [Zero R] where
   coeff : Γ → R
-  is_pwo_support' : (support coeff).IsPwo
+  isPwo_support' : (support coeff).IsPwo
 #align hahn_series HahnSeries
 
 variable {Γ : Type _} {R : Type _}
@@ -93,12 +93,12 @@ def support (x : HahnSeries Γ R) : Set Γ :=
 
 @[simp]
 theorem isPwo_support (x : HahnSeries Γ R) : x.support.IsPwo :=
-  x.is_pwo_support'
+  x.isPwo_support'
 #align hahn_series.is_pwo_support HahnSeries.isPwo_support
 
 @[simp]
 theorem isWf_support (x : HahnSeries Γ R) : x.support.IsWf :=
-  x.is_pwo_support.IsWf
+  x.isPwo_support.IsWf
 #align hahn_series.is_wf_support HahnSeries.isWf_support
 
 @[simp]
@@ -108,7 +108,7 @@ theorem mem_support (x : HahnSeries Γ R) (a : Γ) : a ∈ x.support ↔ x.coeff
 
 instance : Zero (HahnSeries Γ R) :=
   ⟨{  coeff := 0
-      is_pwo_support' := by simp }⟩
+      isPwo_support' := by simp }⟩
 
 instance : Inhabited (HahnSeries Γ R) :=
   ⟨0⟩
@@ -150,7 +150,7 @@ def single (a : Γ) : ZeroHom R (HahnSeries Γ R)
     where
   toFun r :=
     { coeff := Pi.single a r
-      is_pwo_support' := (Set.isPwo_singleton a).mono Pi.support_single_subset }
+      isPwo_support' := (Set.isPwo_singleton a).mono Pi.support_single_subset }
   map_zero' := ext _ _ (Pi.single_zero _)
 #align hahn_series.single HahnSeries.single
 
@@ -219,7 +219,7 @@ variable [Zero Γ]
 /-- The order of a nonzero Hahn series `x` is a minimal element of `Γ` where `x` has a
   nonzero coefficient, the order of 0 is 0. -/
 def order (x : HahnSeries Γ R) : Γ :=
-  if h : x = 0 then 0 else x.is_wf_support.min (support_nonempty_iff.2 h)
+  if h : x = 0 then 0 else x.isWf_support.min (support_nonempty_iff.2 h)
 #align hahn_series.order HahnSeries.order
 
 @[simp]
@@ -228,7 +228,7 @@ theorem order_zero : order (0 : HahnSeries Γ R) = 0 :=
 #align hahn_series.order_zero HahnSeries.order_zero
 
 theorem order_of_ne {x : HahnSeries Γ R} (hx : x ≠ 0) :
-    order x = x.is_wf_support.min (support_nonempty_iff.2 hx) :=
+    order x = x.isWf_support.min (support_nonempty_iff.2 hx) :=
   dif_neg hx
 #align hahn_series.order_of_ne HahnSeries.order_of_ne
 
@@ -248,7 +248,7 @@ theorem order_le_of_coeff_ne_zero {Γ} [LinearOrderedCancelAddCommMonoid Γ] {x 
 theorem order_single (h : r ≠ 0) : (single a r).order = a :=
   (order_of_ne (single_ne_zero h)).trans
     (support_single_subset
-      ((single a r).is_wf_support.min_mem (support_nonempty_iff.2 (single_ne_zero h))))
+      ((single a r).isWf_support.min_mem (support_nonempty_iff.2 (single_ne_zero h))))
 #align hahn_series.order_single HahnSeries.order_single
 
 theorem coeff_eq_zero_of_lt_order {x : HahnSeries Γ R} {i : Γ} (hi : i < x.order) : x.coeff i = 0 :=
@@ -270,8 +270,8 @@ variable {Γ' : Type _} [PartialOrder Γ']
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
 def embDomain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R := fun x =>
   { coeff := fun b : Γ' => if h : b ∈ f '' x.support then x.coeff (Classical.choose h) else 0
-    is_pwo_support' :=
-      (x.is_pwo_support.image_of_monotone f.Monotone).mono fun b hb =>
+    isPwo_support' :=
+      (x.isPwo_support.image_of_monotone f.Monotone).mono fun b hb =>
         by
         contrapose! hb
         rw [Function.mem_support, dif_neg hb, Classical.not_not] }
@@ -296,7 +296,7 @@ theorem embDomain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} :
 theorem embDomain_mk_coeff {f : Γ → Γ'} (hfi : Function.Injective f)
     (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g') {x : HahnSeries Γ R} {a : Γ} :
     (embDomain ⟨⟨f, hfi⟩, hf⟩ x).coeff (f a) = x.coeff a :=
-  emb_domain_coeff
+  embDomain_coeff
 #align hahn_series.emb_domain_mk_coeff HahnSeries.embDomain_mk_coeff
 
 theorem embDomain_notin_image_support {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {b : Γ'}
@@ -361,7 +361,7 @@ variable [AddMonoid R]
 instance : Add (HahnSeries Γ R)
     where add x y :=
     { coeff := x.coeff + y.coeff
-      is_pwo_support' := (x.is_pwo_support.union y.is_pwo_support).mono (Function.support_add _ _) }
+      isPwo_support' := (x.isPwo_support.union y.isPwo_support).mono (Function.support_add _ _) }
 
 instance : AddMonoid (HahnSeries Γ R) where
   zero := 0
@@ -456,7 +456,7 @@ instance : AddGroup (HahnSeries Γ R) :=
     HahnSeries.addMonoid with
     neg := fun x =>
       { coeff := fun a => -x.coeff a
-        is_pwo_support' := by
+        isPwo_support' := by
           rw [Function.support_neg]
           exact x.is_pwo_support }
     add_left_neg := fun x => by
@@ -504,7 +504,7 @@ variable [PartialOrder Γ] {V : Type _} [Monoid R] [AddMonoid V] [DistribMulActi
 instance : SMul R (HahnSeries Γ V) :=
   ⟨fun r x =>
     { coeff := r • x.coeff
-      is_pwo_support' := x.is_pwo_support.mono (Function.support_smul_subset_right r x.coeff) }⟩
+      isPwo_support' := x.isPwo_support.mono (Function.support_smul_subset_right r x.coeff) }⟩
 
 @[simp]
 theorem smul_coeff {r : R} {x : HahnSeries Γ V} {a : Γ} : (r • x).coeff a = r • x.coeff a :=
@@ -630,8 +630,8 @@ theorem order_one [MulZeroOneClass R] : order (1 : HahnSeries Γ R) = 0 :=
 instance [NonUnitalNonAssocSemiring R] : Mul (HahnSeries Γ R)
     where mul x y :=
     { coeff := fun a =>
-        ∑ ij in addAntidiagonal x.is_pwo_support y.is_pwo_support a, x.coeff ij.fst * y.coeff ij.snd
-      is_pwo_support' :=
+        ∑ ij in addAntidiagonal x.isPwo_support y.isPwo_support a, x.coeff ij.fst * y.coeff ij.snd
+      isPwo_support' :=
         haveI h :
           { a : Γ |
               (∑ ij : Γ × Γ in add_antidiagonal x.is_pwo_support y.is_pwo_support a,
@@ -647,15 +647,14 @@ instance [NonUnitalNonAssocSemiring R] : Mul (HahnSeries Γ R)
 @[simp]
 theorem mul_coeff [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} :
     (x * y).coeff a =
-      ∑ ij in addAntidiagonal x.is_pwo_support y.is_pwo_support a,
-        x.coeff ij.fst * y.coeff ij.snd :=
+      ∑ ij in addAntidiagonal x.isPwo_support y.isPwo_support a, x.coeff ij.fst * y.coeff ij.snd :=
   rfl
 #align hahn_series.mul_coeff HahnSeries.mul_coeff
 
 theorem mul_coeff_right' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} {s : Set Γ}
     (hs : s.IsPwo) (hys : y.support ⊆ s) :
     (x * y).coeff a =
-      ∑ ij in addAntidiagonal x.is_pwo_support hs a, x.coeff ij.fst * y.coeff ij.snd :=
+      ∑ ij in addAntidiagonal x.isPwo_support hs a, x.coeff ij.fst * y.coeff ij.snd :=
   by
   rw [mul_coeff]
   apply sum_subset_zero_on_sdiff (add_antidiagonal_mono_right hys) _ fun _ _ => rfl
@@ -667,7 +666,7 @@ theorem mul_coeff_right' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {
 theorem mul_coeff_left' [NonUnitalNonAssocSemiring R] {x y : HahnSeries Γ R} {a : Γ} {s : Set Γ}
     (hs : s.IsPwo) (hxs : x.support ⊆ s) :
     (x * y).coeff a =
-      ∑ ij in addAntidiagonal hs y.is_pwo_support a, x.coeff ij.fst * y.coeff ij.snd :=
+      ∑ ij in addAntidiagonal hs y.isPwo_support a, x.coeff ij.fst * y.coeff ij.snd :=
   by
   rw [mul_coeff]
   apply sum_subset_zero_on_sdiff (add_antidiagonal_mono_left hxs) _ fun _ _ => rfl
@@ -873,8 +872,8 @@ instance [NonUnitalCommSemiring R] : NonUnitalCommSemiring (HahnSeries Γ R) :=
       ext
       simp_rw [mul_coeff, mul_comm]
       refine'
-          sum_bij (fun a ha => a.swap) (fun a ha => _) (fun a ha => rfl)
-            (fun _ _ _ _ => Prod.swap_inj.1) fun a ha => ⟨a.swap, _, a.swap_swap.symm⟩ <;>
+          sum_bij (fun a ha => a.symm) (fun a ha => _) (fun a ha => rfl)
+            (fun _ _ _ _ => Prod.swap_inj.1) fun a ha => ⟨a.symm, _, a.swap_swap.symm⟩ <;>
         rwa [swap_mem_add_antidiagonal] }
 
 instance [CommSemiring R] : CommSemiring (HahnSeries Γ R) :=
@@ -1100,7 +1099,7 @@ instance : Algebra R (HahnSeries Γ A)
       Function.comp_apply, algebraMap_smul, mul_single_zero_coeff]
     rw [← Algebra.commutes, Algebra.smul_def]
 
-theorem c_eq_algebraMap : C = algebraMap R (HahnSeries Γ R) :=
+theorem c_eq_algebraMap : c = algebraMap R (HahnSeries Γ R) :=
   rfl
 #align hahn_series.C_eq_algebra_map HahnSeries.c_eq_algebraMap
 
@@ -1427,7 +1426,7 @@ variable (Γ) (R) [PartialOrder Γ] [AddCommMonoid R]
   and that only finitely many series are nonzero at any given coefficient. -/
 structure SummableFamily (α : Type _) where
   toFun : α → HahnSeries Γ R
-  is_pwo_Union_support' : Set.IsPwo (⋃ a : α, (to_fun a).support)
+  isPwo_unionᵢ_support' : Set.IsPwo (⋃ a : α, (to_fun a).support)
   finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
 #align hahn_series.summable_family HahnSeries.SummableFamily
 
@@ -1443,7 +1442,7 @@ instance : CoeFun (SummableFamily Γ R α) fun _ => α → HahnSeries Γ R :=
   ⟨toFun⟩
 
 theorem isPwo_unionᵢ_support (s : SummableFamily Γ R α) : Set.IsPwo (⋃ a : α, (s a).support) :=
-  s.is_pwo_Union_support'
+  s.isPwo_unionᵢ_support'
 #align hahn_series.summable_family.is_pwo_Union_support HahnSeries.SummableFamily.isPwo_unionᵢ_support
 
 theorem finite_co_support (s : SummableFamily Γ R α) (g : Γ) :
@@ -1465,8 +1464,8 @@ theorem ext {s t : SummableFamily Γ R α} (h : ∀ a : α, s a = t a) : s = t :
 instance : Add (SummableFamily Γ R α) :=
   ⟨fun x y =>
     { toFun := x + y
-      is_pwo_Union_support' :=
-        (x.is_pwo_Union_support.union y.is_pwo_Union_support).mono
+      isPwo_unionᵢ_support' :=
+        (x.isPwo_unionᵢ_support.union y.isPwo_unionᵢ_support).mono
           (by
             rw [← Set.unionᵢ_union_distrib]
             exact Set.unionᵢ_mono fun a => support_add_subset)
@@ -1524,8 +1523,8 @@ instance : AddCommMonoid (SummableFamily Γ R α)
 def hsum (s : SummableFamily Γ R α) : HahnSeries Γ R
     where
   coeff g := ∑ᶠ i, (s i).coeff g
-  is_pwo_support' :=
-    s.is_pwo_Union_support.mono fun g => by
+  isPwo_support' :=
+    s.isPwo_unionᵢ_support.mono fun g => by
       contrapose
       rw [Set.mem_unionᵢ, not_exists, Function.mem_support, Classical.not_not]
       simp_rw [mem_support, Classical.not_not]
@@ -1566,7 +1565,7 @@ instance : AddCommGroup (SummableFamily Γ R α) :=
     SummableFamily.addCommMonoid with
     neg := fun s =>
       { toFun := fun a => -s a
-        is_pwo_Union_support' := by
+        isPwo_unionᵢ_support' := by
           simp_rw [support_neg]
           exact s.is_pwo_Union_support'
         finite_co_support' := fun g =>
@@ -1604,7 +1603,7 @@ variable [OrderedCancelAddCommMonoid Γ] [Semiring R] {α : Type _}
 instance : SMul (HahnSeries Γ R) (SummableFamily Γ R α)
     where smul x s :=
     { toFun := fun a => x * s a
-      is_pwo_Union_support' :=
+      isPwo_unionᵢ_support' :=
         by
         apply (x.is_pwo_support.add s.is_pwo_Union_support).mono
         refine' Set.Subset.trans (Set.unionᵢ_mono fun a => support_mul_subset_add_support) _
@@ -1614,7 +1613,7 @@ instance : SMul (HahnSeries Γ R) (SummableFamily Γ R α)
       finite_co_support' := fun g =>
         by
         refine'
-          ((add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g).finite_to_set.bUnion'
+          ((add_antidiagonal x.is_pwo_support s.is_pwo_Union_support g).finite_toSet.bunionᵢ'
                 fun ij hij => _).Subset
             fun a ha => _
         · exact fun ij hij => Function.support fun a => (s a).coeff ij.2
@@ -1697,9 +1696,9 @@ variable [PartialOrder Γ] [AddCommMonoid R] {α : Type _}
 def ofFinsupp (f : α →₀ HahnSeries Γ R) : SummableFamily Γ R α
     where
   toFun := f
-  is_pwo_Union_support' :=
+  isPwo_unionᵢ_support' :=
     by
-    apply (f.support.is_pwo_bUnion.2 fun a ha => (f a).is_pwo_support).mono
+    apply (f.support.is_pwo_bUnion.2 fun a ha => (f a).isPwo_support).mono
     refine' Set.unionᵢ_subset_iff.2 fun a g hg => _
     have haf : a ∈ f.support :=
       by
@@ -1743,7 +1742,7 @@ variable [PartialOrder Γ] [AddCommMonoid R] {α β : Type _}
 def embDomain (s : SummableFamily Γ R α) (f : α ↪ β) : SummableFamily Γ R β
     where
   toFun b := if h : b ∈ Set.range f then s (Classical.choose h) else 0
-  is_pwo_Union_support' :=
+  isPwo_unionᵢ_support' :=
     by
     refine' s.is_pwo_Union_support.mono (Set.unionᵢ_subset fun b g h => _)
     by_cases hb : b ∈ Set.range f
@@ -1799,7 +1798,7 @@ variable [LinearOrderedCancelAddCommMonoid Γ] [CommRing R] [IsDomain R]
 def powers (x : HahnSeries Γ R) (hx : 0 < addVal Γ R x) : SummableFamily Γ R ℕ
     where
   toFun n := x ^ n
-  is_pwo_Union_support' := isPwo_unionᵢ_support_powers hx
+  isPwo_unionᵢ_support' := isPwo_unionᵢ_support_powers hx
   finite_co_support' g := by
     have hpwo := is_pwo_Union_support_powers hx
     by_cases hg : g ∈ ⋃ n : ℕ, { g | (x ^ n).coeff g ≠ 0 }
@@ -1807,7 +1806,7 @@ def powers (x : HahnSeries Γ R) (hx : 0 < addVal Γ R x) : SummableFamily Γ R 
     apply hpwo.is_wf.induction hg
     intro y ys hy
     refine'
-      ((((add_antidiagonal x.is_pwo_support hpwo y).finite_to_set.bUnion fun ij hij =>
+      ((((add_antidiagonal x.is_pwo_support hpwo y).finite_toSet.bunionᵢ fun ij hij =>
                     hy ij.snd _ _).image
                 Nat.succ).union
             (Set.finite_singleton 0)).Subset

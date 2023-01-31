@@ -194,7 +194,7 @@ theorem of_digits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
 #align nat.of_digits_eq_sum_map_with_index_aux Nat.of_digits_eq_sum_map_with_index_aux
 
 theorem ofDigits_eq_sum_mapIdx (b : ℕ) (L : List ℕ) :
-    ofDigits b L = (L.mapWithIndex fun i a => a * b ^ i).Sum :=
+    ofDigits b L = (L.mapIdx fun i a => a * b ^ i).Sum :=
   by
   rw [List.mapIdx_eq_enum_map, List.enum_eq_zip_range, List.map_uncurry_zip_eq_zipWith,
     of_digits_eq_foldr]
@@ -254,7 +254,7 @@ theorem digits_zero_of_eq_zero {b : ℕ} (h : b ≠ 0) :
 #align nat.digits_zero_of_eq_zero Nat.digits_zero_of_eq_zero
 
 theorem digits_ofDigits (b : ℕ) (h : 1 < b) (L : List ℕ) (w₁ : ∀ l ∈ L, l < b)
-    (w₂ : ∀ h : L ≠ [], L.last h ≠ 0) : digits b (ofDigits b L) = L :=
+    (w₂ : ∀ h : L ≠ [], L.getLast h ≠ 0) : digits b (ofDigits b L) = L :=
   by
   induction' L with d L ih
   · dsimp [of_digits]
@@ -347,7 +347,7 @@ theorem digits_eq_cons_digits_div {b n : ℕ} (h : 1 < b) (w : n ≠ 0) :
 #align nat.digits_eq_cons_digits_div Nat.digits_eq_cons_digits_div
 
 theorem digits_getLast {b : ℕ} (m : ℕ) (h : 1 < b) (p q) :
-    (digits b m).last p = (digits b (m / b)).last q :=
+    (digits b m).getLast p = (digits b (m / b)).getLast q :=
   by
   by_cases hm : m = 0
   · simp [hm]
@@ -380,7 +380,7 @@ theorem digits_len (b n : ℕ) (hb : 1 < b) (hn : n ≠ 0) : (b.digits n).length
 #align nat.digits_len Nat.digits_len
 
 theorem getLast_digit_ne_zero (b : ℕ) {m : ℕ} (hm : m ≠ 0) :
-    (digits b m).last (digits_ne_nil_iff_ne_zero.mpr hm) ≠ 0 :=
+    (digits b m).getLast (digits_ne_nil_iff_ne_zero.mpr hm) ≠ 0 :=
   by
   rcases b with (_ | _ | b)
   · cases m
@@ -478,7 +478,7 @@ theorem le_digits_len_le (b n m : ℕ) (h : n ≤ m) : (digits b n).length ≤ (
   monotone_nat_of_le_succ (digits_len_le_digits_len_succ b) h
 #align nat.le_digits_len_le Nat.le_digits_len_le
 
-theorem pow_length_le_mul_ofDigits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2 : l.last hl ≠ 0) :
+theorem pow_length_le_mul_ofDigits {b : ℕ} {l : List ℕ} (hl : l ≠ []) (hl2 : l.getLast hl ≠ 0) :
     (b + 2) ^ l.length ≤ (b + 2) * ofDigits (b + 2) l :=
   by
   rw [← List.dropLast_append_getLast hl]
@@ -554,7 +554,7 @@ theorem ofDigits_modeq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List 
 #align nat.of_digits_modeq' Nat.ofDigits_modeq'
 
 theorem ofDigits_modEq (b k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [MOD k] :=
-  ofDigits_modeq' b (b % k) k (b.mod_modeq k).symm L
+  ofDigits_modeq' b (b % k) k (b.mod_modEq k).symm L
 #align nat.of_digits_modeq Nat.ofDigits_modEq
 
 theorem ofDigits_mod (b k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b % k) L % k :=
@@ -573,7 +573,7 @@ theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Lis
 #align nat.of_digits_zmodeq' Nat.ofDigits_zmodeq'
 
 theorem ofDigits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [ZMOD k] :=
-  ofDigits_zmodeq' b (b % k) k (b.mod_modeq ↑k).symm L
+  ofDigits_zmodeq' b (b % k) k (b.mod_modEq ↑k).symm L
 #align nat.of_digits_zmodeq Nat.ofDigits_zmodeq
 
 theorem ofDigits_zmod (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b % k) L % k :=

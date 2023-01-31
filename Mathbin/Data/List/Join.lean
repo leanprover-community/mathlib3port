@@ -60,8 +60,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidablePred.{succ u1} (List.{u1} α) (fun (l : List.{u1} α) => Eq.{1} Bool (List.isEmpty.{u1} α l) Bool.false)] {L : List.{u1} (List.{u1} α)}, Eq.{succ u1} (List.{u1} α) (List.join.{u1} α (List.filter.{u1} (List.{u1} α) (fun (a : List.{u1} α) => Decidable.decide (Eq.{1} Bool (List.isEmpty.{u1} α a) Bool.false) (_inst_1 a)) L)) (List.join.{u1} α L)
 Case conversion may be inaccurate. Consider using '#align list.join_filter_empty_eq_ff List.join_filter_isEmpty_eq_falseₓ'. -/
 @[simp]
-theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty = ff] :
-    ∀ {L : List (List α)}, join (L.filter fun l => l.Empty = ff) = L.join
+theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty = false] :
+    ∀ {L : List (List α)}, join (L.filterₓ fun l => l.Empty = false) = L.join
   | [] => rfl
   | [] :: L => by simp [@join_filter_empty_eq_ff L]
   | (a :: l) :: L => by simp [@join_filter_empty_eq_ff L]
@@ -75,7 +75,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.join_filter_ne_nil List.join_filter_ne_nilₓ'. -/
 @[simp]
 theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List (List α)} :
-    join (L.filter fun l => l ≠ []) = L.join := by
+    join (L.filterₓ fun l => l ≠ []) = L.join := by
   simp [join_filter_empty_eq_ff, ← empty_iff_eq_nil]
 #align list.join_filter_ne_nil List.join_filter_ne_nil
 
@@ -227,7 +227,7 @@ theorem eq_iff_join_eq (L L' : List (List α)) :
 
 #print List.join_drop_length_sub_one /-
 theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) :
-    (L.drop (L.length - 1)).join = L.last h :=
+    (L.drop (L.length - 1)).join = L.getLast h :=
   by
   induction L using List.reverseRecOn
   · cases h rfl

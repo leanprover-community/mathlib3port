@@ -74,7 +74,7 @@ def Orientation.map (e : M ≃ₗ[R] N) : Orientation R M ι ≃ Orientation R N
 @[simp]
 theorem Orientation.map_apply (e : M ≃ₗ[R] N) (v : AlternatingMap R M R ι) (hv : v ≠ 0) :
     Orientation.map ι e (rayOfNeZero _ v hv) =
-      rayOfNeZero _ (v.compLinearMap e.symm) (mt (v.comp_linear_equiv_eq_zero_iff e.symm).mp hv) :=
+      rayOfNeZero _ (v.compLinearMap e.symm) (mt (v.comp_linearEquiv_eq_zero_iff e.symm).mp hv) :=
   rfl
 #align orientation.map_apply Orientation.map_apply
 
@@ -98,7 +98,7 @@ instance (priority := 100) IsEmpty.oriented [Nontrivial R] [IsEmpty ι] : Module
 
 @[simp]
 theorem Orientation.map_positiveOrientation_of_isEmpty [Nontrivial R] [IsEmpty ι] (f : M ≃ₗ[R] N) :
-    Orientation.map ι f positiveOrientation = positive_orientation :=
+    Orientation.map ι f positiveOrientation = positiveOrientation :=
   rfl
 #align orientation.map_positive_orientation_of_is_empty Orientation.map_positiveOrientation_of_isEmpty
 
@@ -171,7 +171,7 @@ theorem orientation_unitsSmul [Nontrivial R] (e : Basis ι R M) (w : ι → Unit
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]] -/
 @[simp]
 theorem orientation_isEmpty [Nontrivial R] [IsEmpty ι] (b : Basis ι R M) :
-    b.Orientation = positive_orientation :=
+    b.Orientation = positiveOrientation :=
   by
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ray_of_ne_zero _ _ _]]"
@@ -196,7 +196,7 @@ namespace Orientation
 respect to an empty index type. (Note that these are only orientations of `M` of in the conventional
 mathematical sense if `M` is zero-dimensional.) -/
 theorem eq_or_eq_neg_of_isEmpty [Nontrivial R] [IsEmpty ι] (o : Orientation R M ι) :
-    o = positive_orientation ∨ o = -positive_orientation :=
+    o = positiveOrientation ∨ o = -positiveOrientation :=
   by
   induction' o using Module.Ray.ind with x hx
   dsimp [positive_orientation]
@@ -226,7 +226,7 @@ theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) :
   calc
     e₁.Orientation = e₂.Orientation ↔ SameRay R e₁.det e₂.det := ray_eq_iff _ _
     _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by rw [← e₁.det.eq_smul_basis_det e₂]
-    _ ↔ 0 < e₁.det e₂ := sameRay_smul_left_iff_of_ne e₂.det_ne_zero (e₁.is_unit_det e₂).NeZero
+    _ ↔ 0 < e₁.det e₂ := sameRay_smul_left_iff_of_ne e₂.det_ne_zero (e₁.isUnit_det e₂).NeZero
     
 #align basis.orientation_eq_iff_det_pos Basis.orientation_eq_iff_det_pos
 

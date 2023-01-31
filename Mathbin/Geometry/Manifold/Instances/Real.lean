@@ -117,8 +117,8 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
       UniqueDiffOn.pi (Fin n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Fin n))) =>
         uniqueDiffOn_Ici 0
     simpa only [singleton_pi] using this
-  continuous_to_fun := continuous_subtype_val
-  continuous_inv_fun :=
+  continuous_toFun := continuous_subtype_val
+  continuous_invFun :=
     (continuous_id.update 0 <| (continuous_apply 0).max continuous_const).subtype_mk _
 #align model_with_corners_euclidean_half_space modelWithCornersEuclideanHalfSpace
 
@@ -146,8 +146,8 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     have this : UniqueDiffOn ℝ _ :=
       UniqueDiffOn.univ_pi (Fin n) (fun _ => ℝ) _ fun i => uniqueDiffOn_Ici 0
     simpa only [pi_univ_Ici] using this
-  continuous_to_fun := continuous_subtype_val
-  continuous_inv_fun :=
+  continuous_toFun := continuous_subtype_val
+  continuous_invFun :=
     Continuous.subtype_mk
       (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 #align model_with_corners_euclidean_quadrant modelWithCornersEuclideanQuadrant
@@ -200,13 +200,13 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
-  continuous_to_fun := by
+  continuous_toFun := by
     apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => z - x :=
       Continuous.sub (continuous_pi fun i => continuous_id) continuous_const
     exact this.comp continuous_subtype_val
-  continuous_inv_fun := by
+  continuous_invFun := by
     apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => min (z + x) y :=
@@ -252,13 +252,13 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
-  continuous_to_fun := by
+  continuous_toFun := by
     apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have : Continuous fun (z : ℝ) (i : Fin 1) => y - z :=
       continuous_const.sub (continuous_pi fun i => continuous_id)
     exact this.comp continuous_subtype_val
-  continuous_inv_fun := by
+  continuous_invFun := by
     apply Continuous.continuousOn
     apply Continuous.subtype_mk
     have A : Continuous fun z : ℝ => max (y - z) x :=

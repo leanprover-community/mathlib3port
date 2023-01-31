@@ -521,7 +521,7 @@ def Mat (R : Type u) :=
 #align category_theory.Mat CategoryTheory.Mat
 
 instance (R : Type u) : CoeSort (Mat R) (Type u) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 open Classical Matrix
 
@@ -598,7 +598,7 @@ instance : Faithful (equivalenceSingleObjInverse R)
 instance : Full (equivalenceSingleObjInverse R) where Preimage X Y f i j := MulOpposite.op (f i j)
 
 instance : EssSurj (equivalenceSingleObjInverse R)
-    where mem_ess_image X :=
+    where mem_essImage X :=
     ⟨{  ι := X
         x := fun _ => PUnit.unit },
       ⟨eqToIso

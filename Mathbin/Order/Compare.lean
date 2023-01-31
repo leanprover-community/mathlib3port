@@ -40,7 +40,7 @@ def cmpLE {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
 
 #print cmpLE_swap /-
 theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) :
-    (cmpLE x y).swap = cmpLE y x :=
+    (cmpLE x y).symm = cmpLE y x :=
   by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, *, Ordering.swap]
   cases not_or_of_not xy yx (total_of _ _ _)
@@ -70,7 +70,7 @@ def Compares [LT α] : Ordering → α → α → Prop
 -/
 
 #print Ordering.compares_swap /-
-theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b ↔ o.Compares b a :=
+theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.symm.Compares a b ↔ o.Compares b a :=
   by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
@@ -83,13 +83,13 @@ alias compares_swap ↔ compares.of_swap compares.swap
 
 #print Ordering.swap_inj /-
 @[simp]
-theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by
+theorem swap_inj (o₁ o₂ : Ordering) : o₁.symm = o₂.symm ↔ o₁ = o₂ := by
   cases o₁ <;> cases o₂ <;> decide
 #align ordering.swap_inj Ordering.swap_inj
 -/
 
 #print Ordering.swap_eq_iff_eq_swap /-
-theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by
+theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.symm = o' ↔ o = o'.symm := by
   rw [← swap_inj, swap_swap]
 #align ordering.swap_eq_iff_eq_swap Ordering.swap_eq_iff_eq_swap
 -/
@@ -111,7 +111,7 @@ theorem Compares.ne_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o
 -/
 
 #print Ordering.Compares.eq_eq /-
-theorem Compares.eq_eq [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = Eq ↔ a = b)
+theorem Compares.eq_eq [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = eq ↔ a = b)
   | lt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h h').elim⟩
   | Eq, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
   | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_gt h h').elim⟩
@@ -119,14 +119,14 @@ theorem Compares.eq_eq [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o
 -/
 
 #print Ordering.Compares.eq_gt /-
-theorem Compares.eq_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o = GT.gt ↔ b < a :=
-  swap_eq_iff_eq_swap.symm.trans h.swap.eq_lt
+theorem Compares.eq_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o = gt ↔ b < a :=
+  swap_eq_iff_eq_swap.symm.trans h.symm.eq_lt
 #align ordering.compares.eq_gt Ordering.Compares.eq_gt
 -/
 
 #print Ordering.Compares.ne_gt /-
-theorem Compares.ne_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o ≠ GT.gt ↔ a ≤ b :=
-  (not_congr swap_eq_iff_eq_swap.symm).trans h.swap.ne_lt
+theorem Compares.ne_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o ≠ gt ↔ a ≤ b :=
+  (not_congr swap_eq_iff_eq_swap.symm).trans h.symm.ne_lt
 #align ordering.compares.ne_gt Ordering.Compares.ne_gt
 -/
 
@@ -177,13 +177,13 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder �
 #align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_impl
 
 #print Ordering.swap_orElse /-
-theorem swap_orElse (o₁ o₂) : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
+theorem swap_orElse (o₁ o₂) : (orElse o₁ o₂).symm = orElse o₁.symm o₂.symm := by
   cases o₁ <;> try rfl <;> cases o₂ <;> rfl
 #align ordering.swap_or_else Ordering.swap_orElse
 -/
 
 #print Ordering.orElse_eq_lt /-
-theorem orElse_eq_lt (o₁ o₂) : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = Eq ∧ o₂ = lt := by
+theorem orElse_eq_lt (o₁ o₂) : orElse o₁ o₂ = lt ↔ o₁ = lt ∨ o₁ = eq ∧ o₂ = lt := by
   cases o₁ <;> cases o₂ <;> exact by decide
 #align ordering.or_else_eq_lt Ordering.orElse_eq_lt
 -/
@@ -227,7 +227,7 @@ theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h :
 
 #print cmp_swap /-
 @[simp]
-theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a :=
+theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).symm = cmp b a :=
   by
   unfold cmp cmpUsing
   by_cases a < b <;> by_cases h₂ : b < a <;> simp [h, h₂, Ordering.swap]

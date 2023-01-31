@@ -89,7 +89,7 @@ noncomputable def fromSkeleton : Skeleton C ⥤ C :=
   inducedFunctor _ deriving Full, Faithful
 #align category_theory.from_skeleton CategoryTheory.fromSkeleton
 
-instance : EssSurj (fromSkeleton C) where mem_ess_image X := ⟨Quotient.mk' X, Quotient.mk_out X⟩
+instance : EssSurj (fromSkeleton C) where mem_essImage X := ⟨Quotient.mk' X, Quotient.mk_out X⟩
 
 noncomputable instance : IsEquivalence (fromSkeleton C) :=
   Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)

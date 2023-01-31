@@ -98,7 +98,7 @@ theorem laurent_algebraMap : laurent r (algebraMap _ _ p) = algebraMap _ _ (tayl
 #align ratfunc.laurent_algebra_map Ratfunc.laurent_algebraMap
 
 @[simp]
-theorem laurent_x : laurent r x = X + c r := by
+theorem laurent_x : laurent r x = x + c r := by
   rw [← algebra_map_X, laurent_algebra_map, taylor_X, _root_.map_add, algebra_map_C]
 #align ratfunc.laurent_X Ratfunc.laurent_x
 

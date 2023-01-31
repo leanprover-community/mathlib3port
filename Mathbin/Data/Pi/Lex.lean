@@ -136,7 +136,7 @@ instance [LinearOrder ι] [∀ a, PartialOrder (β a)] : PartialOrder (Lex (∀ 
 noncomputable instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ a, LinearOrder (β a)] :
     LinearOrder (Lex (∀ i, β i)) :=
   @linearOrderOfSTO (Πₗ i, β i) (· < ·)
-    { to_is_trichotomous := isTrichotomous_lex _ _ IsWellFounded.wf } (Classical.decRel _)
+    { to_isTrichotomous := isTrichotomous_lex _ _ IsWellFounded.wf } (Classical.decRel _)
 
 section PartialOrder
 

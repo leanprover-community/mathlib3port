@@ -139,7 +139,7 @@ instance : IsProbabilityMeasure (@haarAddCircle T _) :=
   IsProbabilityMeasure.mk add_haar_measure_self
 
 theorem volume_eq_smul_haarAddCircle :
-    (volume : Measure (AddCircle T)) = Ennreal.ofReal T • haar_add_circle :=
+    (volume : Measure (AddCircle T)) = Ennreal.ofReal T • haarAddCircle :=
   rfl
 #align add_circle.volume_eq_smul_haar_add_circle AddCircle.volume_eq_smul_haarAddCircle
 
@@ -154,7 +154,7 @@ considered as bundled continuous maps from `ℝ / ℤ • T` to `ℂ`. -/
 def fourier (n : ℤ) : C(AddCircle T, ℂ)
     where
   toFun x := toCircle (n • x)
-  continuous_to_fun := continuous_induced_dom.comp <| continuous_toCircle.comp <| continuous_zsmul _
+  continuous_toFun := continuous_induced_dom.comp <| continuous_toCircle.comp <| continuous_zsmul _
 #align fourier fourier
 
 @[simp]
@@ -294,7 +294,7 @@ abbrev fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) : lp ℂ p (@haarAd
 #align fourier_Lp fourierLp
 
 theorem coeFn_fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) :
-    @fourierLp T hT p _ n =ᵐ[haar_add_circle] fourier n :=
+    @fourierLp T hT p _ n =ᵐ[haarAddCircle] fourier n :=
   coeFn_toLp haarAddCircle (fourier n)
 #align coe_fn_fourier_Lp coeFn_fourierLp
 
@@ -304,7 +304,7 @@ theorem span_fourierLp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p 
     (span ℂ (range (@fourierLp T _ p _))).topologicalClosure = ⊤ :=
   by
   convert
-    (ContinuousMap.toLp_denseRange ℂ hp (@haar_add_circle T hT) ℂ).topological_closure_map_submodule
+    (ContinuousMap.toLp_denseRange ℂ hp (@haar_add_circle T hT) ℂ).topologicalClosure_map_submodule
       span_fourier_closure_eq_top
   rw [map_span, range_comp]
   simp only [ContinuousLinearMap.coe_coe]
@@ -348,7 +348,7 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace E]
 /-- The `n`-th Fourier coefficient of a function `add_circle T → E`, for `E` a complete normed
 `ℂ`-vector space, defined as the integral over `add_circle T` of `fourier (-n) t • f t`. -/
 def fourierCoeff (f : AddCircle T → E) (n : ℤ) : E :=
-  ∫ t : AddCircle T, fourier (-n) t • f t ∂haar_add_circle
+  ∫ t : AddCircle T, fourier (-n) t • f t ∂haarAddCircle
 #align fourier_coeff fourierCoeff
 
 /-- The Fourier coefficients of a function on `add_circle T` can be computed as an integral
@@ -474,7 +474,7 @@ theorem hasSum_fourier_series_L2 (f : lp ℂ 2 <| @haarAddCircle T hT) :
 /-- **Parseval's identity**: for an `L²` function `f` on `add_circle T`, the sum of the squared
 norms of the Fourier coefficients equals the `L²` norm of `f`. -/
 theorem tsum_sq_fourierCoeff (f : lp ℂ 2 <| @haarAddCircle T hT) :
-    (∑' i : ℤ, ‖fourierCoeff f i‖ ^ 2) = ∫ t : AddCircle T, ‖f t‖ ^ 2 ∂haar_add_circle :=
+    (∑' i : ℤ, ‖fourierCoeff f i‖ ^ 2) = ∫ t : AddCircle T, ‖f t‖ ^ 2 ∂haarAddCircle :=
   by
   simp_rw [← fourierBasis_repr]
   have H₁ : ‖fourier_basis.repr f‖ ^ 2 = ∑' i, ‖fourier_basis.repr f i‖ ^ 2 :=
@@ -536,7 +536,7 @@ variable (T)
 
 theorem hasDerivAt_fourier (n : ℤ) (x : ℝ) :
     HasDerivAt (fun y : ℝ => fourier n (y : AddCircle T))
-      (2 * π * I * n / T * fourier n (x : AddCircle T)) x :=
+      (2 * π * i * n / T * fourier n (x : AddCircle T)) x :=
   by
   simp_rw [fourier_coe_apply]
   refine' (_ : HasDerivAt (fun y => exp (2 * π * I * n * y / T)) _ _).comp_of_real
@@ -548,14 +548,14 @@ theorem hasDerivAt_fourier (n : ℤ) (x : ℝ) :
 
 theorem hasDerivAt_fourier_neg (n : ℤ) (x : ℝ) :
     HasDerivAt (fun y : ℝ => fourier (-n) (y : AddCircle T))
-      (-2 * π * I * n / T * fourier (-n) (x : AddCircle T)) x :=
+      (-2 * π * i * n / T * fourier (-n) (x : AddCircle T)) x :=
   by simpa using hasDerivAt_fourier T (-n) x
 #align has_deriv_at_fourier_neg hasDerivAt_fourier_neg
 
 variable {T}
 
 theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0) (x : ℝ) :
-    HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * I * n) * fourier (-n) (y : AddCircle T))
+    HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * i * n) * fourier (-n) (y : AddCircle T))
       (fourier (-n) (x : AddCircle T)) x :=
   by
   convert (hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
@@ -572,7 +572,7 @@ theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0
 theorem fourierCoeffOn_of_hasDerivAt {a b : ℝ} (hab : a < b) {f f' : ℝ → ℂ} {n : ℤ} (hn : n ≠ 0)
     (hf : ∀ x, x ∈ [a, b] → HasDerivAt f (f' x) x) (hf' : IntervalIntegrable f' volume a b) :
     fourierCoeffOn hab f n =
-      1 / (-2 * π * I * n) *
+      1 / (-2 * π * i * n) *
         (fourier (-n) (a : AddCircle (b - a)) * (f b - f a) - (b - a) * fourierCoeffOn hab f' n) :=
   by
   rw [← of_real_sub]

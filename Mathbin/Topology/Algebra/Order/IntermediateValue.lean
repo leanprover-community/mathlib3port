@@ -433,7 +433,7 @@ theorem is_preconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : 
   by_contra hst
   suffices : Icc x y ⊆ s
   exact hst ⟨y, xyab <| right_mem_Icc.2 hxy, this <| right_mem_Icc.2 hxy, hy.2⟩
-  apply (IsClosed.inter hs isClosed_Icc).Icc_subset_of_forall_mem_nhds_within hx.2
+  apply (IsClosed.inter hs isClosed_Icc).Icc_subset_of_forall_mem_nhdsWithin hx.2
   rintro z ⟨zs, hz⟩
   have zt : z ∈ tᶜ := fun zt => hst ⟨z, xyab <| Ico_subset_Icc_self hz, zs, zt⟩
   have : tᶜ ∩ Ioc z y ∈ 𝓝[>] z :=

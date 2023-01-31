@@ -86,7 +86,7 @@ theorem box_zero : box (n + 1) 0 = ∅ := by simp [box]
 /-- The intersection of the sphere of radius `sqrt k` with the integer points in the positive
 quadrant. -/
 def sphere (n d k : ℕ) : Finset (Fin n → ℕ) :=
-  (box n d).filter fun x => (∑ i, x i ^ 2) = k
+  (box n d).filterₓ fun x => (∑ i, x i ^ 2) = k
 #align behrend.sphere Behrend.sphere
 
 theorem sphere_zero_subset : sphere n d 0 ⊆ 0 := fun x => by

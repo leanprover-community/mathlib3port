@@ -143,7 +143,7 @@ unsafe def normal_expr.to_string (e : normal_expr) : String :=
 
 unsafe def normal_expr.pp (e : normal_expr) : tactic format := do
   let l ←
-    (to_list e).mmap fun ⟨n, e⟩ => do
+    (to_list e).mapM fun ⟨n, e⟩ => do
         let pe ← pp e
         return (to_fmt n ++ " • (" ++ pe ++ ")")
   return <| format.join <| l ↑" + "
@@ -444,7 +444,7 @@ unsafe def normalize (red : Transparency) (mode := NormalizeMode.term) (e : expr
       [`` term.equations._eqn_1, `` termg.equations._eqn_1, `` add_zero, `` one_nsmul, `` one_zsmul,
         `` zsmul_zero]
     | _ => []
-  let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk
+  let lemmas ← lemmas.foldlM simp_lemmas.add_simp simp_lemmas.mk
   let (_, e', pr) ←
     ext_simplify_core () { } simp_lemmas.mk (fun _ => failed)
         (fun _ _ _ _ e => do

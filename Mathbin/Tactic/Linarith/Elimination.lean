@@ -138,7 +138,7 @@ iff `k' ≥ k`. Thus we can compute the intersection of officially and implicitl
 by taking the set of implicitly eliminated variables with indices ≥ `elimed_ge`.
 -/
 unsafe def pcomp.maybe_minimal (c : pcomp) (elimed_ge : ℕ) : Bool :=
-  c.history.size ≤ 1 + ((c.implicit.filter (· ≥ elimed_ge)).union c.effective).size
+  c.history.size ≤ 1 + ((c.implicit.filterₓ (· ≥ elimed_ge)).union c.effective).size
 #align linarith.pcomp.maybe_minimal linarith.pcomp.maybe_minimal
 
 /-- The `comp_source` field is ignored when comparing `pcomp`s. Two `pcomp`s proving the same
@@ -327,7 +327,7 @@ ground comparisons. If this succeeds without exception, the original `linarith` 
 -/
 unsafe def elim_all_vars : linarith_monad Unit := do
   let mv ← get_max_var
-  (List.range <| mv + 1).reverse.mmap' monad.elim_var
+  (List.range <| mv + 1).reverse.mapM' monad.elim_var
 #align linarith.elim_all_vars linarith.elim_all_vars
 
 /-- `mk_linarith_structure hyps vars` takes a list of hypotheses and the largest variable present in

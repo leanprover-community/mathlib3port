@@ -737,7 +737,7 @@ theorem prod_sup_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s
 
 theorem infᵢ_sup_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → J i ⊔ I = ⊤) :
     (⨅ i ∈ s, J i) ⊔ I = ⊤ :=
-  sup_comm.trans (sup_infi_eq_top fun i hi => sup_comm.trans <| h i hi)
+  sup_comm.trans (sup_infᵢ_eq_top fun i hi => sup_comm.trans <| h i hi)
 #align ideal.infi_sup_eq_top Ideal.infᵢ_sup_eq_top
 
 theorem sup_pow_eq_top {n : ℕ} (h : I ⊔ J = ⊤) : I ⊔ J ^ n = ⊤ :=
@@ -1514,19 +1514,19 @@ theorem comap_inf : comap f (K ⊓ L) = comap f K ⊓ comap f L :=
 variable {ι : Sort _}
 
 theorem map_supᵢ (K : ι → Ideal R) : (supᵢ K).map f = ⨆ i, (K i).map f :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supr
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supᵢ
 #align ideal.map_supr Ideal.map_supᵢ
 
 theorem comap_infᵢ (K : ι → Ideal S) : (infᵢ K).comap f = ⨅ i, (K i).comap f :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infi
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infᵢ
 #align ideal.comap_infi Ideal.comap_infᵢ
 
 theorem map_supₛ (s : Set (Ideal R)) : (supₛ s).map f = ⨆ I ∈ s, (I : Ideal R).map f :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_Sup
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).l_supₛ
 #align ideal.map_Sup Ideal.map_supₛ
 
 theorem comap_infₛ (s : Set (Ideal S)) : (infₛ s).comap f = ⨅ I ∈ s, (I : Ideal S).comap f :=
-  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_Inf
+  (gc_map_comap f : GaloisConnection (map f) (comap f)).u_infₛ
 #align ideal.comap_Inf Ideal.comap_infₛ
 
 theorem comap_Inf' (s : Set (Ideal S)) : (infₛ s).comap f = ⨅ I ∈ comap f '' s, I :=
@@ -1626,7 +1626,7 @@ theorem map_sup_comap_of_surjective (I J : Ideal S) : (I.comap f ⊔ J.comap f).
 #align ideal.map_sup_comap_of_surjective Ideal.map_sup_comap_of_surjective
 
 theorem map_supᵢ_comap_of_surjective (K : ι → Ideal S) : (⨆ i, (K i).comap f).map f = supᵢ K :=
-  (giMapComap f hf).l_supr_u _
+  (giMapComap f hf).l_supᵢ_u _
 #align ideal.map_supr_comap_of_surjective Ideal.map_supᵢ_comap_of_surjective
 
 theorem map_inf_comap_of_surjective (I J : Ideal S) : (I.comap f ⊓ J.comap f).map f = I ⊓ J :=
@@ -1634,7 +1634,7 @@ theorem map_inf_comap_of_surjective (I J : Ideal S) : (I.comap f ⊓ J.comap f).
 #align ideal.map_inf_comap_of_surjective Ideal.map_inf_comap_of_surjective
 
 theorem map_infᵢ_comap_of_surjective (K : ι → Ideal S) : (⨅ i, (K i).comap f).map f = infᵢ K :=
-  (giMapComap f hf).l_infi_u _
+  (giMapComap f hf).l_infᵢ_u _
 #align ideal.map_infi_comap_of_surjective Ideal.map_infᵢ_comap_of_surjective
 
 theorem mem_image_of_mem_map_of_surjective {I : Ideal R} {y} (H : y ∈ map f I) : y ∈ f '' I :=
@@ -2768,7 +2768,7 @@ def liftOfRightInverseAux (hf : Function.RightInverse f_inv f) (g : A →+* C) (
 @[simp]
 theorem liftOfRightInverseAux_comp_apply (hf : Function.RightInverse f_inv f) (g : A →+* C)
     (hg : f.ker ≤ g.ker) (a : A) : (f.liftOfRightInverseAux f_inv hf g hg) (f a) = g a :=
-  f.toAddMonoidHom.lift_of_right_inverse_comp_apply f_inv hf ⟨g.toAddMonoidHom, hg⟩ a
+  f.toAddMonoidHom.liftOfRightInverse_comp_apply f_inv hf ⟨g.toAddMonoidHom, hg⟩ a
 #align ring_hom.lift_of_right_inverse_aux_comp_apply RingHom.liftOfRightInverseAux_comp_apply
 
 /-- `lift_of_right_inverse f hf g hg` is the unique ring homomorphism `φ`
@@ -2813,12 +2813,12 @@ noncomputable abbrev liftOfSurjective (hf : Function.Surjective f) :
 theorem liftOfRightInverse_comp_apply (hf : Function.RightInverse f_inv f)
     (g : { g : A →+* C // f.ker ≤ g.ker }) (x : A) :
     (f.liftOfRightInverse f_inv hf g) (f x) = g x :=
-  f.lift_of_right_inverse_aux_comp_apply f_inv hf g.1 g.2 x
+  f.liftOfRightInverseAux_comp_apply f_inv hf g.1 g.2 x
 #align ring_hom.lift_of_right_inverse_comp_apply RingHom.liftOfRightInverse_comp_apply
 
 theorem liftOfRightInverse_comp (hf : Function.RightInverse f_inv f)
     (g : { g : A →+* C // f.ker ≤ g.ker }) : (f.liftOfRightInverse f_inv hf g).comp f = g :=
-  RingHom.ext <| f.lift_of_right_inverse_comp_apply f_inv hf g
+  RingHom.ext <| f.liftOfRightInverse_comp_apply f_inv hf g
 #align ring_hom.lift_of_right_inverse_comp RingHom.liftOfRightInverse_comp
 
 theorem eq_liftOfRightInverse (hf : Function.RightInverse f_inv f) (g : A →+* C)

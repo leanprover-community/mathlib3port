@@ -81,7 +81,7 @@ end
 ```
 -/
 unsafe def clear' (p : parse (many ident)) : tactic Unit := do
-  let hyps ← p.mmap get_local
+  let hyps ← p.mapM get_local
   tactic.clear' False hyps
 #align tactic.interactive.clear' tactic.interactive.clear'
 
@@ -98,7 +98,7 @@ end
 ```
  -/
 unsafe def clear_dependent (p : parse (many ident)) : tactic Unit := do
-  let hyps ← p.mmap get_local
+  let hyps ← p.mapM get_local
   tactic.clear' True hyps
 #align tactic.interactive.clear_dependent tactic.interactive.clear_dependent
 

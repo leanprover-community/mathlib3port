@@ -518,7 +518,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β} {p : (Prod.{u2, u1} α β) -> Prop}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α β) (fun (x : Prod.{u2, u1} α β) => p x) (Filter.prod.{u2, u1} α β f g)) (Filter.Eventually.{max u2 u1} (Prod.{u1, u2} β α) (fun (y : Prod.{u1, u2} β α) => p (Prod.swap.{u1, u2} β α y)) (Filter.prod.{u1, u2} β α g f))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_swap_iff Filter.eventually_swap_iffₓ'. -/
 theorem eventually_swap_iff {p : α × β → Prop} :
-    (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.swap :=
+    (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.symm :=
   by
   rw [prod_comm, eventually_map]
   simpa

@@ -205,13 +205,13 @@ private unsafe def combine_proofs (proofs : List expr) : tactic expr :=
 /-- Construct a proof unit, given a path through the graph.
 This reverses the direction of the proof on the right hand side, with `mk_eq_symm`.
 -/
-private unsafe def proof_for_edges : side × List edge → tactic (Option proof_unit)
+private unsafe def proof_for_edges : Side × List edge → tactic (Option proof_unit)
   | (s, []) => return none
   | (s, edges) => do
     let proofs ←
       match s with
-        | side.L => edges.mmap fun e => e.Proof
-        | side.R => edges.reverse.mmap fun e => e.Proof >>= mk_eq_symm
+        | side.L => edges.mapM fun e => e.Proof
+        | side.R => edges.reverse.mapM fun e => e.Proof >>= mk_eq_symm
     let proof ← combine_proofs proofs
     let hows := edges.map fun e => e.how
     return <| some ⟨proof, s, hows⟩
@@ -233,7 +233,7 @@ unsafe def find_proof : tactic (graph × expr × List proof_unit) :=
   find_trivial_proof g <|> do
     let g ← find_solving_edge g 0
     let (left_edges, right_edges) ← solution_paths g
-    let units ← [(Side.L, left_edges), (Side.R, right_edges)].mmapFilter proof_for_edges
+    let units ← [(Side.L, left_edges), (Side.R, right_edges)].filterMapM proof_for_edges
     let proof ← combine_proofs <| Units.map fun u => u.Proof
     return (g, proof, Units)
 #align tactic.rewrite_search.graph.find_proof tactic.rewrite_search.graph.find_proof

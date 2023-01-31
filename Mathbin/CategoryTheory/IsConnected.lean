@@ -233,7 +233,7 @@ theorem isPreconnected_of_equivalent {K : Type u₁} [Category.{v₂} K] [IsPrec
 theorem isConnected_of_equivalent {K : Type u₁} [Category.{v₂} K] (e : J ≌ K) [IsConnected J] :
     IsConnected K :=
   { is_nonempty := Nonempty.map e.Functor.obj (by infer_instance)
-    to_is_preconnected := isPreconnected_of_equivalent e }
+    to_isPreconnected := isPreconnected_of_equivalent e }
 #align category_theory.is_connected_of_equivalent CategoryTheory.isConnected_of_equivalent
 
 /-- If `J` is preconnected, then `Jᵒᵖ` is preconnected as well. -/
@@ -270,7 +270,7 @@ def Zag (j₁ j₂ : J) : Prop :=
   Nonempty (j₁ ⟶ j₂) ∨ Nonempty (j₂ ⟶ j₁)
 #align category_theory.zag CategoryTheory.Zag
 
-theorem zag_symmetric : Symmetric (@Zag J _) := fun j₂ j₁ h => h.swap
+theorem zag_symmetric : Symmetric (@Zag J _) := fun j₂ j₁ h => h.symm
 #align category_theory.zag_symmetric CategoryTheory.zag_symmetric
 
 /-- `j₁` and `j₂` are related by `zigzag` if there is a chain of

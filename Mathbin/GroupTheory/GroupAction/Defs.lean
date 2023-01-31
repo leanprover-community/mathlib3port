@@ -998,7 +998,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distribSMul [AddZeroClass B] [SMul M B] (f : B →+ A)
     (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribSMul M B :=
-  { hf.SmulZeroClass f.toZeroHom smul with
+  { hf.SMulZeroClass f.toZeroHom smul with
     smul := (· • ·)
     smul_add := fun c x y => hf <| by simp only [smul, map_add, smul_add] }
 #align function.injective.distrib_smul Function.Injective.distribSMul
@@ -1015,7 +1015,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distribSMul [AddZeroClass B] [SMul M B] (f : A →+ B)
     (hf : Surjective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribSMul M B :=
-  { f.toZeroHom.SmulZeroClass smul with
+  { f.toZeroHom.SMulZeroClass smul with
     smul := (· • ·)
     smul_add := fun c x y => by
       rcases hf x with ⟨x, rfl⟩
@@ -1093,8 +1093,7 @@ and the two paths from `distrib_mul_action` to `has_smul` are indeed definitiona
 
 
 example :
-    (DistribMulAction.toMulAction.toHasSmul : SMul M A) =
-      DistribMulAction.toDistribSMul.toHasSmul :=
+    (DistribMulAction.toMulAction.toSMul : SMul M A) = DistribMulAction.toDistribSMul.toSMul :=
   rfl
 
 /- warning: function.injective.distrib_mul_action -> Function.Injective.distribMulAction is a dubious translation:
@@ -1109,7 +1108,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distribMulAction [AddMonoid B] [SMul M B] (f : B →+ A)
     (hf : Injective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribMulAction M B :=
-  { hf.DistribSmul f smul, hf.MulAction f smul with smul := (· • ·) }
+  { hf.DistribSMul f smul, hf.MulAction f smul with smul := (· • ·) }
 #align function.injective.distrib_mul_action Function.Injective.distribMulAction
 
 /- warning: function.surjective.distrib_mul_action -> Function.Surjective.distribMulAction is a dubious translation:
@@ -1124,7 +1123,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distribMulAction [AddMonoid B] [SMul M B] (f : A →+ B)
     (hf : Surjective f) (smul : ∀ (c : M) (x), f (c • x) = c • f x) : DistribMulAction M B :=
-  { hf.DistribSmul f smul, hf.MulAction f smul with smul := (· • ·) }
+  { hf.DistribSMul f smul, hf.MulAction f smul with smul := (· • ·) }
 #align function.surjective.distrib_mul_action Function.Surjective.distribMulAction
 
 /- warning: function.surjective.distrib_mul_action_left -> Function.Surjective.distribMulActionLeft is a dubious translation:
@@ -1141,7 +1140,7 @@ See also `function.surjective.mul_action_left` and `function.surjective.module_l
 def Function.Surjective.distribMulActionLeft {R S M : Type _} [Monoid R] [AddMonoid M]
     [DistribMulAction R M] [Monoid S] [SMul S M] (f : R →* S) (hf : Function.Surjective f)
     (hsmul : ∀ (c) (x : M), f c • x = c • x) : DistribMulAction S M :=
-  { hf.distribSmulLeft f hsmul, hf.mulActionLeft f hsmul with smul := (· • ·) }
+  { hf.distribSMulLeft f hsmul, hf.mulActionLeft f hsmul with smul := (· • ·) }
 #align function.surjective.distrib_mul_action_left Function.Surjective.distribMulActionLeft
 
 variable (A)

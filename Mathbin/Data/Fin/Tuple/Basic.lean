@@ -730,7 +730,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.snoc_comp_cast_succ Fin.snoc_comp_cast_succₓ'. -/
 @[simp]
 theorem snoc_comp_cast_succ {n : ℕ} {α : Sort _} {a : α} {f : Fin n → α} :
-    (snoc f a : Fin (n + 1) → α) ∘ cast_succ = f :=
+    (snoc f a : Fin (n + 1) → α) ∘ castSucc = f :=
   funext fun i => by rw [Function.comp_apply, snoc_cast_succ]
 #align fin.snoc_comp_cast_succ Fin.snoc_comp_cast_succ
 
@@ -974,7 +974,7 @@ def succAboveCases {α : Fin (n + 1) → Sort u} (i : Fin (n + 1)) (x : α i)
   if hj : j = i then Eq.ndrec x hj.symm
   else
     if hlt : j < i then Eq.recOn (succAbove_castLt hlt) (p _)
-    else Eq.recOn (succ_above_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
+    else Eq.recOn (succAbove_pred <| (Ne.lt_or_lt hj).resolve_left hlt) (p _)
 #align fin.succ_above_cases Fin.succAboveCases
 
 /- warning: fin.forall_iff_succ_above -> Fin.forall_iff_succAbove is a dubious translation:

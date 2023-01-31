@@ -103,7 +103,7 @@ theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) :=
   by
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
   by_cases hx : IsIntegral A x
-  · exact mt (monic hx).eq_one_of_is_unit (ne_one A x)
+  · exact mt (monic hx).eq_one_of_isUnit (ne_one A x)
   · rw [eq_zero hx]
     exact not_isUnit_zero
 #align minpoly.not_is_unit minpoly.not_isUnit
@@ -134,7 +134,7 @@ theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
   by
   nontriviality A
   have hx : IsIntegral A x := ⟨p, hm, hp⟩
-  obtain h | h := hl _ ((minpoly A x).degree_mod_by_monic_lt hm)
+  obtain h | h := hl _ ((minpoly A x).degree_modByMonic_lt hm)
   swap
   · exact (h <| (aeval_mod_by_monic_eq_self_of_root hm hp).trans <| aeval A x).elim
   obtain ⟨r, hr⟩ := (dvd_iff_mod_by_monic_eq_zero hm).1 h
@@ -199,7 +199,7 @@ theorem degree_pos [Nontrivial B] (hx : IsIntegral A x) : 0 < degree (minpoly A 
 /-- If `B/A` is an injective ring extension, and `a` is an element of `A`,
 then the minimal polynomial of `algebra_map A B a` is `X - C a`. -/
 theorem eq_x_sub_c_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMap A B)) :
-    minpoly A (algebraMap A B a) = X - c a :=
+    minpoly A (algebraMap A B a) = x - c a :=
   by
   nontriviality A
   refine' (unique' A _ (monic_X_sub_C a) _ _).symm

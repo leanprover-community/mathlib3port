@@ -139,7 +139,7 @@ theorem IsCompactOperator.image_subset_compact_of_bounded [HasContinuousConstSmu
 theorem IsCompactOperator.isCompact_closure_image_of_bounded [HasContinuousConstSmul 𝕜₂ M₂]
     [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁}
     (hS : Metric.Bounded S) : IsCompact (closure <| f '' S) :=
-  hf.is_compact_closure_image_of_vonN_bounded
+  hf.isCompact_closure_image_of_vonN_bounded
     (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.bounded_iff_isBounded])
 #align is_compact_operator.is_compact_closure_image_of_bounded IsCompactOperator.isCompact_closure_image_of_bounded
 
@@ -158,13 +158,13 @@ theorem IsCompactOperator.image_closedBall_subset_compact [HasContinuousConstSmu
 theorem IsCompactOperator.isCompact_closure_image_ball [HasContinuousConstSmul 𝕜₂ M₂] [T2Space M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     IsCompact (closure <| f '' Metric.ball 0 r) :=
-  hf.is_compact_closure_image_of_vonN_bounded (NormedSpace.isVonNBounded_ball 𝕜₁ M₁ r)
+  hf.isCompact_closure_image_of_vonN_bounded (NormedSpace.isVonNBounded_ball 𝕜₁ M₁ r)
 #align is_compact_operator.is_compact_closure_image_ball IsCompactOperator.isCompact_closure_image_ball
 
 theorem IsCompactOperator.isCompact_closure_image_closedBall [HasContinuousConstSmul 𝕜₂ M₂]
     [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     IsCompact (closure <| f '' Metric.closedBall 0 r) :=
-  hf.is_compact_closure_image_of_vonN_bounded (NormedSpace.isVonNBounded_closedBall 𝕜₁ M₁ r)
+  hf.isCompact_closure_image_of_vonN_bounded (NormedSpace.isVonNBounded_closedBall 𝕜₁ M₁ r)
 #align is_compact_operator.is_compact_closure_image_closed_ball IsCompactOperator.isCompact_closure_image_closedBall
 
 theorem isCompactOperator_iff_image_ball_subset_compact [HasContinuousConstSmul 𝕜₂ M₂]
@@ -178,7 +178,7 @@ theorem isCompactOperator_iff_image_ball_subset_compact [HasContinuousConstSmul 
 theorem isCompactOperator_iff_image_closedBall_subset_compact [HasContinuousConstSmul 𝕜₂ M₂]
     (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ ∃ K : Set M₂, IsCompact K ∧ f '' Metric.closedBall 0 r ⊆ K :=
-  ⟨fun hf => hf.image_closed_ball_subset_compact r, fun ⟨K, hK, hKr⟩ =>
+  ⟨fun hf => hf.image_closedBall_subset_compact r, fun ⟨K, hK, hKr⟩ =>
     (isCompactOperator_iff_exists_mem_nhds_image_subset_compact f).mpr
       ⟨Metric.closedBall 0 r, closedBall_mem_nhds _ hr, K, hK, hKr⟩⟩
 #align is_compact_operator_iff_image_closed_ball_subset_compact isCompactOperator_iff_image_closedBall_subset_compact
@@ -186,7 +186,7 @@ theorem isCompactOperator_iff_image_closedBall_subset_compact [HasContinuousCons
 theorem isCompactOperator_iff_isCompact_closure_image_ball [HasContinuousConstSmul 𝕜₂ M₂]
     [T2Space M₂] (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ IsCompact (closure <| f '' Metric.ball 0 r) :=
-  ⟨fun hf => hf.is_compact_closure_image_ball r, fun hf =>
+  ⟨fun hf => hf.isCompact_closure_image_ball r, fun hf =>
     (isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image f).mpr
       ⟨Metric.ball 0 r, ball_mem_nhds _ hr, hf⟩⟩
 #align is_compact_operator_iff_is_compact_closure_image_ball isCompactOperator_iff_isCompact_closure_image_ball
@@ -194,7 +194,7 @@ theorem isCompactOperator_iff_isCompact_closure_image_ball [HasContinuousConstSm
 theorem isCompactOperator_iff_isCompact_closure_image_closedBall [HasContinuousConstSmul 𝕜₂ M₂]
     [T2Space M₂] (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ IsCompact (closure <| f '' Metric.closedBall 0 r) :=
-  ⟨fun hf => hf.is_compact_closure_image_closed_ball r, fun hf =>
+  ⟨fun hf => hf.isCompact_closure_image_closedBall r, fun hf =>
     (isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image f).mpr
       ⟨Metric.closedBall 0 r, closedBall_mem_nhds _ hr, hf⟩⟩
 #align is_compact_operator_iff_is_compact_closure_image_closed_ball isCompactOperator_iff_isCompact_closure_image_closedBall
@@ -293,7 +293,7 @@ theorem IsCompactOperator.codRestrict {f : M₁ → M₂} (hf : IsCompactOperato
     (hV : ∀ x, f x ∈ V) (h_closed : IsClosed (V : Set M₂)) :
     IsCompactOperator (Set.codRestrict f V hV) :=
   let ⟨K, hK, hKf⟩ := hf
-  ⟨coe ⁻¹' K, (closedEmbedding_subtype_coe h_closed).is_compact_preimage hK, hKf⟩
+  ⟨coe ⁻¹' K, (closedEmbedding_subtype_val h_closed).isCompact_preimage hK, hKf⟩
 #align is_compact_operator.cod_restrict IsCompactOperator.codRestrict
 
 end CodRestrict

@@ -177,7 +177,7 @@ infixl:300 " ⤳ " => Specializes
                   (Term.app
                    `h
                    [(Order.Basic.«term_ᶜ» `s "ᶜ")
-                    (Term.proj `hsc "." `is_open_compl)
+                    (Term.proj `hsc "." `isOpen_compl)
                     `hy
                     `hx])))]))))
            []
@@ -326,10 +326,7 @@ infixl:300 " ⤳ " => Specializes
                  "=>"
                  (Term.app
                   `h
-                  [(Order.Basic.«term_ᶜ» `s "ᶜ")
-                   (Term.proj `hsc "." `is_open_compl)
-                   `hy
-                   `hx])))]))))
+                  [(Order.Basic.«term_ᶜ» `s "ᶜ") (Term.proj `hsc "." `isOpen_compl) `hy `hx])))]))))
           []
           (Tactic.tfaeHave "tfae_have" [] (num "4") "→" (num "5"))
           ";"
@@ -721,7 +718,7 @@ infixl:300 " ⤳ " => Specializes
           exact fun h s hso hy => h hso . mem_nhds hy
           tfae_have 3 → 4
           ;
-          exact fun h s hsc hx => of_not_not fun hy => h s ᶜ hsc . is_open_compl hy hx
+          exact fun h s hsc hx => of_not_not fun hy => h s ᶜ hsc . isOpen_compl hy hx
           tfae_have 4 → 5
           ;
           exact fun h => h _ isClosed_closure subset_closure <| mem_singleton _
@@ -830,7 +827,7 @@ theorem Specializes.map_of_continuousAt (h : x ⤳ y) (hy : ContinuousAt f y) : 
 #align specializes.map_of_continuous_at Specializes.map_of_continuousAt
 
 theorem Specializes.map (h : x ⤳ y) (hf : Continuous f) : f x ⤳ f y :=
-  h.map_of_continuous_at hf.ContinuousAt
+  h.map_of_continuousAt hf.ContinuousAt
 #align specializes.map Specializes.map
 
 theorem Inducing.specializes_iff (hf : Inducing f) : f x ⤳ f y ↔ x ⤳ y := by
@@ -839,7 +836,7 @@ theorem Inducing.specializes_iff (hf : Inducing f) : f x ⤳ f y ↔ x ⤳ y := 
 #align inducing.specializes_iff Inducing.specializes_iff
 
 theorem subtype_specializes_iff {p : X → Prop} (x y : Subtype p) : x ⤳ y ↔ (x : X) ⤳ y :=
-  inducing_coe.specializes_iff.symm
+  inducing_subtype_val.specializes_iff.symm
 #align subtype_specializes_iff subtype_specializes_iff
 
 @[simp]
@@ -964,7 +961,7 @@ theorem Inducing.inseparable_iff (hf : Inducing f) : (f x ~ f y) ↔ (x ~ y) := 
 #align inducing.inseparable_iff Inducing.inseparable_iff
 
 theorem subtype_inseparable_iff {p : X → Prop} (x y : Subtype p) : (x ~ y) ↔ ((x : X) ~ y) :=
-  inducing_coe.inseparable_iff.symm
+  inducing_subtype_val.inseparable_iff.symm
 #align subtype_inseparable_iff subtype_inseparable_iff
 
 @[simp]
@@ -1021,11 +1018,11 @@ theorem mem_closed_iff (h : x ~ y) (hs : IsClosed s) : x ∈ s ↔ y ∈ s :=
 
 theorem map_of_continuousAt (h : x ~ y) (hx : ContinuousAt f x) (hy : ContinuousAt f y) :
     f x ~ f y :=
-  (h.Specializes.map_of_continuous_at hy).antisymm (h.specializes'.map_of_continuous_at hx)
+  (h.Specializes.map_of_continuousAt hy).antisymm (h.specializes'.map_of_continuousAt hx)
 #align inseparable.map_of_continuous_at Inseparable.map_of_continuousAt
 
 theorem map (h : x ~ y) (hf : Continuous f) : f x ~ f y :=
-  h.map_of_continuous_at hf.ContinuousAt hf.ContinuousAt
+  h.map_of_continuousAt hf.ContinuousAt hf.ContinuousAt
 #align inseparable.map Inseparable.map
 
 end Inseparable
@@ -1106,7 +1103,7 @@ theorem preimage_image_mk_open (hs : IsOpen s) : mk ⁻¹' (mk '' s) = s :=
 #align separation_quotient.preimage_image_mk_open SeparationQuotient.preimage_image_mk_open
 
 theorem isOpenMap_mk : IsOpenMap (mk : X → SeparationQuotient X) := fun s hs =>
-  quotientMap_mk.is_open_preimage.1 <| by rwa [preimage_image_mk_open hs]
+  quotientMap_mk.isOpen_preimage.1 <| by rwa [preimage_image_mk_open hs]
 #align separation_quotient.is_open_map_mk SeparationQuotient.isOpenMap_mk
 
 theorem preimage_image_mk_closed (hs : IsClosed s) : mk ⁻¹' (mk '' s) = s :=
@@ -1134,7 +1131,7 @@ theorem comap_mk_nhds_mk : comap mk (𝓝 (mk x)) = 𝓝 x :=
 
 @[simp]
 theorem comap_mk_nhdsSet_image : comap mk (𝓝ˢ (mk '' s)) = 𝓝ˢ s :=
-  (inducing_mk.nhds_set_eq_comap _).symm
+  (inducing_mk.nhdsSet_eq_comap _).symm
 #align separation_quotient.comap_mk_nhds_set_image SeparationQuotient.comap_mk_nhdsSet_image
 
 theorem map_mk_nhds : map mk (𝓝 x) = 𝓝 (mk x) := by
@@ -1214,7 +1211,7 @@ theorem continuousAt_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} {x
 theorem continuousWithinAt_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y}
     {s : Set (SeparationQuotient X)} {x : X} :
     ContinuousWithinAt (lift f hf) s (mk x) ↔ ContinuousWithinAt f (mk ⁻¹' s) x :=
-  tendsto_lift_nhds_within_mk
+  tendsto_lift_nhdsWithin_mk
 #align separation_quotient.continuous_within_at_lift SeparationQuotient.continuousWithinAt_lift
 
 @[simp]
@@ -1272,7 +1269,7 @@ theorem continuousWithinAt_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c
     {s : Set (SeparationQuotient X × SeparationQuotient Y)} {x : X} {y : Y} :
     ContinuousWithinAt (uncurry <| lift₂ f hf) s (mk x, mk y) ↔
       ContinuousWithinAt (uncurry f) (Prod.map mk mk ⁻¹' s) (x, y) :=
-  tendsto_lift₂_nhds_within
+  tendsto_lift₂_nhdsWithin
 #align separation_quotient.continuous_within_at_lift₂ SeparationQuotient.continuousWithinAt_lift₂
 
 @[simp]

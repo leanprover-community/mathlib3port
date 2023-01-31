@@ -113,7 +113,7 @@ def wideCospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : Wid
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagramIsoWideCospan (F : WidePullbackShape J ⥤ C) :
     F ≅ wideCospan (F.obj none) (fun j => F.obj (some j)) fun j => F.map (Hom.term j) :=
-  (NatIso.ofComponents fun j => eq_to_iso <| by tidy) <| by tidy
+  (NatIso.ofComponents fun j => eqToIso <| by tidy) <| by tidy
 #align category_theory.limits.wide_pullback_shape.diagram_iso_wide_cospan CategoryTheory.Limits.WidePullbackShape.diagramIsoWideCospan
 
 /-- Construct a cone over a wide cospan. -/
@@ -213,7 +213,7 @@ def wideSpan (B : C) (objs : J → C) (arrows : ∀ j : J, B ⟶ objs j) : WideP
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_span` -/
 def diagramIsoWideSpan (F : WidePushoutShape J ⥤ C) :
     F ≅ wideSpan (F.obj none) (fun j => F.obj (some j)) fun j => F.map (Hom.init j) :=
-  (NatIso.ofComponents fun j => eq_to_iso <| by tidy) <| by tidy
+  (NatIso.ofComponents fun j => eqToIso <| by tidy) <| by tidy
 #align category_theory.limits.wide_pushout_shape.diagram_iso_wide_span CategoryTheory.Limits.WidePushoutShape.diagramIsoWideSpan
 
 /-- Construct a cocone over a wide span. -/

@@ -174,8 +174,8 @@ theorem IsSRGWith.compl (h : G.IsSRGWith n k ℓ μ) :
     Gᶜ.IsSRGWith n (n - k - 1) (n - (2 * k - μ) - 2) (n - (2 * k - ℓ)) :=
   { card := h.card
     regular := h.compl_is_regular
-    of_adj := fun v w ha => h.card_common_neighbors_eq_of_adj_compl ha
-    of_not_adj := fun v w hn hna => h.card_common_neighbors_eq_of_not_adj_compl hn hna }
+    of_adj := fun v w ha => h.card_commonNeighbors_eq_of_adj_compl ha
+    of_not_adj := fun v w hn hna => h.card_commonNeighbors_eq_of_not_adj_compl hn hna }
 #align simple_graph.is_SRG_with.compl SimpleGraph.IsSRGWith.compl
 
 end SimpleGraph

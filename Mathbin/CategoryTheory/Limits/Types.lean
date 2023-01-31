@@ -70,7 +70,7 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v} (Type max v u)
 #align category_theory.limits.types.has_limits_of_size CategoryTheory.Limits.Types.hasLimitsOfSize
 
 instance : HasLimits (Type u) :=
-  types.has_limits_of_size.{u, u}
+  Types.hasLimitsOfSize.{u, u}
 
 /-- The equivalence between a limiting cone of `F` in `Type u` and the "concrete" definition as the
 sections of `F`.
@@ -262,7 +262,7 @@ instance hasColimitsOfSize : HasColimitsOfSize.{v} (Type max v u)
 #align category_theory.limits.types.has_colimits_of_size CategoryTheory.Limits.Types.hasColimitsOfSize
 
 instance : HasColimits (Type u) :=
-  types.has_colimits_of_size.{u, u}
+  Types.hasColimitsOfSize.{u, u}
 
 /-- The equivalence between the abstract colimit of `F` in `Type u`
 and the "concrete" definition as a quotient.
@@ -451,7 +451,7 @@ protected theorem rel_eq_eqvGen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.
   ext (⟨j, x⟩⟨j', y⟩)
   constructor
   · apply eqv_gen_quot_rel_of_rel
-  · rw [← (filtered_colimit.rel_equiv F).eqv_gen_iff]
+  · rw [← (filtered_colimit.rel_equiv F).eqvGen_iff]
     exact EqvGen.mono (rel_of_quot_rel F)
 #align category_theory.limits.types.filtered_colimit.rel_eq_eqv_gen_quot_rel CategoryTheory.Limits.Types.FilteredColimit.rel_eq_eqvGen_quot_rel
 

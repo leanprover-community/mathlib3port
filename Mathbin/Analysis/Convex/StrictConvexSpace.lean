@@ -72,7 +72,7 @@ then prove that any closed ball is strictly convex in `strict_convex_closed_ball
 See also `strict_convex_space.of_strict_convex_closed_unit_ball`. -/
 class StrictConvexSpace (𝕜 E : Type _) [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] : Prop where
-  strict_convex_closed_ball : ∀ r : ℝ, 0 < r → StrictConvex 𝕜 (closedBall (0 : E) r)
+  strictConvex_closedBall : ∀ r : ℝ, 0 < r → StrictConvex 𝕜 (closedBall (0 : E) r)
 #align strict_convex_space StrictConvexSpace
 
 variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedAddCommGroup E]

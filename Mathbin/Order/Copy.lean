@@ -109,8 +109,8 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop)
       bot
       sup
       inf
-      sup
-      inf.. }
+      supₛ
+      infₛ.. }
   all_goals abstract subst_vars; cases c; assumption
 #align complete_lattice.copy CompleteLattice.copy
 
@@ -137,8 +137,8 @@ def Frame.copy (c : Frame α) (le : α → α → Prop) (eq_le : le = @Frame.Le 
       bot
       sup
       inf
-      sup
-      inf.. }
+      supₛ
+      infₛ.. }
   all_goals abstract subst_vars; cases c; assumption
 #align frame.copy Frame.copy
 
@@ -165,8 +165,8 @@ def Coframe.copy (c : Coframe α) (le : α → α → Prop) (eq_le : le = @Cofra
       bot
       sup
       inf
-      sup
-      inf.. }
+      supₛ
+      infₛ.. }
   all_goals abstract subst_vars; cases c; assumption
 #align coframe.copy Coframe.copy
 
@@ -212,8 +212,8 @@ def ConditionallyCompleteLattice.copy (c : ConditionallyCompleteLattice α) (le 
     { le
       sup
       inf
-      sup
-      inf.. }
+      supₛ
+      infₛ.. }
   all_goals abstract subst_vars; cases c; assumption
 #align conditionally_complete_lattice.copy ConditionallyCompleteLattice.copy
 

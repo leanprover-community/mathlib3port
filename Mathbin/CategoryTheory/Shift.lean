@@ -174,7 +174,7 @@ variable [HasShift C A]
 
 /-- The monoidal functor from `A` to `C ⥤ C` given a `has_shift` instance. -/
 def shiftMonoidalFunctor : MonoidalFunctor (Discrete A) (C ⥤ C) :=
-  has_shift.shift
+  HasShift.shift
 #align category_theory.shift_monoidal_functor CategoryTheory.shiftMonoidalFunctor
 
 variable {A}
@@ -331,7 +331,7 @@ instance shiftFunctorFull (i : A) : Full (shiftFunctor C i) :=
 
 /-- Shifting by `n` is an essentially surjective functor. -/
 instance shiftFunctor_essSurj (i : A) : EssSurj (shiftFunctor C i)
-    where mem_ess_image Y := ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
+    where mem_essImage Y := ⟨Y⟦-i⟧, ⟨(shiftFunctorNegCompShiftFunctor C i).app Y⟩⟩
 #align category_theory.shift_functor_ess_surj CategoryTheory.shiftFunctor_essSurj
 
 end
@@ -366,7 +366,7 @@ theorem shift_neg_shift' (i : A) :
 
 theorem shift_equiv_triangle (n : A) (X : C) :
     (shiftShiftNeg X n).inv⟦n⟧' ≫ (shiftNegShift (X⟦n⟧) n).Hom = 𝟙 (X⟦n⟧) :=
-  (addNegEquiv (shiftMonoidalFunctor C A) n).functor_unit_iso_comp X
+  (addNegEquiv (shiftMonoidalFunctor C A) n).functor_unitIso_comp X
 #align category_theory.shift_equiv_triangle CategoryTheory.shift_equiv_triangle
 
 section
@@ -432,7 +432,7 @@ variable (X Y : C) (f : X ⟶ Y)
 def shiftComm (i j : A) : X⟦i⟧⟦j⟧ ≅ X⟦j⟧⟦i⟧ :=
   (shiftAdd X i j).symm ≪≫
     ((shiftMonoidalFunctor C A).toFunctor.mapIso
-            (discrete.eq_to_iso <| add_comm i j : (⟨i + j⟩ : Discrete A) ≅ ⟨j + i⟩)).app
+            (Discrete.eqToIso <| add_comm i j : (⟨i + j⟩ : Discrete A) ≅ ⟨j + i⟩)).app
         X ≪≫
       shiftAdd X j i
 #align category_theory.shift_comm CategoryTheory.shiftComm

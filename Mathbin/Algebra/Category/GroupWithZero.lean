@@ -30,7 +30,7 @@ def GroupWithZeroCat :=
 namespace GroupWithZeroCat
 
 instance : CoeSort GroupWithZeroCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : GroupWithZeroCat) : GroupWithZero X :=
   X.str

@@ -87,7 +87,7 @@ theorem Function.Injective.wSameSide_map_iff {s : AffineSubspace R P} {x y : P} 
   rcases hfp₁ with ⟨p₁, hp₁, rfl⟩
   rcases hfp₂ with ⟨p₂, hp₂, rfl⟩
   refine' ⟨p₁, hp₁, p₂, hp₂, _⟩
-  simp_rw [← linear_map_vsub, (f.linear_injective_iff.2 hf).same_ray_map_iff] at h
+  simp_rw [← linear_map_vsub, (f.linear_injective_iff.2 hf).sameRay_map_iff] at h
   exact h
 #align function.injective.w_same_side_map_iff Function.Injective.wSameSide_map_iff
 
@@ -99,13 +99,13 @@ theorem Function.Injective.sSameSide_map_iff {s : AffineSubspace R P} {x y : P} 
 @[simp]
 theorem AffineEquiv.wSameSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
     (s.map ↑f).WSameSide (f x) (f y) ↔ s.WSameSide x y :=
-  (show Function.Injective f.toAffineMap from f.Injective).w_same_side_map_iff
+  (show Function.Injective f.toAffineMap from f.Injective).wSameSide_map_iff
 #align affine_equiv.w_same_side_map_iff AffineEquiv.wSameSide_map_iff
 
 @[simp]
 theorem AffineEquiv.sSameSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
     (s.map ↑f).SSameSide (f x) (f y) ↔ s.SSameSide x y :=
-  (show Function.Injective f.toAffineMap from f.Injective).s_same_side_map_iff
+  (show Function.Injective f.toAffineMap from f.Injective).sSameSide_map_iff
 #align affine_equiv.s_same_side_map_iff AffineEquiv.sSameSide_map_iff
 
 theorem WOppSide.map {s : AffineSubspace R P} {x y : P} (h : s.WOppSide x y) (f : P →ᵃ[R] P') :
@@ -126,7 +126,7 @@ theorem Function.Injective.wOppSide_map_iff {s : AffineSubspace R P} {x y : P} {
   rcases hfp₁ with ⟨p₁, hp₁, rfl⟩
   rcases hfp₂ with ⟨p₂, hp₂, rfl⟩
   refine' ⟨p₁, hp₁, p₂, hp₂, _⟩
-  simp_rw [← linear_map_vsub, (f.linear_injective_iff.2 hf).same_ray_map_iff] at h
+  simp_rw [← linear_map_vsub, (f.linear_injective_iff.2 hf).sameRay_map_iff] at h
   exact h
 #align function.injective.w_opp_side_map_iff Function.Injective.wOppSide_map_iff
 
@@ -138,35 +138,35 @@ theorem Function.Injective.sOppSide_map_iff {s : AffineSubspace R P} {x y : P} {
 @[simp]
 theorem AffineEquiv.wOppSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
     (s.map ↑f).WOppSide (f x) (f y) ↔ s.WOppSide x y :=
-  (show Function.Injective f.toAffineMap from f.Injective).w_opp_side_map_iff
+  (show Function.Injective f.toAffineMap from f.Injective).wOppSide_map_iff
 #align affine_equiv.w_opp_side_map_iff AffineEquiv.wOppSide_map_iff
 
 @[simp]
 theorem AffineEquiv.sOppSide_map_iff {s : AffineSubspace R P} {x y : P} (f : P ≃ᵃ[R] P') :
     (s.map ↑f).SOppSide (f x) (f y) ↔ s.SOppSide x y :=
-  (show Function.Injective f.toAffineMap from f.Injective).s_opp_side_map_iff
+  (show Function.Injective f.toAffineMap from f.Injective).sOppSide_map_iff
 #align affine_equiv.s_opp_side_map_iff AffineEquiv.sOppSide_map_iff
 
 omit V'
 
 theorem WSameSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.WSameSide x y) :
     (s : Set P).Nonempty :=
-  ⟨h.some, h.some_spec.some⟩
+  ⟨h.some, h.choose_spec.some⟩
 #align affine_subspace.w_same_side.nonempty AffineSubspace.WSameSide.nonempty
 
 theorem SSameSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) :
     (s : Set P).Nonempty :=
-  ⟨h.1.some, h.1.some_spec.some⟩
+  ⟨h.1.some, h.1.choose_spec.some⟩
 #align affine_subspace.s_same_side.nonempty AffineSubspace.SSameSide.nonempty
 
 theorem WOppSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.WOppSide x y) :
     (s : Set P).Nonempty :=
-  ⟨h.some, h.some_spec.some⟩
+  ⟨h.some, h.choose_spec.some⟩
 #align affine_subspace.w_opp_side.nonempty AffineSubspace.WOppSide.nonempty
 
 theorem SOppSide.nonempty {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) :
     (s : Set P).Nonempty :=
-  ⟨h.1.some, h.1.some_spec.some⟩
+  ⟨h.1.some, h.1.choose_spec.some⟩
 #align affine_subspace.s_opp_side.nonempty AffineSubspace.SOppSide.nonempty
 
 theorem SSameSide.wSameSide {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) :
@@ -680,19 +680,19 @@ theorem SSameSide.not_wOppSide {s : AffineSubspace R P} {x y : P} (h : s.SSameSi
 #align affine_subspace.s_same_side.not_w_opp_side AffineSubspace.SSameSide.not_wOppSide
 
 theorem SSameSide.not_sOppSide {s : AffineSubspace R P} {x y : P} (h : s.SSameSide x y) :
-    ¬s.SOppSide x y := fun ho => h.not_w_opp_side ho.1
+    ¬s.SOppSide x y := fun ho => h.not_wOppSide ho.1
 #align affine_subspace.s_same_side.not_s_opp_side AffineSubspace.SSameSide.not_sOppSide
 
 theorem WOppSide.not_sSameSide {s : AffineSubspace R P} {x y : P} (h : s.WOppSide x y) :
-    ¬s.SSameSide x y := fun hs => hs.not_w_opp_side h
+    ¬s.SSameSide x y := fun hs => hs.not_wOppSide h
 #align affine_subspace.w_opp_side.not_s_same_side AffineSubspace.WOppSide.not_sSameSide
 
 theorem SOppSide.not_wSameSide {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) :
-    ¬s.WSameSide x y := fun hs => hs.not_s_opp_side h
+    ¬s.WSameSide x y := fun hs => hs.not_sOppSide h
 #align affine_subspace.s_opp_side.not_w_same_side AffineSubspace.SOppSide.not_wSameSide
 
 theorem SOppSide.not_sSameSide {s : AffineSubspace R P} {x y : P} (h : s.SOppSide x y) :
-    ¬s.SSameSide x y := fun hs => h.not_w_same_side hs.1
+    ¬s.SSameSide x y := fun hs => h.not_wSameSide hs.1
 #align affine_subspace.s_opp_side.not_s_same_side AffineSubspace.SOppSide.not_sSameSide
 
 theorem wOppSide_iff_exists_wbtw {s : AffineSubspace R P} {x y : P} :

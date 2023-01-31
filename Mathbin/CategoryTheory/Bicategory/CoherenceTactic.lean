@@ -250,9 +250,11 @@ namespace Tactic
             to_expr
                 `
                   `(
-                    ( FreeBicategory.lift ( Prefunctor.id _ ) ) . map₂ ( LiftHom₂.lift $ ( lhs ) )
+                    ( FreeBicategory.lift ( Prefunctor.id _ ) ) . zipWith
+                        ( LiftHom₂.lift $ ( lhs ) )
                       =
-                      ( FreeBicategory.lift ( Prefunctor.id _ ) ) . map₂ ( LiftHom₂.lift $ ( rhs ) )
+                      ( FreeBicategory.lift ( Prefunctor.id _ ) ) . zipWith
+                        ( LiftHom₂.lift $ ( rhs ) )
                     )
               >>=
               tactic.change

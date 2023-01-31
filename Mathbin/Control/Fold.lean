@@ -205,15 +205,15 @@ section Defs
 variable {α β : Type u} {t : Type u → Type u} [Traversable t]
 
 def foldMap {α ω} [One ω] [Mul ω] (f : α → ω) : t α → ω :=
-  traverse (const.mk' ∘ f)
+  traverse (Const.mk' ∘ f)
 #align traversable.fold_map Traversable.foldMap
 
 def foldl (f : α → β → α) (x : α) (xs : t β) : α :=
-  (foldMap (foldl.mk ∘ flip f) xs).get x
+  (foldMap (Foldl.mk ∘ flip f) xs).get x
 #align traversable.foldl Traversable.foldl
 
 def foldr (f : α → β → β) (x : β) (xs : t α) : β :=
-  (foldMap (foldr.mk ∘ f) xs).get x
+  (foldMap (Foldr.mk ∘ f) xs).get x
 #align traversable.foldr Traversable.foldr
 
 /-- Conceptually, `to_list` collects all the elements of a collection
@@ -243,11 +243,11 @@ def length (xs : t α) : ℕ :=
 variable {m : Type u → Type u} [Monad m]
 
 def mfoldl (f : α → β → m α) (x : α) (xs : t β) : m α :=
-  (foldMap (mfoldl.mk ∘ flip f) xs).get x
+  (foldMap (Mfoldl.mk ∘ flip f) xs).get x
 #align traversable.mfoldl Traversable.mfoldl
 
 def mfoldr (f : α → β → m β) (x : β) (xs : t α) : m β :=
-  (foldMap (mfoldr.mk ∘ f) xs).get x
+  (foldMap (Mfoldr.mk ∘ f) xs).get x
 #align traversable.mfoldr Traversable.mfoldr
 
 end Defs
@@ -288,9 +288,9 @@ open IsLawfulTraversable
 theorem foldMap_hom [Monoid α] [Monoid β] (f : α →* β) (g : γ → α) (x : t γ) :
     f (foldMap g x) = foldMap (f ∘ g) x :=
   calc
-    f (foldMap g x) = f (traverse (const.mk' ∘ g) x) := rfl
-    _ = (mapFold f).app _ (traverse (const.mk' ∘ g) x) := rfl
-    _ = traverse ((mapFold f).app _ ∘ const.mk' ∘ g) x := naturality (mapFold f) _ _
+    f (foldMap g x) = f (traverse (Const.mk' ∘ g) x) := rfl
+    _ = (mapFold f).app _ (traverse (Const.mk' ∘ g) x) := rfl
+    _ = traverse ((mapFold f).app _ ∘ Const.mk' ∘ g) x := naturality (mapFold f) _ _
     _ = foldMap (f ∘ g) x := rfl
     
 #align traversable.fold_map_hom Traversable.foldMap_hom
@@ -314,19 +314,19 @@ variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 
 @[simp]
 theorem foldl.ofFreeMonoid_comp_of (f : α → β → α) :
-    Foldl.ofFreeMonoid f ∘ FreeMonoid.of = foldl.mk ∘ flip f :=
+    Foldl.ofFreeMonoid f ∘ FreeMonoid.of = Foldl.mk ∘ flip f :=
   rfl
 #align traversable.foldl.of_free_monoid_comp_of Traversable.foldl.ofFreeMonoid_comp_of
 
 @[simp]
 theorem foldr.ofFreeMonoid_comp_of (f : β → α → α) :
-    Foldr.ofFreeMonoid f ∘ FreeMonoid.of = foldr.mk ∘ f :=
+    Foldr.ofFreeMonoid f ∘ FreeMonoid.of = Foldr.mk ∘ f :=
   rfl
 #align traversable.foldr.of_free_monoid_comp_of Traversable.foldr.ofFreeMonoid_comp_of
 
 @[simp]
 theorem mfoldl.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : α → β → m α) :
-    Mfoldl.ofFreeMonoid f ∘ FreeMonoid.of = mfoldl.mk ∘ flip f :=
+    Mfoldl.ofFreeMonoid f ∘ FreeMonoid.of = Mfoldl.mk ∘ flip f :=
   by
   ext1 x
   simp [(· ∘ ·), mfoldl.of_free_monoid, mfoldl.mk, flip]
@@ -335,7 +335,7 @@ theorem mfoldl.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : α → β
 
 @[simp]
 theorem mfoldr.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : β → α → m α) :
-    Mfoldr.ofFreeMonoid f ∘ FreeMonoid.of = mfoldr.mk ∘ f :=
+    Mfoldr.ofFreeMonoid f ∘ FreeMonoid.of = Mfoldr.mk ∘ f :=
   by
   ext
   simp [(· ∘ ·), mfoldr.of_free_monoid, mfoldr.mk, flip]

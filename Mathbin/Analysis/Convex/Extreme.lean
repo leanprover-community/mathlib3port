@@ -184,7 +184,7 @@ theorem IsExtreme.extremePoints_subset_extremePoints (hAB : IsExtreme 𝕜 A B) 
 
 theorem IsExtreme.extremePoints_eq (hAB : IsExtreme 𝕜 A B) :
     B.extremePoints 𝕜 = B ∩ A.extremePoints 𝕜 :=
-  Subset.antisymm (fun x hx => ⟨hx.1, hAB.extreme_points_subset_extreme_points hx⟩)
+  Subset.antisymm (fun x hx => ⟨hx.1, hAB.extremePoints_subset_extremePoints hx⟩)
     (inter_extremePoints_subset_extremePoints_of_subset hAB.1)
 #align is_extreme.extreme_points_eq IsExtreme.extremePoints_eq
 
@@ -196,7 +196,7 @@ variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroup E] [Module 𝕜 E] {A B : S
 
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
   convex_iff_openSegment_subset.2 fun x₁ ⟨hx₁A, hx₁B⟩ x₂ ⟨hx₂A, hx₂B⟩ x hx =>
-    ⟨hA.open_segment_subset hx₁A hx₂A hx, fun hxB => hx₁B (hAB.2 hx₁A hx₂A hxB hx).1⟩
+    ⟨hA.openSegment_subset hx₁A hx₂A hx, fun hxB => hx₁B (hAB.2 hx₁A hx₂A hxB hx).1⟩
 #align is_extreme.convex_diff IsExtreme.convex_diff
 
 end OrderedSemiring
@@ -247,7 +247,7 @@ theorem Convex.mem_extremePoints_iff_mem_diff_convexHull_diff (hA : Convex 𝕜 
 theorem extremePoints_convexHull_subset : (convexHull 𝕜 A).extremePoints 𝕜 ⊆ A :=
   by
   rintro x hx
-  rw [(convex_convexHull 𝕜 _).mem_extreme_points_iff_convex_diff] at hx
+  rw [(convex_convexHull 𝕜 _).mem_extremePoints_iff_convex_diff] at hx
   by_contra
   exact
     (convexHull_min (subset_diff.2 ⟨subset_convexHull 𝕜 _, disjoint_singleton_right.2 h⟩) hx.2

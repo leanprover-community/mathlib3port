@@ -90,7 +90,7 @@ instance (priority := 100) polishSpace_of_complete_second_countable [m : MetricS
 
 /-- Construct on a Polish space a metric (compatible with the topology) which is complete. -/
 def polishSpaceMetric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] : MetricSpace α :=
-  h.complete.some.replaceTopology h.complete.some_spec.1.symm
+  h.complete.some.replaceTopology h.complete.choose_spec.1.symm
 #align polish_space_metric polishSpaceMetric
 
 theorem complete_polishSpaceMetric (α : Type _) [ht : TopologicalSpace α] [h : PolishSpace α] :
@@ -181,7 +181,7 @@ theorem Equiv.polishSpace_induced [t : TopologicalSpace β] [PolishSpace β] (f 
 /-- A closed subset of a Polish space is also Polish. -/
 theorem IsClosed.polishSpace {α : Type _} [TopologicalSpace α] [PolishSpace α] {s : Set α}
     (hs : IsClosed s) : PolishSpace s :=
-  (IsClosed.closedEmbedding_subtype_coe hs).PolishSpace
+  (IsClosed.closedEmbedding_subtype_val hs).PolishSpace
 #align is_closed.polish_space IsClosed.polishSpace
 
 /-- A sequence of type synonyms of a given type `α`, useful in the proof of
@@ -337,13 +337,13 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
   invFun := id
   left_inv x := rfl
   right_inv x := rfl
-  continuous_to_fun :=
+  continuous_toFun :=
     haveI : LipschitzWith 1 fun x : complete_copy s => (id x : s) :=
       by
       apply LipschitzWith.mk_one
       exact dist_le_dist_complete_copy
     this.continuous
-  continuous_inv_fun := by
+  continuous_invFun := by
     apply continuous_iff_continuousAt.2 fun x => _
     suffices H :
       tendsto (fun b : s => dist b.1 x.1 + |1 / inf_dist b.1 (sᶜ) - 1 / inf_dist x.1 (sᶜ)|) (𝓝 x)
@@ -359,7 +359,7 @@ def completeCopyIdHomeo (hs : IsOpen s) (h's : sᶜ.Nonempty) : CompleteCopy s �
       exact continuous_subtype_coe.dist continuous_const
     · refine' (tendsto.sub_const _ _).abs
       refine' tendsto.div tendsto_const_nhds _ I.ne'
-      exact ((continuous_inf_dist_pt _).comp continuous_subtype_coe).Tendsto _
+      exact ((continuous_inf_dist_pt _).comp continuous_subtype_val).Tendsto _
 #align polish_space.complete_copy_id_homeo PolishSpace.completeCopyIdHomeo
 
 theorem completeSpace_completeCopy [CompleteSpace α] (hs : IsOpen s) (h's : sᶜ.Nonempty) :
@@ -483,13 +483,13 @@ theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α
     change ∃ s' : Set (Sum (↥s) ↥t), T.is_open s' ∧ f ⁻¹' s' = u
     refine' ⟨f.symm ⁻¹' u, _, by simp only [Equiv.symm_symm, Equiv.symm_preimage_preimage]⟩
     refine' isOpen_sum_iff.2 ⟨_, _⟩
-    · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
+    · have : IsOpen ((coe : s → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_val hu
       have : Sum.inl ⁻¹' (⇑f.symm ⁻¹' u) = (coe : s → α) ⁻¹' u :=
         by
         ext x
         simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sumCompl_apply_inl]
       rwa [this]
-    · have : IsOpen ((coe : t → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_coe hu
+    · have : IsOpen ((coe : t → α) ⁻¹' u) := IsOpen.preimage continuous_subtype_val hu
       have : Sum.inr ⁻¹' (⇑f.symm ⁻¹' u) = (coe : t → α) ⁻¹' u :=
         by
         ext x

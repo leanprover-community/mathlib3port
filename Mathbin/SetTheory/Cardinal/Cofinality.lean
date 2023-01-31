@@ -1109,7 +1109,7 @@ theorem le_range_of_union_finset_eq_top {α β : Type _} [Infinite β] (f : α �
     rintro a p m
     simp at m
     rw [← m]
-    apply fun b => (u b).some_spec
+    apply fun b => (u b).choose_spec
   obtain ⟨⟨-, ⟨a, rfl⟩⟩, p⟩ := exists_infinite_fiber u' h k
   exact (@Infinite.of_injective _ _ p (inclusion (v' a)) (inclusion_injective _)).False
 #align cardinal.le_range_of_union_finset_eq_top Cardinal.le_range_of_union_finset_eq_top

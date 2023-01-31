@@ -94,7 +94,7 @@ theorem exists_mem_adjoin_mul_eq_pow_natDegree {x : S} (hx : aeval x f = 0) (hmo
     ∃ y ∈ adjoin R ({x} : Set S), (algebraMap R S) p * y = x ^ (f.map (algebraMap R S)).natDegree :=
   by
   rw [aeval_def, Polynomial.eval₂_eq_eval_map, eval_eq_sum_range, range_add_one,
-    sum_insert not_mem_range_self, sum_range, (hmo.map (algebraMap R S)).coeff_nat_degree,
+    sum_insert not_mem_range_self, sum_range, (hmo.map (algebraMap R S)).coeff_natDegree,
     one_mul] at hx
   replace hx := eq_neg_of_add_eq_zero_left hx
   have : ∀ n < f.nat_degree, p ∣ f.coeff n :=
@@ -189,7 +189,7 @@ theorem dvd_pow_natDegree_of_eval₂_eq_zero {f : R →+* A} (hf : Function.Inje
   rw [← nat_degree_scale_roots p x, ← Ideal.mem_span_singleton]
   refine'
     (scale_roots.is_weakly_eisenstein_at _
-          (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_nat_degree_le_of_root_of_monic_mem
+          (ideal.mem_span_singleton.mpr <| dvd_refl x)).pow_natDegree_le_of_root_of_monic_mem
       _ ((monic_scale_roots_iff x).mpr hp) _ le_rfl
   rw [injective_iff_map_eq_zero'] at hf
   have := scale_roots_eval₂_eq_zero f h
@@ -218,7 +218,7 @@ theorem Polynomial.Monic.leadingCoeff_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤) 
 theorem Polynomial.Monic.isEisensteinAtOfMemOfNotMem (hf : f.Monic) (h : 𝓟 ≠ ⊤)
     (hmem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟) (hnot_mem : f.coeff 0 ∉ 𝓟 ^ 2) :
     f.IsEisensteinAt 𝓟 :=
-  { leading := hf.leading_coeff_not_mem h
+  { leading := hf.leadingCoeff_not_mem h
     Mem := fun n hn => hmem hn
     not_mem := hnot_mem }
 #align polynomial.monic.is_eisenstein_at_of_mem_of_not_mem Polynomial.Monic.isEisensteinAtOfMemOfNotMem

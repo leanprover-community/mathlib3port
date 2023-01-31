@@ -92,7 +92,7 @@ def Ulift.equivalence : C ≌ ULift.{u₂} C
         ext
         change 𝟙 _ ≫ 𝟙 _ = 𝟙 _
         simp }
-  functor_unit_iso_comp' X := by
+  functor_unitIso_comp' X := by
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
 #align category_theory.ulift.equivalence CategoryTheory.Ulift.equivalence
@@ -204,7 +204,7 @@ def AsSmall.equiv : C ≌ AsSmall C where
   counitIso :=
     NatIso.ofComponents
       (fun X =>
-        eq_to_iso <| by
+        eqToIso <| by
           ext
           rfl)
       (by tidy)

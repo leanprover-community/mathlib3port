@@ -342,7 +342,7 @@ open set in `Spec A⁰_f`.
 def toSpec {f : A} : (Proj.T| pbo f) ⟶ Spec.T A⁰_ f
     where
   toFun := ToSpec.toFun 𝒜 f
-  continuous_to_fun :=
+  continuous_toFun :=
     by
     apply is_topological_basis.continuous PrimeSpectrum.isTopologicalBasis_basic_opens
     rintro _ ⟨⟨k, ⟨a, ha⟩, ⟨b, hb1⟩, ⟨k', hb2⟩⟩, rfl⟩; dsimp
@@ -587,8 +587,7 @@ def carrier.asIdeal : Ideal A where
   smul_mem' := carrier.smul_mem f_deg hm q
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal
 
-theorem carrier.asIdeal.homogeneous : (carrier.asIdeal f_deg hm q).IsHomogeneous 𝒜 :=
-  fun i a ha j =>
+theorem carrier.asIdeal.homogeneous : (carrier.asIdeal f_deg hm q).Homogeneous 𝒜 := fun i a ha j =>
   (em (i = j)).elim (fun h => h ▸ by simpa only [proj_apply, decompose_coe, of_eq_same] using ha _)
     fun h =>
     by
@@ -621,7 +620,7 @@ theorem carrier.asIdeal.ne_top : carrier.asIdeal f_deg hm q ≠ ⊤ := fun rid =
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.ne_top AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.ne_top
 
 theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
-  (carrier.asIdeal.homogeneous f_deg hm q).is_prime_of_homogeneous_mem_or_mem
+  (carrier.asIdeal.homogeneous f_deg hm q).isPrime_of_homogeneous_mem_or_mem
     (carrier.asIdeal.ne_top f_deg hm q) fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
     show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _
       by

@@ -208,7 +208,7 @@ theorem decorateErrors_eq_done : @decorateErrors α msgs p cb n = done n' a ↔ 
 
 @[simp]
 theorem decorateError_eq_done : @decorateError α msg p cb n = done n' a ↔ p cb n = done n' a :=
-  decorate_errors_eq_done
+  decorateErrors_eq_done
 #align parser.decorate_error_eq_done Parser.decorateError_eq_done
 
 @[simp]
@@ -222,7 +222,7 @@ theorem decorateErrors_eq_fail :
 theorem decorateError_eq_fail :
     @decorateError α msg p cb n = fail n' err ↔
       n = n' ∧ err = Std.DList.lazy_ofList [msg ()] ∧ ∃ np err', p cb n = fail np err' :=
-  decorate_errors_eq_fail
+  decorateErrors_eq_fail
 #align parser.decorate_error_eq_fail Parser.decorateError_eq_fail
 
 @[simp]
@@ -305,11 +305,11 @@ theorem mapConst_eq_fail : (b <$ p) cb n = fail n' err ↔ p cb n = fail n' err 
 
 theorem mapConstRev_eq_done {b'} :
     (p $> b) cb n = done n' b' ↔ ∃ a : α, p cb n = done n' a ∧ b = b' :=
-  map_const_eq_done
+  mapConst_eq_done
 #align parser.map_const_rev_eq_done Parser.mapConstRev_eq_done
 
 theorem map_rev_const_eq_fail : (p $> b) cb n = fail n' err ↔ p cb n = fail n' err :=
-  map_const_eq_fail
+  mapConst_eq_fail
 #align parser.map_rev_const_eq_fail Parser.map_rev_const_eq_fail
 
 end Map
@@ -446,15 +446,15 @@ theorem seqRight_eq_fail {p : Parser α} {q : Parser β} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mapM_eq_done {f : α → Parser β} {a : α} {l : List α} {b : β} {l' : List β} :
-    (a::l).mmap f cb n = done n' (b::l') ↔
-      ∃ np : ℕ, f a cb n = done np b ∧ l.mmap f cb np = done n' l' :=
+    (a::l).mapM f cb n = done n' (b::l') ↔
+      ∃ np : ℕ, f a cb n = done np b ∧ l.mapM f cb np = done n' l' :=
   by simp [mmap, and_comm, and_assoc, and_left_comm, pure_eq_done]
 #align parser.mmap_eq_done Parser.mapM_eq_done
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mapM'_eq_done {f : α → Parser β} {a : α} {l : List α} :
-    (a::l).mmap' f cb n = done n' () ↔
-      ∃ (np : ℕ)(b : β), f a cb n = done np b ∧ l.mmap' f cb np = done n' () :=
+    (a::l).mapM' f cb n = done n' () ↔
+      ∃ (np : ℕ)(b : β), f a cb n = done np b ∧ l.mapM' f cb np = done n' () :=
   by simp [mmap']
 #align parser.mmap'_eq_done Parser.mapM'_eq_done
 
@@ -491,19 +491,19 @@ instance bind {f : α → Parser β} [p.mono] [∀ a, (f a).mono] : (p >>= f).mo
 #align parser.mono.bind Parser.Mono.bind
 
 instance andThen {q : Parser β} [p.mono] [q.mono] : (p >> q).mono :=
-  mono.bind
+  Mono.bind
 #align parser.mono.and_then Parser.Mono.andThen
 
 instance map [p.mono] {f : α → β} : (f <$> p).mono :=
-  mono.bind
+  Mono.bind
 #align parser.mono.map Parser.Mono.map
 
 instance seq {f : Parser (α → β)} [f.mono] [p.mono] : (f <*> p).mono :=
-  mono.bind
+  Mono.bind
 #align parser.mono.seq Parser.Mono.seq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mmap f).mono
+instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mapM f).mono
   | [], _, _ => Mono.pure
   | a::l, f, h => by
     convert mono.bind
@@ -521,7 +521,7 @@ but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align parser.mono.mmap' Parser.Mono.mapM'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mmap' f).mono
+instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a ∈ l, (f a).mono], (l.mapM' f).mono
   | [], _, _ => Mono.pure
   | a::l, f, h => by
     convert mono.and_then
@@ -560,7 +560,7 @@ instance decorateErrors [p.mono] : (@decorateErrors α msgs p).mono :=
 #align parser.mono.decorate_errors Parser.Mono.decorateErrors
 
 instance decorateError [p.mono] : (@decorateError α msg p).mono :=
-  mono.decorate_errors
+  Mono.decorateErrors
 #align parser.mono.decorate_error Parser.Mono.decorateError
 
 instance anyChar : Mono anyChar := by
@@ -578,27 +578,27 @@ instance sat {p : Char → Prop} [DecidablePred p] : Mono (sat p) :=
 #align parser.mono.sat Parser.Mono.sat
 
 instance eps : Mono eps :=
-  mono.pure
+  Mono.pure
 #align parser.mono.eps Parser.Mono.eps
 
 instance ch {c : Char} : Mono (ch c) :=
-  mono.decorate_error
+  Mono.decorateError
 #align parser.mono.ch Parser.Mono.ch
 
 instance charBuf {s : CharBuffer} : Mono (charBuf s) :=
-  mono.decorate_error
+  Mono.decorateError
 #align parser.mono.char_buf Parser.Mono.charBuf
 
 instance oneOf {cs : List Char} : (oneOf cs).mono :=
-  mono.decorate_errors
+  Mono.decorateErrors
 #align parser.mono.one_of Parser.Mono.oneOf
 
 instance oneOf' {cs : List Char} : (oneOf' cs).mono :=
-  mono.and_then
+  Mono.andThen
 #align parser.mono.one_of' Parser.Mono.oneOf'
 
 instance str {s : String} : (str s).mono :=
-  mono.decorate_error
+  Mono.decorateError
 #align parser.mono.str Parser.Mono.str
 
 instance remaining : remaining.mono :=
@@ -606,7 +606,7 @@ instance remaining : remaining.mono :=
 #align parser.mono.remaining Parser.Mono.remaining
 
 instance eof : eof.mono :=
-  mono.decorate_error
+  Mono.decorateError
 #align parser.mono.eof Parser.Mono.eof
 
 instance foldrCore {f : α → β → β} {b : β} [p.mono] : ∀ {reps : ℕ}, (foldrCore f p b reps).mono
@@ -642,32 +642,32 @@ instance foldl {f : α → β → α} {p : Parser β} [p.mono] : Mono (foldl f a
     exact mono.foldl_core⟩
 #align parser.mono.foldl Parser.Mono.foldl
 
-instance many [p.mono] : p.many.mono :=
-  mono.foldr
+instance many [p.mono] : p.anyM.mono :=
+  Mono.foldr
 #align parser.mono.many Parser.Mono.many
 
 instance manyChar {p : Parser Char} [p.mono] : p.manyChar.mono :=
-  mono.map
+  Mono.map
 #align parser.mono.many_char Parser.Mono.manyChar
 
 instance many' [p.mono] : p.many'.mono :=
-  mono.and_then
+  Mono.andThen
 #align parser.mono.many' Parser.Mono.many'
 
 instance many1 [p.mono] : p.many1.mono :=
-  mono.seq
+  Mono.seq
 #align parser.mono.many1 Parser.Mono.many1
 
 instance manyChar1 {p : Parser Char} [p.mono] : p.manyChar1.mono :=
-  mono.map
+  Mono.map
 #align parser.mono.many_char1 Parser.Mono.manyChar1
 
 instance sepBy1 [p.mono] [sep.mono] : Mono (sepBy1 sep p) :=
-  mono.seq
+  Mono.seq
 #align parser.mono.sep_by1 Parser.Mono.sepBy1
 
 instance sepBy [p.mono] [hs : sep.mono] : Mono (sepBy sep p) :=
-  mono.orelse
+  Mono.orelse
 #align parser.mono.sep_by Parser.Mono.sepBy
 
 theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) :
@@ -677,11 +677,11 @@ theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono �
 #align parser.mono.fix_core Parser.Mono.fixCore
 
 instance digit : digit.mono :=
-  mono.decorate_error
+  Mono.decorateError
 #align parser.mono.digit Parser.Mono.digit
 
 instance nat : nat.mono :=
-  mono.decorate_error
+  Mono.decorateError
 #align parser.mono.nat Parser.Mono.nat
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) : Mono (fix F) :=
@@ -989,7 +989,7 @@ theorem manyChar_eq_done_empty {p : Parser Char} :
 theorem manyChar_eq_done_not_empty {p : Parser Char} {s : String} (h : s ≠ "") :
     manyChar p cb n = done n' s ↔
       ∃ np : ℕ,
-        p cb n = done np s.head ∧
+        p cb n = done np s.headI ∧
           foldrCore List.cons p List.nil (Buffer.size cb - n) cb np = done n' (s.popn 1).toList :=
   by simp [many_char, List.asString_eq, String.toList_nonempty h, many_eq_done]
 #align parser.many_char_eq_done_not_empty Parser.manyChar_eq_done_not_empty
@@ -1046,7 +1046,7 @@ theorem manyChar1_ne_empty {p : Parser Char} : manyChar1 p cb n ≠ done n' "" :
 
 theorem manyChar1_eq_done {p : Parser Char} {s : String} (h : s ≠ "") :
     manyChar1 p cb n = done n' s ↔
-      ∃ np : ℕ, p cb n = done np s.head ∧ manyChar p cb np = done n' (s.popn 1) :=
+      ∃ np : ℕ, p cb n = done np s.headI ∧ manyChar p cb np = done n' (s.popn 1) :=
   by
   simp [many_char1, List.asString_eq, String.toList_nonempty h, many1_eq_done,
     many_char_eq_many_of_to_list]
@@ -1060,7 +1060,7 @@ theorem sepBy1_ne_done_nil {sep : Parser Unit} {p : Parser α} : sepBy1 sep p cb
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem sepBy1_eq_done {sep : Parser Unit} {p : Parser α} {l : List α} :
     sepBy1 sep p cb n = done n' (a::l) ↔
-      ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).many cb np = done n' l :=
+      ∃ np : ℕ, p cb n = done np a ∧ (sep >> p).anyM cb np = done n' l :=
   by simp [sep_by1, seq_eq_done]
 #align parser.sep_by1_eq_done Parser.sepBy1_eq_done
 
@@ -1138,7 +1138,7 @@ instance bind {f : α → Parser β} [p.Static] [∀ a, (f a).Static] : (p >>= f
 #align parser.static.bind Parser.Static.bind
 
 instance andThen {q : Parser β} [p.Static] [q.Static] : (p >> q).Static :=
-  static.bind
+  Static.bind
 #align parser.static.and_then Parser.Static.andThen
 
 instance map [p.Static] {f : α → β} : (f <$> p).Static :=
@@ -1149,11 +1149,11 @@ instance map [p.Static] {f : α → β} : (f <$> p).Static :=
 #align parser.static.map Parser.Static.map
 
 instance seq {f : Parser (α → β)} [f.Static] [p.Static] : (f <*> p).Static :=
-  static.bind
+  Static.bind
 #align parser.static.seq Parser.Static.seq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mmap f).Static
+instance mapM : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mapM f).Static
   | [], _, _ => Static.pure
   | a::l, _, h => by
     convert static.bind
@@ -1172,7 +1172,7 @@ but is expected to have type
   PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align parser.static.mmap' Parser.Static.mapM'ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mmap' f).Static
+instance mapM' : ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static], (l.mapM' f).Static
   | [], _, _ => Static.pure
   | a::l, _, h => by
     convert static.and_then
@@ -1202,7 +1202,7 @@ instance decorateErrors [p.Static] : (@decorateErrors α msgs p).Static :=
 #align parser.static.decorate_errors Parser.Static.decorateErrors
 
 instance decorateError [p.Static] : (@decorateError α msg p).Static :=
-  static.decorate_errors
+  Static.decorateErrors
 #align parser.static.decorate_error Parser.Static.decorateError
 
 theorem anyChar : ¬Static anyChar :=
@@ -1234,7 +1234,7 @@ instance sat : Static (sat fun _ => False) :=
 #align parser.static.sat Parser.Static.sat
 
 instance eps : Static eps :=
-  static.pure
+  Static.pure
 #align parser.static.eps Parser.Static.eps
 
 theorem ch (c : Char) : ¬Static (ch c) :=
@@ -1296,7 +1296,7 @@ instance remaining : remaining.Static :=
 #align parser.static.remaining Parser.Static.remaining
 
 instance eof : eof.Static :=
-  static.decorate_error
+  Static.decorateError
 #align parser.static.eof Parser.Static.eof
 
 instance foldrCore {f : α → β → β} [p.Static] : ∀ {b : β} {reps : ℕ}, (foldrCore f p b reps).Static
@@ -1336,32 +1336,32 @@ instance foldl {f : α → β → α} {p : Parser β} [p.Static] : Static (foldl
     exact of_done⟩
 #align parser.static.foldl Parser.Static.foldl
 
-instance many [p.Static] : p.many.Static :=
-  static.foldr
+instance many [p.Static] : p.anyM.Static :=
+  Static.foldr
 #align parser.static.many Parser.Static.many
 
 instance manyChar {p : Parser Char} [p.Static] : p.manyChar.Static :=
-  static.map
+  Static.map
 #align parser.static.many_char Parser.Static.manyChar
 
 instance many' [p.Static] : p.many'.Static :=
-  static.and_then
+  Static.andThen
 #align parser.static.many' Parser.Static.many'
 
 instance many1 [p.Static] : p.many1.Static :=
-  static.seq
+  Static.seq
 #align parser.static.many1 Parser.Static.many1
 
 instance manyChar1 {p : Parser Char} [p.Static] : p.manyChar1.Static :=
-  static.map
+  Static.map
 #align parser.static.many_char1 Parser.Static.manyChar1
 
 instance sepBy1 [p.Static] [sep.Static] : Static (sepBy1 sep p) :=
-  static.seq
+  Static.seq
 #align parser.static.sep_by1 Parser.Static.sepBy1
 
 instance sepBy [p.Static] [sep.Static] : Static (sepBy sep p) :=
-  static.orelse
+  Static.orelse
 #align parser.static.sep_by Parser.Static.sepBy
 
 theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Static → (F p).Static) :
@@ -1430,27 +1430,27 @@ instance bind {f : α → Parser β} [p.Bounded] : (p >>= f).Bounded :=
 #align parser.bounded.bind Parser.Bounded.bind
 
 instance andThen {q : Parser β} [p.Bounded] : (p >> q).Bounded :=
-  bounded.bind
+  Bounded.bind
 #align parser.bounded.and_then Parser.Bounded.andThen
 
 instance map [p.Bounded] {f : α → β} : (f <$> p).Bounded :=
-  bounded.bind
+  Bounded.bind
 #align parser.bounded.map Parser.Bounded.map
 
 instance seq {f : Parser (α → β)} [f.Bounded] : (f <*> p).Bounded :=
-  bounded.bind
+  Bounded.bind
 #align parser.bounded.seq Parser.Bounded.seq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] :
-    ((a::l).mmap f).Bounded :=
-  bounded.bind
+    ((a::l).mapM f).Bounded :=
+  Bounded.bind
 #align parser.bounded.mmap Parser.Bounded.mapM
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' {a : α} {l : List α} {f : α → Parser β} [∀ a, (f a).Bounded] :
-    ((a::l).mmap' f).Bounded :=
-  bounded.and_then
+    ((a::l).mapM' f).Bounded :=
+  Bounded.andThen
 #align parser.bounded.mmap' Parser.Bounded.mapM'
 
 instance failure : @Parser.Bounded α failure :=
@@ -1494,11 +1494,11 @@ theorem decorateErrors_iff : (@Parser.decorateErrors α msgs p).Bounded ↔ p.Bo
 #align parser.bounded.decorate_errors_iff Parser.Bounded.decorateErrors_iff
 
 instance decorateError [p.Bounded] : (@decorateError α msg p).Bounded :=
-  bounded.decorate_errors
+  Bounded.decorateErrors
 #align parser.bounded.decorate_error Parser.Bounded.decorateError
 
 theorem decorateError_iff : (@Parser.decorateError α msg p).Bounded ↔ p.Bounded :=
-  decorate_errors_iff
+  decorateErrors_iff
 #align parser.bounded.decorate_error_iff Parser.Bounded.decorateError_iff
 
 instance anyChar : Bounded anyChar :=
@@ -1514,7 +1514,7 @@ theorem eps : ¬Bounded eps :=
 #align parser.bounded.eps Parser.Bounded.eps
 
 instance ch {c : Char} : Bounded (ch c) :=
-  bounded.decorate_error
+  Bounded.decorateError
 #align parser.bounded.ch Parser.Bounded.ch
 
 theorem charBuf_iff {cb' : CharBuffer} : Bounded (charBuf cb') ↔ cb' ≠ Buffer.nil :=
@@ -1529,11 +1529,11 @@ theorem charBuf_iff {cb' : CharBuffer} : Bounded (charBuf cb') ↔ cb' ≠ Buffe
 #align parser.bounded.char_buf_iff Parser.Bounded.charBuf_iff
 
 instance oneOf {cs : List Char} : (oneOf cs).Bounded :=
-  bounded.decorate_errors
+  Bounded.decorateErrors
 #align parser.bounded.one_of Parser.Bounded.oneOf
 
 instance oneOf' {cs : List Char} : (oneOf' cs).Bounded :=
-  bounded.and_then
+  Bounded.andThen
 #align parser.bounded.one_of' Parser.Bounded.oneOf'
 
 theorem str_iff {s : String} : (str s).Bounded ↔ s ≠ "" :=
@@ -1567,11 +1567,11 @@ theorem eof : ¬eof.Bounded := by
 section Fold
 
 instance foldrCore_zero {f : α → β → β} : (foldrCore f p b 0).Bounded :=
-  bounded.failure
+  Bounded.failure
 #align parser.bounded.foldr_core_zero Parser.Bounded.foldrCore_zero
 
 instance foldlCore_zero {f : β → α → β} {b : β} : (foldlCore f b p 0).Bounded :=
-  bounded.failure
+  Bounded.failure
 #align parser.bounded.foldl_core_zero Parser.Bounded.foldlCore_zero
 
 variable {reps : ℕ} [hpb : p.Bounded] (he : ∀ cb n n' err, p cb n = fail n' err → n ≠ n')
@@ -1616,7 +1616,7 @@ theorem foldl {f : β → α → β} : Bounded (foldl f b p) :=
   simp [foldl, hp]
 #align parser.bounded.foldl Parser.Bounded.foldl
 
-theorem many : p.many.Bounded :=
+theorem many : p.anyM.Bounded :=
   foldr he
 #align parser.bounded.many Parser.Bounded.many
 
@@ -1639,15 +1639,15 @@ theorem many' : p.many'.Bounded := by
 end Fold
 
 instance many1 [p.Bounded] : p.many1.Bounded :=
-  bounded.seq
+  Bounded.seq
 #align parser.bounded.many1 Parser.Bounded.many1
 
 instance manyChar1 {p : Parser Char} [p.Bounded] : p.manyChar1.Bounded :=
-  bounded.map
+  Bounded.map
 #align parser.bounded.many_char1 Parser.Bounded.manyChar1
 
 instance sepBy1 {sep : Parser Unit} [p.Bounded] : Bounded (sepBy1 sep p) :=
-  bounded.seq
+  Bounded.seq
 #align parser.bounded.sep_by1 Parser.Bounded.sepBy1
 
 theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Bounded → (F p).Bounded) :
@@ -1657,11 +1657,11 @@ theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Bounded
 #align parser.bounded.fix_core Parser.Bounded.fixCore
 
 instance digit : digit.Bounded :=
-  bounded.decorate_error
+  Bounded.decorateError
 #align parser.bounded.digit Parser.Bounded.digit
 
 instance nat : nat.Bounded :=
-  bounded.decorate_error
+  Bounded.decorateError
 #align parser.bounded.nat Parser.Bounded.nat
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Bounded → (F p).Bounded) :
@@ -1699,18 +1699,18 @@ instance bind {f : α → Parser β} [p.Unfailing] [∀ a, (f a).Unfailing] : (p
 #align parser.unfailing.bind Parser.Unfailing.bind
 
 instance andThen {q : Parser β} [p.Unfailing] [q.Unfailing] : (p >> q).Unfailing :=
-  unfailing.bind
+  Unfailing.bind
 #align parser.unfailing.and_then Parser.Unfailing.andThen
 
 instance map [p.Unfailing] {f : α → β} : (f <$> p).Unfailing :=
-  unfailing.bind
+  Unfailing.bind
 #align parser.unfailing.map Parser.Unfailing.map
 
 instance seq {f : Parser (α → β)} [f.Unfailing] [p.Unfailing] : (f <*> p).Unfailing :=
-  unfailing.bind
+  Unfailing.bind
 #align parser.unfailing.seq Parser.Unfailing.seq
 
-instance mapM {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (l.mmap f).Unfailing :=
+instance mapM {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (l.mapM f).Unfailing :=
   by
   constructor
   induction' l with hd tl hl
@@ -1722,7 +1722,7 @@ instance mapM {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (l
     simp [hp, hf, and_comm, and_left_comm, and_assoc, pure_eq_done]
 #align parser.unfailing.mmap Parser.Unfailing.mapM
 
-instance mapM' {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (l.mmap' f).Unfailing :=
+instance mapM' {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (l.mapM' f).Unfailing :=
   by
   constructor
   induction' l with hd tl hl
@@ -1742,11 +1742,11 @@ theorem failure : ¬@Parser.Unfailing α failure :=
 #align parser.unfailing.failure Parser.Unfailing.failure
 
 instance guard_true : Unfailing (guard True) :=
-  unfailing.pure
+  Unfailing.pure
 #align parser.unfailing.guard_true Parser.Unfailing.guard_true
 
 theorem guard : ¬Unfailing (guard False) :=
-  unfailing.failure
+  Unfailing.failure
 #align parser.unfailing.guard Parser.Unfailing.guard
 
 instance orelse [p.Unfailing] : (p <|> q).Unfailing :=
@@ -1762,7 +1762,7 @@ instance decorateErrors [p.Unfailing] : (@decorateErrors α msgs p).Unfailing :=
 #align parser.unfailing.decorate_errors Parser.Unfailing.decorateErrors
 
 instance decorateError [p.Unfailing] : (@decorateError α msg p).Unfailing :=
-  unfailing.decorate_errors
+  Unfailing.decorateErrors
 #align parser.unfailing.decorate_error Parser.Unfailing.decorateError
 
 instance anyChar : ConditionallyUnfailing anyChar :=
@@ -1774,7 +1774,7 @@ theorem sat : ConditionallyUnfailing (sat fun _ => True) :=
 #align parser.unfailing.sat Parser.Unfailing.sat
 
 instance eps : Unfailing eps :=
-  unfailing.pure
+  Unfailing.pure
 #align parser.unfailing.eps Parser.Unfailing.eps
 
 instance remaining : remaining.Unfailing :=
@@ -1782,7 +1782,7 @@ instance remaining : remaining.Unfailing :=
 #align parser.unfailing.remaining Parser.Unfailing.remaining
 
 theorem foldrCore_zero {f : α → β → β} {b : β} : ¬(foldrCore f p b 0).Unfailing :=
-  unfailing.failure
+  Unfailing.failure
 #align parser.unfailing.foldr_core_zero Parser.Unfailing.foldrCore_zero
 
 instance foldrCore_of_static {f : α → β → β} {b : β} {reps : ℕ} [p.Static] [p.Unfailing] :
@@ -1859,11 +1859,11 @@ instance bind_of_unfailing {f : α → Parser β} [p.ErrStatic] [∀ a, (f a).Un
 #align parser.err_static.bind_of_unfailing Parser.ErrStatic.bind_of_unfailing
 
 instance andThen {q : Parser β} [p.Static] [p.ErrStatic] [q.ErrStatic] : (p >> q).ErrStatic :=
-  err_static.bind
+  ErrStatic.bind
 #align parser.err_static.and_then Parser.ErrStatic.andThen
 
 instance andThen_of_unfailing {q : Parser β} [p.ErrStatic] [q.Unfailing] : (p >> q).ErrStatic :=
-  err_static.bind_of_unfailing
+  ErrStatic.bind_of_unfailing
 #align parser.err_static.and_then_of_unfailing Parser.ErrStatic.andThen_of_unfailing
 
 instance map [p.ErrStatic] {f : α → β} : (f <$> p).ErrStatic :=
@@ -1873,17 +1873,17 @@ instance map [p.ErrStatic] {f : α → β} : (f <$> p).ErrStatic :=
 #align parser.err_static.map Parser.ErrStatic.map
 
 instance seq {f : Parser (α → β)} [f.Static] [f.ErrStatic] [p.ErrStatic] : (f <*> p).ErrStatic :=
-  err_static.bind
+  ErrStatic.bind
 #align parser.err_static.seq Parser.ErrStatic.seq
 
 instance seq_of_unfailing {f : Parser (α → β)} [f.ErrStatic] [p.Unfailing] : (f <*> p).ErrStatic :=
-  err_static.bind_of_unfailing
+  ErrStatic.bind_of_unfailing
 #align parser.err_static.seq_of_unfailing Parser.ErrStatic.seq_of_unfailing
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic],
-      (l.mmap f).ErrStatic
+      (l.mapM f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
   | a::l, _, h, h' => by
     convert err_static.bind
@@ -1902,7 +1902,7 @@ instance mapM :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic],
-      (l.mmap f).ErrStatic
+      (l.mapM f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
   | a::l, _, h, h' => by
     convert err_static.bind_of_unfailing
@@ -1923,7 +1923,7 @@ Case conversion may be inaccurate. Consider using '#align parser.err_static.mmap
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Static] [∀ a, (f a).ErrStatic],
-      (l.mmap' f).ErrStatic
+      (l.mapM' f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
   | a::l, _, h, h' => by
     convert err_static.and_then
@@ -1943,7 +1943,7 @@ Case conversion may be inaccurate. Consider using '#align parser.err_static.mmap
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM'_of_unfailing :
     ∀ {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] [∀ a, (f a).ErrStatic],
-      (l.mmap' f).ErrStatic
+      (l.mapM' f).ErrStatic
   | [], _, _, _ => ErrStatic.pure
   | a::l, _, h, h' => by
     convert err_static.and_then_of_unfailing
@@ -1974,7 +1974,7 @@ instance decorateErrors : (@decorateErrors α msgs p).ErrStatic :=
 #align parser.err_static.decorate_errors Parser.ErrStatic.decorateErrors
 
 instance decorateError : (@decorateError α msg p).ErrStatic :=
-  err_static.decorate_errors
+  ErrStatic.decorateErrors
 #align parser.err_static.decorate_error Parser.ErrStatic.decorateError
 
 instance anyChar : ErrStatic anyChar :=
@@ -1988,27 +1988,27 @@ instance sat_iff {p : Char → Prop} [DecidablePred p] : ErrStatic (sat p) :=
 #align parser.err_static.sat_iff Parser.ErrStatic.sat_iff
 
 instance eps : ErrStatic eps :=
-  err_static.pure
+  ErrStatic.pure
 #align parser.err_static.eps Parser.ErrStatic.eps
 
 instance ch (c : Char) : ErrStatic (ch c) :=
-  err_static.decorate_error
+  ErrStatic.decorateError
 #align parser.err_static.ch Parser.ErrStatic.ch
 
 instance charBuf {cb' : CharBuffer} : ErrStatic (charBuf cb') :=
-  err_static.decorate_error
+  ErrStatic.decorateError
 #align parser.err_static.char_buf Parser.ErrStatic.charBuf
 
 instance oneOf {cs : List Char} : ErrStatic (oneOf cs) :=
-  err_static.decorate_errors
+  ErrStatic.decorateErrors
 #align parser.err_static.one_of Parser.ErrStatic.oneOf
 
 instance oneOf' {cs : List Char} : ErrStatic (oneOf' cs) :=
-  err_static.and_then_of_unfailing
+  ErrStatic.andThen_of_unfailing
 #align parser.err_static.one_of' Parser.ErrStatic.oneOf'
 
 instance str {s : String} : ErrStatic (str s) :=
-  err_static.decorate_error
+  ErrStatic.decorateError
 #align parser.err_static.str Parser.ErrStatic.str
 
 instance remaining : remaining.ErrStatic :=
@@ -2016,7 +2016,7 @@ instance remaining : remaining.ErrStatic :=
 #align parser.err_static.remaining Parser.ErrStatic.remaining
 
 instance eof : eof.ErrStatic :=
-  err_static.decorate_error
+  ErrStatic.decorateError
 #align parser.err_static.eof Parser.ErrStatic.eof
 
 -- TODO: add foldr and foldl, many, etc, fix_core
@@ -2027,11 +2027,11 @@ theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStat
 #align parser.err_static.fix_core Parser.ErrStatic.fixCore
 
 instance digit : digit.ErrStatic :=
-  err_static.decorate_error
+  ErrStatic.decorateError
 #align parser.err_static.digit Parser.ErrStatic.digit
 
 instance nat : nat.ErrStatic :=
-  err_static.decorate_error
+  ErrStatic.decorateError
 #align parser.err_static.nat Parser.ErrStatic.nat
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.ErrStatic → (F p).ErrStatic) :
@@ -2079,11 +2079,11 @@ instance bind' {f : α → Parser β} [p.Static] [∀ a, (f a).step] : (p >>= f)
 #align parser.step.bind' Parser.Step.bind'
 
 instance andThen {q : Parser β} [p.step] [q.Static] : (p >> q).step :=
-  step.bind
+  Step.bind
 #align parser.step.and_then Parser.Step.andThen
 
 instance and_then' {q : Parser β} [p.Static] [q.step] : (p >> q).step :=
-  step.bind'
+  Step.bind'
 #align parser.step.and_then' Parser.Step.and_then'
 
 instance map [p.step] {f : α → β} : (f <$> p).step :=
@@ -2094,14 +2094,14 @@ instance map [p.step] {f : α → β} : (f <$> p).step :=
 #align parser.step.map Parser.Step.map
 
 instance seq {f : Parser (α → β)} [f.step] [p.Static] : (f <*> p).step :=
-  step.bind
+  Step.bind
 #align parser.step.seq Parser.Step.seq
 
 instance seq' {f : Parser (α → β)} [f.Static] [p.step] : (f <*> p).step :=
-  step.bind'
+  Step.bind'
 #align parser.step.seq' Parser.Step.seq'
 
-instance mapM {f : α → Parser β} [(f a).step] : ([a].mmap f).step :=
+instance mapM {f : α → Parser β} [(f a).step] : ([a].mapM f).step :=
   by
   convert step.bind
   · infer_instance
@@ -2111,7 +2111,7 @@ instance mapM {f : α → Parser β} [(f a).step] : ([a].mmap f).step :=
     · exact fun _ => static.pure
 #align parser.step.mmap Parser.Step.mapM
 
-instance mapM' {f : α → Parser β} [(f a).step] : ([a].mmap' f).step :=
+instance mapM' {f : α → Parser β} [(f a).step] : ([a].mapM' f).step :=
   by
   convert step.and_then
   · infer_instance
@@ -2127,7 +2127,7 @@ theorem guard_true : ¬Step (guard True) :=
 #align parser.step.guard_true Parser.Step.guard_true
 
 instance guard : Step (guard False) :=
-  step.failure
+  Step.failure
 #align parser.step.guard Parser.Step.guard
 
 instance orelse [p.step] [q.step] : (p <|> q).step :=
@@ -2158,11 +2158,11 @@ instance decorateErrors [p.step] : (@decorateErrors α msgs p).step :=
 #align parser.step.decorate_errors Parser.Step.decorateErrors
 
 theorem decorateError_iff : (@Parser.decorateError α msg p).step ↔ p.step :=
-  decorate_errors_iff
+  decorateErrors_iff
 #align parser.step.decorate_error_iff Parser.Step.decorateError_iff
 
 instance decorateError [p.step] : (@decorateError α msg p).step :=
-  step.decorate_errors
+  Step.decorateErrors
 #align parser.step.decorate_error Parser.Step.decorateError
 
 instance anyChar : Step anyChar := by
@@ -2187,7 +2187,7 @@ theorem eps : ¬Step eps :=
 #align parser.step.eps Parser.Step.eps
 
 instance ch {c : Char} : Step (ch c) :=
-  step.decorate_error
+  Step.decorateError
 #align parser.step.ch Parser.Step.ch
 
 theorem charBuf_iff {cb' : CharBuffer} : (charBuf cb').step ↔ cb'.size = 1 :=
@@ -2205,11 +2205,11 @@ theorem charBuf_iff {cb' : CharBuffer} : (charBuf cb').step ↔ cb'.size = 1 :=
 #align parser.step.char_buf_iff Parser.Step.charBuf_iff
 
 instance oneOf {cs : List Char} : (oneOf cs).step :=
-  step.decorate_errors
+  Step.decorateErrors
 #align parser.step.one_of Parser.Step.oneOf
 
 instance oneOf' {cs : List Char} : (oneOf' cs).step :=
-  step.and_then
+  Step.andThen
 #align parser.step.one_of' Parser.Step.oneOf'
 
 theorem str_iff {s : String} : (str s).step ↔ s.length = 1 := by
@@ -2237,7 +2237,7 @@ theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step �
 #align parser.step.fix_core Parser.Step.fixCore
 
 instance digit : digit.step :=
-  step.decorate_error
+  Step.decorateError
 #align parser.step.digit Parser.Step.digit
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) : Step (fix F) :=
@@ -2338,7 +2338,7 @@ instance bind {f : α → Parser β} [p.Prog] [∀ a, (f a).mono] : (p >>= f).Pr
 #align parser.prog.bind Parser.Prog.bind
 
 instance andThen {q : Parser β} [p.Prog] [q.mono] : (p >> q).Prog :=
-  prog.bind
+  Prog.bind
 #align parser.prog.and_then Parser.Prog.andThen
 
 instance map [p.Prog] {f : α → β} : (f <$> p).Prog :=
@@ -2349,12 +2349,12 @@ instance map [p.Prog] {f : α → β} : (f <$> p).Prog :=
 #align parser.prog.map Parser.Prog.map
 
 instance seq {f : Parser (α → β)} [f.Prog] [p.mono] : (f <*> p).Prog :=
-  prog.bind
+  Prog.bind
 #align parser.prog.seq Parser.Prog.seq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] :
-    ((a::l).mmap f).Prog := by
+    ((a::l).mapM f).Prog := by
   constructor
   simp only [and_imp, bind_eq_done, return_eq_pure, mmap, exists_imp, pure_eq_done]
   rintro _ _ _ _ _ _ h _ _ hp rfl rfl
@@ -2363,7 +2363,7 @@ instance mapM {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mo
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance mapM' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).mono] :
-    ((a::l).mmap' f).Prog := by
+    ((a::l).mapM' f).Prog := by
   constructor
   simp only [and_imp, bind_eq_done, mmap', exists_imp, and_then_eq_bind]
   intro _ _ _ _ _ _ h hm
@@ -2371,7 +2371,7 @@ instance mapM' {l : List α} {f : α → Parser β} [(f a).Prog] [∀ a, (f a).m
 #align parser.prog.mmap' Parser.Prog.mapM'
 
 instance failure : @Parser.Prog α failure :=
-  prog.of_step
+  Prog.of_step
 #align parser.prog.failure Parser.Prog.failure
 
 theorem guard_true : ¬Prog (guard True) :=
@@ -2379,7 +2379,7 @@ theorem guard_true : ¬Prog (guard True) :=
 #align parser.prog.guard_true Parser.Prog.guard_true
 
 instance guard : Prog (guard False) :=
-  prog.failure
+  Prog.failure
 #align parser.prog.guard Parser.Prog.guard
 
 instance orelse [p.Prog] [q.Prog] : (p <|> q).Prog :=
@@ -2410,19 +2410,19 @@ instance decorateErrors [p.Prog] : (@decorateErrors α msgs p).Prog :=
 #align parser.prog.decorate_errors Parser.Prog.decorateErrors
 
 theorem decorateError_iff : (@Parser.decorateError α msg p).Prog ↔ p.Prog :=
-  decorate_errors_iff
+  decorateErrors_iff
 #align parser.prog.decorate_error_iff Parser.Prog.decorateError_iff
 
 instance decorateError [p.Prog] : (@decorateError α msg p).Prog :=
-  prog.decorate_errors
+  Prog.decorateErrors
 #align parser.prog.decorate_error Parser.Prog.decorateError
 
 instance anyChar : Prog anyChar :=
-  prog.of_step
+  Prog.of_step
 #align parser.prog.any_char Parser.Prog.anyChar
 
 instance sat {p : Char → Prop} [DecidablePred p] : Prog (sat p) :=
-  prog.of_step
+  Prog.of_step
 #align parser.prog.sat Parser.Prog.sat
 
 theorem eps : ¬Prog eps :=
@@ -2430,7 +2430,7 @@ theorem eps : ¬Prog eps :=
 #align parser.prog.eps Parser.Prog.eps
 
 instance ch {c : Char} : Prog (ch c) :=
-  prog.of_step
+  Prog.of_step
 #align parser.prog.ch Parser.Prog.ch
 
 theorem charBuf_iff {cb' : CharBuffer} : (charBuf cb').Prog ↔ cb' ≠ Buffer.nil :=
@@ -2445,11 +2445,11 @@ theorem charBuf_iff {cb' : CharBuffer} : (charBuf cb').Prog ↔ cb' ≠ Buffer.n
 #align parser.prog.char_buf_iff Parser.Prog.charBuf_iff
 
 instance oneOf {cs : List Char} : (oneOf cs).Prog :=
-  prog.decorate_errors
+  Prog.decorateErrors
 #align parser.prog.one_of Parser.Prog.oneOf
 
 instance oneOf' {cs : List Char} : (oneOf' cs).Prog :=
-  prog.and_then
+  Prog.andThen
 #align parser.prog.one_of' Parser.Prog.oneOf'
 
 theorem str_iff {s : String} : (str s).Prog ↔ s ≠ "" := by
@@ -2488,11 +2488,11 @@ theorem fixCore {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog �
 #align parser.prog.fix_core Parser.Prog.fixCore
 
 instance digit : digit.Prog :=
-  prog.of_step
+  Prog.of_step
 #align parser.prog.digit Parser.Prog.digit
 
 instance nat : nat.Prog :=
-  prog.decorate_error
+  Prog.decorateError
 #align parser.prog.nat Parser.Prog.nat
 
 theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.Prog → (F p).Prog) : Prog (fix F) :=
@@ -2513,8 +2513,8 @@ variable {a : α} {b : β}
 section Many
 
 -- TODO: generalize to p.prog instead of p.step
-theorem many_sublist_of_done [p.step] [p.Bounded] {l : List α} (h : p.many cb n = done n' l) :
-    ∀ k < n' - n, p.many cb (n + k) = done n' (l.drop k) :=
+theorem many_sublist_of_done [p.step] [p.Bounded] {l : List α} (h : p.anyM cb n = done n' l) :
+    ∀ k < n' - n, p.anyM cb (n + k) = done n' (l.drop k) :=
   by
   induction' l with hd tl hl generalizing n
   · rw [many_eq_done_nil] at h
@@ -2531,8 +2531,8 @@ theorem many_sublist_of_done [p.step] [p.Bounded] {l : List α} (h : p.many cb n
   · exact nat.lt_pred_iff.mpr hm
 #align parser.many_sublist_of_done Parser.many_sublist_of_done
 
-theorem many_eq_nil_of_done [p.step] [p.Bounded] {l : List α} (h : p.many cb n = done n' l) :
-    p.many cb n' = done n' [] :=
+theorem many_eq_nil_of_done [p.step] [p.Bounded] {l : List α} (h : p.anyM cb n = done n' l) :
+    p.anyM cb n' = done n' [] :=
   by
   induction' l with hd tl hl generalizing n
   · convert h
@@ -2543,7 +2543,7 @@ theorem many_eq_nil_of_done [p.step] [p.Bounded] {l : List α} (h : p.many cb n 
     exact hl h
 #align parser.many_eq_nil_of_done Parser.many_eq_nil_of_done
 
-theorem many_eq_nil_of_out_of_bound [p.Bounded] {l : List α} (h : p.many cb n = done n' l)
+theorem many_eq_nil_of_out_of_bound [p.Bounded] {l : List α} (h : p.anyM cb n = done n' l)
     (hn : cb.size < n) : n' = n ∧ l = [] := by
   cases l
   · rw [many_eq_done_nil] at h

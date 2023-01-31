@@ -36,7 +36,7 @@ open Complex hiding exp continuous_exp abs_of_nonneg
 notation "cexp" => Complex.exp
 
 theorem exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) :
-    (fun x : ℝ => exp (-b * x ^ 2)) =o[at_top] fun x : ℝ => exp (-x) :=
+    (fun x : ℝ => exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-x) :=
   by
   have A : (fun x : ℝ => -x - -b * x ^ 2) = fun x => x * (b * x + -1) :=
     by
@@ -49,9 +49,10 @@ theorem exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) :
 #align exp_neg_mul_sq_is_o_exp_neg exp_neg_mul_sq_isOCat_exp_neg
 
 theorem rpow_mul_exp_neg_mul_sq_isOCat_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
-    (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) =o[at_top] fun x : ℝ => exp (-(1 / 2) * x) :=
+    (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-(1 / 2) * x) :=
   by
-  apply ((is_O_refl (fun x : ℝ => x ^ s) at_top).mul_is_o (exp_neg_mul_sq_isOCat_exp_neg hb)).trans
+  apply
+    ((is_O_refl (fun x : ℝ => x ^ s) at_top).mul_isOCat (exp_neg_mul_sq_isOCat_exp_neg hb)).trans
   convert Gamma_integrand_is_o s
   simp_rw [mul_comm]
 #align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_isOCat_exp_neg
@@ -83,7 +84,7 @@ theorem integrableRpowMulExpNegMulSq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 <
     integrableOn_Ici_iff_integrableOn_Ioi]
   refine' ⟨_, integrableOnRpowMulExpNegMulSq hb hs⟩
   rw [←
-    (measure.measure_preserving_neg (volume : Measure ℝ)).integrable_on_comp_preimage
+    (measure.measure_preserving_neg (volume : Measure ℝ)).integrableOn_comp_preimage
       (Homeomorph.neg ℝ).toMeasurableEquiv.MeasurableEmbedding]
   simp only [Function.comp, neg_sq, neg_preimage, preimage_neg_Iio, neg_neg, neg_zero]
   apply integrable.mono' (integrableOnRpowMulExpNegMulSq hb hs)

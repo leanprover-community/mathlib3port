@@ -193,8 +193,7 @@ theorem isAdjMatrix_adjMatrix [Zero α] [One α] : (G.adjMatrix α).IsAdjMatrix 
 
 /-- The graph induced by the adjacency matrix of `G` is `G` itself. -/
 theorem toGraph_adjMatrix_eq [MulZeroOneClass α] [Nontrivial α] :
-    (G.is_adj_matrix_adj_matrix α).toGraph = G :=
-  by
+    (G.isAdjMatrix_adjMatrix α).toGraph = G := by
   ext
   simp only [is_adj_matrix.to_graph_adj, adj_matrix_apply, ite_eq_left_iff, zero_ne_one]
   apply Classical.not_not

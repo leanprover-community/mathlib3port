@@ -247,10 +247,10 @@ open Classical
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
-    (univ.filter fun a : α => a ^ n = 1).card ≤ n :=
+    (univ.filterₓ fun a : α => a ^ n = 1).card ≤ n :=
   let ⟨g, hg⟩ := IsCyclic.exists_generator α
   calc
-    (univ.filter fun a : α => a ^ n = 1).card ≤
+    (univ.filterₓ fun a : α => a ^ n = 1).card ≤
         (zpowers (g ^ (Fintype.card α / Nat.gcd n (Fintype.card α))) : Set α).toFinset.card :=
       card_le_of_subset fun x hx =>
         let ⟨m, hm⟩ := show x ∈ Submonoid.powers g from mem_powers_iff_mem_zpowers.2 <| hg x
@@ -318,20 +318,20 @@ end
 section Totient
 
 variable [DecidableEq α] [Fintype α]
-  (hn : ∀ n : ℕ, 0 < n → (univ.filter fun a : α => a ^ n = 1).card ≤ n)
+  (hn : ∀ n : ℕ, 0 < n → (univ.filterₓ fun a : α => a ^ n = 1).card ≤ n)
 
 include hn
 
 private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
-    (Finset.univ.filter fun b : α => b ^ orderOf a = 1).card = orderOf a :=
+    (Finset.univ.filterₓ fun b : α => b ^ orderOf a = 1).card = orderOf a :=
   le_antisymm (hn _ (orderOf_pos a))
     (calc
       orderOf a = @Fintype.card (zpowers a) (id _) := order_eq_card_zpowers
       _ ≤
-          @Fintype.card (↑(univ.filter fun b : α => b ^ orderOf a = 1) : Set α)
+          @Fintype.card (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α)
             (Fintype.ofFinset _ fun _ => Iff.rfl) :=
         @Fintype.card_le_of_injective (zpowers a)
-          (↑(univ.filter fun b : α => b ^ orderOf a = 1) : Set α) (id _) (id _)
+          (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α) (id _) (id _)
           (fun b =>
             ⟨b.1,
               mem_filter.2
@@ -340,7 +340,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
                   rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
                     pow_orderOf_eq_one, one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.inj h)
-      _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
+      _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
       )
 #align card_pow_eq_one_eq_order_of_aux card_pow_eq_one_eq_order_of_aux
 
@@ -350,8 +350,8 @@ open Nat
 private theorem card_order_of_eq_totient_aux₁ :
     ∀ {d : ℕ},
       d ∣ Fintype.card α →
-        0 < (univ.filter fun a : α => orderOf a = d).card →
-          (univ.filter fun a : α => orderOf a = d).card = φ d :=
+        0 < (univ.filterₓ fun a : α => orderOf a = d).card →
+          (univ.filterₓ fun a : α => orderOf a = d).card = φ d :=
   by
   intro d hd hpos
   induction' d using Nat.strongRec' with d IH
@@ -377,7 +377,7 @@ private theorem card_order_of_eq_totient_aux₁ :
 #align card_order_of_eq_totient_aux₁ card_order_of_eq_totient_aux₁
 
 theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
-    (univ.filter fun a : α => orderOf a = d).card = φ d :=
+    (univ.filterₓ fun a : α => orderOf a = d).card = φ d :=
   by
   let c := Fintype.card α
   have hc0 : 0 < c := Fintype.card_pos_iff.2 ⟨1⟩
@@ -415,7 +415,7 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
 #align card_order_of_eq_totient_aux₂ card_orderOf_eq_totient_aux₂
 
 theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
-  have : (univ.filter fun a : α => orderOf a = Fintype.card α).Nonempty :=
+  have : (univ.filterₓ fun a : α => orderOf a = Fintype.card α).Nonempty :=
     card_pos.1 <| by
       rw [card_orderOf_eq_totient_aux₂ hn dvd_rfl] <;>
         exact totient_pos (Fintype.card_pos_iff.2 ⟨1⟩)
@@ -424,7 +424,7 @@ theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
 #align is_cyclic_of_card_pow_eq_one_le isCyclic_of_card_pow_eq_one_le
 
 theorem isAddCyclic_of_card_pow_eq_one_le {α} [AddGroup α] [DecidableEq α] [Fintype α]
-    (hn : ∀ n : ℕ, 0 < n → (univ.filter fun a : α => n • a = 0).card ≤ n) : IsAddCyclic α :=
+    (hn : ∀ n : ℕ, 0 < n → (univ.filterₓ fun a : α => n • a = 0).card ≤ n) : IsAddCyclic α :=
   by
   obtain ⟨g, hg⟩ := @isCyclic_of_card_pow_eq_one_le (Multiplicative α) _ _ _ hn
   exact ⟨⟨g, hg⟩⟩
@@ -435,12 +435,12 @@ attribute [to_additive isCyclic_of_card_pow_eq_one_le] isAddCyclic_of_card_pow_e
 end Totient
 
 theorem IsCyclic.card_orderOf_eq_totient [IsCyclic α] [Fintype α] {d : ℕ}
-    (hd : d ∣ Fintype.card α) : (univ.filter fun a : α => orderOf a = d).card = totient d := by
+    (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => orderOf a = d).card = totient d := by
   classical apply card_orderOf_eq_totient_aux₂ (fun n => IsCyclic.card_pow_eq_one_le) hd
 #align is_cyclic.card_order_of_eq_totient IsCyclic.card_orderOf_eq_totient
 
 theorem IsAddCyclic.card_order_of_eq_totient {α} [AddGroup α] [IsAddCyclic α] [Fintype α] {d : ℕ}
-    (hd : d ∣ Fintype.card α) : (univ.filter fun a : α => addOrderOf a = d).card = totient d :=
+    (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => addOrderOf a = d).card = totient d :=
   by
   obtain ⟨g, hg⟩ := id ‹IsAddCyclic α›
   exact @IsCyclic.card_orderOf_eq_totient (Multiplicative α) _ ⟨⟨g, hg⟩⟩ _ _ hd

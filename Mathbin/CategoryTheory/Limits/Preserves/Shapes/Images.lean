@@ -51,7 +51,7 @@ def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
       m := L.map <| Limits.image.ι _
       m_mono := preserves_mono_of_preservesLimit _ _
       e := L.map <| factorThruImage _
-      e_strong_epi := @strongEpi_of_epi _ _ _ <| preserves_epi_of_preservesColimit L _
+      e_strongEpi := @strongEpi_of_epi _ _ _ <| preserves_epi_of_preservesColimit L _
       fac' := by rw [← L.map_comp, limits.image.fac] }
   IsImage.isoExt (Image.isImage (L.map f)) aux1.toMonoIsImage
 #align category_theory.preserves_image.iso CategoryTheory.PreservesImage.iso

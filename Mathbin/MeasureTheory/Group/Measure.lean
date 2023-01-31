@@ -372,13 +372,13 @@ variable [Inv G]
 
 @[simp, to_additive]
 theorem inv_eq_self (μ : Measure G) [IsInvInvariant μ] : μ.inv = μ :=
-  is_inv_invariant.inv_eq_self
+  IsInvInvariant.inv_eq_self
 #align measure_theory.measure.inv_eq_self MeasureTheory.Measure.inv_eq_self
 #align measure_theory.measure.neg_eq_self MeasureTheory.Measure.neg_eq_self
 
 @[simp, to_additive]
 theorem map_inv_eq_self (μ : Measure G) [IsInvInvariant μ] : map Inv.inv μ = μ :=
-  is_inv_invariant.inv_eq_self
+  IsInvInvariant.inv_eq_self
 #align measure_theory.measure.map_inv_eq_self MeasureTheory.Measure.map_inv_eq_self
 #align measure_theory.measure.map_neg_eq_self MeasureTheory.Measure.map_neg_eq_self
 
@@ -704,7 +704,7 @@ See Note [lower instance priority]. -/
 instance (priority := 100) isLocallyFiniteMeasureOfIsHaarMeasure {G : Type _} [Group G]
     [MeasurableSpace G] [TopologicalSpace G] [LocallyCompactSpace G] (μ : Measure G)
     [IsHaarMeasure μ] : IsLocallyFiniteMeasure μ :=
-  is_locally_finite_measure_of_is_finite_measure_on_compacts
+  isLocallyFiniteMeasureOfIsFiniteMeasureOnCompacts
 #align measure_theory.measure.is_locally_finite_measure_of_is_haar_measure MeasureTheory.Measure.isLocallyFiniteMeasureOfIsHaarMeasure
 #align measure_theory.measure.is_locally_finite_measure_of_is_add_haar_measure MeasureTheory.Measure.is_locally_finite_measure_of_is_add_haar_measure
 
@@ -722,7 +722,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
-  { lt_top_of_is_compact := fun K hK => Ennreal.mul_lt_top ctop hK.measure_lt_top.Ne
+  { lt_top_of_isCompact := fun K hK => Ennreal.mul_lt_top ctop hK.measure_lt_top.Ne
     toIsOpenPosMeasure := isOpenPosMeasureSmul μ cpos }
 #align measure_theory.measure.is_haar_measure.smul MeasureTheory.Measure.IsHaarMeasure.smul
 #align measure_theory.measure.is_add_haar_measure.smul MeasureTheory.Measure.IsAddHaarMeasure.smul
@@ -734,7 +734,7 @@ it is a Haar measure. -/
 theorem isHaarMeasureOfIsCompactNonemptyInterior [TopologicalGroup G] [BorelSpace G] (μ : Measure G)
     [IsMulLeftInvariant μ] (K : Set G) (hK : IsCompact K) (h'K : (interior K).Nonempty)
     (h : μ K ≠ 0) (h' : μ K ≠ ∞) : IsHaarMeasure μ :=
-  { lt_top_of_is_compact := fun L hL =>
+  { lt_top_of_isCompact := fun L hL =>
       measure_lt_top_of_isCompact_of_is_mul_left_invariant' h'K h' hL
     toIsOpenPosMeasure := isOpenPosMeasureOfMulLeftInvariantOfCompact K hK h }
 #align measure_theory.measure.is_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.isHaarMeasureOfIsCompactNonemptyInterior
@@ -749,10 +749,10 @@ theorem isHaarMeasureMap [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group
     (f : G →* H) (hf : Continuous f) (h_surj : Surjective f)
     (h_prop : Tendsto f (cocompact G) (cocompact H)) : IsHaarMeasure (Measure.map f μ) :=
   { toIsMulLeftInvariant := isMulLeftInvariantMap f.toMulHom hf.Measurable h_surj
-    lt_top_of_is_compact := by
+    lt_top_of_isCompact := by
       intro K hK
       rw [map_apply hf.measurable hK.measurable_set]
-      exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).is_compact_preimage hK)
+      exact IsCompact.measure_lt_top ((⟨⟨f, hf⟩, h_prop⟩ : CocompactMap G H).isCompact_preimage hK)
     toIsOpenPosMeasure := hf.isOpenPosMeasureMap h_surj }
 #align measure_theory.measure.is_haar_measure_map MeasureTheory.Measure.isHaarMeasureMap
 #align measure_theory.measure.is_add_haar_measure_map MeasureTheory.Measure.is_add_haar_measure_map

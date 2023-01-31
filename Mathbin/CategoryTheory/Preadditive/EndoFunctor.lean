@@ -65,11 +65,11 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F)
         intros
         ext
         apply add_zero
-      nsmul_zero' := by
+      nsmul_zero := by
         intros
         ext
         apply zero_smul
-      nsmul_succ' := by
+      nsmul_succ := by
         intros
         ext
         apply succ_nsmul
@@ -146,11 +146,11 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
         intros
         ext
         apply add_zero
-      nsmul_zero' := by
+      nsmul_zero := by
         intros
         ext
         apply zero_smul
-      nsmul_succ' := by
+      nsmul_succ := by
         intros
         ext
         apply succ_nsmul

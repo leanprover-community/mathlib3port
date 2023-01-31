@@ -154,7 +154,7 @@ sequence implies the termination of another sequence.
 variable {n : ℕ}
 
 theorem IntFractPair.nth_seq1_eq_succ_nth_stream :
-    (IntFractPair.seq1 v).snd.nth n = (IntFractPair.stream v) (n + 1) :=
+    (IntFractPair.seq1 v).snd.get? n = (IntFractPair.stream v) (n + 1) :=
   rfl
 #align generalized_continued_fraction.int_fract_pair.nth_seq1_eq_succ_nth_stream GeneralizedContinuedFraction.IntFractPair.nth_seq1_eq_succ_nth_stream
 
@@ -190,7 +190,7 @@ Now let's show how the values of the sequences correspond to one another.
 
 
 theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K}
-    (s_nth_eq : (of v).s.nth n = some gp_n) :
+    (s_nth_eq : (of v).s.get? n = some gp_n) :
     ∃ ifp : IntFractPair K, IntFractPair.stream v (n + 1) = some ifp ∧ (ifp.b : K) = gp_n.b :=
   by
   obtain ⟨ifp, stream_succ_nth_eq, gp_n_eq⟩ :
@@ -209,7 +209,7 @@ integer parts of the stream of integer and fractional parts.
 -/
 theorem nth_of_eq_some_of_succ_nth_intFractPair_stream {ifp_succ_n : IntFractPair K}
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n) :
-    (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ :=
+    (of v).s.get? n = some ⟨1, ifp_succ_n.b⟩ :=
   by
   unfold of int_fract_pair.seq1
   rw [SeqCat.map_tail, SeqCat.nth_tail, SeqCat.map_nth]
@@ -221,7 +221,7 @@ fractional parts of the stream of integer and fractional parts.
 -/
 theorem nth_of_eq_some_of_nth_intFractPair_stream_fr_ne_zero {ifp_n : IntFractPair K}
     (stream_nth_eq : IntFractPair.stream v n = some ifp_n) (nth_fr_ne_zero : ifp_n.fr ≠ 0) :
-    (of v).s.nth n = some ⟨1, (IntFractPair.of ifp_n.fr⁻¹).b⟩ :=
+    (of v).s.get? n = some ⟨1, (IntFractPair.of ifp_n.fr⁻¹).b⟩ :=
   have : IntFractPair.stream v (n + 1) = some (IntFractPair.of ifp_n.fr⁻¹) :=
     by
     cases ifp_n

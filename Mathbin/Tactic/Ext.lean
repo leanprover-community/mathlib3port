@@ -60,7 +60,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
   let args_x := args ++ [x]
   let args_y := args ++ [y]
   let bs ←
-    fs.mmap fun f => do
+    fs.mapM fun f => do
         let d ← get_decl (n ++ f)
         let a := @expr.const true (n ++ f) <| d.univ_params.map level.param
         let t ← infer_type a
@@ -93,7 +93,7 @@ unsafe def derive_struct_ext_lemma (n : Name) : tactic Name := do
         instantiate_mvars pr
   let decl_n := .str n "ext"
   add_decl (declaration.thm decl_n d t pr)
-  let bs ← bs.mmap infer_type
+  let bs ← bs.mapM infer_type
   let rhs := expr.mk_and_lst bs
   let iff_t ← mk_app `iff [eq_t, rhs]
   let t ← pis (args ++ [x, y]) iff_t
@@ -158,7 +158,7 @@ unsafe def saturate_fun : Name → tactic expr
   | n => do
     let e ← resolve_constant n >>= mk_const
     let a ← get_arity e
-    e <$> (List.iota a).mmap fun _ => mk_mvar
+    e <$> (List.iota a).mapM fun _ => mk_mvar
 #align saturate_fun saturate_fun
 
 unsafe def equiv_type_constr (n n' : Name) : tactic Unit := do
@@ -219,7 +219,7 @@ private unsafe def ext_attr_core : user_attribute (name_map Name) Name
   cache_cfg :=
     { dependencies := []
       mk_cache := fun ns =>
-        ns.mfoldl
+        ns.foldlM
           (fun m n => do
             let ext_l ← ext_attr_core.get_param_untyped n
             pure (m n ext_l))

@@ -312,11 +312,11 @@ variable [Applicative F] [Applicative G]
 
 /-- The `<*>` operation for the composition of applicative functors. -/
 protected def seq {α β : Type v} : Comp F G (α → β) → Comp F G α → Comp F G β
-  | comp.mk f, comp.mk x => comp.mk <| (· <*> ·) <$> f <*> x
+  | comp.mk f, comp.mk x => Comp.mk <| (· <*> ·) <$> f <*> x
 #align functor.comp.seq Functor.Comp.seqₓ
 
 instance : Pure (Comp F G) :=
-  ⟨fun _ x => comp.mk <| pure <| pure x⟩
+  ⟨fun _ x => Comp.mk <| pure <| pure x⟩
 
 instance : Seq (Comp F G) :=
   ⟨fun _ _ f x => Comp.seq f x⟩

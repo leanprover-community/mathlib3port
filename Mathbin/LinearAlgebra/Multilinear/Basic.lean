@@ -884,7 +884,7 @@ instance [Module R' M₂] [SMulCommClass A R' M₂] : Module R' (MultilinearMap 
   zero_smul f := ext fun x => zero_smul _ _
 
 instance [NoZeroSMulDivisors R' M₃] : NoZeroSMulDivisors R' (MultilinearMap A M₁ M₃) :=
-  coe_injective.NoZeroSmulDivisors _ rfl coe_smul
+  coe_injective.NoZeroSMulDivisors _ rfl coe_smul
 
 variable (M₂ M₃ R' A)
 
@@ -995,13 +995,13 @@ protected def mkPiAlgebraFin : MultilinearMap R (fun i : Fin n => A) A
   toFun m := (List.ofFn m).Prod
   map_add' := by
     intro m i x y
-    have : (List.finRange n).indexOf i < n := by
+    have : (List.finRange n).indexOfₓ i < n := by
       simpa using List.indexOf_lt_length.2 (List.mem_finRange i)
     simp [List.ofFn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, add_mul, this,
       mul_add, add_mul]
   map_smul' := by
     intro m i c x
-    have : (List.finRange n).indexOf i < n := by
+    have : (List.finRange n).indexOfₓ i < n := by
       simpa using List.indexOf_lt_length.2 (List.mem_finRange i)
     simp [List.ofFn_eq_map, (List.nodup_finRange n).map_update, List.prod_set, this]
 #align multilinear_map.mk_pi_algebra_fin MultilinearMap.mkPiAlgebraFin
@@ -1167,7 +1167,7 @@ protected def piRingEquiv [Fintype ι] : M₂ ≃ₗ[R] MultilinearMap R (fun i 
     ext m
     simp [smul_smul, mul_comm]
   left_inv z := by simp
-  right_inv f := f.mk_pi_ring_apply_one_eq_self
+  right_inv f := f.mkPiRing_apply_one_eq_self
 #align multilinear_map.pi_ring_equiv MultilinearMap.piRingEquiv
 
 end CommSemiring
@@ -1485,12 +1485,12 @@ def currySumEquiv :
 variable {ι ι' R M₂ M'}
 
 @[simp]
-theorem coe_currySumEquiv : ⇑(currySumEquiv R ι M₂ M' ι') = curry_sum :=
+theorem coe_currySumEquiv : ⇑(currySumEquiv R ι M₂ M' ι') = currySum :=
   rfl
 #align multilinear_map.coe_curry_sum_equiv MultilinearMap.coe_currySumEquiv
 
 @[simp]
-theorem coe_curr_sum_equiv_symm : ⇑(currySumEquiv R ι M₂ M' ι').symm = uncurry_sum :=
+theorem coe_curr_sum_equiv_symm : ⇑(currySumEquiv R ι M₂ M' ι').symm = uncurrySum :=
   rfl
 #align multilinear_map.coe_curr_sum_equiv_symm MultilinearMap.coe_curr_sum_equiv_symm
 

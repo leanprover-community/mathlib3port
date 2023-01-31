@@ -367,7 +367,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : NormalizedGCDMonoid.{u1} α _inst_1] {s : Finset.{u2} β} {f : β -> α} [_inst_3 : DecidablePred.{succ u2} β (fun (x : β) => Eq.{succ u1} α (f x) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))], Eq.{succ u1} α (Finset.gcd.{u1, u2} α β _inst_1 _inst_2 s f) (Finset.gcd.{u1, u2} α β _inst_1 _inst_2 (Finset.filter.{u2} β (fun (x : β) => Ne.{succ u1} α (f x) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (fun (a : β) => instDecidableNot (Eq.{succ u1} α (f a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (_inst_3 a)) s) f)
 Case conversion may be inaccurate. Consider using '#align finset.gcd_eq_gcd_filter_ne_zero Finset.gcd_eq_gcd_filter_ne_zeroₓ'. -/
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] :
-    s.gcd f = (s.filter fun x => f x ≠ 0).gcd f := by
+    s.gcd f = (s.filterₓ fun x => f x ≠ 0).gcd f := by
   classical
     trans ((s.filter fun x => f x = 0) ∪ s.filter fun x => f x ≠ 0).gcd f
     · rw [filter_union_filter_neg_eq]

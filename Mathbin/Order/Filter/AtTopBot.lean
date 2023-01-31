@@ -237,7 +237,7 @@ theorem atBot_basis' [SemilatticeInf α] (a : α) : (@atBot α _).HasBasis (fun 
 #print Filter.atTop_neBot /-
 @[instance]
 theorem atTop_neBot [Nonempty α] [SemilatticeSup α] : NeBot (atTop : Filter α) :=
-  atTop_basis.ne_bot_iff.2 fun a _ => nonempty_Ici
+  atTop_basis.neBot_iff.2 fun a _ => nonempty_Ici
 #align filter.at_top_ne_bot Filter.atTop_neBot
 -/
 
@@ -267,39 +267,39 @@ theorem mem_atBot_sets [Nonempty α] [SemilatticeInf α] {s : Set α} :
 #print Filter.eventually_atTop /-
 @[simp]
 theorem eventually_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop} :
-    (∀ᶠ x in at_top, p x) ↔ ∃ a, ∀ b ≥ a, p b :=
-  mem_at_top_sets
+    (∀ᶠ x in atTop, p x) ↔ ∃ a, ∀ b ≥ a, p b :=
+  mem_atTop_sets
 #align filter.eventually_at_top Filter.eventually_atTop
 -/
 
 #print Filter.eventually_atBot /-
 @[simp]
 theorem eventually_atBot [SemilatticeInf α] [Nonempty α] {p : α → Prop} :
-    (∀ᶠ x in at_bot, p x) ↔ ∃ a, ∀ b ≤ a, p b :=
-  mem_at_bot_sets
+    (∀ᶠ x in atBot, p x) ↔ ∃ a, ∀ b ≤ a, p b :=
+  mem_atBot_sets
 #align filter.eventually_at_bot Filter.eventually_atBot
 -/
 
 #print Filter.eventually_ge_atTop /-
-theorem eventually_ge_atTop [Preorder α] (a : α) : ∀ᶠ x in at_top, a ≤ x :=
+theorem eventually_ge_atTop [Preorder α] (a : α) : ∀ᶠ x in atTop, a ≤ x :=
   mem_atTop a
 #align filter.eventually_ge_at_top Filter.eventually_ge_atTop
 -/
 
 #print Filter.eventually_le_atBot /-
-theorem eventually_le_atBot [Preorder α] (a : α) : ∀ᶠ x in at_bot, x ≤ a :=
+theorem eventually_le_atBot [Preorder α] (a : α) : ∀ᶠ x in atBot, x ≤ a :=
   mem_atBot a
 #align filter.eventually_le_at_bot Filter.eventually_le_atBot
 -/
 
 #print Filter.eventually_gt_atTop /-
-theorem eventually_gt_atTop [Preorder α] [NoMaxOrder α] (a : α) : ∀ᶠ x in at_top, a < x :=
+theorem eventually_gt_atTop [Preorder α] [NoMaxOrder α] (a : α) : ∀ᶠ x in atTop, a < x :=
   Ioi_mem_atTop a
 #align filter.eventually_gt_at_top Filter.eventually_gt_atTop
 -/
 
 #print Filter.eventually_ne_atTop /-
-theorem eventually_ne_atTop [Preorder α] [NoMaxOrder α] (a : α) : ∀ᶠ x in at_top, x ≠ a :=
+theorem eventually_ne_atTop [Preorder α] [NoMaxOrder α] (a : α) : ∀ᶠ x in atTop, x ≠ a :=
   (eventually_gt_atTop a).mono fun x => ne_of_gt
 #align filter.eventually_ne_at_top Filter.eventually_ne_atTop
 -/
@@ -328,18 +328,18 @@ theorem Tendsto.eventually_ne_atTop [Preorder β] [NoMaxOrder β] {f : α → β
 #print Filter.Tendsto.eventually_ne_atTop' /-
 theorem Tendsto.eventually_ne_atTop' [Preorder β] [NoMaxOrder β] {f : α → β} {l : Filter α}
     (hf : Tendsto f l atTop) (c : α) : ∀ᶠ x in l, x ≠ c :=
-  (hf.eventually_ne_at_top (f c)).mono fun x => ne_of_apply_ne f
+  (hf.eventually_ne_atTop (f c)).mono fun x => ne_of_apply_ne f
 #align filter.tendsto.eventually_ne_at_top' Filter.Tendsto.eventually_ne_atTop'
 -/
 
 #print Filter.eventually_lt_atBot /-
-theorem eventually_lt_atBot [Preorder α] [NoMinOrder α] (a : α) : ∀ᶠ x in at_bot, x < a :=
+theorem eventually_lt_atBot [Preorder α] [NoMinOrder α] (a : α) : ∀ᶠ x in atBot, x < a :=
   Iio_mem_atBot a
 #align filter.eventually_lt_at_bot Filter.eventually_lt_atBot
 -/
 
 #print Filter.eventually_ne_atBot /-
-theorem eventually_ne_atBot [Preorder α] [NoMinOrder α] (a : α) : ∀ᶠ x in at_bot, x ≠ a :=
+theorem eventually_ne_atBot [Preorder α] [NoMinOrder α] (a : α) : ∀ᶠ x in atBot, x ≠ a :=
   (eventually_lt_atBot a).mono fun x => ne_of_lt
 #align filter.eventually_ne_at_bot Filter.eventually_ne_atBot
 -/
@@ -368,7 +368,7 @@ theorem Tendsto.eventually_ne_atBot [Preorder β] [NoMinOrder β] {f : α → β
 #print Filter.atTop_basis_Ioi /-
 theorem atTop_basis_Ioi [Nonempty α] [SemilatticeSup α] [NoMaxOrder α] :
     (@atTop α _).HasBasis (fun _ => True) Ioi :=
-  atTop_basis.to_has_basis (fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
+  atTop_basis.to_hasBasis (fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩) fun a ha =>
     (exists_gt a).imp fun b hb => ⟨ha, Ici_subset_Ioi.2 hb⟩
 #align filter.at_top_basis_Ioi Filter.atTop_basis_Ioi
 -/
@@ -472,14 +472,14 @@ theorem tendsto_atBot_pure [PartialOrder α] [OrderBot α] (f : α → β) :
 
 #print Filter.Eventually.exists_forall_of_atTop /-
 theorem Eventually.exists_forall_of_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop}
-    (h : ∀ᶠ x in at_top, p x) : ∃ a, ∀ b ≥ a, p b :=
+    (h : ∀ᶠ x in atTop, p x) : ∃ a, ∀ b ≥ a, p b :=
   eventually_atTop.mp h
 #align filter.eventually.exists_forall_of_at_top Filter.Eventually.exists_forall_of_atTop
 -/
 
 #print Filter.Eventually.exists_forall_of_atBot /-
 theorem Eventually.exists_forall_of_atBot [SemilatticeInf α] [Nonempty α] {p : α → Prop}
-    (h : ∀ᶠ x in at_bot, p x) : ∃ a, ∀ b ≤ a, p b :=
+    (h : ∀ᶠ x in atBot, p x) : ∃ a, ∀ b ≤ a, p b :=
   eventually_atBot.mp h
 #align filter.eventually.exists_forall_of_at_bot Filter.Eventually.exists_forall_of_atBot
 -/
@@ -491,7 +491,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a) (p b)))
 Case conversion may be inaccurate. Consider using '#align filter.frequently_at_top Filter.frequently_atTopₓ'. -/
 theorem frequently_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop} :
-    (∃ᶠ x in at_top, p x) ↔ ∀ a, ∃ b ≥ a, p b := by simp [at_top_basis.frequently_iff]
+    (∃ᶠ x in atTop, p x) ↔ ∀ a, ∃ b ≥ a, p b := by simp [at_top_basis.frequently_iff]
 #align filter.frequently_at_top Filter.frequently_atTop
 
 /- warning: filter.frequently_at_bot -> Filter.frequently_atBot is a dubious translation:
@@ -501,7 +501,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) b a) (p b)))
 Case conversion may be inaccurate. Consider using '#align filter.frequently_at_bot Filter.frequently_atBotₓ'. -/
 theorem frequently_atBot [SemilatticeInf α] [Nonempty α] {p : α → Prop} :
-    (∃ᶠ x in at_bot, p x) ↔ ∀ a, ∃ b ≤ a, p b :=
+    (∃ᶠ x in atBot, p x) ↔ ∀ a, ∃ b ≤ a, p b :=
   @frequently_atTop αᵒᵈ _ _ _
 #align filter.frequently_at_bot Filter.frequently_atBot
 
@@ -512,7 +512,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : Nonempty.{succ u1} α] [_inst_3 : NoMaxOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (GT.gt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a) (p b)))
 Case conversion may be inaccurate. Consider using '#align filter.frequently_at_top' Filter.frequently_atTop'ₓ'. -/
 theorem frequently_atTop' [SemilatticeSup α] [Nonempty α] [NoMaxOrder α] {p : α → Prop} :
-    (∃ᶠ x in at_top, p x) ↔ ∀ a, ∃ b > a, p b := by simp [at_top_basis_Ioi.frequently_iff]
+    (∃ᶠ x in atTop, p x) ↔ ∀ a, ∃ b > a, p b := by simp [at_top_basis_Ioi.frequently_iff]
 #align filter.frequently_at_top' Filter.frequently_atTop'
 
 /- warning: filter.frequently_at_bot' -> Filter.frequently_atBot' is a dubious translation:
@@ -522,7 +522,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : Nonempty.{succ u1} α] [_inst_3 : NoMinOrder.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {p : α -> Prop}, Iff (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) b a) (p b)))
 Case conversion may be inaccurate. Consider using '#align filter.frequently_at_bot' Filter.frequently_atBot'ₓ'. -/
 theorem frequently_atBot' [SemilatticeInf α] [Nonempty α] [NoMinOrder α] {p : α → Prop} :
-    (∃ᶠ x in at_bot, p x) ↔ ∀ a, ∃ b < a, p b :=
+    (∃ᶠ x in atBot, p x) ↔ ∀ a, ∃ b < a, p b :=
   @frequently_atTop' αᵒᵈ _ _ _ _
 #align filter.frequently_at_bot' Filter.frequently_atBot'
 
@@ -533,7 +533,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : α -> Prop}, (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) -> (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) b a) (p b)))
 Case conversion may be inaccurate. Consider using '#align filter.frequently.forall_exists_of_at_top Filter.Frequently.forall_exists_of_atTopₓ'. -/
 theorem Frequently.forall_exists_of_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop}
-    (h : ∃ᶠ x in at_top, p x) : ∀ a, ∃ b ≥ a, p b :=
+    (h : ∃ᶠ x in atTop, p x) : ∀ a, ∃ b ≥ a, p b :=
   frequently_atTop.mp h
 #align filter.frequently.forall_exists_of_at_top Filter.Frequently.forall_exists_of_atTop
 
@@ -544,7 +544,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : α -> Prop}, (Filter.Frequently.{u1} α (fun (x : α) => p x) (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) -> (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) b a) (p b)))
 Case conversion may be inaccurate. Consider using '#align filter.frequently.forall_exists_of_at_bot Filter.Frequently.forall_exists_of_atBotₓ'. -/
 theorem Frequently.forall_exists_of_atBot [SemilatticeInf α] [Nonempty α] {p : α → Prop}
-    (h : ∃ᶠ x in at_bot, p x) : ∀ a, ∃ b ≤ a, p b :=
+    (h : ∃ᶠ x in atBot, p x) : ∀ a, ∃ b ≤ a, p b :=
   frequently_atBot.mp h
 #align filter.frequently.forall_exists_of_at_bot Filter.Frequently.forall_exists_of_atBot
 
@@ -556,7 +556,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map_at_top_eq Filter.map_atTop_eqₓ'. -/
 theorem map_atTop_eq [Nonempty α] [SemilatticeSup α] {f : α → β} :
     atTop.map f = ⨅ a, 𝓟 <| f '' { a' | a ≤ a' } :=
-  (atTop_basis.map _).eq_infi
+  (atTop_basis.map _).eq_infᵢ
 #align filter.map_at_top_eq Filter.map_atTop_eq
 
 /- warning: filter.map_at_bot_eq -> Filter.map_atBot_eq is a dubious translation:
@@ -628,7 +628,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Eq.{succ u2} (Filter.{u2} α) (Filter.comap.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e))) (Filter.atTop.{u1} β _inst_2)) (Filter.atTop.{u2} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align order_iso.comap_at_top OrderIso.comap_atTopₓ'. -/
 @[simp]
-theorem comap_atTop (e : α ≃o β) : comap e atTop = at_top := by
+theorem comap_atTop (e : α ≃o β) : comap e atTop = atTop := by
   simp [at_top, ← e.surjective.infi_comp]
 #align order_iso.comap_at_top OrderIso.comap_atTop
 
@@ -639,8 +639,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Eq.{succ u2} (Filter.{u2} α) (Filter.comap.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e))) (Filter.atBot.{u1} β _inst_2)) (Filter.atBot.{u2} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align order_iso.comap_at_bot OrderIso.comap_atBotₓ'. -/
 @[simp]
-theorem comap_atBot (e : α ≃o β) : comap e atBot = at_bot :=
-  e.dual.comap_at_top
+theorem comap_atBot (e : α ≃o β) : comap e atBot = atBot :=
+  e.dual.comap_atTop
 #align order_iso.comap_at_bot OrderIso.comap_atBot
 
 /- warning: order_iso.map_at_top -> OrderIso.map_atTop is a dubious translation:
@@ -650,7 +650,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e))) (Filter.atTop.{u2} α _inst_1)) (Filter.atTop.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align order_iso.map_at_top OrderIso.map_atTopₓ'. -/
 @[simp]
-theorem map_atTop (e : α ≃o β) : map (e : α → β) atTop = at_top := by
+theorem map_atTop (e : α ≃o β) : map (e : α → β) atTop = atTop := by
   rw [← e.comap_at_top, map_comap_of_surjective e.surjective]
 #align order_iso.map_at_top OrderIso.map_atTop
 
@@ -661,8 +661,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e))) (Filter.atBot.{u2} α _inst_1)) (Filter.atBot.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align order_iso.map_at_bot OrderIso.map_atBotₓ'. -/
 @[simp]
-theorem map_atBot (e : α ≃o β) : map (e : α → β) atBot = at_bot :=
-  e.dual.map_at_top
+theorem map_atBot (e : α ≃o β) : map (e : α → β) atBot = atBot :=
+  e.dual.map_atTop
 #align order_iso.map_at_bot OrderIso.map_atBot
 
 /- warning: order_iso.tendsto_at_top -> OrderIso.tendsto_atTop is a dubious translation:
@@ -672,7 +672,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Filter.Tendsto.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e))) (Filter.atTop.{u2} α _inst_1) (Filter.atTop.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align order_iso.tendsto_at_top OrderIso.tendsto_atTopₓ'. -/
 theorem tendsto_atTop (e : α ≃o β) : Tendsto e atTop atTop :=
-  e.map_at_top.le
+  e.map_atTop.le
 #align order_iso.tendsto_at_top OrderIso.tendsto_atTop
 
 /- warning: order_iso.tendsto_at_bot -> OrderIso.tendsto_atBot is a dubious translation:
@@ -682,7 +682,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (e : OrderIso.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), Filter.Tendsto.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e))) (Filter.atBot.{u2} α _inst_1) (Filter.atBot.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align order_iso.tendsto_at_bot OrderIso.tendsto_atBotₓ'. -/
 theorem tendsto_atBot (e : α ≃o β) : Tendsto e atBot atBot :=
-  e.map_at_bot.le
+  e.map_atBot.le
 #align order_iso.tendsto_at_bot OrderIso.tendsto_atBot
 
 /- warning: order_iso.tendsto_at_top_iff -> OrderIso.tendsto_atTop_iff is a dubious translation:
@@ -706,7 +706,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso.tendsto_at_b
 @[simp]
 theorem tendsto_atBot_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
     Tendsto (fun x => e (f x)) l atBot ↔ Tendsto f l atBot :=
-  e.dual.tendsto_at_top_iff
+  e.dual.tendsto_atTop_iff
 #align order_iso.tendsto_at_bot_iff OrderIso.tendsto_atBot_iff
 
 end OrderIso
@@ -755,7 +755,7 @@ theorem extraction_of_frequently_atTop' {P : ℕ → Prop} (h : ∀ N, ∃ n > N
 #align filter.extraction_of_frequently_at_top' Filter.extraction_of_frequently_atTop'
 
 #print Filter.extraction_of_frequently_atTop /-
-theorem extraction_of_frequently_atTop {P : ℕ → Prop} (h : ∃ᶠ n in at_top, P n) :
+theorem extraction_of_frequently_atTop {P : ℕ → Prop} (h : ∃ᶠ n in atTop, P n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) :=
   by
   rw [frequently_at_top'] at h
@@ -764,14 +764,14 @@ theorem extraction_of_frequently_atTop {P : ℕ → Prop} (h : ∃ᶠ n in at_to
 -/
 
 #print Filter.extraction_of_eventually_atTop /-
-theorem extraction_of_eventually_atTop {P : ℕ → Prop} (h : ∀ᶠ n in at_top, P n) :
+theorem extraction_of_eventually_atTop {P : ℕ → Prop} (h : ∀ᶠ n in atTop, P n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) :=
   extraction_of_frequently_atTop h.Frequently
 #align filter.extraction_of_eventually_at_top Filter.extraction_of_eventually_atTop
 -/
 
 #print Filter.extraction_forall_of_frequently /-
-theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, ∃ᶠ k in at_top, P n k) :
+theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, ∃ᶠ k in atTop, P n k) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P n (φ n) :=
   by
   simp only [frequently_at_top'] at h
@@ -787,7 +787,7 @@ theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, �
 -/
 
 #print Filter.extraction_forall_of_eventually /-
-theorem extraction_forall_of_eventually {P : ℕ → ℕ → Prop} (h : ∀ n, ∀ᶠ k in at_top, P n k) :
+theorem extraction_forall_of_eventually {P : ℕ → ℕ → Prop} (h : ∀ n, ∀ᶠ k in atTop, P n k) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P n (φ n) :=
   extraction_forall_of_frequently fun n => (h n).Frequently
 #align filter.extraction_forall_of_eventually Filter.extraction_forall_of_eventually
@@ -910,7 +910,7 @@ theorem low_scores [LinearOrder β] [NoMinOrder β] {u : ℕ → β} (hu : Tends
 then it `frequently` reaches a value strictly greater than all previous values.
 -/
 theorem frequently_high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β}
-    (hu : Tendsto u atTop atTop) : ∃ᶠ n in at_top, ∀ k < n, u k < u n := by
+    (hu : Tendsto u atTop atTop) : ∃ᶠ n in atTop, ∀ k < n, u k < u n := by
   simpa [frequently_at_top] using high_scores hu
 #align filter.frequently_high_scores Filter.frequently_high_scores
 -/
@@ -920,7 +920,7 @@ theorem frequently_high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β}
 then it `frequently` reaches a value strictly smaller than all previous values.
 -/
 theorem frequently_low_scores [LinearOrder β] [NoMinOrder β] {u : ℕ → β}
-    (hu : Tendsto u atTop atBot) : ∃ᶠ n in at_top, ∀ k < n, u n < u k :=
+    (hu : Tendsto u atTop atBot) : ∃ᶠ n in atTop, ∀ k < n, u n < u k :=
   @frequently_high_scores βᵒᵈ _ _ _ hu
 #align filter.frequently_low_scores Filter.frequently_low_scores
 -/
@@ -1395,8 +1395,8 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} β], Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u1, u1} β β (Neg.neg.{u1} β (NegZeroClass.toNeg.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β (OrderedAddCommGroup.toAddCommGroup.{u1} β _inst_1))))))) (Filter.atBot.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))) (Filter.atTop.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.map_neg_at_bot Filter.map_neg_atBotₓ'. -/
-theorem map_neg_atBot : map (Neg.neg : β → β) atBot = at_top :=
-  (OrderIso.neg β).map_at_bot
+theorem map_neg_atBot : map (Neg.neg : β → β) atBot = atTop :=
+  (OrderIso.neg β).map_atBot
 #align filter.map_neg_at_bot Filter.map_neg_atBot
 
 /- warning: filter.map_neg_at_top -> Filter.map_neg_atTop is a dubious translation:
@@ -1405,8 +1405,8 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} β], Eq.{succ u1} (Filter.{u1} β) (Filter.map.{u1, u1} β β (Neg.neg.{u1} β (NegZeroClass.toNeg.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β (OrderedAddCommGroup.toAddCommGroup.{u1} β _inst_1))))))) (Filter.atTop.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))) (Filter.atBot.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.map_neg_at_top Filter.map_neg_atTopₓ'. -/
-theorem map_neg_atTop : map (Neg.neg : β → β) atTop = at_bot :=
-  (OrderIso.neg β).map_at_top
+theorem map_neg_atTop : map (Neg.neg : β → β) atTop = atBot :=
+  (OrderIso.neg β).map_atTop
 #align filter.map_neg_at_top Filter.map_neg_atTop
 
 /- warning: filter.comap_neg_at_bot -> Filter.comap_neg_atBot is a dubious translation:
@@ -1416,8 +1416,8 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} β], Eq.{succ u1} (Filter.{u1} β) (Filter.comap.{u1, u1} β β (Neg.neg.{u1} β (NegZeroClass.toNeg.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β (OrderedAddCommGroup.toAddCommGroup.{u1} β _inst_1))))))) (Filter.atBot.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))) (Filter.atTop.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.comap_neg_at_bot Filter.comap_neg_atBotₓ'. -/
 @[simp]
-theorem comap_neg_atBot : comap (Neg.neg : β → β) atBot = at_top :=
-  (OrderIso.neg β).comap_at_top
+theorem comap_neg_atBot : comap (Neg.neg : β → β) atBot = atTop :=
+  (OrderIso.neg β).comap_atTop
 #align filter.comap_neg_at_bot Filter.comap_neg_atBot
 
 /- warning: filter.comap_neg_at_top -> Filter.comap_neg_atTop is a dubious translation:
@@ -1427,8 +1427,8 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} β], Eq.{succ u1} (Filter.{u1} β) (Filter.comap.{u1, u1} β β (Neg.neg.{u1} β (NegZeroClass.toNeg.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β (OrderedAddCommGroup.toAddCommGroup.{u1} β _inst_1))))))) (Filter.atTop.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))) (Filter.atBot.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.comap_neg_at_top Filter.comap_neg_atTopₓ'. -/
 @[simp]
-theorem comap_neg_atTop : comap (Neg.neg : β → β) atTop = at_bot :=
-  (OrderIso.neg β).comap_at_bot
+theorem comap_neg_atTop : comap (Neg.neg : β → β) atTop = atBot :=
+  (OrderIso.neg β).comap_atBot
 #align filter.comap_neg_at_top Filter.comap_neg_atTop
 
 /- warning: filter.tendsto_neg_at_top_at_bot -> Filter.tendsto_neg_atTop_atBot is a dubious translation:
@@ -1438,7 +1438,7 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} β], Filter.Tendsto.{u1, u1} β β (Neg.neg.{u1} β (NegZeroClass.toNeg.{u1} β (SubNegZeroMonoid.toNegZeroClass.{u1} β (SubtractionMonoid.toSubNegZeroMonoid.{u1} β (SubtractionCommMonoid.toSubtractionMonoid.{u1} β (AddCommGroup.toDivisionAddCommMonoid.{u1} β (OrderedAddCommGroup.toAddCommGroup.{u1} β _inst_1))))))) (Filter.atTop.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1))) (Filter.atBot.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedAddCommGroup.toPartialOrder.{u1} β _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_neg_at_top_at_bot Filter.tendsto_neg_atTop_atBotₓ'. -/
 theorem tendsto_neg_atTop_atBot : Tendsto (Neg.neg : β → β) atTop atBot :=
-  (OrderIso.neg β).tendsto_at_top
+  (OrderIso.neg β).tendsto_atTop
 #align filter.tendsto_neg_at_top_at_bot Filter.tendsto_neg_atTop_atBot
 
 /- warning: filter.tendsto_neg_at_bot_at_top -> Filter.tendsto_neg_atBot_atTop is a dubious translation:
@@ -1461,7 +1461,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_neg_at_top_iff Filter.tendsto_neg_atTop_iffₓ'. -/
 @[simp]
 theorem tendsto_neg_atTop_iff : Tendsto (fun x => -f x) l atTop ↔ Tendsto f l atBot :=
-  (OrderIso.neg β).tendsto_at_bot_iff
+  (OrderIso.neg β).tendsto_atBot_iff
 #align filter.tendsto_neg_at_top_iff Filter.tendsto_neg_atTop_iff
 
 /- warning: filter.tendsto_neg_at_bot_iff -> Filter.tendsto_neg_atBot_iff is a dubious translation:
@@ -1472,7 +1472,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_neg_at_bot_iff Filter.tendsto_neg_atBot_iffₓ'. -/
 @[simp]
 theorem tendsto_neg_atBot_iff : Tendsto (fun x => -f x) l atBot ↔ Tendsto f l atTop :=
-  (OrderIso.neg β).tendsto_at_top_iff
+  (OrderIso.neg β).tendsto_atTop_iff
 #align filter.tendsto_neg_at_bot_iff Filter.tendsto_neg_atBot_iff
 
 end OrderedGroup
@@ -1512,7 +1512,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α], Filter.Tendsto.{u1, u1} α α (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) x x) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1))) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_mul_self_at_top Filter.tendsto_mul_self_atTopₓ'. -/
 theorem tendsto_mul_self_atTop : Tendsto (fun x : α => x * x) atTop atTop :=
-  tendsto_id.at_top_mul_at_top tendsto_id
+  tendsto_id.atTop_mul_atTop tendsto_id
 #align filter.tendsto_mul_self_at_top Filter.tendsto_mul_self_atTop
 
 #print Filter.tendsto_pow_atTop /-
@@ -1532,7 +1532,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MonoidWithZero.{u1} α], Filter.EventuallyEq.{0, u1} Nat α (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring))) (fun (n : Nat) => HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α _inst_1))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1))) n) (fun (n : Nat) => OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.zero_pow_eventually_eq Filter.zero_pow_eventuallyEqₓ'. -/
 theorem zero_pow_eventuallyEq [MonoidWithZero α] :
-    (fun n : ℕ => (0 : α) ^ n) =ᶠ[at_top] fun n => 0 :=
+    (fun n : ℕ => (0 : α) ^ n) =ᶠ[atTop] fun n => 0 :=
   eventually_atTop.2 ⟨1, fun n hn => zero_pow (zero_lt_one.trans_le hn)⟩
 #align filter.zero_pow_eventually_eq Filter.zero_pow_eventuallyEq
 
@@ -1549,7 +1549,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_top_
 theorem Tendsto.atTop_mul_atBot (hf : Tendsto f l atTop) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x * g x) l atBot :=
   by
-  have := hf.at_top_mul_at_top <| tendsto_neg_atBot_atTop.comp hg
+  have := hf.atTop_mul_atTop <| tendsto_neg_atBot_atTop.comp hg
   simpa only [(· ∘ ·), neg_mul_eq_mul_neg, neg_neg] using tendsto_neg_at_top_at_bot.comp this
 #align filter.tendsto.at_top_mul_at_bot Filter.Tendsto.atTop_mul_atBot
 
@@ -1563,7 +1563,7 @@ theorem Tendsto.atBot_mul_atTop (hf : Tendsto f l atBot) (hg : Tendsto g l atTop
     Tendsto (fun x => f x * g x) l atBot :=
   by
   have : Tendsto (fun x => -f x * g x) l atTop :=
-    (tendsto_neg_atBot_atTop.comp hf).at_top_mul_at_top hg
+    (tendsto_neg_atBot_atTop.comp hf).atTop_mul_atTop hg
   simpa only [(· ∘ ·), neg_mul_eq_neg_mul, neg_neg] using tendsto_neg_at_top_at_bot.comp this
 #align filter.tendsto.at_bot_mul_at_top Filter.Tendsto.atBot_mul_atTop
 
@@ -1577,7 +1577,7 @@ theorem Tendsto.atBot_mul_atBot (hf : Tendsto f l atBot) (hg : Tendsto g l atBot
     Tendsto (fun x => f x * g x) l atTop :=
   by
   have : Tendsto (fun x => -f x * -g x) l atTop :=
-    (tendsto_neg_atBot_atTop.comp hf).at_top_mul_at_top (tendsto_neg_atBot_atTop.comp hg)
+    (tendsto_neg_atBot_atTop.comp hf).atTop_mul_atTop (tendsto_neg_atBot_atTop.comp hg)
   simpa only [neg_mul_neg] using this
 #align filter.tendsto.at_bot_mul_at_bot Filter.Tendsto.atBot_mul_atBot
 
@@ -1616,10 +1616,10 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedAddCommGroup.{u1} α], Eq.{succ u1} (Filter.{u1} α) (Filter.comap.{u1, u1} α α (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (SubtractionCommMonoid.toSubtractionMonoid.{u1} α (AddCommGroup.toDivisionAddCommMonoid.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedAddCommGroup.toLinearOrder.{u1} α _inst_1))))))) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1))))) (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) (Filter.atBot.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))) (Filter.atTop.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (LinearOrderedAddCommGroup.toOrderedAddCommGroup.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align filter.comap_abs_at_top Filter.comap_abs_atTopₓ'. -/
 @[simp]
-theorem comap_abs_atTop : comap (abs : α → α) atTop = at_bot ⊔ at_top :=
+theorem comap_abs_atTop : comap (abs : α → α) atTop = atBot ⊔ atTop :=
   by
   refine'
-    le_antisymm (((at_top_basis.comap _).le_basis_iff (at_bot_basis.sup at_top_basis)).2 _)
+    le_antisymm (((at_top_basis.comap _).le_basis_iffₓ (at_bot_basis.sup at_top_basis)).2 _)
       (sup_le tendsto_abs_at_bot_at_top.le_comap tendsto_abs_at_top_at_top.le_comap)
   rintro ⟨a, b⟩ -
   refine' ⟨max (-a) b, trivial, fun x hx => _⟩
@@ -1672,7 +1672,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] {a : α}, (Filter.Eventually.{0} Nat (fun (n : Nat) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α (MonoidWithZero.toMonoid.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) a n)) (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) a)
 Case conversion may be inaccurate. Consider using '#align filter.nonneg_of_eventually_pow_nonneg Filter.nonneg_of_eventually_pow_nonnegₓ'. -/
 theorem nonneg_of_eventually_pow_nonneg [LinearOrderedRing α] {a : α}
-    (h : ∀ᶠ n in at_top, 0 ≤ a ^ (n : ℕ)) : 0 ≤ a :=
+    (h : ∀ᶠ n in atTop, 0 ≤ a ^ (n : ℕ)) : 0 ≤ a :=
   let ⟨n, hn⟩ := (tendsto_bit1_atTop.Eventually h).exists
   pow_bit1_nonneg_iff.1 hn
 #align filter.nonneg_of_eventually_pow_nonneg Filter.nonneg_of_eventually_pow_nonneg
@@ -1708,7 +1708,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto_const_m
 if `f` tends to infinity along the same filter. -/
 theorem tendsto_const_mul_atTop_of_pos (hr : 0 < r) :
     Tendsto (fun x => r * f x) l atTop ↔ Tendsto f l atTop :=
-  ⟨fun h => h.at_top_of_const_mul hr, fun h =>
+  ⟨fun h => h.atTop_of_const_mul hr, fun h =>
     Tendsto.atTop_of_const_mul (inv_pos.2 hr) <| by simpa only [inv_mul_cancel_left₀ hr.ne'] ⟩
 #align filter.tendsto_const_mul_at_top_of_pos Filter.tendsto_const_mul_atTop_of_pos
 
@@ -2335,7 +2335,7 @@ but is expected to have type
   forall {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u1} γ] {e : β -> γ}, (forall (b₁ : β) (b₂ : β), Iff (LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_2) (e b₁) (e b₂)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) b₁ b₂)) -> (forall (c : γ), Exists.{succ u2} β (fun (b : β) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_2) c (e b))) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.comap.{u2, u1} β γ e (Filter.atTop.{u1} γ _inst_2)) (Filter.atTop.{u2} β _inst_1))
 Case conversion may be inaccurate. Consider using '#align filter.comap_embedding_at_top Filter.comap_embedding_atTopₓ'. -/
 theorem comap_embedding_atTop [Preorder β] [Preorder γ] {e : β → γ}
-    (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) : comap e atTop = at_top :=
+    (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) : comap e atTop = atTop :=
   le_antisymm
     (le_infᵢ fun b =>
       le_principal_iff.2 <| mem_comap.2 ⟨Ici (e b), mem_atTop _, fun x => (hm _ _).1⟩)
@@ -2349,7 +2349,7 @@ but is expected to have type
   forall {β : Type.{u2}} {γ : Type.{u1}} [_inst_1 : Preorder.{u2} β] [_inst_2 : Preorder.{u1} γ] {e : β -> γ}, (forall (b₁ : β) (b₂ : β), Iff (LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_2) (e b₁) (e b₂)) (LE.le.{u2} β (Preorder.toLE.{u2} β _inst_1) b₁ b₂)) -> (forall (c : γ), Exists.{succ u2} β (fun (b : β) => LE.le.{u1} γ (Preorder.toLE.{u1} γ _inst_2) (e b) c)) -> (Eq.{succ u2} (Filter.{u2} β) (Filter.comap.{u2, u1} β γ e (Filter.atBot.{u1} γ _inst_2)) (Filter.atBot.{u2} β _inst_1))
 Case conversion may be inaccurate. Consider using '#align filter.comap_embedding_at_bot Filter.comap_embedding_atBotₓ'. -/
 theorem comap_embedding_atBot [Preorder β] [Preorder γ] {e : β → γ}
-    (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, e b ≤ c) : comap e atBot = at_bot :=
+    (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, e b ≤ c) : comap e atBot = atBot :=
   @comap_embedding_atTop βᵒᵈ γᵒᵈ _ _ e (Function.swap hm) hu
 #align filter.comap_embedding_at_bot Filter.comap_embedding_atBot
 
@@ -2380,7 +2380,7 @@ theorem tendsto_atBot_embedding [Preorder β] [Preorder γ] {f : α → β} {e :
 
 #print Filter.tendsto_finset_range /-
 theorem tendsto_finset_range : Tendsto Finset.range atTop atTop :=
-  Finset.range_mono.tendsto_at_top_at_top Finset.exists_nat_subset_range
+  Finset.range_mono.tendsto_atTop_atTop Finset.exists_nat_subset_range
 #align filter.tendsto_finset_range Filter.tendsto_finset_range
 -/
 
@@ -2395,7 +2395,7 @@ theorem atTop_finset_eq_infᵢ : (atTop : Filter <| Finset α) = ⨅ x : α, �
   refine' le_antisymm (le_infᵢ fun i => le_principal_iff.2 <| mem_at_top {i}) _
   refine'
     le_infᵢ fun s =>
-      le_principal_iff.2 <| mem_infi_of_Inter s.finite_to_set (fun i => mem_principal_self _) _
+      le_principal_iff.2 <| mem_infi_of_Inter s.finite_toSet (fun i => mem_principal_self _) _
   simp only [subset_def, mem_Inter, SetCoe.forall, mem_Ici, Finset.le_iff_subset,
     Finset.mem_singleton, Finset.subset_iff, forall_eq]
   dsimp
@@ -2427,7 +2427,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_finset_image_at_top_at_top Filter.tendsto_finset_image_atTop_atTopₓ'. -/
 theorem tendsto_finset_image_atTop_atTop {i : β → γ} {j : γ → β} (h : Function.LeftInverse j i) :
     Tendsto (Finset.image j) atTop atTop :=
-  (Finset.image_mono j).tendsto_at_top_finset fun a =>
+  (Finset.image_mono j).tendsto_atTop_finset fun a =>
     ⟨{i a}, by simp only [Finset.image_singleton, h a, Finset.mem_singleton]⟩
 #align filter.tendsto_finset_image_at_top_at_top Filter.tendsto_finset_image_atTop_atTop
 
@@ -2439,7 +2439,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_finset_preimage_at_top_at_top Filter.tendsto_finset_preimage_atTop_atTopₓ'. -/
 theorem tendsto_finset_preimage_atTop_atTop {f : α → β} (hf : Function.Injective f) :
     Tendsto (fun s : Finset β => s.Preimage f (hf.InjOn _)) atTop atTop :=
-  (Finset.monotone_preimage hf).tendsto_at_top_finset fun x =>
+  (Finset.monotone_preimage hf).tendsto_atTop_finset fun x =>
     ⟨{f x}, Finset.mem_preimage.2 <| Finset.mem_singleton_self _⟩
 #align filter.tendsto_finset_preimage_at_top_at_top Filter.tendsto_finset_preimage_atTop_atTop
 
@@ -2588,7 +2588,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : (Prod.{u1, u1} α α) -> Prop}, Iff (Filter.Eventually.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => p x) (Filter.atBot.{u1} (Prod.{u1, u1} α α) (Prod.instPreorderProd.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (Exists.{succ u1} α (fun (a : α) => forall (k : α) (l : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) k a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) l a) -> (p (Prod.mk.{u1, u1} α α k l))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_at_bot_prod_self Filter.eventually_atBot_prod_selfₓ'. -/
 theorem eventually_atBot_prod_self [SemilatticeInf α] [Nonempty α] {p : α × α → Prop} :
-    (∀ᶠ x in at_bot, p x) ↔ ∃ a, ∀ k l, k ≤ a → l ≤ a → p (k, l) := by
+    (∀ᶠ x in atBot, p x) ↔ ∃ a, ∀ k l, k ≤ a → l ≤ a → p (k, l) := by
   simp [← prod_at_bot_at_bot_eq, at_bot_basis.prod_self.eventually_iff]
 #align filter.eventually_at_bot_prod_self Filter.eventually_atBot_prod_self
 
@@ -2599,7 +2599,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : (Prod.{u1, u1} α α) -> Prop}, Iff (Filter.Eventually.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => p x) (Filter.atTop.{u1} (Prod.{u1, u1} α α) (Prod.instPreorderProd.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))) (Exists.{succ u1} α (fun (a : α) => forall (k : α) (l : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) a k) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) a l) -> (p (Prod.mk.{u1, u1} α α k l))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_at_top_prod_self Filter.eventually_atTop_prod_selfₓ'. -/
 theorem eventually_atTop_prod_self [SemilatticeSup α] [Nonempty α] {p : α × α → Prop} :
-    (∀ᶠ x in at_top, p x) ↔ ∃ a, ∀ k l, a ≤ k → a ≤ l → p (k, l) := by
+    (∀ᶠ x in atTop, p x) ↔ ∃ a, ∀ k l, a ≤ k → a ≤ l → p (k, l) := by
   simp [← prod_at_top_at_top_eq, at_top_basis.prod_self.eventually_iff]
 #align filter.eventually_at_top_prod_self Filter.eventually_atTop_prod_self
 
@@ -2610,7 +2610,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : (Prod.{u1, u1} α α) -> Prop}, Iff (Filter.Eventually.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => p x) (Filter.atBot.{u1} (Prod.{u1, u1} α α) (Prod.instPreorderProd.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (Exists.{succ u1} α (fun (a : α) => forall (k : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) k a) -> (forall (l : α), (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) l a) -> (p (Prod.mk.{u1, u1} α α k l)))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_at_bot_prod_self' Filter.eventually_atBot_prod_self'ₓ'. -/
 theorem eventually_atBot_prod_self' [SemilatticeInf α] [Nonempty α] {p : α × α → Prop} :
-    (∀ᶠ x in at_bot, p x) ↔ ∃ a, ∀ k ≤ a, ∀ l ≤ a, p (k, l) :=
+    (∀ᶠ x in atBot, p x) ↔ ∃ a, ∀ k ≤ a, ∀ l ≤ a, p (k, l) :=
   by
   rw [Filter.eventually_atBot_prod_self]
   apply exists_congr
@@ -2624,7 +2624,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : Nonempty.{succ u1} α] {p : (Prod.{u1, u1} α α) -> Prop}, Iff (Filter.Eventually.{u1} (Prod.{u1, u1} α α) (fun (x : Prod.{u1, u1} α α) => p x) (Filter.atTop.{u1} (Prod.{u1, u1} α α) (Prod.instPreorderProd.{u1, u1} α α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))) (Exists.{succ u1} α (fun (a : α) => forall (k : α), (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) k a) -> (forall (l : α), (GE.ge.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) l a) -> (p (Prod.mk.{u1, u1} α α k l)))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_at_top_prod_self' Filter.eventually_atTop_prod_self'ₓ'. -/
 theorem eventually_atTop_prod_self' [SemilatticeSup α] [Nonempty α] {p : α × α → Prop} :
-    (∀ᶠ x in at_top, p x) ↔ ∃ a, ∀ k ≥ a, ∀ l ≥ a, p (k, l) :=
+    (∀ᶠ x in atTop, p x) ↔ ∃ a, ∀ k ≥ a, ∀ l ≥ a, p (k, l) :=
   by
   rw [Filter.eventually_atTop_prod_self]
   apply exists_congr
@@ -2638,7 +2638,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : SemilatticeSup.{u1} β] {p : (Prod.{u2, u1} α β) -> Prop}, (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α β) (fun (x : Prod.{u2, u1} α β) => p x) (Filter.atTop.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_2))))) -> (Filter.Eventually.{u2} α (fun (k : α) => Filter.Eventually.{u1} β (fun (l : β) => p (Prod.mk.{u2, u1} α β k l)) (Filter.atTop.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeSup.toPartialOrder.{u1} β _inst_2)))) (Filter.atTop.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_at_top_curry Filter.eventually_atTop_curryₓ'. -/
 theorem eventually_atTop_curry [SemilatticeSup α] [SemilatticeSup β] {p : α × β → Prop}
-    (hp : ∀ᶠ x : α × β in Filter.atTop, p x) : ∀ᶠ k in at_top, ∀ᶠ l in at_top, p (k, l) :=
+    (hp : ∀ᶠ x : α × β in Filter.atTop, p x) : ∀ᶠ k in atTop, ∀ᶠ l in atTop, p (k, l) :=
   by
   rw [← prod_at_top_at_top_eq] at hp
   exact hp.curry
@@ -2651,7 +2651,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : SemilatticeInf.{u1} β] {p : (Prod.{u2, u1} α β) -> Prop}, (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α β) (fun (x : Prod.{u2, u1} α β) => p x) (Filter.atBot.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β _inst_2))))) -> (Filter.Eventually.{u2} α (fun (k : α) => Filter.Eventually.{u1} β (fun (l : β) => p (Prod.mk.{u2, u1} α β k l)) (Filter.atBot.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β _inst_2)))) (Filter.atBot.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_at_bot_curry Filter.eventually_atBot_curryₓ'. -/
 theorem eventually_atBot_curry [SemilatticeInf α] [SemilatticeInf β] {p : α × β → Prop}
-    (hp : ∀ᶠ x : α × β in Filter.atBot, p x) : ∀ᶠ k in at_bot, ∀ᶠ l in at_bot, p (k, l) :=
+    (hp : ∀ᶠ x : α × β in Filter.atBot, p x) : ∀ᶠ k in atBot, ∀ᶠ l in atBot, p (k, l) :=
   @eventually_atTop_curry αᵒᵈ βᵒᵈ _ _ _ hp
 #align filter.eventually_at_bot_curry Filter.eventually_atBot_curry
 
@@ -2666,7 +2666,7 @@ Galois insertion. The Galois "insertion" and "connection" is weakened to only re
 insertion and a connetion above `b'`. -/
 theorem map_atTop_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → β} (g : β → α) (b' : β)
     (hf : Monotone f) (gc : ∀ a, ∀ b ≥ b', f a ≤ b ↔ a ≤ g b) (hgi : ∀ b ≥ b', b ≤ f (g b)) :
-    map f atTop = at_top :=
+    map f atTop = atTop :=
   by
   refine'
     le_antisymm
@@ -2685,13 +2685,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map_at_bot_eq_of_gc Filter.map_atBot_eq_of_gcₓ'. -/
 theorem map_atBot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → β} (g : β → α) (b' : β)
     (hf : Monotone f) (gc : ∀ a, ∀ b ≤ b', b ≤ f a ↔ g b ≤ a) (hgi : ∀ b ≤ b', f (g b) ≤ b) :
-    map f atBot = at_bot :=
+    map f atBot = atBot :=
   @map_atTop_eq_of_gc αᵒᵈ βᵒᵈ _ _ _ _ _ hf.dual gc hgi
 #align filter.map_at_bot_eq_of_gc Filter.map_atBot_eq_of_gc
 
 #print Filter.map_val_atTop_of_Ici_subset /-
 theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : Ici a ⊆ s) :
-    map (coe : s → α) atTop = at_top :=
+    map (coe : s → α) atTop = atTop :=
   by
   have : Directed (· ≥ ·) fun x : s => 𝓟 (Ici x) :=
     by
@@ -2716,7 +2716,7 @@ theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h
 #print Filter.map_val_Ici_atTop /-
 /-- The image of the filter `at_top` on `Ici a` under the coercion equals `at_top`. -/
 @[simp]
-theorem map_val_Ici_atTop [SemilatticeSup α] (a : α) : map (coe : Ici a → α) atTop = at_top :=
+theorem map_val_Ici_atTop [SemilatticeSup α] (a : α) : map (coe : Ici a → α) atTop = atTop :=
   map_val_atTop_of_Ici_subset (Subset.refl _)
 #align filter.map_coe_Ici_at_top Filter.map_val_Ici_atTop
 -/
@@ -2725,16 +2725,16 @@ theorem map_val_Ici_atTop [SemilatticeSup α] (a : α) : map (coe : Ici a → α
 /-- The image of the filter `at_top` on `Ioi a` under the coercion equals `at_top`. -/
 @[simp]
 theorem map_val_Ioi_atTop [SemilatticeSup α] [NoMaxOrder α] (a : α) :
-    map (coe : Ioi a → α) atTop = at_top :=
+    map (coe : Ioi a → α) atTop = atTop :=
   let ⟨b, hb⟩ := exists_gt a
-  map_coe_at_top_of_Ici_subset <| Ici_subset_Ioi.2 hb
+  map_val_atTop_of_Ici_subset <| Ici_subset_Ioi.2 hb
 #align filter.map_coe_Ioi_at_top Filter.map_val_Ioi_atTop
 -/
 
 #print Filter.atTop_Ioi_eq /-
 /-- The `at_top` filter for an open interval `Ioi a` comes from the `at_top` filter in the ambient
 order. -/
-theorem atTop_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ioi a → α) atTop :=
+theorem atTop_Ioi_eq [SemilatticeSup α] (a : α) : atTop = comap (coe : Ioi a → α) atTop :=
   by
   nontriviality
   rcases nontrivial_iff_nonempty.1 ‹_› with ⟨b, hb⟩
@@ -2745,7 +2745,7 @@ theorem atTop_Ioi_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ioi a 
 #print Filter.atTop_Ici_eq /-
 /-- The `at_top` filter for an open interval `Ici a` comes from the `at_top` filter in the ambient
 order. -/
-theorem atTop_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ici a → α) atTop := by
+theorem atTop_Ici_eq [SemilatticeSup α] (a : α) : atTop = comap (coe : Ici a → α) atTop := by
   rw [← map_coe_Ici_at_top a, comap_map Subtype.coe_injective]
 #align filter.at_top_Ici_eq Filter.atTop_Ici_eq
 -/
@@ -2755,7 +2755,7 @@ theorem atTop_Ici_eq [SemilatticeSup α] (a : α) : at_top = comap (coe : Ici a 
 order. -/
 @[simp]
 theorem map_val_Iio_atBot [SemilatticeInf α] [NoMinOrder α] (a : α) :
-    map (coe : Iio a → α) atBot = at_bot :=
+    map (coe : Iio a → α) atBot = atBot :=
   @map_val_Ioi_atTop αᵒᵈ _ _ _
 #align filter.map_coe_Iio_at_bot Filter.map_val_Iio_atBot
 -/
@@ -2763,7 +2763,7 @@ theorem map_val_Iio_atBot [SemilatticeInf α] [NoMinOrder α] (a : α) :
 #print Filter.atBot_Iio_eq /-
 /-- The `at_bot` filter for an open interval `Iio a` comes from the `at_bot` filter in the ambient
 order. -/
-theorem atBot_Iio_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iio a → α) atBot :=
+theorem atBot_Iio_eq [SemilatticeInf α] (a : α) : atBot = comap (coe : Iio a → α) atBot :=
   @atTop_Ioi_eq αᵒᵈ _ _
 #align filter.at_bot_Iio_eq Filter.atBot_Iio_eq
 -/
@@ -2772,7 +2772,7 @@ theorem atBot_Iio_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iio a 
 /-- The `at_bot` filter for an open interval `Iic a` comes from the `at_bot` filter in the ambient
 order. -/
 @[simp]
-theorem map_val_Iic_atBot [SemilatticeInf α] (a : α) : map (coe : Iic a → α) atBot = at_bot :=
+theorem map_val_Iic_atBot [SemilatticeInf α] (a : α) : map (coe : Iic a → α) atBot = atBot :=
   @map_val_Ici_atTop αᵒᵈ _ _
 #align filter.map_coe_Iic_at_bot Filter.map_val_Iic_atBot
 -/
@@ -2780,7 +2780,7 @@ theorem map_val_Iic_atBot [SemilatticeInf α] (a : α) : map (coe : Iic a → α
 #print Filter.atBot_Iic_eq /-
 /-- The `at_bot` filter for an open interval `Iic a` comes from the `at_bot` filter in the ambient
 order. -/
-theorem atBot_Iic_eq [SemilatticeInf α] (a : α) : at_bot = comap (coe : Iic a → α) atBot :=
+theorem atBot_Iic_eq [SemilatticeInf α] (a : α) : atBot = comap (coe : Iic a → α) atBot :=
   @atTop_Ici_eq αᵒᵈ _ _
 #align filter.at_bot_Iic_eq Filter.atBot_Iic_eq
 -/
@@ -2878,14 +2878,14 @@ theorem tendsto_comp_val_Iic_atBot [SemilatticeInf α] {a : α} {f : α → β} 
 #align filter.tendsto_comp_coe_Iic_at_bot Filter.tendsto_comp_val_Iic_atBot
 
 #print Filter.map_add_atTop_eq_nat /-
-theorem map_add_atTop_eq_nat (k : ℕ) : map (fun a => a + k) atTop = at_top :=
+theorem map_add_atTop_eq_nat (k : ℕ) : map (fun a => a + k) atTop = atTop :=
   map_atTop_eq_of_gc (fun a => a - k) k (fun a b h => add_le_add_right h k)
     (fun a b h => (le_tsub_iff_right h).symm) fun a h => by rw [tsub_add_cancel_of_le h]
 #align filter.map_add_at_top_eq_nat Filter.map_add_atTop_eq_nat
 -/
 
 #print Filter.map_sub_atTop_eq_nat /-
-theorem map_sub_atTop_eq_nat (k : ℕ) : map (fun a => a - k) atTop = at_top :=
+theorem map_sub_atTop_eq_nat (k : ℕ) : map (fun a => a - k) atTop = atTop :=
   map_atTop_eq_of_gc (fun a => a + k) 0 (fun a b h => tsub_le_tsub_right h _)
     (fun a b _ => tsub_le_iff_right) fun b _ => by rw [add_tsub_cancel_right]
 #align filter.map_sub_at_top_eq_nat Filter.map_sub_atTop_eq_nat
@@ -2912,7 +2912,7 @@ theorem tendsto_add_atTop_iff_nat {f : ℕ → α} {l : Filter α} (k : ℕ) :
 -/
 
 #print Filter.map_div_atTop_eq_nat /-
-theorem map_div_atTop_eq_nat (k : ℕ) (hk : 0 < k) : map (fun a => a / k) atTop = at_top :=
+theorem map_div_atTop_eq_nat (k : ℕ) (hk : 0 < k) : map (fun a => a / k) atTop = atTop :=
   map_atTop_eq_of_gc (fun b => b * k + (k - 1)) 1 (fun a b h => Nat.div_le_div_right h)
     (fun a b _ =>
       calc
@@ -3022,7 +3022,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto_at_top_
 it tends to `at_top` along `at_top`. -/
 theorem tendsto_atTop_of_monotone_of_filter [Preorder ι] [Preorder α] {l : Filter ι} {u : ι → α}
     (h : Monotone u) [NeBot l] (hu : Tendsto u l atTop) : Tendsto u atTop atTop :=
-  h.tendsto_at_top_at_top fun b => (hu.Eventually (mem_atTop b)).exists
+  h.tendsto_atTop_atTop fun b => (hu.Eventually (mem_atTop b)).exists
 #align filter.tendsto_at_top_of_monotone_of_filter Filter.tendsto_atTop_of_monotone_of_filter
 
 /- warning: filter.tendsto_at_bot_of_monotone_of_filter -> Filter.tendsto_atBot_of_monotone_of_filter is a dubious translation:
@@ -3095,8 +3095,8 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u2} ι] {l : Filter.{u1} α} {s : ι -> (Set.{u1} α)}, (Filter.HasAntitoneBasis.{u1, u2} α ι _inst_1 l s) -> (forall {t : Set.{u1} α}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) -> (Filter.Eventually.{u2} ι (fun (i : ι) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (s i) t) (Filter.atTop.{u2} ι _inst_1)))
 Case conversion may be inaccurate. Consider using '#align filter.has_antitone_basis.eventually_subset Filter.HasAntitoneBasis.eventually_subsetₓ'. -/
 theorem HasAntitoneBasis.eventually_subset [Preorder ι] {l : Filter α} {s : ι → Set α}
-    (hl : l.HasAntitoneBasis s) {t : Set α} (ht : t ∈ l) : ∀ᶠ i in at_top, s i ⊆ t :=
-  let ⟨i, _, hi⟩ := hl.to_has_basis.mem_iff.1 ht
+    (hl : l.HasAntitoneBasis s) {t : Set α} (ht : t ∈ l) : ∀ᶠ i in atTop, s i ⊆ t :=
+  let ⟨i, _, hi⟩ := hl.to_hasBasis.mem_iff.1 ht
   (eventually_ge_atTop i).mono fun j hj => (hl.Antitone hj).trans hi
 #align filter.has_antitone_basis.eventually_subset Filter.HasAntitoneBasis.eventually_subset
 
@@ -3120,7 +3120,7 @@ Case conversion may be inaccurate. Consider using '#align filter.has_antitone_ba
 theorem HasAntitoneBasis.comp_mono [SemilatticeSup ι] [Nonempty ι] [Preorder ι'] {l : Filter α}
     {s : ι' → Set α} (hs : l.HasAntitoneBasis s) {φ : ι → ι'} (φ_mono : Monotone φ)
     (hφ : Tendsto φ atTop atTop) : l.HasAntitoneBasis (s ∘ φ) :=
-  ⟨hs.to_has_basis.to_has_basis
+  ⟨hs.to_hasBasis.to_hasBasis
       (fun n hn =>
         (hφ.Eventually (eventually_ge_atTop n)).exists.imp fun m hm => ⟨trivial, hs.Antitone hm⟩)
       fun n hn => ⟨φ n, trivial, Subset.rfl⟩,
@@ -3130,7 +3130,7 @@ theorem HasAntitoneBasis.comp_mono [SemilatticeSup ι] [Nonempty ι] [Preorder �
 #print Filter.HasAntitoneBasis.comp_strictMono /-
 theorem HasAntitoneBasis.comp_strictMono {l : Filter α} {s : ℕ → Set α} (hs : l.HasAntitoneBasis s)
     {φ : ℕ → ℕ} (hφ : StrictMono φ) : l.HasAntitoneBasis (s ∘ φ) :=
-  hs.comp_mono hφ.Monotone hφ.tendsto_at_top
+  hs.comp_mono hφ.Monotone hφ.tendsto_atTop
 #align filter.has_antitone_basis.comp_strict_mono Filter.HasAntitoneBasis.comp_strictMono
 -/
 
@@ -3139,7 +3139,7 @@ theorem HasAntitoneBasis.comp_strictMono {l : Filter α} {s : ℕ → Set α} (h
 `φ : ℕ → ℕ`, such that `m < n` implies `r (φ m) (φ n)`. This lemma can be used to extract an
 antitone basis with basis sets decreasing "sufficiently fast". -/
 theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α}
-    (hs : f.HasAntitoneBasis s) {r : ℕ → ℕ → Prop} (hr : ∀ m, ∀ᶠ n in at_top, r m n) :
+    (hs : f.HasAntitoneBasis s) {r : ℕ → ℕ → Prop} (hr : ∀ m, ∀ᶠ n in atTop, r m n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ (∀ ⦃m n⦄, m < n → r (φ m) (φ n)) ∧ f.HasAntitoneBasis (s ∘ φ) :=
   by
   rsuffices ⟨φ, hφ, hrφ⟩ : ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ m n, m < n → r (φ m) (φ n)
@@ -3229,7 +3229,7 @@ theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} 
 #print Filter.frequently_iff_seq_frequently /-
 theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → Prop}
     [hl : l.IsCountablyGenerated] :
-    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in at_top, p (x n) :=
+    (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in atTop, p (x n) :=
   by
   refine' ⟨fun h_freq => _, fun h_exists_freq => _⟩
   · have : ne_bot (l ⊓ 𝓟 { x : ι | p x }) := by simpa [ne_bot_iff, inf_principal_eq_bot]
@@ -3251,7 +3251,7 @@ theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → 
 #print Filter.eventually_iff_seq_eventually /-
 theorem eventually_iff_seq_eventually {ι : Type _} {l : Filter ι} {p : ι → Prop}
     [hl : l.IsCountablyGenerated] :
-    (∀ᶠ n in l, p n) ↔ ∀ x : ℕ → ι, Tendsto x atTop l → ∀ᶠ n : ℕ in at_top, p (x n) :=
+    (∀ᶠ n in l, p n) ↔ ∀ x : ℕ → ι, Tendsto x atTop l → ∀ᶠ n : ℕ in atTop, p (x n) :=
   by
   have : (∀ᶠ n in l, p n) ↔ ¬∃ᶠ n in l, ¬p n :=
     by
@@ -3265,7 +3265,7 @@ theorem eventually_iff_seq_eventually {ι : Type _} {l : Filter ι} {p : ι → 
 
 #print Filter.subseq_forall_of_frequently /-
 theorem subseq_forall_of_frequently {ι : Type _} {x : ℕ → ι} {p : ι → Prop} {l : Filter ι}
-    (h_tendsto : Tendsto x atTop l) (h : ∃ᶠ n in at_top, p (x n)) :
+    (h_tendsto : Tendsto x atTop l) (h : ∃ᶠ n in atTop, p (x n)) :
     ∃ ns : ℕ → ℕ, Tendsto (fun n => x (ns n)) atTop l ∧ ∀ n, p (x (ns n)) :=
   by
   rw [tendsto_iff_seq_tendsto] at h_tendsto

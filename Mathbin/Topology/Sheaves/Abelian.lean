@@ -66,7 +66,7 @@ instance sheafIsAbelian [HasFiniteLimits D] : Abelian (Sheaf J D) :=
 attribute [local instance] preserves_binary_biproducts_of_preserves_binary_products
 
 instance presheafToSheaf_additive : (presheafToSheaf J D).Additive :=
-  (presheafToSheaf J D).additive_of_preserves_binary_biproducts
+  (presheafToSheaf J D).additive_of_preservesBinaryBiproducts
 #align category_theory.presheaf_to_Sheaf_additive CategoryTheory.presheafToSheaf_additive
 
 end Abelian

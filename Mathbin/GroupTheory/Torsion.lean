@@ -207,7 +207,7 @@ variable {G}
 
 /-- Torsion submonoids are torsion. -/
 @[to_additive "Additive torsion submonoids are additively torsion."]
-theorem torsion.isTorsion : is_torsion <| torsion G := fun ⟨_, n, npos, hn⟩ =>
+theorem torsion.isTorsion : IsTorsion <| torsion G := fun ⟨_, n, npos, hn⟩ =>
   ⟨n, npos,
     Subtype.ext <| by
       rw [mul_left_iterate, _root_.mul_one, [anonymous], Subtype.coe_mk, Submonoid.coe_one,
@@ -404,7 +404,7 @@ theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsi
 @[to_additive AddMonoid.IsTorsionFree.prod
       "Direct products of additive torsion free groups are torsion free."]
 theorem IsTorsionFree.prod {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs i)]
-    (tfGs : ∀ i, IsTorsionFree (Gs i)) : is_torsion_free <| ∀ i, Gs i := fun w hne h =>
+    (tfGs : ∀ i, IsTorsionFree (Gs i)) : IsTorsionFree <| ∀ i, Gs i := fun w hne h =>
   hne <|
     funext fun i => Classical.not_not.mp <| mt (tfGs i (w i)) <| Classical.not_not.mpr <| h.apply i
 #align is_torsion_free.prod IsTorsionFree.prod
@@ -423,7 +423,7 @@ variable (G) [CommGroup G]
 /-- Quotienting a group by its torsion subgroup yields a torsion free group. -/
 @[to_additive AddIsTorsionFree.quotient_torsion
       "Quotienting a group by its additive torsion subgroup yields an additive torsion free group."]
-theorem IsTorsionFree.quotient_torsion : is_torsion_free <| G ⧸ torsion G := fun g hne hfin =>
+theorem IsTorsionFree.quotient_torsion : IsTorsionFree <| G ⧸ torsion G := fun g hne hfin =>
   hne <| by
     induction g using QuotientGroup.induction_on'
     obtain ⟨m, mpos, hm⟩ := (isOfFinOrder_iff_pow_eq_one _).mp hfin

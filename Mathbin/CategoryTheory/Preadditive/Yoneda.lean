@@ -127,7 +127,7 @@ Yoneda embedding.
 -/
 @[simp]
 theorem whiskering_preadditiveYoneda :
-    preadditive_yoneda ⋙
+    preadditiveYoneda ⋙
         (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) =
       yoneda :=
   rfl
@@ -138,7 +138,7 @@ Yoneda embedding.
 -/
 @[simp]
 theorem whiskering_preadditiveCoyoneda :
-    preadditive_coyoneda ⋙
+    preadditiveCoyoneda ⋙
         (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat) =
       coyoneda :=
   rfl
@@ -147,7 +147,7 @@ theorem whiskering_preadditiveCoyoneda :
 instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
   let yoneda_full :
     Full
-      (preadditive_yoneda ⋙
+      (preadditiveYoneda ⋙
         (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     yoneda.yonedaFull
   full.of_comp_faithful preadditive_yoneda
@@ -157,7 +157,7 @@ instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ Add
 instance preadditiveCoyonedaFull : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
   let coyoneda_full :
     Full
-      (preadditive_coyoneda ⋙
+      (preadditiveCoyoneda ⋙
         (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     coyoneda.coyonedaFull
   full.of_comp_faithful preadditive_coyoneda

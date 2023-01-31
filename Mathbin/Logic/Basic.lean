@@ -573,7 +573,7 @@ theorem dec_em (p : Prop) [Decidable p] : p ∨ ¬p :=
 
 #print dec_em' /-
 theorem dec_em' (p : Prop) [Decidable p] : ¬p ∨ p :=
-  (dec_em p).swap
+  (dec_em p).symm
 #align dec_em' dec_em'
 -/
 
@@ -585,7 +585,7 @@ theorem em (p : Prop) : p ∨ ¬p :=
 
 #print em' /-
 theorem em' (p : Prop) : ¬p ∨ p :=
-  (em p).swap
+  (em p).symm
 #align em' em'
 -/
 
@@ -3170,7 +3170,7 @@ Case conversion may be inaccurate. Consider using '#align classical.not_ball not
 #print not_ball /-
 theorem not_ball {α : Sort _} {p : α → Prop} {P : ∀ x : α, p x → Prop} :
     (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
-  _root_.not_ball
+  not_ball
 #align classical.not_ball not_ball
 -/
 

@@ -173,8 +173,8 @@ theorem mem_infₛ {S : Set (Closeds α)} {x : α} : x ∈ infₛ S ↔ ∀ s �
 
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with
-    inf := infₛ
-    infi_sup_le_sup_Inf := fun a s =>
+    infₛ := infₛ
+    infᵢ_sup_le_sup_inf := fun a s =>
       (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_interᵢ₂]).le }
 
 /-- The term of `closeds α` corresponding to a singleton. -/
@@ -188,13 +188,13 @@ end Closeds
 /-- The complement of a closed set as an open set. -/
 @[simps]
 def Closeds.compl (s : Closeds α) : Opens α :=
-  ⟨sᶜ, s.2.is_open_compl⟩
+  ⟨sᶜ, s.2.isOpen_compl⟩
 #align topological_space.closeds.compl TopologicalSpace.Closeds.compl
 
 /-- The complement of an open set as a closed set. -/
 @[simps]
 def Opens.compl (s : Opens α) : Closeds α :=
-  ⟨sᶜ, s.2.is_closed_compl⟩
+  ⟨sᶜ, s.2.isClosed_compl⟩
 #align topological_space.opens.compl TopologicalSpace.Opens.compl
 
 theorem Closeds.compl_compl (s : Closeds α) : s.compl.compl = s :=
@@ -219,8 +219,8 @@ variable (α)
 @[simps]
 def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ
     where
-  toFun := OrderDual.toDual ∘ closeds.compl
-  invFun := opens.compl ∘ OrderDual.ofDual
+  toFun := OrderDual.toDual ∘ Closeds.compl
+  invFun := Opens.compl ∘ OrderDual.ofDual
   left_inv s := by simp [closeds.compl_compl]
   right_inv s := by simp [opens.compl_compl]
   map_rel_iff' s t := by
@@ -232,8 +232,8 @@ def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ
 @[simps]
 def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ
     where
-  toFun := OrderDual.toDual ∘ opens.compl
-  invFun := closeds.compl ∘ OrderDual.ofDual
+  toFun := OrderDual.toDual ∘ Opens.compl
+  invFun := Closeds.compl ∘ OrderDual.ofDual
   left_inv s := by simp [opens.compl_compl]
   right_inv s := by simp [closeds.compl_compl]
   map_rel_iff' s t := by
@@ -251,7 +251,7 @@ theorem Closeds.isAtom_iff [T1Space α] {s : Closeds α} : IsAtom s ↔ ∃ x, s
     refine' closeds.gi.is_atom_iff' rfl (fun t ht => _) s
     obtain ⟨x, rfl⟩ := t.is_atom_iff.mp ht
     exact closure_singleton
-  simpa only [← this, (s : Set α).is_atom_iff, SetLike.ext_iff, Set.ext_iff]
+  simpa only [← this, (s : Set α).isAtom_iff, SetLike.ext_iff, Set.ext_iff]
 #align topological_space.closeds.is_atom_iff TopologicalSpace.Closeds.isAtom_iff
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]] -/
@@ -262,7 +262,7 @@ theorem Opens.isCoatom_iff [T1Space α] {s : Opens α} :
   by
   rw [← s.compl_compl, ← isAtom_dual_iff_isCoatom]
   change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
-  rw [(closeds.compl_order_iso α).is_atom_iff, closeds.is_atom_iff]
+  rw [(closeds.compl_order_iso α).isAtom_iff, closeds.is_atom_iff]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm
@@ -319,7 +319,7 @@ instance : Bot (Clopens α) :=
   ⟨⟨⊥, isClopen_empty⟩⟩
 
 instance : SDiff (Clopens α) :=
-  ⟨fun s t => ⟨s \ t, s.clopen.diff t.clopen⟩⟩
+  ⟨fun s t => ⟨s \ t, s.clopen.diffₓ t.clopen⟩⟩
 
 instance : HasCompl (Clopens α) :=
   ⟨fun s => ⟨sᶜ, s.clopen.compl⟩⟩

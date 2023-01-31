@@ -203,7 +203,7 @@ theorem pathEquivList_cons (p : Path (star α) (star α)) (a : star α ⟶ star 
 
 #print Quiver.SingleObj.pathEquivList_symm_nil /-
 @[simp]
-theorem pathEquivList_symm_nil : pathEquivList.symm ([] : List α) = path.nil :=
+theorem pathEquivList_symm_nil : pathEquivList.symm ([] : List α) = Path.nil :=
   rfl
 #align quiver.single_obj.path_equiv_list_symm_nil Quiver.SingleObj.pathEquivList_symm_nil
 -/

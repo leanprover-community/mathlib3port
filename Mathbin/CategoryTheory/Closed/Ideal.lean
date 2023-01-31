@@ -87,7 +87,7 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
   symm
   apply nat_iso.of_components _ _
   · intro X
-    haveI := (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_is_iso
+    haveI := (exponential_ideal.exp_closed (i.obj_mem_ess_image X) A).unit_isIso
     apply as_iso ((adjunction.of_right_adjoint i).Unit.app (A ⟹ i.obj X))
   · simp
 #align category_theory.exponential_ideal_reflective CategoryTheory.exponentialIdealReflective
@@ -193,13 +193,13 @@ noncomputable def bijection (A B : C) (X : D) :
     _ ≃ (B ⨯ A ⟶ i.obj X) := (Limits.prod.braiding _ _).homCongr (Iso.refl _)
     _ ≃ (A ⟶ B ⟹ i.obj X) := (exp.adjunction _).homEquiv _ _
     _ ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B ⟹ i.obj X) :=
-      unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_ess_image _) _)
+      unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_essImage _) _)
     _ ≃ (B ⨯ i.obj ((leftAdjoint i).obj A) ⟶ i.obj X) := ((exp.adjunction _).homEquiv _ _).symm
     _ ≃ (i.obj ((leftAdjoint i).obj A) ⨯ B ⟶ i.obj X) :=
       (Limits.prod.braiding _ _).homCongr (Iso.refl _)
     _ ≃ (B ⟶ i.obj ((leftAdjoint i).obj A) ⟹ i.obj X) := (exp.adjunction _).homEquiv _ _
     _ ≃ (i.obj ((leftAdjoint i).obj B) ⟶ i.obj ((leftAdjoint i).obj A) ⟹ i.obj X) :=
-      unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_ess_image _) _)
+      unitCompPartialBijective _ (ExponentialIdeal.exp_closed (i.obj_mem_essImage _) _)
     _ ≃ (i.obj ((leftAdjoint i).obj A) ⨯ i.obj ((leftAdjoint i).obj B) ⟶ i.obj X) :=
       ((exp.adjunction _).homEquiv _ _).symm
     _ ≃ (i.obj ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B) ⟶ i.obj X) :=

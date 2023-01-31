@@ -590,13 +590,13 @@ instance monMonoidal : MonoidalCategory (Mon_ C)
     dsimp
     apply associator_naturality
   leftUnitor M := isoOfIso (λ_ M.x) one_leftUnitor mul_leftUnitor
-  left_unitor_naturality' := by
+  leftUnitor_naturality' := by
     intros
     ext
     dsimp
     apply left_unitor_naturality
   rightUnitor M := isoOfIso (ρ_ M.x) one_rightUnitor mul_rightUnitor
-  right_unitor_naturality' := by
+  rightUnitor_naturality' := by
     intros
     ext
     dsimp

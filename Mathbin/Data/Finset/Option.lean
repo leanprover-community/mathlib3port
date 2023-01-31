@@ -136,7 +136,7 @@ theorem mem_eraseNone {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ 
 
 #print Finset.eraseNone_eq_bUnion /-
 theorem eraseNone_eq_bUnion [DecidableEq α] (s : Finset (Option α)) :
-    s.eraseNone = s.bUnion Option.toFinset := by
+    s.eraseNone = s.bunionᵢ Option.toFinset := by
   ext
   simp
 #align finset.erase_none_eq_bUnion Finset.eraseNone_eq_bUnion
@@ -206,14 +206,14 @@ theorem eraseNone_none : ({none} : Finset (Option α)).eraseNone = ∅ :=
 #print Finset.image_some_eraseNone /-
 @[simp]
 theorem image_some_eraseNone [DecidableEq (Option α)] (s : Finset (Option α)) :
-    s.eraseNone.image some = s.erase none := by ext (_ | x) <;> simp
+    s.eraseNone.image some = s.eraseₓ none := by ext (_ | x) <;> simp
 #align finset.image_some_erase_none Finset.image_some_eraseNone
 -/
 
 #print Finset.map_some_eraseNone /-
 @[simp]
 theorem map_some_eraseNone [DecidableEq (Option α)] (s : Finset (Option α)) :
-    s.eraseNone.map Embedding.some = s.erase none := by
+    s.eraseNone.map Embedding.some = s.eraseₓ none := by
   rw [map_eq_image, embedding.some_apply, image_some_erase_none]
 #align finset.map_some_erase_none Finset.map_some_eraseNone
 -/

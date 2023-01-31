@@ -42,7 +42,7 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
       (do
           let last := last.toString
           let last :=
-            if last.toList.ilast = ''' then (last.toList.reverse.drop 1).reverse.asString
+            if last.toList.getLastI = ''' then (last.toList.reverse.drop 1).reverse.asString
             else last ++ "_lemma"
           return (mkStrName old last)) <|>
         failed

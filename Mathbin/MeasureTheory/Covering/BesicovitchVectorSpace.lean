@@ -318,7 +318,7 @@ def goodδ : ℝ :=
 #align besicovitch.good_δ Besicovitch.goodδ
 
 theorem goodδ_lt_one : goodδ E < 1 :=
-  (exists_good_δ E).some_spec.2.1
+  (exists_good_δ E).choose_spec.2.1
 #align besicovitch.good_δ_lt_one Besicovitch.goodδ_lt_one
 
 /-- A number `τ > 1`, but chosen close enough to `1` so that the construction in the Besicovitch
@@ -330,7 +330,7 @@ def goodτ : ℝ :=
 
 theorem one_lt_goodτ : 1 < goodτ E := by
   dsimp [good_τ, good_δ]
-  linarith [(exists_good_δ E).some_spec.1]
+  linarith [(exists_good_δ E).choose_spec.1]
 #align besicovitch.one_lt_good_τ Besicovitch.one_lt_goodτ
 
 variable {E}

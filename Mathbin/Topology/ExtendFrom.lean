@@ -72,7 +72,7 @@ theorem continuousOn_extendFrom [RegularSpace Y] {f : X → Y} {A B : Set X} (hB
   obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V' :=
     by
     have := tendsto_extendFrom (hf x x_in)
-    rcases(nhdsWithin_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
+    rcases(nhdsWithin_basis_open x A).tendsto_left_iffₓ.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
     use V, IsOpen.mem_nhds V_op hxV, V_op, hV
   suffices : ∀ y ∈ V ∩ B, φ y ∈ V'
   exact mem_of_superset (inter_mem_inf V_in <| mem_principal_self B) this

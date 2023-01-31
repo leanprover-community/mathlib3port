@@ -505,7 +505,7 @@ to terminal is a monomorphism, which is the second of Freyd's axioms for an AT c
 TODO: This is a condition satisfied by categories with zero objects and morphisms.
 -/
 class InitialMonoClass (C : Type u₁) [Category.{v₁} C] : Prop where
-  is_initial_mono_from : ∀ {I} (X : C) (hI : IsInitial I), Mono (hI.to X)
+  isInitial_mono_from : ∀ {I} (X : C) (hI : IsInitial I), Mono (hI.to X)
 #align category_theory.limits.initial_mono_class CategoryTheory.Limits.InitialMonoClass
 
 theorem IsInitial.mono_from [InitialMonoClass C] {I} {X : C} (hI : IsInitial I) (f : I ⟶ X) :
@@ -524,7 +524,7 @@ every morphism out of it is a monomorphism. -/
 theorem InitialMonoClass.of_isInitial {I : C} (hI : IsInitial I) (h : ∀ X, Mono (hI.to X)) :
     InitialMonoClass C :=
   {
-    is_initial_mono_from := fun I' X hI' =>
+    isInitial_mono_from := fun I' X hI' =>
       by
       rw [hI'.hom_ext (hI'.to X) ((hI'.unique_up_to_iso hI).Hom ≫ hI.to X)]
       apply mono_comp }

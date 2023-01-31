@@ -149,7 +149,7 @@ theorem exists_mem_zpowers {x : G} {p : G → Prop} : (∃ g ∈ zpowers x, p g)
 #align subgroup.exists_mem_zpowers Subgroup.exists_mem_zpowers
 
 instance (a : G) : Countable (zpowers a) :=
-  ((zpowersHom G a).range_restrict_surjective.comp Multiplicative.ofAdd.Surjective).Countable
+  ((zpowersHom G a).rangeRestrict_surjective.comp Multiplicative.ofAdd.Surjective).Countable
 
 end Subgroup
 
@@ -194,7 +194,7 @@ attribute [to_additive AddSubgroup.exists_zmultiples] Subgroup.exists_zpowers
 attribute [to_additive AddSubgroup.exists_mem_zmultiples] Subgroup.exists_mem_zpowers
 
 instance (a : A) : Countable (zmultiples a) :=
-  (zmultiplesHom A a).range_restrict_surjective.Countable
+  (zmultiplesHom A a).rangeRestrict_surjective.Countable
 
 section Ring
 

@@ -265,7 +265,7 @@ private theorem step4 : (Fintype.card N).minFac.Prime :=
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step5 {P : Sylow (Fintype.card N).minFac N} : P.1 ≠ ⊥ :=
   haveI : Fact (Fintype.card N).minFac.Prime := ⟨step4 h1 h2 h3⟩
-  P.ne_bot_of_dvd_card (Fintype.card N).min_fac_dvd
+  P.ne_bot_of_dvd_card (Fintype.card N).minFac_dvd
 #align subgroup.schur_zassenhaus_induction.step5 subgroup.schur_zassenhaus_induction.step5
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/

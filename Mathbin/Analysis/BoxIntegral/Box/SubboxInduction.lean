@@ -84,12 +84,12 @@ theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
 #align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_splitCenterBox
 
 theorem injective_splitCenterBox (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
-  by_contra fun Hne => (I.disjoint_split_center_box Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
+  by_contra fun Hne => (I.disjoint_splitCenterBox Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
 #align box_integral.box.injective_split_center_box BoxIntegral.Box.injective_splitCenterBox
 
 @[simp]
 theorem exists_mem_splitCenterBox {I : Box ι} {x : ι → ℝ} : (∃ s, x ∈ I.splitCenterBox s) ↔ x ∈ I :=
-  ⟨fun ⟨s, hs⟩ => I.split_center_box_le s hs, fun hx =>
+  ⟨fun ⟨s, hs⟩ => I.splitCenterBox_le s hs, fun hx =>
     ⟨{ i | (I.lower i + I.upper i) / 2 < x i }, mem_splitCenterBox.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
 #align box_integral.box.exists_mem_split_center_box BoxIntegral.Box.exists_mem_splitCenterBox
 
@@ -169,8 +169,8 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     mem_Inter.1
       (csupᵢ_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
         (J m).lower_le_upper)
-  have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_Icc
-  have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_Icc
+  have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_icc
+  have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_icc
   have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
     tendsto_atTop_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
   have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) :=

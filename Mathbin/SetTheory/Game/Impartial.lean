@@ -219,7 +219,7 @@ theorem forall_leftMoves_fuzzy_iff_equiv_zero : (∀ i, G.moveLeft i ‖ 0) ↔ 
   · rw [equiv_zero_iff_le G, le_zero_lf]
     exact fun i => (hb i).1
   · rw [fuzzy_zero_iff_lf]
-    exact hp.1.move_left_lf i
+    exact hp.1.moveLeft_lf i
 #align pgame.impartial.forall_left_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_leftMoves_fuzzy_iff_equiv_zero
 
 theorem forall_rightMoves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) ↔ (G ≈ 0) :=
@@ -228,7 +228,7 @@ theorem forall_rightMoves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) �
   · rw [equiv_zero_iff_ge G, zero_le_lf]
     exact fun i => (hb i).2
   · rw [fuzzy_zero_iff_gf]
-    exact hp.2.lf_move_right i
+    exact hp.2.lf_moveRight i
 #align pgame.impartial.forall_right_moves_fuzzy_iff_equiv_zero Pgame.Impartial.forall_rightMoves_fuzzy_iff_equiv_zero
 
 theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ G ‖ 0 :=

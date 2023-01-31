@@ -230,7 +230,7 @@ def homologyOfZeroRight [HasCokernel (imageToKernel f (0 : B ⟶ C) comp_zero)] 
 def homologyOfZeroLeft [HasZeroObject V] [HasKernels V] [HasImage (0 : A ⟶ B)]
     [HasCokernel (imageToKernel (0 : A ⟶ B) g zero_comp)] :
     homology (0 : A ⟶ B) g zero_comp ≅ kernel g :=
-  ((cokernel_iso_of_eq <| imageToKernel_zero_left _).trans cokernelZeroIsoTarget).trans
+  ((cokernelIsoOfEq <| imageToKernel_zero_left _).trans cokernelZeroIsoTarget).trans
     (kernelSubobjectIso _)
 #align homology_of_zero_left homologyOfZeroLeft
 

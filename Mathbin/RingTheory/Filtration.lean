@@ -453,7 +453,7 @@ variable (I)
 /-- **Artin-Rees lemma** -/
 theorem Ideal.exists_pow_inf_eq_pow_smul [IsNoetherianRing R] [h : Module.Finite R M]
     (N : Submodule R M) : ∃ k : ℕ, ∀ n ≥ k, I ^ n • ⊤ ⊓ N = I ^ (n - k) • (I ^ k • ⊤ ⊓ N) :=
-  ((I.stable_filtration_stable ⊤).inter_right (I.trivialFiltration N)).exists_pow_smul_eq_of_ge
+  ((I.stableFiltration_stable ⊤).inter_right (I.trivialFiltration N)).exists_pow_smul_eq_of_ge
 #align ideal.exists_pow_inf_eq_pow_smul Ideal.exists_pow_inf_eq_pow_smul
 
 theorem Ideal.mem_infᵢ_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Finite R M] (x : M) :

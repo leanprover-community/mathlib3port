@@ -90,7 +90,7 @@ theorem transpose_dualTensorHom (f : Module.Dual R M) (m : M) :
 
 @[simp]
 theorem dualTensorHom_prodMap_zero (f : Module.Dual R M) (p : P) :
-    ((dualTensorHom R M P) (f ⊗ₜ[R] p)).prod_map (0 : N →ₗ[R] Q) =
+    ((dualTensorHom R M P) (f ⊗ₜ[R] p)).Prod_map (0 : N →ₗ[R] Q) =
       dualTensorHom R (M × N) (P × Q) ((f ∘ₗ fst R M N) ⊗ₜ inl R P Q p) :=
   by
   ext <;>
@@ -100,7 +100,7 @@ theorem dualTensorHom_prodMap_zero (f : Module.Dual R M) (p : P) :
 
 @[simp]
 theorem zero_prodMap_dualTensorHom (g : Module.Dual R N) (q : Q) :
-    (0 : M →ₗ[R] P).prod_map ((dualTensorHom R N Q) (g ⊗ₜ[R] q)) =
+    (0 : M →ₗ[R] P).Prod_map ((dualTensorHom R N Q) (g ⊗ₜ[R] q)) =
       dualTensorHom R (M × N) (P × Q) ((g ∘ₗ snd R M N) ⊗ₜ inr R P Q q) :=
   by
   ext <;>

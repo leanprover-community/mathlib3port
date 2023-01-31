@@ -43,7 +43,7 @@ variable (μ : Measure α) [IsLocallyFiniteMeasure μ] [IsDoublingMeasure μ]
 NB: The `set : α` type ascription is present because of issue #16932 on GitHub. -/
 theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s : ℕ → Set α}
     (hs : ∀ i, IsClosed (s i)) {r₁ r₂ : ℕ → ℝ} (hr : Tendsto r₁ atTop (𝓝[>] 0)) (hrp : 0 ≤ r₁)
-    {M : ℝ} (hM : 0 < M) (hM' : M < 1) (hMr : ∀ᶠ i in at_top, M * r₁ i ≤ r₂ i) :
+    {M : ℝ} (hM : 0 < M) (hM' : M < 1) (hMr : ∀ᶠ i in atTop, M * r₁ i ≤ r₂ i) :
     (blimsup (fun i => cthickening (r₁ i) (s i)) atTop p : Set α) ≤ᵐ[μ]
       (blimsup (fun i => cthickening (r₂ i) (s i)) atTop p : Set α) :=
   by
@@ -171,7 +171,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
 NB: The `set : α` type ascription is present because of issue #16932 on GitHub. -/
 theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : ℕ → Set α} {M : ℝ}
     (hM : 0 < M) {r₁ r₂ : ℕ → ℝ} (hr : Tendsto r₁ atTop (𝓝[>] 0))
-    (hMr : ∀ᶠ i in at_top, M * r₁ i ≤ r₂ i) :
+    (hMr : ∀ᶠ i in atTop, M * r₁ i ≤ r₂ i) :
     (blimsup (fun i => cthickening (r₁ i) (s i)) atTop p : Set α) ≤ᵐ[μ]
       (blimsup (fun i => cthickening (r₂ i) (s i)) atTop p : Set α) :=
   by
@@ -265,7 +265,7 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
 #align blimsup_cthickening_mul_ae_eq blimsup_cthickening_mul_ae_eq
 
 theorem blimsup_cthickening_ae_eq_blimsup_thickening {p : ℕ → Prop} {s : ℕ → Set α} {r : ℕ → ℝ}
-    (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in at_top, p i → 0 < r i) :
+    (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in atTop, p i → 0 < r i) :
     (blimsup (fun i => cthickening (r i) (s i)) atTop p : Set α) =ᵐ[μ]
       (blimsup (fun i => thickening (r i) (s i)) atTop p : Set α) :=
   by
@@ -281,7 +281,7 @@ theorem blimsup_cthickening_ae_eq_blimsup_thickening {p : ℕ → Prop} {s : ℕ
 
 /-- An auxiliary result en route to `blimsup_thickening_mul_ae_eq`. -/
 theorem blimsup_thickening_mul_ae_eq_aux (p : ℕ → Prop) (s : ℕ → Set α) {M : ℝ} (hM : 0 < M)
-    (r : ℕ → ℝ) (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in at_top, p i → 0 < r i) :
+    (r : ℕ → ℝ) (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in atTop, p i → 0 < r i) :
     (blimsup (fun i => thickening (M * r i) (s i)) atTop p : Set α) =ᵐ[μ]
       (blimsup (fun i => thickening (r i) (s i)) atTop p : Set α) :=
   by

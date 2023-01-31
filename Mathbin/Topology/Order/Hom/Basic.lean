@@ -38,7 +38,7 @@ variable {F α β γ δ : Type _}
 /-- The type of continuous monotone maps from `α` to `β`, aka Priestley homomorphisms. -/
 structure ContinuousOrderHom (α β : Type _) [Preorder α] [Preorder β] [TopologicalSpace α]
   [TopologicalSpace β] extends OrderHom α β where
-  continuous_to_fun : Continuous to_fun
+  continuous_toFun : Continuous to_fun
 #align continuous_order_hom ContinuousOrderHom
 
 -- mathport name: «expr →Co »
@@ -69,7 +69,7 @@ instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
   ⟨fun f =>
     { toFun := f
       monotone' := OrderHomClass.mono f
-      continuous_to_fun := map_continuous f }⟩
+      continuous_toFun := map_continuous f }⟩
 
 /-! ### Top homomorphisms -/
 
@@ -95,7 +95,7 @@ instance : ContinuousOrderHomClass (α →Co β) α β
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
   map_rel f := f.monotone'
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -115,7 +115,7 @@ theorem ext {f g : α →Co β} (h : ∀ a, f a = g a) : f = g :=
 /-- Copy of a `continuous_order_hom` with a new `continuous_map` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : α →Co β) (f' : α → β) (h : f' = f) : α →Co β :=
-  ⟨f.toOrderHom.copy f' <| h, h.symm.subst f.continuous_to_fun⟩
+  ⟨f.toOrderHom.copy f' <| h, h.symm.subst f.continuous_toFun⟩
 #align continuous_order_hom.copy ContinuousOrderHom.copy
 
 @[simp]
@@ -151,7 +151,7 @@ theorem id_apply (a : α) : ContinuousOrderHom.id α a = a :=
 
 /-- Composition of `continuous_order_hom`s as a `continuous_order_hom`. -/
 def comp (f : β →Co γ) (g : α →Co β) : ContinuousOrderHom α γ :=
-  ⟨f.toOrderHom.comp g.toOrderHom, f.continuous_to_fun.comp g.continuous_to_fun⟩
+  ⟨f.toOrderHom.comp g.toOrderHom, f.continuous_toFun.comp g.continuous_toFun⟩
 #align continuous_order_hom.comp ContinuousOrderHom.comp
 
 @[simp]

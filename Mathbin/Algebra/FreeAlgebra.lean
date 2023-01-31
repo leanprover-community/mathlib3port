@@ -504,7 +504,7 @@ theorem induction {C : FreeAlgebra R X → Prop}
     { carrier := C
       mul_mem' := h_mul
       add_mem' := h_add
-      algebra_map_mem' := h_grade0 }
+      algebraMap_mem' := h_grade0 }
   let of : X → s := Subtype.coind (ι R) h_grade1
   -- the mapping through the subalgebra is the identity
   have of_id : AlgHom.id R (FreeAlgebra R X) = s.val.comp (lift R of) :=

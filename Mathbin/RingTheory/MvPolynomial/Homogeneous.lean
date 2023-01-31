@@ -51,7 +51,7 @@ variable (σ R)
 /-- The submodule of homogeneous `mv_polynomial`s of degree `n`. -/
 def homogeneousSubmodule [CommSemiring R] (n : ℕ) : Submodule R (MvPolynomial σ R)
     where
-  carrier := { x | x.IsHomogeneous n }
+  carrier := { x | x.Homogeneous n }
   smul_mem' r a ha c hc := by
     rw [coeff_smul] at hc
     apply ha
@@ -74,7 +74,7 @@ variable {σ R}
 
 @[simp]
 theorem mem_homogeneousSubmodule [CommSemiring R] (n : ℕ) (p : MvPolynomial σ R) :
-    p ∈ homogeneousSubmodule σ R n ↔ p.IsHomogeneous n :=
+    p ∈ homogeneousSubmodule σ R n ↔ p.Homogeneous n :=
   Iff.rfl
 #align mv_polynomial.mem_homogeneous_submodule MvPolynomial.mem_homogeneousSubmodule
 
@@ -273,11 +273,11 @@ theorem coeff_homogeneousComponent (d : σ →₀ ℕ) :
 
 theorem homogeneousComponent_apply :
     homogeneousComponent n φ =
-      ∑ d in φ.support.filter fun d => (∑ i in d.support, d i) = n, monomial d (coeff d φ) :=
+      ∑ d in φ.support.filterₓ fun d => (∑ i in d.support, d i) = n, monomial d (coeff d φ) :=
   by convert Finsupp.filter_eq_sum (fun d : σ →₀ ℕ => (∑ i in d.support, d i) = n) φ
 #align mv_polynomial.homogeneous_component_apply MvPolynomial.homogeneousComponent_apply
 
-theorem homogeneousComponent_isHomogeneous : (homogeneousComponent n φ).IsHomogeneous n :=
+theorem homogeneousComponent_isHomogeneous : (homogeneousComponent n φ).Homogeneous n :=
   by
   intro d hd
   contrapose! hd

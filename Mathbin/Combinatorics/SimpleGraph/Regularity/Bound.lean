@@ -36,8 +36,7 @@ def stepBound (n : ℕ) : ℕ :=
   n * 4 ^ n
 #align szemeredi_regularity.step_bound SzemerediRegularity.stepBound
 
-theorem le_stepBound : id ≤ step_bound := fun n =>
-  Nat.le_mul_of_pos_right <| pow_pos (by norm_num) n
+theorem le_stepBound : id ≤ stepBound := fun n => Nat.le_mul_of_pos_right <| pow_pos (by norm_num) n
 #align szemeredi_regularity.le_step_bound SzemerediRegularity.le_stepBound
 
 theorem stepBound_mono : Monotone stepBound := fun a b h =>
@@ -171,8 +170,8 @@ theorem hundred_lt_pow_initialBound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
 /-- An explicit bound on the size of the equipartition whose existence is given by Szemerédi's
 regularity lemma. -/
 noncomputable def bound : ℕ :=
-  (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l) *
-    16 ^ (step_bound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l)
+  (stepBound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l) *
+    16 ^ (stepBound^[⌊4 / ε ^ 5⌋₊] <| initialBound ε l)
 #align szemeredi_regularity.bound SzemerediRegularity.bound
 
 theorem initialBound_le_bound : initialBound ε l ≤ bound ε l :=

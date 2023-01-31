@@ -42,7 +42,7 @@ variable {C : Type _} [Category C] {A B B' X Y Y' : C} (i : A ⟶ B) (i' : B ⟶
 property with respect to `p`, or equivalently that `p` has
 the right lifting property with respect to `i`. -/
 class HasLiftingProperty : Prop where
-  sq_has_lift : ∀ {f : A ⟶ X} {g : B ⟶ Y} (sq : CommSq f i p g), sq.HasLift
+  sq_hasLift : ∀ {f : A ⟶ X} {g : B ⟶ Y} (sq : CommSq f i p g), sq.HasLift
 #align category_theory.has_lifting_property CategoryTheory.HasLiftingProperty
 
 instance (priority := 100) sq_hasLift_of_hasLiftingProperty {f : A ⟶ X} {g : B ⟶ Y}

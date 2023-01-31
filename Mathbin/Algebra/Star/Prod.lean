@@ -28,7 +28,7 @@ variable {R : Type u} {S : Type v}
 
 namespace Prod
 
-instance [Star R] [Star S] : Star (R × S) where star x := (star x.1, star x.2)
+instance [Star R] [Star S] : Star (R × S) where unit x := (star x.1, star x.2)
 
 #print Prod.fst_star /-
 @[simp]

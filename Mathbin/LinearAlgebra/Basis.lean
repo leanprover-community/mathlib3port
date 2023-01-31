@@ -400,7 +400,7 @@ theorem mapCoeffs_apply (i : ι) : b.mapCoeffs f h i = b i :=
 
 @[simp]
 theorem coe_mapCoeffs : (b.mapCoeffs f h : ι → M) = b :=
-  funext <| b.map_coeffs_apply f h
+  funext <| b.mapCoeffs_apply f h
 #align basis.coe_map_coeffs Basis.coe_mapCoeffs
 
 end MapCoeffs
@@ -478,7 +478,7 @@ theorem reindexRange_repr_self (i : ι) :
     b.reindexRange.repr (b i) = Finsupp.single ⟨b i, mem_range_self i⟩ 1 :=
   calc
     b.reindexRange.repr (b i) = b.reindexRange.repr (b.reindexRange ⟨b i, mem_range_self i⟩) :=
-      congr_arg _ (b.reindex_range_self _ _).symm
+      congr_arg _ (b.reindexRange_self _ _).symm
     _ = Finsupp.single ⟨b i, mem_range_self i⟩ 1 := b.reindexRange.repr_self _
     
 #align basis.reindex_range_repr_self Basis.reindexRange_repr_self
@@ -512,7 +512,7 @@ theorem reindexRange_repr' (x : M) {bi : M} {i : ι} (h : b i = bi) :
 @[simp]
 theorem reindexRange_repr (x : M) (i : ι) (h := Set.mem_range_self i) :
     b.reindexRange.repr x ⟨b i, h⟩ = b.repr x i :=
-  b.reindex_range_repr' _ rfl
+  b.reindexRange_repr' _ rfl
 #align basis.reindex_range_repr Basis.reindexRange_repr
 
 section Fintype
@@ -795,7 +795,7 @@ protected theorem noZeroSMulDivisors [NoZeroDivisors R] (b : Basis ι R M) :
 
 protected theorem smul_eq_zero [NoZeroDivisors R] (b : Basis ι R M) {c : R} {x : M} :
     c • x = 0 ↔ c = 0 ∨ x = 0 :=
-  @smul_eq_zero _ _ _ _ _ b.NoZeroSmulDivisors _ _
+  @smul_eq_zero _ _ _ _ _ b.NoZeroSMulDivisors _ _
 #align basis.smul_eq_zero Basis.smul_eq_zero
 
 theorem eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : Submodule R M)
@@ -862,9 +862,9 @@ theorem basis_singleton_iff {R M : Type _} [Ring R] [Nontrivial R] [AddCommGroup
       simp
     · refine' smul_left_injective _ nz _
       simp only [Finsupp.single_eq_same]
-      exact (w (f default • x)).some_spec
+      exact (w (f default • x)).choose_spec
     · simp only [Finsupp.single_eq_same]
-      exact (w y).some_spec
+      exact (w y).choose_spec
 #align basis.basis_singleton_iff Basis.basis_singleton_iff
 
 end Singleton
@@ -946,7 +946,7 @@ theorem Basis.sum_equivFun (u : M) : (∑ i, b.equivFun u i • b i) = u :=
 #align basis.sum_equiv_fun Basis.sum_equivFun
 
 theorem Basis.sum_repr (u : M) : (∑ i, b.repr u i • b i) = u :=
-  b.sum_equiv_fun u
+  b.sum_equivFun u
 #align basis.sum_repr Basis.sum_repr
 
 @[simp]
@@ -1286,7 +1286,7 @@ theorem coord_unitsSmul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
 @[simp]
 theorem repr_unitsSmul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (v : M) (i : ι) :
     (e.units_smul w).repr v i = (w i)⁻¹ • e.repr v i :=
-  congr_arg (fun f : M →ₗ[R₂] R₂ => f v) (e.coord_units_smul w i)
+  congr_arg (fun f : M →ₗ[R₂] R₂ => f v) (e.coord_unitsSmul w i)
 #align basis.repr_units_smul Basis.repr_unitsSmul
 
 /-- A version of `smul_of_units` that uses `is_unit`. -/
@@ -1430,7 +1430,7 @@ section ExistsBasis
 /-- If `s` is a linear independent set of vectors, we can extend it to a basis. -/
 noncomputable def extend (hs : LinearIndependent K (coe : s → V)) : Basis _ K V :=
   Basis.mk
-    (@LinearIndependent.restrict_of_comp_subtype _ _ _ id _ _ _ _ (hs.linear_independent_extend _))
+    (@LinearIndependent.restrict_of_comp_subtype _ _ _ id _ _ _ _ (hs.linearIndependent_extend _))
     (SetLike.coe_subset_coe.mp <| by simpa using hs.subset_span_extend (subset_univ s))
 #align basis.extend Basis.extend
 
@@ -1569,7 +1569,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
 
 /-- The lattice of submodules of a module over a division ring is atomistic. -/
 instance : IsAtomistic (Submodule K V)
-    where eq_Sup_atoms := by
+    where eq_supₛ_atoms := by
     intro W
     use { T : Submodule K V | ∃ (v : V)(hv : v ∈ W)(hz : v ≠ 0), T = span K {v} }
     refine' ⟨submodule_eq_Sup_le_nonzero_spans W, _⟩
@@ -1655,7 +1655,7 @@ theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
 #align submodule.exists_le_ker_of_lt_top Submodule.exists_le_ker_of_lt_top
 
 theorem quotient_prod_linearEquiv (p : Submodule K V) : Nonempty (((V ⧸ p) × p) ≃ₗ[K] V) :=
-  let ⟨q, hq⟩ := p.exists_is_compl
+  let ⟨q, hq⟩ := p.exists_isCompl
   Nonempty.intro <|
     ((quotientEquivOfIsCompl p q hq).Prod (LinearEquiv.refl _ _)).trans
       (prodEquivOfIsCompl q p hq.symm)

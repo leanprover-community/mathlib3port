@@ -442,7 +442,7 @@ This lemma is only intended for use in setting up the bundled version
 and should not be used once that is defined. -/
 theorem orthogonalProjectionFn_mem (v : E) : orthogonalProjectionFn K v ∈ K :=
   (exists_norm_eq_infᵢ_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›)
-        v).some_spec.some
+        v).choose_spec.some
 #align orthogonal_projection_fn_mem orthogonalProjectionFn_mem
 
 /-- The characterization of the unbundled orthogonal projection.  This
@@ -454,7 +454,7 @@ theorem orthogonalProjectionFn_inner_eq_zero (v : E) :
   rw [← norm_eq_infᵢ_iff_inner_eq_zero K (orthogonalProjectionFn_mem v)]
   exact
     (exists_norm_eq_infᵢ_of_complete_subspace K (complete_space_coe_iff_is_complete.mp ‹_›)
-          v).some_spec.some_spec
+          v).choose_spec.choose_spec
 #align orthogonal_projection_fn_inner_eq_zero orthogonalProjectionFn_inner_eq_zero
 
 /-- The unbundled orthogonal projection is the unique point in `K`
@@ -847,7 +847,7 @@ theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] : Kᗮᗮ =
     haveI : CompleteSpace K.topological_closure :=
       K.is_closed_topological_closure.complete_space_coe
     rw [K.topological_closure.orthogonal_orthogonal]
-  · exact K.topological_closure_minimal K.le_orthogonal_orthogonal Kᗮ.is_closed_orthogonal
+  · exact K.topological_closure_minimal K.le_orthogonal_orthogonal Kᗮ.isClosed_orthogonal
 #align submodule.orthogonal_orthogonal_eq_closure Submodule.orthogonal_orthogonal_eq_closure
 
 variable {K}
@@ -924,7 +924,7 @@ theorem orthogonalProjection_tendsto_closure_supᵢ [CompleteSpace E] {ι : Type
   let y := (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)
   have proj_x : ∀ i, orthogonalProjection (U i) x = orthogonalProjection (U i) y := fun i =>
     (orthogonalProjection_orthogonalProjection_of_le
-        ((le_supᵢ U i).trans (supᵢ U).le_topological_closure) _).symm
+        ((le_supᵢ U i).trans (supᵢ U).le_topologicalClosure) _).symm
   suffices ∀ ε > 0, ∃ I, ∀ i ≥ I, ‖(orthogonalProjection (U i) y : E) - y‖ < ε by
     simpa only [proj_x, NormedAddCommGroup.tendsto_atTop] using this
   intro ε hε
@@ -1393,7 +1393,7 @@ theorem maximal_orthonormal_iff_basis_of_finiteDimensional (hv : Orthonormal �
   by
   haveI := proper_is_R_or_C 𝕜 (span 𝕜 v)
   rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hv]
-  have hv_compl : IsComplete (span 𝕜 v : Set E) := (span 𝕜 v).complete_of_finite_dimensional
+  have hv_compl : IsComplete (span 𝕜 v : Set E) := (span 𝕜 v).complete_of_finiteDimensional
   rw [Submodule.orthogonal_eq_bot_iff]
   have hv_coe : range (coe : v → E) = v := by simp
   constructor

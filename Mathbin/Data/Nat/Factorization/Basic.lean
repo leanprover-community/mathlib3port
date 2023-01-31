@@ -55,7 +55,7 @@ def factorization (n : ℕ) : ℕ →₀ ℕ
     where
   support := n.factors.toFinset
   toFun p := if p.Prime then padicValNat p n else 0
-  mem_support_to_fun := by
+  mem_support_toFun := by
     rcases eq_or_ne n 0 with (rfl | hn0); · simp
     simp only [mem_factors hn0, mem_to_finset, Ne.def, ite_eq_right_iff, not_forall, exists_prop,
       and_congr_right_iff]
@@ -548,7 +548,7 @@ theorem coprime_ord_compl {n p : ℕ} (hp : Prime p) (hn : n ≠ 0) : coprime p 
 #align nat.coprime_ord_compl Nat.coprime_ord_compl
 
 theorem factorization_ord_compl (n p : ℕ) :
-    (ord_compl[p] n).factorization = n.factorization.erase p :=
+    (ord_compl[p] n).factorization = n.factorization.eraseₓ p :=
   by
   rcases eq_or_ne n 0 with (rfl | hn); · simp
   by_cases pp : p.prime; swap; · simp [pp]
@@ -727,7 +727,7 @@ theorem setOf_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n �
 /-- The set of positive powers of prime `p` that divide `n` is exactly the set of
 positive natural numbers up to `n.factorization p`. -/
 theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
-    Icc 1 (n.factorization p) = (Ico 1 n).filter fun i : ℕ => p ^ i ∣ n :=
+    Icc 1 (n.factorization p) = (Ico 1 n).filterₓ fun i : ℕ => p ^ i ∣ n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn); · simp
   ext x
@@ -737,12 +737,12 @@ theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
 #align nat.Icc_factorization_eq_pow_dvd Nat.Icc_factorization_eq_pow_dvd
 
 theorem factorization_eq_card_pow_dvd (n : ℕ) {p : ℕ} (pp : p.Prime) :
-    n.factorization p = ((Ico 1 n).filter fun i => p ^ i ∣ n).card := by
+    n.factorization p = ((Ico 1 n).filterₓ fun i => p ^ i ∣ n).card := by
   simp [← Icc_factorization_eq_pow_dvd n pp]
 #align nat.factorization_eq_card_pow_dvd Nat.factorization_eq_card_pow_dvd
 
 theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
-    ((Ico 1 n).filter fun i => p ^ i ∣ n) = (Icc 1 b).filter fun i => p ^ i ∣ n :=
+    ((Ico 1 n).filterₓ fun i => p ^ i ∣ n) = (Icc 1 b).filterₓ fun i => p ^ i ∣ n :=
   by
   ext x
   simp only [Finset.mem_filter, mem_Ico, mem_Icc, and_congr_left_iff, and_congr_right_iff]
@@ -949,7 +949,7 @@ theorem prod_pow_prime_padicValNat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < 
 
 -- TODO: Port lemmas from `data/nat/multiplicity` to here, re-written in terms of `factorization`
 /-- Exactly `n / p` naturals in `[1, n]` are multiples of `p`. -/
-theorem card_multiples (n p : ℕ) : card ((Finset.range n).filter fun e => p ∣ e + 1) = n / p :=
+theorem card_multiples (n p : ℕ) : card ((Finset.range n).filterₓ fun e => p ∣ e + 1) = n / p :=
   by
   induction' n with n hn; · simp
   simp [Nat.succ_div, add_ite, add_zero, Finset.range_succ, filter_insert, apply_ite card,
@@ -957,7 +957,7 @@ theorem card_multiples (n p : ℕ) : card ((Finset.range n).filter fun e => p �
 #align nat.card_multiples Nat.card_multiples
 
 /-- Exactly `n / p` naturals in `(0, n]` are multiples of `p`. -/
-theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filter fun x => p ∣ x).card = n / p :=
+theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filterₓ fun x => p ∣ x).card = n / p :=
   by
   induction' n with n IH
   · simp

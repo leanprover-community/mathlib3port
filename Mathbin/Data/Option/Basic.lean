@@ -132,7 +132,7 @@ theorem getD_coe (x y : α) : Option.getD (↑x) y = x :=
 -/
 
 #print Option.getD_of_ne_none /-
-theorem getD_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getOrElse y) = x := by
+theorem getD_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getD y) = x := by
   cases x <;> [contradiction, rw [get_or_else_some]]
 #align option.get_or_else_of_ne_none Option.getD_of_ne_none
 -/
@@ -925,14 +925,14 @@ theorem orElse_none (x : Option α) : (x <|> none) = x :=
 
 #print Option.isSome_none /-
 @[simp]
-theorem isSome_none : @isSome α none = ff :=
+theorem isSome_none : @isSome α none = false :=
   rfl
 #align option.is_some_none Option.isSome_none
 -/
 
 #print Option.isSome_some /-
 @[simp]
-theorem isSome_some {a : α} : isSome (some a) = tt :=
+theorem isSome_some {a : α} : isSome (some a) = true :=
   rfl
 #align option.is_some_some Option.isSome_some
 -/
@@ -945,21 +945,21 @@ theorem isSome_iff_exists {x : Option α} : isSome x ↔ ∃ a, x = some a := by
 
 #print Option.isNone_none /-
 @[simp]
-theorem isNone_none : @isNone α none = tt :=
+theorem isNone_none : @isNone α none = true :=
   rfl
 #align option.is_none_none Option.isNone_none
 -/
 
 #print Option.isNone_some /-
 @[simp]
-theorem isNone_some {a : α} : isNone (some a) = ff :=
+theorem isNone_some {a : α} : isNone (some a) = false :=
   rfl
 #align option.is_none_some Option.isNone_some
 -/
 
 #print Option.not_isSome /-
 @[simp]
-theorem not_isSome {a : Option α} : isSome a = ff ↔ a.isNone = tt := by cases a <;> simp
+theorem not_isSome {a : Option α} : isSome a = false ↔ a.isNone = true := by cases a <;> simp
 #align option.not_is_some Option.not_isSome
 -/
 
@@ -1019,7 +1019,7 @@ theorem iget_of_mem [Inhabited α] {a : α} : ∀ {o : Option α}, a ∈ o → o
 -/
 
 #print Option.getD_default_eq_iget /-
-theorem getD_default_eq_iget [Inhabited α] (o : Option α) : o.getOrElse default = o.iget := by
+theorem getD_default_eq_iget [Inhabited α] (o : Option α) : o.getD default = o.iget := by
   cases o <;> rfl
 #align option.get_or_else_default_eq_iget Option.getD_default_eq_iget
 -/

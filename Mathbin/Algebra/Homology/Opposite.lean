@@ -214,7 +214,7 @@ def opEquivalence : (HomologicalComplex V c)ᵒᵖ ≌ HomologicalComplex Vᵒ�
   inverse := opInverse V c
   unitIso := opUnitIso V c
   counitIso := opCounitIso V c
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     intro X
     ext
     simp only [op_unit_iso, op_counit_iso, nat_iso.of_components_hom_app, iso.op_hom, comp_f,
@@ -282,7 +282,7 @@ def unopEquivalence : (HomologicalComplex Vᵒᵖ c)ᵒᵖ ≌ HomologicalComple
   inverse := unopInverse V c
   unitIso := unopUnitIso V c
   counitIso := unopCounitIso V c
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     intro X
     ext
     simp only [op_unit_iso, op_counit_iso, nat_iso.of_components_hom_app, iso.op_hom, comp_f,

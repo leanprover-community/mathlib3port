@@ -112,7 +112,7 @@ submartingale converges to its `limit_process` almost everywhere.
 /-- If a stochastic process has bounded upcrossing from below `a` to above `b`,
 then it does not frequently visit both below `a` and above `b`. -/
 theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a b f ω ≠ ∞) :
-    ¬((∃ᶠ n in at_top, f n ω < a) ∧ ∃ᶠ n in at_top, b < f n ω) :=
+    ¬((∃ᶠ n in atTop, f n ω < a) ∧ ∃ᶠ n in atTop, b < f n ω) :=
   by
   rw [← lt_top_iff_ne_top, upcrossings_lt_top_iff] at hω
   replace hω : ∃ k, ∀ N, upcrossings_before a b f N ω < k
@@ -136,8 +136,8 @@ theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a 
 
 /-- A stochastic process that frequently visits below `a` and above `b` have infinite
 upcrossings. -/
-theorem upcrossings_eq_top_of_frequently_lt (hab : a < b) (h₁ : ∃ᶠ n in at_top, f n ω < a)
-    (h₂ : ∃ᶠ n in at_top, b < f n ω) : upcrossings a b f ω = ∞ :=
+theorem upcrossings_eq_top_of_frequently_lt (hab : a < b) (h₁ : ∃ᶠ n in atTop, f n ω < a)
+    (h₂ : ∃ᶠ n in atTop, b < f n ω) : upcrossings a b f ω = ∞ :=
   by_contradiction fun h => not_frequently_of_upcrossings_lt_top hab h ⟨h₁, h₂⟩
 #align measure_theory.upcrossings_eq_top_of_frequently_lt MeasureTheory.upcrossings_eq_top_of_frequently_lt
 
@@ -361,7 +361,7 @@ theorem Submartingale.ae_tendsto_limitProcess_of_uniformIntegrable (hf : Submart
     (hunif : UniformIntegrable f 1 μ) :
     ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (ℱ.limitProcess f μ ω)) :=
   let ⟨R, hR⟩ := hunif.2.2
-  hf.ae_tendsto_limit_process hR
+  hf.ae_tendsto_limitProcess hR
 #align measure_theory.submartingale.ae_tendsto_limit_process_of_uniform_integrable MeasureTheory.Submartingale.ae_tendsto_limitProcess_of_uniformIntegrable
 
 /-- If a martingale `f` adapted to `ℱ` converges in L¹ to `g`, then for all `n`, `f n` is almost
@@ -394,7 +394,7 @@ theorem Martingale.ae_eq_condexp_limitProcess (hf : Martingale f ℱ μ)
     (hbdd : UniformIntegrable f 1 μ) (n : ℕ) : f n =ᵐ[μ] μ[ℱ.limitProcess f μ|ℱ n] :=
   let ⟨R, hR⟩ := hbdd.2.2
   hf.eq_condexp_of_tendsto_snorm ((memℒpLimitProcessOfSnormBdd hbdd.1 hR).Integrable le_rfl)
-    (hf.Submartingale.tendsto_snorm_one_limit_process hbdd) n
+    (hf.Submartingale.tendsto_snorm_one_limitProcess hbdd) n
 #align measure_theory.martingale.ae_eq_condexp_limit_process MeasureTheory.Martingale.ae_eq_condexp_limitProcess
 
 /-- Part c of the **L¹ martingale convergnce theorem**: Given a integrable function `g` which
@@ -416,7 +416,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ)
   suffices g =ᵐ[μ] ℱ.limit_process (fun n x => (μ[g|ℱ n]) x) μ
     by
     filter_upwards [this,
-      (martingale_condexp g ℱ μ).Submartingale.ae_tendsto_limit_process hR]with x heq ht
+      (martingale_condexp g ℱ μ).Submartingale.ae_tendsto_limitProcess hR]with x heq ht
     rwa [HEq]
   have :
     ∀ n s,
@@ -426,7 +426,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ)
     intro n s hs
     rw [← set_integral_condexp (ℱ.le n) hg hs, ← set_integral_condexp (ℱ.le n) hlimint hs]
     refine' set_integral_congr_ae (ℱ.le _ _ hs) _
-    filter_upwards [(martingale_condexp g ℱ μ).ae_eq_condexp_limit_process hunif n]with x hx _
+    filter_upwards [(martingale_condexp g ℱ μ).ae_eq_condexp_limitProcess hunif n]with x hx _
     rwa [hx]
   refine'
     ae_eq_of_forall_set_integral_eq_of_sigma_finite' hle (fun s _ _ => hg.integrable_on)

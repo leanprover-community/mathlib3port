@@ -131,7 +131,7 @@ theorem preimage_iterate {s : Set α} (h : IsFixedPt (Set.preimage f) s) (n : �
 
 #print Function.IsFixedPt.equiv_symm /-
 protected theorem equiv_symm (h : IsFixedPt e x) : IsFixedPt e.symm x :=
-  h.to_left_inverse e.left_inverse_symm
+  h.to_leftInverse e.leftInverse_symm
 #align function.is_fixed_pt.equiv_symm Function.IsFixedPt.equiv_symm
 -/
 
@@ -176,7 +176,7 @@ def fixedPoints (f : α → α) : Set α :=
 #print Function.fixedPoints.decidable /-
 instance fixedPoints.decidable [DecidableEq α] (f : α → α) (x : α) :
     Decidable (x ∈ fixedPoints f) :=
-  is_fixed_pt.decidable
+  IsFixedPt.decidable
 #align function.fixed_points.decidable Function.fixedPoints.decidable
 -/
 
@@ -216,7 +216,7 @@ theorem Semiconj.mapsTo_fixedPoints {g : α → β} (h : Semiconj g fa fb) :
 /-- Any two maps `f : α → β` and `g : β → α` are inverse of each other on the sets of fixed points
 of `f ∘ g` and `g ∘ f`, respectively. -/
 theorem invOn_fixedPoints_comp (f : α → β) (g : β → α) :
-    Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
+    Set.InvOn f g (fixedPoints <| f ∘ g) (fixedPoints <| g ∘ f) :=
   ⟨fun x => id, fun x => id⟩
 #align function.inv_on_fixed_pts_comp Function.invOn_fixedPoints_comp
 -/
@@ -224,7 +224,7 @@ theorem invOn_fixedPoints_comp (f : α → β) (g : β → α) :
 #print Function.mapsTo_fixedPoints_comp /-
 /-- Any map `f` sends fixed points of `g ∘ f` to fixed points of `f ∘ g`. -/
 theorem mapsTo_fixedPoints_comp (f : α → β) (g : β → α) :
-    Set.MapsTo f (fixed_points <| g ∘ f) (fixed_points <| f ∘ g) := fun x hx => hx.map fun x => rfl
+    Set.MapsTo f (fixedPoints <| g ∘ f) (fixedPoints <| f ∘ g) := fun x hx => hx.map fun x => rfl
 #align function.maps_to_fixed_pts_comp Function.mapsTo_fixedPoints_comp
 -/
 
@@ -232,7 +232,7 @@ theorem mapsTo_fixedPoints_comp (f : α → β) (g : β → α) :
 /-- Given two maps `f : α → β` and `g : β → α`, `g` is a bijective map between the fixed points
 of `f ∘ g` and the fixed points of `g ∘ f`. The inverse map is `f`, see `inv_on_fixed_pts_comp`. -/
 theorem bijOn_fixedPoints_comp (f : α → β) (g : β → α) :
-    Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| g ∘ f) :=
+    Set.BijOn g (fixedPoints <| f ∘ g) (fixedPoints <| g ∘ f) :=
   (invOn_fixedPoints_comp f g).BijOn (mapsTo_fixedPoints_comp g f) (mapsTo_fixedPoints_comp f g)
 #align function.bij_on_fixed_pts_comp Function.bijOn_fixedPoints_comp
 -/
@@ -241,7 +241,7 @@ theorem bijOn_fixedPoints_comp (f : α → β) (g : β → α) :
 /-- If self-maps `f` and `g` commute, then they are inverse of each other on the set of fixed points
 of `f ∘ g`. This is a particular case of `function.inv_on_fixed_pts_comp`. -/
 theorem Commute.invOn_fixedPoints_comp (h : Commute f g) :
-    Set.InvOn f g (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
+    Set.InvOn f g (fixedPoints <| f ∘ g) (fixedPoints <| f ∘ g) := by
   simpa only [h.comp_eq] using inv_on_fixed_pts_comp f g
 #align function.commute.inv_on_fixed_pts_comp Function.Commute.invOn_fixedPoints_comp
 -/
@@ -250,7 +250,7 @@ theorem Commute.invOn_fixedPoints_comp (h : Commute f g) :
 /-- If self-maps `f` and `g` commute, then `f` is bijective on the set of fixed points of `f ∘ g`.
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.left_bijOn_fixedPoints_comp (h : Commute f g) :
-    Set.BijOn f (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
+    Set.BijOn f (fixedPoints <| f ∘ g) (fixedPoints <| f ∘ g) := by
   simpa only [h.comp_eq] using bij_on_fixed_pts_comp g f
 #align function.commute.left_bij_on_fixed_pts_comp Function.Commute.left_bijOn_fixedPoints_comp
 -/
@@ -259,7 +259,7 @@ theorem Commute.left_bijOn_fixedPoints_comp (h : Commute f g) :
 /-- If self-maps `f` and `g` commute, then `g` is bijective on the set of fixed points of `f ∘ g`.
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.right_bijOn_fixedPoints_comp (h : Commute f g) :
-    Set.BijOn g (fixed_points <| f ∘ g) (fixed_points <| f ∘ g) := by
+    Set.BijOn g (fixedPoints <| f ∘ g) (fixedPoints <| f ∘ g) := by
   simpa only [h.comp_eq] using bij_on_fixed_pts_comp f g
 #align function.commute.right_bij_on_fixed_pts_comp Function.Commute.right_bijOn_fixedPoints_comp
 -/

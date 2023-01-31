@@ -455,7 +455,7 @@ def toWeakDualBcnn (μ : FiniteMeasure Ω) : WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0
   toFun f := μ.testAgainstNn f
   map_add' := testAgainstNn_add μ
   map_smul' := testAgainstNn_smul μ
-  cont := μ.test_against_nn_lipschitz.Continuous
+  cont := μ.testAgainstNn_lipschitz.Continuous
 #align measure_theory.finite_measure.to_weak_dual_bcnn MeasureTheory.FiniteMeasure.toWeakDualBcnn
 
 @[simp]
@@ -484,7 +484,7 @@ depends continuously on the measure. -/
 theorem continuous_testAgainstNn_eval (f : Ω →ᵇ ℝ≥0) :
     Continuous fun μ : FiniteMeasure Ω => μ.testAgainstNn f :=
   (by apply (WeakBilin.eval_continuous _ _).comp to_weak_dual_bcnn_continuous :
-    Continuous ((fun φ : WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0) => φ f) ∘ to_weak_dual_bcnn))
+    Continuous ((fun φ : WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0) => φ f) ∘ toWeakDualBcnn))
 #align measure_theory.finite_measure.continuous_test_against_nn_eval MeasureTheory.FiniteMeasure.continuous_testAgainstNn_eval
 
 /-- The total mass of a finite measure depends continuously on the measure. -/
@@ -533,7 +533,7 @@ theorem tendsto_zero_testAgainstNn_of_tendsto_zero_mass {γ : Type _} {F : Filte
     Tendsto (fun i => (μs i).testAgainstNn f) F (𝓝 0) :=
   by
   apply tendsto_iff_dist_tendsto_zero.mpr
-  have obs := fun i => (μs i).test_against_nn_lipschitz_estimate f 0
+  have obs := fun i => (μs i).testAgainstNn_lipschitz_estimate f 0
   simp_rw [test_against_nn_zero, zero_add] at obs
   simp_rw [show ∀ i, dist ((μs i).testAgainstNn f) 0 = (μs i).testAgainstNn f by
       simp only [dist_nndist, Nnreal.nndist_zero_eq_val', eq_self_iff_true, imp_true_iff]]

@@ -161,7 +161,7 @@ theorem mapsTo_emetric_ball (hf : Isometry f) (x : α) (r : ℝ≥0∞) :
 
 theorem mapsTo_emetric_closedBall (hf : Isometry f) (x : α) (r : ℝ≥0∞) :
     MapsTo f (Emetric.closedBall x r) (Emetric.closedBall (f x) r) :=
-  (hf.preimage_emetric_closed_ball x r).ge
+  (hf.preimage_emetric_closedBall x r).ge
 #align isometry.maps_to_emetric_closed_ball Isometry.mapsTo_emetric_closedBall
 
 /-- The injection from a subtype is an isometry -/
@@ -170,7 +170,7 @@ theorem isometry_subtype_coe {s : Set α} : Isometry (coe : s → α) := fun x y
 
 theorem comp_continuousOn_iff {γ} [TopologicalSpace γ] (hf : Isometry f) {g : γ → α} {s : Set γ} :
     ContinuousOn (f ∘ g) s ↔ ContinuousOn g s :=
-  hf.UniformInducing.Inducing.continuous_on_iff.symm
+  hf.UniformInducing.Inducing.continuousOn_iff.symm
 #align isometry.comp_continuous_on_iff Isometry.comp_continuousOn_iff
 
 theorem comp_continuous_iff {γ} [TopologicalSpace γ] (hf : Isometry f) {g : γ → α} :
@@ -233,17 +233,17 @@ theorem preimage_setOf_dist (hf : Isometry f) (x : α) (p : ℝ → Prop) :
 
 theorem preimage_closedBall (hf : Isometry f) (x : α) (r : ℝ) :
     f ⁻¹' Metric.closedBall (f x) r = Metric.closedBall x r :=
-  hf.preimage_set_of_dist x (· ≤ r)
+  hf.preimage_setOf_dist x (· ≤ r)
 #align isometry.preimage_closed_ball Isometry.preimage_closedBall
 
 theorem preimage_ball (hf : Isometry f) (x : α) (r : ℝ) :
     f ⁻¹' Metric.ball (f x) r = Metric.ball x r :=
-  hf.preimage_set_of_dist x (· < r)
+  hf.preimage_setOf_dist x (· < r)
 #align isometry.preimage_ball Isometry.preimage_ball
 
 theorem preimage_sphere (hf : Isometry f) (x : α) (r : ℝ) :
     f ⁻¹' Metric.sphere (f x) r = Metric.sphere x r :=
-  hf.preimage_set_of_dist x (· = r)
+  hf.preimage_setOf_dist x (· = r)
 #align isometry.preimage_sphere Isometry.preimage_sphere
 
 theorem mapsTo_ball (hf : Isometry f) (x : α) (r : ℝ) :
@@ -258,7 +258,7 @@ theorem mapsTo_sphere (hf : Isometry f) (x : α) (r : ℝ) :
 
 theorem mapsTo_closedBall (hf : Isometry f) (x : α) (r : ℝ) :
     MapsTo f (Metric.closedBall x r) (Metric.closedBall (f x) r) :=
-  (hf.preimage_closed_ball x r).ge
+  (hf.preimage_closedBall x r).ge
 #align isometry.maps_to_closed_ball Isometry.mapsTo_closedBall
 
 end PseudoMetricIsometry
@@ -300,7 +300,7 @@ theorem Embedding.to_isometry {α β} [TopologicalSpace α] [MetricSpace β] {f 
 @[nolint has_nonempty_instance]
 structure IsometryEquiv (α β : Type _) [PseudoEmetricSpace α] [PseudoEmetricSpace β] extends
   α ≃ β where
-  isometry_to_fun : Isometry to_fun
+  isometry_toFun : Isometry to_fun
 #align isometry_equiv IsometryEquiv
 
 -- mathport name: «expr ≃ᵢ »
@@ -325,7 +325,7 @@ theorem coe_toEquiv (h : α ≃ᵢ β) : ⇑h.toEquiv = h :=
 #align isometry_equiv.coe_to_equiv IsometryEquiv.coe_toEquiv
 
 protected theorem isometry (h : α ≃ᵢ β) : Isometry h :=
-  h.isometry_to_fun
+  h.isometry_toFun
 #align isometry_equiv.isometry IsometryEquiv.isometry
 
 protected theorem bijective (h : α ≃ᵢ β) : Bijective h :=
@@ -371,7 +371,7 @@ theorem toEquiv_inj : ∀ ⦃h₁ h₂ : α ≃ᵢ β⦄, h₁.toEquiv = h₂.to
 
 @[ext]
 theorem ext ⦃h₁ h₂ : α ≃ᵢ β⦄ (H : ∀ x, h₁ x = h₂ x) : h₁ = h₂ :=
-  to_equiv_inj <| Equiv.ext H
+  toEquiv_inj <| Equiv.ext H
 #align isometry_equiv.ext IsometryEquiv.ext
 
 /-- Alternative constructor for isometric bijections,
@@ -382,18 +382,18 @@ def mk' {α : Type u} [EmetricSpace α] (f : α → β) (g : β → α) (hfg : �
   invFun := g
   left_inv x := hf.Injective <| hfg _
   right_inv := hfg
-  isometry_to_fun := hf
+  isometry_toFun := hf
 #align isometry_equiv.mk' IsometryEquiv.mk'
 
 /-- The identity isometry of a space. -/
 protected def refl (α : Type _) [PseudoEmetricSpace α] : α ≃ᵢ α :=
-  { Equiv.refl α with isometry_to_fun := isometry_id }
+  { Equiv.refl α with isometry_toFun := isometry_id }
 #align isometry_equiv.refl IsometryEquiv.refl
 
 /-- The composition of two isometric isomorphisms, as an isometric isomorphism. -/
 protected def trans (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) : α ≃ᵢ γ :=
   { Equiv.trans h₁.toEquiv h₂.toEquiv with
-    isometry_to_fun := h₂.isometry_to_fun.comp h₁.isometry_to_fun }
+    isometry_toFun := h₂.isometry_toFun.comp h₁.isometry_toFun }
 #align isometry_equiv.trans IsometryEquiv.trans
 
 @[simp]
@@ -404,7 +404,7 @@ theorem trans_apply (h₁ : α ≃ᵢ β) (h₂ : β ≃ᵢ γ) (x : α) : h₁.
 /-- The inverse of an isometric isomorphism, as an isometric isomorphism. -/
 protected def symm (h : α ≃ᵢ β) : β ≃ᵢ α
     where
-  isometry_to_fun := h.Isometry.right_inv h.right_inv
+  isometry_toFun := h.Isometry.right_inv h.right_inv
   toEquiv := h.toEquiv.symm
 #align isometry_equiv.symm IsometryEquiv.symm
 
@@ -508,8 +508,8 @@ theorem image_emetric_closedBall (h : α ≃ᵢ β) (x : α) (r : ℝ≥0∞) :
 @[simps toEquiv]
 protected def toHomeomorph (h : α ≃ᵢ β) : α ≃ₜ β
     where
-  continuous_to_fun := h.Continuous
-  continuous_inv_fun := h.symm.Continuous
+  continuous_toFun := h.Continuous
+  continuous_invFun := h.symm.Continuous
   toEquiv := h.toEquiv
 #align isometry_equiv.to_homeomorph IsometryEquiv.toHomeomorph
 
@@ -526,7 +526,7 @@ theorem coe_toHomeomorph_symm (h : α ≃ᵢ β) : ⇑h.toHomeomorph.symm = h.sy
 @[simp]
 theorem comp_continuousOn_iff {γ} [TopologicalSpace γ] (h : α ≃ᵢ β) {f : γ → α} {s : Set γ} :
     ContinuousOn (h ∘ f) s ↔ ContinuousOn f s :=
-  h.toHomeomorph.comp_continuous_on_iff _ _
+  h.toHomeomorph.comp_continuousOn_iff _ _
 #align isometry_equiv.comp_continuous_on_iff IsometryEquiv.comp_continuousOn_iff
 
 @[simp]
@@ -652,7 +652,7 @@ range of the isometry. -/
 def Isometry.isometryEquivOnRange [EmetricSpace α] [PseudoEmetricSpace β] {f : α → β}
     (h : Isometry f) : α ≃ᵢ range f
     where
-  isometry_to_fun x y := by simpa [Subtype.edist_eq] using h x y
+  isometry_toFun x y := by simpa [Subtype.edist_eq] using h x y
   toEquiv := Equiv.ofInjective f h.Injective
 #align isometry.isometry_equiv_on_range Isometry.isometryEquivOnRange
 

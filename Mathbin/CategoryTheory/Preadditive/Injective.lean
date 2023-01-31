@@ -78,7 +78,7 @@ def factorThru {J X Y : C} [Injective J] (g : X ⟶ J) (f : X ⟶ Y) [Mono f] : 
 @[simp]
 theorem comp_factorThru {J X Y : C} [Injective J] (g : X ⟶ J) (f : X ⟶ Y) [Mono f] :
     f ≫ factorThru g f = g :=
-  (Injective.factors g f).some_spec
+  (Injective.factors g f).choose_spec
 #align category_theory.injective.comp_factor_thru CategoryTheory.Injective.comp_factorThru
 
 section
@@ -201,7 +201,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {L : C ⥤ D} {R : D ⥤ C} [PreservesMonomorphisms L]
 
-theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : injective <| R.obj J :=
+theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : Injective <| R.obj J :=
   ⟨fun A A' g f im =>
     ⟨adj.hom_equiv _ _ (factor_thru ((adj.hom_equiv A J).symm g) (L.map f)),
       (adj.hom_equiv _ _).symm.Injective (by simp)⟩⟩

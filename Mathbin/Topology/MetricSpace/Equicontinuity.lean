@@ -49,13 +49,13 @@ namespace Metric
 space. -/
 theorem equicontinuousAt_iff_right {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {x₀ : β} :
     EquicontinuousAt F x₀ ↔ ∀ ε > 0, ∀ᶠ x in 𝓝 x₀, ∀ i, dist (F i x₀) (F i x) < ε :=
-  uniformity_basis_dist.equicontinuous_at_iff_right
+  uniformity_basis_dist.equicontinuousAt_iff_right
 #align metric.equicontinuous_at_iff_right Metric.equicontinuousAt_iff_right
 
 /-- Characterization of equicontinuity for families of functions between (pseudo) metric spaces. -/
 theorem equicontinuousAt_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → β → α} {x₀ : β} :
     EquicontinuousAt F x₀ ↔ ∀ ε > 0, ∃ δ > 0, ∀ x, dist x x₀ < δ → ∀ i, dist (F i x₀) (F i x) < ε :=
-  nhds_basis_ball.equicontinuous_at_iff uniformity_basis_dist
+  nhds_basis_ball.equicontinuousAt_iff uniformity_basis_dist
 #align metric.equicontinuous_at_iff Metric.equicontinuousAt_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x x' «expr ∈ » U) -/
@@ -81,7 +81,7 @@ protected theorem equicontinuousAt_iff_pair {ι : Type _} [TopologicalSpace β] 
 (pseudo) metric space. -/
 theorem uniformEquicontinuous_iff_right {ι : Type _} [UniformSpace β] {F : ι → β → α} :
     UniformEquicontinuous F ↔ ∀ ε > 0, ∀ᶠ xy : β × β in 𝓤 β, ∀ i, dist (F i xy.1) (F i xy.2) < ε :=
-  uniformity_basis_dist.uniform_equicontinuous_iff_right
+  uniformity_basis_dist.uniformEquicontinuous_iff_right
 #align metric.uniform_equicontinuous_iff_right Metric.uniformEquicontinuous_iff_right
 
 /-- Characterization of uniform equicontinuity for families of functions between
@@ -89,7 +89,7 @@ theorem uniformEquicontinuous_iff_right {ι : Type _} [UniformSpace β] {F : ι 
 theorem uniformEquicontinuous_iff {ι : Type _} [PseudoMetricSpace β] {F : ι → β → α} :
     UniformEquicontinuous F ↔
       ∀ ε > 0, ∃ δ > 0, ∀ x y, dist x y < δ → ∀ i, dist (F i x) (F i y) < ε :=
-  uniformity_basis_dist.uniform_equicontinuous_iff uniformity_basis_dist
+  uniformity_basis_dist.uniformEquicontinuous_iff uniformity_basis_dist
 #align metric.uniform_equicontinuous_iff Metric.uniformEquicontinuous_iff
 
 /-- For a family of functions to a (pseudo) metric spaces, a convenient way to prove

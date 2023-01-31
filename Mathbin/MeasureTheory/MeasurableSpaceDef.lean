@@ -55,7 +55,7 @@ structure MeasurableSpace (α : Type _) where
   MeasurableSet' : Set α → Prop
   measurable_set_empty : measurable_set' ∅
   measurable_set_compl : ∀ s, measurable_set' s → measurable_set' (sᶜ)
-  measurable_set_Union : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃ i, f i)
+  measurable_set_unionᵢ : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃ i, f i)
 #align measurable_space MeasurableSpace
 
 attribute [class] MeasurableSpace
@@ -118,7 +118,7 @@ theorem MeasurableSet.unionᵢ [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b
     MeasurableSet (⋃ b, f b) := by
   cases nonempty_encodable (PLift ι)
   rw [← Union_plift_down, ← Encodable.unionᵢ_decode₂]
-  exact ‹MeasurableSpace α›.measurable_set_Union _ (MeasurableSet.bUnion_decode₂ fun _ => h _)
+  exact ‹MeasurableSpace α›.measurable_set_unionᵢ _ (MeasurableSet.bUnion_decode₂ fun _ => h _)
 #align measurable_set.Union MeasurableSet.unionᵢ
 
 theorem MeasurableSet.bUnion {f : β → Set α} {s : Set β} (hs : s.Countable)
@@ -136,7 +136,7 @@ theorem Set.Finite.measurableSet_bUnion {f : β → Set α} {s : Set β} (hs : s
 
 theorem Finset.measurableSet_bUnion {f : β → Set α} (s : Finset β)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
-  s.finite_to_set.measurable_set_bUnion h
+  s.finite_toSet.measurableSet_bUnion h
 #align finset.measurable_set_bUnion Finset.measurableSet_bUnion
 
 theorem MeasurableSet.unionₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
@@ -171,7 +171,7 @@ theorem Set.Finite.measurableSet_bInter {f : β → Set α} {s : Set β} (hs : s
 
 theorem Finset.measurableSet_bInter {f : β → Set α} (s : Finset β)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
-  s.finite_to_set.measurable_set_bInter h
+  s.finite_toSet.measurableSet_bInter h
 #align finset.measurable_set_bInter Finset.measurableSet_bInter
 
 theorem MeasurableSet.interₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
@@ -208,13 +208,13 @@ theorem MeasurableSet.diff {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h�
 @[simp]
 theorem MeasurableSet.symmDiff {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
     MeasurableSet (s₁ ∆ s₂) :=
-  (h₁.diff h₂).union (h₂.diff h₁)
+  (h₁.diffₓ h₂).union (h₂.diffₓ h₁)
 #align measurable_set.symm_diff MeasurableSet.symmDiff
 
 @[simp]
 theorem MeasurableSet.ite {t s₁ s₂ : Set α} (ht : MeasurableSet t) (h₁ : MeasurableSet s₁)
     (h₂ : MeasurableSet s₂) : MeasurableSet (t.ite s₁ s₂) :=
-  (h₁.inter ht).union (h₂.diff ht)
+  (h₁.inter ht).union (h₂.diffₓ ht)
 #align measurable_set.ite MeasurableSet.ite
 
 theorem MeasurableSet.ite' {s t : Set α} {p : Prop} (hs : p → MeasurableSet s)
@@ -273,10 +273,10 @@ theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
 
 /-- A typeclass mixin for `measurable_space`s such that each singleton is measurable. -/
 class MeasurableSingletonClass (α : Type _) [MeasurableSpace α] : Prop where
-  measurable_set_singleton : ∀ x, MeasurableSet ({x} : Set α)
+  measurableSet_singleton : ∀ x, MeasurableSet ({x} : Set α)
 #align measurable_singleton_class MeasurableSingletonClass
 
-export MeasurableSingletonClass (measurable_set_singleton)
+export MeasurableSingletonClass (measurableSet_singleton)
 
 attribute [simp] measurable_set_singleton
 
@@ -297,7 +297,7 @@ theorem MeasurableSet.insert {s : Set α} (hs : MeasurableSet s) (a : α) :
 theorem measurableSet_insert {a : α} {s : Set α} : MeasurableSet (insert a s) ↔ MeasurableSet s :=
   ⟨fun h =>
     if ha : a ∈ s then by rwa [← insert_eq_of_mem ha]
-    else insert_diff_self_of_not_mem ha ▸ h.diff (measurableSet_singleton _),
+    else insert_diff_self_of_not_mem ha ▸ h.diffₓ (measurableSet_singleton _),
     fun h => h.insert a⟩
 #align measurable_set_insert measurableSet_insert
 
@@ -310,7 +310,7 @@ theorem Set.Finite.measurableSet {s : Set α} (hs : s.Finite) : MeasurableSet s 
 #align set.finite.measurable_set Set.Finite.measurableSet
 
 protected theorem Finset.measurableSet (s : Finset α) : MeasurableSet (↑s : Set α) :=
-  s.finite_to_set.MeasurableSet
+  s.finite_toSet.MeasurableSet
 #align finset.measurable_set Finset.measurableSet
 
 theorem Set.Countable.measurableSet {s : Set α} (hs : s.Countable) : MeasurableSet s :=
@@ -350,7 +350,7 @@ def generateFrom (s : Set (Set α)) : MeasurableSpace α
   MeasurableSet' := GenerateMeasurable s
   measurable_set_empty := GenerateMeasurable.empty
   measurable_set_compl := GenerateMeasurable.compl
-  measurable_set_Union := GenerateMeasurable.union
+  measurable_set_unionᵢ := GenerateMeasurable.union
 #align measurable_space.generate_from MeasurableSpace.generateFrom
 
 theorem measurableSet_generateFrom {s : Set (Set α)} {t : Set α} (ht : t ∈ s) :
@@ -383,7 +383,7 @@ theorem generateFrom_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
 @[simp]
 theorem generateFrom_measurableSet [MeasurableSpace α] :
     generateFrom { s : Set α | MeasurableSet s } = ‹_› :=
-  le_antisymm (generate_from_le fun _ => id) fun s => measurableSet_generateFrom
+  le_antisymm (generateFrom_le fun _ => id) fun s => measurableSet_generateFrom
 #align measurable_space.generate_from_measurable_set MeasurableSpace.generateFrom_measurableSet
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
@@ -393,7 +393,7 @@ protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generate
   MeasurableSet' s := s ∈ g
   measurable_set_empty := hg ▸ measurable_set_empty _
   measurable_set_compl := hg ▸ measurable_set_compl _
-  measurable_set_Union := hg ▸ measurable_set_unionᵢ _
+  measurable_set_unionᵢ := hg ▸ measurable_set_unionᵢ _
 #align measurable_space.mk_of_closure MeasurableSpace.mkOfClosure
 
 theorem mkOfClosure_sets {s : Set (Set α)} {hs : { t | measurable_set[generateFrom s] t } = s} :
@@ -474,7 +474,7 @@ theorem measurableSet_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = ∅
     { MeasurableSet' := fun s => s = ∅ ∨ s = univ
       measurable_set_empty := Or.inl rfl
       measurable_set_compl := by simp (config := { contextual := true }) [or_imp]
-      measurable_set_Union := fun f hf =>
+      measurable_set_unionᵢ := fun f hf =>
         by_cases
           (fun h : ∃ i, f i = univ =>
             let ⟨i, hi⟩ := h
@@ -482,7 +482,7 @@ theorem measurableSet_bot_iff {s : Set α} : @MeasurableSet α ⊥ s ↔ s = ∅
           fun h : ¬∃ i, f i = univ =>
           Or.inl <|
             eq_empty_of_subset_empty <|
-              Union_subset fun i =>
+              unionᵢ_subset fun i =>
                 (hf i).elim (by simp (config := { contextual := true })) fun hi =>
                   False.elim <| h ⟨i, hi⟩ }
   have : b = ⊥ :=
@@ -543,7 +543,7 @@ theorem measurableSpace_supᵢ_eq (m : ι → MeasurableSpace α) :
 
 theorem generateFrom_unionᵢ_measurableSet (m : ι → MeasurableSpace α) :
     generateFrom (⋃ n, { t | measurable_set[m n] t }) = ⨆ n, m n :=
-  (@giGenerateFrom α).l_supr_u m
+  (@giGenerateFrom α).l_supᵢ_u m
 #align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generateFrom_unionᵢ_measurableSet
 
 end CompleteLattice

@@ -161,17 +161,17 @@ def mk (f : α → β) (hfm : AeStronglyMeasurable' m f μ) : α → β :=
 
 theorem stronglyMeasurable_mk {f : α → β} (hfm : AeStronglyMeasurable' m f μ) :
     strongly_measurable[m] (hfm.mk f) :=
-  hfm.some_spec.1
+  hfm.choose_spec.1
 #align measure_theory.ae_strongly_measurable'.strongly_measurable_mk MeasureTheory.AeStronglyMeasurable'.stronglyMeasurable_mk
 
 theorem ae_eq_mk {f : α → β} (hfm : AeStronglyMeasurable' m f μ) : f =ᵐ[μ] hfm.mk f :=
-  hfm.some_spec.2
+  hfm.choose_spec.2
 #align measure_theory.ae_strongly_measurable'.ae_eq_mk MeasureTheory.AeStronglyMeasurable'.ae_eq_mk
 
 theorem continuousComp {γ} [TopologicalSpace γ] {f : α → β} {g : β → γ} (hg : Continuous g)
     (hf : AeStronglyMeasurable' m f μ) : AeStronglyMeasurable' m (g ∘ f) μ :=
   ⟨fun x => g (hf.mk _ x),
-    @Continuous.comp_stronglyMeasurable _ _ _ m _ _ _ _ hg hf.strongly_measurable_mk,
+    @Continuous.comp_stronglyMeasurable _ _ _ m _ _ _ _ hg hf.stronglyMeasurable_mk,
     hf.ae_eq_mk.mono fun x hx => by rw [Function.comp_apply, hx]⟩
 #align measure_theory.ae_strongly_measurable'.continuous_comp MeasureTheory.AeStronglyMeasurable'.continuousComp
 
@@ -195,7 +195,7 @@ theorem ae_eq_trim_iff_of_aeStronglyMeasurable' {α β} [TopologicalSpace β] [M
     {m m0 : MeasurableSpace α} {μ : Measure α} {f g : α → β} (hm : m ≤ m0)
     (hfm : AeStronglyMeasurable' m f μ) (hgm : AeStronglyMeasurable' m g μ) :
     hfm.mk f =ᵐ[μ.trim hm] hgm.mk g ↔ f =ᵐ[μ] g :=
-  (ae_eq_trim_iff hm hfm.strongly_measurable_mk hgm.strongly_measurable_mk).trans
+  (ae_eq_trim_iff hm hfm.stronglyMeasurable_mk hgm.stronglyMeasurable_mk).trans
     ⟨fun h => hfm.ae_eq_mk.trans (h.trans hgm.ae_eq_mk.symm), fun h =>
       hfm.ae_eq_mk.symm.trans (h.trans hgm.ae_eq_mk)⟩
 #align measure_theory.ae_eq_trim_iff_of_ae_strongly_measurable' MeasureTheory.ae_eq_trim_iff_of_aeStronglyMeasurable'
@@ -404,7 +404,7 @@ variable {F 𝕜 p μ}
 theorem lpMeasSubgroupToLpTrim_ae_eq (hm : m ≤ m0) (f : lpMeasSubgroup F m p μ) :
     lpMeasSubgroupToLpTrim F p μ hm f =ᵐ[μ] f :=
   (ae_eq_of_ae_eq_trim (Memℒp.coeFn_toLp (memℒpTrimOfMemLpMeasSubgroup hm (↑f) f.Mem))).trans
-    (mem_lpMeasSubgroup_iff_aeStronglyMeasurable'.mp f.Mem).some_spec.2.symm
+    (mem_lpMeasSubgroup_iff_aeStronglyMeasurable'.mp f.Mem).choose_spec.2.symm
 #align measure_theory.Lp_meas_subgroup_to_Lp_trim_ae_eq MeasureTheory.lpMeasSubgroupToLpTrim_ae_eq
 
 theorem lpTrimToLpMeasSubgroup_ae_eq (hm : m ≤ m0) (f : lp F p (μ.trim hm)) :
@@ -415,7 +415,7 @@ theorem lpTrimToLpMeasSubgroup_ae_eq (hm : m ≤ m0) (f : lp F p (μ.trim hm)) :
 theorem lpMeasToLpTrim_ae_eq (hm : m ≤ m0) (f : lpMeas F 𝕜 m p μ) :
     lpMeasToLpTrim F 𝕜 p μ hm f =ᵐ[μ] f :=
   (ae_eq_of_ae_eq_trim (Memℒp.coeFn_toLp (memℒpTrimOfMemLpMeasSubgroup hm (↑f) f.Mem))).trans
-    (mem_lpMeasSubgroup_iff_aeStronglyMeasurable'.mp f.Mem).some_spec.2.symm
+    (mem_lpMeasSubgroup_iff_aeStronglyMeasurable'.mp f.Mem).choose_spec.2.symm
 #align measure_theory.Lp_meas_to_Lp_trim_ae_eq MeasureTheory.lpMeasToLpTrim_ae_eq
 
 theorem lpTrimToLpMeas_ae_eq (hm : m ≤ m0) (f : lp F p (μ.trim hm)) :
@@ -525,7 +525,7 @@ def lpMeasSubgroupToLpTrimIso [hp : Fact (1 ≤ p)] (hm : m ≤ m0) :
   invFun := lpTrimToLpMeasSubgroup F p μ hm
   left_inv := lpMeasSubgroupToLpTrim_left_inv hm
   right_inv := lpMeasSubgroupToLpTrim_right_inv hm
-  isometry_to_fun := isometry_lpMeasSubgroupToLpTrim hm
+  isometry_toFun := isometry_lpMeasSubgroupToLpTrim hm
 #align measure_theory.Lp_meas_subgroup_to_Lp_trim_iso MeasureTheory.lpMeasSubgroupToLpTrimIso
 
 variable (𝕜)
@@ -552,13 +552,13 @@ variable {F 𝕜 p μ}
 instance [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] :
     CompleteSpace (lpMeasSubgroup F m p μ) :=
   by
-  rw [(Lp_meas_subgroup_to_Lp_trim_iso F p μ hm.elim).complete_space_iff]
+  rw [(Lp_meas_subgroup_to_Lp_trim_iso F p μ hm.elim).completeSpace_iff]
   infer_instance
 
 instance [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] :
     CompleteSpace (lpMeas F 𝕜 m p μ) :=
   by
-  rw [(Lp_meas_subgroup_to_Lp_meas_iso F 𝕜 p μ).symm.complete_space_iff]
+  rw [(Lp_meas_subgroup_to_Lp_meas_iso F 𝕜 p μ).symm.completeSpace_iff]
   infer_instance
 
 theorem isComplete_aeStronglyMeasurable' [hp : Fact (1 ≤ p)] [CompleteSpace F] (hm : m ≤ m0) :
@@ -728,7 +728,7 @@ theorem lp.inductionStronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞) (
     have : s_f \ s_g =ᵐ[μ] s_f :=
       by
       rw [← Set.diff_inter_self_eq_diff, Set.inter_comm]
-      refine' ((ae_eq_refl s_f).diff h_inter_empty).trans _
+      refine' ((ae_eq_refl s_f).diffₓ h_inter_empty).trans _
       rw [Set.diff_empty]
     refine' ((indicator_ae_eq_of_ae_eq_set this).trans _).symm
     rw [Set.indicator_support]
@@ -740,7 +740,7 @@ theorem lp.inductionStronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ ∞) (
     by
     have : s_g \ s_f =ᵐ[μ] s_g := by
       rw [← Set.diff_inter_self_eq_diff]
-      refine' ((ae_eq_refl s_g).diff h_inter_empty).trans _
+      refine' ((ae_eq_refl s_g).diffₓ h_inter_empty).trans _
       rw [Set.diff_empty]
     refine' ((indicator_ae_eq_of_ae_eq_set this).trans _).symm
     rw [Set.indicator_support]
@@ -928,7 +928,7 @@ theorem integral_norm_le_of_forall_fin_meas_integral_eq (hm : m ≤ m0) {f g : �
   by
   rw [integral_norm_eq_pos_sub_neg (hg.mono hm) hgi, integral_norm_eq_pos_sub_neg hf hfi]
   have h_meas_nonneg_g : measurable_set[m] { x | 0 ≤ g x } :=
-    (@strongly_measurable_const _ _ m _ _).measurable_set_le hg
+    (@strongly_measurable_const _ _ m _ _).measurableSet_le hg
   have h_meas_nonneg_f : MeasurableSet { x | 0 ≤ f x } :=
     strongly_measurable_const.measurable_set_le hf
   have h_meas_nonpos_g : measurable_set[m] { x | g x ≤ 0 } :=
@@ -1254,7 +1254,7 @@ theorem condexpL2_indicator_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (h
       (indicator_const_Lp 2 hs hμs (1 : ℝ))
   rw [← Lp_meas_coe] at h_comp
   refine' h_comp.trans _
-  exact (to_span_singleton ℝ x).coe_fn_comp_Lp _
+  exact (to_span_singleton ℝ x).coeFn_compLp _
 #align measure_theory.condexp_L2_indicator_ae_eq_smul MeasureTheory.condexpL2_indicator_ae_eq_smul
 
 theorem condexpL2_indicator_eq_toSpanSingleton_comp (hm : m ≤ m0) (hs : MeasurableSet s)
@@ -1266,7 +1266,7 @@ theorem condexpL2_indicator_eq_toSpanSingleton_comp (hm : m ≤ m0) (hs : Measur
   rw [← Lp_meas_coe]
   refine' (condexp_L2_indicator_ae_eq_smul 𝕜 hm hs hμs x).trans _
   have h_comp :=
-    (to_span_singleton ℝ x).coe_fn_comp_Lp
+    (to_span_singleton ℝ x).coeFn_compLp
       (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)) : α →₂[μ] ℝ)
   rw [← eventually_eq] at h_comp
   refine' eventually_eq.trans _ h_comp.symm
@@ -1366,14 +1366,14 @@ theorem condexpIndSmul_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (hs 
     (hμs : μ s ≠ ∞) (c : 𝕜) (x : F) :
     condexpIndSmul hm hs hμs (c • x) = c • condexpIndSmul hm hs hμs x := by
   rw [condexp_ind_smul, condexp_ind_smul, to_span_singleton_smul',
-    (to_span_singleton ℝ x).smul_comp_LpL_apply c
+    (to_span_singleton ℝ x).smul_compLpL_apply c
       ↑(condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ)))]
 #align measure_theory.condexp_ind_smul_smul' MeasureTheory.condexpIndSmul_smul'
 
 theorem condexpIndSmul_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
     condexpIndSmul hm hs hμs x =ᵐ[μ] fun a =>
       condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x :=
-  (toSpanSingleton ℝ x).coe_fn_comp_LpL _
+  (toSpanSingleton ℝ x).coeFn_compLpL _
 #align measure_theory.condexp_ind_smul_ae_eq_smul MeasureTheory.condexpIndSmul_ae_eq_smul
 
 theorem set_lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
@@ -1516,7 +1516,7 @@ def condexpIndL1Fin (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hs : MeasurableS
 theorem condexpIndL1Fin_ae_eq_condexpIndSmul (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
     condexpIndL1Fin hm hs hμs x =ᵐ[μ] condexpIndSmul hm hs hμs x :=
-  (integrableCondexpIndSmul hm hs hμs x).coe_fn_to_L1
+  (integrableCondexpIndSmul hm hs hμs x).coeFn_toL1
 #align measure_theory.condexp_ind_L1_fin_ae_eq_condexp_ind_smul MeasureTheory.condexpIndL1Fin_ae_eq_condexpIndSmul
 
 variable {hm : m ≤ m0} [SigmaFinite (μ.trim hm)]

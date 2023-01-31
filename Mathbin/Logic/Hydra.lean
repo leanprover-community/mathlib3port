@@ -92,7 +92,8 @@ theorem cutExpand_add_left {t u} (s) : CutExpand r (s + t) (s + u) ↔ CutExpand
 #align relation.cut_expand_add_left Relation.cutExpand_add_left
 
 theorem cutExpand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
-    CutExpand r s' s ↔ ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.erase a + t :=
+    CutExpand r s' s ↔
+      ∃ (t : Multiset α)(a : _), (∀ a' ∈ t, r a' a) ∧ a ∈ s ∧ s' = s.eraseₓ a + t :=
   by
   simp_rw [cut_expand, add_singleton_eq_iff]
   refine' exists₂_congr fun t a => ⟨_, _⟩
@@ -122,7 +123,7 @@ theorem cutExpand_fibration (r : α → α → Prop) :
     · refine' ⟨(s₁.erase a + t, s₂), game_add.fst ⟨t, a, hr, _⟩, _⟩
       · rw [add_comm, ← add_assoc, singleton_add, cons_erase h]
       · rw [add_assoc s₁, erase_add_left_pos _ h, add_right_comm, add_assoc]
-    · refine' ⟨(s₁, (s₂ + t).erase a), game_add.snd ⟨t, a, hr, _⟩, _⟩
+    · refine' ⟨(s₁, (s₂ + t).eraseₓ a), game_add.snd ⟨t, a, hr, _⟩, _⟩
       · rw [add_comm, singleton_add, cons_erase h]
       · rw [add_assoc, erase_add_right_pos _ h]
 #align relation.cut_expand_fibration Relation.cutExpand_fibration
@@ -137,7 +138,7 @@ theorem acc_of_singleton [IsIrrefl α r] {s : Multiset α} :
   · intro a s ih hacc
     rw [← s.singleton_add a]
     exact
-      ((hacc a <| s.mem_cons_self a).prod_game_add <|
+      ((hacc a <| s.mem_cons_self a).prod_gameAdd <|
             ih fun a ha => hacc a <| mem_cons_of_mem ha).of_fibration
         _ (cut_expand_fibration r)
 #align relation.acc_of_singleton Relation.acc_of_singleton

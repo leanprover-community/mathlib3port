@@ -533,7 +533,7 @@ theorem lower_mem_icc (I : Box ι) : I.lower ∈ I.Icc :=
 #align box_integral.box.lower_mem_Icc BoxIntegral.Box.lower_mem_icc
 
 protected theorem isCompact_icc (I : Box ι) : IsCompact I.Icc :=
-  is_compact_Icc
+  isCompact_Icc
 #align box_integral.box.is_compact_Icc BoxIntegral.Box.isCompact_icc
 
 theorem icc_eq_pi : I.Icc = pi univ fun i => Icc (I.lower i) (I.upper i) :=
@@ -748,7 +748,7 @@ theorem mapsTo_insertNth_face {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x :
 theorem continuousOn_face_icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) → ℝ) → X}
     {I : Box (Fin (n + 1))} (h : ContinuousOn f I.Icc) {i : Fin (n + 1)} {x : ℝ}
     (hx : x ∈ Icc (I.lower i) (I.upper i)) : ContinuousOn (f ∘ i.insertNth x) (I.face i).Icc :=
-  h.comp (continuousOn_const.fin_insert_nth i continuousOn_id) (I.maps_to_insert_nth_face_Icc hx)
+  h.comp (continuousOn_const.fin_insertNth i continuousOn_id) (I.mapsTo_insertNth_face_Icc hx)
 #align box_integral.box.continuous_on_face_Icc BoxIntegral.Box.continuousOn_face_icc
 
 /-!
@@ -768,7 +768,7 @@ theorem ioo_subset_coe (I : Box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Io
 #align box_integral.box.Ioo_subset_coe BoxIntegral.Box.ioo_subset_coe
 
 protected theorem ioo_subset_icc (I : Box ι) : I.Ioo ⊆ I.Icc :=
-  I.Ioo_subset_coe.trans coe_subset_icc
+  I.ioo_subset_coe.trans coe_subset_icc
 #align box_integral.box.Ioo_subset_Icc BoxIntegral.Box.ioo_subset_icc
 
 theorem unionᵢ_ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotone J)

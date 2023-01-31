@@ -56,8 +56,8 @@ namespace Name
 with the value of `f n`. -/
 def mapPrefix (f : Name → Option Name) : Name → Name
   | anonymous => anonymous
-  | mk_string s n' => (f (mk_string s n')).getOrElse (mk_string s <| map_prefix n')
-  | mk_numeral d n' => (f (mk_numeral d n')).getOrElse (mk_numeral d <| map_prefix n')
+  | mk_string s n' => (f (mk_string s n')).getD (mk_string s <| map_prefix n')
+  | mk_numeral d n' => (f (mk_numeral d n')).getD (mk_numeral d <| map_prefix n')
 #align name.map_prefix Name.mapPrefix
 
 /-- If `nm` is a simple name (having only one string component) starting with `_`, then
@@ -143,7 +143,7 @@ unsafe def head : Name → String
 
 /-- Tests whether the first component of a name is `"_private"` -/
 unsafe def is_private (n : Name) : Bool :=
-  n.head = "_private"
+  n.headI = "_private"
 #align name.is_private name.is_private
 
 /-- Returns the number of characters used to print all the string components of a name,
@@ -195,7 +195,7 @@ unsafe def append_namespace (ns : Name) : Name → Name
 Example: ``name.from_string "foo.bar" = `foo.bar``
 -/
 unsafe def from_string (s : String) : Name :=
-  from_components <| s.split (· = '.')
+  fromComponents <| s.split (· = '.')
 #align name.from_string name.from_string
 
 library_note "likely generated binder names"/--
@@ -522,7 +522,7 @@ unsafe def mreplace_aux {m : Type _ → Type _} [Monad m] (R : expr → Nat → 
       let Rb ← mreplace_aux b n
       return <| elet nm Rty Ra Rb
   | macro c es, n =>
-    Option.getDM (R (macro c es) n) <| macro c <$> es.mmap fun e => mreplace_aux e n
+    Option.getDM (R (macro c es) n) <| macro c <$> es.mapM fun e => mreplace_aux e n
   | e, n => Option.getDM (R e n) (return e)
 #align expr.mreplace_aux expr.mreplace_aux
 
@@ -956,7 +956,7 @@ unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr
     expr elab :=
   unsafe_cast <|
     e.unsafe_cast.replace fun e n =>
-      (mappings.filter fun ent : expr × expr => ent.1 = e).head'.map Prod.snd
+      (mappings.filterₓ fun ent : expr × expr => ent.1 = e).head?.map Prod.snd
 #align expr.replace_subexprs expr.replace_subexprs
 
 /-- `is_implicitly_included_variable e vs` accepts `e`, an `expr.local_const`, and a list `vs` of
@@ -1079,14 +1079,14 @@ protected unsafe def apply_replacement_fun (f : Name → Name) (test : expr → 
           const
               (f
                 n) <|-- if the first two arguments are reordered, we also reorder the first two universe parameters
-              if 1 ∈ (reorder.find n).iget then ls.inth 1 :: ls.head :: ls.drop 2
+              if 1 ∈ (reorder.find n).iget then ls.getI 1 :: ls.headI :: ls.drop 2
             else ls
       | app g x =>
         let f := g.get_app_fn
         let nm := f.const_name
         let n_args := g.get_app_num_args
         -- this might be inefficient
-          if n_args ∈ (reorder.find nm).iget ∧ test g.get_app_args.head then
+          if n_args ∈ (reorder.find nm).iget ∧ test g.get_app_args.headI then
           -- interchange `x` and the last argument of `g`
             some <|
             apply_replacement_fun g.app_fn (apply_replacement_fun x) <|
@@ -1174,7 +1174,7 @@ unsafe def mfilter (e : environment) (test : declaration → tactic Bool) :
 /-- Checks whether `s` is a prefix of the file where `n` is declared.
   This is used to check whether `n` is declared in mathlib, where `s` is the mathlib directory. -/
 unsafe def is_prefix_of_file (e : environment) (s : String) (n : Name) : Bool :=
-  s.isPrefixOf <| (e.decl_olean n).getOrElse ""
+  s.isPrefixOfₓ <| (e.decl_olean n).getD ""
 #align environment.is_prefix_of_file environment.is_prefix_of_file
 
 end Environment
@@ -1210,7 +1210,7 @@ unsafe def is_eta_expansion_test : List (Name × expr) → Option expr
     | (const nm univs : expr) =>
       if nm = proj then
         let args := val.get_app_args
-        let e := args.ilast
+        let e := args.getLastI
         if is_eta_expansion_of args univs l then some e else none
       else none
     | _ => none
@@ -1222,7 +1222,7 @@ unsafe def is_eta_expansion_test : List (Name × expr) → Option expr
   afterward checks whether the resulting expression `e` unifies with `val`.
   This last check is necessary, because `val` and `e` might have different types. -/
 unsafe def is_eta_expansion_aux (val : expr) (l : List (Name × expr)) : tactic (Option expr) := do
-  let l' ← l.mfilter fun ⟨proj, val⟩ => not <$> is_proof val
+  let l' ← l.filterM fun ⟨proj, val⟩ => not <$> is_proof val
   match is_eta_expansion_test l' with
     | some e => (Option.map fun _ => e) <$> try_core (unify e val)
     | none => return none
@@ -1302,9 +1302,9 @@ unsafe def is_auto_generated (e : environment) (d : declaration) : Bool :=
   e.is_constructor d.to_name ∨
     (e.is_projection d.to_name).isSome ∨
       e.is_constructor d.to_name.getPrefix ∧
-          d.to_name.last ∈ ["inj", "inj_eq", "sizeof_spec", "inj_arrow"] ∨
+          d.to_name.getLast ∈ ["inj", "inj_eq", "sizeof_spec", "inj_arrow"] ∨
         e.is_inductive d.to_name.getPrefix ∧
-            d.to_name.last ∈
+            d.to_name.getLast ∈
               ["below", "binduction_on", "brec_on", "cases_on", "dcases_on", "drec_on", "drec",
                 "rec", "rec_on", "no_confusion", "no_confusion_type", "sizeof", "ibelow",
                 "has_sizeof_inst"] ∨

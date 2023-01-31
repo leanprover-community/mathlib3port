@@ -171,30 +171,30 @@ def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R)
   one_mem' := ⟨1, Matrix.Represents.one⟩
   add_mem' := fun A₁ A₂ ⟨f₁, e₁⟩ ⟨f₂, e₂⟩ => ⟨f₁ + f₂, e₁.add e₂⟩
   zero_mem' := ⟨0, Matrix.Represents.zero⟩
-  algebra_map_mem' r := ⟨r • 1, Matrix.Represents.one.smul r⟩
+  algebraMap_mem' r := ⟨r • 1, Matrix.Represents.one.smul r⟩
 #align matrix.is_representation Matrix.isRepresentation
 
 /-- The map sending a matrix to the endomorphism it represents. This is an `R`-algebra morphism. -/
 noncomputable def Matrix.isRepresentation.toEnd : Matrix.isRepresentation R b →ₐ[R] Module.End R M
     where
   toFun A := A.2.some
-  map_one' := (1 : Matrix.isRepresentation R b).2.some_spec.Eq hb Matrix.Represents.one
-  map_mul' A₁ A₂ := (A₁ * A₂).2.some_spec.Eq hb (A₁.2.some_spec.mul A₂.2.some_spec)
-  map_zero' := (0 : Matrix.isRepresentation R b).2.some_spec.Eq hb Matrix.Represents.zero
-  map_add' A₁ A₂ := (A₁ + A₂).2.some_spec.Eq hb (A₁.2.some_spec.add A₂.2.some_spec)
+  map_one' := (1 : Matrix.isRepresentation R b).2.choose_spec.Eq hb Matrix.Represents.one
+  map_mul' A₁ A₂ := (A₁ * A₂).2.choose_spec.Eq hb (A₁.2.choose_spec.mul A₂.2.choose_spec)
+  map_zero' := (0 : Matrix.isRepresentation R b).2.choose_spec.Eq hb Matrix.Represents.zero
+  map_add' A₁ A₂ := (A₁ + A₂).2.choose_spec.Eq hb (A₁.2.choose_spec.add A₂.2.choose_spec)
   commutes' r :=
-    (r • 1 : Matrix.isRepresentation R b).2.some_spec.Eq hb (Matrix.Represents.one.smul r)
+    (r • 1 : Matrix.isRepresentation R b).2.choose_spec.Eq hb (Matrix.Represents.one.smul r)
 #align matrix.is_representation.to_End Matrix.isRepresentation.toEnd
 
 theorem Matrix.isRepresentation.toEnd_represents (A : Matrix.isRepresentation R b) :
     (A : Matrix ι ι R).Represents b (Matrix.isRepresentation.toEnd R b hb A) :=
-  A.2.some_spec
+  A.2.choose_spec
 #align matrix.is_representation.to_End_represents Matrix.isRepresentation.toEnd_represents
 
 theorem Matrix.isRepresentation.eq_toEnd_of_represents (A : Matrix.isRepresentation R b)
     {f : Module.End R M} (h : (A : Matrix ι ι R).Represents b f) :
     Matrix.isRepresentation.toEnd R b hb A = f :=
-  A.2.some_spec.Eq hb h
+  A.2.choose_spec.Eq hb h
 #align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_toEnd_of_represents
 
 theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I : Ideal R)
@@ -246,7 +246,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
       Matrix.isRepresentation.toEnd_exists_mem_ideal R (coe : s → M)
         (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
     refine' ⟨A.1.charpoly, A.1.charpoly_monic, _, _⟩
-    · rw [A.1.charpoly_nat_degree_eq_dim]
+    · rw [A.1.charpoly_natDegree_eq_dim]
       exact coeff_charpoly_mem_ideal_pow h
     · rw [Polynomial.aeval_algHom_apply, ← map_zero (Matrix.isRepresentation.toEnd R coe _)]
       congr 1

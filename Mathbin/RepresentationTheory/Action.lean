@@ -218,13 +218,13 @@ def inverse : (SingleObj G ⥤ V) ⥤ Action V G
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
-def unitIso : 𝟭 (Action V G) ≅ Functor ⋙ inverse :=
+def unitIso : 𝟭 (Action V G) ≅ functor ⋙ inverse :=
   NatIso.ofComponents (fun M => mkIso (Iso.refl _) (by tidy)) (by tidy)
 #align Action.functor_category_equivalence.unit_iso Action.FunctorCategoryEquivalence.unitIso
 
 /-- Auxilliary definition for `functor_category_equivalence`. -/
 @[simps]
-def counitIso : inverse ⋙ Functor ≅ 𝟭 (SingleObj G ⥤ V) :=
+def counitIso : inverse ⋙ functor ≅ 𝟭 (SingleObj G ⥤ V) :=
   NatIso.ofComponents (fun M => NatIso.ofComponents (by tidy) (by tidy)) (by tidy)
 #align Action.functor_category_equivalence.counit_iso Action.FunctorCategoryEquivalence.counitIso
 
@@ -317,7 +317,7 @@ variable [HasZeroMorphisms V]
 
 instance : HasZeroMorphisms (Action V G)
     where
-  HasZero X Y :=
+  Zero X Y :=
     ⟨⟨0, by
         intro g
         simp⟩⟩
@@ -868,8 +868,8 @@ def mapAction (F : MonoidalFunctor V W) (G : Mon.{u}) : MonoidalFunctor (Action 
     μ := fun X Y =>
       { Hom := F.μ X.V Y.V
         comm' := fun g => F.toLaxMonoidalFunctor.μ_natural (X.ρ g) (Y.ρ g) }
-    ε_is_iso := by infer_instance
-    μ_is_iso := by infer_instance
+    ε_isIso := by infer_instance
+    μ_isIso := by infer_instance
     μ_natural' := by
       intros
       ext

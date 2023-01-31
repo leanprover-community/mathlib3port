@@ -87,12 +87,13 @@ def IsOrthoCat (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) (v : n → M�
 #align linear_map.is_Ortho LinearMap.IsOrthoCat
 
 theorem isOrthoCat_def {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {v : n → M₁} :
-    B.IsOrtho v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
+    B.IsOrthoCat v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
   Iff.rfl
 #align linear_map.is_Ortho_def LinearMap.isOrthoCat_def
 
 theorem isOrthoCat_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) {v : n → M₁} :
-    B.IsOrtho v ↔ B.flip.IsOrtho v := by
+    B.IsOrthoCat v ↔ B.flip.IsOrthoCat v :=
+  by
   simp_rw [is_Ortho_def]
   constructor <;> intro h i j hij
   · rw [flip_apply]
@@ -140,7 +141,7 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
 /-- A set of orthogonal vectors `v` with respect to some sesquilinear form `B` is linearly
   independent if for all `i`, `B (v i) (v i) ≠ 0`. -/
 theorem linearIndependent_of_isOrthoCat {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁}
-    (hv₁ : B.IsOrtho v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by
+    (hv₁ : B.IsOrthoCat v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by
   classical
     rw [linearIndependent_iff']
     intro s w hs i hi
@@ -791,8 +792,8 @@ theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R
 /-- An orthogonal basis with respect to a left-separating bilinear form has no self-orthogonal
 elements. -/
 theorem IsOrthoCat.not_isOrtho_basis_self_of_separatingLeft [Nontrivial R]
-    {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M} (h : B.IsOrtho v) (hB : B.SeparatingLeft) (i : n) :
-    ¬B.IsOrtho (v i) (v i) := by
+    {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M} (h : B.IsOrthoCat v) (hB : B.SeparatingLeft)
+    (i : n) : ¬B.IsOrtho (v i) (v i) := by
   intro ho
   refine' v.ne_zero i (hB (v i) fun m => _)
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
@@ -809,7 +810,7 @@ theorem IsOrthoCat.not_isOrtho_basis_self_of_separatingLeft [Nontrivial R]
 /-- An orthogonal basis with respect to a right-separating bilinear form has no self-orthogonal
 elements. -/
 theorem IsOrthoCat.not_isOrtho_basis_self_of_separatingRight [Nontrivial R]
-    {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M} (h : B.IsOrtho v) (hB : B.SeparatingRight)
+    {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M} (h : B.IsOrthoCat v) (hB : B.SeparatingRight)
     (i : n) : ¬B.IsOrtho (v i) (v i) :=
   by
   rw [is_Ortho_flip] at h
@@ -820,7 +821,7 @@ theorem IsOrthoCat.not_isOrtho_basis_self_of_separatingRight [Nontrivial R]
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is left-separating
 if the basis has no elements which are self-orthogonal. -/
 theorem IsOrthoCat.separatingLeftOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M →ₗ[R] M →ₗ[R] R}
-    (v : Basis n R M) (hO : B.IsOrtho v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.SeparatingLeft :=
+    (v : Basis n R M) (hO : B.IsOrthoCat v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.SeparatingLeft :=
   by
   intro m hB
   obtain ⟨vi, rfl⟩ := v.repr.symm.surjective m
@@ -843,7 +844,7 @@ theorem IsOrthoCat.separatingLeftOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is right-separating
 if the basis has no elements which are self-orthogonal. -/
 theorem IsOrthoCat.separatingRightIffNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M →ₗ[R] M →ₗ[R] R}
-    (v : Basis n R M) (hO : B.IsOrtho v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.SeparatingRight :=
+    (v : Basis n R M) (hO : B.IsOrthoCat v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.SeparatingRight :=
   by
   rw [is_Ortho_flip] at hO
   rw [← flip_separating_left]
@@ -855,7 +856,7 @@ theorem IsOrthoCat.separatingRightIffNotIsOrthoBasisSelf [NoZeroDivisors R] {B :
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
 if the basis has no elements which are self-orthogonal. -/
 theorem IsOrthoCat.nondegenerateOfNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M →ₗ[R] M →ₗ[R] R}
-    (v : Basis n R M) (hO : B.IsOrtho v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.Nondegenerate :=
+    (v : Basis n R M) (hO : B.IsOrthoCat v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.Nondegenerate :=
   ⟨IsOrthoCat.separatingLeftOfNotIsOrthoBasisSelf v hO h,
     IsOrthoCat.separatingRightIffNotIsOrthoBasisSelf v hO h⟩
 #align linear_map.is_Ortho.nondegenerate_of_not_is_ortho_basis_self LinearMap.IsOrthoCat.nondegenerateOfNotIsOrthoBasisSelf

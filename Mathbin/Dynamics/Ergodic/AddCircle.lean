@@ -84,7 +84,7 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
       by
       refine' tendsto_nhds_within_iff.mpr ⟨_, hδ₀⟩
       replace hu₂ : tendsto (fun j => T⁻¹ * 2 * n j) l at_top :=
-        (tendsto_coe_nat_at_top_iff.mpr hu₂).const_mul_at_top (by positivity : 0 < T⁻¹ * 2)
+        (tendsto_coe_nat_at_top_iff.mpr hu₂).const_mul_atTop (by positivity : 0 < T⁻¹ * 2)
       convert hu₂.inv_tendsto_at_top
       ext j
       simp only [δ, Pi.inv_apply, mul_inv_rev, inv_inv, div_eq_inv_mul, ← mul_assoc]

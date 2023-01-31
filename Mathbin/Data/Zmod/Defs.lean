@@ -152,9 +152,9 @@ instance commRing (n : ℕ) : CommRing (ZMod n)
   zsmul_neg' :=
     Nat.casesOn n (@CommRing.zsmul_neg' Int _) fun n => @CommRing.zsmul_neg' (Fin n.succ) _
   nsmul := Nat.casesOn n (@CommRing.nsmul Int _) fun n => @CommRing.nsmul (Fin n.succ) _
-  nsmul_zero' :=
+  nsmul_zero :=
     Nat.casesOn n (@CommRing.nsmul_zero' Int _) fun n => @CommRing.nsmul_zero' (Fin n.succ) _
-  nsmul_succ' :=
+  nsmul_succ :=
     Nat.casesOn n (@CommRing.nsmul_succ' Int _) fun n => @CommRing.nsmul_succ' (Fin n.succ) _
   add_left_neg := by
     cases n
@@ -166,11 +166,11 @@ instance commRing (n : ℕ) : CommRing (ZMod n)
   one_mul := Nat.casesOn n (@one_mul Int _) fun n => @one_mul (Fin n.succ) _
   mul_one := Nat.casesOn n (@mul_one Int _) fun n => @mul_one (Fin n.succ) _
   natCast := Nat.casesOn n (coe : ℕ → ℤ) fun n => (coe : ℕ → Fin n.succ)
-  nat_cast_zero := Nat.casesOn n (@Nat.cast_zero Int _) fun n => @Nat.cast_zero (Fin n.succ) _
-  nat_cast_succ := Nat.casesOn n (@Nat.cast_succ Int _) fun n => @Nat.cast_succ (Fin n.succ) _
+  natCast_zero := Nat.casesOn n (@Nat.cast_zero Int _) fun n => @Nat.cast_zero (Fin n.succ) _
+  natCast_succ := Nat.casesOn n (@Nat.cast_succ Int _) fun n => @Nat.cast_succ (Fin n.succ) _
   intCast := Nat.casesOn n (coe : ℤ → ℤ) fun n => (coe : ℤ → Fin n.succ)
-  int_cast_of_nat := Nat.casesOn n (@Int.cast_ofNat Int _) fun n => @Int.cast_ofNat (Fin n.succ) _
-  int_cast_neg_succ_of_nat :=
+  intCast_ofNat := Nat.casesOn n (@Int.cast_ofNat Int _) fun n => @Int.cast_ofNat (Fin n.succ) _
+  intCast_negSucc :=
     Nat.casesOn n (@Int.cast_negSucc Int _) fun n => @Int.cast_negSucc (Fin n.succ) _
   left_distrib := Nat.casesOn n (@left_distrib Int _ _ _) fun n => @left_distrib (Fin n.succ) _ _ _
   right_distrib :=

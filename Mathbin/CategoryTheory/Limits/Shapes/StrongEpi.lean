@@ -84,11 +84,11 @@ attribute [instance] strong_epi.llp
 attribute [instance] strong_mono.rlp
 
 instance (priority := 100) epi_of_strongEpi (f : P ⟶ Q) [StrongEpi f] : Epi f :=
-  strong_epi.epi
+  StrongEpi.epi
 #align category_theory.epi_of_strong_epi CategoryTheory.epi_of_strongEpi
 
 instance (priority := 100) mono_of_strongMono (f : P ⟶ Q) [StrongMono f] : Mono f :=
-  strong_mono.mono
+  StrongMono.mono
 #align category_theory.mono_of_strong_mono CategoryTheory.mono_of_strongMono
 
 section
@@ -204,12 +204,12 @@ variable (C)
 
 /-- A strong epi category is a category in which every epimorphism is strong. -/
 class StrongEpiCategory : Prop where
-  strong_epi_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], StrongEpi f
+  strongEpi_of_epi : ∀ {X Y : C} (f : X ⟶ Y) [Epi f], StrongEpi f
 #align category_theory.strong_epi_category CategoryTheory.StrongEpiCategory
 
 /-- A strong mono category is a category in which every monomorphism is strong. -/
 class StrongMonoCategory : Prop where
-  strong_mono_of_mono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], StrongMono f
+  strongMono_of_mono : ∀ {X Y : C} (f : X ⟶ Y) [Mono f], StrongMono f
 #align category_theory.strong_mono_category CategoryTheory.StrongMonoCategory
 
 end
@@ -227,7 +227,7 @@ section
 attribute [local instance] strong_epi_of_epi
 
 instance (priority := 100) balanced_of_strongEpiCategory [StrongEpiCategory C] : Balanced C
-    where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_mono_of_strong_epi _
+    where isIso_of_mono_of_epi _ _ _ _ _ := is_iso_of_mono_of_strong_epi _
 #align category_theory.balanced_of_strong_epi_category CategoryTheory.balanced_of_strongEpiCategory
 
 end
@@ -237,7 +237,7 @@ section
 attribute [local instance] strong_mono_of_mono
 
 instance (priority := 100) balanced_of_strongMonoCategory [StrongMonoCategory C] : Balanced C
-    where is_iso_of_mono_of_epi _ _ _ _ _ := is_iso_of_epi_of_strong_mono _
+    where isIso_of_mono_of_epi _ _ _ _ _ := is_iso_of_epi_of_strong_mono _
 #align category_theory.balanced_of_strong_mono_category CategoryTheory.balanced_of_strongMonoCategory
 
 end

@@ -67,7 +67,7 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
   use c, cmem
   rw [← sub_eq_zero]
   have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_Icc]
-  exact (hc.is_local_min this).has_deriv_at_eq_zero ((hg c cmem).HasDerivAt this)
+  exact (hc.is_local_min this).hasDerivAt_eq_zero ((hg c cmem).HasDerivAt this)
 #align exists_has_deriv_within_at_eq_of_gt_of_lt exists_hasDerivWithinAt_eq_of_gt_of_lt
 
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.

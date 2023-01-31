@@ -632,7 +632,7 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u1}} {f : α -> γ} {g : β -> δ}, (Function.Bijective.{succ u4, succ u3} α γ f) -> (Function.Bijective.{succ u2, succ u1} β δ g) -> (Function.Bijective.{max (succ u2) (succ u4), max (succ u1) (succ u3)} (Prod.{u4, u2} α β) (Prod.{u3, u1} γ δ) (Prod.map.{u4, u3, u2, u1} α γ β δ f g))
 Case conversion may be inaccurate. Consider using '#align function.bijective.prod_map Function.Bijective.Prod_mapₓ'. -/
 theorem Bijective.Prod_map (hf : Bijective f) (hg : Bijective g) : Bijective (map f g) :=
-  ⟨hf.1.prod_map hg.1, hf.2.prod_map hg.2⟩
+  ⟨hf.1.Prod_map hg.1, hf.2.Prod_map hg.2⟩
 #align function.bijective.prod_map Function.Bijective.Prod_map
 
 /- warning: function.left_inverse.prod_map -> Function.LeftInverse.Prod_map is a dubious translation:
@@ -654,7 +654,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.right_inverse.prod_map Function.RightInverse.Prod_mapₓ'. -/
 theorem RightInverse.Prod_map :
     RightInverse f₁ f₂ → RightInverse g₁ g₂ → RightInverse (map f₁ g₁) (map f₂ g₂) :=
-  left_inverse.prod_map
+  LeftInverse.Prod_map
 #align function.right_inverse.prod_map Function.RightInverse.Prod_map
 
 /- warning: function.involutive.prod_map -> Function.Involutive.Prod_map is a dubious translation:
@@ -665,7 +665,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.involutive.prod_map Function.Involutive.Prod_mapₓ'. -/
 theorem Involutive.Prod_map {f : α → α} {g : β → β} :
     Involutive f → Involutive g → Involutive (map f g) :=
-  left_inverse.prod_map
+  LeftInverse.Prod_map
 #align function.involutive.prod_map Function.Involutive.Prod_map
 
 end Function

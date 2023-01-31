@@ -136,7 +136,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {s : Multiset.{u1} α} {a : α} [_inst_2 : DecidableEq.{succ u1} α], (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)))) a (Multiset.prod.{u1} α _inst_1 (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_2 a b) s a))) (Multiset.prod.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align multiset.prod_erase Multiset.prod_eraseₓ'. -/
 @[simp, to_additive]
-theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.erase a).Prod = s.Prod := by
+theorem prod_erase [DecidableEq α] (h : a ∈ s) : a * (s.eraseₓ a).Prod = s.Prod := by
   rw [← s.coe_to_list, coe_erase, coe_prod, coe_prod, List.prod_erase (mem_to_list.2 h)]
 #align multiset.prod_erase Multiset.prod_erase
 #align multiset.sum_erase Multiset.sum_erase
@@ -149,7 +149,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.prod_map_erase Multiset.prod_map_eraseₓ'. -/
 @[simp, to_additive]
 theorem prod_map_erase [DecidableEq ι] {a : ι} (h : a ∈ m) :
-    f a * ((m.erase a).map f).Prod = (m.map f).Prod := by
+    f a * ((m.eraseₓ a).map f).Prod = (m.map f).Prod := by
   rw [← m.coe_to_list, coe_erase, coe_map, coe_map, coe_prod, coe_prod,
     List.prod_map_erase f (mem_to_list.2 h)]
 #align multiset.prod_map_erase Multiset.prod_map_erase
@@ -242,7 +242,7 @@ theorem prod_eq_pow_single [DecidableEq α] (a : α) (h : ∀ (a') (_ : a' ≠ a
 
 #print Multiset.pow_count /-
 @[to_additive]
-theorem pow_count [DecidableEq α] (a : α) : a ^ s.count a = (s.filter (Eq a)).Prod := by
+theorem pow_count [DecidableEq α] (a : α) : a ^ s.count a = (s.filterₓ (Eq a)).Prod := by
   rw [filter_eq, prod_replicate]
 #align multiset.pow_count Multiset.pow_count
 #align multiset.nsmul_count Multiset.nsmul_count
@@ -360,8 +360,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.prod_map_prod_map Multiset.prod_map_prod_mapₓ'. -/
 @[to_additive]
 theorem prod_map_prod_map (m : Multiset β) (n : Multiset γ) {f : β → γ → α} :
-    prod (m.map fun a => Prod <| n.map fun b => f a b) =
-      prod (n.map fun b => Prod <| m.map fun a => f a b) :=
+    prod (m.map fun a => prod <| n.map fun b => f a b) =
+      prod (n.map fun b => prod <| m.map fun a => f a b) :=
   Multiset.induction_on m (by simp) fun a m ih => by simp [ih]
 #align multiset.prod_map_prod_map Multiset.prod_map_prod_map
 #align multiset.sum_map_sum_map Multiset.sum_map_sum_map
@@ -453,7 +453,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} α], Eq.{succ u1} (forall (a : Multiset.{u1} α), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => α) a) (FunLike.coe.{succ u1, succ u1, succ u1} (AddMonoidHom.{u1, u1} (Multiset.{u1} α) α (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (AddMonoidHom.{u1, u1} (Multiset.{u1} α) α (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (Multiset.{u1} α) α (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (AddMonoidHom.{u1, u1} (Multiset.{u1} α) α (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))) (Multiset.{u1} α) α (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1)) (AddMonoidHom.addMonoidHomClass.{u1, u1} (Multiset.{u1} α) α (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α _inst_1))))) (Multiset.sumAddMonoidHom.{u1} α _inst_1)) (Multiset.sum.{u1} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align multiset.coe_sum_add_monoid_hom Multiset.coe_sumAddMonoidHomₓ'. -/
 @[simp]
-theorem coe_sumAddMonoidHom : (sumAddMonoidHom : Multiset α → α) = Sum :=
+theorem coe_sumAddMonoidHom : (sumAddMonoidHom : Multiset α → α) = sum :=
   rfl
 #align multiset.coe_sum_add_monoid_hom Multiset.coe_sumAddMonoidHom
 

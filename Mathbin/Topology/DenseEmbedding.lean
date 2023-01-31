@@ -104,7 +104,7 @@ protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α �
     (de₁ : DenseInducing e₁) (de₂ : DenseInducing e₂) :
     DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
   { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced
-    dense := de₁.dense.prod_map de₂.dense }
+    dense := de₁.dense.Prod_map de₂.dense }
 #align dense_inducing.prod DenseInducing.prod
 
 open TopologicalSpace
@@ -134,11 +134,11 @@ theorem tendsto_comap_nhds_nhds {d : δ} {a : α} (di : DenseInducing i)
 #align dense_inducing.tendsto_comap_nhds_nhds DenseInducing.tendsto_comap_nhds_nhds
 
 protected theorem nhdsWithin_neBot (di : DenseInducing i) (b : β) : NeBot (𝓝[range i] b) :=
-  di.dense.nhds_within_ne_bot b
+  di.dense.nhdsWithin_neBot b
 #align dense_inducing.nhds_within_ne_bot DenseInducing.nhdsWithin_neBot
 
 theorem comap_nhds_neBot (di : DenseInducing i) (b : β) : NeBot (comap i (𝓝 b)) :=
-  comap_ne_bot fun s hs =>
+  comap_neBot fun s hs =>
     let ⟨_, ⟨ha, a, rfl⟩⟩ := mem_closure_iff_nhds.1 (di.dense b) s hs
     ⟨a, ha⟩
 #align dense_inducing.comap_nhds_ne_bot DenseInducing.comap_nhds_neBot
@@ -217,7 +217,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
     rwa [di.extend_eq_of_tendsto hc]
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀ x ∈ i ⁻¹' V₂, f x ∈ V' := by
     simpa [and_assoc'] using
-      ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
+      ((nhds_basis_opens' b).comap i).tendsto_left_iffₓ.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
   suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by filter_upwards [inter_mem V₁_in V₂_in]using this
   rintro x ⟨x_in₁, x_in₂⟩
   have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂
@@ -228,7 +228,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
 
 theorem continuous_extend [T3Space γ] {f : α → γ} (di : DenseInducing i)
     (hf : ∀ b, ∃ c, Tendsto f (comap i (𝓝 b)) (𝓝 c)) : Continuous (di.extend f) :=
-  continuous_iff_continuousAt.mpr fun b => di.continuous_at_extend <| univ_mem' hf
+  continuous_iff_continuousAt.mpr fun b => di.continuousAt_extend <| univ_mem' hf
 #align dense_inducing.continuous_extend DenseInducing.continuous_extend
 
 theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ closure (range i))
@@ -272,13 +272,13 @@ theorem to_embedding : Embedding e :=
 
 /-- If the domain of a `dense_embedding` is a separable space, then so is its codomain. -/
 protected theorem separableSpace [SeparableSpace α] : SeparableSpace β :=
-  de.to_dense_inducing.SeparableSpace
+  de.to_denseInducing.SeparableSpace
 #align dense_embedding.separable_space DenseEmbedding.separableSpace
 
 /-- The product of two dense embeddings is a dense embedding. -/
 protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbedding e₁)
     (de₂ : DenseEmbedding e₂) : DenseEmbedding fun p : α × γ => (e₁ p.1, e₂ p.2) :=
-  { DenseInducing.prod de₁.to_dense_inducing de₂.to_dense_inducing with
+  { DenseInducing.prod de₁.to_denseInducing de₂.to_denseInducing with
     inj := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => by simp <;> exact fun h₁ h₂ => ⟨de₁.inj h₁, de₂.inj h₂⟩ }
 #align dense_embedding.prod DenseEmbedding.prod
 
@@ -303,7 +303,7 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
 #align dense_embedding.subtype DenseEmbedding.subtype
 
 theorem dense_image {s : Set α} : Dense (e '' s) ↔ Dense s :=
-  de.to_dense_inducing.dense_image
+  de.to_denseInducing.dense_image
 #align dense_embedding.dense_image DenseEmbedding.dense_image
 
 end DenseEmbedding
@@ -314,7 +314,7 @@ theorem denseEmbedding_id {α : Type _} [TopologicalSpace α] : DenseEmbedding (
 
 theorem Dense.denseEmbedding_coe [TopologicalSpace α] {s : Set α} (hs : Dense s) :
     DenseEmbedding (coe : s → α) :=
-  { embedding_subtype_coe with dense := hs.dense_range_coe }
+  { embedding_subtype_val with dense := hs.denseRange_val }
 #align dense.dense_embedding_coe Dense.denseEmbedding_coe
 
 theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e)
@@ -330,7 +330,7 @@ theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop
 
 theorem isClosed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.prod_map he) hp fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.Prod_map he) hp fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 #align is_closed_property2 isClosed_property2
 
@@ -338,7 +338,7 @@ theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → β 
     (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
-    isClosed_property (he.prod_map <| he.prod_map he) hp fun _ => h _ _ _
+    isClosed_property (he.Prod_map <| he.Prod_map he) hp fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 #align is_closed_property3 isClosed_property3
 

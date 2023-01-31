@@ -77,7 +77,7 @@ def conePoint : Algebra T where
       by
       rw [category.assoc, category.assoc, t.fac (new_cone D c), new_cone_π_app, ←
         functor.map_comp_assoc, t.fac (new_cone D c), new_cone_π_app, ← T.μ.naturality_assoc,
-        (D.obj j).assoc, functor.map_comp, category.assoc]
+        (D.obj j).and_assoc, functor.map_comp, category.assoc]
       rfl
 #align category_theory.monad.forget_creates_limits.cone_point CategoryTheory.Monad.ForgetCreatesLimits.conePoint
 
@@ -255,7 +255,7 @@ which the monad itself preserves.
 noncomputable instance forgetCreatesColimit (D : J ⥤ Algebra T)
     [PreservesColimit (D ⋙ forget T) (T : C ⥤ C)]
     [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)] : CreatesColimit D (forget T) :=
-  creates_colimit_of_reflects_iso fun c t =>
+  createsColimitOfReflectsIso fun c t =>
     { liftedCocone :=
         { x := coconePoint c t
           ι :=

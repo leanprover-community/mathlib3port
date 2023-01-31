@@ -105,7 +105,7 @@ unsafe def to_tactic_format (cl : closure) : tactic format := do
   let m ← read_ref cl
   let l := m.toList
   let fmt ←
-    l.mmap fun ⟨x, y⟩ =>
+    l.mapM fun ⟨x, y⟩ =>
         match y with
         | Sum.inl y => f!"{(← x)} ⇐ {← y}"
         | Sum.inr ⟨y, p⟩ => f!"({(← x)}, {(← y)}) : {← infer_type p}"
@@ -239,8 +239,8 @@ namespace ImplGraph
                   is_prop v₀ >>= guardb
                     is_prop v₁ >>= guardb
                     let m ← read_ref g
-                    let xs := ( m v₀ ) . getOrElse [ ]
-                    let xs' := ( m v₁ ) . getOrElse [ ]
+                    let xs := ( m v₀ ) . getD [ ]
+                    let xs' := ( m v₁ ) . getD [ ]
                     modify_ref g fun m => ( m v₀ ( ( v₁ , p ) :: xs ) ) . insert v₁ xs'
               |
                 q( $ ( v₀ ) ↔ $ ( v₁ ) )
@@ -268,17 +268,17 @@ consecutive vertices. The proofs are compiled into proofs of equivalences and ad
 structure. `e` and the first vertex of `path` do not have to be the same but they have to be
 in the same equivalence class. -/
 unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := do
-  let p₁ ← cl.prove_impl e path.head.fst
+  let p₁ ← cl.prove_impl e path.headI.fst
   let p₂ ← mk_mapp `` id [e]
   let path := (e, p₁) :: path
   let (_, ls) ←
-    path.mmapAccuml
+    path.mapAccumLM
         (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, p'.1, none, p, p'.2] <*> pure p) p₂
   let (_, rs) ←
-    path.mmapAccumr
+    path.mapAccumRM
         (fun p p' => Prod.mk <$> mk_mapp `` Implies.trans [none, none, none, p.2, p'] <*> pure p')
         p₂
-  let ps ← zipWithM (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.init
+  let ps ← zipWithM (fun p₀ p₁ => mk_app `` Iff.intro [p₀, p₁]) ls.tail rs.dropLast
   ps cl
 #align tactic.impl_graph.merge_path tactic.impl_graph.merge_path
 

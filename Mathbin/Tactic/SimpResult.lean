@@ -62,14 +62,14 @@ unsafe def intercept_result {α} (m : expr → tactic expr) (t : tactic α) : ta
   let gs
     ←-- Replace the goals with copies.
       get_goals
-  let gs' ← gs.mmap fun g => infer_type g >>= mk_meta_var
+  let gs' ← gs.mapM fun g => infer_type g >>= mk_meta_var
   set_goals gs'
   let a
     ←-- Run the tactic on the copied goals.
       t
   (-- Run `m` on the produced terms,
           gs
-          gs').mmap
+          gs').mapM
       fun ⟨g, g'⟩ => do
       let g' ← instantiate_mvars g'
       let g'' ← with_local_goals' gs <| m g'

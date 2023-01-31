@@ -124,7 +124,7 @@ theorem averageMap_id (v : V) (hv : v ∈ invariants ρ) : averageMap ρ v = v :
 #align representation.average_map_id Representation.averageMap_id
 
 theorem isProj_averageMap : LinearMap.IsProj ρ.invariants ρ.averageMap :=
-  ⟨ρ.average_map_invariant, ρ.average_map_id⟩
+  ⟨ρ.averageMap_invariant, ρ.averageMap_id⟩
 #align representation.is_proj_average_map Representation.isProj_averageMap
 
 end Invariants

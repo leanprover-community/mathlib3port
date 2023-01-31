@@ -655,23 +655,23 @@ def prodMap (f : α →. γ) (g : β →. δ) : α × β →. γ × δ := fun x 
 
 @[simp]
 theorem dom_prodMap (f : α →. γ) (g : β →. δ) :
-    (f.prod_map g).Dom = { x | (f x.1).Dom ∧ (g x.2).Dom } :=
+    (f.Prod_map g).Dom = { x | (f x.1).Dom ∧ (g x.2).Dom } :=
   rfl
 #align pfun.dom_prod_map Pfun.dom_prodMap
 
 theorem get_prodMap (f : α →. γ) (g : β →. δ) (x : α × β) (h) :
-    (f.prod_map g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
+    (f.Prod_map g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
   rfl
 #align pfun.get_prod_map Pfun.get_prodMap
 
 @[simp]
 theorem prodMap_apply (f : α →. γ) (g : β →. δ) (x : α × β) :
-    f.prod_map g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
+    f.Prod_map g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
   rfl
 #align pfun.prod_map_apply Pfun.prodMap_apply
 
 theorem mem_prodMap {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ × δ} :
-    y ∈ f.prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 :=
+    y ∈ f.Prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 :=
   by
   trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
   · simp only [Prod_map, Part.mem_mk_iff, And.exists, Prod.ext_iff]
@@ -687,13 +687,13 @@ theorem prodLift_fst_comp_snd_comp (f : α →. γ) (g : β →. δ) :
 #align pfun.prod_lift_fst_comp_snd_comp Pfun.prodLift_fst_comp_snd_comp
 
 @[simp]
-theorem prodMap_id_id : (Pfun.id α).prod_map (Pfun.id β) = Pfun.id _ :=
+theorem prodMap_id_id : (Pfun.id α).Prod_map (Pfun.id β) = Pfun.id _ :=
   ext fun _ _ => by simp [eq_comm]
 #align pfun.prod_map_id_id Pfun.prodMap_id_id
 
 @[simp]
 theorem prodMap_comp_comp (f₁ : α →. β) (f₂ : β →. γ) (g₁ : δ →. ε) (g₂ : ε →. ι) :
-    (f₂.comp f₁).prod_map (g₂.comp g₁) = (f₂.prod_map g₂).comp (f₁.prod_map g₁) :=
+    (f₂.comp f₁).Prod_map (g₂.comp g₁) = (f₂.Prod_map g₂).comp (f₁.Prod_map g₁) :=
   ext fun _ _ => by tidy
 #align pfun.prod_map_comp_comp Pfun.prodMap_comp_comp
 

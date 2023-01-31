@@ -100,7 +100,7 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.t
 @[simp]
 def varFinset [DecidableEq α] : L.term α → Finset α
   | var i => {i}
-  | func f ts => univ.bUnion fun i => (ts i).varFinset
+  | func f ts => univ.bunionᵢ fun i => (ts i).varFinset
 #align first_order.language.term.var_finset FirstOrder.Language.Term.varFinset
 
 /- warning: first_order.language.term.var_finset_left -> FirstOrder.Language.Term.varFinsetLeft is a dubious translation:
@@ -114,7 +114,7 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.t
 def varFinsetLeft [DecidableEq α] : L.term (Sum α β) → Finset α
   | var (Sum.inl i) => {i}
   | var (Sum.inr i) => ∅
-  | func f ts => univ.bUnion fun i => (ts i).varFinsetLeft
+  | func f ts => univ.bunionᵢ fun i => (ts i).varFinsetLeft
 #align first_order.language.term.var_finset_left FirstOrder.Language.Term.varFinsetLeft
 
 /- warning: first_order.language.term.relabel -> FirstOrder.Language.Term.relabel is a dubious translation:
@@ -482,7 +482,7 @@ Case conversion may be inaccurate. Consider using '#align first_order.language.b
 def freeVarFinset [DecidableEq α] : ∀ {n}, L.BoundedFormula α n → Finset α
   | n, falsum => ∅
   | n, equal t₁ t₂ => t₁.varFinsetLeft ∪ t₂.varFinsetLeft
-  | n, Rel R ts => univ.bUnion fun i => (ts i).varFinsetLeft
+  | n, Rel R ts => univ.bunionᵢ fun i => (ts i).varFinsetLeft
   | n, imp f₁ f₂ => f₁.freeVarFinset ∪ f₂.freeVarFinset
   | n, all f => f.freeVarFinset
 #align first_order.language.bounded_formula.free_var_finset FirstOrder.Language.BoundedFormula.freeVarFinset
@@ -803,11 +803,11 @@ inductive IsQf : L.BoundedFormula α n → Prop
 #align first_order.language.bounded_formula.is_qf FirstOrder.Language.BoundedFormula.IsQf
 
 theorem IsAtomic.isQf {φ : L.BoundedFormula α n} : IsAtomic φ → IsQf φ :=
-  is_qf.of_is_atomic
+  IsQf.of_is_atomic
 #align first_order.language.bounded_formula.is_atomic.is_qf FirstOrder.Language.BoundedFormula.IsAtomic.isQf
 
 theorem isQf_bot : IsQf (⊥ : L.BoundedFormula α n) :=
-  is_qf.falsum
+  IsQf.falsum
 #align first_order.language.bounded_formula.is_qf_bot FirstOrder.Language.BoundedFormula.isQf_bot
 
 theorem IsQf.not {φ : L.BoundedFormula α n} (h : IsQf φ) : IsQf φ.Not :=
@@ -849,7 +849,7 @@ inductive IsPrenex : ∀ {n}, L.BoundedFormula α n → Prop
 #align first_order.language.bounded_formula.is_prenex FirstOrder.Language.BoundedFormula.IsPrenex
 
 theorem IsQf.isPrenex {φ : L.BoundedFormula α n} : IsQf φ → IsPrenex φ :=
-  is_prenex.of_is_qf
+  IsPrenex.of_is_qf
 #align first_order.language.bounded_formula.is_qf.is_prenex FirstOrder.Language.BoundedFormula.IsQf.isPrenex
 
 theorem IsAtomic.isPrenex {φ : L.BoundedFormula α n} (h : IsAtomic φ) : IsPrenex φ :=
@@ -1138,7 +1138,7 @@ protected def not (φ : L.Formula α) : L.Formula α :=
 
 /-- The implication between formulas, as a formula. -/
 protected def imp : L.Formula α → L.Formula α → L.Formula α :=
-  bounded_formula.imp
+  BoundedFormula.imp
 #align first_order.language.formula.imp FirstOrder.Language.Formula.imp
 
 /-- The biimplication between formulas, as a formula. -/
@@ -1208,7 +1208,7 @@ variable (L)
 
 /-- A sentence indicating that a structure has `n` distinct elements. -/
 protected def Sentence.cardGe (n) : L.Sentence :=
-  (((((List.finRange n).product (List.finRange n)).filter fun ij : _ × _ => ij.1 ≠ ij.2).map
+  (((((List.finRange n).product (List.finRange n)).filterₓ fun ij : _ × _ => ij.1 ≠ ij.2).map
           fun ij : _ × _ => ∼((&ij.1).bdEqual &ij.2)).foldr
       (· ⊓ ·) ⊤).exs
 #align first_order.language.sentence.card_ge FirstOrder.Language.Sentence.cardGe

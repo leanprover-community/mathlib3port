@@ -147,7 +147,7 @@ def free : C ⥤ Algebra T
   obj X :=
     { a := T.obj X
       a := T.μ.app X
-      assoc' := (T.assoc _).symm }
+      assoc' := (T.and_assoc _).symm }
   map X Y f :=
     { f := T.map f
       h' := T.μ.naturality _ }
@@ -310,7 +310,7 @@ def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra 
       algebraFunctorOfMonadHomEq (by simp) ≪≫ algebraFunctorOfMonadHomComp _ _
   counitIso :=
     (algebraFunctorOfMonadHomComp _ _).symm ≪≫
-      algebraFunctorOfMonadHomEq (by simp) ≪≫ algebra_functor_of_monad_hom_id
+      algebraFunctorOfMonadHomEq (by simp) ≪≫ algebraFunctorOfMonadHomId
 #align category_theory.monad.algebra_equiv_of_iso_monads CategoryTheory.Monad.algebraEquivOfIsoMonads
 
 @[simp]

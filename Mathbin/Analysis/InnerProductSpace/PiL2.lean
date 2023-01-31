@@ -559,7 +559,7 @@ theorem Complex.orthonormalBasisOneI_repr_apply (z : ℂ) :
 
 @[simp]
 theorem Complex.orthonormalBasisOneI_repr_symm_apply (x : EuclideanSpace ℝ (Fin 2)) :
-    Complex.orthonormalBasisOneI.repr.symm x = x 0 + x 1 * I :=
+    Complex.orthonormalBasisOneI.repr.symm x = x 0 + x 1 * i :=
   rfl
 #align complex.orthonormal_basis_one_I_repr_symm_apply Complex.orthonormalBasisOneI_repr_symm_apply
 
@@ -587,7 +587,7 @@ theorem Complex.map_isometryOfOrthonormal (v : OrthonormalBasis (Fin 2) ℝ F) (
 
 theorem Complex.isometryOfOrthonormal_symm_apply (v : OrthonormalBasis (Fin 2) ℝ F) (f : F) :
     (Complex.isometryOfOrthonormal v).symm f =
-      (v.toBasis.Coord 0 f : ℂ) + (v.toBasis.Coord 1 f : ℂ) * I :=
+      (v.toBasis.Coord 0 f : ℂ) + (v.toBasis.Coord 1 f : ℂ) * i :=
   by simp [Complex.isometryOfOrthonormal]
 #align complex.isometry_of_orthonormal_symm_apply Complex.isometryOfOrthonormal_symm_apply
 
@@ -641,7 +641,7 @@ variable (a b : OrthonormalBasis ι ℝ F)
 /-- The change-of-basis matrix between two orthonormal bases `a`, `b` is an orthogonal matrix. -/
 theorem OrthonormalBasis.toMatrix_orthonormalBasis_mem_orthogonal :
     a.toBasis.toMatrix b ∈ Matrix.orthogonalGroup ι ℝ :=
-  a.to_matrix_orthonormal_basis_mem_unitary b
+  a.toMatrix_orthonormalBasis_mem_unitary b
 #align orthonormal_basis.to_matrix_orthonormal_basis_mem_orthogonal OrthonormalBasis.toMatrix_orthonormalBasis_mem_orthogonal
 
 /-- The determinant of the change-of-basis matrix between two orthonormal bases `a`, `b` is ±1. -/
@@ -735,7 +735,7 @@ variable (𝕜 E)
 /-- A finite-dimensional inner product space admits an orthonormal basis. -/
 theorem exists_orthonormalBasis :
     ∃ (w : Finset E)(b : OrthonormalBasis w 𝕜 E), ⇑b = (coe : w → E) :=
-  let ⟨w, hw, hw', hw''⟩ := (orthonormalEmpty 𝕜 E).exists_orthonormal_basis_extension
+  let ⟨w, hw, hw', hw''⟩ := (orthonormalEmpty 𝕜 E).exists_orthonormalBasis_extension
   ⟨w, hw, hw''⟩
 #align exists_orthonormal_basis exists_orthonormalBasis
 

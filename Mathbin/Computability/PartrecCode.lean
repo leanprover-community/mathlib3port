@@ -189,11 +189,11 @@ instance : Denumerable Code :=
     ⟨encodeCode, ofNatCode, fun c => by
       induction c <;> try rfl <;> simp [encode_code, of_nat_code, -add_comm, *], encode_ofNatCode⟩
 
-theorem encodeCode_eq : encode = encode_code :=
+theorem encodeCode_eq : encode = encodeCode :=
   rfl
 #align nat.partrec.code.encode_code_eq Nat.Partrec.Code.encodeCode_eq
 
-theorem ofNatCode_eq : ofNat Code = of_nat_code :=
+theorem ofNatCode_eq : ofNat Code = ofNatCode :=
   rfl
 #align nat.partrec.code.of_nat_code_eq Nat.Partrec.Code.ofNatCode_eq
 
@@ -276,9 +276,9 @@ theorem rfind_prim : Primrec rfind' :=
 
 theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
-    (hr : Primrec r) {pr : α → code × code × σ × σ → σ} (hpr : Primrec₂ pr)
-    {co : α → code × code × σ × σ → σ} (hco : Primrec₂ co) {pc : α → code × code × σ × σ → σ}
-    (hpc : Primrec₂ pc) {rf : α → code × σ → σ} (hrf : Primrec₂ rf) :
+    (hr : Primrec r) {pr : α → Code × Code × σ × σ → σ} (hpr : Primrec₂ pr)
+    {co : α → Code × Code × σ × σ → σ} (hco : Primrec₂ co) {pc : α → Code × Code × σ × σ → σ}
+    (hpc : Primrec₂ pc) {rf : α → Code × σ → σ} (hrf : Primrec₂ rf) :
     let PR (a) cf cg hf hg := pr a (cf, cg, hf, hg)
     let CO (a) cf cg hf hg := co a (cf, cg, hf, hg)
     let PC (a) cf cg hf hg := pc a (cf, cg, hf, hg)
@@ -293,9 +293,9 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
     let IH := p.1.2
     let n := p.2.1
     let m := p.2.2
-    (IH.nth m).bind fun s =>
-      (IH.nth m.unpair.1).bind fun s₁ =>
-        (IH.nth m.unpair.2).map fun s₂ =>
+    (IH.get? m).bind fun s =>
+      (IH.get? m.unpair.1).bind fun s₁ =>
+        (IH.get? m.unpair.2).map fun s₂ =>
           cond n.bodd
             (cond n.div2.bodd (rf a (of_nat code m, s))
               (pc a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)))
@@ -375,12 +375,12 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
 theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
     (hr : Primrec r) {pr : α → Code → Code → σ → σ → σ}
-    (hpr : Primrec fun a : α × code × code × σ × σ => pr a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
+    (hpr : Primrec fun a : α × Code × Code × σ × σ => pr a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
     {co : α → Code → Code → σ → σ → σ}
-    (hco : Primrec fun a : α × code × code × σ × σ => co a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
+    (hco : Primrec fun a : α × Code × Code × σ × σ => co a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
     {pc : α → Code → Code → σ → σ → σ}
-    (hpc : Primrec fun a : α × code × code × σ × σ => pc a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
-    {rf : α → Code → σ → σ} (hrf : Primrec fun a : α × code × σ => rf a.1 a.2.1 a.2.2) :
+    (hpc : Primrec fun a : α × Code × Code × σ × σ => pc a.1 a.2.1 a.2.2.1 a.2.2.2.1 a.2.2.2.2)
+    {rf : α → Code → σ → σ} (hrf : Primrec fun a : α × Code × σ => rf a.1 a.2.1 a.2.2) :
     let F (a : α) (c : Code) : σ :=
       Nat.Partrec.Code.recOn c (z a) (s a) (l a) (r a) (pr a) (co a) (pc a) (rf a)
     Primrec fun a => F a (c a) :=
@@ -391,9 +391,9 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
     let IH := p.1.2
     let n := p.2.1
     let m := p.2.2
-    (IH.nth m).bind fun s =>
-      (IH.nth m.unpair.1).bind fun s₁ =>
-        (IH.nth m.unpair.2).map fun s₂ =>
+    (IH.get? m).bind fun s =>
+      (IH.get? m.unpair.1).bind fun s₁ =>
+        (IH.get? m.unpair.2).map fun s₂ =>
           cond n.bodd
             (cond n.div2.bodd (rf a (of_nat code m) s)
               (pc a (of_nat code m.unpair.1) (of_nat code m.unpair.2) s₁ s₂))
@@ -482,9 +482,9 @@ open Computable
 /-- Recursion on `nat.partrec.code` is computable. -/
 theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Computable c)
     {z : α → σ} (hz : Computable z) {s : α → σ} (hs : Computable s) {l : α → σ} (hl : Computable l)
-    {r : α → σ} (hr : Computable r) {pr : α → code × code × σ × σ → σ} (hpr : Computable₂ pr)
-    {co : α → code × code × σ × σ → σ} (hco : Computable₂ co) {pc : α → code × code × σ × σ → σ}
-    (hpc : Computable₂ pc) {rf : α → code × σ → σ} (hrf : Computable₂ rf) :
+    {r : α → σ} (hr : Computable r) {pr : α → Code × Code × σ × σ → σ} (hpr : Computable₂ pr)
+    {co : α → Code × Code × σ × σ → σ} (hco : Computable₂ co) {pc : α → Code × Code × σ × σ → σ}
+    (hpc : Computable₂ pc) {rf : α → Code × σ → σ} (hrf : Computable₂ rf) :
     let PR (a) cf cg hf hg := pr a (cf, cg, hf, hg)
     let CO (a) cf cg hf hg := co a (cf, cg, hf, hg)
     let PC (a) cf cg hf hg := pc a (cf, cg, hf, hg)
@@ -500,9 +500,9 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
     let IH := p.1.2
     let n := p.2.1
     let m := p.2.2
-    (IH.nth m).bind fun s =>
-      (IH.nth m.unpair.1).bind fun s₁ =>
-        (IH.nth m.unpair.2).map fun s₂ =>
+    (IH.get? m).bind fun s =>
+      (IH.get? m.unpair.1).bind fun s₁ =>
+        (IH.get? m.unpair.2).map fun s₂ =>
           cond n.bodd
             (cond n.div2.bodd (rf a (of_nat code m, s))
               (pc a (of_nat code m.unpair.1, of_nat code m.unpair.2, s₁, s₂)))
@@ -894,9 +894,9 @@ section
 
 open Primrec
 
-private def lup (L : List (List (Option ℕ))) (p : ℕ × code) (n : ℕ) := do
-  let l ← L.nth (encode p)
-  let o ← l.nth n
+private def lup (L : List (List (Option ℕ))) (p : ℕ × Code) (n : ℕ) := do
+  let l ← L.get? (encode p)
+  let o ← l.get? n
   o
 #align nat.partrec.code.lup nat.partrec.code.lup
 
@@ -907,7 +907,7 @@ private theorem hlup : Primrec fun p : _ × (_ × _) × _ => lup p.1 p.2.1 p.2.2
 
 private def G (L : List (List (Option ℕ))) : Option (List (Option ℕ)) :=
   Option.some <|
-    let a := ofNat (ℕ × code) L.length
+    let a := ofNat (ℕ × Code) L.length
     let k := a.1
     let c := a.2
     (List.range k).map fun n =>
@@ -1011,7 +1011,7 @@ private theorem hG : Primrec g :=
 #align nat.partrec.code.hG nat.partrec.code.hG
 
 private theorem evaln_map (k c n) :
-    ((((List.range k).nth n).map (evaln k c)).bind fun b => b) = evaln k c n :=
+    ((((List.range k).get? n).map (evaln k c)).bind fun b => b) = evaln k c n :=
   by
   by_cases kn : n < k
   · simp [List.nth_range kn]
@@ -1023,10 +1023,10 @@ private theorem evaln_map (k c n) :
 #align nat.partrec.code.evaln_map nat.partrec.code.evaln_map
 
 /-- The `nat.partrec.code.evaln` function is primitive recursive. -/
-theorem evaln_prim : Primrec fun a : (ℕ × code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
+theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
   have :
     Primrec₂ fun (_ : Unit) (n : ℕ) =>
-      let a := ofNat (ℕ × code) n
+      let a := ofNat (ℕ × Code) n
       (List.range a.1).map (evaln a.1 a.2) :=
     Primrec.nat_strong_rec _ (hG.comp snd).to₂ fun _ p =>
       by

@@ -54,19 +54,19 @@ theorem isHomeomorphicTrivialFiberBundle_im : IsHomeomorphicTrivialFiberBundle �
 #align complex.is_homeomorphic_trivial_fiber_bundle_im Complex.isHomeomorphicTrivialFiberBundle_im
 
 theorem isOpenMap_re : IsOpenMap re :=
-  isHomeomorphicTrivialFiberBundle_re.is_open_map_proj
+  isHomeomorphicTrivialFiberBundle_re.isOpenMap_proj
 #align complex.is_open_map_re Complex.isOpenMap_re
 
 theorem isOpenMap_im : IsOpenMap im :=
-  isHomeomorphicTrivialFiberBundle_im.is_open_map_proj
+  isHomeomorphicTrivialFiberBundle_im.isOpenMap_proj
 #align complex.is_open_map_im Complex.isOpenMap_im
 
 theorem quotientMap_re : QuotientMap re :=
-  isHomeomorphicTrivialFiberBundle_re.quotient_map_proj
+  isHomeomorphicTrivialFiberBundle_re.quotientMap_proj
 #align complex.quotient_map_re Complex.quotientMap_re
 
 theorem quotientMap_im : QuotientMap im :=
-  isHomeomorphicTrivialFiberBundle_im.quotient_map_proj
+  isHomeomorphicTrivialFiberBundle_im.quotientMap_proj
 #align complex.quotient_map_im Complex.quotientMap_im
 
 theorem interior_preimage_re (s : Set ℝ) : interior (re ⁻¹' s) = re ⁻¹' interior s :=

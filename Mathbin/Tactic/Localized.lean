@@ -34,7 +34,7 @@ unsafe def localized_attr : user_attribute (rb_lmap Name String) Unit
   parser := failed
   cache_cfg :=
     ⟨fun ns => do
-      let dcls ← ns.mmap fun n => mk_const n >>= eval_expr (Name × String)
+      let dcls ← ns.mapM fun n => mk_const n >>= eval_expr (Name × String)
       return <| rb_lmap.of_list dcls, []⟩
 #align localized_attr localized_attr
 

@@ -69,7 +69,7 @@ theorem equiv_free_prod_directSum_zMod [hG : AddGroup.Fg G] :
       ((AddEquiv.refl _).prodCongr <|
         Dfinsupp.mapRange.addEquiv fun i =>
           ((Int.quotientSpanEquivZmod _).trans <|
-              ZMod.ringEquivCongr <| (p i).nat_abs_pow _).toAddEquiv)
+              ZMod.ringEquivCongr <| (p i).natAbs_pow _).toAddEquiv)
 #align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zMod
 
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of

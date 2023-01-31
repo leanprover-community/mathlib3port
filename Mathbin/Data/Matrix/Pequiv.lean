@@ -96,14 +96,14 @@ theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l
 #align pequiv.matrix_mul_apply PEquiv.matrix_mul_apply
 
 theorem toPEquiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m ≃ m)
-    (M : Matrix m n α) : f.toPequiv.toMatrix ⬝ M = fun i => M (f i) :=
+    (M : Matrix m n α) : f.toPEquiv.toMatrix ⬝ M = fun i => M (f i) :=
   by
   ext (i j)
   rw [mul_matrix_apply, Equiv.toPEquiv_apply]
 #align pequiv.to_pequiv_mul_matrix PEquiv.toPEquiv_mul_matrix
 
 theorem mul_toPEquiv_toMatrix {m n α : Type _} [Fintype n] [DecidableEq n] [Semiring α] (f : n ≃ n)
-    (M : Matrix m n α) : M ⬝ f.toPequiv.toMatrix = M.submatrix id f.symm :=
+    (M : Matrix m n α) : M ⬝ f.toPEquiv.toMatrix = M.submatrix id f.symm :=
   Matrix.ext fun i j => by
     rw [PEquiv.matrix_mul_apply, ← Equiv.toPEquiv_symm, Equiv.toPEquiv_apply,
       Matrix.submatrix_apply, id.def]
@@ -142,7 +142,7 @@ theorem toMatrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
 #align pequiv.to_matrix_injective PEquiv.toMatrix_injective
 
 theorem toMatrix_swap [DecidableEq n] [Ring α] (i j : n) :
-    (Equiv.swap i j).toPequiv.toMatrix =
+    (Equiv.swap i j).toPEquiv.toMatrix =
       (1 : Matrix n n α) - (single i i).toMatrix - (single j j).toMatrix + (single i j).toMatrix +
         (single j i).toMatrix :=
   by
@@ -179,7 +179,7 @@ theorem single_mul_single_right [Fintype n] [Fintype k] [DecidableEq n] [Decidab
 
 /-- We can also define permutation matrices by permuting the rows of the identity matrix. -/
 theorem equiv_toPEquiv_toMatrix [DecidableEq n] [Zero α] [One α] (σ : Equiv n n) (i j : n) :
-    σ.toPequiv.toMatrix i j = (1 : Matrix n n α) (σ i) j :=
+    σ.toPEquiv.toMatrix i j = (1 : Matrix n n α) (σ i) j :=
   if_congr Option.some_inj rfl rfl
 #align pequiv.equiv_to_pequiv_to_matrix PEquiv.equiv_toPEquiv_toMatrix
 

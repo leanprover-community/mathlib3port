@@ -42,7 +42,7 @@ instance : UnbundledHom @UniformContinuous :=
 deriving instance LargeCategory, ConcreteCategory for UniformSpaceCat
 
 instance : CoeSort UniformSpaceCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (x : UniformSpaceCat) : UniformSpace x :=
   x.str
@@ -89,7 +89,7 @@ instance hasForgetToTop : HasForget₂ UniformSpaceCat.{u} TopCat.{u}
     { obj := fun X => TopCat.of X
       map := fun X Y f =>
         { toFun := f
-          continuous_to_fun := UniformContinuous.continuous f.property } }
+          continuous_toFun := UniformContinuous.continuous f.property } }
 #align UniformSpace.has_forget_to_Top UniformSpaceCat.hasForgetToTop
 
 end UniformSpaceCat
@@ -98,7 +98,7 @@ end UniformSpaceCat
 structure CpltSepUniformSpace where
   α : Type u
   [isUniformSpace : UniformSpace α]
-  [is_complete_space : CompleteSpace α]
+  [is_completeSpace : CompleteSpace α]
   [is_separated : SeparatedSpace α]
 #align CpltSepUniformSpace CpltSepUniformSpace
 
@@ -206,7 +206,7 @@ theorem extension_comp_coe {X : UniformSpaceCat} {Y : CpltSepUniformSpace}
 #align UniformSpace.extension_comp_coe UniformSpaceCat.extension_comp_coe
 
 /-- The completion functor is left adjoint to the forgetful functor. -/
-noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace UniformSpaceCat :=
+noncomputable def adj : completionFunctor ⊣ forget₂ CpltSepUniformSpace UniformSpaceCat :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f => completionHom X ≫ f
@@ -219,7 +219,7 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
             exact
               @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpace.separatedSpace _) f_property
                 _ }
-      hom_equiv_naturality_left_symm' := fun X X' Y f g =>
+      homEquiv_naturality_left_symm' := fun X X' Y f g =>
         by
         apply hom_ext; funext x; dsimp
         erw [coe_comp, ← completion.extension_map]
@@ -235,7 +235,7 @@ open CategoryTheory.Limits
 
 -- TODO Once someone defines `has_limits UniformSpace`, turn this into an instance.
 example [HasLimits.{u} UniformSpaceCat.{u}] : HasLimits.{u} CpltSepUniformSpace.{u} :=
-  has_limits_of_reflective <| forget₂ CpltSepUniformSpace UniformSpaceCat.{u}
+  hasLimitsOfReflective <| forget₂ CpltSepUniformSpace UniformSpaceCat.{u}
 
 end UniformSpaceCat
 

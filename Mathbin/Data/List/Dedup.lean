@@ -41,14 +41,14 @@ theorem dedup_nil : dedup [] = ([] : List α) :=
 
 #print List.dedup_cons_of_mem' /-
 theorem dedup_cons_of_mem' {a : α} {l : List α} (h : a ∈ dedup l) : dedup (a :: l) = dedup l :=
-  pw_filter_cons_of_neg <| by simpa only [forall_mem_ne] using h
+  pwFilter_cons_of_neg <| by simpa only [forall_mem_ne] using h
 #align list.dedup_cons_of_mem' List.dedup_cons_of_mem'
 -/
 
 #print List.dedup_cons_of_not_mem' /-
 theorem dedup_cons_of_not_mem' {a : α} {l : List α} (h : a ∉ dedup l) :
     dedup (a :: l) = a :: dedup l :=
-  pw_filter_cons_of_pos <| by simpa only [forall_mem_ne] using h
+  pwFilter_cons_of_pos <| by simpa only [forall_mem_ne] using h
 #align list.dedup_cons_of_not_mem' List.dedup_cons_of_not_mem'
 -/
 
@@ -78,13 +78,13 @@ theorem dedup_cons_of_not_mem {a : α} {l : List α} (h : a ∉ l) : dedup (a ::
 
 #print List.dedup_sublist /-
 theorem dedup_sublist : ∀ l : List α, dedup l <+ l :=
-  pw_filter_sublist
+  pwFilter_sublist
 #align list.dedup_sublist List.dedup_sublist
 -/
 
 #print List.dedup_subset /-
 theorem dedup_subset : ∀ l : List α, dedup l ⊆ l :=
-  pw_filter_subset
+  pwFilter_subset
 #align list.dedup_subset List.dedup_subset
 -/
 
@@ -95,13 +95,13 @@ theorem subset_dedup (l : List α) : l ⊆ dedup l := fun a => mem_dedup.2
 
 #print List.nodup_dedup /-
 theorem nodup_dedup : ∀ l : List α, Nodup (dedup l) :=
-  pairwise_pw_filter
+  pairwise_pwFilter
 #align list.nodup_dedup List.nodup_dedup
 -/
 
 #print List.dedup_eq_self /-
 theorem dedup_eq_self {l : List α} : dedup l = l ↔ Nodup l :=
-  pw_filter_eq_self
+  pwFilter_eq_self
 #align list.dedup_eq_self List.dedup_eq_self
 -/
 
@@ -114,7 +114,7 @@ protected theorem Nodup.dedup {l : List α} (h : l.Nodup) : l.dedup = l :=
 #print List.dedup_idempotent /-
 @[simp]
 theorem dedup_idempotent {l : List α} : dedup (dedup l) = dedup l :=
-  pw_filter_idempotent
+  pwFilter_idempotent
 #align list.dedup_idempotent List.dedup_idempotent
 -/
 
@@ -152,7 +152,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countpₓ'. -/
 /-- Summing the count of `x` over a list filtered by some `p` is just `countp` applied to `p` -/
 theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p] (l : List α) :
-    ((l.dedup.filter p).map fun x => l.count x).Sum = l.countp p :=
+    ((l.dedup.filterₓ p).map fun x => l.count x).Sum = l.countp p :=
   by
   induction' l with a as h
   · simp

@@ -216,7 +216,7 @@ theorem tendsto_cons {n : ℕ} {a : α} {l : Vector α n} :
     Tendsto (fun p : α × Vector α n => p.1 ::ᵥ p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (a ::ᵥ l)) :=
   by
   simp [tendsto_subtype_rng, ← Subtype.val_eq_coe, cons_val]
-  exact tendsto_fst.cons (tendsto.comp continuousAt_subtype_coe tendsto_snd)
+  exact tendsto_fst.cons (tendsto.comp continuousAt_subtype_val tendsto_snd)
 #align vector.tendsto_cons Vector.tendsto_cons
 
 theorem tendsto_insertNth {n : ℕ} {i : Fin (n + 1)} {a : α} :
@@ -225,7 +225,7 @@ theorem tendsto_insertNth {n : ℕ} {i : Fin (n + 1)} {a : α} :
   | ⟨l, hl⟩ => by
     rw [insert_nth, tendsto_subtype_rng]
     simp [insert_nth_val]
-    exact List.tendsto_insertNth tendsto_fst (tendsto.comp continuousAt_subtype_coe tendsto_snd : _)
+    exact List.tendsto_insertNth tendsto_fst (tendsto.comp continuousAt_subtype_val tendsto_snd : _)
 #align vector.tendsto_insert_nth Vector.tendsto_insertNth
 
 theorem continuous_insert_nth' {n : ℕ} {i : Fin (n + 1)} :
@@ -246,7 +246,7 @@ theorem continuousAt_removeNth {n : ℕ} {i : Fin (n + 1)} :
   by
     rw [ContinuousAt, remove_nth, tendsto_subtype_rng]
     simp only [← Subtype.val_eq_coe, Vector.removeNth_val]
-    exact tendsto.comp List.tendsto_removeNth continuousAt_subtype_coe
+    exact tendsto.comp List.tendsto_removeNth continuousAt_subtype_val
 #align vector.continuous_at_remove_nth Vector.continuousAt_removeNth
 
 theorem continuous_removeNth {n : ℕ} {i : Fin (n + 1)} :

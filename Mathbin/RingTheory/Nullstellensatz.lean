@@ -143,7 +143,7 @@ def pointToPoint (x : σ → k) : PrimeSpectrum (MvPolynomial σ k) :=
 
 @[simp]
 theorem vanishingIdeal_pointToPoint (V : Set (σ → k)) :
-    PrimeSpectrum.vanishingIdeal (point_to_point '' V) = MvPolynomial.vanishingIdeal V :=
+    PrimeSpectrum.vanishingIdeal (pointToPoint '' V) = MvPolynomial.vanishingIdeal V :=
   le_antisymm
     (fun p hp x hx =>
       (((PrimeSpectrum.mem_vanishingIdeal _ _).1 hp) ⟨vanishingIdeal {x}, by infer_instance⟩
@@ -156,7 +156,7 @@ theorem vanishingIdeal_pointToPoint (V : Set (σ → k)) :
 #align mv_polynomial.vanishing_ideal_point_to_point MvPolynomial.vanishingIdeal_pointToPoint
 
 theorem pointToPoint_zeroLocus_le (I : Ideal (MvPolynomial σ k)) :
-    point_to_point '' MvPolynomial.zeroLocus I ≤ PrimeSpectrum.zeroLocus ↑I := fun J hJ =>
+    pointToPoint '' MvPolynomial.zeroLocus I ≤ PrimeSpectrum.zeroLocus ↑I := fun J hJ =>
   let ⟨x, hx⟩ := hJ
   (le_trans (le_vanishingIdeal_zeroLocus I)
       (hx.2 ▸ vanishingIdeal_anti_mono (Set.singleton_subset_iff.2 hx.1)) :

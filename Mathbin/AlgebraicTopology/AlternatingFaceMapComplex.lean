@@ -243,8 +243,8 @@ namespace AlternatingFaceMapComplex
 complex attached to an augmented simplicial object. -/
 @[simps]
 def ε [Limits.HasZeroObject C] :
-    simplicial_object.augmented.drop ⋙ AlgebraicTopology.alternatingFaceMapComplex C ⟶
-      simplicial_object.augmented.point ⋙ ChainComplex.single₀ C
+    SimplicialObject.Augmented.drop ⋙ AlgebraicTopology.alternatingFaceMapComplex C ⟶
+      SimplicialObject.Augmented.point ⋙ ChainComplex.single₀ C
     where
   app X := by
     equiv_rw ChainComplex.toSingle₀Equiv _ _

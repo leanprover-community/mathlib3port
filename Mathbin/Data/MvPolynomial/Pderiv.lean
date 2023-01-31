@@ -82,7 +82,7 @@ theorem pderiv_c {i : σ} : pderiv i (c a) = 0 :=
 #align mv_polynomial.pderiv_C MvPolynomial.pderiv_c
 
 theorem pderiv_one {i : σ} : pderiv i (1 : MvPolynomial σ R) = 0 :=
-  pderiv_C
+  pderiv_c
 #align mv_polynomial.pderiv_one MvPolynomial.pderiv_one
 
 @[simp]
@@ -101,7 +101,7 @@ theorem pderiv_x_of_ne {i j : σ} (h : j ≠ i) : pderiv i (x j : MvPolynomial �
 
 theorem pderiv_eq_zero_of_not_mem_vars {i : σ} {f : MvPolynomial σ R} (h : i ∉ f.vars) :
     pderiv i f = 0 :=
-  derivation_eq_zero_of_forall_mem_vars fun j hj => pderiv_X_of_ne <| ne_of_mem_of_not_mem hj h
+  derivation_eq_zero_of_forall_mem_vars fun j hj => pderiv_x_of_ne <| ne_of_mem_of_not_mem hj h
 #align mv_polynomial.pderiv_eq_zero_of_not_mem_vars MvPolynomial.pderiv_eq_zero_of_not_mem_vars
 
 theorem pderiv_monomial_single {i : σ} {n : ℕ} :

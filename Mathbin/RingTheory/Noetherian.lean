@@ -601,7 +601,7 @@ theorem isNoetherianRing_of_surjective (R) [Ring R] (S) [Ring S] (f : R →+* S)
 
 instance isNoetherianRing_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsNoetherianRing R] :
     IsNoetherianRing f.range :=
-  isNoetherianRing_of_surjective R f.range f.range_restrict f.range_restrict_surjective
+  isNoetherianRing_of_surjective R f.range f.range_restrict f.rangeRestrict_surjective
 #align is_noetherian_ring_range isNoetherianRing_range
 
 theorem isNoetherianRing_of_ringEquiv (R) [Ring R] {S} [Ring S] (f : R ≃+* S) [IsNoetherianRing R] :

@@ -45,7 +45,7 @@ and binders (or any other element that can be pretty printed).
 `get_pi_binders`. -/
 unsafe def print_arguments {α} [has_to_tactic_format α] (l : List (ℕ × α)) : tactic String := do
   let fs ←
-    l.mmap fun ⟨n, b⟩ => (fun s => to_fmt "argument " ++ to_fmt (n + 1) ++ ": " ++ s) <$> pp b
+    l.mapM fun ⟨n, b⟩ => (fun s => to_fmt "argument " ++ to_fmt (n + 1) ++ ": " ++ s) <$> pp b
   return <| fs tt
 #align print_arguments print_arguments
 
@@ -160,7 +160,7 @@ private unsafe def impossible_instance (d : declaration) : tactic (Option String
   let tt ← is_instance d.to_name |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
-  let bad_arguments := binders.filter fun nb => nb.2.info ≠ BinderInfo.inst_implicit
+  let bad_arguments := binders.filterₓ fun nb => nb.2.info ≠ BinderInfo.inst_implicit
   let _ :: _ ← return bad_arguments |
     return none
   (fun s => some <| "Impossible to infer " ++ s) <$> print_arguments bad_arguments
@@ -188,7 +188,7 @@ private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Opt
     ←/- the head of the type should either unfold to a class, or be a local constant.
             A local constant is allowed, because that could be a class when applied to the
             proper arguments. -/
-          instance_arguments.mfilter
+          instance_arguments.filterM
         fun ⟨_, b⟩ => do
         let (_, head) ← open_pis b.type
         if head then return ff
@@ -292,7 +292,7 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
             This happens a lot for `has_sizeof` and `has_well_founded`, but can also happen if there is a
             noncomputable instance with fewer assumptions. -/
         return <|
-        if "tactic.mk_instance failed to generate instance for".isPrefixOf msg then none
+        if "tactic.mk_instance failed to generate instance for".isPrefixOfₓ msg then none
         else
           some <|
             (· ++ state_msg) <|
@@ -370,7 +370,7 @@ private unsafe def inhabited_nonempty (d : declaration) : tactic (Option String)
   let tt ← is_prop d.type |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
-  let inhd_binders := binders.filter fun pr => pr.2.type.is_app_of `inhabited
+  let inhd_binders := binders.filterₓ fun pr => pr.2.type.is_app_of `inhabited
   if inhd_binders = 0 then return none
     else
       (fun s => some <| "The following `inhabited` instances should be `nonempty`. " ++ s) <$>
@@ -394,11 +394,11 @@ Theorems in the `decidable` namespace are exempt from the check. -/
 private unsafe def decidable_classical (d : declaration) : tactic (Option String) := do
   let tt ← is_prop d.type |
     return none
-  let ff ← pure <| `decidable.isPrefixOf d.to_name |
+  let ff ← pure <| `decidable.isPrefixOfₓ d.to_name |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
   let deceq_binders :=
-    binders.filter fun pr =>
+    binders.filterₓ fun pr =>
       pr.2.type.is_app_of `decidable_eq ∨
         pr.2.type.is_app_of `decidable_pred ∨
           pr.2.type.is_app_of `decidable_rel ∨ pr.2.type.is_app_of `decidable
@@ -433,7 +433,7 @@ unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option String) 
   let tt ← is_prop d.type |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
-  let fintype_binders := binders.filter fun pr => pr.2.type.is_app_of `fintype
+  let fintype_binders := binders.filterₓ fun pr => pr.2.type.is_app_of `fintype
   if fintype_binders = 0 then return none
     else
       (fun s =>
@@ -517,7 +517,7 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
   let tt ← return <| constrs.Mem `add || constrs.Mem `mul |
     return none
   let l ←
-    d.value.list_constant.mfilter fun nm => do
+    d.value.list_constant.filterM fun nm => do
         let d ← env.get nm
         let ff ← is_instance nm |
           return false

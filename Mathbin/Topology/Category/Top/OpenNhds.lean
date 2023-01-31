@@ -181,8 +181,8 @@ def functorNhds (h : IsOpenMap f) (x : X) : OpenNhds x ⥤ OpenNhds (f x)
 -/
 def adjunctionNhds (h : IsOpenMap f) (x : X) : IsOpenMap.functorNhds h x ⊣ OpenNhds.map f x :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => hom_of_le fun x hxU => ⟨x, hxU, rfl⟩ }
-      counit := { app := fun V => hom_of_le fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => homOfLe fun x hxU => ⟨x, hxU, rfl⟩ }
+      counit := { app := fun V => homOfLe fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction_nhds IsOpenMap.adjunctionNhds
 
 end IsOpenMap

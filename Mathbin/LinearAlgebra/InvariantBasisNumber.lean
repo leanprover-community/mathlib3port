@@ -164,7 +164,7 @@ from which the strong rank condition gives the necessary inequality for the rank
 instance (priority := 100) rankCondition_of_strongRankCondition [StrongRankCondition R] :
     RankCondition R
     where le_of_fin_surjective n m f s :=
-    le_of_fin_injective R _ (f.splitting_of_fun_on_fintype_surjective_injective s)
+    le_of_fin_injective R _ (f.splittingOfFunOnFintypeSurjective_injective s)
 #align rank_condition_of_strong_rank_condition rankCondition_of_strongRankCondition
 
 /-- We say that `R` has the invariant basis number property if `(fin n → R) ≃ₗ[R] (fin m → R)`

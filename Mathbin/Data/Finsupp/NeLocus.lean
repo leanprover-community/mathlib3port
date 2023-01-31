@@ -39,7 +39,7 @@ variable [DecidableEq N] [Zero N] (f g : α →₀ N)
 /-- Given two finitely supported functions `f g : α →₀ N`, `finsupp.ne_locus f g` is the `finset`
 where `f` and `g` differ. This generalizes `(f - g).support` to situations without subtraction. -/
 def neLocus (f g : α →₀ N) : Finset α :=
-  (f.support ∪ g.support).filter fun x => f x ≠ g x
+  (f.support ∪ g.support).filterₓ fun x => f x ≠ g x
 #align finsupp.ne_locus Finsupp.neLocus
 -/
 

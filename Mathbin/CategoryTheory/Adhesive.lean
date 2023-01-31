@@ -268,8 +268,8 @@ theorem IsPushout.IsVanKampen.mono_of_mono_right [Mono g] {H : IsPushout f g h i
 /-- A category is adhesive if it has pushouts and pullbacks along monomorphisms,
 and such pushouts are van Kampen. -/
 class Adhesive (C : Type u) [Category.{v} C] : Prop where
-  [has_pullback_of_mono_left : ∀ {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) [Mono f], HasPullback f g]
-  [has_pushout_of_mono_left : ∀ {X Y S : C} (f : S ⟶ X) (g : S ⟶ Y) [Mono f], HasPushout f g]
+  [hasPullback_of_mono_left : ∀ {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) [Mono f], HasPullback f g]
+  [hasPushout_of_mono_left : ∀ {X Y S : C} (f : S ⟶ X) (g : S ⟶ Y) [Mono f], HasPushout f g]
   van_kampen :
     ∀ {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} [Mono f]
       (H : IsPushout f g h i), H.IsVanKampen

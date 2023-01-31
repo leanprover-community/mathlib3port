@@ -45,7 +45,7 @@ local notation "𝓟" => Submodule.span ℤ {p}
 open Polynomial
 
 theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] :
-    ((cyclotomic p ℤ).comp (X + 1)).IsEisensteinAt 𝓟 :=
+    ((cyclotomic p ℤ).comp (x + 1)).IsEisensteinAt 𝓟 :=
   by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
@@ -81,7 +81,7 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] :
 #align cyclotomic_comp_X_add_one_is_eisenstein_at cyclotomicCompXAddOneIsEisensteinAt
 
 theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ) :
-    ((cyclotomic (p ^ (n + 1)) ℤ).comp (X + 1)).IsEisensteinAt 𝓟 :=
+    ((cyclotomic (p ^ (n + 1)) ℤ).comp (x + 1)).IsEisensteinAt 𝓟 :=
   by
   refine'
     monic.is_eisenstein_at_of_mem_of_not_mem _
@@ -158,11 +158,11 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
   have deg_K_P : (minpoly K B.gen).natDegree = B.dim := B.nat_degree_minpoly
   have deg_R_P : P.nat_degree = B.dim := by
     rw [← deg_K_P, minpoly.isIntegrallyClosed_eq_field_fractions' K hBint,
-      (minpoly.monic hBint).nat_degree_map (algebraMap R K)]
+      (minpoly.monic hBint).natDegree_map (algebraMap R K)]
   choose! f hf using
     hei.is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree_le (minpoly.aeval R B.gen)
       (minpoly.monic hBint)
-  simp only [(minpoly.monic hBint).nat_degree_map, deg_R_P] at hf
+  simp only [(minpoly.monic hBint).natDegree_map, deg_R_P] at hf
   -- The Eisenstein condition shows that `p` divides `Q.coeff 0`
   -- if `p^n.succ` divides the following multiple of `Q.coeff 0^n.succ`:
   suffices p ^ n.succ ∣ Q.coeff 0 ^ n.succ * ((-1) ^ (n.succ * n) * (minpoly R B.gen).coeff 0 ^ n)
@@ -175,7 +175,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     ring_nf
     simp [pow_right_comm _ _ 2]
   -- We claim the quotient of `Q^n * _` by `p^n` is the following `r`:
-  have aux : ∀ i ∈ (range (Q.nat_degree + 1)).erase 0, B.dim ≤ i + n :=
+  have aux : ∀ i ∈ (range (Q.nat_degree + 1)).eraseₓ 0, B.dim ≤ i + n :=
     by
     intro i hi
     simp only [mem_range, mem_erase] at hi
@@ -183,7 +183,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     exact le_add_pred_of_pos _ hi.1
   have hintsum :
     IsIntegral R
-      (z * B.gen ^ n - ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • f (x + n)) :=
+      (z * B.gen ^ n - ∑ x : ℕ in (range (Q.nat_degree + 1)).eraseₓ 0, Q.coeff x • f (x + n)) :=
     by
     refine'
       isIntegral_sub (isIntegral_mul hzint (IsIntegral.pow hBint _))
@@ -200,7 +200,7 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
     _ =
         norm K
           (p • (z * B.gen ^ n) -
-            ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, p • Q.coeff x • f (x + n)) :=
+            ∑ x : ℕ in (range (Q.nat_degree + 1)).eraseₓ 0, p • Q.coeff x • f (x + n)) :=
       congr_arg (norm K) (eq_sub_of_add_eq _)
     _ = _ := _
     
@@ -214,19 +214,19 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       Algebra.norm_algebraMap, finrank_K_L, hr, ← hn]
   calc
     _ =
-        (Q.coeff 0 • 1 + ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) *
+        (Q.coeff 0 • 1 + ∑ x : ℕ in (range (Q.nat_degree + 1)).eraseₓ 0, Q.coeff x • B.gen ^ x) *
           B.gen ^ n :=
       _
     _ =
         (Q.coeff 0 • B.gen ^ 0 +
-            ∑ x : ℕ in (range (Q.nat_degree + 1)).erase 0, Q.coeff x • B.gen ^ x) *
+            ∑ x : ℕ in (range (Q.nat_degree + 1)).eraseₓ 0, Q.coeff x • B.gen ^ x) *
           B.gen ^ n :=
       by rw [pow_zero]
     _ = aeval B.gen Q * B.gen ^ n := _
     _ = _ := by rw [hQ, Algebra.smul_mul_assoc]
     
   · have :
-      ∀ i ∈ (range (Q.nat_degree + 1)).erase 0,
+      ∀ i ∈ (range (Q.nat_degree + 1)).eraseₓ 0,
         Q.coeff i • (B.gen ^ i * B.gen ^ n) = p • Q.coeff i • f (i + n) :=
       by
       intro i hi
@@ -331,7 +331,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
       is_weakly_eisenstein_at.exists_mem_adjoin_mul_eq_pow_nat_degree_le (minpoly.aeval R B.gen)
         (minpoly.monic hBint) hei.is_weakly_eisenstein_at
     have hf₁ :
-      ∀ k ∈ (range (Q.nat_degree - j)).erase 0,
+      ∀ k ∈ (range (Q.nat_degree - j)).eraseₓ 0,
         Q.coeff (j + 1 + k) • B.gen ^ (j + 1 + k) * B.gen ^ (P.nat_degree - (j + 2)) =
           (algebraMap R L) p * Q.coeff (j + 1 + k) • f (k + P.nat_degree - 1) :=
       by
@@ -339,8 +339,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
       rw [smul_mul_assoc, ← pow_add, ← Nat.add_sub_assoc H, ← add_assoc j 1 1, add_comm (j + 1) 1,
         add_assoc (j + 1), add_comm _ (k + P.nat_degree), Nat.add_sub_add_right, ←
         (hf (k + P.nat_degree - 1) _).2, mul_smul_comm]
-      rw [(minpoly.monic hBint).nat_degree_map, add_comm, Nat.add_sub_assoc,
-        le_add_iff_nonneg_right]
+      rw [(minpoly.monic hBint).natDegree_map, add_comm, Nat.add_sub_assoc, le_add_iff_nonneg_right]
       · exact Nat.zero_le _
       · refine' one_le_iff_ne_zero.2 fun h => _
         rw [h] at hk
@@ -355,7 +354,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
       convert this
       rw [Nat.succ_eq_add_one, add_assoc, ← Nat.add_sub_assoc H, ← add_assoc, add_comm (j + 1),
         Nat.add_sub_add_left, ← Nat.add_sub_assoc, Nat.add_sub_add_left, hP, ←
-        (minpoly.monic hBint).nat_degree_map (algebraMap R K), ←
+        (minpoly.monic hBint).natDegree_map (algebraMap R K), ←
         minpoly.isIntegrallyClosed_eq_field_fractions' K hBint, nat_degree_minpoly, hn, Nat.sub_one,
         Nat.pred_succ]
       linarith
@@ -377,7 +376,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
     have hintsum :
       IsIntegral R
         (z * B.gen ^ (P.nat_degree - (j + 2)) -
-          ((∑ x : ℕ in (range (Q.nat_degree - j)).erase 0,
+          ((∑ x : ℕ in (range (Q.nat_degree - j)).eraseₓ 0,
               Q.coeff (j + 1 + x) • f (x + P.nat_degree - 1)) +
             ∑ x : ℕ in range (j + 1), g x • B.gen ^ x * B.gen ^ (P.nat_degree - (j + 2)))) :=
       by
@@ -387,7 +386,7 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
             (IsIntegral.sum _ fun k hk =>
               isIntegral_mul (isIntegral_smul _ (IsIntegral.pow hBint _)) (IsIntegral.pow hBint _)))
       refine' adjoin_le_integralClosure hBint (hf _ _).1
-      rw [(minpoly.monic hBint).nat_degree_map (algebraMap R L)]
+      rw [(minpoly.monic hBint).natDegree_map (algebraMap R L)]
       rw [add_comm, Nat.add_sub_assoc, le_add_iff_nonneg_right]
       · exact zero_le _
       · refine' one_le_iff_ne_zero.2 fun h => _

@@ -49,12 +49,12 @@ def toIcoDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
 
 theorem sub_toIcoDiv_zsmul_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
     x - toIcoDiv a hb x • b ∈ Set.Ico a (a + b) :=
-  (existsUnique_sub_zsmul_mem_Ico hb x a).some_spec.1
+  (existsUnique_sub_zsmul_mem_Ico hb x a).choose_spec.1
 #align sub_to_Ico_div_zsmul_mem_Ico sub_toIcoDiv_zsmul_mem_Ico
 
 theorem eq_toIcoDiv_of_sub_zsmul_mem_Ico {a b x : α} (hb : 0 < b) {y : ℤ}
     (hy : x - y • b ∈ Set.Ico a (a + b)) : y = toIcoDiv a hb x :=
-  (existsUnique_sub_zsmul_mem_Ico hb x a).some_spec.2 y hy
+  (existsUnique_sub_zsmul_mem_Ico hb x a).choose_spec.2 y hy
 #align eq_to_Ico_div_of_sub_zsmul_mem_Ico eq_toIcoDiv_of_sub_zsmul_mem_Ico
 
 /--
@@ -65,12 +65,12 @@ def toIocDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
 
 theorem sub_toIocDiv_zsmul_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) :
     x - toIocDiv a hb x • b ∈ Set.Ioc a (a + b) :=
-  (existsUnique_sub_zsmul_mem_Ioc hb x a).some_spec.1
+  (existsUnique_sub_zsmul_mem_Ioc hb x a).choose_spec.1
 #align sub_to_Ioc_div_zsmul_mem_Ioc sub_toIocDiv_zsmul_mem_Ioc
 
 theorem eq_toIocDiv_of_sub_zsmul_mem_Ioc {a b x : α} (hb : 0 < b) {y : ℤ}
     (hy : x - y • b ∈ Set.Ioc a (a + b)) : y = toIocDiv a hb x :=
-  (existsUnique_sub_zsmul_mem_Ioc hb x a).some_spec.2 y hy
+  (existsUnique_sub_zsmul_mem_Ioc hb x a).choose_spec.2 y hy
 #align eq_to_Ioc_div_of_sub_zsmul_mem_Ioc eq_toIocDiv_of_sub_zsmul_mem_Ioc
 
 /-- Reduce `x` to the interval `Ico a (a + b)`. -/

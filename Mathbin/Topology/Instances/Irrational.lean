@@ -39,7 +39,7 @@ open Set Filter Metric
 open Filter Topology
 
 theorem isGδ_irrational : IsGδ { x | Irrational x } :=
-  (countable_range _).is_Gδ_compl
+  (countable_range _).isGδ_compl
 #align is_Gδ_irrational isGδ_irrational
 
 theorem dense_irrational : Dense { x : ℝ | Irrational x } :=
@@ -96,7 +96,7 @@ theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : 
 #align irrational.eventually_forall_le_dist_cast_div_of_denom_le Irrational.eventually_forall_le_dist_cast_div_of_denom_le
 
 theorem eventually_forall_le_dist_cast_rat_of_den_le (hx : Irrational x) (n : ℕ) :
-    ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
+    ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.den ≤ n → ε ≤ dist x r :=
   (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono fun ε H r hr => by
     simpa only [Rat.cast_def] using H r.denom hr r.num
 #align irrational.eventually_forall_le_dist_cast_rat_of_denom_le Irrational.eventually_forall_le_dist_cast_rat_of_den_le

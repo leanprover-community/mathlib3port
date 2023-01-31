@@ -222,7 +222,7 @@ theorem iteratedFderiv_tsum (hf : ∀ i, ContDiff 𝕜 N (f i))
     have A : Summable fun n => iteratedFderiv 𝕜 k (f n) 0 :=
       summable_of_norm_bounded (v k) (hv k h'k.le) fun n => h'f k n 0 h'k.le
     simp_rw [iteratedFderiv_succ_eq_comp_left, IH h'k.le]
-    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iterated_fderiv h'k) _ A]
+    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iteratedFderiv h'k) _ A]
     · ext1 x
       exact
         (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (k + 1) => E)

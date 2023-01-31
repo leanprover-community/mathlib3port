@@ -435,7 +435,7 @@ variable [DecidableEq α] [Fintype α] {f g : Perm α}
 #print Equiv.Perm.Support /-
 /-- The `finset` of nonfixed points of a permutation. -/
 def Support (f : Perm α) : Finset α :=
-  univ.filter fun x => f x ≠ x
+  univ.filterₓ fun x => f x ≠ x
 #align equiv.perm.support Equiv.Perm.Support
 -/
 
@@ -972,7 +972,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Function.comp.{succ u1, succ u1, 1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) Nat (Finset.card.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_prod_list_of_pairwise_disjoint Equiv.Perm.card_support_prod_list_of_pairwise_disjointₓ'. -/
 theorem card_support_prod_list_of_pairwise_disjoint {l : List (Perm α)} (h : l.Pairwise Disjoint) :
-    l.Prod.Support.card = (l.map (Finset.card ∘ support)).Sum :=
+    l.Prod.Support.card = (l.map (Finset.card ∘ Support)).Sum :=
   by
   induction' l with a t ih
   · exact card_support_eq_zero.mpr rfl
@@ -988,7 +988,7 @@ end Support
 #print Equiv.Perm.support_subtype_perm /-
 @[simp]
 theorem support_subtype_perm [DecidableEq α] {s : Finset α} (f : Perm α) (h) :
-    (f.subtypePerm h : Perm { x // x ∈ s }).Support = s.attach.filter fun x => f x ≠ x :=
+    (f.subtypePerm h : Perm { x // x ∈ s }).Support = s.attach.filterₓ fun x => f x ≠ x :=
   by
   ext
   simp [Subtype.ext_iff]

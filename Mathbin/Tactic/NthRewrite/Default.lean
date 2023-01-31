@@ -65,7 +65,7 @@ private unsafe def unpack_rule (p : rw_rule) : tactic (expr × Bool) := do
 /-- Get the `n`th rewrite of rewrite rules `q` in expression `e`,
 or fail if there are not enough such rewrites. -/
 unsafe def get_nth_rewrite (n : ℕ) (q : rw_rules_t) (e : expr) : tactic tracked_rewrite := do
-  let rewrites ← q.rules.mmap fun r => unpack_rule r >>= all_rewrites e
+  let rewrites ← q.rules.mapM fun r => unpack_rule r >>= all_rewrites e
   rewrites n <|> fail "failed: not enough rewrites found"
 #align tactic.get_nth_rewrite tactic.get_nth_rewrite
 

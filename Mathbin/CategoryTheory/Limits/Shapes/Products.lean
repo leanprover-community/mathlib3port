@@ -187,7 +187,7 @@ abbrev Pi.map {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶
 #align category_theory.limits.pi.map CategoryTheory.Limits.Pi.map
 
 instance Pi.map_mono {f g : β → C} [HasProduct f] [HasProduct g] (p : ∀ b, f b ⟶ g b)
-    [∀ i, Mono (p i)] : mono <| Pi.map p :=
+    [∀ i, Mono (p i)] : Mono <| Pi.map p :=
   @Limits.limMap_mono _ _ _ _ _
     (by
       dsimp
@@ -209,7 +209,7 @@ abbrev Sigma.map {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, 
 #align category_theory.limits.sigma.map CategoryTheory.Limits.Sigma.map
 
 instance Sigma.map_epi {f g : β → C} [HasCoproduct f] [HasCoproduct g] (p : ∀ b, f b ⟶ g b)
-    [∀ i, Epi (p i)] : epi <| Sigma.map p :=
+    [∀ i, Epi (p i)] : Epi <| Sigma.map p :=
   @Limits.colimMap_epi _ _ _ _ _
     (by
       dsimp

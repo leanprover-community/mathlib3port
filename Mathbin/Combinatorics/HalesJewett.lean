@@ -90,7 +90,7 @@ namespace Line
 
 -- This lets us treat a line `l : line α ι` as a function `α → ι → α`.
 instance (α ι) : CoeFun (Line α ι) fun _ => α → ι → α :=
-  ⟨fun l x i => (l.idxFun i).getOrElse x⟩
+  ⟨fun l x i => (l.idxFun i).getD x⟩
 
 /-- A line is monochromatic if all its points are the same color. -/
 def IsMono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
@@ -147,24 +147,24 @@ def map {α α' ι} (f : α → α') (l : Line α ι) : Line α' ι
 def vertical {α ι ι'} (v : ι → α) (l : Line α ι') : Line α (Sum ι ι')
     where
   idxFun := Sum.elim (some ∘ v) l.idxFun
-  proper := ⟨Sum.inr l.proper.some, l.proper.some_spec⟩
+  proper := ⟨Sum.inr l.proper.some, l.proper.choose_spec⟩
 #align combinatorics.line.vertical Combinatorics.Line.vertical
 
 /-- A line in `ι → α` and a point in `ι' → α` determine a line in `ι ⊕ ι' → α`. -/
 def horizontal {α ι ι'} (l : Line α ι) (v : ι' → α) : Line α (Sum ι ι')
     where
   idxFun := Sum.elim l.idxFun (some ∘ v)
-  proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
+  proper := ⟨Sum.inl l.proper.some, l.proper.choose_spec⟩
 #align combinatorics.line.horizontal Combinatorics.Line.horizontal
 
 /-- One line in `ι → α` and one in `ι' → α` together determine a line in `ι ⊕ ι' → α`. -/
 def prod {α ι ι'} (l : Line α ι) (l' : Line α ι') : Line α (Sum ι ι')
     where
   idxFun := Sum.elim l.idxFun l'.idxFun
-  proper := ⟨Sum.inl l.proper.some, l.proper.some_spec⟩
+  proper := ⟨Sum.inl l.proper.some, l.proper.choose_spec⟩
 #align combinatorics.line.prod Combinatorics.Line.prod
 
-theorem apply {α ι} (l : Line α ι) (x : α) : l x = fun i => (l.idxFun i).getOrElse x :=
+theorem apply {α ι} (l : Line α ι) (x : α) : l x = fun i => (l.idxFun i).getD x :=
   rfl
 #align combinatorics.line.apply Combinatorics.Line.apply
 
@@ -342,8 +342,8 @@ theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finse
   obtain ⟨l, c, hl⟩ := hι
   set s : Finset ι := { i ∈ Finset.univ | l.idx_fun i = none } with hs
   refine'
-    ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getOrElse 0,
-      c, _⟩
+    ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getD 0, c,
+      _⟩
   · rw [hs, Finset.sep_def, Finset.mem_filter]
     exact ⟨Finset.mem_univ _, l.proper.some_spec⟩
   intro x xs

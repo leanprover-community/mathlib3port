@@ -592,8 +592,8 @@ end
 /-- Convert back any exotic `ℕ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_monoid`s should normally have exactly one `ℕ`-module structure by design.
 -/
-theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) :
-    @SMul.smul ℕ M h.toHasSmul n x = n • x := by rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
+theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @SMul.smul ℕ M h.toSMul n x = n • x :=
+  by rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
 #align nat_smul_eq_nsmul nat_smul_eq_nsmul
 -/
 
@@ -650,8 +650,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int_smul_eq_zsmul int_smul_eq_zsmulₓ'. -/
 /-- Convert back any exotic `ℤ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_group`s should normally have exactly one `ℤ`-module structure by design. -/
-theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) :
-    @SMul.smul ℤ M h.toHasSmul n x = n • x := by rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
+theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @SMul.smul ℤ M h.toSMul n x = n • x :=
+  by rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
 #align int_smul_eq_zsmul int_smul_eq_zsmul
 
 /- warning: add_comm_group.int_module.unique -> AddCommGroup.intModule.unique is a dubious translation:

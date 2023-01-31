@@ -85,7 +85,7 @@ variable [PreservesLimitsOfShape J G] [HasLimitsOfShape J D] [HasLimitsOfShape J
 /-- If `C, D` has all limits of shape `J`, and `G` preserves them, then `preserves_limit_iso` is
 functorial wrt `F`. -/
 @[simps]
-def preservesLimitNatIso : limUnder ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ limUnder :=
+def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :=
   NatIso.ofComponents (fun F => preservesLimitIso G F)
     (by
       intro _ _ f
@@ -126,7 +126,7 @@ theorem ι_preserves_colimits_iso_inv (j : J) :
 @[simp, reassoc.1]
 theorem ι_preserves_colimits_iso_hom (j : J) :
     G.map (colimit.ι F j) ≫ (preservesColimitIso G F).Hom = colimit.ι (F ⋙ G) j :=
-  (PreservesColimit.preserves (colimit.isColimit _)).comp_cocone_point_unique_up_to_iso_hom _ j
+  (PreservesColimit.preserves (colimit.isColimit _)).comp_coconePointUniqueUpToIso_hom _ j
 #align category_theory.ι_preserves_colimits_iso_hom CategoryTheory.ι_preserves_colimits_iso_hom
 
 @[simp, reassoc.1]

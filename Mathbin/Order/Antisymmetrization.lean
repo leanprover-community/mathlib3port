@@ -402,7 +402,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.dual_antisymmetrization_apply OrderIso.dualAntisymmetrization_applyₓ'. -/
 @[simp]
 theorem OrderIso.dualAntisymmetrization_apply (a : α) :
-    OrderIso.dualAntisymmetrization _ (to_dual <| toAntisymmetrization _ a) =
+    OrderIso.dualAntisymmetrization _ (toDual <| toAntisymmetrization _ a) =
       toAntisymmetrization _ (toDual a) :=
   rfl
 #align order_iso.dual_antisymmetrization_apply OrderIso.dualAntisymmetrization_apply

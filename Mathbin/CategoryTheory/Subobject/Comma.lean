@@ -116,7 +116,7 @@ def subobjectEquiv [HasLimits C] [PreservesLimits T] (A : StructuredArrow S T) :
     Subobject A ≃o { P : Subobject A.right // ∃ q, q ≫ T.map P.arrow = A.Hom }
     where
   toFun P := ⟨projectSubobject P, projectSubobject_factors P⟩
-  invFun P := liftSubobject P.val P.Prop.some_spec
+  invFun P := liftSubobject P.val P.Prop.choose_spec
   left_inv P := lift_projectSubobject _ _
   right_inv P := Subtype.ext (by simp)
   map_rel_iff' :=
@@ -239,7 +239,7 @@ def quotientEquiv [HasColimits C] [PreservesColimits S] (A : CostructuredArrow S
     Subobject (op A) ≃o { P : Subobject (op A.left) // ∃ q, S.map P.arrow.unop ≫ q = A.Hom }
     where
   toFun P := ⟨projectQuotient P, projectQuotient_factors P⟩
-  invFun P := liftQuotient P.val P.Prop.some_spec
+  invFun P := liftQuotient P.val P.Prop.choose_spec
   left_inv P := lift_projectQuotient _ _
   right_inv P := Subtype.ext (by simp)
   map_rel_iff' :=

@@ -148,7 +148,7 @@ between `s` and its image. -/
 protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrder α] [Preorder β] (f : α → β)
     (s : Set α) (hf : StrictMonoOn f s) : s ≃o f '' s
     where
-  toEquiv := hf.InjOn.bij_on_image.Equiv _
+  toEquiv := hf.InjOn.bijOn_image.Equiv _
   map_rel_iff' x y := hf.le_iff_le x.2 y.2
 #align strict_mono_on.order_iso StrictMonoOn.orderIso
 -/

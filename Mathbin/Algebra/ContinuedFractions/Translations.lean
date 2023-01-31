@@ -37,41 +37,41 @@ variable {α : Type _} {g : GeneralizedContinuedFraction α} {n : ℕ}
 theorem terminatedAt_iff_s_terminatedAt : g.TerminatedAt n ↔ g.s.TerminatedAt n := by rfl
 #align generalized_continued_fraction.terminated_at_iff_s_terminated_at GeneralizedContinuedFraction.terminatedAt_iff_s_terminatedAt
 
-theorem terminatedAt_iff_s_none : g.TerminatedAt n ↔ g.s.nth n = none := by rfl
+theorem terminatedAt_iff_s_none : g.TerminatedAt n ↔ g.s.get? n = none := by rfl
 #align generalized_continued_fraction.terminated_at_iff_s_none GeneralizedContinuedFraction.terminatedAt_iff_s_none
 
-theorem part_num_none_iff_s_none : g.partialNumerators.nth n = none ↔ g.s.nth n = none := by
+theorem part_num_none_iff_s_none : g.partialNumerators.get? n = none ↔ g.s.get? n = none := by
   cases s_nth_eq : g.s.nth n <;> simp [partial_numerators, s_nth_eq]
 #align generalized_continued_fraction.part_num_none_iff_s_none GeneralizedContinuedFraction.part_num_none_iff_s_none
 
-theorem terminatedAt_iff_part_num_none : g.TerminatedAt n ↔ g.partialNumerators.nth n = none := by
+theorem terminatedAt_iff_part_num_none : g.TerminatedAt n ↔ g.partialNumerators.get? n = none := by
   rw [terminated_at_iff_s_none, part_num_none_iff_s_none]
 #align generalized_continued_fraction.terminated_at_iff_part_num_none GeneralizedContinuedFraction.terminatedAt_iff_part_num_none
 
-theorem part_denom_none_iff_s_none : g.partialDenominators.nth n = none ↔ g.s.nth n = none := by
+theorem part_denom_none_iff_s_none : g.partialDenominators.get? n = none ↔ g.s.get? n = none := by
   cases s_nth_eq : g.s.nth n <;> simp [partial_denominators, s_nth_eq]
 #align generalized_continued_fraction.part_denom_none_iff_s_none GeneralizedContinuedFraction.part_denom_none_iff_s_none
 
-theorem terminatedAt_iff_part_denom_none : g.TerminatedAt n ↔ g.partialDenominators.nth n = none :=
+theorem terminatedAt_iff_part_denom_none : g.TerminatedAt n ↔ g.partialDenominators.get? n = none :=
   by rw [terminated_at_iff_s_none, part_denom_none_iff_s_none]
 #align generalized_continued_fraction.terminated_at_iff_part_denom_none GeneralizedContinuedFraction.terminatedAt_iff_part_denom_none
 
-theorem part_num_eq_s_a {gp : Pair α} (s_nth_eq : g.s.nth n = some gp) :
-    g.partialNumerators.nth n = some gp.a := by simp [partial_numerators, s_nth_eq]
+theorem part_num_eq_s_a {gp : Pair α} (s_nth_eq : g.s.get? n = some gp) :
+    g.partialNumerators.get? n = some gp.a := by simp [partial_numerators, s_nth_eq]
 #align generalized_continued_fraction.part_num_eq_s_a GeneralizedContinuedFraction.part_num_eq_s_a
 
-theorem part_denom_eq_s_b {gp : Pair α} (s_nth_eq : g.s.nth n = some gp) :
-    g.partialDenominators.nth n = some gp.b := by simp [partial_denominators, s_nth_eq]
+theorem part_denom_eq_s_b {gp : Pair α} (s_nth_eq : g.s.get? n = some gp) :
+    g.partialDenominators.get? n = some gp.b := by simp [partial_denominators, s_nth_eq]
 #align generalized_continued_fraction.part_denom_eq_s_b GeneralizedContinuedFraction.part_denom_eq_s_b
 
-theorem exists_s_a_of_part_num {a : α} (nth_part_num_eq : g.partialNumerators.nth n = some a) :
-    ∃ gp, g.s.nth n = some gp ∧ gp.a = a := by
+theorem exists_s_a_of_part_num {a : α} (nth_part_num_eq : g.partialNumerators.get? n = some a) :
+    ∃ gp, g.s.get? n = some gp ∧ gp.a = a := by
   simpa [partial_numerators, SeqCat.map_nth] using nth_part_num_eq
 #align generalized_continued_fraction.exists_s_a_of_part_num GeneralizedContinuedFraction.exists_s_a_of_part_num
 
 theorem exists_s_b_of_part_denom {b : α}
-    (nth_part_denom_eq : g.partialDenominators.nth n = some b) :
-    ∃ gp, g.s.nth n = some gp ∧ gp.b = b := by
+    (nth_part_denom_eq : g.partialDenominators.get? n = some b) :
+    ∃ gp, g.s.get? n = some gp ∧ gp.b = b := by
   simpa [partial_denominators, SeqCat.map_nth] using nth_part_denom_eq
 #align generalized_continued_fraction.exists_s_b_of_part_denom GeneralizedContinuedFraction.exists_s_b_of_part_denom
 
@@ -148,21 +148,21 @@ theorem zeroth_convergent_eq_h : g.convergents 0 = g.h := by
   simp [convergent_eq_num_div_denom, num_eq_conts_a, denom_eq_conts_b, div_one]
 #align generalized_continued_fraction.zeroth_convergent_eq_h GeneralizedContinuedFraction.zeroth_convergent_eq_h
 
-theorem second_continuant_aux_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
+theorem second_continuant_aux_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.continuantsAux 2 = ⟨gp.b * g.h + gp.a, gp.b⟩ := by
   simp [zeroth_s_eq, continuants_aux, next_continuants, next_denominator, next_numerator]
 #align generalized_continued_fraction.second_continuant_aux_eq GeneralizedContinuedFraction.second_continuant_aux_eq
 
-theorem first_continuant_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
+theorem first_continuant_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.continuants 1 = ⟨gp.b * g.h + gp.a, gp.b⟩ := by
   simp [nth_cont_eq_succ_nth_cont_aux, second_continuant_aux_eq zeroth_s_eq]
 #align generalized_continued_fraction.first_continuant_eq GeneralizedContinuedFraction.first_continuant_eq
 
-theorem first_numerator_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
+theorem first_numerator_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.numerators 1 = gp.b * g.h + gp.a := by simp [num_eq_conts_a, first_continuant_eq zeroth_s_eq]
 #align generalized_continued_fraction.first_numerator_eq GeneralizedContinuedFraction.first_numerator_eq
 
-theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
+theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.denominators 1 = gp.b := by simp [denom_eq_conts_b, first_continuant_eq zeroth_s_eq]
 #align generalized_continued_fraction.first_denominator_eq GeneralizedContinuedFraction.first_denominator_eq
 

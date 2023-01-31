@@ -718,7 +718,7 @@ instance apply_smul_comm_class' : SMulCommClass (A₁ ≃ₐ[R] A₁) R A₁
 theorem algebraMap_eq_apply (e : A₁ ≃ₐ[R] A₂) {y : R} {x : A₁} :
     algebraMap R A₂ y = e x ↔ algebraMap R A₁ y = x :=
   ⟨fun h => by simpa using e.symm.to_alg_hom.algebra_map_eq_apply h, fun h =>
-    e.toAlgHom.algebra_map_eq_apply h⟩
+    e.toAlgHom.algebraMap_eq_apply h⟩
 #align alg_equiv.algebra_map_eq_apply AlgEquiv.algebraMap_eq_apply
 
 end Semiring

@@ -78,14 +78,14 @@ universe u
   The definition of a euclidean domain usually includes a valuation function `R → ℕ`.
   This definition is slightly generalised to include a well founded relation
   `r` with the property that `r (a % b) b`, instead of a valuation.  -/
-@[protect_proj without mul_left_not_lt r_well_founded]
+@[protect_proj without mul_left_not_lt r_wellFounded]
 class EuclideanDomain (R : Type u) extends CommRing R, Nontrivial R where
   Quotient : R → R → R
   quotient_zero : ∀ a, Quotient a 0 = 0
   remainder : R → R → R
   quotient_mul_add_remainder_eq : ∀ a b, b * Quotient a b + remainder a b = a
   R : R → R → Prop
-  r_well_founded : WellFounded r
+  r_wellFounded : WellFounded r
   remainder_lt : ∀ (a) {b}, b ≠ 0 → r (remainder a b) b
   mul_left_not_lt : ∀ (a) {b}, b ≠ 0 → ¬r (a * b) a
 #align euclidean_domain EuclideanDomain

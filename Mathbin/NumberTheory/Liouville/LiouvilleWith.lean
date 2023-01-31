@@ -50,7 +50,7 @@ number `C` such that for infinitely many denominators `n` there exists a numerat
 A number is a Liouville number in the sense of `liouville` if it is `liouville_with` any real
 exponent. -/
 def LiouvilleWith (p x : ℝ) : Prop :=
-  ∃ C, ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p
+  ∃ C, ∃ᶠ n : ℕ in atTop, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p
 #align liouville_with LiouvilleWith
 
 /-- For `p = 1` (hence, for any `p ≤ 1`), the condition `liouville_with p x` is trivial. -/
@@ -78,7 +78,7 @@ We also add `1 ≤ n` to the list of assumptions about the denominator. While it
 the original statement, the case `n = 0` breaks many arguments. -/
 theorem exists_pos (h : LiouvilleWith p x) :
     ∃ (C : ℝ)(h₀ : 0 < C),
-      ∃ᶠ n : ℕ in at_top, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p :=
+      ∃ᶠ n : ℕ in atTop, 1 ≤ n ∧ ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p :=
   by
   rcases h with ⟨C, hC⟩
   refine' ⟨max C 1, zero_lt_one.trans_le <| le_max_right _ _, _⟩
@@ -101,7 +101,7 @@ theorem mono (h : LiouvilleWith p x) (hle : q ≤ p) : LiouvilleWith q x :=
 /-- If `x` satisfies Liouville condition with exponent `p` and `q < p`, then `x`
 satisfies Liouville condition with exponent `q` and constant `1`. -/
 theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
-    ∃ᶠ n : ℕ in at_top, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < n ^ (-q) :=
+    ∃ᶠ n : ℕ in atTop, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < n ^ (-q) :=
   by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
   have : ∀ᶠ n : ℕ in at_top, C < n ^ (p - q) := by
@@ -348,7 +348,7 @@ variable {x : ℝ}
 /-- If `x` is a Liouville number, then for any `n`, for infinitely many denominators `b` there
 exists a numerator `a` such that `x ≠ a / b` and `|x - a / b| < 1 / b ^ n`. -/
 theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
-    ∃ᶠ b : ℕ in at_top, ∃ a : ℤ, x ≠ a / b ∧ |x - a / b| < 1 / b ^ n :=
+    ∃ᶠ b : ℕ in atTop, ∃ a : ℤ, x ≠ a / b ∧ |x - a / b| < 1 / b ^ n :=
   by
   refine' Classical.not_not.1 fun H => _
   simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_lt,

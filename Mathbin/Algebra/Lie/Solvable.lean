@@ -262,7 +262,7 @@ end Function
 
 theorem LieHom.isSolvableRange (f : L' →ₗ⁅R⁆ L) [h : LieAlgebra.IsSolvable R L'] :
     LieAlgebra.IsSolvable R f.range :=
-  f.surjective_range_restrict.lieAlgebraIsSolvable
+  f.surjective_rangeRestrict.lieAlgebraIsSolvable
 #align lie_hom.is_solvable_range LieHom.isSolvableRange
 
 namespace LieAlgebra

@@ -148,7 +148,7 @@ add_tactic_doc
 
 unsafe def unprime : Name → tactic Name
   | nn@(Name.mk_string s n) =>
-    let s' := (s.splitOn ''').head
+    let s' := (s.splitOn ''').headI
     if s'.length < s.length then pure (Name.mk_string s' n)
     else fail f! "expecting primed name: {nn}"
   | n => fail f! "invalid name: {n}"

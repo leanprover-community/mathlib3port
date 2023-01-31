@@ -105,9 +105,9 @@ variable (A : Matrix n n α) (B : Matrix n n α)
 def invertibleOfDetInvertible [Invertible A.det] : Invertible A
     where
   invOf := ⅟ A.det • A.adjugate
-  mul_inv_of_self := by
+  mul_invOf_self := by
     rw [mul_smul_comm, Matrix.mul_eq_mul, mul_adjugate, smul_smul, invOf_mul_self, one_smul]
-  inv_of_mul_self := by
+  invOf_mul_self := by
     rw [smul_mul_assoc, Matrix.mul_eq_mul, adjugate_mul, smul_smul, invOf_mul_self, one_smul]
 #align matrix.invertible_of_det_invertible Matrix.invertibleOfDetInvertible
 
@@ -121,16 +121,16 @@ theorem invOf_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adj
 def detInvertibleOfLeftInverse (h : B ⬝ A = 1) : Invertible A.det
     where
   invOf := B.det
-  mul_inv_of_self := by rw [mul_comm, ← det_mul, h, det_one]
-  inv_of_mul_self := by rw [← det_mul, h, det_one]
+  mul_invOf_self := by rw [mul_comm, ← det_mul, h, det_one]
+  invOf_mul_self := by rw [← det_mul, h, det_one]
 #align matrix.det_invertible_of_left_inverse Matrix.detInvertibleOfLeftInverse
 
 /-- `A.det` is invertible if `A` has a right inverse. -/
 def detInvertibleOfRightInverse (h : A ⬝ B = 1) : Invertible A.det
     where
   invOf := B.det
-  mul_inv_of_self := by rw [← det_mul, h, det_one]
-  inv_of_mul_self := by rw [mul_comm, ← det_mul, h, det_one]
+  mul_invOf_self := by rw [← det_mul, h, det_one]
+  invOf_mul_self := by rw [mul_comm, ← det_mul, h, det_one]
 #align matrix.det_invertible_of_right_inverse Matrix.detInvertibleOfRightInverse
 
 /-- If `A` has a constructive inverse, produce one for `A.det`. -/
@@ -554,7 +554,7 @@ theorem invOf_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inve
 def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : Invertible v
     where
   invOf := diag (⅟ (diagonal v))
-  inv_of_mul_self :=
+  invOf_mul_self :=
     funext fun i =>
       by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
@@ -562,7 +562,7 @@ def invertibleOfDiagonalInvertible (v : n → α) [Invertible (diagonal v)] : In
       dsimp
       rw [mul_assoc, prod_erase_mul _ _ (Finset.mem_univ _), ← det_diagonal]
       exact mul_invOf_self _
-  mul_inv_of_self :=
+  mul_invOf_self :=
     funext fun i =>
       by
       letI : Invertible (diagonal v).det := det_invertible_of_invertible _
@@ -639,7 +639,7 @@ theorem det_smul_inv_mulVec_eq_cramer (A : Matrix n n α) (b : n → α) (h : Is
 theorem det_smul_inv_vecMul_eq_cramer_transpose (A : Matrix n n α) (b : n → α) (h : IsUnit A.det) :
     A.det • A⁻¹.vecMul b = cramer Aᵀ b := by
   rw [← A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ← det_transpose,
-    Aᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
+    Aᵀ.det_smul_inv_mulVec_eq_cramer _ (is_unit_det_transpose A h)]
 #align matrix.det_smul_inv_vec_mul_eq_cramer_transpose Matrix.det_smul_inv_vecMul_eq_cramer_transpose
 
 /-! ### More results about determinants -/

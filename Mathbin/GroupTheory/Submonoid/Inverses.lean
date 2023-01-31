@@ -107,13 +107,13 @@ noncomputable def fromLeftInv : S.left_inv → S := fun x => x.Prop.some
 
 @[simp, to_additive]
 theorem mul_fromLeftInv (x : S.left_inv) : (x : M) * S.fromLeftInv x = 1 :=
-  x.Prop.some_spec
+  x.Prop.choose_spec
 #align submonoid.mul_from_left_inv Submonoid.mul_fromLeftInv
 #align add_submonoid.add_from_left_neg AddSubmonoid.add_from_left_neg
 
 @[simp, to_additive]
 theorem fromLeftInv_one : S.fromLeftInv 1 = 1 :=
-  (one_mul _).symm.trans (Subtype.eq <| S.mul_from_left_inv 1)
+  (one_mul _).symm.trans (Subtype.eq <| S.mul_fromLeftInv 1)
 #align submonoid.from_left_inv_one Submonoid.fromLeftInv_one
 #align add_submonoid.from_left_neg_zero AddSubmonoid.from_left_neg_zero
 
@@ -148,7 +148,7 @@ theorem fromLeftInv_eq_iff (a : S.left_inv) (b : M) : (S.fromLeftInv a : M) = b 
 noncomputable def fromCommLeftInv : S.left_inv →* S
     where
   toFun := S.fromLeftInv
-  map_one' := S.from_left_inv_one
+  map_one' := S.fromLeftInv_one
   map_mul' x y :=
     Subtype.ext <| by
       rw [from_left_inv_eq_iff, mul_comm x, Submonoid.coe_mul, Submonoid.coe_mul, mul_assoc, ←
@@ -178,7 +178,7 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
       ext
       rw [from_left_inv_eq_iff]
       convert (hS x.prop).some.inv_val
-      exact (hS x.prop).some_spec.symm }
+      exact (hS x.prop).choose_spec.symm }
 #align submonoid.left_inv_equiv Submonoid.leftInvEquiv
 #align add_submonoid.left_neg_equiv AddSubmonoid.leftNegEquiv
 
@@ -232,7 +232,7 @@ open Pointwise
 @[to_additive]
 theorem leftInv_eq_inv : S.left_inv = S⁻¹ :=
   Submonoid.ext fun x =>
-    ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.some_spec).symm ▸ h.some.Prop),
+    ⟨fun h => Submonoid.mem_inv.mpr ((inv_eq_of_mul_eq_one_right h.choose_spec).symm ▸ h.some.Prop),
       fun h => ⟨⟨_, h⟩, mul_right_inv _⟩⟩
 #align submonoid.left_inv_eq_inv Submonoid.leftInv_eq_inv
 #align add_submonoid.left_neg_eq_neg AddSubmonoid.left_neg_eq_neg

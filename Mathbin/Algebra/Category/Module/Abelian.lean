@@ -97,12 +97,12 @@ section ReflectsLimits
     is balanced. -/
 instance forgetReflectsLimitsOfSize :
     ReflectsLimitsOfSize.{v, v} (forget (ModuleCat.{max v w} R)) :=
-  reflects_limits_of_reflects_isomorphisms
+  reflectsLimitsOfReflectsIsomorphisms
 #align Module.forget_reflects_limits_of_size ModuleCat.forgetReflectsLimitsOfSize
 
 instance forget₂ReflectsLimitsOfSize :
     ReflectsLimitsOfSize.{v, v} (forget₂ (ModuleCat.{max v w} R) AddCommGroupCat.{max v w}) :=
-  reflects_limits_of_reflects_isomorphisms
+  reflectsLimitsOfReflectsIsomorphisms
 #align Module.forget₂_reflects_limits_of_size ModuleCat.forget₂ReflectsLimitsOfSize
 
 instance forgetReflectsLimits : ReflectsLimits (forget (ModuleCat.{v} R)) :=

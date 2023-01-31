@@ -301,7 +301,7 @@ unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tacti
   do
   let cache
     ←-- names has the declarations in reverse order
-          names.mfoldr
+          names.foldrM
         (fun name cache => add_lemma (attr ()) cache Name) empty_cache
   let--some special lemmas to handle binary relations
   up := cache.up
@@ -325,7 +325,7 @@ unsafe def norm_cast_attr : user_attribute norm_cast_cache (Option Label)
   descr := "attribute for norm_cast"
   parser :=
     (do
-        let some l ← (label.of_string ∘ toString) <$> ident
+        let some l ← (Label.ofString ∘ toString) <$> ident
         return l) <|>
       return none
   after_set :=
@@ -605,7 +605,7 @@ unsafe def derive_push_cast (extra_lems : List simp_arg_type) (e : expr) : tacti
   do
   let (s, _) ← mk_simp_set true [`push_cast] extra_lems
   let (e, prf, _) ←
-    simplify (s.erase [`nat.cast_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
+    simplify (s.eraseₓ [`nat.cast_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
   return (e, prf)
 #align norm_cast.derive_push_cast norm_cast.derive_push_cast
 

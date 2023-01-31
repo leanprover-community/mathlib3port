@@ -75,7 +75,7 @@ variable {𝕆 ℙ α β : Type _}
 which preserves order covering (`covby`). -/
 class GradeOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] where
   grade : α → 𝕆
-  grade_strict_mono : StrictMono grade
+  grade_strictMono : StrictMono grade
   covby_grade ⦃a b : α⦄ : a ⋖ b → grade a ⋖ grade b
 #align grade_order GradeOrder
 -/
@@ -83,14 +83,14 @@ class GradeOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] where
 #print GradeMinOrder /-
 /-- A `𝕆`-graded order where minimal elements have minimal grades. -/
 class GradeMinOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends GradeOrder 𝕆 α where
-  is_min_grade ⦃a : α⦄ : IsMin a → IsMin (grade a)
+  isMin_grade ⦃a : α⦄ : IsMin a → IsMin (grade a)
 #align grade_min_order GradeMinOrder
 -/
 
 #print GradeMaxOrder /-
 /-- A `𝕆`-graded order where maximal elements have maximal grades. -/
 class GradeMaxOrder (𝕆 α : Type _) [Preorder 𝕆] [Preorder α] extends GradeOrder 𝕆 α where
-  is_max_grade ⦃a : α⦄ : IsMax a → IsMax (grade a)
+  isMax_grade ⦃a : α⦄ : IsMax a → IsMax (grade a)
 #align grade_max_order GradeMaxOrder
 -/
 
@@ -187,7 +187,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_min_grade_iff isMin_grade_iffₓ'. -/
 @[simp]
 theorem isMin_grade_iff : IsMin (grade 𝕆 a) ↔ IsMin a :=
-  ⟨grade_strictMono.is_min_of_apply, IsMin.grade _⟩
+  ⟨grade_strictMono.isMin_of_apply, IsMin.grade _⟩
 #align is_min_grade_iff isMin_grade_iff
 
 end GradeMinOrder
@@ -216,7 +216,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_max_grade_iff isMax_grade_iffₓ'. -/
 @[simp]
 theorem isMax_grade_iff : IsMax (grade 𝕆 a) ↔ IsMax a :=
-  ⟨grade_strictMono.is_max_of_apply, IsMax.grade _⟩
+  ⟨grade_strictMono.isMax_of_apply, IsMax.grade _⟩
 #align is_max_grade_iff isMax_grade_iff
 
 end GradeMaxOrder
@@ -345,9 +345,9 @@ variable [Preorder 𝕆] [Preorder ℙ] [Preorder α] [Preorder β]
 instance Preorder.toGradeBoundedOrder : GradeBoundedOrder α α
     where
   grade := id
-  is_min_grade _ := id
-  is_max_grade _ := id
-  grade_strict_mono := strictMono_id
+  isMin_grade _ := id
+  isMax_grade _ := id
+  grade_strictMono := strictMono_id
   covby_grade a b := id
 #align preorder.to_grade_bounded_order Preorder.toGradeBoundedOrder
 -/
@@ -364,15 +364,15 @@ theorem grade_self (a : α) : grade α a = a :=
 
 instance [GradeOrder 𝕆 α] : GradeOrder 𝕆ᵒᵈ αᵒᵈ
     where
-  grade := to_dual ∘ grade 𝕆 ∘ of_dual
-  grade_strict_mono := grade_strictMono.dual
+  grade := toDual ∘ grade 𝕆 ∘ ofDual
+  grade_strictMono := grade_strictMono.dual
   covby_grade a b h := (h.ofDual.grade _).toDual
 
 instance [GradeMaxOrder 𝕆 α] : GradeMinOrder 𝕆ᵒᵈ αᵒᵈ :=
-  { OrderDual.gradeOrder with is_min_grade := fun _ => IsMax.grade _ }
+  { OrderDual.gradeOrder with isMin_grade := fun _ => IsMax.grade _ }
 
 instance [GradeMinOrder 𝕆 α] : GradeMaxOrder 𝕆ᵒᵈ αᵒᵈ :=
-  { OrderDual.gradeOrder with is_max_grade := fun _ => IsMin.grade _ }
+  { OrderDual.gradeOrder with isMax_grade := fun _ => IsMin.grade _ }
 
 instance [GradeBoundedOrder 𝕆 α] : GradeBoundedOrder 𝕆ᵒᵈ αᵒᵈ :=
   { OrderDual.gradeMinOrder, OrderDual.gradeMaxOrder with }
@@ -410,7 +410,7 @@ def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder ℙ α
     where
   grade := f ∘ grade 𝕆
-  grade_strict_mono := hf.comp grade_strictMono
+  grade_strictMono := hf.comp grade_strictMono
   covby_grade a b h := hcovby _ _ <| h.grade _
 #align grade_order.lift_left GradeOrder.liftLeft
 -/
@@ -421,7 +421,7 @@ def GradeOrder.liftLeft [GradeOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono
 @[reducible]
 def GradeMinOrder.liftLeft [GradeMinOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f)
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmin : ∀ a, IsMin a → IsMin (f a)) : GradeMinOrder ℙ α :=
-  { GradeOrder.liftLeft f hf hcovby with is_min_grade := fun a ha => hmin _ <| ha.grade _ }
+  { GradeOrder.liftLeft f hf hcovby with isMin_grade := fun a ha => hmin _ <| ha.grade _ }
 #align grade_min_order.lift_left GradeMinOrder.liftLeft
 -/
 
@@ -431,7 +431,7 @@ def GradeMinOrder.liftLeft [GradeMinOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : Stri
 @[reducible]
 def GradeMaxOrder.liftLeft [GradeMaxOrder 𝕆 α] (f : 𝕆 → ℙ) (hf : StrictMono f)
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeMaxOrder ℙ α :=
-  { GradeOrder.liftLeft f hf hcovby with is_max_grade := fun a ha => hmax _ <| ha.grade _ }
+  { GradeOrder.liftLeft f hf hcovby with isMax_grade := fun a ha => hmax _ <| ha.grade _ }
 #align grade_max_order.lift_left GradeMaxOrder.liftLeft
 -/
 
@@ -454,7 +454,7 @@ def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) : GradeOrder 𝕆 α
     where
   grade := grade 𝕆 ∘ f
-  grade_strict_mono := grade_strictMono.comp hf
+  grade_strictMono := grade_strictMono.comp hf
   covby_grade a b h := (hcovby _ _ h).grade _
 #align grade_order.lift_right GradeOrder.liftRight
 -/
@@ -465,7 +465,7 @@ def GradeOrder.liftRight [GradeOrder 𝕆 β] (f : α → β) (hf : StrictMono f
 @[reducible]
 def GradeMinOrder.liftRight [GradeMinOrder 𝕆 β] (f : α → β) (hf : StrictMono f)
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmin : ∀ a, IsMin a → IsMin (f a)) : GradeMinOrder 𝕆 α :=
-  { GradeOrder.liftRight f hf hcovby with is_min_grade := fun a ha => (hmin _ ha).grade _ }
+  { GradeOrder.liftRight f hf hcovby with isMin_grade := fun a ha => (hmin _ ha).grade _ }
 #align grade_min_order.lift_right GradeMinOrder.liftRight
 -/
 
@@ -475,7 +475,7 @@ def GradeMinOrder.liftRight [GradeMinOrder 𝕆 β] (f : α → β) (hf : Strict
 @[reducible]
 def GradeMaxOrder.liftRight [GradeMaxOrder 𝕆 β] (f : α → β) (hf : StrictMono f)
     (hcovby : ∀ a b, a ⋖ b → f a ⋖ f b) (hmax : ∀ a, IsMax a → IsMax (f a)) : GradeMaxOrder 𝕆 α :=
-  { GradeOrder.liftRight f hf hcovby with is_max_grade := fun a ha => (hmax _ ha).grade _ }
+  { GradeOrder.liftRight f hf hcovby with isMax_grade := fun a ha => (hmax _ ha).grade _ }
 #align grade_max_order.lift_right GradeMaxOrder.liftRight
 -/
 

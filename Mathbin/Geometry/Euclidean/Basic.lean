@@ -943,7 +943,7 @@ theorem Cospherical.affineIndependent_of_mem_of_ne {s : Set P} (hs : Cospherical
 /-- The three points of a cospherical set are affinely independent. -/
 theorem Cospherical.affineIndependent_of_ne {p₁ p₂ p₃ : P} (hs : Cospherical ({p₁, p₂, p₃} : Set P))
     (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) : AffineIndependent ℝ ![p₁, p₂, p₃] :=
-  hs.affine_independent_of_mem_of_ne (Set.mem_insert _ _)
+  hs.affineIndependent_of_mem_of_ne (Set.mem_insert _ _)
     (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
     (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) h₁₂ h₁₃ h₂₃
 #align euclidean_geometry.cospherical.affine_independent_of_ne EuclideanGeometry.Cospherical.affineIndependent_of_ne

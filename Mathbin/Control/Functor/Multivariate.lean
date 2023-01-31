@@ -105,14 +105,14 @@ variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 #print MvFunctor.LiftP' /-
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
 def LiftP' : F α → Prop :=
-  MvFunctor.LiftP fun i x => of_repeat <| p i x
+  MvFunctor.LiftP fun i x => ofRepeat <| p i x
 #align mvfunctor.liftp' MvFunctor.LiftP'
 -/
 
 #print MvFunctor.LiftR' /-
 /-- adapt `mvfunctor.liftp` to accept relations as arrows -/
 def LiftR' : F α → F α → Prop :=
-  MvFunctor.LiftR fun i x y => of_repeat <| r i <| TypeVec.prod.mk _ x y
+  MvFunctor.LiftR fun i x y => ofRepeat <| r i <| TypeVec.prod.mk _ x y
 #align mvfunctor.liftr' MvFunctor.LiftR'
 -/
 

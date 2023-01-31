@@ -118,7 +118,7 @@ def comparisonLeftAdjointHomEquiv (A : adj.toMonad.Algebra) (B : D)
       refine' (adj.homEquiv _ _).subtypeEquiv _
       intro f
       rw [← (adj.homEquiv _ _).Injective.eq_iff, adjunction.hom_equiv_naturality_left,
-        adj.hom_equiv_unit, adj.hom_equiv_unit, G.map_comp]
+        adj.homEquiv_unit, adj.homEquiv_unit, G.map_comp]
       dsimp
       rw [adj.right_triangle_components_assoc, ← G.map_comp, F.map_comp, category.assoc,
         adj.counit_naturality, adj.left_triangle_components_assoc]
@@ -146,7 +146,7 @@ def leftAdjointComparison
   · intro A B B' g h
     ext1
     dsimp [comparison_left_adjoint_hom_equiv]
-    rw [← adj.hom_equiv_naturality_right, category.assoc]
+    rw [← adj.homEquiv_naturality_right, category.assoc]
 #align category_theory.monad.monadicity_internal.left_adjoint_comparison CategoryTheory.Monad.MonadicityInternal.leftAdjointComparison
 
 /-- Provided we have the appropriate coequalizers, we have an adjunction to the comparison functor.
@@ -193,8 +193,8 @@ theorem comparisonAdjunction_unit_f
   apply limits.cofork.is_colimit.hom_ext (beck_coequalizer A)
   rw [cofork.is_colimit.π_desc]
   dsimp only [beck_cofork_π, unit_cofork_π]
-  rw [comparison_adjunction_unit_f_aux, ← adj.hom_equiv_naturality_left A.a, coequalizer.condition,
-    adj.hom_equiv_naturality_right, adj.hom_equiv_unit, category.assoc]
+  rw [comparison_adjunction_unit_f_aux, ← adj.homEquiv_naturality_left A.a, coequalizer.condition,
+    adj.homEquiv_naturality_right, adj.homEquiv_unit, category.assoc]
   apply adj.right_triangle_components_assoc
 #align category_theory.monad.monadicity_internal.comparison_adjunction_unit_f CategoryTheory.Monad.MonadicityInternal.comparisonAdjunction_unit_f
 

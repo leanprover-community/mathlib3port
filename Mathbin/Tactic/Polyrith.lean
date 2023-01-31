@@ -136,9 +136,9 @@ If `e` appears with index `k` in `vars`, it returns the singleton sum `p = poly.
 Otherwise it updates `vars`, adding `e` with index `n`, and returns the singleton `p = poly.var n`.
 -/
 unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) :
-    tactic (List expr × poly) := do
+    tactic (List expr × Poly) := do
   let index_of_e ←
-    vars.mfoldlWithIndex
+    vars.foldlIdxM
         (fun n last e' =>
           match last with
           | none => tactic.try_core <| tactic.is_def_eq e e' red >> return n
@@ -164,7 +164,7 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
     unsafe
   def
     poly_form_of_expr
-    ( red : Transparency ) : List expr → expr → tactic ( List expr × poly )
+    ( red : Transparency ) : List expr → expr → tactic ( List expr × Poly )
     |
         m , q( $ ( e1 ) * $ ( e2 ) )
         =>
@@ -232,7 +232,7 @@ The following section contains code that can convert an a `poly` object into a `
         m , poly.var n
         =>
         do
-          let some e ← return <| m . nth n | throwError "unknown variable poly.var { ← n }"
+          let some e ← return <| m . get? n | throwError "unknown variable poly.var { ← n }"
             return ` `( $ ( e ) )
       |
         m , poly.add p q
@@ -291,7 +291,7 @@ to the appropriate `poly` object representing a rational coefficient.
 Here, `r` is a rational number
 -/
 unsafe def const_fraction_parser : Parser Poly :=
-  str "poly.const " >> poly.const <$> Parser.rat
+  str "poly.const " >> Poly.const <$> Parser.rat
 #align polyrith.const_fraction_parser polyrith.const_fraction_parser
 
 /-- A parser object that parses `string`s of the form `"poly.add p q"`
@@ -299,7 +299,7 @@ to the appropriate `poly` object representing the sum of two `poly`s.
 Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def add_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.add " >> poly.add <$> cont <*> (ch ' ' >> cont)
+  str "poly.add " >> Poly.add <$> cont <*> (ch ' ' >> cont)
 #align polyrith.add_parser polyrith.add_parser
 
 /-- A parser object that parses `string`s of the form `"poly.sub p q"`
@@ -307,7 +307,7 @@ to the appropriate `poly` object representing the subtraction of two `poly`s.
 Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def sub_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.sub " >> poly.sub <$> cont <*> (ch ' ' >> cont)
+  str "poly.sub " >> Poly.sub <$> cont <*> (ch ' ' >> cont)
 #align polyrith.sub_parser polyrith.sub_parser
 
 /-- A parser object that parses `string`s of the form `"poly.mul p q"`
@@ -315,7 +315,7 @@ to the appropriate `poly` object representing the product of two `poly`s.
 Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def mul_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.mul " >> poly.mul <$> cont <*> (ch ' ' >> cont)
+  str "poly.mul " >> Poly.mul <$> cont <*> (ch ' ' >> cont)
 #align polyrith.mul_parser polyrith.mul_parser
 
 /-- A parser object that parses `string`s of the form `"poly.pow p n"`
@@ -324,7 +324,7 @@ power of a natural number. Here, `p` is the string form of a `poly`
 and `n` is a natural number.
 -/
 unsafe def pow_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.pow " >> poly.pow <$> cont <*> (ch ' ' >> Nat)
+  str "poly.pow " >> Poly.pow <$> cont <*> (ch ' ' >> Nat)
 #align polyrith.pow_parser polyrith.pow_parser
 
 /-- A parser object that parses `string`s of the form `"poly.neg p"`
@@ -332,7 +332,7 @@ to the appropriate `poly` object representing the negation of a `poly`.
 Here, `p` is the string form of a `poly`.
 -/
 unsafe def neg_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.neg " >> poly.neg <$> cont
+  str "poly.neg " >> Poly.neg <$> cont
 #align polyrith.neg_parser polyrith.neg_parser
 
 /-- A parser for `poly` that uses an s-essresion style formats such as
@@ -363,7 +363,7 @@ unsafe instance : non_null_json_serializable Poly
 
 /-- A schema for success messages from the python script -/
 structure SageJsonSuccess where
-  success : { b : Bool // b = tt }
+  success : { b : Bool // b = true }
   trace : Option String := none
   data : Option (List Poly) := none
   deriving non_null_json_serializable, Inhabited
@@ -371,7 +371,7 @@ structure SageJsonSuccess where
 
 /-- A schema for failure messages from the python script -/
 structure SageJsonFailure where
-  success : { b : Bool // b = ff }
+  success : { b : Bool // b = false }
   errorName : String
   errorValue : String
   deriving non_null_json_serializable, Inhabited
@@ -380,7 +380,7 @@ structure SageJsonFailure where
 /-- Parse the json output from `scripts/polyrith.py` into either an error message, a list of `poly`
 objects, or `none` if only trace output was requested. -/
 unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
-  let r : Sum sage_json_success sage_json_failure ←
+  let r : Sum SageJsonSuccess SageJsonFailure ←
     decorate_ex "internal json error: "
         (-- try the error format first, so that if both fail we get the message from the success parser
             Sum.inr <$>
@@ -414,7 +414,7 @@ and converts them into `poly` objects.
 /-- `(vars, poly, typ) ← parse_target_to_poly` interprets the current target (an equality over
 some field) into a `poly`. The result is a list of the atomic expressions in the target,
 the `poly` itself, and an `expr` representing the type of the field. -/
-unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
+unsafe def parse_target_to_poly : tactic (List expr × Poly × expr) := do
   let e@q(@Eq $(R) _ _) ← target
   let left_side ← equality_to_left_side e
   let (m, p) ← poly_form_of_expr Transparency.reducible [] left_side
@@ -423,7 +423,7 @@ unsafe def parse_target_to_poly : tactic (List expr × poly × expr) := do
 
 /-- Filter `l` to the elements which are equalities of type `expt`. -/
 unsafe def get_equalities_of_type (expt : expr) (l : List expr) : tactic (List expr) :=
-  l.mfilter fun h_eq =>
+  l.filterM fun h_eq =>
     succeeds do
       let q(@Eq $(R) _ _) ← infer_type h_eq
       unify expt R
@@ -451,15 +451,15 @@ and a list of these hypotheses converted into `poly` objects.
 -/
 unsafe def parse_ctx_to_polys (expt : expr) (m : List expr) (only_on : Bool) (hyps : List pexpr) :
     tactic (List expr × List expr × List Poly) := do
-  let hyps ← hyps.mmap i_to_expr
+  let hyps ← hyps.mapM i_to_expr
   let hyps ← if only_on then return hyps else (· ++ hyps) <$> local_context
   let eq_names ← get_equalities_of_type expt hyps
-  let eqs ← eq_names.mmap infer_type
-  let eqs_to_left ← eqs.mmap equality_to_left_side
+  let eqs ← eq_names.mapM infer_type
+  let eqs_to_left ← eqs.mapM equality_to_left_side
   let-- convert the expressions to polynomials, tracking the variables in `m`
     (m, poly_list)
     ←
-    eqs_to_left.mfoldl
+    eqs_to_left.foldlM
         (fun (s : _ × List Poly) new_exp => do
           let (m, poly_list) := s
           let (m', new_poly) ← poly_form_of_expr Transparency.reducible m new_exp
@@ -546,7 +546,7 @@ unsafe def intersperse_ops : List (Bool × format) → format
 
 /-- This tactic repeats the process above for a `list` of pairs of `expr`s.-/
 unsafe def components_to_lc_format (components : List (expr × expr)) : tactic format :=
-  intersperse_ops <$> components.mmap component_to_lc_format
+  intersperse_ops <$> components.mapM component_to_lc_format
 #align polyrith.components_to_lc_format polyrith.components_to_lc_format
 
 /-!
@@ -578,12 +578,12 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
   focus1 do
     let some coeffs_as_poly ← convert_sage_output sage_out |
       throwError"internal error: No output available"
-    let coeffs_as_pexpr ← coeffs_as_poly.mmap (poly.to_pexpr m)
+    let coeffs_as_pexpr ← coeffs_as_poly.mapM (poly.to_pexpr m)
     let eq_names_pexpr := eq_names.map to_pexpr
-    let coeffs_as_expr ← coeffs_as_pexpr.mmap fun e => to_expr ``(($(e) : $(R)))
+    let coeffs_as_expr ← coeffs_as_pexpr.mapM fun e => to_expr ``(($(e) : $(R)))
     linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
     let components :=
-      (eq_names.zip coeffs_as_expr).filter fun pr => not <| pr.2.is_app_of `has_zero.zero
+      (eq_names.zip coeffs_as_expr).filterₓ fun pr => not <| pr.2.is_app_of `has_zero.zero
     let expr_string ← components_to_lc_format components
     let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
     done <|>
@@ -694,7 +694,7 @@ by polyrith only [scary c d, h]
 -/
 unsafe def _root_.tactic.interactive.polyrith (restr : parse (tk "only")?)
     (hyps : parse pexpr_list ?) : tactic Unit := do
-  let some f ← tactic.polyrith restr.isSome (hyps.getOrElse []) |
+  let some f ← tactic.polyrith restr.isSome (hyps.getD []) |
     skip
   ← do
       dbg_trace "Try this: {← f}"

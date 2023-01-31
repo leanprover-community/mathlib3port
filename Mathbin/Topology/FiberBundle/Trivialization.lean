@@ -71,10 +71,10 @@ have a topology on both the fiber and the base space. Through the construction
 structure Pretrivialization (proj : Z → B) extends LocalEquiv Z (B × F) where
   open_target : IsOpen target
   baseSet : Set B
-  open_base_set : IsOpen base_set
+  open_baseSet : IsOpen base_set
   source_eq : source = proj ⁻¹' base_set
   target_eq : target = base_set ×ˢ univ
-  proj_to_fun : ∀ p ∈ source, (to_fun p).1 = proj p
+  proj_toFun : ∀ p ∈ source, (to_fun p).1 = proj p
 #align pretrivialization Pretrivialization
 
 namespace Pretrivialization
@@ -91,7 +91,7 @@ theorem coe_coe : ⇑e.toLocalEquiv = e :=
 
 @[simp, mfld_simps]
 theorem coe_fst (ex : x ∈ e.source) : (e x).1 = proj x :=
-  e.proj_to_fun x ex
+  e.proj_toFun x ex
 #align pretrivialization.coe_fst Pretrivialization.coe_fst
 
 theorem mem_source : x ∈ e.source ↔ proj x ∈ e.baseSet := by rw [e.source_eq, mem_preimage]
@@ -290,10 +290,10 @@ sets of the form `proj ⁻¹' base_set` and `base_set × F`, acting trivially on
 @[ext, nolint has_nonempty_instance]
 structure Trivialization (proj : Z → B) extends LocalHomeomorph Z (B × F) where
   baseSet : Set B
-  open_base_set : IsOpen base_set
+  open_baseSet : IsOpen base_set
   source_eq : source = proj ⁻¹' base_set
   target_eq : target = base_set ×ˢ univ
-  proj_to_fun : ∀ p ∈ source, (to_local_homeomorph p).1 = proj p
+  proj_toFun : ∀ p ∈ source, (to_local_homeomorph p).1 = proj p
 #align trivialization Trivialization
 
 namespace Trivialization
@@ -327,7 +327,7 @@ theorem coe_coe : ⇑e.toLocalHomeomorph = e :=
 
 @[simp, mfld_simps]
 theorem coe_fst (ex : x ∈ e.source) : (e x).1 = proj x :=
-  e.proj_to_fun x ex
+  e.proj_toFun x ex
 #align trivialization.coe_fst Trivialization.coe_fst
 
 protected theorem eqOn : EqOn (Prod.fst ∘ e) proj e.source := fun x hx => e.coe_fst hx
@@ -377,7 +377,7 @@ theorem proj_symm_apply' {b : B} {x : F} (hx : b ∈ e.baseSet) :
 #align trivialization.proj_symm_apply' Trivialization.proj_symm_apply'
 
 theorem proj_surjOn_baseSet [Nonempty F] : Set.SurjOn proj e.source e.baseSet :=
-  e.toPretrivialization.proj_surj_on_base_set
+  e.toPretrivialization.proj_surjOn_baseSet
 #align trivialization.proj_surj_on_base_set Trivialization.proj_surjOn_baseSet
 
 theorem apply_symm_apply {x : B × F} (hx : x ∈ e.target) : e (e.toLocalHomeomorph.symm x) = x :=
@@ -411,7 +411,7 @@ theorem coe_fst_eventuallyEq_proj (ex : x ∈ e.source) : Prod.fst ∘ e =ᶠ[�
 #align trivialization.coe_fst_eventually_eq_proj Trivialization.coe_fst_eventuallyEq_proj
 
 theorem coe_fst_eventuallyEq_proj' (ex : proj x ∈ e.baseSet) : Prod.fst ∘ e =ᶠ[𝓝 x] proj :=
-  e.coe_fst_eventually_eq_proj (e.mem_source.2 ex)
+  e.coe_fst_eventuallyEq_proj (e.mem_source.2 ex)
 #align trivialization.coe_fst_eventually_eq_proj' Trivialization.coe_fst_eventuallyEq_proj'
 
 theorem map_proj_nhds (ex : x ∈ e.source) : map proj (𝓝 x) = 𝓝 (proj x) := by
@@ -428,7 +428,7 @@ theorem image_preimage_eq_prod_univ {s : Set B} (hb : s ⊆ e.baseSet) :
     e '' (proj ⁻¹' s) = s ×ˢ univ :=
   Subset.antisymm
     (image_subset_iff.mpr fun p hp =>
-      ⟨(e.proj_to_fun p (e.preimage_subset_source hb hp)).symm ▸ hp, trivial⟩)
+      ⟨(e.proj_toFun p (e.preimage_subset_source hb hp)).symm ▸ hp, trivial⟩)
     fun p hp =>
     let hp' : p ∈ e.target := e.mem_target.mpr (hb hp.1)
     ⟨e.invFun p, mem_preimage.mpr ((e.proj_symm_apply hp').symm ▸ hp.1), e.apply_symm_apply hp'⟩
@@ -444,7 +444,7 @@ def preimageHomeomorph {s : Set B} (hb : s ⊆ e.baseSet) : proj ⁻¹' s ≃ₜ
 @[simp]
 theorem preimageHomeomorph_apply {s : Set B} (hb : s ⊆ e.baseSet) (p : proj ⁻¹' s) :
     e.preimageHomeomorph hb p = (⟨proj p, p.2⟩, (e p).2) :=
-  Prod.ext (Subtype.ext (e.proj_to_fun p (e.mem_source.mpr (hb p.2)))) rfl
+  Prod.ext (Subtype.ext (e.proj_toFun p (e.mem_source.mpr (hb p.2)))) rfl
 #align trivialization.preimage_homeomorph_apply Trivialization.preimageHomeomorph_apply
 
 @[simp]
@@ -461,7 +461,7 @@ def sourceHomeomorphBaseSetProd : e.source ≃ₜ e.baseSet × F :=
 @[simp]
 theorem sourceHomeomorphBaseSetProd_apply (p : e.source) :
     e.sourceHomeomorphBaseSetProd p = (⟨proj p, e.mem_source.mp p.2⟩, (e p).2) :=
-  e.preimage_homeomorph_apply subset_rfl ⟨p, e.mem_source.mp p.2⟩
+  e.preimageHomeomorph_apply subset_rfl ⟨p, e.mem_source.mp p.2⟩
 #align trivialization.source_homeomorph_base_set_prod_apply Trivialization.sourceHomeomorphBaseSetProd_apply
 
 @[simp]
@@ -502,10 +502,10 @@ protected def compHomeomorph {Z' : Type _} [TopologicalSpace Z'] (h : Z' ≃ₜ 
     where
   toLocalHomeomorph := h.toLocalHomeomorph.trans e.toLocalHomeomorph
   baseSet := e.baseSet
-  open_base_set := e.open_base_set
+  open_baseSet := e.open_baseSet
   source_eq := by simp [e.source_eq, preimage_preimage]
   target_eq := by simp [e.target_eq]
-  proj_to_fun p hp := by
+  proj_toFun p hp := by
     have hp : h p ∈ e.source := by simpa using hp
     simp [hp]
 #align trivialization.comp_homeomorph Trivialization.compHomeomorph
@@ -539,7 +539,7 @@ theorem continuousAt_of_comp_left {X : Type _} [TopologicalSpace X] {f : X → Z
 variable {E} (e' : Trivialization F (π E)) {x' : TotalSpace E} {b : B} {y : E b}
 
 protected theorem continuousOn : ContinuousOn e' e'.source :=
-  e'.continuous_to_fun
+  e'.continuous_toFun
 #align trivialization.continuous_on Trivialization.continuousOn
 
 theorem coe_mem_source : ↑y ∈ e'.source ↔ b ∈ e'.baseSet :=
@@ -638,10 +638,10 @@ def transFiberHomeomorph {F' : Type _} [TopologicalSpace F'] (e : Trivialization
     where
   toLocalHomeomorph := e.toLocalHomeomorph.transHomeomorph <| (Homeomorph.refl _).prodCongr h
   baseSet := e.baseSet
-  open_base_set := e.open_base_set
+  open_baseSet := e.open_baseSet
   source_eq := e.source_eq
   target_eq := by simp [e.target_eq, prod_univ, preimage_preimage]
-  proj_to_fun := e.proj_to_fun
+  proj_toFun := e.proj_toFun
 #align trivialization.trans_fiber_homeomorph Trivialization.transFiberHomeomorph
 
 @[simp]
@@ -677,7 +677,7 @@ theorem coordChange_same_apply (e : Trivialization F proj) {b : B} (h : b ∈ e.
 
 theorem coordChange_same (e : Trivialization F proj) {b : B} (h : b ∈ e.baseSet) :
     e.coordChange e b = id :=
-  funext <| e.coord_change_same_apply h
+  funext <| e.coordChange_same_apply h
 #align trivialization.coord_change_same Trivialization.coordChange_same
 
 theorem coordChange_coordChange (e₁ e₂ e₃ : Trivialization F proj) {b : B} (h₁ : b ∈ e₁.baseSet)
@@ -711,8 +711,8 @@ protected def coordChangeHomeomorph (e₁ e₂ : Trivialization F proj) {b : B} 
   invFun := e₂.coordChange e₁ b
   left_inv x := by simp only [*, coord_change_coord_change, coord_change_same_apply]
   right_inv x := by simp only [*, coord_change_coord_change, coord_change_same_apply]
-  continuous_to_fun := e₁.continuous_coord_change e₂ h₁ h₂
-  continuous_inv_fun := e₂.continuous_coord_change e₁ h₂ h₁
+  continuous_toFun := e₁.continuous_coordChange e₂ h₁ h₂
+  continuous_invFun := e₂.continuous_coordChange e₁ h₂ h₁
 #align trivialization.coord_change_homeomorph Trivialization.coordChangeHomeomorph
 
 @[simp]
@@ -733,13 +733,12 @@ protected def restrOpen (e : Trivialization F proj) (s : Set B) (hs : IsOpen s) 
     Trivialization F proj
     where
   toLocalHomeomorph :=
-    ((e.is_image_preimage_prod s).symm.restr
-        (IsOpen.inter e.open_target (hs.Prod isOpen_univ))).symm
+    ((e.isImage_preimage_prod s).symm.restr (IsOpen.inter e.open_target (hs.Prod isOpen_univ))).symm
   baseSet := e.baseSet ∩ s
-  open_base_set := IsOpen.inter e.open_base_set hs
+  open_baseSet := IsOpen.inter e.open_baseSet hs
   source_eq := by simp [e.source_eq]
   target_eq := by simp [e.target_eq, prod_univ]
-  proj_to_fun p hp := e.proj_to_fun p hp.1
+  proj_toFun p hp := e.proj_toFun p hp.1
 #align trivialization.restr_open Trivialization.restrOpen
 
 section Piecewise
@@ -762,13 +761,13 @@ noncomputable def piecewise (e e' : Trivialization F proj) (s : Set B)
     where
   toLocalHomeomorph :=
     e.toLocalHomeomorph.piecewise e'.toLocalHomeomorph (proj ⁻¹' s) (s ×ˢ univ)
-      (e.is_image_preimage_prod s) (e'.is_image_preimage_prod s)
+      (e.isImage_preimage_prod s) (e'.isImage_preimage_prod s)
       (by rw [e.frontier_preimage, e'.frontier_preimage, Hs]) (by rwa [e.frontier_preimage])
   baseSet := s.ite e.baseSet e'.baseSet
-  open_base_set := e.open_base_set.ite e'.open_base_set Hs
+  open_baseSet := e.open_baseSet.ite e'.open_baseSet Hs
   source_eq := by simp [e.source_eq, e'.source_eq]
   target_eq := by simp [e.target_eq, e'.target_eq, prod_univ]
-  proj_to_fun := by rintro p (⟨he, hs⟩ | ⟨he, hs⟩) <;> simp [*]
+  proj_toFun := by rintro p (⟨he, hs⟩ | ⟨he, hs⟩) <;> simp [*]
 #align trivialization.piecewise Trivialization.piecewise
 
 /-- Given two bundle trivializations `e`, `e'` of a topological fiber bundle `proj : Z → B`
@@ -818,10 +817,10 @@ noncomputable def disjointUnion (e e' : Trivialization F proj) (H : Disjoint e.b
         intro x hx
         exact H.le_bot ⟨hx.1.1, hx.2.1⟩)
   baseSet := e.baseSet ∪ e'.baseSet
-  open_base_set := IsOpen.union e.open_base_set e'.open_base_set
+  open_baseSet := IsOpen.union e.open_baseSet e'.open_baseSet
   source_eq := congr_arg₂ (· ∪ ·) e.source_eq e'.source_eq
   target_eq := (congr_arg₂ (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm
-  proj_to_fun := by
+  proj_toFun := by
     rintro p (hp | hp')
     · show (e.source.piecewise e e' p).1 = proj p
       rw [piecewise_eq_of_mem, e.coe_fst] <;> exact hp

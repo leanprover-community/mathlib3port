@@ -161,8 +161,8 @@ theorem continuousOn_toReal : ContinuousOn Ereal.toReal ({⊥, ⊤}ᶜ : Set Ere
 def neBotTopHomeomorphReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ₜ ℝ :=
   {
     neTopBotEquivReal with
-    continuous_to_fun := continuousOn_iff_continuous_restrict.1 continuousOn_toReal
-    continuous_inv_fun := continuous_coe_real_ereal.subtype_mk _ }
+    continuous_toFun := continuousOn_iff_continuous_restrict.1 continuousOn_toReal
+    continuous_invFun := continuous_coe_real_ereal.subtype_mk _ }
 #align ereal.ne_bot_top_homeomorph_real Ereal.neBotTopHomeomorphReal
 
 /-! ### ennreal coercion -/

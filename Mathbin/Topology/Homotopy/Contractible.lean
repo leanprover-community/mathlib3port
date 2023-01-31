@@ -108,7 +108,7 @@ protected theorem Homeomorph.contractibleSpace [ContractibleSpace Y] (e : X ≃�
 
 protected theorem Homeomorph.contractibleSpace_iff (e : X ≃ₜ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
-  e.toHomotopyEquiv.contractible_space_iff
+  e.toHomotopyEquiv.contractibleSpace_iff
 #align homeomorph.contractible_space_iff Homeomorph.contractibleSpace_iff
 
 namespace ContractibleSpace

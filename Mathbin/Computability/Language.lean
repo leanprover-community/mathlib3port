@@ -147,8 +147,8 @@ instance : Semiring (Language α) where
   one_mul l := by simp [mul_def, one_def]
   mul_one l := by simp [mul_def, one_def]
   natCast n := if n = 0 then 0 else 1
-  nat_cast_zero := rfl
-  nat_cast_succ n := by cases n <;> simp [Nat.cast, add_def, zero_def]
+  natCast_zero := rfl
+  natCast_succ n := by cases n <;> simp [Nat.cast, add_def, zero_def]
   left_distrib _ _ _ := image2_union_right
   right_distrib _ _ _ := image2_union_left
 
@@ -205,7 +205,7 @@ theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l�
 #align language.le_add_congr Language.le_add_congr
 
 theorem mem_supᵢ {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
-  mem_Union
+  mem_unionᵢ
 #align language.mem_supr Language.mem_supᵢ
 
 theorem supᵢ_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :

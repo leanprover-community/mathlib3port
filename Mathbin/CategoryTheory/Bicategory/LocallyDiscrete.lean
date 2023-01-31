@@ -77,15 +77,15 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C)
   whiskerLeft X Y Z f g h η := eqToHom (congr_arg₂ (· ≫ ·) rfl (LocallyDiscrete.eq_of_hom η))
   whiskerRight X Y Z f g η h := eqToHom (congr_arg₂ (· ≫ ·) (LocallyDiscrete.eq_of_hom η) rfl)
   associator W X Y Z f g h :=
-    eq_to_iso <| by
+    eqToIso <| by
       unfold_projs
       simp only [category.assoc]
   leftUnitor X Y f :=
-    eq_to_iso <| by
+    eqToIso <| by
       unfold_projs
       simp only [category.id_comp, mk_as]
   rightUnitor X Y f :=
-    eq_to_iso <| by
+    eqToIso <| by
       unfold_projs
       simp only [category.comp_id, mk_as]
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
@@ -121,7 +121,7 @@ def Functor.toOplaxFunctor (F : I ⥤ B) : OplaxFunctor (LocallyDiscrete I) B
     where
   obj := F.obj
   map X Y f := F.map f.as
-  map₂ i j f g η := eqToHom (congr_arg _ (eq_of_hom η))
+  zipWith i j f g η := eqToHom (congr_arg _ (eq_of_hom η))
   map_id i := eqToHom (F.map_id i)
   map_comp i j k f g := eqToHom (F.map_comp f.as g.as)
 #align category_theory.functor.to_oplax_functor CategoryTheory.Functor.toOplaxFunctor

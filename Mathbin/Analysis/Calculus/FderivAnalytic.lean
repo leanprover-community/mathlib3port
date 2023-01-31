@@ -69,7 +69,7 @@ theorem HasFpowerSeriesAt.fderiv_eq (h : HasFpowerSeriesAt f p x) :
 
 theorem HasFpowerSeriesOnBall.differentiableOn [CompleteSpace F]
     (h : HasFpowerSeriesOnBall f p x r) : DifferentiableOn 𝕜 f (Emetric.ball x r) := fun y hy =>
-  (h.analytic_at_of_mem hy).DifferentiableWithinAt
+  (h.analyticAt_of_mem hy).DifferentiableWithinAt
 #align has_fpower_series_on_ball.differentiable_on HasFpowerSeriesOnBall.differentiableOn
 
 theorem AnalyticOn.differentiableOn (h : AnalyticOn 𝕜 f s) : DifferentiableOn 𝕜 f s := fun y hy =>
@@ -134,11 +134,11 @@ theorem AnalyticOn.iteratedFderiv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
   by
   induction' n with n IH
   · rw [iteratedFderiv_zero_eq_comp]
-    exact ((continuousMultilinearCurryFin0 𝕜 E F).symm : F →L[𝕜] E[×0]→L[𝕜] F).comp_analytic_on h
+    exact ((continuousMultilinearCurryFin0 𝕜 E F).symm : F →L[𝕜] E[×0]→L[𝕜] F).comp_analyticOn h
   · rw [iteratedFderiv_succ_eq_comp_left]
     apply
       (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Fin (n + 1) => E)
-              F).toContinuousLinearEquiv.toContinuousLinearMap.comp_analytic_on
+              F).toContinuousLinearEquiv.toContinuousLinearMap.comp_analyticOn
     exact IH.fderiv
 #align analytic_on.iterated_fderiv AnalyticOn.iteratedFderiv
 
@@ -185,7 +185,7 @@ protected theorem HasFpowerSeriesAt.deriv (h : HasFpowerSeriesAt f p x) :
 
 /-- If a function is analytic on a set `s`, so is its derivative. -/
 theorem AnalyticOn.deriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticOn 𝕜 (deriv f) s :=
-  (ContinuousLinearMap.apply 𝕜 F (1 : 𝕜)).comp_analytic_on h.fderiv
+  (ContinuousLinearMap.apply 𝕜 F (1 : 𝕜)).comp_analyticOn h.fderiv
 #align analytic_on.deriv AnalyticOn.deriv
 
 /-- If a function is analytic on a set `s`, so are its successive derivatives. -/

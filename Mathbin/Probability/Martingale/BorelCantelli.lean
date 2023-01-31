@@ -194,7 +194,7 @@ theorem Submartingale.bddAbove_iff_exists_tendsto_aux [IsFiniteMeasure μ] (hf :
     (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
     ∀ᵐ ω ∂μ, BddAbove (Set.range fun n => f n ω) ↔ ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) := by
   filter_upwards [hf.exists_tendsto_of_abs_bdd_above_aux hf0
-      hbdd]with ω hω using⟨hω, fun ⟨c, hc⟩ => hc.bdd_above_range⟩
+      hbdd]with ω hω using⟨hω, fun ⟨c, hc⟩ => hc.bddAbove_range⟩
 #align measure_theory.submartingale.bdd_above_iff_exists_tendsto_aux MeasureTheory.Submartingale.bddAbove_iff_exists_tendsto_aux
 
 /-- One sided martingale bound: If `f` is a submartingale which has uniformly bounded differences,
@@ -364,10 +364,10 @@ theorem tendsto_sum_indicator_atTop_iff [IsFiniteMeasure μ]
         Tendsto (fun n => predictablePart f ℱ μ n ω) atTop atTop :=
   by
   have h₁ :=
-    (martingale_martingale_part hf hint).ae_not_tendsto_at_top_at_top
+    (martingale_martingale_part hf hint).ae_not_tendsto_atTop_atTop
       (martingale_part_bdd_difference ℱ hbdd)
   have h₂ :=
-    (martingale_martingale_part hf hint).ae_not_tendsto_at_top_at_bot
+    (martingale_martingale_part hf hint).ae_not_tendsto_atTop_atBot
       (martingale_part_bdd_difference ℱ hbdd)
   have h₃ : ∀ᵐ ω ∂μ, ∀ n, 0 ≤ (μ[f (n + 1) - f n|ℱ n]) ω :=
     by

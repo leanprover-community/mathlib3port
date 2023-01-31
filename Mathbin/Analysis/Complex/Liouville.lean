@@ -49,7 +49,7 @@ TODO: add a version for `w ∈ metric.ball c R`.
 TODO: add a version for higher derivatives. -/
 theorem deriv_eq_smul_circleIntegral [CompleteSpace F] {R : ℝ} {c : ℂ} {f : ℂ → F} (hR : 0 < R)
     (hf : DiffContOnCl ℂ f (ball c R)) :
-    deriv f c = (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z :=
+    deriv f c = (2 * π * i : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z :=
   by
   lift R to ℝ≥0 using hR.le
   refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _

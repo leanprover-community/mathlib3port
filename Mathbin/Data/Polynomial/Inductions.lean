@@ -50,7 +50,7 @@ theorem coeff_divX : (divX p).coeff n = p.coeff (n + 1) :=
   rw [coeff_eq_zero_of_nat_degree_lt (Nat.lt_succ_of_le h)]
 #align polynomial.coeff_div_X Polynomial.coeff_divX
 
-theorem divX_mul_x_add (p : R[X]) : divX p * X + c (p.coeff 0) = p :=
+theorem divX_mul_x_add (p : R[X]) : divX p * x + c (p.coeff 0) = p :=
   ext <| by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
 #align polynomial.div_X_mul_X_add Polynomial.divX_mul_x_add
 
@@ -111,7 +111,7 @@ Case conversion may be inaccurate. Consider using '#align polynomial.rec_on_horn
 noncomputable def recOnHorner {M : R[X] → Sort _} :
     ∀ p : R[X],
       M 0 →
-        (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * X)) → M p
+        (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p + c a)) → (∀ p, p ≠ 0 → M p → M (p * x)) → M p
   | p => fun M0 MC MX =>
     if hp : p = 0 then Eq.recOn hp.symm M0
     else by
@@ -139,7 +139,7 @@ See `nat_degree_ne_zero_induction_on` for a similar statement involving no expli
  -/
 @[elab_as_elim]
 theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree p)
-    (hC : ∀ {a}, a ≠ 0 → P (c a * X)) (hX : ∀ {p}, 0 < degree p → P p → P (p * X))
+    (hC : ∀ {a}, a ≠ 0 → P (c a * x)) (hX : ∀ {p}, 0 < degree p → P p → P (p * x))
     (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p + c a)) : P p :=
   recOnHorner p (fun h => by rw [degree_zero] at h <;> exact absurd h (by decide))
     (fun p a _ _ ih h0 =>

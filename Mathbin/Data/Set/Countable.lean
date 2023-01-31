@@ -194,14 +194,14 @@ theorem MapsTo.countable_of_injOn {s : Set α} {t : Set β} {f : α → β} (hf 
 #print Set.Countable.preimage_of_injOn /-
 theorem Countable.preimage_of_injOn {s : Set β} (hs : s.Countable) {f : α → β}
     (hf : InjOn f (f ⁻¹' s)) : (f ⁻¹' s).Countable :=
-  (mapsTo_preimage f s).countable_of_inj_on hf hs
+  (mapsTo_preimage f s).countable_of_injOn hf hs
 #align set.countable.preimage_of_inj_on Set.Countable.preimage_of_injOn
 -/
 
 #print Set.Countable.preimage /-
 protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α → β} (hf : Injective f) :
     (f ⁻¹' s).Countable :=
-  hs.preimage_of_inj_on (hf.InjOn _)
+  hs.preimage_of_injOn (hf.InjOn _)
 #align set.countable.preimage Set.Countable.preimage
 -/
 
@@ -409,7 +409,7 @@ end Set
 
 #print Finset.countable_to_set /-
 theorem Finset.countable_to_set (s : Finset α) : Set.Countable (↑s : Set α) :=
-  s.finite_to_set.Countable
+  s.finite_toSet.Countable
 #align finset.countable_to_set Finset.countable_to_set
 -/
 

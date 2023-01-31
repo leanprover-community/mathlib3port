@@ -248,7 +248,7 @@ variable {F : Type → Type v} [Alternative F]
 
 #print succeeds /-
 def succeeds {α} (x : F α) : F Bool :=
-  x $> tt <|> pure false
+  x $> true <|> pure false
 #align succeeds succeeds
 -/
 

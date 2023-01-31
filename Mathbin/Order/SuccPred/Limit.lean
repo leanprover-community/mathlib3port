@@ -431,7 +431,7 @@ variable [IsPredArchimedean α]
 
 #print Order.IsPredLimit.isMax_of_noMin /-
 protected theorem IsPredLimit.isMax_of_noMin [NoMinOrder α] (h : IsPredLimit a) : IsMax a :=
-  h.dual.is_min_of_no_max
+  h.dual.isMin_of_noMax
 #align order.is_pred_limit.is_max_of_no_min Order.IsPredLimit.isMax_of_noMin
 -/
 

@@ -81,7 +81,7 @@ theorem eval₂_monomial {n : ℕ} {r : R} : (monomial n r).eval₂ f x = f r * 
 #align polynomial.eval₂_monomial Polynomial.eval₂_monomial
 
 @[simp]
-theorem eval₂_x_pow {n : ℕ} : (X ^ n).eval₂ f x = x ^ n :=
+theorem eval₂_x_pow {n : ℕ} : (x ^ n).eval₂ f x = x ^ n :=
   by
   rw [X_pow_eq_monomial]
   convert eval₂_monomial f x
@@ -186,7 +186,7 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) :
 #align polynomial.eval₂_mul_noncomm Polynomial.eval₂_mul_noncomm
 
 @[simp]
-theorem eval₂_mul_x : eval₂ f x (p * X) = eval₂ f x p * x :=
+theorem eval₂_mul_x : eval₂ f x (p * x) = eval₂ f x p * x :=
   by
   refine' trans (eval₂_mul_noncomm _ _ fun k => _) (by rw [eval₂_X])
   rcases em (k = 1) with (rfl | hk)
@@ -195,7 +195,7 @@ theorem eval₂_mul_x : eval₂ f x (p * X) = eval₂ f x p * x :=
 #align polynomial.eval₂_mul_X Polynomial.eval₂_mul_x
 
 @[simp]
-theorem eval₂_x_mul : eval₂ f x (X * p) = eval₂ f x p * x := by rw [X_mul, eval₂_mul_X]
+theorem eval₂_x_mul : eval₂ f x (x * p) = eval₂ f x p * x := by rw [X_mul, eval₂_mul_X]
 #align polynomial.eval₂_X_mul Polynomial.eval₂_x_mul
 
 theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p * c a) = eval₂ f x p * f a :=
@@ -456,7 +456,7 @@ theorem eval_nat_cast_mul {n : ℕ} : ((n : R[X]) * p).eval x = n * p.eval x := 
 #align polynomial.eval_nat_cast_mul Polynomial.eval_nat_cast_mul
 
 @[simp]
-theorem eval_mul_x : (p * X).eval x = p.eval x * x :=
+theorem eval_mul_x : (p * x).eval x = p.eval x * x :=
   by
   apply Polynomial.induction_on' p
   · intro p q ph qh
@@ -467,7 +467,7 @@ theorem eval_mul_x : (p * X).eval x = p.eval x * x :=
 #align polynomial.eval_mul_X Polynomial.eval_mul_x
 
 @[simp]
-theorem eval_mul_x_pow {k : ℕ} : (p * X ^ k).eval x = p.eval x * x ^ k :=
+theorem eval_mul_x_pow {k : ℕ} : (p * x ^ k).eval x = p.eval x * x ^ k :=
   by
   induction' k with k ih
   · simp
@@ -587,7 +587,7 @@ theorem monomial_comp (n : ℕ) : (monomial n a).comp p = c a * p ^ n :=
 #align polynomial.monomial_comp Polynomial.monomial_comp
 
 @[simp]
-theorem mul_x_comp : (p * X).comp r = p.comp r * r :=
+theorem mul_x_comp : (p * x).comp r = p.comp r * r :=
   by
   apply Polynomial.induction_on' p
   · intro p q hp hq
@@ -597,7 +597,7 @@ theorem mul_x_comp : (p * X).comp r = p.comp r * r :=
 #align polynomial.mul_X_comp Polynomial.mul_x_comp
 
 @[simp]
-theorem x_pow_comp {k : ℕ} : (X ^ k).comp p = p ^ k :=
+theorem x_pow_comp {k : ℕ} : (x ^ k).comp p = p ^ k :=
   by
   induction' k with k ih
   · simp
@@ -605,7 +605,7 @@ theorem x_pow_comp {k : ℕ} : (X ^ k).comp p = p ^ k :=
 #align polynomial.X_pow_comp Polynomial.x_pow_comp
 
 @[simp]
-theorem mul_x_pow_comp {k : ℕ} : (p * X ^ k).comp r = p.comp r * r ^ k :=
+theorem mul_x_pow_comp {k : ℕ} : (p * x ^ k).comp r = p.comp r * r ^ k :=
   by
   induction' k with k ih
   · simp
@@ -694,7 +694,7 @@ theorem map_c : (c a).map f = c (f a) :=
 #align polynomial.map_C Polynomial.map_c
 
 @[simp]
-theorem map_x : x.map f = X :=
+theorem map_x : x.map f = x :=
   eval₂_x _ _
 #align polynomial.map_X Polynomial.map_x
 
@@ -1046,7 +1046,7 @@ theorem coe_evalRingHom (r : R) : (evalRingHom r : R[X] → R) = eval r :=
   rfl
 #align polynomial.coe_eval_ring_hom Polynomial.coe_evalRingHom
 
-theorem evalRingHom_zero : evalRingHom 0 = constant_coeff :=
+theorem evalRingHom_zero : evalRingHom 0 = constantCoeff :=
   FunLike.ext _ _ fun p => p.coeff_zero_eq_eval_zero.symm
 #align polynomial.eval_ring_hom_zero Polynomial.evalRingHom_zero
 
@@ -1146,7 +1146,7 @@ theorem eval_eq_zero_of_dvd_of_eval_eq_zero : p ∣ q → eval x p = 0 → eval 
 
 @[simp]
 theorem eval_geom_sum {R} [CommSemiring R] {n : ℕ} {x : R} :
-    eval x (∑ i in range n, X ^ i) = ∑ i in range n, x ^ i := by simp [eval_finset_sum]
+    eval x (∑ i in range n, x ^ i) = ∑ i in range n, x ^ i := by simp [eval_finset_sum]
 #align polynomial.eval_geom_sum Polynomial.eval_geom_sum
 
 end
@@ -1250,7 +1250,7 @@ theorem eval_sub (p q : R[X]) (x : R) : (p - q).eval x = p.eval x - q.eval x :=
   eval₂_sub _
 #align polynomial.eval_sub Polynomial.eval_sub
 
-theorem root_x_sub_c : IsRoot (X - c a) b ↔ a = b := by
+theorem root_x_sub_c : IsRoot (x - c a) b ↔ a = b := by
   rw [is_root.def, eval_sub, eval_X, eval_C, sub_eq_zero, eq_comm]
 #align polynomial.root_X_sub_C Polynomial.root_x_sub_c
 

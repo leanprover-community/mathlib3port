@@ -122,7 +122,7 @@ Note that maps `f` of type `M →ₗ⁅R,L⁆ N →ₗ[R] P` are exactly those `
 `⁅x, f m n⁆ = f ⁅x, m⁆ n + f m ⁅x, n⁆` for all `x, m, n` (see e.g, `lie_module_hom.map_lie₂`). -/
 def liftLie : (M →ₗ⁅R,L⁆ N →ₗ[R] P) ≃ₗ[R] M ⊗[R] N →ₗ⁅R,L⁆ P :=
   maxTrivLinearMapEquivLieModuleHom.symm ≪≫ₗ ↑(maxTrivEquiv (lift R L M N P)) ≪≫ₗ
-    max_triv_linear_map_equiv_lie_module_hom
+    maxTrivLinearMapEquivLieModuleHom
 #align tensor_product.lie_module.lift_lie TensorProduct.LieModule.liftLie
 
 @[simp]

@@ -416,7 +416,7 @@ theorem div_cases (h : Irrational (x / y)) : Irrational x ∨ Irrational y :=
 #align irrational.div_cases Irrational.div_cases
 
 theorem of_rat_div (h : Irrational (q / x)) : Irrational x :=
-  (h.of_rat_mul q).of_inv
+  (h.ofRat_mul q).of_inv
 #align irrational.of_rat_div Irrational.of_rat_div
 
 theorem of_div_rat (h : Irrational (x / q)) : Irrational x :=
@@ -610,7 +610,7 @@ theorem irrational_inv_iff : Irrational x⁻¹ ↔ Irrational x :=
 
 @[simp]
 theorem irrational_rat_mul_iff : Irrational (q * x) ↔ q ≠ 0 ∧ Irrational x :=
-  ⟨fun h => ⟨Rat.cast_ne_zero.1 <| left_ne_zero_of_mul h.NeZero, h.of_rat_mul q⟩, fun h =>
+  ⟨fun h => ⟨Rat.cast_ne_zero.1 <| left_ne_zero_of_mul h.NeZero, h.ofRat_mul q⟩, fun h =>
     h.2.rat_mul h.1⟩
 #align irrational_rat_mul_iff irrational_rat_mul_iff
 

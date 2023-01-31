@@ -381,7 +381,7 @@ Case conversion may be inaccurate. Consider using '#align bornology.is_cobounded
 @[simp]
 theorem isCobounded_interᵢ [Finite ι] {f : ι → Set α} :
     IsCobounded (⋂ i, f i) ↔ ∀ i, IsCobounded (f i) :=
-  Inter_mem
+  interᵢ_mem
 #align bornology.is_cobounded_Inter Bornology.isCobounded_interᵢ
 
 #print Bornology.isCobounded_interₛ /-
@@ -410,7 +410,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_bUnion_finset Bornology.isBounded_bunionᵢ_finsetₓ'. -/
 theorem isBounded_bunionᵢ_finset (s : Finset ι) {f : ι → Set α} :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, IsBounded (f i) :=
-  isBounded_bunionᵢ s.finite_to_set
+  isBounded_bunionᵢ s.finite_toSet
 #align bornology.is_bounded_bUnion_finset Bornology.isBounded_bunionᵢ_finset
 
 #print Bornology.isBounded_unionₛ /-

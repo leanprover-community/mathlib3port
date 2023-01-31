@@ -100,7 +100,7 @@ theorem toLowerSet_injective : Injective (toLowerSet : Ideal P → LowerSet P) :
 
 instance : SetLike (Ideal P) P where
   coe s := s.carrier
-  coe_injective' s t h := to_lower_set_injective <| SetLike.coe_injective h
+  coe_injective' s t h := toLowerSet_injective <| SetLike.coe_injective h
 
 @[ext]
 theorem ext {s t : Ideal P} : (s : Set P) = t → s = t :=
@@ -213,7 +213,7 @@ theorem isProper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
   ⟨fun h => ne_top <| ext h⟩
 #align order.ideal.is_proper_of_ne_top Order.Ideal.isProper_of_ne_top
 
-theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => is_proper.ne_univ <| congr_arg coe h
+theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => IsProper.ne_univ <| congr_arg coe h
 #align order.ideal.is_proper.ne_top Order.Ideal.IsProper.ne_top
 
 theorem IsCoatom.isProper (hI : IsCoatom I) : IsProper I :=
@@ -322,7 +322,7 @@ variable [OrderTop P]
 
 @[simp]
 theorem principal_top : principal (⊤ : P) = ⊤ :=
-  to_lower_set_injective <| LowerSet.iic_top
+  toLowerSet_injective <| LowerSet.iic_top
 #align order.ideal.principal_top Order.Ideal.principal_top
 
 end OrderTop

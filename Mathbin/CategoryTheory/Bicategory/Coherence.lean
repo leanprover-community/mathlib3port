@@ -85,7 +85,7 @@ def preinclusion (B : Type u) [Quiver.{v + 1} B] :
     where
   obj := id
   map a b := (inclusionPath a b).obj
-  map₂ a b f g η := (inclusionPath a b).map η
+  zipWith a b f g η := (inclusionPath a b).map η
 #align category_theory.free_bicategory.preinclusion CategoryTheory.FreeBicategory.preinclusion
 
 @[simp]
@@ -95,7 +95,7 @@ theorem preinclusion_obj (a : B) : (preinclusion B).obj a = a :=
 
 @[simp]
 theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : f ⟶ g) :
-    (preinclusion B).map₂ η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) :=
+    (preinclusion B).zipWith η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) :=
   by
   rcases η with ⟨⟨⟩⟩
   cases discrete.ext _ _ η
@@ -179,7 +179,7 @@ theorem normalizeAux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
 theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
     (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).Hom =
       (normalizeIso p f).Hom ≫
-        (preinclusion B).map₂ (eqToHom (Discrete.ext _ _ (normalizeAux_congr p η))) :=
+        (preinclusion B).zipWith (eqToHom (Discrete.ext _ _ (normalizeAux_congr p η))) :=
   by
   rcases η with ⟨⟩; induction η
   case id => simp
@@ -217,9 +217,9 @@ def normalize (B : Type u) [Quiver.{v + 1} B] :
     where
   obj := id
   map a b f := ⟨normalizeAux nil f⟩
-  map₂ a b f g η := eq_to_hom <| Discrete.ext _ _ <| normalizeAux_congr nil η
-  map_id a := eq_to_iso <| Discrete.ext _ _ rfl
-  map_comp a b c f g := eq_to_iso <| Discrete.ext _ _ <| normalizeAux_nil_comp f g
+  zipWith a b f g η := eqToHom <| Discrete.ext _ _ <| normalizeAux_congr nil η
+  map_id a := eqToIso <| Discrete.ext _ _ rfl
+  map_comp a b c f g := eqToIso <| Discrete.ext _ _ <| normalizeAux_nil_comp f g
 #align category_theory.free_bicategory.normalize CategoryTheory.FreeBicategory.normalize
 
 /-- Auxiliary definition for `normalize_equiv`. -/

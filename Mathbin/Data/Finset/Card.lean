@@ -182,32 +182,32 @@ theorem card_doubleton (h : a ≠ b) : ({a, b} : Finset α).card = 2 := by
 
 #print Finset.card_erase_of_mem /-
 @[simp]
-theorem card_erase_of_mem : a ∈ s → (s.erase a).card = s.card - 1 :=
+theorem card_erase_of_mem : a ∈ s → (s.eraseₓ a).card = s.card - 1 :=
   card_erase_of_mem
 #align finset.card_erase_of_mem Finset.card_erase_of_mem
 -/
 
 #print Finset.card_erase_add_one /-
 @[simp]
-theorem card_erase_add_one : a ∈ s → (s.erase a).card + 1 = s.card :=
+theorem card_erase_add_one : a ∈ s → (s.eraseₓ a).card + 1 = s.card :=
   card_erase_add_one
 #align finset.card_erase_add_one Finset.card_erase_add_one
 -/
 
 #print Finset.card_erase_lt_of_mem /-
-theorem card_erase_lt_of_mem : a ∈ s → (s.erase a).card < s.card :=
+theorem card_erase_lt_of_mem : a ∈ s → (s.eraseₓ a).card < s.card :=
   card_erase_lt_of_mem
 #align finset.card_erase_lt_of_mem Finset.card_erase_lt_of_mem
 -/
 
 #print Finset.card_erase_le /-
-theorem card_erase_le : (s.erase a).card ≤ s.card :=
+theorem card_erase_le : (s.eraseₓ a).card ≤ s.card :=
   card_erase_le
 #align finset.card_erase_le Finset.card_erase_le
 -/
 
 #print Finset.pred_card_le_card_erase /-
-theorem pred_card_le_card_erase : s.card - 1 ≤ (s.erase a).card :=
+theorem pred_card_le_card_erase : s.card - 1 ≤ (s.eraseₓ a).card :=
   by
   by_cases h : a ∈ s
   · exact (card_erase_of_mem h).ge
@@ -218,7 +218,7 @@ theorem pred_card_le_card_erase : s.card - 1 ≤ (s.erase a).card :=
 
 #print Finset.card_erase_eq_ite /-
 /-- If `a ∈ s` is known, see also `finset.card_erase_of_mem` and `finset.erase_eq_of_not_mem`. -/
-theorem card_erase_eq_ite : (s.erase a).card = if a ∈ s then s.card - 1 else s.card :=
+theorem card_erase_eq_ite : (s.eraseₓ a).card = if a ∈ s then s.card - 1 else s.card :=
   card_erase_eq_ite
 #align finset.card_erase_eq_ite Finset.card_erase_eq_ite
 -/
@@ -310,7 +310,7 @@ theorem length_toList (s : Finset α) : s.toList.length = s.card :=
 
 #print Finset.card_image_le /-
 theorem card_image_le [DecidableEq β] : (s.image f).card ≤ s.card := by
-  simpa only [card_map] using (s.1.map f).to_finset_card_le
+  simpa only [card_map] using (s.1.map f).toFinset_card_le
 #align finset.card_image_le Finset.card_image_le
 -/
 
@@ -343,7 +343,7 @@ theorem card_image_iff [DecidableEq β] : (s.image f).card = s.card ↔ Set.InjO
 #print Finset.card_image_of_injective /-
 theorem card_image_of_injective [DecidableEq β] (s : Finset α) (H : Injective f) :
     (s.image f).card = s.card :=
-  card_image_of_inj_on fun x _ y _ h => H h
+  card_image_of_injOn fun x _ y _ h => H h
 #align finset.card_image_of_injective Finset.card_image_of_injective
 -/
 
@@ -354,7 +354,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (s : Finset.{u2} α) (f : α -> β) [_inst_1 : DecidableEq.{succ u1} β] (y : β), Iff (Ne.{1} Nat (Finset.card.{u2} α (Finset.filter.{u2} α (fun (x : α) => Eq.{succ u1} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) y (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s))
 Case conversion may be inaccurate. Consider using '#align finset.fiber_card_ne_zero_iff_mem_image Finset.fiber_card_ne_zero_iff_mem_imageₓ'. -/
 theorem fiber_card_ne_zero_iff_mem_image (s : Finset α) (f : α → β) [DecidableEq β] (y : β) :
-    (s.filter fun x => f x = y).card ≠ 0 ↔ y ∈ s.image f := by
+    (s.filterₓ fun x => f x = y).card ≠ 0 ↔ y ∈ s.image f := by
   rw [← pos_iff_ne_zero, card_pos, fiber_nonempty_iff_mem_image]
 #align finset.fiber_card_ne_zero_iff_mem_image Finset.fiber_card_ne_zero_iff_mem_image
 
@@ -372,13 +372,13 @@ theorem card_map (f : α ↪ β) : (s.map f).card = s.card :=
 #print Finset.card_subtype /-
 @[simp]
 theorem card_subtype (p : α → Prop) [DecidablePred p] (s : Finset α) :
-    (s.Subtype p).card = (s.filter p).card := by simp [Finset.subtype]
+    (s.Subtype p).card = (s.filterₓ p).card := by simp [Finset.subtype]
 #align finset.card_subtype Finset.card_subtype
 -/
 
 #print Finset.card_filter_le /-
 theorem card_filter_le (s : Finset α) (p : α → Prop) [DecidablePred p] :
-    (s.filter p).card ≤ s.card :=
+    (s.filterₓ p).card ≤ s.card :=
   card_le_of_subset <| filter_subset _ _
 #align finset.card_filter_le Finset.card_filter_le
 -/
@@ -408,7 +408,7 @@ theorem map_eq_of_subset {f : α ↪ α} (hs : s.map f ⊆ s) : s.map f = s :=
 -/
 
 #print Finset.filter_card_eq /-
-theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filter p).card = s.card) (x : α)
+theorem filter_card_eq {p : α → Prop} [DecidablePred p] (h : (s.filterₓ p).card = s.card) (x : α)
     (hx : x ∈ s) : p x :=
   by
   rw [← eq_of_subset_of_card_le (s.filter_subset p) h.ge, mem_filter] at hx
@@ -652,7 +652,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Finset.{u1} α} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] [inst._@.Mathlib.Data.Finset.Card._hyg.4875 : forall (x : α), Decidable (Not (p x))], Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (Finset.filter.{u1} α p (fun (a : α) => _inst_1 a) s)) (Finset.card.{u1} α (Finset.filter.{u1} α (fun (a : α) => Not (p a)) (fun (a : α) => inst._@.Mathlib.Data.Finset.Card._hyg.4875 a) s))) (Finset.card.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align finset.filter_card_add_filter_neg_card_eq_card Finset.filter_card_add_filter_neg_card_eq_cardₓ'. -/
 theorem filter_card_add_filter_neg_card_eq_card (p : α → Prop) [DecidablePred p] :
-    (s.filter p).card + (s.filter (Not ∘ p)).card = s.card := by
+    (s.filterₓ p).card + (s.filterₓ (Not ∘ p)).card = s.card := by
   classical simp [← card_union_eq, filter_union_filter_neg_eq, disjoint_filter]
 #align finset.filter_card_add_filter_neg_card_eq_card Finset.filter_card_add_filter_neg_card_eq_card
 
@@ -838,7 +838,7 @@ theorem card_eq_succ [DecidableEq α] :
     s.card = n + 1 ↔ ∃ a t, a ∉ t ∧ insert a t = s ∧ t.card = n :=
   ⟨fun h =>
     let ⟨a, has⟩ := card_pos.mp (h.symm ▸ Nat.zero_lt_succ _ : 0 < s.card)
-    ⟨a, s.erase a, s.not_mem_erase a, insert_erase has, by
+    ⟨a, s.eraseₓ a, s.not_mem_erase a, insert_erase has, by
       simp only [h, card_erase_of_mem has, add_tsub_cancel_right]⟩,
     fun ⟨a, t, hat, s_eq, n_eq⟩ => s_eq ▸ n_eq ▸ card_insert_of_not_mem hat⟩
 #align finset.card_eq_succ Finset.card_eq_succ

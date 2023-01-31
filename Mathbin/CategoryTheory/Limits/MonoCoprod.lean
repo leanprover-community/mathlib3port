@@ -43,7 +43,7 @@ variable (C : Type _) [Category C]
 
 /-- This condition expresses that inclusion morphisms into coproducts are monomorphisms. -/
 class MonoCoprod : Prop where
-  binary_cofan_inl : ∀ ⦃A B : C⦄ (c : BinaryCofan A B) (hc : IsColimit c), Mono c.inl
+  binaryCofan_inl : ∀ ⦃A B : C⦄ (c : BinaryCofan A B) (hc : IsColimit c), Mono c.inl
 #align category_theory.limits.mono_coprod CategoryTheory.Limits.MonoCoprod
 
 variable {C}

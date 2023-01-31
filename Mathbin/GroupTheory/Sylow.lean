@@ -100,7 +100,7 @@ variable {K : Type _} [Group K] (ϕ : K →* G) {N : Subgroup G}
 /-- The preimage of a Sylow subgroup under a p-group-kernel homomorphism is a Sylow subgroup. -/
 def comapOfKerIsPGroup (hϕ : IsPGroup p ϕ.ker) (h : ↑P ≤ ϕ.range) : Sylow p K :=
   { P.1.comap ϕ with
-    is_p_group' := P.2.comap_of_ker_is_p_group ϕ hϕ
+    is_p_group' := P.2.comap_of_ker_isPGroup ϕ hϕ
     is_maximal' := fun Q hQ hle =>
       by
       rw [← P.3 (hQ.map ϕ) (le_trans (ge_of_eq (map_comap_eq_self h)) (map_mono hle))]
@@ -109,13 +109,13 @@ def comapOfKerIsPGroup (hϕ : IsPGroup p ϕ.ker) (h : ↑P ≤ ϕ.range) : Sylow
 
 @[simp]
 theorem coe_comapOfKerIsPGroup (hϕ : IsPGroup p ϕ.ker) (h : ↑P ≤ ϕ.range) :
-    ↑(P.comap_of_ker_is_p_group ϕ hϕ h) = Subgroup.comap ϕ ↑P :=
+    ↑(P.comap_of_ker_isPGroup ϕ hϕ h) = Subgroup.comap ϕ ↑P :=
   rfl
 #align sylow.coe_comap_of_ker_is_p_group Sylow.coe_comapOfKerIsPGroup
 
 /-- The preimage of a Sylow subgroup under an injective homomorphism is a Sylow subgroup. -/
 def comapOfInjective (hϕ : Function.Injective ϕ) (h : ↑P ≤ ϕ.range) : Sylow p K :=
-  P.comap_of_ker_is_p_group ϕ (IsPGroup.ker_isPGroup_of_injective hϕ) h
+  P.comap_of_ker_isPGroup ϕ (IsPGroup.ker_isPGroup_of_injective hϕ) h
 #align sylow.comap_of_injective Sylow.comapOfInjective
 
 @[simp]
@@ -173,13 +173,13 @@ noncomputable instance Sylow.inhabited : Inhabited (Sylow p G) :=
 
 theorem Sylow.exists_comap_eq_of_ker_isPGroup {H : Type _} [Group H] (P : Sylow p H) {f : H →* G}
     (hf : IsPGroup p f.ker) : ∃ Q : Sylow p G, (Q : Subgroup G).comap f = P :=
-  Exists.imp (fun Q hQ => P.3 (Q.2.comap_of_ker_is_p_group f hf) (map_le_iff_le_comap.mp hQ))
+  Exists.imp (fun Q hQ => P.3 (Q.2.comap_of_ker_isPGroup f hf) (map_le_iff_le_comap.mp hQ))
     (P.2.map f).exists_le_sylow
 #align sylow.exists_comap_eq_of_ker_is_p_group Sylow.exists_comap_eq_of_ker_isPGroup
 
 theorem Sylow.exists_comap_eq_of_injective {H : Type _} [Group H] (P : Sylow p H) {f : H →* G}
     (hf : Function.Injective f) : ∃ Q : Sylow p G, (Q : Subgroup G).comap f = P :=
-  P.exists_comap_eq_of_ker_is_p_group (IsPGroup.ker_isPGroup_of_injective hf)
+  P.exists_comap_eq_of_ker_isPGroup (IsPGroup.ker_isPGroup_of_injective hf)
 #align sylow.exists_comap_eq_of_injective Sylow.exists_comap_eq_of_injective
 
 theorem Sylow.exists_comap_subtype_eq {H : Subgroup G} (P : Sylow p H) :
@@ -191,7 +191,7 @@ theorem Sylow.exists_comap_subtype_eq {H : Subgroup G} (P : Sylow p H) :
   then `fintype (sylow p G)` implies `fintype (sylow p H)`. -/
 noncomputable def Sylow.fintypeOfKerIsPGroup {H : Type _} [Group H] {f : H →* G}
     (hf : IsPGroup p f.ker) [Fintype (Sylow p G)] : Fintype (Sylow p H) :=
-  let h_exists := fun P : Sylow p H => P.exists_comap_eq_of_ker_is_p_group hf
+  let h_exists := fun P : Sylow p H => P.exists_comap_eq_of_ker_isPGroup hf
   let g : Sylow p H → Sylow p G := fun P => Classical.choose (h_exists P)
   let hg : ∀ P : Sylow p H, (g P).1.comap f = P := fun P => Classical.choose_spec (h_exists P)
   Fintype.ofInjective g fun P Q h => Sylow.ext (by simp only [← hg, h])
@@ -306,7 +306,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
         calc
           S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) :=
             forall_congr' fun a => Subtype.ext_iff
-          _ ↔ R.1 ≤ S := R.2.sylow_mem_fixed_points_iff
+          _ ↔ R.1 ≤ S := R.2.sylow_mem_fixedPoints_iff
           _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
           
       suffices Set.Nonempty (fixed_points Q (orbit G P)) by
@@ -315,7 +315,7 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
       refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
       calc
         1 = card (fixed_points P (orbit G P)) := _
-        _ ≡ card (orbit G P) [MOD p] := (P.2.card_modeq_card_fixed_points (orbit G P)).symm
+        _ ≡ card (orbit G P) [MOD p] := (P.2.card_modEq_card_fixedPoints (orbit G P)).symm
         _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
         
       rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
@@ -333,7 +333,7 @@ theorem card_sylow_modEq_one [Fact p.Prime] [Fintype (Sylow p G)] : card (Sylow 
   have : fixed_points P.1 (Sylow p G) = {P} :=
     Set.ext fun Q : Sylow p G =>
       calc
-        Q ∈ fixed_points P (Sylow p G) ↔ P.1 ≤ Q := P.2.sylow_mem_fixed_points_iff
+        Q ∈ fixed_points P (Sylow p G) ↔ P.1 ≤ Q := P.2.sylow_mem_fixedPoints_iff
         _ ↔ Q.1 = P.1 := ⟨P.3 Q.2, ge_of_eq⟩
         _ ↔ Q ∈ {P} := sylow.ext_iff.symm.trans set.mem_singleton_iff.symm
         
@@ -342,7 +342,7 @@ theorem card_sylow_modEq_one [Fact p.Prime] [Fintype (Sylow p G)] : card (Sylow 
     rw [this]
     infer_instance
   have : card (fixed_points P.1 (Sylow p G)) = 1 := by simp [this]
-  exact (P.2.card_modeq_card_fixed_points (Sylow p G)).trans (by rw [this])
+  exact (P.2.card_modEq_card_fixedPoints (Sylow p G)).trans (by rw [this])
 #align card_sylow_modeq_one card_sylow_modEq_one
 
 theorem not_dvd_card_sylow [hp : Fact p.Prime] [Fintype (Sylow p G)] : ¬p ∣ card (Sylow p G) :=
@@ -558,7 +558,7 @@ theorem card_quotient_normalizer_modEq_card_quotient [Fintype G] {p : ℕ} {n : 
       card (G ⧸ H) [MOD p] :=
   by
   rw [← Fintype.card_congr (fixed_points_mul_left_cosets_equiv_quotient H)]
-  exact ((IsPGroup.of_card hH).card_modeq_card_fixed_points _).symm
+  exact ((IsPGroup.of_card hH).card_modEq_card_fixedPoints _).symm
 #align sylow.card_quotient_normalizer_modeq_card_quotient Sylow.card_quotient_normalizer_modEq_card_quotient
 
 /-- If `H` is a subgroup of `G` of cardinality `p ^ n`, then the cardinality of the
@@ -595,7 +595,7 @@ theorem prime_dvd_card_quotient_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp :
 theorem prime_pow_dvd_card_normalizer [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact p.Prime]
     (hdvd : p ^ (n + 1) ∣ card G) {H : Subgroup G} (hH : Fintype.card H = p ^ n) :
     p ^ (n + 1) ∣ card (normalizer H) :=
-  Nat.modEq_zero_iff_dvd.1 ((card_normalizer_modEq_card hH).trans hdvd.modeq_zero_nat)
+  Nat.modEq_zero_iff_dvd.1 ((card_normalizer_modEq_card hH).trans hdvd.modEq_zero_nat)
 #align sylow.prime_pow_dvd_card_normalizer Sylow.prime_pow_dvd_card_normalizer
 
 /-- If `H` is a subgroup of `G` of cardinality `p ^ n`,
@@ -611,7 +611,7 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
         rwa [← card_eq_card_quotient_mul_card_subgroup H, hH, hs, pow_succ', mul_assoc, mul_comm p])
   have hm : s * p % p = card (normalizer H ⧸ H.subgroupOf H.normalizer) % p :=
     card_congr (fixedPointsMulLeftCosetsEquivQuotient H) ▸
-      hcard ▸ (IsPGroup.of_card hH).card_modeq_card_fixed_points _
+      hcard ▸ (IsPGroup.of_card hH).card_modEq_card_fixedPoints _
   have hm' : p ∣ card (normalizer H ⧸ H.subgroupOf H.normalizer) :=
     Nat.dvd_of_mod_eq_zero (by rwa [Nat.mod_eq_zero_of_dvd (dvd_mul_left _ _), eq_comm] at hm)
   let ⟨x, hx⟩ := @exists_prime_orderOf_dvd_card _ (QuotientGroup.Quotient.group _) _ _ hp hm'

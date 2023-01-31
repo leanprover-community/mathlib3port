@@ -73,7 +73,7 @@ protected def id : StieltjesFunction where
 
 @[simp]
 theorem id_leftLim (x : ℝ) : leftLim StieltjesFunction.id x = x :=
-  tendsto_nhds_unique (StieltjesFunction.id.mono.tendsto_left_lim x) <|
+  tendsto_nhds_unique (StieltjesFunction.id.mono.tendsto_leftLim x) <|
     continuousAt_id.Tendsto.mono_left nhdsWithin_le_nhds
 #align stieltjes_function.id_left_lim StieltjesFunction.id_leftLim
 
@@ -336,7 +336,8 @@ theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory :=
 interval `(a, b]`. -/
 protected irreducible_def measure : Measure ℝ :=
   { toOuterMeasure := f.outer
-    m_Union := fun s hs => f.outer.Union_eq_of_caratheodory fun i => f.borel_le_measurable _ (hs i)
+    m_unionᵢ := fun s hs =>
+      f.outer.unionᵢ_eq_of_caratheodory fun i => f.borel_le_measurable _ (hs i)
     trimmed := f.outer_trim }
 #align stieltjes_function.measure StieltjesFunction.measure
 

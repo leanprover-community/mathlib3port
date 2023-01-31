@@ -33,16 +33,16 @@ variable {R : Type u} [Ring R]
 
 -- As `Module R` is preadditive, and has all limits, it automatically has biproducts.
 instance : HasBinaryBiproducts (ModuleCat.{v} R) :=
-  has_binary_biproducts.of_has_binary_products
+  HasBinaryBiproducts.ofHasBinaryProducts
 
 instance : HasFiniteBiproducts (ModuleCat.{v} R) :=
-  has_finite_biproducts.of_has_finite_products
+  HasFiniteBiproducts.ofHasFiniteProducts
 
 -- We now construct explicit limit data,
 -- so we can compare the biproducts to the usual unbundled constructions.
 /-- Construct limit data for a binary product in `Module R`, using `Module.of R (M × N)`.
 -/
-@[simps cone_X is_limit_lift]
+@[simps cone_x isLimit_lift]
 def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
     where
   Cone :=

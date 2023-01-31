@@ -647,7 +647,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pow_inv_comm pow_inv_commₓ'. -/
 @[to_additive]
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
-  (Commute.refl a).inv_left.pow_pow _ _
+  (Commute.refl a).inv_left.pow_powₓ _ _
 #align pow_inv_comm pow_inv_comm
 #align nsmul_neg_comm nsmul_neg_comm
 

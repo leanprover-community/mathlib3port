@@ -303,7 +303,7 @@ theorem discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K] {b : Basis �
     convert h' i ((b.index_equiv b').symm j)
     simpa
   classical
-    rw [← (b.reindex (b.index_equiv b')).to_matrix_map_vec_mul b', discr_of_matrix_vec_mul, ←
+    rw [← (b.reindex (b.index_equiv b')).toMatrix_map_vecMul b', discr_of_matrix_vec_mul, ←
       one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
     congr
     have hint : IsIntegral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det :=

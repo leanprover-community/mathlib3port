@@ -515,7 +515,7 @@ need for an additional case disjunction. As discussed on Zulip, this doesn't wor
 give a function which does *not* satisfy the seminorm axioms (typically sub-additivity).
 -/
 noncomputable instance : SupSet (Seminorm 𝕜 E)
-    where sup s :=
+    where supₛ s :=
     if h : BddAbove (coeFn '' s : Set (E → ℝ)) then
       { toFun := ⨆ p : s, ((p : Seminorm 𝕜 E) : E → ℝ)
         map_zero' := by
@@ -654,7 +654,7 @@ theorem ball_zero_eq : ball p 0 r = { y : E | p y < r } :=
 #align seminorm.ball_zero_eq Seminorm.ball_zero_eq
 
 theorem closedBall_zero_eq : closedBall p 0 r = { y : E | p y ≤ r } :=
-  Set.ext fun x => p.mem_closed_ball_zero
+  Set.ext fun x => p.mem_closedBall_zero
 #align seminorm.closed_ball_zero_eq Seminorm.closedBall_zero_eq
 
 theorem ball_subset_closedBall (x r) : ball p x r ⊆ closedBall p x r := fun y (hy : _ < _) => hy.le
@@ -991,7 +991,7 @@ protected theorem absorbent_ball_zero (hr : 0 < r) : Absorbent 𝕜 (ball p (0 :
 
 /-- Closed seminorm-balls at the origin are absorbent. -/
 protected theorem absorbent_closedBall_zero (hr : 0 < r) : Absorbent 𝕜 (closedBall p (0 : E) r) :=
-  (p.absorbent_ball_zero hr).Subset (p.ball_subset_closed_ball _ _)
+  (p.absorbent_ball_zero hr).Subset (p.ball_subset_closedBall _ _)
 #align seminorm.absorbent_closed_ball_zero Seminorm.absorbent_closedBall_zero
 
 /-- Seminorm-balls containing the origin are absorbent. -/
@@ -1136,7 +1136,7 @@ theorem continuousAt_zero' [TopologicalSpace E] [HasContinuousConstSmul 𝕜 E] 
 
 theorem continuousAt_zero [TopologicalSpace E] [HasContinuousConstSmul 𝕜 E] {p : Seminorm 𝕜 E}
     {r : ℝ} (hr : 0 < r) (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) : ContinuousAt p 0 :=
-  continuousAt_zero' hr (Filter.mem_of_superset hp <| p.ball_subset_closed_ball _ _)
+  continuousAt_zero' hr (Filter.mem_of_superset hp <| p.ball_subset_closedBall _ _)
 #align seminorm.continuous_at_zero Seminorm.continuousAt_zero
 
 protected theorem uniformContinuous_of_continuousAt_zero [UniformSpace E] [UniformAddGroup E]

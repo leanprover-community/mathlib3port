@@ -79,7 +79,7 @@ theorem decomposition_q (n q : ℕ) :
           Nat.lt_succ_iff_lt_or_eq, Fin.ext_iff]
         tauto
       · have hnaq' : n = a + q := by linarith
-        simpa only [Fin.val_mk, (higher_faces_vanish.of_P q n).comp_Hσ_eq hnaq', q'.rev_eq hnaq',
+        simpa only [Fin.val_mk, (higher_faces_vanish.of_P q n).comp_hσ_eq hnaq', q'.rev_eq hnaq',
           neg_neg]
       · simp only [Finset.mem_filter, Fin.val_mk, lt_self_iff_false, and_false_iff, not_false_iff]
 #align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_q

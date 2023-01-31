@@ -254,11 +254,11 @@ open PadicSeq
 
 private unsafe def index_simp_core (hh hf hg : expr)
     (at_ : Interactive.Loc := Interactive.Loc.ns [none]) : tactic Unit := do
-  let [v1, v2, v3] ← [hh, hf, hg].mmap fun n => tactic.mk_app `` stationary_point [n] <|> return n
+  let [v1, v2, v3] ← [hh, hf, hg].mapM fun n => tactic.mk_app `` stationary_point [n] <|> return n
   let e1 ← tactic.mk_app `` lift_index_left_left [hh, v2, v3] <|> return q(True)
   let e2 ← tactic.mk_app `` lift_index_left [hf, v1, v3] <|> return q(True)
   let e3 ← tactic.mk_app `` lift_index_right [hg, v1, v2] <|> return q(True)
-  let sl ← [e1, e2, e3].mfoldl (fun s e => simp_lemmas.add s e) simp_lemmas.mk
+  let sl ← [e1, e2, e3].foldlM (fun s e => simp_lemmas.add s e) simp_lemmas.mk
   when at_ (tactic.simp_target sl >> tactic.skip)
   let hs ← at_.get_locals
   hs (tactic.simp_hyp sl [])
@@ -268,7 +268,7 @@ private unsafe def index_simp_core (hh hf hg : expr)
 `padic_norm (f (max _ _ _))`. -/
 unsafe def tactic.interactive.padic_index_simp (l : interactive.parse interactive.types.pexpr_list)
     (at_ : interactive.parse interactive.types.location) : tactic Unit := do
-  let [h, f, g] ← l.mmap tactic.i_to_expr
+  let [h, f, g] ← l.mapM tactic.i_to_expr
   index_simp_core h f g at_
 #align tactic.interactive.padic_index_simp tactic.interactive.padic_index_simp
 
@@ -499,7 +499,7 @@ instance : Inhabited ℚ_[p] :=
 
 -- short circuits
 instance : CommRing ℚ_[p] :=
-  Cauchy.comm_ring
+  Cauchy.commRing
 
 instance : Ring ℚ_[p] :=
   Cauchy.ring
@@ -922,7 +922,7 @@ theorem eq_ratNorm (q : ℚ_[p]) : ‖q‖ = ratNorm q :=
   Classical.choose_spec (padicNormE.is_rat q)
 #align padic_norm_e.eq_rat_norm padicNormE.eq_ratNorm
 
-theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ‖(q : ℚ_[p])‖ ≤ 1
+theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])‖ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then
       by
@@ -932,7 +932,7 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.denom), ‖(q : ℚ_[p])
       by
       have hnz' :
         {   num := n
-            denom := d
+            den := d
             Pos := hn
             cop := hd } ≠ 0 := mt Rat.zero_iff_num_zero.1 hnz
       rw [padicNormE.eq_padicNorm]

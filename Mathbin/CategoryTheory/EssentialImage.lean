@@ -64,7 +64,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.functor.ess_image.get_iso CategoryTheory.Functor.essImage.getIsoₓ'. -/
 /-- Extract the isomorphism between `F.obj h.witness` and `Y` itself. -/
 def essImage.getIso {Y : D} (h : Y ∈ F.essImage) : F.obj h.witness ≅ Y :=
-  Classical.choice h.some_spec
+  Classical.choice h.choose_spec
 #align category_theory.functor.ess_image.get_iso CategoryTheory.Functor.essImage.getIso
 
 #print CategoryTheory.Functor.essImage.ofIso /-
@@ -142,19 +142,19 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 end Functor
 
 #print CategoryTheory.EssSurj /-
-/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`mem_ess_image] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
 -/
 class EssSurj (F : C ⥤ D) : Prop where
-  mem_ess_image (Y : D) : Y ∈ F.essImage
+  mem_essImage (Y : D) : Y ∈ F.essImage
 #align category_theory.ess_surj CategoryTheory.EssSurj
 -/
 
 instance : EssSurj F.toEssImage
-    where mem_ess_image := fun ⟨Y, hY⟩ => ⟨_, ⟨⟨_, _, hY.getIso.hom_inv_id, hY.getIso.inv_hom_id⟩⟩⟩
+    where mem_essImage := fun ⟨Y, hY⟩ => ⟨_, ⟨⟨_, _, hY.getIso.hom_inv_id, hY.getIso.inv_hom_id⟩⟩⟩
 
 variable (F) [EssSurj F]
 

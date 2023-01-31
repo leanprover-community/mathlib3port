@@ -89,13 +89,13 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
     -- this is a one-time cost during `mk_assumption_set`, rather than a cost proportional to the
     -- length of the search `solve_by_elim` executes.
     hs := hs.map fun h => i_to_expr_for_apply h
-    let l ← attr.mmap fun a => attribute.get_instances a
+    let l ← attr.mapM fun a => attribute.get_instances a
     let l := l.join
     let m := l.map fun h => mk_const h
     let hs ←
       (-- In order to remove the expressions we need to evaluate the thunks.
               hs ++
-              m).mfilter
+              m).filterM
           fun h => do
           let h ← h
           return <| expr.const_name h ∉ gex
@@ -112,7 +112,7 @@ unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : 
     let hs
       ←-- Finally, run all of the tactics: any that return an expression without metavariables can safely
             -- be replaced by a `return` tactic.
-            hs.mmap
+            hs.mapM
           fun h : tactic expr => do
           let e ← h
           if e then return h else return (return e)
@@ -299,7 +299,7 @@ unsafe def apply_assumption (lemmas : parse (parser.optional pexpr_list))
   let lemmas ←
     match lemmas with
       | none => local_context
-      | some lemmas => lemmas.mmap to_expr
+      | some lemmas => lemmas.mapM to_expr
   tactic.apply_any lemmas opt tac
 #align tactic.interactive.apply_assumption tactic.interactive.apply_assumption
 

@@ -89,7 +89,7 @@ def factorThru {P X E : C} [Projective P] (f : P ⟶ X) (e : E ⟶ X) [Epi e] : 
 @[simp]
 theorem factorThru_comp {P X E : C} [Projective P] (f : P ⟶ X) (e : E ⟶ X) [Epi e] :
     factorThru f e ≫ e = f :=
-  (Projective.factors f e).some_spec
+  (Projective.factors f e).choose_spec
 #align category_theory.projective.factor_thru_comp CategoryTheory.Projective.factorThru_comp
 
 section
@@ -122,7 +122,7 @@ instance (X : Type u) : Projective X
     ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some,
       by
       ext x
-      exact ((epi_iff_surjective _).mp epi (f x)).some_spec⟩
+      exact ((epi_iff_surjective _).mp epi (f x)).choose_spec⟩
 
 instance Type.enoughProjectives : EnoughProjectives (Type u)
     where presentation X :=

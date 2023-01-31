@@ -93,7 +93,7 @@ theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x 
   by
   use (to_endomorphism R L M x).maximalGeneralizedEigenspaceIndex 0
   simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, infᵢ_le, ←
-    (to_endomorphism R L M x).maximal_generalized_eigenspace_eq]
+    (to_endomorphism R L M x).maximalGeneralizedEigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
 
 variable {R} (L)
@@ -265,7 +265,7 @@ theorem isWeightZeroOfNilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsN
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie
 module. -/
 theorem isNilpotent_toEndomorphism_weightSpace_zero [LieAlgebra.IsNilpotent R L] [IsNoetherian R M]
-    (x : L) : _root_.is_nilpotent <| toEndomorphism R L (weightSpace M (0 : L → R)) x :=
+    (x : L) : IsNilpotent <| toEndomorphism R L (weightSpace M (0 : L → R)) x :=
   by
   obtain ⟨k, hk⟩ := exists_pre_weight_space_zero_le_ker_of_is_noetherian R M x
   use k
@@ -514,7 +514,7 @@ theorem zeroRootSubalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSu
   by
   refine' le_antisymm _ (le_zero_root_subalgebra R L H)
   suffices root_space H 0 ≤ H.to_lie_submodule by exact fun x hx => this hx
-  obtain ⟨k, hk⟩ := (root_space H 0).is_nilpotent_iff_exists_self_le_ucs.mp (by infer_instance)
+  obtain ⟨k, hk⟩ := (root_space H 0).isNilpotent_iff_exists_self_le_ucs.mp (by infer_instance)
   exact hk.trans (LieSubmodule.ucs_le_of_centralizer_eq_self (by simp) k)
 #align lie_algebra.zero_root_subalgebra_eq_of_is_cartan LieAlgebra.zeroRootSubalgebra_eq_of_is_cartan
 

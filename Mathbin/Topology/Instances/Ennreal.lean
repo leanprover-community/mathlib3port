@@ -161,8 +161,8 @@ theorem tendsto_toReal {a : ℝ≥0∞} (ha : a ≠ ⊤) : Tendsto Ennreal.toRea
 def neTopHomeomorphNnreal : { a | a ≠ ∞ } ≃ₜ ℝ≥0 :=
   {
     neTopEquivNnreal with
-    continuous_to_fun := continuousOn_iff_continuous_restrict.1 continuousOn_toNnreal
-    continuous_inv_fun := continuous_coe.subtype_mk _ }
+    continuous_toFun := continuousOn_iff_continuous_restrict.1 continuousOn_toNnreal
+    continuous_invFun := continuous_coe.subtype_mk _ }
 #align ennreal.ne_top_homeomorph_nnreal Ennreal.neTopHomeomorphNnreal
 
 /-- The set of finite `ℝ≥0∞` numbers is homeomorphic to `ℝ≥0`. -/
@@ -238,7 +238,7 @@ theorem nhdsWithin_Ioi_coe_neBot {r : ℝ≥0} : (𝓝[>] (r : ℝ≥0∞)).ne_b
 
 @[instance]
 theorem nhdsWithin_Ioi_zero_neBot : (𝓝[>] (0 : ℝ≥0∞)).ne_bot :=
-  nhds_within_Ioi_coe_ne_bot
+  nhdsWithin_Ioi_coe_neBot
 #align ennreal.nhds_within_Ioi_zero_ne_bot Ennreal.nhdsWithin_Ioi_zero_neBot
 
 -- using Icc because
@@ -574,11 +574,11 @@ theorem infᵢ_mul_right {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {a : ℝ≥0
 #align ennreal.infi_mul_right Ennreal.infᵢ_mul_right
 
 theorem inv_map_infᵢ {ι : Sort _} {x : ι → ℝ≥0∞} : (infᵢ x)⁻¹ = ⨆ i, (x i)⁻¹ :=
-  OrderIso.invEnnreal.map_infi x
+  OrderIso.invEnnreal.map_infᵢ x
 #align ennreal.inv_map_infi Ennreal.inv_map_infᵢ
 
 theorem inv_map_supᵢ {ι : Sort _} {x : ι → ℝ≥0∞} : (supᵢ x)⁻¹ = ⨅ i, (x i)⁻¹ :=
-  OrderIso.invEnnreal.map_supr x
+  OrderIso.invEnnreal.map_supᵢ x
 #align ennreal.inv_map_supr Ennreal.inv_map_supᵢ
 
 theorem inv_limsup {ι : Sort _} {x : ι → ℝ≥0∞} {l : Filter ι} :
@@ -691,7 +691,7 @@ theorem supᵢ_add_supᵢ {ι : Sort _} {f g : ι → ℝ≥0∞} (h : ∀ i j, 
 
 theorem supᵢ_add_supᵢ_of_monotone {ι : Sort _} [SemilatticeSup ι] {f g : ι → ℝ≥0∞} (hf : Monotone f)
     (hg : Monotone g) : supᵢ f + supᵢ g = ⨆ a, f a + g a :=
-  supr_add_supr fun i j => ⟨i ⊔ j, add_le_add (hf <| le_sup_left) (hg <| le_sup_right)⟩
+  supᵢ_add_supᵢ fun i j => ⟨i ⊔ j, add_le_add (hf <| le_sup_left) (hg <| le_sup_right)⟩
 #align ennreal.supr_add_supr_of_monotone Ennreal.supᵢ_add_supᵢ_of_monotone
 
 theorem finset_sum_supᵢ_nat {α} {ι} [SemilatticeSup ι] {s : Finset α} {f : α → ι → ℝ≥0∞}
@@ -712,7 +712,7 @@ theorem mul_supᵢ {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : a * 
   · obtain rfl : f = fun _ => 0
     exact funext hf
     simp only [supr_zero_eq_zero, mul_zero]
-  · refine' (monotone_id.const_mul' _).map_supr_of_continuous_at _ (mul_zero a)
+  · refine' (monotone_id.const_mul' _).map_supᵢ_of_continuousAt _ (mul_zero a)
     refine' Ennreal.Tendsto.const_mul tendsto_id (Or.inl _)
     exact mt supr_eq_zero.1 hf
 #align ennreal.mul_supr Ennreal.mul_supᵢ
@@ -726,7 +726,7 @@ theorem supᵢ_mul {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : sup�
 #align ennreal.supr_mul Ennreal.supᵢ_mul
 
 theorem supᵢ_div {ι : Sort _} {f : ι → ℝ≥0∞} {a : ℝ≥0∞} : supᵢ f / a = ⨆ i, f i / a :=
-  supr_mul
+  supᵢ_mul
 #align ennreal.supr_div Ennreal.supᵢ_div
 
 protected theorem tendsto_coe_sub :
@@ -749,7 +749,7 @@ theorem sub_supᵢ {ι : Sort _} [Nonempty ι] {b : ι → ℝ≥0∞} (hr : a <
   let ⟨r, Eq, _⟩ := lt_iff_exists_coe.mp hr
   have : infₛ ((fun b => ↑r - b) '' range b) = ↑r - ⨆ i, b i :=
     IsGLB.infₛ_eq <|
-      isLUB_supᵢ.is_glb_of_tendsto (fun x _ y _ => tsub_le_tsub (le_refl (r : ℝ≥0∞)))
+      isLUB_supᵢ.isGLB_of_tendsto (fun x _ y _ => tsub_le_tsub (le_refl (r : ℝ≥0∞)))
         (range_nonempty _) (Ennreal.tendsto_coe_sub.comp (tendsto_id'.2 inf_le_left))
   rw [Eq, ← this] <;> simp [infₛ_image, infᵢ_range, -mem_range] <;> exact le_rfl
 #align ennreal.sub_supr Ennreal.sub_supᵢ
@@ -899,7 +899,7 @@ protected theorem tsum_eq_supᵢ_sum' {ι : Type _} (s : ι → Finset α) (hs :
   rw [Ennreal.tsum_eq_supᵢ_sum]
   symm
   change (⨆ i : ι, (fun t : Finset α => ∑ a in t, f a) (s i)) = ⨆ s : Finset α, ∑ a in s, f a
-  exact (Finset.sum_mono_set f).supr_comp_eq hs
+  exact (Finset.sum_mono_set f).supᵢ_comp_eq hs
 #align ennreal.tsum_eq_supr_sum' Ennreal.tsum_eq_supᵢ_sum'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
@@ -1070,7 +1070,7 @@ theorem tendsto_nat_tsum (f : ℕ → ℝ≥0∞) :
 
 theorem toNnreal_apply_of_tsum_ne_top {α : Type _} {f : α → ℝ≥0∞} (hf : (∑' i, f i) ≠ ∞) (x : α) :
     (((Ennreal.toNnreal ∘ f) x : ℝ≥0) : ℝ≥0∞) = f x :=
-  coe_to_nnreal <| Ennreal.ne_top_of_tsum_ne_top hf _
+  coe_toNnreal <| Ennreal.ne_top_of_tsum_ne_top hf _
 #align ennreal.to_nnreal_apply_of_tsum_ne_top Ennreal.toNnreal_apply_of_tsum_ne_top
 
 theorem summable_toNnreal_of_tsum_ne_top {α : Type _} {f : α → ℝ≥0∞} (hf : (∑' i, f i) ≠ ∞) :
@@ -1175,7 +1175,7 @@ theorem tsum_eq_add_tsum_ite {f : β → ℝ≥0∞} (b : β) :
 theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) (hf0 : f 0 ≠ ∞) :
     (∑' n, f (n + 1)) = ∞ :=
   by
-  rw [← tsum_eq_tsum_of_hasSum_iff_hasSum fun _ => (notMemRangeEquiv 1).has_sum_iff]
+  rw [← tsum_eq_tsum_of_hasSum_iff_hasSum fun _ => (notMemRangeEquiv 1).hasSum_iff]
   swap
   · infer_instance
   have h₁ :

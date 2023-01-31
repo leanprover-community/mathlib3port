@@ -110,7 +110,7 @@ unsafe def hint : tactic Unit := do
       let t ← hints 0
       if t.2 = 0 then do
           trace "the following tactics solve the goal:\n----"
-          (hints fun p : String × ℕ => p.2 = 0).mmap' fun p => tactic.trace f! "Try this: {p.1}"
+          (hints fun p : String × ℕ => p.2 = 0).mapM' fun p => tactic.trace f! "Try this: {p.1}"
         else do
           trace "the following tactics make progress:\n----"
           hints fun p => tactic.trace f! "Try this: {p.1}"

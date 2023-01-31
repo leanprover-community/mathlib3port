@@ -103,7 +103,7 @@ protected def hasSmul (R : Type _) [SMul R β] : SMul R α :=
 #align equiv.has_smul Equiv.hasSmul
 
 theorem smul_def {R : Type _} [SMul R β] (r : R) (x : α) :
-    @SMul.smul _ _ (e.HasSmul R) r x = e.symm (r • e x) :=
+    @SMul.smul _ _ (e.SMul R) r x = e.symm (r • e x) :=
   rfl
 #align equiv.smul_def Equiv.smul_def
 
@@ -115,7 +115,7 @@ protected def hasPow (N : Type _) [Pow β N] : Pow α N :=
 #align equiv.has_smul Equiv.hasSmul
 
 theorem pow_def {N : Type _} [Pow β N] (n : N) (x : α) :
-    @Pow.pow _ _ (e.HasPow N) x n = e.symm (e x ^ n) :=
+    @Pow.pow _ _ (e.Pow N) x n = e.symm (e x ^ n) :=
   rfl
 #align equiv.pow_def Equiv.pow_def
 
@@ -189,7 +189,7 @@ theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) :
 @[reducible, to_additive "Transfer `add_semigroup` across an `equiv`"]
 protected def semigroup [Semigroup β] : Semigroup α :=
   by
-  let mul := e.HasMul
+  let mul := e.Mul
   skip <;> apply e.injective.semigroup _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.semigroup Equiv.semigroup
 #align equiv.add_semigroup Equiv.addSemigroup
@@ -198,8 +198,8 @@ protected def semigroup [Semigroup β] : Semigroup α :=
 @[reducible]
 protected def semigroupWithZero [SemigroupWithZero β] : SemigroupWithZero α :=
   by
-  let mul := e.HasMul
-  let zero := e.HasZero
+  let mul := e.Mul
+  let zero := e.Zero
   skip <;> apply e.injective.semigroup_with_zero _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.semigroup_with_zero Equiv.semigroupWithZero
 
@@ -207,7 +207,7 @@ protected def semigroupWithZero [SemigroupWithZero β] : SemigroupWithZero α :=
 @[reducible, to_additive "Transfer `add_comm_semigroup` across an `equiv`"]
 protected def commSemigroup [CommSemigroup β] : CommSemigroup α :=
   by
-  let mul := e.HasMul
+  let mul := e.Mul
   skip <;> apply e.injective.comm_semigroup _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_semigroup Equiv.commSemigroup
 #align equiv.add_comm_semigroup Equiv.addCommSemigroup
@@ -216,8 +216,8 @@ protected def commSemigroup [CommSemigroup β] : CommSemigroup α :=
 @[reducible]
 protected def mulZeroClass [MulZeroClass β] : MulZeroClass α :=
   by
-  let zero := e.HasZero
-  let mul := e.HasMul
+  let zero := e.Zero
+  let mul := e.Mul
   skip <;> apply e.injective.mul_zero_class _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.mul_zero_class Equiv.mulZeroClass
 
@@ -225,8 +225,8 @@ protected def mulZeroClass [MulZeroClass β] : MulZeroClass α :=
 @[reducible, to_additive "Transfer `add_zero_class` across an `equiv`"]
 protected def mulOneClass [MulOneClass β] : MulOneClass α :=
   by
-  let one := e.HasOne
-  let mul := e.HasMul
+  let one := e.One
+  let mul := e.Mul
   skip <;> apply e.injective.mul_one_class _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.mul_one_class Equiv.mulOneClass
 #align equiv.add_zero_class Equiv.addZeroClass
@@ -235,9 +235,9 @@ protected def mulOneClass [MulOneClass β] : MulOneClass α :=
 @[reducible]
 protected def mulZeroOneClass [MulZeroOneClass β] : MulZeroOneClass α :=
   by
-  let zero := e.HasZero
-  let one := e.HasOne
-  let mul := e.HasMul
+  let zero := e.Zero
+  let one := e.One
+  let mul := e.Mul
   skip <;> apply e.injective.mul_zero_one_class _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.mul_zero_one_class Equiv.mulZeroOneClass
 
@@ -245,9 +245,9 @@ protected def mulZeroOneClass [MulZeroOneClass β] : MulZeroOneClass α :=
 @[reducible, to_additive "Transfer `add_monoid` across an `equiv`"]
 protected def monoid [Monoid β] : Monoid α :=
   by
-  let one := e.HasOne
-  let mul := e.HasMul
-  let pow := e.HasPow ℕ
+  let one := e.One
+  let mul := e.Mul
+  let pow := e.Pow ℕ
   skip <;> apply e.injective.monoid _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.monoid Equiv.monoid
 #align equiv.add_monoid Equiv.addMonoid
@@ -256,9 +256,9 @@ protected def monoid [Monoid β] : Monoid α :=
 @[reducible, to_additive "Transfer `add_comm_monoid` across an `equiv`"]
 protected def commMonoid [CommMonoid β] : CommMonoid α :=
   by
-  let one := e.HasOne
-  let mul := e.HasMul
-  let pow := e.HasPow ℕ
+  let one := e.One
+  let mul := e.Mul
+  let pow := e.Pow ℕ
   skip <;> apply e.injective.comm_monoid _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_monoid Equiv.commMonoid
 #align equiv.add_comm_monoid Equiv.addCommMonoid
@@ -267,12 +267,12 @@ protected def commMonoid [CommMonoid β] : CommMonoid α :=
 @[reducible, to_additive "Transfer `add_group` across an `equiv`"]
 protected def group [Group β] : Group α :=
   by
-  let one := e.HasOne
-  let mul := e.HasMul
-  let inv := e.HasInv
-  let div := e.HasDiv
-  let npow := e.HasPow ℕ
-  let zpow := e.HasPow ℤ
+  let one := e.One
+  let mul := e.Mul
+  let inv := e.Inv
+  let div := e.Div
+  let npow := e.Pow ℕ
+  let zpow := e.Pow ℤ
   skip <;> apply e.injective.group _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.group Equiv.group
 #align equiv.add_group Equiv.addGroup
@@ -281,12 +281,12 @@ protected def group [Group β] : Group α :=
 @[reducible, to_additive "Transfer `add_comm_group` across an `equiv`"]
 protected def commGroup [CommGroup β] : CommGroup α :=
   by
-  let one := e.HasOne
-  let mul := e.HasMul
-  let inv := e.HasInv
-  let div := e.HasDiv
-  let npow := e.HasPow ℕ
-  let zpow := e.HasPow ℤ
+  let one := e.One
+  let mul := e.Mul
+  let inv := e.Inv
+  let div := e.Div
+  let npow := e.Pow ℕ
+  let zpow := e.Pow ℤ
   skip <;> apply e.injective.comm_group _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_group Equiv.commGroup
 #align equiv.add_comm_group Equiv.addCommGroup
@@ -295,10 +295,10 @@ protected def commGroup [CommGroup β] : CommGroup α :=
 @[reducible]
 protected def nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring β] :
     NonUnitalNonAssocSemiring α := by
-  let zero := e.HasZero
-  let add := e.HasAdd
-  let mul := e.HasMul
-  let nsmul := e.HasSmul ℕ
+  let zero := e.Zero
+  let add := e.Add
+  let mul := e.Mul
+  let nsmul := e.SMul ℕ
   skip <;> apply e.injective.non_unital_non_assoc_semiring _ <;> intros <;>
     exact e.apply_symm_apply _
 #align equiv.non_unital_non_assoc_semiring Equiv.nonUnitalNonAssocSemiring
@@ -307,20 +307,20 @@ protected def nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring β] :
 @[reducible]
 protected def nonUnitalSemiring [NonUnitalSemiring β] : NonUnitalSemiring α :=
   by
-  let zero := e.HasZero
-  let add := e.HasAdd
-  let mul := e.HasMul
-  let nsmul := e.HasSmul ℕ
+  let zero := e.Zero
+  let add := e.Add
+  let mul := e.Mul
+  let nsmul := e.SMul ℕ
   skip <;> apply e.injective.non_unital_semiring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_unital_semiring Equiv.nonUnitalSemiring
 
 /-- Transfer `add_monoid_with_one` across an `equiv` -/
 @[reducible]
 protected def addMonoidWithOne [AddMonoidWithOne β] : AddMonoidWithOne α :=
-  { e.AddMonoid, e.HasOne with
+  { e.AddMonoid, e.One with
     natCast := fun n => e.symm n
-    nat_cast_zero := show e.symm _ = _ by simp [zero_def]
-    nat_cast_succ := fun n => show e.symm _ = e.symm (e (e.symm _) + _) by simp [add_def, one_def] }
+    natCast_zero := show e.symm _ = _ by simp [zero_def]
+    natCast_succ := fun n => show e.symm _ = e.symm (e (e.symm _) + _) by simp [add_def, one_def] }
 #align equiv.add_monoid_with_one Equiv.addMonoidWithOne
 
 /-- Transfer `add_group_with_one` across an `equiv` -/
@@ -329,8 +329,8 @@ protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
   { e.AddMonoidWithOne,
     e.AddGroup with
     intCast := fun n => e.symm n
-    int_cast_of_nat := fun n => by rw [Int.cast_ofNat] <;> rfl
-    int_cast_neg_succ_of_nat := fun n =>
+    intCast_ofNat := fun n => by rw [Int.cast_ofNat] <;> rfl
+    intCast_negSucc := fun n =>
       congr_arg e.symm <| (Int.cast_negSucc _).trans <| congr_arg _ (e.apply_symm_apply _).symm }
 #align equiv.add_group_with_one Equiv.addGroupWithOne
 
@@ -338,7 +338,7 @@ protected def addGroupWithOne [AddGroupWithOne β] : AddGroupWithOne α :=
 @[reducible]
 protected def nonAssocSemiring [NonAssocSemiring β] : NonAssocSemiring α :=
   by
-  let mul := e.HasMul
+  let mul := e.Mul
   let add_monoid_with_one := e.AddMonoidWithOne
   skip <;> apply e.injective.non_assoc_semiring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_assoc_semiring Equiv.nonAssocSemiring
@@ -347,9 +347,9 @@ protected def nonAssocSemiring [NonAssocSemiring β] : NonAssocSemiring α :=
 @[reducible]
 protected def semiring [Semiring β] : Semiring α :=
   by
-  let mul := e.HasMul
+  let mul := e.Mul
   let add_monoid_with_one := e.AddMonoidWithOne
-  let npow := e.HasPow ℕ
+  let npow := e.Pow ℕ
   skip <;> apply e.injective.semiring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.semiring Equiv.semiring
 
@@ -357,10 +357,10 @@ protected def semiring [Semiring β] : Semiring α :=
 @[reducible]
 protected def nonUnitalCommSemiring [NonUnitalCommSemiring β] : NonUnitalCommSemiring α :=
   by
-  let zero := e.HasZero
-  let add := e.HasAdd
-  let mul := e.HasMul
-  let nsmul := e.HasSmul ℕ
+  let zero := e.Zero
+  let add := e.Add
+  let mul := e.Mul
+  let nsmul := e.SMul ℕ
   skip <;> apply e.injective.non_unital_comm_semiring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_unital_comm_semiring Equiv.nonUnitalCommSemiring
 
@@ -368,9 +368,9 @@ protected def nonUnitalCommSemiring [NonUnitalCommSemiring β] : NonUnitalCommSe
 @[reducible]
 protected def commSemiring [CommSemiring β] : CommSemiring α :=
   by
-  let mul := e.HasMul
+  let mul := e.Mul
   let add_monoid_with_one := e.AddMonoidWithOne
-  let npow := e.HasPow ℕ
+  let npow := e.Pow ℕ
   skip <;> apply e.injective.comm_semiring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_semiring Equiv.commSemiring
 
@@ -378,13 +378,13 @@ protected def commSemiring [CommSemiring β] : CommSemiring α :=
 @[reducible]
 protected def nonUnitalNonAssocRing [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing α :=
   by
-  let zero := e.HasZero
-  let add := e.HasAdd
-  let mul := e.HasMul
-  let neg := e.HasNeg
-  let sub := e.HasSub
-  let nsmul := e.HasSmul ℕ
-  let zsmul := e.HasSmul ℤ
+  let zero := e.Zero
+  let add := e.Add
+  let mul := e.Mul
+  let neg := e.Neg
+  let sub := e.Sub
+  let nsmul := e.SMul ℕ
+  let zsmul := e.SMul ℤ
   skip <;> apply e.injective.non_unital_non_assoc_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_unital_non_assoc_ring Equiv.nonUnitalNonAssocRing
 
@@ -392,13 +392,13 @@ protected def nonUnitalNonAssocRing [NonUnitalNonAssocRing β] : NonUnitalNonAss
 @[reducible]
 protected def nonUnitalRing [NonUnitalRing β] : NonUnitalRing α :=
   by
-  let zero := e.HasZero
-  let add := e.HasAdd
-  let mul := e.HasMul
-  let neg := e.HasNeg
-  let sub := e.HasSub
-  let nsmul := e.HasSmul ℕ
-  let zsmul := e.HasSmul ℤ
+  let zero := e.Zero
+  let add := e.Add
+  let mul := e.Mul
+  let neg := e.Neg
+  let sub := e.Sub
+  let nsmul := e.SMul ℕ
+  let zsmul := e.SMul ℤ
   skip <;> apply e.injective.non_unital_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_unital_ring Equiv.nonUnitalRing
 
@@ -407,16 +407,16 @@ protected def nonUnitalRing [NonUnitalRing β] : NonUnitalRing α :=
 protected def nonAssocRing [NonAssocRing β] : NonAssocRing α :=
   by
   let add_group_with_one := e.AddGroupWithOne
-  let mul := e.HasMul
+  let mul := e.Mul
   skip <;> apply e.injective.non_assoc_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_assoc_ring Equiv.nonAssocRing
 
 /-- Transfer `ring` across an `equiv` -/
 @[reducible]
 protected def ring [Ring β] : Ring α := by
-  let mul := e.HasMul
+  let mul := e.Mul
   let add_group_with_one := e.AddGroupWithOne
-  let npow := e.HasPow ℕ
+  let npow := e.Pow ℕ
   skip <;> apply e.injective.ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.ring Equiv.ring
 
@@ -424,13 +424,13 @@ protected def ring [Ring β] : Ring α := by
 @[reducible]
 protected def nonUnitalCommRing [NonUnitalCommRing β] : NonUnitalCommRing α :=
   by
-  let zero := e.HasZero
-  let add := e.HasAdd
-  let mul := e.HasMul
-  let neg := e.HasNeg
-  let sub := e.HasSub
-  let nsmul := e.HasSmul ℕ
-  let zsmul := e.HasSmul ℤ
+  let zero := e.Zero
+  let add := e.Add
+  let mul := e.Mul
+  let neg := e.Neg
+  let sub := e.Sub
+  let nsmul := e.SMul ℕ
+  let zsmul := e.SMul ℤ
   skip <;> apply e.injective.non_unital_comm_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.non_unital_comm_ring Equiv.nonUnitalCommRing
 
@@ -438,9 +438,9 @@ protected def nonUnitalCommRing [NonUnitalCommRing β] : NonUnitalCommRing α :=
 @[reducible]
 protected def commRing [CommRing β] : CommRing α :=
   by
-  let mul := e.HasMul
+  let mul := e.Mul
   let add_group_with_one := e.AddGroupWithOne
-  let npow := e.HasPow ℕ
+  let npow := e.Pow ℕ
   skip <;> apply e.injective.comm_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.comm_ring Equiv.commRing
 
@@ -466,14 +466,14 @@ protected def hasRatCast [RatCast β] : RatCast α where ratCast n := e.symm n
 protected def divisionRing [DivisionRing β] : DivisionRing α :=
   by
   let add_group_with_one := e.AddGroupWithOne
-  let mul := e.HasMul
-  let inv := e.HasInv
-  let div := e.HasDiv
-  let mul := e.HasMul
-  let npow := e.HasPow ℕ
-  let zpow := e.HasPow ℤ
-  let rat_cast := e.HasRatCast
-  let qsmul := e.HasSmul ℚ
+  let mul := e.Mul
+  let inv := e.Inv
+  let div := e.Div
+  let mul := e.Mul
+  let npow := e.Pow ℕ
+  let zpow := e.Pow ℤ
+  let rat_cast := e.RatCast
+  let qsmul := e.SMul ℚ
   skip <;> apply e.injective.division_ring _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.division_ring Equiv.divisionRing
 
@@ -482,15 +482,15 @@ protected def divisionRing [DivisionRing β] : DivisionRing α :=
 protected def field [Field β] : Field α :=
   by
   let add_group_with_one := e.AddGroupWithOne
-  let mul := e.HasMul
-  let neg := e.HasNeg
-  let inv := e.HasInv
-  let div := e.HasDiv
-  let mul := e.HasMul
-  let npow := e.HasPow ℕ
-  let zpow := e.HasPow ℤ
-  let rat_cast := e.HasRatCast
-  let qsmul := e.HasSmul ℚ
+  let mul := e.Mul
+  let neg := e.Neg
+  let inv := e.Inv
+  let div := e.Div
+  let mul := e.Mul
+  let npow := e.Pow ℕ
+  let zpow := e.Pow ℤ
+  let rat_cast := e.RatCast
+  let qsmul := e.SMul ℚ
   skip <;> apply e.injective.field _ <;> intros <;> exact e.apply_symm_apply _
 #align equiv.field Equiv.field
 
@@ -507,7 +507,7 @@ variable [Monoid R]
 /-- Transfer `mul_action` across an `equiv` -/
 @[reducible]
 protected def mulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
-  { e.HasSmul R with
+  { e.SMul R with
     one_smul := by simp [smul_def]
     mul_smul := by simp [smul_def, mul_smul] }
 #align equiv.mul_action Equiv.mulAction

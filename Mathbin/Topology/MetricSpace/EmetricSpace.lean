@@ -314,20 +314,20 @@ theorem edist_mem_uniformity {ε : ℝ≥0∞} (ε0 : 0 < ε) : { p : α × α |
 namespace Emetric
 
 instance (priority := 900) : IsCountablyGenerated (𝓤 α) :=
-  isCountablyGenerated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infi⟩
+  isCountablyGenerated_of_seq ⟨_, uniformity_basis_edist_inv_nat.eq_infᵢ⟩
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection {a b «expr ∈ » s} -/
 /-- ε-δ characterization of uniform continuity on a set for pseudoemetric spaces -/
 theorem uniformContinuousOn_iff [PseudoEmetricSpace β] {f : α → β} {s : Set α} :
     UniformContinuousOn f s ↔
       ∀ ε > 0, ∃ δ > 0, ∀ {a} {_ : a ∈ s} {b} {_ : b ∈ s}, edist a b < δ → edist (f a) (f b) < ε :=
-  uniformity_basis_edist.uniform_continuous_on_iff uniformity_basis_edist
+  uniformity_basis_edist.uniformContinuousOn_iff uniformity_basis_edist
 #align emetric.uniform_continuous_on_iff Emetric.uniformContinuousOn_iff
 
 /-- ε-δ characterization of uniform continuity on pseudoemetric spaces -/
 theorem uniformContinuous_iff [PseudoEmetricSpace β] {f : α → β} :
     UniformContinuous f ↔ ∀ ε > 0, ∃ δ > 0, ∀ {a b : α}, edist a b < δ → edist (f a) (f b) < ε :=
-  uniformity_basis_edist.uniform_continuous_iff uniformity_basis_edist
+  uniformity_basis_edist.uniformContinuous_iff uniformity_basis_edist
 #align emetric.uniform_continuous_iff Emetric.uniformContinuous_iff
 
 /-- ε-δ characterization of uniform embeddings on pseudoemetric spaces -/
@@ -729,7 +729,7 @@ theorem nhdsWithin_basis_closed_eball :
 #align emetric.nhds_within_basis_closed_eball Emetric.nhdsWithin_basis_closed_eball
 
 theorem nhds_eq : 𝓝 x = ⨅ ε > 0, 𝓟 (ball x ε) :=
-  nhds_basis_eball.eq_binfi
+  nhds_basis_eball.eq_binfᵢ
 #align emetric.nhds_eq Emetric.nhds_eq
 
 theorem mem_nhds_iff : s ∈ 𝓝 x ↔ ∃ ε > 0, ball x ε ⊆ s :=
@@ -747,7 +747,7 @@ variable [PseudoEmetricSpace β] {f : α → β}
 theorem tendsto_nhdsWithin_nhdsWithin {t : Set β} {a b} :
     Tendsto f (𝓝[s] a) (𝓝[t] b) ↔
       ∀ ε > 0, ∃ δ > 0, ∀ ⦃x⦄, x ∈ s → edist x a < δ → f x ∈ t ∧ edist (f x) b < ε :=
-  (nhdsWithin_basis_eball.tendsto_iff nhdsWithin_basis_eball).trans <|
+  (nhdsWithin_basis_eball.tendsto_iffₓ nhdsWithin_basis_eball).trans <|
     forall₂_congr fun ε hε => exists₂_congr fun δ hδ => forall_congr' fun x => by simp <;> itauto
 #align emetric.tendsto_nhds_within_nhds_within Emetric.tendsto_nhdsWithin_nhdsWithin
 
@@ -761,7 +761,7 @@ theorem tendsto_nhdsWithin_nhds {a b} :
 
 theorem tendsto_nhds_nhds {a b} :
     Tendsto f (𝓝 a) (𝓝 b) ↔ ∀ ε > 0, ∃ δ > 0, ∀ ⦃x⦄, edist x a < δ → edist (f x) b < ε :=
-  nhds_basis_eball.tendsto_iff nhds_basis_eball
+  nhds_basis_eball.tendsto_iffₓ nhds_basis_eball
 #align emetric.tendsto_nhds_nhds Emetric.tendsto_nhds_nhds
 
 end
@@ -815,7 +815,7 @@ theorem tendsto_nhds {f : Filter β} {u : β → α} {a : α} :
 
 theorem tendsto_atTop [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α} :
     Tendsto u atTop (𝓝 a) ↔ ∀ ε > 0, ∃ N, ∀ n ≥ N, edist (u n) a < ε :=
-  (atTop_basis.tendsto_iff nhds_basis_eball).trans <| by
+  (atTop_basis.tendsto_iffₓ nhds_basis_eball).trans <| by
     simp only [exists_prop, true_and_iff, mem_Ici, mem_ball]
 #align emetric.tendsto_at_top Emetric.tendsto_atTop
 
@@ -830,20 +830,20 @@ the pseudoedistance between its elements is arbitrarily small -/
 @[nolint ge_or_gt]
 theorem cauchySeq_iff [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ ∀ ε > 0, ∃ N, ∀ (m) (_ : m ≥ N) (n) (_ : n ≥ N), edist (u m) (u n) < ε :=
-  uniformity_basis_edist.cauchy_seq_iff
+  uniformity_basis_edist.cauchySeq_iff
 #align emetric.cauchy_seq_iff Emetric.cauchySeq_iff
 
 /-- A variation around the emetric characterization of Cauchy sequences -/
 theorem cauchySeq_iff' [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ ∀ ε > (0 : ℝ≥0∞), ∃ N, ∀ n ≥ N, edist (u n) (u N) < ε :=
-  uniformity_basis_edist.cauchy_seq_iff'
+  uniformity_basis_edist.cauchySeq_iff'
 #align emetric.cauchy_seq_iff' Emetric.cauchySeq_iff'
 
 /-- A variation of the emetric characterization of Cauchy sequences that deals with
 `ℝ≥0` upper bounds. -/
 theorem cauchySeq_iff_nnreal [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ ∀ ε : ℝ≥0, 0 < ε → ∃ N, ∀ n, N ≤ n → edist (u n) (u N) < ε :=
-  uniformity_basis_edist_nnreal.cauchy_seq_iff'
+  uniformity_basis_edist_nnreal.cauchySeq_iff'
 #align emetric.cauchy_seq_iff_nnreal Emetric.cauchySeq_iff_nnreal
 
 theorem totallyBounded_iff {s : Set α} :
@@ -851,7 +851,7 @@ theorem totallyBounded_iff {s : Set α} :
   ⟨fun H ε ε0 => H _ (edist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 ru
     let ⟨t, ft, h⟩ := H ε ε0
-    ⟨t, ft, h.trans <| Union₂_mono fun y yt z => hε⟩⟩
+    ⟨t, ft, h.trans <| unionᵢ₂_mono fun y yt z => hε⟩⟩
 #align emetric.totally_bounded_iff Emetric.totallyBounded_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -860,7 +860,7 @@ theorem totallyBounded_iff' {s : Set α} :
   ⟨fun H ε ε0 => (totallyBounded_iff_subset.1 H) _ (edist_mem_uniformity ε0), fun H r ru =>
     let ⟨ε, ε0, hε⟩ := mem_uniformity_edist.1 ru
     let ⟨t, _, ft, h⟩ := H ε ε0
-    ⟨t, ft, h.trans <| Union₂_mono fun y yt z => hε⟩⟩
+    ⟨t, ft, h.trans <| unionᵢ₂_mono fun y yt z => hε⟩⟩
 #align emetric.totally_bounded_iff' Emetric.totallyBounded_iff'
 
 section Compact

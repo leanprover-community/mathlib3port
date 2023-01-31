@@ -42,7 +42,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bdd_above_inv bddAbove_invₓ'. -/
 @[simp, to_additive]
 theorem bddAbove_inv : BddAbove s⁻¹ ↔ BddBelow s :=
-  (OrderIso.inv G).bdd_above_preimage
+  (OrderIso.inv G).bddAbove_preimage
 #align bdd_above_inv bddAbove_inv
 #align bdd_above_neg bddAbove_neg
 
@@ -54,7 +54,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bdd_below_inv bddBelow_invₓ'. -/
 @[simp, to_additive]
 theorem bddBelow_inv : BddBelow s⁻¹ ↔ BddAbove s :=
-  (OrderIso.inv G).bdd_below_preimage
+  (OrderIso.inv G).bddBelow_preimage
 #align bdd_below_inv bddBelow_inv
 #align bdd_below_neg bddBelow_neg
 
@@ -90,7 +90,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_lub_inv isLUB_invₓ'. -/
 @[simp, to_additive]
 theorem isLUB_inv : IsLUB s⁻¹ a ↔ IsGLB s a⁻¹ :=
-  (OrderIso.inv G).is_lub_preimage
+  (OrderIso.inv G).isLUB_preimage
 #align is_lub_inv isLUB_inv
 #align is_lub_neg isLUB_neg
 
@@ -102,7 +102,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_lub_inv' isLUB_inv'ₓ'. -/
 @[to_additive]
 theorem isLUB_inv' : IsLUB s⁻¹ a⁻¹ ↔ IsGLB s a :=
-  (OrderIso.inv G).is_lub_preimage'
+  (OrderIso.inv G).isLUB_preimage'
 #align is_lub_inv' isLUB_inv'
 #align is_lub_neg' isLUB_neg'
 
@@ -126,7 +126,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_glb_inv isGLB_invₓ'. -/
 @[simp, to_additive]
 theorem isGLB_inv : IsGLB s⁻¹ a ↔ IsLUB s a⁻¹ :=
-  (OrderIso.inv G).is_glb_preimage
+  (OrderIso.inv G).isGLB_preimage
 #align is_glb_inv isGLB_inv
 #align is_glb_neg isGLB_neg
 
@@ -138,7 +138,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_glb_inv' isGLB_inv'ₓ'. -/
 @[to_additive]
 theorem isGLB_inv' : IsGLB s⁻¹ a⁻¹ ↔ IsLUB s a :=
-  (OrderIso.inv G).is_glb_preimage'
+  (OrderIso.inv G).isGLB_preimage'
 #align is_glb_inv' isGLB_inv'
 #align is_glb_neg' isGLB_neg'
 
@@ -230,7 +230,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align csupr_mul csupᵢ_mulₓ'. -/
 @[to_additive]
 theorem csupᵢ_mul (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) * a = ⨆ i, f i * a :=
-  (OrderIso.mulRight a).map_csupr hf
+  (OrderIso.mulRight a).map_csupᵢ hf
 #align csupr_mul csupᵢ_mul
 #align csupr_add csupᵢ_add
 
@@ -261,7 +261,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_csupr mul_csupᵢₓ'. -/
 @[to_additive]
 theorem mul_csupᵢ (hf : BddAbove (Set.range f)) (a : G) : (a * ⨆ i, f i) = ⨆ i, a * f i :=
-  (OrderIso.mulLeft a).map_csupr hf
+  (OrderIso.mulLeft a).map_csupᵢ hf
 #align mul_csupr mul_csupᵢ
 #align add_csupr add_csupᵢ
 

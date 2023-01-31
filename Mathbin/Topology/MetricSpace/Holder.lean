@@ -205,7 +205,7 @@ theorem edist_le_of_le (h : HolderWith C r f) {x y : X} {d : ℝ≥0∞} (hd : e
 
 theorem comp {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0} {f : X → Y}
     (hf : HolderWith Cf rf f) : HolderWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) :=
-  (hg.HolderOnWith univ).comp_holder_with hf fun _ => trivial
+  (hg.HolderOnWith univ).comp_holderWith hf fun _ => trivial
 #align holder_with.comp HolderWith.comp
 
 theorem comp_holderOnWith {Cg rg : ℝ≥0} {g : Y → Z} (hg : HolderWith Cg rg g) {Cf rf : ℝ≥0}

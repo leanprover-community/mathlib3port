@@ -561,7 +561,7 @@ theorem Memℒp.mono' {f : α → E} {g : α → ℝ} (hg : Memℒp g p μ) (hf 
 
 theorem Memℒp.congrNorm {f : α → E} {g : α → F} (hf : Memℒp f p μ) (hg : AeStronglyMeasurable g μ)
     (h : ∀ᵐ a ∂μ, ‖f a‖ = ‖g a‖) : Memℒp g p μ :=
-  hf.mono hg <| eventually_eq.le <| EventuallyEq.symm h
+  hf.mono hg <| EventuallyEq.le <| EventuallyEq.symm h
 #align measure_theory.mem_ℒp.congr_norm MeasureTheory.Memℒp.congrNorm
 
 theorem memℒp_congr_norm {f : α → E} {g : α → F} (hf : AeStronglyMeasurable f μ)
@@ -694,22 +694,22 @@ theorem snorm_one_add_measure (f : α → F) (μ ν : Measure α) :
 
 theorem snorm_le_add_measure_right (f : α → F) (μ ν : Measure α) {p : ℝ≥0∞} :
     snorm f p μ ≤ snorm f p (μ + ν) :=
-  snorm_mono_measure f <| measure.le_add_right <| le_refl _
+  snorm_mono_measure f <| Measure.le_add_right <| le_refl _
 #align measure_theory.snorm_le_add_measure_right MeasureTheory.snorm_le_add_measure_right
 
 theorem snorm_le_add_measure_left (f : α → F) (μ ν : Measure α) {p : ℝ≥0∞} :
     snorm f p ν ≤ snorm f p (μ + ν) :=
-  snorm_mono_measure f <| measure.le_add_left <| le_refl _
+  snorm_mono_measure f <| Measure.le_add_left <| le_refl _
 #align measure_theory.snorm_le_add_measure_left MeasureTheory.snorm_le_add_measure_left
 
 omit m
 
 theorem Memℒp.leftOfAddMeasure {f : α → E} (h : Memℒp f p (μ + ν)) : Memℒp f p μ :=
-  h.monoMeasure <| measure.le_add_right <| le_refl _
+  h.monoMeasure <| Measure.le_add_right <| le_refl _
 #align measure_theory.mem_ℒp.left_of_add_measure MeasureTheory.Memℒp.leftOfAddMeasure
 
 theorem Memℒp.rightOfAddMeasure {f : α → E} (h : Memℒp f p (μ + ν)) : Memℒp f p ν :=
-  h.monoMeasure <| measure.le_add_left <| le_refl _
+  h.monoMeasure <| Measure.le_add_left <| le_refl _
 #align measure_theory.mem_ℒp.right_of_add_measure MeasureTheory.Memℒp.rightOfAddMeasure
 
 theorem Memℒp.norm {f : α → E} (h : Memℒp f p μ) : Memℒp (fun x => ‖f x‖) p μ :=
@@ -904,7 +904,7 @@ theorem memℒp_map_measure_iff (hg : AeStronglyMeasurable g (Measure.map f μ))
 
 theorem MeasurableEmbedding.snormEssSup_map_measure {g : β → F} (hf : MeasurableEmbedding f) :
     snormEssSup g (Measure.map f μ) = snormEssSup (g ∘ f) μ :=
-  hf.ess_sup_map_measure
+  hf.essSup_map_measure
 #align measurable_embedding.snorm_ess_sup_map_measure MeasurableEmbedding.snormEssSup_map_measure
 
 theorem MeasurableEmbedding.snorm_map_measure {g : β → F} (hf : MeasurableEmbedding f) :
@@ -926,7 +926,7 @@ theorem MeasurableEmbedding.memℒp_map_measure_iff {g : β → F} (hf : Measura
 
 theorem MeasurableEquiv.memℒp_map_measure_iff (f : α ≃ᵐ β) {g : β → F} :
     Memℒp g p (Measure.map f μ) ↔ Memℒp (g ∘ f) p μ :=
-  f.MeasurableEmbedding.mem_ℒp_map_measure_iff
+  f.MeasurableEmbedding.memℒp_map_measure_iff
 #align measurable_equiv.mem_ℒp_map_measure_iff MeasurableEquiv.memℒp_map_measure_iff
 
 omit mβ
@@ -1746,7 +1746,7 @@ protected theorem memℒp (f : lp E p μ) : Memℒp f p μ :=
 variable (E p μ)
 
 theorem coeFn_zero : ⇑(0 : lp E p μ) =ᵐ[μ] 0 :=
-  ae_eq_fun.coe_fn_zero
+  AeEqFun.coe_fn_zero
 #align measure_theory.Lp.coe_fn_zero MeasureTheory.lp.coeFn_zero
 
 variable {E p μ}
@@ -2286,7 +2286,7 @@ theorem MeasureTheory.Memℒp.ofCompAntilipschitzWith {α E F} {K'} [MeasurableS
     rw [← dist_zero_right, ← dist_zero_right, ← g0]
     apply hg'.le_mul_dist
   have B : ae_strongly_measurable f μ :=
-    (hg'.uniform_embedding hg).Embedding.ae_strongly_measurable_comp_iff.1 hL.1
+    (hg'.uniform_embedding hg).Embedding.aeStronglyMeasurable_comp_iff.1 hL.1
   exact hL.of_le_mul B A
 #align measure_theory.mem_ℒp.of_comp_antilipschitz_with MeasureTheory.Memℒp.ofCompAntilipschitzWith
 
@@ -2365,15 +2365,15 @@ theorem coeFn_compLp (L : E →L[𝕜] F) (f : lp E p μ) : ∀ᵐ a ∂μ, (L.c
 #align continuous_linear_map.coe_fn_comp_Lp ContinuousLinearMap.coeFn_compLp
 
 theorem coeFn_comp_Lp' (L : E →L[𝕜] F) (f : lp E p μ) : L.compLp f =ᵐ[μ] fun a => L (f a) :=
-  L.coe_fn_comp_Lp f
+  L.coeFn_compLp f
 #align continuous_linear_map.coe_fn_comp_Lp' ContinuousLinearMap.coeFn_comp_Lp'
 
 theorem compMemℒp (L : E →L[𝕜] F) (f : lp E p μ) : Memℒp (L ∘ f) p μ :=
-  (lp.memℒp (L.compLp f)).ae_eq (L.coe_fn_comp_Lp' f)
+  (lp.memℒp (L.compLp f)).ae_eq (L.coeFn_comp_Lp' f)
 #align continuous_linear_map.comp_mem_ℒp ContinuousLinearMap.compMemℒp
 
 theorem compMemℒp' (L : E →L[𝕜] F) {f : α → E} (hf : Memℒp f p μ) : Memℒp (L ∘ f) p μ :=
-  (L.compMemℒp (hf.toLp f)).ae_eq (EventuallyEq.fun_comp hf.coe_fn_to_Lp _)
+  (L.compMemℒp (hf.toLp f)).ae_eq (EventuallyEq.fun_comp hf.coeFn_toLp _)
 #align continuous_linear_map.comp_mem_ℒp' ContinuousLinearMap.compMemℒp'
 
 section IsROrC
@@ -2455,14 +2455,14 @@ def compLpₗ (L : E →L[𝕜] F) : lp E p μ →ₗ[𝕜] lp F p μ
 * `continuous_linear_map.comp_left_continuous_compact` for continuous functions on compact spaces.
 -/
 def compLpL [Fact (1 ≤ p)] (L : E →L[𝕜] F) : lp E p μ →L[𝕜] lp F p μ :=
-  LinearMap.mkContinuous (L.compLpₗ p μ) ‖L‖ L.norm_comp_Lp_le
+  LinearMap.mkContinuous (L.compLpₗ p μ) ‖L‖ L.norm_compLp_le
 #align continuous_linear_map.comp_LpL ContinuousLinearMap.compLpL
 
 variable {μ p}
 
 theorem coeFn_compLpL [Fact (1 ≤ p)] (L : E →L[𝕜] F) (f : lp E p μ) :
     L.compLpL p μ f =ᵐ[μ] fun a => L (f a) :=
-  L.coe_fn_comp_Lp f
+  L.coeFn_compLp f
 #align continuous_linear_map.coe_fn_comp_LpL ContinuousLinearMap.coeFn_compLpL
 
 theorem add_compLpL [Fact (1 ≤ p)] (L L' : E →L[𝕜] F) :
@@ -2502,7 +2502,7 @@ theorem indicatorConstLp_eq_toSpanSingleton_compLp {s : Set α} [NormedSpace ℝ
   ext1
   refine' indicator_const_Lp_coe_fn.trans _
   have h_comp_Lp :=
-    (ContinuousLinearMap.toSpanSingleton ℝ x).coe_fn_comp_Lp (indicator_const_Lp 2 hs hμs (1 : ℝ))
+    (ContinuousLinearMap.toSpanSingleton ℝ x).coeFn_compLp (indicator_const_Lp 2 hs hμs (1 : ℝ))
   rw [← eventually_eq] at h_comp_Lp
   refine' eventually_eq.trans _ h_comp_Lp.symm
   refine' (@indicator_const_Lp_coe_fn _ _ _ 2 μ _ s hs hμs (1 : ℝ)).mono fun y hy => _
@@ -2699,7 +2699,7 @@ theorem tendsto_lp_iff_tendsto_ℒp'' {ι} {fi : Filter ι} [Fact (1 ≤ p)] (f 
   convert Lp.tendsto_Lp_iff_tendsto_ℒp' _ _
   ext1 n
   apply snorm_congr_ae
-  filter_upwards [((f_ℒp n).sub f_lim_ℒp).coe_fn_to_Lp,
+  filter_upwards [((f_ℒp n).sub f_lim_ℒp).coeFn_toLp,
     Lp.coe_fn_sub ((f_ℒp n).toLp (f n)) (f_lim_ℒp.to_Lp f_lim)]with _ hx₁ hx₂
   rw [← hx₂]
   exact hx₁.symm
@@ -3021,7 +3021,7 @@ theorem cauchy_complete_ℒp [CompleteSpace E] (hp : 1 ≤ p) {f : ℕ → α �
 
 
 instance [CompleteSpace E] [hp : Fact (1 ≤ p)] : CompleteSpace (lp E p μ) :=
-  complete_space_Lp_of_cauchy_complete_ℒp fun f hf B hB h_cau =>
+  completeSpace_lp_of_cauchy_complete_ℒp fun f hf B hB h_cau =>
     cauchy_complete_ℒp hp.elim hf hB.Ne h_cau
 
 end Lp

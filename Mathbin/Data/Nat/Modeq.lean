@@ -98,7 +98,7 @@ theorem Dvd.dvd.modEq_zero_nat (h : n ∣ a) : a ≡ 0 [MOD n] :=
 
 #print Dvd.dvd.zero_modEq_nat /-
 theorem Dvd.dvd.zero_modEq_nat (h : n ∣ a) : 0 ≡ a [MOD n] :=
-  h.modeq_zero_nat.symm
+  h.modEq_zero_nat.symm
 #align has_dvd.dvd.zero_modeq_nat Dvd.dvd.zero_modEq_nat
 -/
 
@@ -297,13 +297,13 @@ end Modeq
 
 #print Nat.modEq_sub /-
 theorem modEq_sub (h : b ≤ a) : a ≡ b [MOD a - b] :=
-  (modeq_of_dvd <| by rw [Int.ofNat_sub h]).symm
+  (modEq_of_dvd <| by rw [Int.ofNat_sub h]).symm
 #align nat.modeq_sub Nat.modEq_sub
 -/
 
 #print Nat.modEq_one /-
 theorem modEq_one : a ≡ b [MOD 1] :=
-  modeq_of_dvd <| one_dvd _
+  modEq_of_dvd <| one_dvd _
 #align nat.modeq_one Nat.modEq_one
 -/
 

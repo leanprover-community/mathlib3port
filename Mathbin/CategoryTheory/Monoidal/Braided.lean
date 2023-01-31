@@ -853,7 +853,7 @@ def tensorMonoidal : MonoidalFunctor (C × C) C :=
     associativity' := fun X Y Z => tensor_associativity C X.1 X.2 Y.1 Y.2 Z.1 Z.2
     left_unitality' := fun ⟨X₁, X₂⟩ => tensor_left_unitality C X₁ X₂
     right_unitality' := fun ⟨X₁, X₂⟩ => tensor_right_unitality C X₁ X₂
-    μ_is_iso := by
+    μ_isIso := by
       dsimp [tensor_μ]
       infer_instance }
 #align category_theory.tensor_monoidal CategoryTheory.tensorMonoidal

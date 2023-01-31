@@ -89,7 +89,7 @@ theorem Equiv.Perm.decomposeOption_symm_sign {α : Type _} [DecidableEq α] [Fin
 /-- The set of all permutations of `option α` can be constructed by augmenting the set of
 permutations of `α` by each element of `option α` in turn. -/
 theorem Finset.univ_perm_option {α : Type _} [DecidableEq α] [Fintype α] :
-    @Finset.univ (perm <| Option α) _ =
+    @Finset.univ (Perm <| Option α) _ =
       (Finset.univ : Finset <| Option α × Perm α).map Equiv.Perm.decomposeOption.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 #align finset.univ_perm_option Finset.univ_perm_option

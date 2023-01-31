@@ -129,7 +129,7 @@ Case conversion may be inaccurate. Consider using '#align list.rdrop_while List.
 /-- Drop elements from the tail end of a list that satisfy `p : α → Prop`.
 Implemented naively via `list.reverse` -/
 def rdropWhile : List α :=
-  reverse (l.reverse.dropWhile p)
+  reverse (l.reverse.dropWhileₓ p)
 #align list.rdrop_while List.rdropWhile
 
 /- warning: list.rdrop_while_nil -> List.rdropWhile_nil is a dubious translation:
@@ -193,7 +193,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} α) (l : Ne.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p _inst_1) (List.nil.{u1} α)), Not (Eq.{1} Bool (p (List.getLast.{u1} α (List.rdropWhile.{u1} α p _inst_1) l)) Bool.true)
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_last_not List.rdropWhile_last_notₓ'. -/
-theorem rdropWhile_last_not (hl : l.rdropWhile p ≠ []) : ¬p ((rdropWhile p l).last hl) :=
+theorem rdropWhile_last_not (hl : l.rdropWhile p ≠ []) : ¬p ((rdropWhile p l).getLast hl) :=
   by
   simp_rw [rdrop_while]
   rw [last_reverse]
@@ -253,7 +253,7 @@ but is expected to have type
   forall {α : Type.{u1}} {p : α -> Bool} {_inst_1 : List.{u1} α}, Iff (Eq.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p _inst_1) _inst_1) (forall (hl : Ne.{succ u1} (List.{u1} α) _inst_1 (List.nil.{u1} α)), Not (Eq.{1} Bool (p (List.getLast.{u1} α _inst_1 hl)) Bool.true))
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_eq_self_iff List.rdropWhile_eq_self_iffₓ'. -/
 @[simp]
-theorem rdropWhile_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p (l.last hl) :=
+theorem rdropWhile_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p (l.getLast hl) :=
   by
   simp only [rdrop_while, reverse_eq_iff, length_reverse, Ne.def, drop_while_eq_self_iff,
     last_eq_nth_le, ← length_eq_zero, pos_iff_ne_zero]
@@ -376,7 +376,7 @@ but is expected to have type
   forall {α : Type.{u1}} {p : α -> Bool} {_inst_1 : List.{u1} α}, Iff (Eq.{succ u1} (List.{u1} α) (List.rtakeWhile.{u1} α p _inst_1) (List.nil.{u1} α)) (forall (hl : Ne.{succ u1} (List.{u1} α) _inst_1 (List.nil.{u1} α)), Not (Eq.{1} Bool (p (List.getLast.{u1} α _inst_1 hl)) Bool.true))
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_eq_nil_iff List.rtakeWhile_eq_nil_iffₓ'. -/
 @[simp]
-theorem rtakeWhile_eq_nil_iff : rtakeWhile p l = [] ↔ ∀ hl : l ≠ [], ¬p (l.last hl) := by
+theorem rtakeWhile_eq_nil_iff : rtakeWhile p l = [] ↔ ∀ hl : l ≠ [], ¬p (l.getLast hl) := by
   induction l using List.reverseRecOn <;> simp [rtake_while]
 #align list.rtake_while_eq_nil_iff List.rtakeWhile_eq_nil_iff
 

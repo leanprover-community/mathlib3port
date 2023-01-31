@@ -21,7 +21,7 @@ propositions in a set using various implications between them.
 
 namespace Tactic
 
-export List (Tfae)
+export List (TFAE)
 
 namespace Tfae
 
@@ -80,7 +80,7 @@ unsafe def tfae_have (h : parse <| optional ident <* tk ":") (i₁ : parse (with
   let e₁ ← List.get? l (i₁ - 1) <|> fail f! "index {i₁ } is not between 1 and {l.length}"
   let e₂ ← List.get? l (i₂ - 1) <|> fail f! "index {i₂ } is not between 1 and {l.length}"
   let type ← to_expr (tfae.mk_implication re e₁ e₂)
-  let h := h.getOrElse (mk_name re i₁ i₂)
+  let h := h.getD (mk_name re i₁ i₂)
   tactic.assert h type
   return ()
 #align tactic.interactive.tfae_have tactic.interactive.tfae_have
@@ -94,7 +94,7 @@ unsafe def tfae_finish : tactic Unit :=
       impl_graph.mk_scc cl
       let q(TFAE $(l)) ← target
       let l ← parse_list l
-      let (_, r, _) ← cl.root l.head
+      let (_, r, _) ← cl.root l.headI
       refine ``(tfae_of_forall $(r) _ _)
       let thm ← mk_const `` forall_mem_cons
       l fun e => do

@@ -293,7 +293,7 @@ theorem isOpen_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : S
 
 @[to_additive]
 theorem isOpen_of_openSubgroup {U : OpenSubgroup G} (h : U.1 ≤ H) : IsOpen (H : Set G) :=
-  H.is_open_of_mem_nhds (Filter.mem_of_superset U.mem_nhds_one h)
+  H.isOpen_of_mem_nhds (Filter.mem_of_superset U.mem_nhds_one h)
 #align subgroup.is_open_of_open_subgroup Subgroup.isOpen_of_openSubgroup
 #align add_subgroup.is_open_of_open_add_subgroup AddSubgroup.isOpen_of_open_add_subgroup
 

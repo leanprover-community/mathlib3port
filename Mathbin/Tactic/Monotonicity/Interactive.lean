@@ -568,7 +568,7 @@ open Format MonoSelection
 
 unsafe def best_match {β} (xs : List expr) (tac : expr → tactic β) : tactic Unit := do
   let t ← target
-  let xs ← xs.mmap fun x => try_core <| Prod.mk x <$> solve_aux t (tac x >> get_goals)
+  let xs ← xs.mapM fun x => try_core <| Prod.mk x <$> solve_aux t (tac x >> get_goals)
   let xs := xs.filterMap id
   let r := List.minimumOn (List.length ∘ Prod.fst ∘ Prod.snd) xs
   match r with
@@ -641,7 +641,7 @@ by mono*
 unsafe def mono (many : parse (tk "*")?) (dir : parse side)
     (hyps : parse <| tk "with" *> pexpr_list_or_texpr <|> pure [])
     (simp_rules : parse <| tk "using" *> simp_arg_list <|> pure []) : tactic Unit := do
-  let hyps ← hyps.mmap fun p => to_expr p >>= mk_meta_var
+  let hyps ← hyps.mapM fun p => to_expr p >>= mk_meta_var
   hyps fun pr => do
       let h ← get_unused_name `h
       note h none pr
@@ -724,7 +724,7 @@ unsafe def assert_or_rule : lean.parser (Sum pexpr pexpr) :=
 #align tactic.interactive.assert_or_rule tactic.interactive.assert_or_rule
 
 unsafe def arity : lean.parser RepArity :=
-  tk "*" *> pure RepArity.many <|> rep_arity.exactly <$> (tk "^" *> small_nat) <|> pure RepArity.one
+  tk "*" *> pure RepArity.many <|> RepArity.exactly <$> (tk "^" *> small_nat) <|> pure RepArity.one
 #align tactic.interactive.arity tactic.interactive.arity
 
 /-- `ac_mono` reduces the `f x ⊑ f y`, for some relation `⊑` and a

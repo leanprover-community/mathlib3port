@@ -53,7 +53,7 @@ theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι 
   by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
   classical
-    have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_to_set.WellFoundedOn
+    have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_toSet.WellFoundedOn
     obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
     exact
       ⟨i, fun k hk =>
@@ -73,8 +73,8 @@ theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y 
 instance Lex.isStrictOrder [LinearOrder ι] [∀ i, PartialOrder (α i)] :
     IsStrictOrder (Lex (Π₀ i, α i)) (· < ·) :=
   let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.isStrictOrder
-  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_is_irrefl a
-    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_is_trans a b c }
+  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_isIrrefl a
+    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_isTrans a b c }
 #align dfinsupp.lex.is_strict_order Dfinsupp.Lex.isStrictOrder
 
 variable [LinearOrder ι]
@@ -111,9 +111,8 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLe : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
-  ltTrichotomyRec (fun f g h => is_true <| Or.inr h)
-    (fun f g h => is_true <| Or.inl <| congr_arg _ h) fun f g h =>
-    is_false fun h' => (lt_irrefl _ (h.trans_le h')).elim
+  ltTrichotomyRec (fun f g h => isTrue <| Or.inr h) (fun f g h => isTrue <| Or.inl <| congr_arg _ h)
+    fun f g h => isFalse fun h' => (lt_irrefl _ (h.trans_le h')).elim
 #align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLe
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/

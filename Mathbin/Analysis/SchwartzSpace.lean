@@ -227,7 +227,7 @@ theorem seminormAux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
     (c • f).seminormAux k n ≤ ‖c‖ * f.seminormAux k n :=
   by
   refine'
-    (c • f).seminorm_aux_le_bound k n (mul_nonneg (norm_nonneg _) (seminorm_aux_nonneg _ _ _))
+    (c • f).seminormAux_le_bound k n (mul_nonneg (norm_nonneg _) (seminorm_aux_nonneg _ _ _))
       fun x => (decay_smul_aux k n f c x).le.trans _
   rw [mul_assoc]
   exact mul_le_mul_of_nonneg_left (f.le_seminorm_aux k n x) (norm_nonneg _)
@@ -297,7 +297,7 @@ section Neg
 instance : Neg 𝓢(E, F) :=
   ⟨fun f =>
     ⟨-f, (f.smooth _).neg, fun k n =>
-      ⟨f.seminormAux k n, fun x => (decay_neg_aux k n f x).le.trans (f.le_seminorm_aux k n x)⟩⟩⟩
+      ⟨f.seminormAux k n, fun x => (decay_neg_aux k n f x).le.trans (f.le_seminormAux k n x)⟩⟩⟩
 
 end Neg
 
@@ -308,7 +308,7 @@ instance : Add 𝓢(E, F) :=
     ⟨f + g, (f.smooth _).add (g.smooth _), fun k n =>
       ⟨f.seminormAux k n + g.seminormAux k n, fun x =>
         (decay_add_le_aux k n f g x).trans
-          (add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x))⟩⟩⟩
+          (add_le_add (f.le_seminormAux k n x) (g.le_seminormAux k n x))⟩⟩⟩
 
 @[simp]
 theorem add_apply {f g : 𝓢(E, F)} {x : E} : (f + g) x = f x + g x :=
@@ -317,10 +317,10 @@ theorem add_apply {f g : 𝓢(E, F)} {x : E} : (f + g) x = f x + g x :=
 
 theorem seminormAux_add_le (k n : ℕ) (f g : 𝓢(E, F)) :
     (f + g).seminormAux k n ≤ f.seminormAux k n + g.seminormAux k n :=
-  (f + g).seminorm_aux_le_bound k n
+  (f + g).seminormAux_le_bound k n
     (add_nonneg (seminormAux_nonneg _ _ _) (seminormAux_nonneg _ _ _)) fun x =>
     (decay_add_le_aux k n f g x).trans <|
-      add_le_add (f.le_seminorm_aux k n x) (g.le_seminorm_aux k n x)
+      add_le_add (f.le_seminormAux k n x) (g.le_seminormAux k n x)
 #align schwartz_map.seminorm_aux_add_le SchwartzMap.seminormAux_add_le
 
 end Add
@@ -403,13 +403,13 @@ def seminorm (k n : ℕ) : Seminorm 𝕜 𝓢(E, F) :=
 /-- If one controls the seminorm for every `x`, then one controls the seminorm. -/
 theorem seminorm_le_bound (k n : ℕ) (f : 𝓢(E, F)) {M : ℝ} (hMp : 0 ≤ M)
     (hM : ∀ x, ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ M) : Seminorm 𝕜 k n f ≤ M :=
-  f.seminorm_aux_le_bound k n hMp hM
+  f.seminormAux_le_bound k n hMp hM
 #align schwartz_map.seminorm_le_bound SchwartzMap.seminorm_le_bound
 
 /-- The seminorm controls the Schwartz estimate for any fixed `x`. -/
 theorem le_seminorm (k n : ℕ) (f : 𝓢(E, F)) (x : E) :
     ‖x‖ ^ k * ‖iteratedFderiv ℝ n f x‖ ≤ Seminorm 𝕜 k n f :=
-  f.le_seminorm_aux k n x
+  f.le_seminormAux k n x
 #align schwartz_map.le_seminorm SchwartzMap.le_seminorm
 
 theorem norm_iteratedFderiv_le_seminorm (f : 𝓢(E, F)) (n : ℕ) (x₀ : E) :
@@ -474,7 +474,7 @@ variable {𝕜 E F}
 
 instance : HasContinuousSmul 𝕜 𝓢(E, F) :=
   by
-  rw [(schwartzWithSeminorms 𝕜 E F).with_seminorms_eq]
+  rw [(schwartzWithSeminorms 𝕜 E F).withSeminorms_eq]
   exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.HasContinuousSmul
 
 instance : TopologicalAddGroup 𝓢(E, F) :=

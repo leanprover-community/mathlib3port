@@ -104,7 +104,7 @@ reserved).
 -/
 unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved : name_set) :
     tactic (List expr) :=
-  ns.mmap fun spec =>
+  ns.mapM fun spec =>
     match spec with
     | Sum.inl n => intro n
     | Sum.inr ns => intro_fresh_reserved ns reserved

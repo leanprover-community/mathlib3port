@@ -87,8 +87,8 @@ open neighborhood `U`. -/
 @[protect_proj]
 structure CU (X : Type _) [TopologicalSpace X] where
   (c U : Set X)
-  closed_C : IsClosed C
-  open_U : IsOpen U
+  closed_c : IsClosed C
+  open_u : IsOpen U
   Subset : C ⊆ U
 #align urysohns.CU Urysohns.CU
 
@@ -104,10 +104,10 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. 
 @[simps c]
 def left (c : CU X) : CU X where
   c := c.c
-  U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
-  closed_C := c.closed_C
-  open_U := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.1
-  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.1
+  U := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
+  closed_c := c.closed_c
+  open_u := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.1
+  Subset := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.2.1
 #align urysohns.CU.left Urysohns.CU.left
 
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
@@ -115,11 +115,11 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u
 @[simps U]
 def right (c : CU X) : CU X
     where
-  c := closure (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some
+  c := closure (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
   U := c.U
-  closed_C := isClosed_closure
-  open_U := c.open_U
-  Subset := (normal_exists_closure_subset c.closed_C c.open_U c.Subset).some_spec.2.2
+  closed_c := isClosed_closure
+  open_u := c.open_u
+  Subset := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.2.2
 #align urysohns.CU.right Urysohns.CU.right
 
 theorem left_u_subset_right_c (c : CU X) : c.left.U ⊆ c.right.c :=
@@ -127,11 +127,11 @@ theorem left_u_subset_right_c (c : CU X) : c.left.U ⊆ c.right.c :=
 #align urysohns.CU.left_U_subset_right_C Urysohns.CU.left_u_subset_right_c
 
 theorem left_u_subset (c : CU X) : c.left.U ⊆ c.U :=
-  Subset.trans c.left_U_subset_right_C c.right.Subset
+  Subset.trans c.left_u_subset_right_c c.right.Subset
 #align urysohns.CU.left_U_subset Urysohns.CU.left_u_subset
 
 theorem subset_right_c (c : CU X) : c.c ⊆ c.right.c :=
-  Subset.trans c.left.Subset c.left_U_subset_right_C
+  Subset.trans c.left.Subset c.left_u_subset_right_c
 #align urysohns.CU.subset_right_C Urysohns.CU.subset_right_c
 
 /-- `n`-th approximation to a continuous function `f : X → ℝ` such that `f = 0` on `c.C` and `f = 1`
@@ -253,7 +253,7 @@ theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim 
 #align urysohns.CU.lim_eq_midpoint Urysohns.CU.lim_eq_midpoint
 
 theorem approx_le_lim (c : CU X) (x : X) (n : ℕ) : c.approx n x ≤ c.lim x :=
-  le_csupᵢ (c.bdd_above_range_approx x) _
+  le_csupᵢ (c.bddAbove_range_approx x) _
 #align urysohns.CU.approx_le_lim Urysohns.CU.approx_le_lim
 
 theorem lim_nonneg (c : CU X) (x : X) : 0 ≤ c.lim x :=

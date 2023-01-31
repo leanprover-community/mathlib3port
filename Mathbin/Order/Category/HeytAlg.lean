@@ -30,7 +30,7 @@ def HeytAlg :=
 namespace HeytAlg
 
 instance : CoeSort HeytAlg (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : HeytAlg) : HeytingAlgebra X :=
   X.str

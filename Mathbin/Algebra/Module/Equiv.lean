@@ -194,7 +194,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} {M : Type.{u4}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u2} R] [_inst_2 : Semiring.{u1} S] [_inst_3 : AddCommMonoid.{u4} M] [_inst_5 : AddCommMonoid.{u3} M₂] [_inst_6 : Module.{u2, u4} R M _inst_1 _inst_3] [_inst_7 : Module.{u1, u3} S M₂ _inst_2 _inst_5] {σ : RingHom.{u2, u1} R S (Semiring.toNonAssocSemiring.{u2} R _inst_1) (Semiring.toNonAssocSemiring.{u1} S _inst_2)} {σ' : RingHom.{u1, u2} S R (Semiring.toNonAssocSemiring.{u1} S _inst_2) (Semiring.toNonAssocSemiring.{u2} R _inst_1)} [_inst_8 : RingHomInvPair.{u2, u1} R S _inst_1 _inst_2 σ σ'] [_inst_9 : RingHomInvPair.{u1, u2} S R _inst_2 _inst_1 σ' σ], Function.Injective.{max (succ u4) (succ u3), max (succ u4) (succ u3)} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' _inst_8 _inst_9 M M₂ _inst_3 _inst_5 _inst_6 _inst_7) (LinearMap.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ M M₂ _inst_3 _inst_5 _inst_6 _inst_7) (LinearEquiv.toLinearMap.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' _inst_8 _inst_9 M M₂ _inst_3 _inst_5 _inst_6 _inst_7)
 Case conversion may be inaccurate. Consider using '#align linear_equiv.to_linear_map_injective LinearEquiv.toLinearMap_injectiveₓ'. -/
 theorem toLinearMap_injective : Injective (coe : (M ≃ₛₗ[σ] M₂) → M →ₛₗ[σ] M₂) := fun e₁ e₂ H =>
-  to_equiv_injective <| Equiv.ext <| LinearMap.congr_fun H
+  toEquiv_injective <| Equiv.ext <| LinearMap.congr_fun H
 #align linear_equiv.to_linear_map_injective LinearEquiv.toLinearMap_injective
 
 /- warning: linear_equiv.to_linear_map_inj -> LinearEquiv.toLinearMap_inj is a dubious translation:

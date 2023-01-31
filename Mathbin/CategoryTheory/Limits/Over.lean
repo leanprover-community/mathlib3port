@@ -55,7 +55,7 @@ instance [HasColimits C] : HasColimits (Over X) :=
   ⟨inferInstance⟩
 
 instance createsColimits : CreatesColimits (forget X) :=
-  costructured_arrow.creates_colimits
+  CostructuredArrow.createsColimits
 #align category_theory.over.creates_colimits CategoryTheory.Over.createsColimits
 
 -- We can automatically infer that the forgetful functor preserves and reflects colimits.
@@ -154,7 +154,7 @@ theorem mono_iff_mono_right [HasPullbacks C] {f g : Under X} (h : f ⟶ g) : Mon
 #align category_theory.under.mono_iff_mono_right CategoryTheory.Under.mono_iff_mono_right
 
 instance createsLimits : CreatesLimits (forget X) :=
-  structured_arrow.creates_limits
+  StructuredArrow.createsLimits
 #align category_theory.under.creates_limits CategoryTheory.Under.createsLimits
 
 -- We can automatically infer that the forgetful functor preserves and reflects limits.

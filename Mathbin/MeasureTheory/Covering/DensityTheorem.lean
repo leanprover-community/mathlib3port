@@ -124,7 +124,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
     (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
     Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) :=
   by
-  refine' (VitaliFamily μ K).tendsto_filter_at_iff.mpr ⟨_, fun ε hε => _⟩
+  refine' (VitaliFamily μ K).tendsto_filterAt_iff.mpr ⟨_, fun ε hε => _⟩
   · filter_upwards [xmem, δlim self_mem_nhdsWithin]with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
   · by_cases l.ne_bot

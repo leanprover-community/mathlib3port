@@ -85,7 +85,7 @@ theorem index_comap_of_surjective {G' : Type _} [Group G'] {f : G' →* G}
 theorem index_comap {G' : Type _} [Group G'] (f : G' →* G) :
     (H.comap f).index = H.relindex f.range :=
   Eq.trans (congr_arg index (by rfl))
-    ((H.subgroupOf f.range).index_comap_of_surjective f.range_restrict_surjective)
+    ((H.subgroupOf f.range).index_comap_of_surjective f.rangeRestrict_surjective)
 #align subgroup.index_comap Subgroup.index_comap
 #align add_subgroup.index_comap AddSubgroup.index_comap
 

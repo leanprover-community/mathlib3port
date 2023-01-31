@@ -339,7 +339,7 @@ def equivSigmaTuple : List α ≃ Σn, Fin n → α
 This can be used with `induction l using list.of_fn_rec`. -/
 @[elab_as_elim]
 def ofFnRec {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C (List.ofFn f)) (l : List α) : C l :=
-  cast (congr_arg _ l.of_fn_nth_le) <| h l.length fun i => l.nthLe (↑i) i.2
+  cast (congr_arg _ l.ofFn_nthLe) <| h l.length fun i => l.nthLe (↑i) i.2
 #align list.of_fn_rec List.ofFnRec
 -/
 
@@ -352,7 +352,7 @@ Case conversion may be inaccurate. Consider using '#align list.of_fn_rec_of_fn L
 @[simp]
 theorem ofFnRec_ofFn {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C (List.ofFn f)) {n : ℕ}
     (f : Fin n → α) : @ofFnRec _ C h (List.ofFn f) = h _ f :=
-  equivSigmaTuple.right_inverse_symm.cast_eq (fun s => h s.1 s.2) ⟨n, f⟩
+  equivSigmaTuple.rightInverse_symm.cast_eq (fun s => h s.1 s.2) ⟨n, f⟩
 #align list.of_fn_rec_of_fn List.ofFnRec_ofFn
 
 #print List.exists_iff_exists_tuple /-

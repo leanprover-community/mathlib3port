@@ -134,7 +134,7 @@ but is expected to have type
   forall {t : Type.{u1} -> Type.{u1}} [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {F : Type.{u1} -> Type.{u1}} {G : Type.{u1} -> Type.{u1}} [_inst_3 : Applicative.{u1, u1} F] [_inst_4 : LawfulApplicative.{u1, u1} F _inst_3] [_inst_5 : Applicative.{u1, u1} G] [_inst_6 : LawfulApplicative.{u1, u1} G _inst_5] {α : Type.{u1}} (x : t (F (G α))), Eq.{succ u1} (Functor.Comp.{u1, u1, u1} F G (t α)) (sequence.{u1} t α (Functor.Comp.{u1, u1, u1} F G) (Functor.Comp.instApplicativeComp.{u1, u1, u1} F G _inst_3 _inst_5) _inst_1 (Functor.map.{u1, u1} t (Traversable.toFunctor.{u1} t _inst_1) (F (G α)) (Functor.Comp.{u1, u1, u1} F G α) (Functor.Comp.mk.{u1, u1, u1} F G α) x)) (Functor.Comp.mk.{u1, u1, u1} F G (t α) (Functor.map.{u1, u1} F (Applicative.toFunctor.{u1, u1} F _inst_3) (t (G α)) (G (t α)) (sequence.{u1} t α G _inst_5 _inst_1) (sequence.{u1} t (G α) F _inst_3 _inst_1 x)))
 Case conversion may be inaccurate. Consider using '#align traversable.comp_sequence Traversable.comp_sequenceₓ'. -/
 theorem comp_sequence (x : t (F (G α))) :
-    sequence (comp.mk <$> x) = Comp.mk (sequence <$> sequence x) := by
+    sequence (Comp.mk <$> x) = Comp.mk (sequence <$> sequence x) := by
   simp [sequence, traverse_map] <;> rw [← comp_traverse] <;> simp [map_id]
 #align traversable.comp_sequence Traversable.comp_sequence
 
@@ -165,8 +165,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align traversable.traverse_comp Traversable.traverse_compₓ'. -/
 @[functor_norm]
 theorem traverse_comp (g : α → F β) (h : β → G γ) :
-    traverse (comp.mk ∘ map h ∘ g) =
-      (comp.mk ∘ map (traverse h) ∘ traverse g : t α → Comp F G (t γ)) :=
+    traverse (Comp.mk ∘ map h ∘ g) =
+      (Comp.mk ∘ map (traverse h) ∘ traverse g : t α → Comp F G (t γ)) :=
   by
   ext
   exact comp_traverse _ _ _

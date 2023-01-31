@@ -42,7 +42,7 @@ theorem forall_mem_ne {a : α} {l : List α} : (∀ a' : α, a' ∈ l → ¬a = 
 #print List.nodup_nil /-
 @[simp]
 theorem nodup_nil : @Nodup α [] :=
-  pairwise.nil
+  Pairwise.nil
 #align list.nodup_nil List.nodup_nil
 -/
 
@@ -100,7 +100,7 @@ theorem not_nodup_cons_of_mem : a ∈ l → ¬Nodup (a :: l) :=
 
 #print List.Nodup.sublist /-
 protected theorem Nodup.sublist : l₁ <+ l₂ → Nodup l₂ → Nodup l₁ :=
-  pairwise.sublist
+  Pairwise.sublist
 #align list.nodup.sublist List.Nodup.sublist
 -/
 
@@ -141,7 +141,7 @@ theorem Nodup.nthLe_inj_iff {l : List α} (h : Nodup l) {i j : ℕ} (hi : i < l.
 
 #print List.nodup_iff_get?_ne_get? /-
 theorem nodup_iff_get?_ne_get? {l : List α} :
-    l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.nth i ≠ l.nth j :=
+    l.Nodup ↔ ∀ i j : ℕ, i < j → j < l.length → l.get? i ≠ l.get? j :=
   by
   rw [nodup_iff_nth_le_inj]
   simp only [nth_le_eq_iff, some_nth_le_eq]
@@ -191,7 +191,7 @@ theorem nthLe_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.len
 @[simp]
 theorem nthLe_index_of [DecidableEq α] {l : List α} (H : Nodup l) (n h) :
     indexOf (nthLe l n h) l = n :=
-  nodup_iff_nthLe_inj.1 H _ _ _ h <| index_of_nth_le <| indexOf_lt_length.2 <| nthLe_mem _ _ _
+  nodup_iff_nthLe_inj.1 H _ _ _ h <| indexOf_nthLe <| indexOf_lt_length.2 <| nthLe_mem _ _ _
 #align list.nth_le_index_of List.nthLe_index_of
 -/
 
@@ -304,7 +304,7 @@ theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : Nodup (map f l)) 
 #print List.nodup_map_iff_inj_on /-
 theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : Nodup l) :
     Nodup (map f l) ↔ ∀ x ∈ l, ∀ y ∈ l, f x = f y → x = y :=
-  ⟨inj_on_of_nodup_map, fun h => d.map_on h⟩
+  ⟨inj_on_of_nodup_map, fun h => d.map_onₓ h⟩
 #align list.nodup_map_iff_inj_on List.nodup_map_iff_inj_on
 -/
 
@@ -366,7 +366,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l : List.{u1} α}, (List.Nodup.{u1} α l) -> (forall (a : α), Eq.{succ u1} (List.{u1} α) (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l a) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Ne.{succ u1} α a_1 a) (instDecidableNot (Eq.{succ u1} α a_1 a) (_inst_1 a_1 a))) l))
 Case conversion may be inaccurate. Consider using '#align list.nodup.erase_eq_filter List.Nodup.erase_eq_filterₓ'. -/
 theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
-    l.erase a = filter (· ≠ a) l :=
+    l.eraseₓ a = filter (· ≠ a) l :=
   by
   induction' d with b l m d IH; · rfl
   by_cases b = a
@@ -386,8 +386,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] (a : α), (List.Nodup.{u1} α l) -> (List.Nodup.{u1} α (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l a))
 Case conversion may be inaccurate. Consider using '#align list.nodup.erase List.Nodup.eraseₓ'. -/
-theorem Nodup.erase [DecidableEq α] (a : α) : Nodup l → Nodup (l.erase a) :=
-  nodup.sublist <| erase_sublist _ _
+theorem Nodup.erase [DecidableEq α] (a : α) : Nodup l → Nodup (l.eraseₓ a) :=
+  Nodup.sublist <| erase_sublist _ _
 #align list.nodup.erase List.Nodup.erase
 
 /- warning: list.nodup.diff -> List.Nodup.diff is a dubious translation:
@@ -396,8 +396,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} [_inst_1 : DecidableEq.{succ u1} α], (List.Nodup.{u1} α l₁) -> (List.Nodup.{u1} α (List.diff.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂))
 Case conversion may be inaccurate. Consider using '#align list.nodup.diff List.Nodup.diffₓ'. -/
-theorem Nodup.diff [DecidableEq α] : l₁.Nodup → (l₁.diff l₂).Nodup :=
-  nodup.sublist <| diff_sublist _ _
+theorem Nodup.diff [DecidableEq α] : l₁.Nodup → (l₁.diffₓ l₂).Nodup :=
+  Nodup.sublist <| diff_sublist _ _
 #align list.nodup.diff List.Nodup.diff
 
 /- warning: list.nodup.mem_erase_iff -> List.Nodup.mem_erase_iff is a dubious translation:
@@ -406,7 +406,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} {a : α} {b : α} [_inst_1 : DecidableEq.{succ u1} α], (List.Nodup.{u1} α l) -> (Iff (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l b)) (And (Ne.{succ u1} α a b) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l)))
 Case conversion may be inaccurate. Consider using '#align list.nodup.mem_erase_iff List.Nodup.mem_erase_iffₓ'. -/
-theorem Nodup.mem_erase_iff [DecidableEq α] (d : Nodup l) : a ∈ l.erase b ↔ a ≠ b ∧ a ∈ l := by
+theorem Nodup.mem_erase_iff [DecidableEq α] (d : Nodup l) : a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by
   rw [d.erase_eq_filter, mem_filter, and_comm']
 #align list.nodup.mem_erase_iff List.Nodup.mem_erase_iff
 
@@ -416,7 +416,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α], (List.Nodup.{u1} α l) -> (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l a)))
 Case conversion may be inaccurate. Consider using '#align list.nodup.not_mem_erase List.Nodup.not_mem_eraseₓ'. -/
-theorem Nodup.not_mem_erase [DecidableEq α] (h : Nodup l) : a ∉ l.erase a := fun H =>
+theorem Nodup.not_mem_erase [DecidableEq α] (h : Nodup l) : a ∉ l.eraseₓ a := fun H =>
   (h.mem_erase_iff.1 H).1 rfl
 #align list.nodup.not_mem_erase List.Nodup.not_mem_erase
 
@@ -443,7 +443,7 @@ theorem nodup_bind {l₁ : List α} {f : α → List β} :
 protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l₂.Nodup) :
     (l₁.product l₂).Nodup :=
   nodup_bind.2
-    ⟨fun a ma => d₂.map <| left_inverse.injective fun b => (rfl : (a, b).2 = b),
+    ⟨fun a ma => d₂.map <| LeftInverse.injective fun b => (rfl : (a, b).2 = b),
       d₁.imp fun a₁ a₂ n x h₁ h₂ =>
         by
         rcases mem_map.1 h₁ with ⟨b₁, mb₁, rfl⟩
@@ -511,7 +511,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {l₁ : List.{u1} α} {l₂ : List.{u1} α}, (List.Nodup.{u1} α l₁) -> (Eq.{succ u1} (List.{u1} α) (List.diff.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) (List.filter.{u1} α (fun (a : α) => Decidable.decide (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂)) (instDecidableNot (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂) (List.instDecidableMemListInstMembershipList.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a l₂))) l₁))
 Case conversion may be inaccurate. Consider using '#align list.nodup.diff_eq_filter List.Nodup.diff_eq_filterₓ'. -/
 theorem Nodup.diff_eq_filter [DecidableEq α] :
-    ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
+    ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diffₓ l₂ = l₁.filterₓ (· ∉ l₂)
   | l₁, [], hl₁ => by simp
   | l₁, a :: l₂, hl₁ =>
     by
@@ -525,20 +525,20 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l₁ : List.{u1} α} {l₂ : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α], (List.Nodup.{u1} α l₁) -> (Iff (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.diff.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂)) (And (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₁) (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂))))
 Case conversion may be inaccurate. Consider using '#align list.nodup.mem_diff_iff List.Nodup.mem_diff_iffₓ'. -/
-theorem Nodup.mem_diff_iff [DecidableEq α] (hl₁ : l₁.Nodup) : a ∈ l₁.diff l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ := by
-  rw [hl₁.diff_eq_filter, mem_filter]
+theorem Nodup.mem_diff_iff [DecidableEq α] (hl₁ : l₁.Nodup) : a ∈ l₁.diffₓ l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ :=
+  by rw [hl₁.diff_eq_filter, mem_filter]
 #align list.nodup.mem_diff_iff List.Nodup.mem_diff_iff
 
 #print List.Nodup.set /-
 protected theorem Nodup.set :
-    ∀ {l : List α} {n : ℕ} {a : α} (hl : l.Nodup) (ha : a ∉ l), (l.updateNth n a).Nodup
+    ∀ {l : List α} {n : ℕ} {a : α} (hl : l.Nodup) (ha : a ∉ l), (l.set n a).Nodup
   | [], n, a, hl, ha => nodup_nil
   | b :: l, 0, a, hl, ha => nodup_cons.2 ⟨mt (mem_cons_of_mem _) ha, (nodup_cons.1 hl).2⟩
   | b :: l, n + 1, a, hl, ha =>
     nodup_cons.2
       ⟨fun h =>
         (mem_or_eq_of_mem_set h).elim (nodup_cons.1 hl).1 fun hba => ha (hba ▸ mem_cons_self _ _),
-        hl.of_cons.updateNth (mt (mem_cons_of_mem _) ha)⟩
+        hl.of_cons.set (mt (mem_cons_of_mem _) ha)⟩
 #align list.nodup.update_nth List.Nodup.set
 -/
 
@@ -549,8 +549,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] {l : List.{u1} α}, (List.Nodup.{u1} α l) -> (forall (f : α -> β) (x : α) (y : β), Eq.{succ u2} (List.{u2} β) (List.map.{u1, u2} α β (Function.update.{succ u1, succ u2} α (fun (ᾰ : α) => β) (fun (a : α) (b : α) => _inst_1 a b) f x y) l) (ite.{succ u2} (List.{u2} β) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l) (List.instDecidableMemListInstMembershipList.{u1} α (fun (a : α) (b : α) => _inst_1 a b) x l) (List.set.{u2} β (List.map.{u1, u2} α β f l) (List.indexOf.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) x l) y) (List.map.{u1, u2} α β f l)))
 Case conversion may be inaccurate. Consider using '#align list.nodup.map_update List.Nodup.map_updateₓ'. -/
 theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
-    l.map (Function.update f x y) =
-      if x ∈ l then (l.map f).updateNth (l.indexOf x) y else l.map f :=
+    l.map (Function.update f x y) = if x ∈ l then (l.map f).set (l.indexOfₓ x) y else l.map f :=
   by
   induction' l with hd tl ihl; · simp
   rw [nodup_cons] at hl

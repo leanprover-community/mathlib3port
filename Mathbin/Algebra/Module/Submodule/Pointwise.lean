@@ -136,12 +136,12 @@ theorem neg_top : -(⊤ : Submodule R M) = ⊤ :=
 
 @[simp]
 theorem neg_infᵢ {ι : Sort _} (S : ι → Submodule R M) : (-⨅ i, S i) = ⨅ i, -S i :=
-  (negOrderIso : Submodule R M ≃o Submodule R M).map_infi _
+  (negOrderIso : Submodule R M ≃o Submodule R M).map_infᵢ _
 #align submodule.neg_infi Submodule.neg_infᵢ
 
 @[simp]
 theorem neg_supᵢ {ι : Sort _} (S : ι → Submodule R M) : (-⨆ i, S i) = ⨆ i, -S i :=
-  (negOrderIso : Submodule R M ≃o Submodule R M).map_supr _
+  (negOrderIso : Submodule R M ≃o Submodule R M).map_supᵢ _
 #align submodule.neg_supr Submodule.neg_supᵢ
 
 end Semiring

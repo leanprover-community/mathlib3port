@@ -39,7 +39,7 @@ variable {X Y : Scheme.{u}} (f : X ⟶ Y)
 -/
 @[mk_iff]
 class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
-  finite_type_of_affine_subset :
+  finiteType_of_affine_subset :
     ∀ (U : Y.affineOpens) (V : X.affineOpens) (e : V.1 ≤ (Opens.map f.1.base).obj U.1),
       (f.appLe e).FiniteType
 #align algebraic_geometry.locally_of_finite_type AlgebraicGeometry.LocallyOfFiniteType
@@ -53,12 +53,12 @@ theorem locallyOfFiniteType_eq : @LocallyOfFiniteType = affineLocally @RingHom.F
 
 instance (priority := 900) locallyOfFiniteTypeOfIsOpenImmersion {X Y : Scheme} (f : X ⟶ Y)
     [IsOpenImmersion f] : LocallyOfFiniteType f :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affine_locally_of_is_open_immersion f
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_of_isOpenImmersion f
 #align algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locallyOfFiniteTypeOfIsOpenImmersion
 
 theorem locallyOfFiniteType_stableUnderComposition :
     MorphismProperty.StableUnderComposition @LocallyOfFiniteType :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affine_locally_stable_under_composition
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_stableUnderComposition
 #align algebraic_geometry.locally_of_finite_type_stable_under_composition AlgebraicGeometry.locallyOfFiniteType_stableUnderComposition
 
 instance locallyOfFiniteTypeComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
@@ -80,18 +80,18 @@ theorem LocallyOfFiniteType.affine_openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y
     (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)]
     (𝒰' : ∀ i, Scheme.OpenCover.{u} ((𝒰.pullbackCover f).obj i)) [∀ i j, IsAffine ((𝒰' i).obj j)] :
     LocallyOfFiniteType f ↔ ∀ i j, (Scheme.Γ.map ((𝒰' i).map j ≫ pullback.snd).op).FiniteType :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affine_open_cover_iff f 𝒰 𝒰'
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affine_openCover_iff f 𝒰 𝒰'
 #align algebraic_geometry.locally_of_finite_type.affine_open_cover_iff AlgebraicGeometry.LocallyOfFiniteType.affine_openCover_iff
 
 theorem LocallyOfFiniteType.source_openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y)
     (𝒰 : Scheme.OpenCover.{u} X) : LocallyOfFiniteType f ↔ ∀ i, LocallyOfFiniteType (𝒰.map i ≫ f) :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.source_open_cover_iff f 𝒰
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.source_openCover_iff f 𝒰
 #align algebraic_geometry.locally_of_finite_type.source_open_cover_iff AlgebraicGeometry.LocallyOfFiniteType.source_openCover_iff
 
 theorem LocallyOfFiniteType.openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y)
     (𝒰 : Scheme.OpenCover.{u} Y) :
     LocallyOfFiniteType f ↔ ∀ i, LocallyOfFiniteType (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.isLocalAffineLocally.open_cover_iff f 𝒰
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.isLocalAffineLocally.openCover_iff f 𝒰
 #align algebraic_geometry.locally_of_finite_type.open_cover_iff AlgebraicGeometry.LocallyOfFiniteType.openCover_iff
 
 theorem locallyOfFiniteType_respectsIso : MorphismProperty.RespectsIso @LocallyOfFiniteType :=

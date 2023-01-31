@@ -202,7 +202,7 @@ theorem eq_of_forall_apply_eq (μ ν : ProbabilityMeasure Ω)
 
 @[simp]
 theorem mass_toFiniteMeasure (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure.mass = 1 :=
-  μ.coe_fn_univ
+  μ.coeFn_univ
 #align measure_theory.probability_measure.mass_to_finite_measure MeasureTheory.ProbabilityMeasure.mass_toFiniteMeasure
 
 theorem toFiniteMeasure_nonzero (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure ≠ 0 :=
@@ -215,7 +215,7 @@ variable [TopologicalSpace Ω] [OpensMeasurableSpace Ω]
 
 theorem testAgainstNn_lipschitz (μ : ProbabilityMeasure Ω) :
     LipschitzWith 1 fun f : Ω →ᵇ ℝ≥0 => μ.toFiniteMeasure.testAgainstNn f :=
-  μ.mass_to_finite_measure ▸ μ.toFiniteMeasure.test_against_nn_lipschitz
+  μ.mass_toFiniteMeasure ▸ μ.toFiniteMeasure.testAgainstNn_lipschitz
 #align measure_theory.probability_measure.test_against_nn_lipschitz MeasureTheory.ProbabilityMeasure.testAgainstNn_lipschitz
 
 /-- The topology of weak convergence on `measure_theory.probability_measure Ω`. This is inherited
@@ -232,7 +232,7 @@ theorem toFiniteMeasure_continuous :
 /-- Probability measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `measure_theory.finite_measure.test_against_nn`, i.e., integration. -/
 def toWeakDualBcnn : ProbabilityMeasure Ω → WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0) :=
-  finite_measure.to_weak_dual_bcnn ∘ to_finite_measure
+  FiniteMeasure.toWeakDualBcnn ∘ toFiniteMeasure
 #align measure_theory.probability_measure.to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.toWeakDualBcnn
 
 @[simp]
@@ -268,7 +268,7 @@ theorem toFiniteMeasure_embedding (Ω : Type _) [MeasurableSpace Ω] [Topologica
 
 theorem tendsto_nhds_iff_to_finite_measures_tendsto_nhds {δ : Type _} (F : Filter δ)
     {μs : δ → ProbabilityMeasure Ω} {μ₀ : ProbabilityMeasure Ω} :
-    Tendsto μs F (𝓝 μ₀) ↔ Tendsto (to_finite_measure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=
+    Tendsto μs F (𝓝 μ₀) ↔ Tendsto (toFiniteMeasure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=
   Embedding.tendsto_nhds_iff (toFiniteMeasure_embedding Ω)
 #align measure_theory.probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds MeasureTheory.ProbabilityMeasure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds
 
@@ -428,7 +428,7 @@ theorem tendsto_testAgainstNn_of_tendsto_normalize_testAgainstNn_of_tendsto_mass
   · simp only [μ.mass_zero_iff.mp h_mass, zero.test_against_nn_apply, zero.mass,
       eq_self_iff_true] at *
     exact tendsto_zero_test_against_nn_of_tendsto_zero_mass mass_lim f
-  simp_rw [fun i => (μs i).test_against_nn_eq_mass_mul f, μ.test_against_nn_eq_mass_mul f]
+  simp_rw [fun i => (μs i).testAgainstNn_eq_mass_mul f, μ.test_against_nn_eq_mass_mul f]
   rw [probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds] at μs_lim
   rw [tendsto_iff_forall_test_against_nn_tendsto] at μs_lim
   have lim_pair :

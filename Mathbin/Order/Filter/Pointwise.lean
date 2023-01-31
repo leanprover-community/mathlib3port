@@ -446,7 +446,7 @@ theorem mul_eq_bot_iff : f * g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 #print Filter.mul_neBot_iff /-
 @[simp, to_additive]
 theorem mul_neBot_iff : (f * g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
-  map₂_ne_bot_iff
+  map₂_neBot_iff
 #align filter.mul_ne_bot_iff Filter.mul_neBot_iff
 #align filter.add_ne_bot_iff Filter.add_neBot_iff
 -/
@@ -454,7 +454,7 @@ theorem mul_neBot_iff : (f * g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
 #print Filter.NeBot.mul /-
 @[to_additive]
 theorem NeBot.mul : NeBot f → NeBot g → NeBot (f * g) :=
-  ne_bot.map₂
+  NeBot.map₂
 #align filter.ne_bot.mul Filter.NeBot.mul
 #align filter.ne_bot.add Filter.NeBot.add
 -/
@@ -462,7 +462,7 @@ theorem NeBot.mul : NeBot f → NeBot g → NeBot (f * g) :=
 #print Filter.NeBot.of_mul_left /-
 @[to_additive]
 theorem NeBot.of_mul_left : (f * g).ne_bot → f.ne_bot :=
-  ne_bot.of_map₂_left
+  NeBot.of_map₂_left
 #align filter.ne_bot.of_mul_left Filter.NeBot.of_mul_left
 #align filter.ne_bot.of_add_left Filter.NeBot.of_add_left
 -/
@@ -470,7 +470,7 @@ theorem NeBot.of_mul_left : (f * g).ne_bot → f.ne_bot :=
 #print Filter.NeBot.of_mul_right /-
 @[to_additive]
 theorem NeBot.of_mul_right : (f * g).ne_bot → g.ne_bot :=
-  ne_bot.of_map₂_right
+  NeBot.of_map₂_right
 #align filter.ne_bot.of_mul_right Filter.NeBot.of_mul_right
 #align filter.ne_bot.of_add_right Filter.NeBot.of_add_right
 -/
@@ -655,7 +655,7 @@ theorem div_eq_bot_iff : f / g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 #print Filter.div_neBot_iff /-
 @[simp, to_additive]
 theorem div_neBot_iff : (f / g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
-  map₂_ne_bot_iff
+  map₂_neBot_iff
 #align filter.div_ne_bot_iff Filter.div_neBot_iff
 #align filter.sub_ne_bot_iff Filter.sub_neBot_iff
 -/
@@ -663,7 +663,7 @@ theorem div_neBot_iff : (f / g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
 #print Filter.NeBot.div /-
 @[to_additive]
 theorem NeBot.div : NeBot f → NeBot g → NeBot (f / g) :=
-  ne_bot.map₂
+  NeBot.map₂
 #align filter.ne_bot.div Filter.NeBot.div
 #align filter.ne_bot.sub Filter.NeBot.sub
 -/
@@ -671,7 +671,7 @@ theorem NeBot.div : NeBot f → NeBot g → NeBot (f / g) :=
 #print Filter.NeBot.of_div_left /-
 @[to_additive]
 theorem NeBot.of_div_left : (f / g).ne_bot → f.ne_bot :=
-  ne_bot.of_map₂_left
+  NeBot.of_map₂_left
 #align filter.ne_bot.of_div_left Filter.NeBot.of_div_left
 #align filter.ne_bot.of_sub_left Filter.NeBot.of_sub_left
 -/
@@ -679,7 +679,7 @@ theorem NeBot.of_div_left : (f / g).ne_bot → f.ne_bot :=
 #print Filter.NeBot.of_div_right /-
 @[to_additive]
 theorem NeBot.of_div_right : (f / g).ne_bot → g.ne_bot :=
-  ne_bot.of_map₂_right
+  NeBot.of_map₂_right
 #align filter.ne_bot.of_div_right Filter.NeBot.of_div_right
 #align filter.ne_bot.of_sub_right Filter.NeBot.of_sub_right
 -/
@@ -1282,7 +1282,7 @@ theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
 #print Filter.isUnit_pure /-
 @[to_additive]
 theorem isUnit_pure (a : α) : IsUnit (pure a : Filter α) :=
-  (Group.isUnit a).filter
+  (Group.isUnit a).filterₓ
 #align filter.is_unit_pure Filter.isUnit_pure
 #align filter.is_add_unit_pure Filter.isAddUnit_pure
 -/
@@ -1467,7 +1467,7 @@ theorem smul_eq_bot_iff : f • g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 #print Filter.smul_neBot_iff /-
 @[simp, to_additive]
 theorem smul_neBot_iff : (f • g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
-  map₂_ne_bot_iff
+  map₂_neBot_iff
 #align filter.smul_ne_bot_iff Filter.smul_neBot_iff
 #align filter.vadd_ne_bot_iff Filter.vadd_neBot_iff
 -/
@@ -1480,14 +1480,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.smul Filter.NeBot.smulₓ'. -/
 @[to_additive]
 theorem NeBot.smul : NeBot f → NeBot g → NeBot (f • g) :=
-  ne_bot.map₂
+  NeBot.map₂
 #align filter.ne_bot.smul Filter.NeBot.smul
 #align filter.ne_bot.vadd Filter.NeBot.vadd
 
 #print Filter.NeBot.of_smul_left /-
 @[to_additive]
 theorem NeBot.of_smul_left : (f • g).ne_bot → f.ne_bot :=
-  ne_bot.of_map₂_left
+  NeBot.of_map₂_left
 #align filter.ne_bot.of_smul_left Filter.NeBot.of_smul_left
 #align filter.ne_bot.of_vadd_left Filter.NeBot.of_vadd_left
 -/
@@ -1495,7 +1495,7 @@ theorem NeBot.of_smul_left : (f • g).ne_bot → f.ne_bot :=
 #print Filter.NeBot.of_smul_right /-
 @[to_additive]
 theorem NeBot.of_smul_right : (f • g).ne_bot → g.ne_bot :=
-  ne_bot.of_map₂_right
+  NeBot.of_map₂_right
 #align filter.ne_bot.of_smul_right Filter.NeBot.of_smul_right
 #align filter.ne_bot.of_vadd_right Filter.NeBot.of_vadd_right
 -/
@@ -1674,12 +1674,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.vsub_ne_bot_iff Filter.vsub_neBot_iffₓ'. -/
 @[simp]
 theorem vsub_neBot_iff : (f -ᵥ g : Filter α).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
-  map₂_ne_bot_iff
+  map₂_neBot_iff
 #align filter.vsub_ne_bot_iff Filter.vsub_neBot_iff
 
 #print Filter.NeBot.vsub /-
 theorem NeBot.vsub : NeBot f → NeBot g → NeBot (f -ᵥ g) :=
-  ne_bot.map₂
+  NeBot.map₂
 #align filter.ne_bot.vsub Filter.NeBot.vsub
 -/
 
@@ -1690,7 +1690,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) -> (Filter.NeBot.{u1} β f)
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_leftₓ'. -/
 theorem NeBot.of_vsub_left : (f -ᵥ g : Filter α).ne_bot → f.ne_bot :=
-  ne_bot.of_map₂_left
+  NeBot.of_map₂_left
 #align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_left
 
 /- warning: filter.ne_bot.of_vsub_right -> Filter.NeBot.of_vsub_right is a dubious translation:
@@ -1700,7 +1700,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) -> (Filter.NeBot.{u1} β g)
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_rightₓ'. -/
 theorem NeBot.of_vsub_right : (f -ᵥ g : Filter α).ne_bot → g.ne_bot :=
-  ne_bot.of_map₂_right
+  NeBot.of_map₂_right
 #align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_right
 
 /- warning: filter.pure_vsub -> Filter.pure_vsub is a dubious translation:
@@ -1864,7 +1864,7 @@ theorem NeBot.smul_filter : f.ne_bot → (a • f).ne_bot := fun h => h.map _
 #print Filter.NeBot.of_smul_filter /-
 @[to_additive]
 theorem NeBot.of_smul_filter : (a • f).ne_bot → f.ne_bot :=
-  ne_bot.of_map
+  NeBot.of_map
 #align filter.ne_bot.of_smul_filter Filter.NeBot.of_smul_filter
 #align filter.ne_bot.of_vadd_filter Filter.NeBot.of_vadd_filter
 -/

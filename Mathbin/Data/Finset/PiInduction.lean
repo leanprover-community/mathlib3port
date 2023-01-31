@@ -47,7 +47,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choiceₓ'. -/
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
-    (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.erase x))
+    (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.eraseₓ x))
     {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
     (step :
       ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
@@ -60,7 +60,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     simpa [funext_iff] using he
   · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
-    set g := update f i ((f i).erase x) with hg
+    set g := update f i ((f i).eraseₓ x) with hg
     clear_value g
     have hx' : x ∉ g i := by
       rw [hg, update_same]

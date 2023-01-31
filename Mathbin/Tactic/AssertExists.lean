@@ -78,7 +78,7 @@ unsafe def assert_not_exists.linter : linter
     where
   test d := do
     let n := d.to_name
-    let tt ← pure (`assert_not_exists._checked.isPrefixOf n) |
+    let tt ← pure (`assert_not_exists._checked.isPrefixOfₓ n) |
       pure none
     let declaration.defn _ _ q(Name) val _ _ ← pure d
     let n ← tactic.eval_expr Name val
@@ -150,7 +150,7 @@ unsafe def assert_no_instance.linter : linter
     where
   test d := do
     let n := d.to_name
-    let tt ← pure (`assert_no_instance._checked.isPrefixOf n) |
+    let tt ← pure (`assert_no_instance._checked.isPrefixOfₓ n) |
       pure none
     let declaration.defn _ _ _ val _ _ ← pure d
     let tt ← succeeds (tactic.mk_instance val) |

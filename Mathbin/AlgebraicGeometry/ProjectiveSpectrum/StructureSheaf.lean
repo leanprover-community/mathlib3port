@@ -313,7 +313,7 @@ theorem stalkToFiberRingHom_germ (U : Opens (ProjectiveSpectrum.top 𝒜)) (x : 
 #align algebraic_geometry.stalk_to_fiber_ring_hom_germ AlgebraicGeometry.stalkToFiberRingHom_germ
 
 theorem HomogeneousLocalization.mem_basicOpen (x : ProjectiveSpectrum.top 𝒜) (f : at x) :
-    x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.denom :=
+    x ∈ ProjectiveSpectrum.basicOpen 𝒜 f.den :=
   by
   rw [ProjectiveSpectrum.mem_basicOpen]
   exact f.denom_mem
@@ -325,11 +325,11 @@ variable (𝒜)
 such that, for any `f` in the homogeneous localization at `x`, it returns the obvious section in the
 basic open set `D(f.denom)`-/
 def sectionInBasicOpen (x : ProjectiveSpectrum.top 𝒜) :
-    ∀ f : at x, (Proj.structureSheaf 𝒜).1.obj (op (ProjectiveSpectrum.basicOpen 𝒜 f.denom)) :=
+    ∀ f : at x, (Proj.structureSheaf 𝒜).1.obj (op (ProjectiveSpectrum.basicOpen 𝒜 f.den)) :=
   fun f =>
-  ⟨fun y => Quotient.mk'' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, y.2⟩, fun y =>
-    ⟨ProjectiveSpectrum.basicOpen 𝒜 f.denom, y.2,
-      ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem_deg⟩, ⟨f.denom, f.denom_mem_deg⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
+  ⟨fun y => Quotient.mk'' ⟨f.deg, ⟨f.num, f.num_mem_deg⟩, ⟨f.den, f.denom_mem_deg⟩, y.2⟩, fun y =>
+    ⟨ProjectiveSpectrum.basicOpen 𝒜 f.den, y.2,
+      ⟨𝟙 _, ⟨f.deg, ⟨⟨f.num, f.num_mem_deg⟩, ⟨f.den, f.denom_mem_deg⟩, fun z => ⟨z.2, rfl⟩⟩⟩⟩⟩⟩
 #align algebraic_geometry.section_in_basic_open AlgebraicGeometry.sectionInBasicOpen
 
 /-- Given any point `x` and `f` in the homogeneous localization at `x`, there is an element in the
@@ -338,7 +338,7 @@ stalk at `x` obtained by `section_in_basic_open`. This is the inverse of `stalk_
 def homogeneousLocalizationToStalk (x : ProjectiveSpectrum.top 𝒜) :
     (at x) → (Proj.structureSheaf 𝒜).Presheaf.stalk x := fun f =>
   (Proj.structureSheaf 𝒜).Presheaf.germ
-    (⟨x, HomogeneousLocalization.mem_basicOpen _ x f⟩ : ProjectiveSpectrum.basicOpen _ f.denom)
+    (⟨x, HomogeneousLocalization.mem_basicOpen _ x f⟩ : ProjectiveSpectrum.basicOpen _ f.den)
     (sectionInBasicOpen _ x f)
 #align algebraic_geometry.homogeneous_localization_to_stalk AlgebraicGeometry.homogeneousLocalizationToStalk
 

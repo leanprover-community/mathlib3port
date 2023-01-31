@@ -82,7 +82,7 @@ If `pi_or_lambda` is `tt`, we match a leading Π binder; otherwise a leading λ
 binder.
 -/
 @[inline]
-unsafe def get_binder (do_whnf : Option (transparency × Bool)) (pi_or_lambda : Bool) (e : expr) :
+unsafe def get_binder (do_whnf : Option (Transparency × Bool)) (pi_or_lambda : Bool) (e : expr) :
     tactic (Option (Name × BinderInfo × expr × expr)) := do
   let e ← do_whnf.elim (pure e) fun p => whnf e p.1 p.2
   pure <| if pi_or_lambda then match_pi e else match_lam e
@@ -112,7 +112,7 @@ proceeds as follows:
 Returns the constructed replacement expressions and `e` without its leading
 binders.
 -/
-unsafe def open_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool)
+unsafe def open_binders (do_whnf : Option (Transparency × Bool)) (pis_or_lambdas : Bool)
     (locals_or_metas : Bool) : expr → tactic (List expr × expr) := fun e => do
   let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
     pure ([], e)
@@ -126,7 +126,7 @@ unsafe def open_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambda
 leading Π/λ binders of `e`. If `e` does not start with at least `n` Π/λ binders,
 (after normalisation, if `do_whnf` is given), the tactic fails.
 -/
-unsafe def open_n_binders (do_whnf : Option (transparency × Bool)) (pis_or_lambdas : Bool)
+unsafe def open_n_binders (do_whnf : Option (Transparency × Bool)) (pis_or_lambdas : Bool)
     (locals_or_metas : Bool) : expr → ℕ → tactic (List expr × expr)
   | e, 0 => pure ([], e)
   | e, d + 1 => do

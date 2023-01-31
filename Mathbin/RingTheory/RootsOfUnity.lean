@@ -327,7 +327,7 @@ variable {k : ℕ}
 /-- `primitive_roots k R` is the finset of primitive `k`-th roots of unity
 in the integral domain `R`. -/
 def primitiveRoots (k : ℕ) (R : Type _) [CommRing R] [IsDomain R] : Finset R :=
-  (nthRoots k (1 : R)).toFinset.filter fun ζ => IsPrimitiveRoot ζ k
+  (nthRoots k (1 : R)).toFinset.filterₓ fun ζ => IsPrimitiveRoot ζ k
 #align primitive_roots primitiveRoots
 
 variable [CommRing R] [IsDomain R]
@@ -780,7 +780,7 @@ theorem zmodEquivZpowers_symm_apply_zpow (i : ℤ) :
 
 @[simp]
 theorem zmodEquivZpowers_symm_apply_zpow' (i : ℤ) : h.zmodEquivZpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
-  h.zmod_equiv_zpowers_symm_apply_zpow i
+  h.zmodEquivZpowers_symm_apply_zpow i
 #align is_primitive_root.zmod_equiv_zpowers_symm_apply_zpow' IsPrimitiveRoot.zmodEquivZpowers_symm_apply_zpow'
 
 @[simp]
@@ -791,7 +791,7 @@ theorem zmodEquivZpowers_symm_apply_pow (i : ℕ) :
 
 @[simp]
 theorem zmodEquivZpowers_symm_apply_pow' (i : ℕ) : h.zmodEquivZpowers.symm ⟨ζ ^ i, i, rfl⟩ = i :=
-  h.zmod_equiv_zpowers_symm_apply_pow i
+  h.zmodEquivZpowers_symm_apply_pow i
 #align is_primitive_root.zmod_equiv_zpowers_symm_apply_pow' IsPrimitiveRoot.zmodEquivZpowers_symm_apply_pow'
 
 variable [IsDomain R]
@@ -971,7 +971,7 @@ theorem disjoint {k l : ℕ} (h : k ≠ l) : Disjoint (primitiveRoots k R) (prim
 if there is a primitive root of unity in `R`.
 This holds for any `nat`, not just `pnat`, see `nth_roots_one_eq_bUnion_primitive_roots`. -/
 theorem nth_roots_one_eq_bunionᵢ_primitive_roots' {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
-    nthRootsFinset n R = (Nat.divisors ↑n).bUnion fun i => primitiveRoots i R :=
+    nthRootsFinset n R = (Nat.divisors ↑n).bunionᵢ fun i => primitiveRoots i R :=
   by
   symm
   apply Finset.eq_of_subset_of_card_le
@@ -993,7 +993,7 @@ theorem nth_roots_one_eq_bunionᵢ_primitive_roots' {ζ : R} {n : ℕ+} (h : IsP
       simp only [Nat.mem_divisors]
       rintro k ⟨⟨d, hd⟩, -⟩
       rw [mul_comm] at hd
-      rw [(h.pow n.pos hd).card_primitive_roots]
+      rw [(h.pow n.pos hd).card_primitiveRoots]
     · intro i hi j hj hdiff
       exact Disjoint hdiff
 #align is_primitive_root.nth_roots_one_eq_bUnion_primitive_roots' IsPrimitiveRoot.nth_roots_one_eq_bunionᵢ_primitive_roots'
@@ -1001,7 +1001,7 @@ theorem nth_roots_one_eq_bunionᵢ_primitive_roots' {ζ : R} {n : ℕ+} (h : IsP
 /-- `nth_roots n` as a `finset` is equal to the union of `primitive_roots i R` for `i ∣ n`
 if there is a primitive root of unity in `R`. -/
 theorem nth_roots_one_eq_bunionᵢ_primitiveRoots {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
-    nthRootsFinset n R = (Nat.divisors n).bUnion fun i => primitiveRoots i R :=
+    nthRootsFinset n R = (Nat.divisors n).bunionᵢ fun i => primitiveRoots i R :=
   by
   by_cases hn : n = 0
   · simp [hn]
@@ -1037,7 +1037,7 @@ variable [IsDomain K] [CharZero K]
 omit hpos
 
 /-- The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
-theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=
+theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ x ^ n - 1 :=
   by
   rcases n.eq_zero_or_pos with (rfl | hpos)
   · simp
@@ -1216,7 +1216,7 @@ theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree
     map (Int.castRingHom K) P
   -- minimal polynomial of `μ` sent to `K[X]`
   calc
-    n.totient = (primitiveRoots n K).card := h.card_primitive_roots.symm
+    n.totient = (primitiveRoots n K).card := h.card_primitiveRoots.symm
     _ ≤ P_K.roots.toFinset.card := Finset.card_le_of_subset (is_roots_of_minpoly h)
     _ ≤ P_K.roots.card := Multiset.toFinset_card_le _
     _ ≤ P_K.natDegree := card_roots' _

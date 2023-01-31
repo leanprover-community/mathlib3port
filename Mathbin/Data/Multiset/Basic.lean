@@ -1565,7 +1565,7 @@ variable [DecidableEq α] {s t : Multiset α} {a b : α}
 /-- `erase s a` is the multiset that subtracts 1 from the
   multiplicity of `a`. -/
 def erase (s : Multiset α) (a : α) : Multiset α :=
-  Quot.liftOn s (fun l => (l.erase a : Multiset α)) fun l₁ l₂ p => Quot.sound (p.erase a)
+  Quot.liftOn s (fun l => (l.eraseₓ a : Multiset α)) fun l₁ l₂ p => Quot.sound (p.eraseₓ a)
 #align multiset.erase Multiset.erase
 -/
 
@@ -1576,20 +1576,20 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (Multiset.{u1} α) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (Multiset.ofList.{u1} α l) a) (Multiset.ofList.{u1} α (List.erase.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l a))
 Case conversion may be inaccurate. Consider using '#align multiset.coe_erase Multiset.coe_eraseₓ'. -/
 @[simp]
-theorem coe_erase (l : List α) (a : α) : erase (l : Multiset α) a = l.erase a :=
+theorem coe_erase (l : List α) (a : α) : erase (l : Multiset α) a = l.eraseₓ a :=
   rfl
 #align multiset.coe_erase Multiset.coe_erase
 
 #print Multiset.erase_zero /-
 @[simp]
-theorem erase_zero (a : α) : (0 : Multiset α).erase a = 0 :=
+theorem erase_zero (a : α) : (0 : Multiset α).eraseₓ a = 0 :=
   rfl
 #align multiset.erase_zero Multiset.erase_zero
 -/
 
 #print Multiset.erase_cons_head /-
 @[simp]
-theorem erase_cons_head (a : α) (s : Multiset α) : (a ::ₘ s).erase a = s :=
+theorem erase_cons_head (a : α) (s : Multiset α) : (a ::ₘ s).eraseₓ a = s :=
   Quot.inductionOn s fun l => congr_arg coe <| erase_cons_head a l
 #align multiset.erase_cons_head Multiset.erase_cons_head
 -/
@@ -1597,28 +1597,28 @@ theorem erase_cons_head (a : α) (s : Multiset α) : (a ::ₘ s).erase a = s :=
 #print Multiset.erase_cons_tail /-
 @[simp]
 theorem erase_cons_tail {a b : α} (s : Multiset α) (h : b ≠ a) :
-    (b ::ₘ s).erase a = b ::ₘ s.erase a :=
+    (b ::ₘ s).eraseₓ a = b ::ₘ s.eraseₓ a :=
   Quot.inductionOn s fun l => congr_arg coe <| erase_cons_tail l h
 #align multiset.erase_cons_tail Multiset.erase_cons_tail
 -/
 
 #print Multiset.erase_singleton /-
 @[simp]
-theorem erase_singleton (a : α) : ({a} : Multiset α).erase a = 0 :=
+theorem erase_singleton (a : α) : ({a} : Multiset α).eraseₓ a = 0 :=
   erase_cons_head a 0
 #align multiset.erase_singleton Multiset.erase_singleton
 -/
 
 #print Multiset.erase_of_not_mem /-
 @[simp]
-theorem erase_of_not_mem {a : α} {s : Multiset α} : a ∉ s → s.erase a = s :=
+theorem erase_of_not_mem {a : α} {s : Multiset α} : a ∉ s → s.eraseₓ a = s :=
   Quot.inductionOn s fun l h => congr_arg coe <| erase_of_not_mem h
 #align multiset.erase_of_not_mem Multiset.erase_of_not_mem
 -/
 
 #print Multiset.cons_erase /-
 @[simp]
-theorem cons_erase {s : Multiset α} {a : α} : a ∈ s → a ::ₘ s.erase a = s :=
+theorem cons_erase {s : Multiset α} {a : α} : a ∈ s → a ::ₘ s.eraseₓ a = s :=
   Quot.inductionOn s fun l h => Quot.sound (perm_cons_erase h).symm
 #align multiset.cons_erase Multiset.cons_erase
 -/
@@ -1629,13 +1629,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (a : α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.cons.{u1} α a (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a))
 Case conversion may be inaccurate. Consider using '#align multiset.le_cons_erase Multiset.le_cons_eraseₓ'. -/
-theorem le_cons_erase (s : Multiset α) (a : α) : s ≤ a ::ₘ s.erase a :=
+theorem le_cons_erase (s : Multiset α) (a : α) : s ≤ a ::ₘ s.eraseₓ a :=
   if h : a ∈ s then le_of_eq (cons_erase h).symm
   else by rw [erase_of_not_mem h] <;> apply le_cons_self
 #align multiset.le_cons_erase Multiset.le_cons_erase
 
 #print Multiset.add_singleton_eq_iff /-
-theorem add_singleton_eq_iff {s t : Multiset α} {a : α} : s + {a} = t ↔ a ∈ t ∧ s = t.erase a :=
+theorem add_singleton_eq_iff {s t : Multiset α} {a : α} : s + {a} = t ↔ a ∈ t ∧ s = t.eraseₓ a :=
   by
   rw [add_comm, singleton_add]; constructor
   · rintro rfl
@@ -1646,27 +1646,28 @@ theorem add_singleton_eq_iff {s t : Multiset α} {a : α} : s + {a} = t ↔ a �
 -/
 
 #print Multiset.erase_add_left_pos /-
-theorem erase_add_left_pos {a : α} {s : Multiset α} (t) : a ∈ s → (s + t).erase a = s.erase a + t :=
+theorem erase_add_left_pos {a : α} {s : Multiset α} (t) :
+    a ∈ s → (s + t).eraseₓ a = s.eraseₓ a + t :=
   Quotient.induction_on₂ s t fun l₁ l₂ h => congr_arg coe <| erase_append_left l₂ h
 #align multiset.erase_add_left_pos Multiset.erase_add_left_pos
 -/
 
 #print Multiset.erase_add_right_pos /-
 theorem erase_add_right_pos {a : α} (s) {t : Multiset α} (h : a ∈ t) :
-    (s + t).erase a = s + t.erase a := by rw [add_comm, erase_add_left_pos s h, add_comm]
+    (s + t).eraseₓ a = s + t.eraseₓ a := by rw [add_comm, erase_add_left_pos s h, add_comm]
 #align multiset.erase_add_right_pos Multiset.erase_add_right_pos
 -/
 
 #print Multiset.erase_add_right_neg /-
 theorem erase_add_right_neg {a : α} {s : Multiset α} (t) :
-    a ∉ s → (s + t).erase a = s + t.erase a :=
+    a ∉ s → (s + t).eraseₓ a = s + t.eraseₓ a :=
   Quotient.induction_on₂ s t fun l₁ l₂ h => congr_arg coe <| erase_append_right l₂ h
 #align multiset.erase_add_right_neg Multiset.erase_add_right_neg
 -/
 
 #print Multiset.erase_add_left_neg /-
 theorem erase_add_left_neg {a : α} (s) {t : Multiset α} (h : a ∉ t) :
-    (s + t).erase a = s.erase a + t := by rw [add_comm, erase_add_right_neg s h, add_comm]
+    (s + t).eraseₓ a = s.eraseₓ a + t := by rw [add_comm, erase_add_right_neg s h, add_comm]
 #align multiset.erase_add_left_neg Multiset.erase_add_left_neg
 -/
 
@@ -1676,7 +1677,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (a : α) (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) s
 Case conversion may be inaccurate. Consider using '#align multiset.erase_le Multiset.erase_leₓ'. -/
-theorem erase_le (a : α) (s : Multiset α) : s.erase a ≤ s :=
+theorem erase_le (a : α) (s : Multiset α) : s.eraseₓ a ≤ s :=
   Quot.inductionOn s fun l => (erase_sublist a l).Subperm
 #align multiset.erase_le Multiset.erase_le
 
@@ -1687,32 +1688,32 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α}, Iff (LT.lt.{u1} (Multiset.{u1} α) (Preorder.toLT.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) s) (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s)
 Case conversion may be inaccurate. Consider using '#align multiset.erase_lt Multiset.erase_ltₓ'. -/
 @[simp]
-theorem erase_lt {a : α} {s : Multiset α} : s.erase a < s ↔ a ∈ s :=
+theorem erase_lt {a : α} {s : Multiset α} : s.eraseₓ a < s ↔ a ∈ s :=
   ⟨fun h => not_imp_comm.1 erase_of_not_mem (ne_of_lt h), fun h => by
     simpa [h] using lt_cons_self (s.erase a) a⟩
 #align multiset.erase_lt Multiset.erase_lt
 
 #print Multiset.erase_subset /-
-theorem erase_subset (a : α) (s : Multiset α) : s.erase a ⊆ s :=
+theorem erase_subset (a : α) (s : Multiset α) : s.eraseₓ a ⊆ s :=
   subset_of_le (erase_le a s)
 #align multiset.erase_subset Multiset.erase_subset
 -/
 
 #print Multiset.mem_erase_of_ne /-
-theorem mem_erase_of_ne {a b : α} {s : Multiset α} (ab : a ≠ b) : a ∈ s.erase b ↔ a ∈ s :=
+theorem mem_erase_of_ne {a b : α} {s : Multiset α} (ab : a ≠ b) : a ∈ s.eraseₓ b ↔ a ∈ s :=
   Quot.inductionOn s fun l => List.mem_erase_of_ne ab
 #align multiset.mem_erase_of_ne Multiset.mem_erase_of_ne
 -/
 
 #print Multiset.mem_of_mem_erase /-
-theorem mem_of_mem_erase {a b : α} {s : Multiset α} : a ∈ s.erase b → a ∈ s :=
+theorem mem_of_mem_erase {a b : α} {s : Multiset α} : a ∈ s.eraseₓ b → a ∈ s :=
   mem_of_subset (erase_subset _ _)
 #align multiset.mem_of_mem_erase Multiset.mem_of_mem_erase
 -/
 
 #print Multiset.erase_comm /-
-theorem erase_comm (s : Multiset α) (a b : α) : (s.erase a).erase b = (s.erase b).erase a :=
-  Quot.inductionOn s fun l => congr_arg coe <| l.erase_comm a b
+theorem erase_comm (s : Multiset α) (a b : α) : (s.eraseₓ a).eraseₓ b = (s.eraseₓ b).eraseₓ a :=
+  Quot.inductionOn s fun l => congr_arg coe <| l.erase_commₓ a b
 #align multiset.erase_comm Multiset.erase_comm
 -/
 
@@ -1722,8 +1723,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} (a : α), (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) t a))
 Case conversion may be inaccurate. Consider using '#align multiset.erase_le_erase Multiset.erase_le_eraseₓ'. -/
-theorem erase_le_erase {s t : Multiset α} (a : α) (h : s ≤ t) : s.erase a ≤ t.erase a :=
-  leInductionOn h fun l₁ l₂ h => (h.erase _).Subperm
+theorem erase_le_erase {s t : Multiset α} (a : α) (h : s ≤ t) : s.eraseₓ a ≤ t.eraseₓ a :=
+  leInductionOn h fun l₁ l₂ h => (h.eraseₓ _).Subperm
 #align multiset.erase_le_erase Multiset.erase_le_erase
 
 /- warning: multiset.erase_le_iff_le_cons -> Multiset.erase_le_iff_le_cons is a dubious translation:
@@ -1732,7 +1733,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Multiset.{u1} α} {t : Multiset.{u1} α} {a : α}, Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a) t) (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s (Multiset.cons.{u1} α a t))
 Case conversion may be inaccurate. Consider using '#align multiset.erase_le_iff_le_cons Multiset.erase_le_iff_le_consₓ'. -/
-theorem erase_le_iff_le_cons {s t : Multiset α} {a : α} : s.erase a ≤ t ↔ s ≤ a ::ₘ t :=
+theorem erase_le_iff_le_cons {s t : Multiset α} {a : α} : s.eraseₓ a ≤ t ↔ s ≤ a ::ₘ t :=
   ⟨fun h => le_trans (le_cons_erase _ _) (cons_le_cons _ h), fun h =>
     if m : a ∈ s then by rw [← cons_erase m] at h <;> exact (cons_le_cons_iff _).1 h
     else le_trans (erase_le _ _) ((le_cons_of_not_mem m).1 h)⟩
@@ -1745,7 +1746,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α}, (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (Nat.pred (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s)))
 Case conversion may be inaccurate. Consider using '#align multiset.card_erase_of_mem Multiset.card_erase_of_memₓ'. -/
 @[simp]
-theorem card_erase_of_mem {a : α} {s : Multiset α} : a ∈ s → card (s.erase a) = pred (card s) :=
+theorem card_erase_of_mem {a : α} {s : Multiset α} : a ∈ s → card (s.eraseₓ a) = pred (card s) :=
   Quot.inductionOn s fun l => length_erase_of_mem
 #align multiset.card_erase_of_mem Multiset.card_erase_of_mem
 
@@ -1756,7 +1757,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α}, (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (HAdd.hAdd.{0, 0, 0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (instHAdd.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) instAddNat) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (OfNat.ofNat.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) 1 (instOfNatNat 1))) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s))
 Case conversion may be inaccurate. Consider using '#align multiset.card_erase_add_one Multiset.card_erase_add_oneₓ'. -/
 @[simp]
-theorem card_erase_add_one {a : α} {s : Multiset α} : a ∈ s → (s.erase a).card + 1 = s.card :=
+theorem card_erase_add_one {a : α} {s : Multiset α} : a ∈ s → (s.eraseₓ a).card + 1 = s.card :=
   Quot.inductionOn s fun l => length_erase_add_one
 #align multiset.card_erase_add_one Multiset.card_erase_add_one
 
@@ -1766,7 +1767,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α}, (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) -> (LT.lt.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) instLTNat (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s))
 Case conversion may be inaccurate. Consider using '#align multiset.card_erase_lt_of_mem Multiset.card_erase_lt_of_memₓ'. -/
-theorem card_erase_lt_of_mem {a : α} {s : Multiset α} : a ∈ s → card (s.erase a) < card s :=
+theorem card_erase_lt_of_mem {a : α} {s : Multiset α} : a ∈ s → card (s.eraseₓ a) < card s :=
   fun h => card_lt_of_lt (erase_lt.mpr h)
 #align multiset.card_erase_lt_of_mem Multiset.card_erase_lt_of_mem
 
@@ -1776,7 +1777,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α}, LE.le.{0} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) instLENat (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s)
 Case conversion may be inaccurate. Consider using '#align multiset.card_erase_le Multiset.card_erase_leₓ'. -/
-theorem card_erase_le {a : α} {s : Multiset α} : card (s.erase a) ≤ card s :=
+theorem card_erase_le {a : α} {s : Multiset α} : card (s.eraseₓ a) ≤ card s :=
   card_le_of_le (erase_le a s)
 #align multiset.card_erase_le Multiset.card_erase_le
 
@@ -1787,7 +1788,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {s : Multiset.{u1} α}, Eq.{1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) (Multiset.erase.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s a)) (ite.{1} Nat (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) (Multiset.decidableMem.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s) (Nat.pred (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s)) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) s))
 Case conversion may be inaccurate. Consider using '#align multiset.card_erase_eq_ite Multiset.card_erase_eq_iteₓ'. -/
 theorem card_erase_eq_ite {a : α} {s : Multiset α} :
-    card (s.erase a) = if a ∈ s then pred (card s) else card s :=
+    card (s.eraseₓ a) = if a ∈ s then pred (card s) else card s :=
   by
   by_cases h : a ∈ s
   · rwa [card_erase_of_mem h, if_pos]
@@ -2033,7 +2034,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] (f : α -> β) (s : Multiset.{u2} α) (t : Multiset.{u1} β) (b : β), Iff (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a s) (And (Eq.{succ u1} β (f a) b) (Eq.{succ u1} (Multiset.{u1} β) (Multiset.map.{u2, u1} α β f (Multiset.erase.{u2} α (fun (a : α) (b : α) => _inst_1 a b) s a)) t)))) (Eq.{succ u1} (Multiset.{u1} β) (Multiset.map.{u2, u1} α β f s) (Multiset.cons.{u1} β b t))
 Case conversion may be inaccurate. Consider using '#align multiset.map_eq_cons Multiset.map_eq_consₓ'. -/
 theorem map_eq_cons [DecidableEq α] (f : α → β) (s : Multiset α) (t : Multiset β) (b : β) :
-    (∃ a ∈ s, f a = b ∧ (s.erase a).map f = t) ↔ s.map f = b ::ₘ t :=
+    (∃ a ∈ s, f a = b ∧ (s.eraseₓ a).map f = t) ↔ s.map f = b ::ₘ t :=
   by
   constructor
   · rintro ⟨a, ha, rfl, rfl⟩
@@ -2179,14 +2180,14 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} β] (f : α -> β), (Function.Injective.{succ u2, succ u1} α β f) -> (forall (x : α) (s : Multiset.{u2} α), Eq.{succ u1} (Multiset.{u1} β) (Multiset.map.{u2, u1} α β f (Multiset.erase.{u2} α (fun (a : α) (b : α) => _inst_1 a b) s x)) (Multiset.erase.{u1} β (fun (a : β) (b : β) => _inst_2 a b) (Multiset.map.{u2, u1} α β f s) (f x)))
 Case conversion may be inaccurate. Consider using '#align multiset.map_erase Multiset.map_eraseₓ'. -/
 theorem map_erase [DecidableEq α] [DecidableEq β] (f : α → β) (hf : Function.Injective f) (x : α)
-    (s : Multiset α) : (s.erase x).map f = (s.map f).erase (f x) :=
+    (s : Multiset α) : (s.eraseₓ x).map f = (s.map f).eraseₓ (f x) :=
   by
   induction' s using Multiset.induction_on with y s ih
   · simp
   by_cases hxy : y = x
   · cases hxy
     simp
-  · rw [s.erase_cons_tail hxy, map_cons, map_cons, (s.map f).erase_cons_tail (hf.ne hxy), ih]
+  · rw [s.erase_cons_tail hxy, map_cons, map_cons, (s.map f).erase_cons_tailₓ (hf.ne hxy), ih]
 #align multiset.map_erase Multiset.map_erase
 
 /- warning: multiset.map_surjective_of_surjective -> Multiset.map_surjective_of_surjective is a dubious translation:
@@ -2696,8 +2697,8 @@ variable [DecidableEq α] {s t u : Multiset α} {a b : α}
 /-- `s - t` is the multiset such that `count a (s - t) = count a s - count a t` for all `a`
   (note that it is truncated subtraction, so it is `0` if `count a t ≥ count a s`). -/
 protected def sub (s t : Multiset α) : Multiset α :=
-  Quotient.liftOn₂ s t (fun l₁ l₂ => (l₁.diff l₂ : Multiset α)) fun v₁ v₂ w₁ w₂ p₁ p₂ =>
-    Quot.sound <| p₁.diff p₂
+  Quotient.liftOn₂ s t (fun l₁ l₂ => (l₁.diffₓ l₂ : Multiset α)) fun v₁ v₂ w₁ w₂ p₁ p₂ =>
+    Quot.sound <| p₁.diffₓ p₂
 #align multiset.sub Multiset.sub
 -/
 
@@ -2711,7 +2712,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : List.{u1} α) (t : List.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (HSub.hSub.{u1, u1, u1} (Multiset.{u1} α) (Multiset.{u1} α) (Multiset.{u1} α) (instHSub.{u1} (Multiset.{u1} α) (Multiset.instSubMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b))) (Multiset.ofList.{u1} α s) (Multiset.ofList.{u1} α t)) (Multiset.ofList.{u1} α (List.diff.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t))
 Case conversion may be inaccurate. Consider using '#align multiset.coe_sub Multiset.coe_subₓ'. -/
 @[simp]
-theorem coe_sub (s t : List α) : (s - t : Multiset α) = (s.diff t : List α) :=
+theorem coe_sub (s t : List α) : (s - t : Multiset α) = (s.diffₓ t : List α) :=
   rfl
 #align multiset.coe_sub Multiset.coe_sub
 
@@ -2725,7 +2726,7 @@ protected theorem sub_zero (s : Multiset α) : s - 0 = s :=
 
 #print Multiset.sub_cons /-
 @[simp]
-theorem sub_cons (a : α) (s t : Multiset α) : s - a ::ₘ t = s.erase a - t :=
+theorem sub_cons (a : α) (s t : Multiset α) : s - a ::ₘ t = s.eraseₓ a - t :=
   Quotient.induction_on₂ s t fun l₁ l₂ => congr_arg coe <| diff_cons _ _ _
 #align multiset.sub_cons Multiset.sub_cons
 -/
@@ -2761,7 +2762,7 @@ theorem cons_sub_of_le (a : α) {s t : Multiset α} (h : t ≤ s) : a ::ₘ s - 
 #print Multiset.sub_eq_fold_erase /-
 theorem sub_eq_fold_erase (s t : Multiset α) : s - t = foldl erase erase_comm s t :=
   Quotient.induction_on₂ s t fun l₁ l₂ =>
-    show ↑(l₁.diff l₂) = foldl erase erase_comm ↑l₁ ↑l₂
+    show ↑(l₁.diffₓ l₂) = foldl erase erase_comm ↑l₁ ↑l₂
       by
       rw [diff_eq_foldl l₁ l₂]
       symm
@@ -2876,8 +2877,8 @@ theorem map_union [DecidableEq β] {f : α → β} (finj : Function.Injective f)
   multiset `≤`. The multiplicity of `a` in `s ∩ t` is the minimum
   of the multiplicities in `s` and `t`. -/
 def inter (s t : Multiset α) : Multiset α :=
-  Quotient.liftOn₂ s t (fun l₁ l₂ => (l₁.bagInter l₂ : Multiset α)) fun v₁ v₂ w₁ w₂ p₁ p₂ =>
-    Quot.sound <| p₁.bagInter p₂
+  Quotient.liftOn₂ s t (fun l₁ l₂ => (l₁.bagInterₓ l₂ : Multiset α)) fun v₁ v₂ w₁ w₂ p₁ p₂ =>
+    Quot.sound <| p₁.bagInterₓ p₂
 #align multiset.inter Multiset.inter
 -/
 
@@ -2887,20 +2888,20 @@ instance : Inter (Multiset α) :=
 #print Multiset.inter_zero /-
 @[simp]
 theorem inter_zero (s : Multiset α) : s ∩ 0 = 0 :=
-  Quot.inductionOn s fun l => congr_arg coe l.bag_inter_nil
+  Quot.inductionOn s fun l => congr_arg coe l.bagInter_nil
 #align multiset.inter_zero Multiset.inter_zero
 -/
 
 #print Multiset.zero_inter /-
 @[simp]
 theorem zero_inter (s : Multiset α) : 0 ∩ s = 0 :=
-  Quot.inductionOn s fun l => congr_arg coe l.nil_bag_inter
+  Quot.inductionOn s fun l => congr_arg coe l.nil_bagInter
 #align multiset.zero_inter Multiset.zero_inter
 -/
 
 #print Multiset.cons_inter_of_pos /-
 @[simp]
-theorem cons_inter_of_pos {a} (s : Multiset α) {t} : a ∈ t → (a ::ₘ s) ∩ t = a ::ₘ s ∩ t.erase a :=
+theorem cons_inter_of_pos {a} (s : Multiset α) {t} : a ∈ t → (a ::ₘ s) ∩ t = a ::ₘ s ∩ t.eraseₓ a :=
   Quotient.induction_on₂ s t fun l₁ l₂ h => congr_arg coe <| cons_bagInter_of_pos _ h
 #align multiset.cons_inter_of_pos Multiset.cons_inter_of_pos
 -/
@@ -3149,7 +3150,7 @@ variable (p : α → Prop) [DecidablePred p]
 /-- `filter p s` returns the elements in `s` (with the same multiplicities)
   which satisfy `p`, and removes the rest. -/
 def filter (s : Multiset α) : Multiset α :=
-  Quot.liftOn s (fun l => (filter p l : Multiset α)) fun l₁ l₂ h => Quot.sound <| h.filter p
+  Quot.liftOn s (fun l => (filter p l : Multiset α)) fun l₁ l₂ h => Quot.sound <| h.filterₓ p
 #align multiset.filter Multiset.filter
 -/
 
@@ -3160,7 +3161,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] (l : List.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (Multiset.filter.{u1} α p (fun (a : α) => _inst_1 a) (Multiset.ofList.{u1} α l)) (Multiset.ofList.{u1} α (List.filter.{u1} α (fun (a : α) => Decidable.decide (p a) ((fun (a : α) => _inst_1 a) a)) l))
 Case conversion may be inaccurate. Consider using '#align multiset.coe_filter Multiset.coe_filterₓ'. -/
 @[simp]
-theorem coe_filter (l : List α) : filter p ↑l = l.filter p :=
+theorem coe_filter (l : List α) : filter p ↑l = l.filterₓ p :=
   rfl
 #align multiset.coe_filter Multiset.coe_filter
 
@@ -3210,7 +3211,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Prop) [_inst_1 : DecidablePred.{succ u1} α p] {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.filter.{u1} α p (fun (a : α) => _inst_1 a) s) (Multiset.filter.{u1} α p (fun (a : α) => _inst_1 a) t))
 Case conversion may be inaccurate. Consider using '#align multiset.filter_le_filter Multiset.filter_le_filterₓ'. -/
 theorem filter_le_filter {s t} (h : s ≤ t) : filter p s ≤ filter p t :=
-  leInductionOn h fun l₁ l₂ h => (h.filter p).Subperm
+  leInductionOn h fun l₁ l₂ h => (h.filterₓ p).Subperm
 #align multiset.filter_le_filter Multiset.filter_le_filter
 
 /- warning: multiset.monotone_filter_left -> Multiset.monotone_filter_left is a dubious translation:
@@ -3229,7 +3230,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Multiset.{u1} α) {{p : α -> Prop}} {{q : α -> Prop}} [_inst_2 : DecidablePred.{succ u1} α p] [_inst_3 : DecidablePred.{succ u1} α q], (forall (b : α), (p b) -> (q b)) -> (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.filter.{u1} α p (fun (a : α) => _inst_2 a) s) (Multiset.filter.{u1} α q (fun (a : α) => _inst_3 a) s))
 Case conversion may be inaccurate. Consider using '#align multiset.monotone_filter_right Multiset.monotone_filter_rightₓ'. -/
 theorem monotone_filter_right (s : Multiset α) ⦃p q : α → Prop⦄ [DecidablePred p] [DecidablePred q]
-    (h : p ≤ q) : s.filter p ≤ s.filter q :=
+    (h : p ≤ q) : s.filterₓ p ≤ s.filterₓ q :=
   Quotient.inductionOn s fun l => (l.monotone_filter_right h).Subperm
 #align multiset.monotone_filter_right Multiset.monotone_filter_right
 
@@ -3506,7 +3507,7 @@ theorem filterMap_map (f : α → β) (g : β → Option γ) (s : Multiset α) :
 
 #print Multiset.filter_filterMap /-
 theorem filter_filterMap (f : α → Option β) (p : β → Prop) [DecidablePred p] (s : Multiset α) :
-    filter p (filterMap f s) = filterMap (fun x => (f x).filter p) s :=
+    filter p (filterMap f s) = filterMap (fun x => (f x).filterₓ p) s :=
   Quot.inductionOn s fun l => congr_arg coe <| filter_filterMap f p l
 #align multiset.filter_filter_map Multiset.filter_filterMap
 -/
@@ -3735,7 +3736,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Multiset.{u2} α) (p : β -> Prop) [_inst_2 : DecidablePred.{succ u1} β p], Eq.{1} Nat (Multiset.countp.{u1} β p (fun (a : β) => _inst_2 a) (Multiset.map.{u2, u1} α β f s)) (FunLike.coe.{succ u2, succ u2, 1} (AddMonoidHom.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u2} α) (fun (_x : Multiset.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u2} α) => Nat) _x) (AddHomClass.toFunLike.{u2, u2, 0} (AddMonoidHom.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u2} α) Nat (AddZeroClass.toAdd.{u2} (Multiset.{u2} α) (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u2, u2, 0} (AddMonoidHom.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u2} α) (Multiset.filter.{u2} α (fun (a : α) => p (f a)) (fun (a : α) => _inst_2 (f a)) s))
 Case conversion may be inaccurate. Consider using '#align multiset.countp_map Multiset.countp_mapₓ'. -/
 theorem countp_map (f : α → β) (s : Multiset α) (p : β → Prop) [DecidablePred p] :
-    countp p (map f s) = (s.filter fun a => p (f a)).card :=
+    countp p (map f s) = (s.filterₓ fun a => p (f a)).card :=
   by
   refine' Multiset.induction_on s _ fun a t IH => _
   · rw [map_zero, countp_zero, filter_zero, card_zero]
@@ -4081,7 +4082,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : List.{u1} α) (t : List.{u1} α), Eq.{succ u1} (Multiset.{u1} α) (Inter.inter.{u1} (Multiset.{u1} α) (Multiset.instInterMultiset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Multiset.ofList.{u1} α s) (Multiset.ofList.{u1} α t)) (Multiset.ofList.{u1} α (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) s t))
 Case conversion may be inaccurate. Consider using '#align multiset.coe_inter Multiset.coe_interₓ'. -/
 @[simp]
-theorem coe_inter (s t : List α) : (s ∩ t : Multiset α) = (s.bagInter t : List α) := by ext <;> simp
+theorem coe_inter (s t : List α) : (s ∩ t : Multiset α) = (s.bagInterₓ t : List α) := by
+  ext <;> simp
 #align multiset.coe_inter Multiset.coe_inter
 
 /- warning: multiset.le_iff_count -> Multiset.le_iff_count is a dubious translation:
@@ -4111,7 +4113,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (s : Multiset.{u2} α) [_inst_2 : DecidableEq.{succ u1} β] (b : β), Eq.{1} Nat (Multiset.count.{u1} β (fun (a : β) (b : β) => _inst_2 a b) b (Multiset.map.{u2, u1} α β f s)) (FunLike.coe.{succ u2, succ u2, 1} (AddMonoidHom.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u2} α) (fun (_x : Multiset.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u2} α) => Nat) _x) (AddHomClass.toFunLike.{u2, u2, 0} (AddMonoidHom.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u2} α) Nat (AddZeroClass.toAdd.{u2} (Multiset.{u2} α) (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u2, u2, 0} (AddMonoidHom.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u2, 0} (Multiset.{u2} α) Nat (AddMonoid.toAddZeroClass.{u2} (Multiset.{u2} α) (AddRightCancelMonoid.toAddMonoid.{u2} (Multiset.{u2} α) (AddCancelMonoid.toAddRightCancelMonoid.{u2} (Multiset.{u2} α) (AddCancelCommMonoid.toAddCancelMonoid.{u2} (Multiset.{u2} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u2} (Multiset.{u2} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u2} α) (Multiset.filter.{u2} α (fun (a : α) => Eq.{succ u1} β b (f a)) (fun (a : α) => _inst_2 b (f a)) s))
 Case conversion may be inaccurate. Consider using '#align multiset.count_map Multiset.count_mapₓ'. -/
 theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableEq β] (b : β) :
-    count b (map f s) = (s.filter fun a => b = f a).card :=
+    count b (map f s) = (s.filterₓ fun a => b = f a).card :=
   countp_map _ _ _
 #align multiset.count_map Multiset.count_map
 
@@ -4157,18 +4159,18 @@ theorem attach_count_eq_count_coe (m : Multiset α) (a) : m.attach.count a = m.c
   calc
     m.attach.count a = (m.attach.map (coe : _ → α)).count (a : α) :=
       (Multiset.count_map_eq_count' _ _ Subtype.coe_injective _).symm
-    _ = m.count (a : α) := congr_arg _ m.attach_map_coe
+    _ = m.count (a : α) := congr_arg _ m.attach_map_val
     
 #align multiset.attach_count_eq_count_coe Multiset.attach_count_eq_count_coe
 
 #print Multiset.filter_eq' /-
-theorem filter_eq' (s : Multiset α) (b : α) : s.filter (· = b) = replicate (count b s) b :=
+theorem filter_eq' (s : Multiset α) (b : α) : s.filterₓ (· = b) = replicate (count b s) b :=
   Quotient.inductionOn s fun l => congr_arg coe <| filter_eq' l b
 #align multiset.filter_eq' Multiset.filter_eq'
 -/
 
 #print Multiset.filter_eq /-
-theorem filter_eq (s : Multiset α) (b : α) : s.filter (Eq b) = replicate (count b s) b := by
+theorem filter_eq (s : Multiset α) (b : α) : s.filterₓ (Eq b) = replicate (count b s) b := by
   simp_rw [← filter_eq', eq_comm]
 #align multiset.filter_eq Multiset.filter_eq
 -/
@@ -4257,7 +4259,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (a : α), Eq.{1} Nat (Multiset.count.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a s) (FunLike.coe.{succ u1, succ u1, 1} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) (fun (_x : Multiset.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : Multiset.{u1} α) => Nat) _x) (AddHomClass.toFunLike.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddZeroClass.toAdd.{u1} (Multiset.{u1} α) (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α))))))) (AddZeroClass.toAdd.{0} Nat (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (AddMonoidHomClass.toAddHomClass.{u1, u1, 0} (AddMonoidHom.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)) (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid) (AddMonoidHom.addMonoidHomClass.{u1, 0} (Multiset.{u1} α) Nat (AddMonoid.toAddZeroClass.{u1} (Multiset.{u1} α) (AddRightCancelMonoid.toAddMonoid.{u1} (Multiset.{u1} α) (AddCancelMonoid.toAddRightCancelMonoid.{u1} (Multiset.{u1} α) (AddCancelCommMonoid.toAddCancelMonoid.{u1} (Multiset.{u1} α) (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u1} (Multiset.{u1} α) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} α)))))) (AddMonoid.toAddZeroClass.{0} Nat Nat.addMonoid)))) (Multiset.card.{u1} α) (Multiset.filter.{u1} α (fun (x._@.Mathlib.Data.Multiset.Basic._hyg.25610 : α) => Eq.{succ u1} α x._@.Mathlib.Data.Multiset.Basic._hyg.25610 a) (fun (a_1 : α) => _inst_1 a_1 a) s))
 Case conversion may be inaccurate. Consider using '#align multiset.count_eq_card_filter_eq Multiset.count_eq_card_filter_eqₓ'. -/
 theorem count_eq_card_filter_eq [DecidableEq α] (s : Multiset α) (a : α) :
-    s.count a = (s.filter (Eq a)).card := by rw [count, countp_eq_card_filter]
+    s.count a = (s.filterₓ (Eq a)).card := by rw [count, countp_eq_card_filter]
 #align multiset.count_eq_card_filter_eq Multiset.count_eq_card_filter_eq
 
 /- warning: multiset.map_count_true_eq_filter_card -> Multiset.map_count_True_eq_filter_card is a dubious translation:
@@ -4276,7 +4278,7 @@ for more discussion.
 -/
 @[simp]
 theorem map_count_True_eq_filter_card (s : Multiset α) (p : α → Prop) [DecidablePred p] :
-    (s.map p).count True = (s.filter p).card := by
+    (s.map p).count True = (s.filterₓ p).card := by
   simp only [count_eq_card_filter_eq, map_filter, card_map, Function.comp.left_id, eq_true_eq_id]
 #align multiset.map_count_true_eq_filter_card Multiset.map_count_True_eq_filter_card
 

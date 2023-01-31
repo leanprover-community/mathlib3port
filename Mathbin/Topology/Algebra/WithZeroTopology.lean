@@ -58,7 +58,7 @@ attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ «expr ≠ » 0) -/
 theorem nhds_eq_update : (𝓝 : Γ₀ → Filter Γ₀) = update pure 0 (⨅ (γ) (_ : γ ≠ 0), 𝓟 (Iio γ)) :=
-  funext <| nhds_mk_of_nhds_single <| le_infᵢ₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
+  funext <| nhds_mkOfNhds_single <| le_infᵢ₂ fun γ h₀ => le_principal_iff.2 <| zero_lt_iff.2 h₀
 #align linear_ordered_comm_group_with_zero.nhds_eq_update LinearOrderedCommGroupWithZero.nhds_eq_update
 
 /-!
@@ -177,7 +177,7 @@ theorem isOpen_Iio {a : Γ₀} : IsOpen (Iio a) :=
 /-- The topology on a linearly ordered group with zero element adjoined is compatible with the order
 structure: the set `{p : Γ₀ × Γ₀ | p.1 ≤ p.2}` is closed. -/
 instance (priority := 100) orderClosedTopology : OrderClosedTopology Γ₀
-    where is_closed_le' :=
+    where isClosed_le' :=
     by
     simp only [← isOpen_compl_iff, compl_set_of, not_le, isOpen_iff_mem_nhds]
     rintro ⟨a, b⟩ (hab : b < a)
@@ -213,7 +213,7 @@ instance (priority := 100) : HasContinuousMul Γ₀ :=
     rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip]
     · rw [ContinuousAt, zero_mul]
       refine'
-        ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iff has_basis_nhds_zero).2
+        ((has_basis_nhds_zero.prod_nhds has_basis_nhds_zero).tendsto_iffₓ has_basis_nhds_zero).2
           fun γ hγ => ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, _⟩
       rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
       exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)

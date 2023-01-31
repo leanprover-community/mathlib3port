@@ -207,8 +207,8 @@ def mapEnd : End X →* End (f.obj X)
 /-- `f.map_iso` as a group hom between automorphism groups. -/
 def mapAut : Aut X →* Aut (f.obj X) where
   toFun := f.mapIso
-  map_mul' x y := f.map_iso_trans y x
-  map_one' := f.map_iso_refl X
+  map_mul' x y := f.mapIso_trans y x
+  map_one' := f.mapIso_refl X
 #align category_theory.functor.map_Aut CategoryTheory.Functor.mapAut
 
 end Functor

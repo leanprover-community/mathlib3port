@@ -136,6 +136,6 @@ variable (G)
 theorem inv_card_commutator_le_commProb : (↑(Nat.card (commutator G)))⁻¹ ≤ commProb G :=
   (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr Finite.card_pos)).mpr
     (le_trans (ge_of_eq (commProb_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
-      (commutator G).comm_prob_quotient_le)
+      (commutator G).commProb_quotient_le)
 #align inv_card_commutator_le_comm_prob inv_card_commutator_le_commProb
 

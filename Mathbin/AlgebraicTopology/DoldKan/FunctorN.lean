@@ -62,7 +62,7 @@ def n₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)
       p := pInfty
       idem := pInfty_idem }
   map X Y f :=
-    { f := P_infty ≫ AlternatingFaceMapComplex.map f
+    { f := pInfty ≫ AlternatingFaceMapComplex.map f
       comm := by
         ext
         simp }

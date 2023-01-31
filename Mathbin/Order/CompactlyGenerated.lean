@@ -509,7 +509,7 @@ end CompleteLattice
 /-- A complete lattice is said to be compactly generated if any
 element is the `Sup` of compact elements. -/
 class IsCompactlyGenerated (α : Type _) [CompleteLattice α] : Prop where
-  exists_Sup_eq : ∀ x : α, ∃ s : Set α, (∀ x ∈ s, CompleteLattice.IsCompactElement x) ∧ supₛ s = x
+  exists_supₛ_eq : ∀ x : α, ∃ s : Set α, (∀ x ∈ s, CompleteLattice.IsCompactElement x) ∧ supₛ s = x
 #align is_compactly_generated IsCompactlyGenerated
 
 section
@@ -644,7 +644,7 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
 #align complete_lattice.Iic_coatomic_of_compact_element CompleteLattice.Iic_coatomic_of_compact_element
 
 theorem coatomic_of_top_compact (h : IsCompactElement (⊤ : α)) : IsCoatomic α :=
-  (@OrderIso.IicTop α _ _).is_coatomic_iff.mp (Iic_coatomic_of_compact_element h)
+  (@OrderIso.IicTop α _ _).IsCoatomic_iff.mp (Iic_coatomic_of_compact_element h)
 #align complete_lattice.coatomic_of_top_compact CompleteLattice.coatomic_of_top_compact
 
 end CompleteLattice

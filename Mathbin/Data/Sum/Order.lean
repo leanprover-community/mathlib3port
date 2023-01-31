@@ -71,8 +71,8 @@ Case conversion may be inaccurate. Consider using '#align sum.lift_rel.trans Sum
 @[trans]
 theorem LiftRel.trans [IsTrans α r] [IsTrans β s] :
     ∀ {a b c}, LiftRel r s a b → LiftRel r s b c → LiftRel r s a c
-  | _, _, _, lift_rel.inl hab, lift_rel.inl hbc => lift_rel.inl <| trans hab hbc
-  | _, _, _, lift_rel.inr hab, lift_rel.inr hbc => lift_rel.inr <| trans hab hbc
+  | _, _, _, lift_rel.inl hab, lift_rel.inl hbc => LiftRel.inl <| trans hab hbc
+  | _, _, _, lift_rel.inr hab, lift_rel.inr hbc => LiftRel.inr <| trans hab hbc
 #align sum.lift_rel.trans Sum.LiftRel.trans
 
 instance [IsTrans α r] [IsTrans β s] : IsTrans (Sum α β) (LiftRel r s) :=
@@ -163,7 +163,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.inl_le_inl_iff Sum.inl_le_inl_iffₓ'. -/
 @[simp]
 theorem inl_le_inl_iff [LE α] [LE β] {a b : α} : (inl a : Sum α β) ≤ inl b ↔ a ≤ b :=
-  lift_rel_inl_inl
+  liftRel_inl_inl
 #align sum.inl_le_inl_iff Sum.inl_le_inl_iff
 
 /- warning: sum.inr_le_inr_iff -> Sum.inr_le_inr_iff is a dubious translation:
@@ -174,7 +174,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.inr_le_inr_iff Sum.inr_le_inr_iffₓ'. -/
 @[simp]
 theorem inr_le_inr_iff [LE α] [LE β] {a b : β} : (inr a : Sum α β) ≤ inr b ↔ a ≤ b :=
-  lift_rel_inr_inr
+  liftRel_inr_inr
 #align sum.inr_le_inr_iff Sum.inr_le_inr_iff
 
 /- warning: sum.inl_lt_inl_iff -> Sum.inl_lt_inl_iff is a dubious translation:
@@ -185,7 +185,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.inl_lt_inl_iff Sum.inl_lt_inl_iffₓ'. -/
 @[simp]
 theorem inl_lt_inl_iff [LT α] [LT β] {a b : α} : (inl a : Sum α β) < inl b ↔ a < b :=
-  lift_rel_inl_inl
+  liftRel_inl_inl
 #align sum.inl_lt_inl_iff Sum.inl_lt_inl_iff
 
 /- warning: sum.inr_lt_inr_iff -> Sum.inr_lt_inr_iff is a dubious translation:
@@ -196,7 +196,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.inr_lt_inr_iff Sum.inr_lt_inr_iffₓ'. -/
 @[simp]
 theorem inr_lt_inr_iff [LT α] [LT β] {a b : β} : (inr a : Sum α β) < inr b ↔ a < b :=
-  lift_rel_inr_inr
+  liftRel_inr_inr
 #align sum.inr_lt_inr_iff Sum.inr_lt_inr_iff
 
 /- warning: sum.not_inl_le_inr -> Sum.not_inl_le_inr is a dubious translation:
@@ -207,7 +207,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.not_inl_le_inr Sum.not_inl_le_inrₓ'. -/
 @[simp]
 theorem not_inl_le_inr [LE α] [LE β] {a : α} {b : β} : ¬inl b ≤ inr a :=
-  not_lift_rel_inl_inr
+  not_liftRel_inl_inr
 #align sum.not_inl_le_inr Sum.not_inl_le_inr
 
 /- warning: sum.not_inl_lt_inr -> Sum.not_inl_lt_inr is a dubious translation:
@@ -218,7 +218,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.not_inl_lt_inr Sum.not_inl_lt_inrₓ'. -/
 @[simp]
 theorem not_inl_lt_inr [LT α] [LT β] {a : α} {b : β} : ¬inl b < inr a :=
-  not_lift_rel_inl_inr
+  not_liftRel_inl_inr
 #align sum.not_inl_lt_inr Sum.not_inl_lt_inr
 
 /- warning: sum.not_inr_le_inl -> Sum.not_inr_le_inl is a dubious translation:
@@ -229,7 +229,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.not_inr_le_inl Sum.not_inr_le_inlₓ'. -/
 @[simp]
 theorem not_inr_le_inl [LE α] [LE β] {a : α} {b : β} : ¬inr b ≤ inl a :=
-  not_lift_rel_inr_inl
+  not_liftRel_inr_inl
 #align sum.not_inr_le_inl Sum.not_inr_le_inl
 
 /- warning: sum.not_inr_lt_inl -> Sum.not_inr_lt_inl is a dubious translation:
@@ -240,7 +240,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.not_inr_lt_inl Sum.not_inr_lt_inlₓ'. -/
 @[simp]
 theorem not_inr_lt_inl [LT α] [LT β] {a : α} {b : β} : ¬inr b < inl a :=
-  not_lift_rel_inr_inl
+  not_liftRel_inr_inl
 #align sum.not_inr_lt_inl Sum.not_inr_lt_inl
 
 section Preorder
@@ -412,8 +412,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {a : Sum.{u2, u1} α β} {b : Sum.{u2, u1} α β}, Iff (LE.le.{max u2 u1} (Sum.{u1, u2} β α) (Sum.instLESum.{u1, u2} β α _inst_2 _inst_1) (Sum.swap.{u2, u1} α β a) (Sum.swap.{u2, u1} α β b)) (LE.le.{max u2 u1} (Sum.{u2, u1} α β) (Sum.instLESum.{u2, u1} α β _inst_1 _inst_2) a b)
 Case conversion may be inaccurate. Consider using '#align sum.swap_le_swap_iff Sum.swap_le_swap_iffₓ'. -/
 @[simp]
-theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.swap ≤ b.swap ↔ a ≤ b :=
-  lift_rel_swap_iff
+theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.symm ≤ b.symm ↔ a ≤ b :=
+  liftRel_swap_iff
 #align sum.swap_le_swap_iff Sum.swap_le_swap_iff
 
 /- warning: sum.swap_lt_swap_iff -> Sum.swap_lt_swap_iff is a dubious translation:
@@ -423,8 +423,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LT.{u2} α] [_inst_2 : LT.{u1} β] {a : Sum.{u2, u1} α β} {b : Sum.{u2, u1} α β}, Iff (LT.lt.{max u2 u1} (Sum.{u1, u2} β α) (Sum.instLTSum.{u1, u2} β α _inst_2 _inst_1) (Sum.swap.{u2, u1} α β a) (Sum.swap.{u2, u1} α β b)) (LT.lt.{max u2 u1} (Sum.{u2, u1} α β) (Sum.instLTSum.{u2, u1} α β _inst_1 _inst_2) a b)
 Case conversion may be inaccurate. Consider using '#align sum.swap_lt_swap_iff Sum.swap_lt_swap_iffₓ'. -/
 @[simp]
-theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.swap < b.swap ↔ a < b :=
-  lift_rel_swap_iff
+theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.symm < b.symm ↔ a < b :=
+  liftRel_swap_iff
 #align sum.swap_lt_swap_iff Sum.swap_lt_swap_iff
 
 end Disjoint
@@ -996,10 +996,10 @@ def sumLexAssoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) ⊕
     map_rel_iff' := fun a b =>
       ⟨fun h =>
         match a, b, h with
-        | inlₗ (inlₗ a), inlₗ (inlₗ b), lex.inl h => lex.inl <| Lex.inl h
-        | inlₗ (inlₗ a), inlₗ (inrₗ b), lex.sep _ _ => lex.inl <| Lex.sep _ _
+        | inlₗ (inlₗ a), inlₗ (inlₗ b), lex.inl h => Lex.inl <| Lex.inl h
+        | inlₗ (inlₗ a), inlₗ (inrₗ b), lex.sep _ _ => Lex.inl <| Lex.sep _ _
         | inlₗ (inlₗ a), inrₗ b, lex.sep _ _ => Lex.sep _ _
-        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inr (lex.inl h) => lex.inl <| Lex.inr h
+        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inr (lex.inl h) => Lex.inl <| Lex.inr h
         | inlₗ (inrₗ a), inrₗ b, lex.inr (lex.sep _ _) => Lex.sep _ _
         | inrₗ a, inrₗ b, lex.inr (lex.inr h) => Lex.inr h,
         fun h =>
@@ -1007,9 +1007,9 @@ def sumLexAssoc (α β γ : Type _) [LE α] [LE β] [LE γ] : (α ⊕ₗ β) ⊕
         | inlₗ (inlₗ a), inlₗ (inlₗ b), lex.inl (lex.inl h) => Lex.inl h
         | inlₗ (inlₗ a), inlₗ (inrₗ b), lex.inl (lex.sep _ _) => Lex.sep _ _
         | inlₗ (inlₗ a), inrₗ b, lex.sep _ _ => Lex.sep _ _
-        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inl (lex.inr h) => lex.inr <| Lex.inl h
-        | inlₗ (inrₗ a), inrₗ b, lex.sep _ _ => lex.inr <| Lex.sep _ _
-        | inrₗ a, inrₗ b, lex.inr h => lex.inr <| Lex.inr h⟩ }
+        | inlₗ (inrₗ a), inlₗ (inrₗ b), lex.inl (lex.inr h) => Lex.inr <| Lex.inl h
+        | inlₗ (inrₗ a), inrₗ b, lex.sep _ _ => Lex.inr <| Lex.sep _ _
+        | inrₗ a, inrₗ b, lex.inr h => Lex.inr <| Lex.inr h⟩ }
 #align order_iso.sum_lex_assoc OrderIso.sumLexAssoc
 -/
 

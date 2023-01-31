@@ -55,7 +55,7 @@ theorem padic_polynomial_dist {p : ℕ} [Fact p.Prime] (F : Polynomial ℤ_[p]) 
 open Filter Metric
 
 private theorem comp_tendsto_lim {p : ℕ} [Fact p.Prime] {F : Polynomial ℤ_[p]}
-    (ncs : CauSeq ℤ_[p] norm) : Tendsto (fun i => F.eval (ncs i)) atTop (𝓝 (F.eval ncs.lim)) :=
+    (ncs : CauSeq ℤ_[p] norm) : Tendsto (fun i => F.eval (ncs i)) atTop (𝓝 (F.eval ncs.limUnder)) :=
   F.ContinuousAt.Tendsto.comp ncs.tendsto_limit
 #align comp_tendsto_lim comp_tendsto_lim
 
@@ -78,11 +78,11 @@ private theorem ncs_tendsto_const :
 #align ncs_tendsto_const ncs_tendsto_const
 
 private theorem ncs_tendsto_lim :
-    Tendsto (fun i => ‖F.derivative.eval (ncs i)‖) atTop (𝓝 ‖F.derivative.eval ncs.lim‖) :=
+    Tendsto (fun i => ‖F.derivative.eval (ncs i)‖) atTop (𝓝 ‖F.derivative.eval ncs.limUnder‖) :=
   Tendsto.comp (continuous_iff_continuousAt.1 continuous_norm _) (comp_tendsto_lim _)
 #align ncs_tendsto_lim ncs_tendsto_lim
 
-private theorem norm_deriv_eq : ‖F.derivative.eval ncs.lim‖ = ‖F.derivative.eval a‖ :=
+private theorem norm_deriv_eq : ‖F.derivative.eval ncs.limUnder‖ = ‖F.derivative.eval a‖ :=
   tendsto_nhds_unique ncs_tendsto_lim ncs_tendsto_const
 #align norm_deriv_eq norm_deriv_eq
 
@@ -103,7 +103,7 @@ private theorem tendsto_zero_of_norm_tendsto_zero : Tendsto (fun i => F.eval (nc
   tendsto_iff_norm_tendsto_zero.2 (by simpa using hnorm)
 #align tendsto_zero_of_norm_tendsto_zero tendsto_zero_of_norm_tendsto_zero
 
-theorem limit_zero_of_norm_tendsto_zero : F.eval ncs.lim = 0 :=
+theorem limit_zero_of_norm_tendsto_zero : F.eval ncs.limUnder = 0 :=
   tendsto_nhds_unique (comp_tendsto_lim _) tendsto_zero_of_norm_tendsto_zero
 #align limit_zero_of_norm_tendsto_zero limit_zero_of_norm_tendsto_zero
 
@@ -447,7 +447,7 @@ private def newton_cau_seq : CauSeq ℤ_[p] norm :=
 #align newton_cau_seq newton_cau_seq
 
 private def soln : ℤ_[p] :=
-  newton_cau_seq.lim
+  newton_cau_seq.limUnder
 #align soln soln
 
 private theorem soln_spec {ε : ℝ} (hε : ε > 0) :

@@ -259,7 +259,7 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem addHom_ext' {γ : Type _} [AddMonoid γ] ⦃f g : (⨁ i, β i) →+ γ⦄
     (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
-  add_hom_ext fun i => AddMonoidHom.congr_fun <| H i
+  addHom_ext fun i => AddMonoidHom.congr_fun <| H i
 #align direct_sum.add_hom_ext' DirectSum.addHom_ext'
 
 variable {γ : Type u₁} [AddCommMonoid γ]
@@ -319,7 +319,7 @@ induced by a family `φ` of homomorphisms `γ → β i`.
 
 Note that this is not an isomorphism. Not every homomorphism `γ →+ ⨁ i, β i` arises in this way. -/
 def fromAddMonoid : (⨁ i, γ →+ β i) →+ γ →+ ⨁ i, β i :=
-  to_add_monoid fun i => AddMonoidHom.compHom (of β i)
+  toAddMonoid fun i => AddMonoidHom.compHom (of β i)
 #align direct_sum.from_add_monoid DirectSum.fromAddMonoid
 
 /- warning: direct_sum.from_add_monoid_of -> DirectSum.fromAddMonoid_of is a dubious translation:
@@ -359,7 +359,7 @@ Case conversion may be inaccurate. Consider using '#align direct_sum.set_to_set 
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
 def setToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, β i) →+ ⨁ i : T, β i :=
-  to_add_monoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
+  toAddMonoid fun i => of (fun i : Subtype T => β i) ⟨↑i, H i.Prop⟩
 #align direct_sum.set_to_set DirectSum.setToSet
 
 variable {β}

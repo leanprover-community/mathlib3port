@@ -140,7 +140,7 @@ theorem powerBasis_gen_mem_adjoin_zeta_sub_one :
 noncomputable def subOnePowerBasis : PowerBasis K L :=
   (hζ.PowerBasis K).ofGenMemAdjoin
     (isIntegral_sub (IsCyclotomicExtension.integral {n} K L ζ) isIntegral_one)
-    (hζ.power_basis_gen_mem_adjoin_zeta_sub_one _)
+    (hζ.powerBasis_gen_mem_adjoin_zeta_sub_one _)
 #align is_primitive_root.sub_one_power_basis IsPrimitiveRoot.subOnePowerBasis
 
 variable {K} (C)
@@ -306,7 +306,7 @@ theorem sub_one_norm_isPrimePow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtensi
   nth_rw 1 [← IsPrimePow.minFac_pow_factorization_eq hn]
   obtain ⟨k, hk⟩ : ∃ k, (n : ℕ).factorization (n : ℕ).minFac = k + 1 :=
     exists_eq_succ_of_ne_zero
-      (((n : ℕ).factorization.mem_support_to_fun (n : ℕ).minFac).1 <|
+      (((n : ℕ).factorization.mem_support_toFun (n : ℕ).minFac).1 <|
         factor_iff_mem_factorization.2 <|
           (mem_factors (IsPrimePow.ne_zero hn)).2 ⟨hprime.out, min_fac_dvd _⟩)
   simp [hk, sub_one_norm_eq_eval_cyclotomic hζ this hirr]
@@ -319,7 +319,7 @@ variable {A}
 theorem minpoly_sub_one_eq_cyclotomic_comp [Algebra K A] [IsDomain A] {ζ : A}
     [IsCyclotomicExtension {n} K A] (hζ : IsPrimitiveRoot ζ n)
     (h : Irreducible (Polynomial.cyclotomic n K)) :
-    minpoly K (ζ - 1) = (cyclotomic n K).comp (X + 1) :=
+    minpoly K (ζ - 1) = (cyclotomic n K).comp (x + 1) :=
   by
   haveI := IsCyclotomicExtension.ne_zero' n K A
   rw [show ζ - 1 = ζ + algebraMap K A (-1) by simp [sub_eq_add_neg],
@@ -390,7 +390,7 @@ theorem pow_sub_one_norm_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot ζ 
     rw [add_sub_cancel] at H
     rw [H, coe_coe]
     congr
-    · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.min_fac_eq]
+    · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]
       exact Nat.succ_ne_zero _
     have := FiniteDimensional.finrank_mul_finrank K K⟮⟯ L
     rw [IsCyclotomicExtension.finrank L hirr, IsCyclotomicExtension.finrank K⟮⟯ hirr₁, PNat.pow_coe,
@@ -529,7 +529,7 @@ theorem norm_zeta_eq_one [IsCyclotomicExtension {n} K L] (hn : n ≠ 2)
 theorem isPrimePow_norm_zeta_sub_one (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtension {n} K L]
     (hirr : Irreducible (cyclotomic (n : ℕ) K)) (h : n ≠ 2) :
     norm K (zeta n K L - 1) = (n : ℕ).minFac :=
-  (zeta_spec n K L).sub_one_norm_is_prime_pow hn hirr h
+  (zeta_spec n K L).sub_one_norm_isPrimePow hn hirr h
 #align is_cyclotomic_extension.is_prime_pow_norm_zeta_sub_one IsCyclotomicExtension.isPrimePow_norm_zeta_sub_one
 
 /-- If `irreducible (cyclotomic (p ^ (k + 1)) K)` (in particular for `K = ℚ`) and `p` is a prime,

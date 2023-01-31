@@ -65,7 +65,7 @@ variable {ι : Type u} (F : Discrete ι ⥤ LocallyRingedSpace.{u})
 /-- The explicit coproduct for `F : discrete ι ⥤ LocallyRingedSpace`. -/
 noncomputable def coproduct : LocallyRingedSpace
     where
-  toSheafedSpace := colimit (F ⋙ forget_to_SheafedSpace : _)
+  toSheafedSpace := colimit (F ⋙ forgetToSheafedSpace : _)
   LocalRing x :=
     by
     obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forget_to_SheafedSpace) x
@@ -82,7 +82,7 @@ noncomputable def coproductCofan : Cocone F
     where
   x := coproduct F
   ι :=
-    { app := fun j => ⟨colimit.ι (F ⋙ forget_to_SheafedSpace) j, inferInstance⟩
+    { app := fun j => ⟨colimit.ι (F ⋙ forgetToSheafedSpace) j, inferInstance⟩
       naturality' := fun j j' f => by
         cases j
         cases j'
@@ -93,7 +93,7 @@ noncomputable def coproductCofan : Cocone F
 noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F)
     where
   desc s :=
-    ⟨colimit.desc (F ⋙ forget_to_SheafedSpace) (forgetToSheafedSpace.mapCocone s),
+    ⟨colimit.desc (F ⋙ forgetToSheafedSpace) (forgetToSheafedSpace.mapCocone s),
       by
       intro x
       obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forget_to_SheafedSpace) x
@@ -205,8 +205,7 @@ theorem imageBasicOpen_image_open :
     IsOpen ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) :=
   by
   rw [←
-    (TopCat.homeoOfIso
-        (preserves_coequalizer.iso (SheafedSpace.forget _) f.1 g.1)).is_open_preimage,
+    (TopCat.homeoOfIso (preserves_coequalizer.iso (SheafedSpace.forget _) f.1 g.1)).isOpen_preimage,
     TopCat.coequalizer_isOpen_iff, ← Set.preimage_comp]
   erw [← coe_comp]
   rw [preserves_coequalizer.iso_hom, ι_comp_coequalizer_comparison]
@@ -258,7 +257,7 @@ noncomputable def coequalizer : LocallyRingedSpace
     by
     obtain ⟨y, rfl⟩ :=
       (TopCat.epi_iff_surjective (coequalizer.π f.val g.val).base).mp inferInstance x
-    exact (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) y).domain_local_ring
+    exact (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) y).domain_localRing
 #align algebraic_geometry.LocallyRingedSpace.coequalizer AlgebraicGeometry.LocallyRingedSpace.coequalizer
 
 /-- The explicit coequalizer cofork of locally ringed spaces. -/
@@ -327,7 +326,7 @@ noncomputable instance preservesCoequalizer :
 end HasCoequalizer
 
 instance : HasColimits LocallyRingedSpace :=
-  has_colimits_of_has_coequalizers_and_coproducts
+  hasColimitsOfHasCoequalizersAndCoproducts
 
 noncomputable instance : PreservesColimits LocallyRingedSpace.forgetToSheafedSpace :=
   preservesColimitsOfPreservesCoequalizersAndCoproducts _

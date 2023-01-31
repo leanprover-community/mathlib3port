@@ -35,7 +35,7 @@ variable {x : ℝ}
 theorem hasStrictDerivAt_log_of_pos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x :=
   by
   have : HasStrictDerivAt log (exp <| log x)⁻¹ x :=
-    (has_strict_deriv_at_exp <| log x).of_local_left_inverse (continuousAt_log hx.ne')
+    (hasStrictDerivAt_exp <| log x).of_local_left_inverse (continuousAt_log hx.ne')
         (ne_of_gt <| exp_pos _) <|
       Eventually.mono (lt_mem_nhds hx) @exp_log
   rwa [exp_log hx] at this
@@ -107,7 +107,7 @@ theorem HasDerivWithinAt.log (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasDerivWithinAt (fun y => log (f y)) (f' / f x) s x :=
   by
   rw [div_eq_inv_mul]
-  exact (has_deriv_at_log hx).comp_has_deriv_within_at x hf
+  exact (has_deriv_at_log hx).comp_hasDerivWithinAt x hf
 #align has_deriv_within_at.log HasDerivWithinAt.log
 
 theorem HasDerivAt.log (hf : HasDerivAt f f' x) (hx : f x ≠ 0) :
@@ -145,17 +145,17 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasFderivWithinAt.log (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasFderivWithinAt (fun x => log (f x)) ((f x)⁻¹ • f') s x :=
-  (hasDerivAt_log hx).comp_has_fderiv_within_at x hf
+  (hasDerivAt_log hx).comp_hasFderivWithinAt x hf
 #align has_fderiv_within_at.log HasFderivWithinAt.log
 
 theorem HasFderivAt.log (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
     HasFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
-  (hasDerivAt_log hx).comp_has_fderiv_at x hf
+  (hasDerivAt_log hx).comp_hasFderivAt x hf
 #align has_fderiv_at.log HasFderivAt.log
 
 theorem HasStrictFderivAt.log (hf : HasStrictFderivAt f f' x) (hx : f x ≠ 0) :
     HasStrictFderivAt (fun x => log (f x)) ((f x)⁻¹ • f') x :=
-  (hasStrictDerivAt_log hx).comp_has_strict_fderiv_at x hf
+  (hasStrictDerivAt_log hx).comp_hasStrictFderivAt x hf
 #align has_strict_fderiv_at.log HasStrictFderivAt.log
 
 theorem DifferentiableWithinAt.log (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :
@@ -176,7 +176,7 @@ theorem ContDiffAt.log {n} (hf : ContDiffAt ℝ n f x) (hx : f x ≠ 0) :
 
 theorem ContDiffWithinAt.log {n} (hf : ContDiffWithinAt ℝ n f s x) (hx : f x ≠ 0) :
     ContDiffWithinAt ℝ n (fun x => log (f x)) s x :=
-  (contDiffAt_log.2 hx).comp_cont_diff_within_at x hf
+  (contDiffAt_log.2 hx).comp_contDiffWithinAt x hf
 #align cont_diff_within_at.log ContDiffWithinAt.log
 
 theorem ContDiffOn.log {n} (hf : ContDiffOn ℝ n f s) (hs : ∀ x ∈ s, f x ≠ 0) :
@@ -327,7 +327,7 @@ theorem hasSum_log_sub_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     rw [Odd.neg_pow (⟨n, rfl⟩ : Odd (2 * n + 1)) x]
     push_cast
     ring_nf
-  rw [← h_term_eq_goal, (mul_right_injective₀ (two_ne_zero' ℕ)).has_sum_iff]
+  rw [← h_term_eq_goal, (mul_right_injective₀ (two_ne_zero' ℕ)).hasSum_iff]
   · have h₁ := (has_sum_pow_div_log_of_abs_lt_1 (Eq.trans_lt (abs_neg x) h)).mul_left (-1)
     convert h₁.add (has_sum_pow_div_log_of_abs_lt_1 h)
     ring_nf

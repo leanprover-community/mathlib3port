@@ -61,11 +61,11 @@ theorem eqOn_dslope_slope (f : 𝕜 → E) (a : 𝕜) : EqOn (dslope f a) (slope
 #align eq_on_dslope_slope eqOn_dslope_slope
 
 theorem dslope_eventuallyEq_slope_of_ne (f : 𝕜 → E) (h : b ≠ a) : dslope f a =ᶠ[𝓝 b] slope f a :=
-  (eqOn_dslope_slope f a).eventually_eq_of_mem (isOpen_ne.mem_nhds h)
+  (eqOn_dslope_slope f a).eventuallyEq_of_mem (isOpen_ne.mem_nhds h)
 #align dslope_eventually_eq_slope_of_ne dslope_eventuallyEq_slope_of_ne
 
 theorem dslope_eventuallyEq_slope_punctured_nhds (f : 𝕜 → E) : dslope f a =ᶠ[𝓝[≠] a] slope f a :=
-  (eqOn_dslope_slope f a).eventually_eq_of_mem self_mem_nhdsWithin
+  (eqOn_dslope_slope f a).eventuallyEq_of_mem self_mem_nhdsWithin
 #align dslope_eventually_eq_slope_punctured_nhds dslope_eventuallyEq_slope_punctured_nhds
 
 @[simp]
@@ -152,9 +152,9 @@ theorem differentiableWithinAt_dslope_of_ne (h : b ≠ a) :
   refine' ⟨DifferentiableWithinAt.of_dslope, fun hd => _⟩
   refine'
     (((differentiable_within_at_id.sub_const a).inv (sub_ne_zero.2 h)).smul
-          (hd.sub_const (f a))).congr_of_eventually_eq
+          (hd.sub_const (f a))).congr_of_eventuallyEq
       _ (dslope_of_ne _ h)
-  refine' (eqOn_dslope_slope _ _).eventually_eq_of_mem _
+  refine' (eqOn_dslope_slope _ _).eventuallyEq_of_mem _
   exact mem_nhdsWithin_of_mem_nhds (is_open_ne.mem_nhds h)
 #align differentiable_within_at_dslope_of_ne differentiableWithinAt_dslope_of_ne
 

@@ -127,11 +127,11 @@ section AllowEmpty
 variable {C} [IsFilteredOrEmpty C]
 
 theorem cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True :=
-  is_filtered_or_empty.cocone_objs
+  IsFilteredOrEmpty.cocone_objs
 #align category_theory.is_filtered.cocone_objs CategoryTheory.IsFiltered.cocone_objs
 
 theorem cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h :=
-  is_filtered_or_empty.cocone_maps
+  IsFilteredOrEmpty.cocone_maps
 #align category_theory.is_filtered.cocone_maps CategoryTheory.IsFiltered.cocone_maps
 
 /-- `max j j'` is an arbitrary choice of object to the right of both `j` and `j'`,
@@ -145,14 +145,14 @@ noncomputable def max (j j' : C) : C :=
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def leftToMax (j j' : C) : j ⟶ max j j' :=
-  (cocone_objs j j').some_spec.some
+  (cocone_objs j j').choose_spec.some
 #align category_theory.is_filtered.left_to_max CategoryTheory.IsFiltered.leftToMax
 
 /-- `right_to_max j j'` is an arbitrary choice of morphism from `j'` to `max j j'`,
 whose existence is ensured by `is_filtered`.
 -/
 noncomputable def rightToMax (j j' : C) : j' ⟶ max j j' :=
-  (cocone_objs j j').some_spec.some_spec.some
+  (cocone_objs j j').choose_spec.choose_spec.some
 #align category_theory.is_filtered.right_to_max CategoryTheory.IsFiltered.rightToMax
 
 /-- `coeq f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of object
@@ -170,7 +170,7 @@ noncomputable def coeq {j j' : C} (f f' : j ⟶ j') : C :=
 Its existence is ensured by `is_filtered`.
 -/
 noncomputable def coeqHom {j j' : C} (f f' : j ⟶ j') : j' ⟶ coeq f f' :=
-  (cocone_maps f f').some_spec.some
+  (cocone_maps f f').choose_spec.some
 #align category_theory.is_filtered.coeq_hom CategoryTheory.IsFiltered.coeqHom
 
 /-- `coeq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
@@ -178,7 +178,7 @@ noncomputable def coeqHom {j j' : C} (f f' : j ⟶ j') : j' ⟶ coeq f f' :=
 -/
 @[simp, reassoc.1]
 theorem coeq_condition {j j' : C} (f f' : j ⟶ j') : f ≫ coeqHom f f' = f' ≫ coeqHom f f' :=
-  (cocone_maps f f').some_spec.some_spec
+  (cocone_maps f f').choose_spec.choose_spec
 #align category_theory.is_filtered.coeq_condition CategoryTheory.IsFiltered.coeq_condition
 
 end AllowEmpty
@@ -249,7 +249,7 @@ noncomputable def sup : C :=
 /-- The morphisms to `sup O H`.
 -/
 noncomputable def toSup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
-  (sup_exists O H).some_spec.some m
+  (sup_exists O H).choose_spec.some m
 #align category_theory.is_filtered.to_sup CategoryTheory.IsFiltered.toSup
 
 /-- The triangles of consisting of a morphism in `H` and the maps to `sup O H` commute.
@@ -257,7 +257,7 @@ noncomputable def toSup {X : C} (m : X ∈ O) : X ⟶ sup O H :=
 theorem toSup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
     (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) :
     f ≫ toSup O H mY = toSup O H mX :=
-  (sup_exists O H).some_spec.some_spec mX mY mf
+  (sup_exists O H).choose_spec.choose_spec mX mY mf
 #align category_theory.is_filtered.to_sup_commutes CategoryTheory.IsFiltered.toSup_commutes
 
 variable {J : Type v} [SmallCategory J] [FinCategory J]
@@ -511,11 +511,11 @@ section AllowEmpty
 variable {C} [IsCofilteredOrEmpty C]
 
 theorem cone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True :=
-  is_cofiltered_or_empty.cone_objs
+  IsCofilteredOrEmpty.cone_objs
 #align category_theory.is_cofiltered.cone_objs CategoryTheory.IsCofiltered.cone_objs
 
 theorem cone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g :=
-  is_cofiltered_or_empty.cone_maps
+  IsCofilteredOrEmpty.cone_maps
 #align category_theory.is_cofiltered.cone_maps CategoryTheory.IsCofiltered.cone_maps
 
 /-- `min j j'` is an arbitrary choice of object to the left of both `j` and `j'`,
@@ -529,14 +529,14 @@ noncomputable def min (j j' : C) : C :=
 whose existence is ensured by `is_cofiltered`.
 -/
 noncomputable def minToLeft (j j' : C) : min j j' ⟶ j :=
-  (cone_objs j j').some_spec.some
+  (cone_objs j j').choose_spec.some
 #align category_theory.is_cofiltered.min_to_left CategoryTheory.IsCofiltered.minToLeft
 
 /-- `min_to_right j j'` is an arbitrary choice of morphism from `min j j'` to `j'`,
 whose existence is ensured by `is_cofiltered`.
 -/
 noncomputable def minToRight (j j' : C) : min j j' ⟶ j' :=
-  (cone_objs j j').some_spec.some_spec.some
+  (cone_objs j j').choose_spec.choose_spec.some
 #align category_theory.is_cofiltered.min_to_right CategoryTheory.IsCofiltered.minToRight
 
 /-- `eq f f'`, for morphisms `f f' : j ⟶ j'`, is an arbitrary choice of object
@@ -554,7 +554,7 @@ noncomputable def eq {j j' : C} (f f' : j ⟶ j') : C :=
 Its existence is ensured by `is_cofiltered`.
 -/
 noncomputable def eqHom {j j' : C} (f f' : j ⟶ j') : eq f f' ⟶ j :=
-  (cone_maps f f').some_spec.some
+  (cone_maps f f').choose_spec.some
 #align category_theory.is_cofiltered.eq_hom CategoryTheory.IsCofiltered.eqHom
 
 /-- `eq_condition f f'`, for morphisms `f f' : j ⟶ j'`, is the proof that
@@ -562,7 +562,7 @@ noncomputable def eqHom {j j' : C} (f f' : j ⟶ j') : eq f f' ⟶ j :=
 -/
 @[simp, reassoc.1]
 theorem eq_condition {j j' : C} (f f' : j ⟶ j') : eqHom f f' ≫ f = eqHom f f' ≫ f' :=
-  (cone_maps f f').some_spec.some_spec
+  (cone_maps f f').choose_spec.choose_spec
 #align category_theory.is_cofiltered.eq_condition CategoryTheory.IsCofiltered.eq_condition
 
 /-- For every cospan `j ⟶ i ⟵ j'`,
@@ -649,7 +649,7 @@ noncomputable def inf : C :=
 /-- The morphisms from `inf O H`.
 -/
 noncomputable def infTo {X : C} (m : X ∈ O) : inf O H ⟶ X :=
-  (inf_exists O H).some_spec.some m
+  (inf_exists O H).choose_spec.some m
 #align category_theory.is_cofiltered.inf_to CategoryTheory.IsCofiltered.infTo
 
 /-- The triangles consisting of a morphism in `H` and the maps from `inf O H` commute.
@@ -657,7 +657,7 @@ noncomputable def infTo {X : C} (m : X ∈ O) : inf O H ⟶ X :=
 theorem infTo_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
     (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) :
     infTo O H mX ≫ f = infTo O H mY :=
-  (inf_exists O H).some_spec.some_spec mX mY mf
+  (inf_exists O H).choose_spec.choose_spec mX mY mf
 #align category_theory.is_cofiltered.inf_to_commutes CategoryTheory.IsCofiltered.infTo_commutes
 
 variable {J : Type w} [SmallCategory J] [FinCategory J]

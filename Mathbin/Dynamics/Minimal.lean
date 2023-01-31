@@ -100,7 +100,7 @@ theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstS
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
     calc
       K ⊆ univ := subset_univ K
-      _ = ⋃ g : G, g • U := (hUo.Union_smul G hne).symm
+      _ = ⋃ g : G, g • U := (hUo.unionᵢ_smul G hne).symm
       
 #align is_compact.exists_finite_cover_smul IsCompact.exists_finite_cover_smul
 #align is_compact.exists_finite_cover_vadd IsCompact.exists_finite_cover_vadd

@@ -184,7 +184,7 @@ variable [DecidableEq R]
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
 noncomputable def finsetApprox : Finset R :=
-  (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).erase
+  (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).eraseₓ
     0
 #align class_group.finset_approx ClassGroup.finsetApprox
 

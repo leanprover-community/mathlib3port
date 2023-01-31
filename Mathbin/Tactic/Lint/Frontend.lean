@@ -77,7 +77,7 @@ If `slow` is false, it only uses the fast default tests. -/
 unsafe def get_checks (slow : Bool) (extra : List Name) (use_only : Bool) :
     tactic (List (Name × linter)) := do
   let default ← if use_only then return [] else attribute.get_instances `linter >>= get_linters
-  let default := if slow then default else default.filter fun l => l.2.is_fast
+  let default := if slow then default else default.filterₓ fun l => l.2.is_fast
   List.append default <$> get_linters extra
 #align get_checks get_checks
 
@@ -117,7 +117,7 @@ unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List
     rb_lmap.values <|
       rb_lmap.of_list <|
         results.fold [] fun decl linter_warning results =>
-          (((e.decl_pos decl).getOrElse ⟨0, 0⟩).line, (decl, linter_warning)) :: results
+          (((e.decl_pos decl).getD ⟨0, 0⟩).line, (decl, linter_warning)) :: results
 #align sort_results sort_results
 
 /-- Formats a linter warning as `#check` command with comment. -/
@@ -161,7 +161,7 @@ unsafe def print_warnings (env : environment) (emit_workflow_commands : Bool) (l
     (sort_results env results).map fun ⟨decl_name, warning⟩ =>
       let form := print_warning decl_name warning
       if emit_workflow_commands then
-        form ++ (print_workflow_command env linter_name decl_name warning).getOrElse ""
+        form ++ (print_workflow_command env linter_name decl_name warning).getD ""
       else form
 #align print_warnings print_warnings
 
@@ -172,8 +172,8 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) 
     (formatter : rb_map Name String → format) : format :=
   let results :=
     results.fold (rb_map.mk String (rb_map Name String)) fun decl_name linter_warning results =>
-      let fn := (e.decl_olean decl_name).getOrElse ""
-      results.insert fn (((results.find fn).getOrElse mk_rb_map).insert decl_name linter_warning)
+      let fn := (e.decl_olean decl_name).getD ""
+      results.insert fn (((results.find fn).getD mk_rb_map).insert decl_name linter_warning)
   let l :=
     results.toList.reverse.map fun ⟨fn, results⟩ =>
       ("-- " ++ fn.popn drop_fn_chars ++ "\n" ++ formatter results : format)
@@ -203,7 +203,7 @@ unsafe def format_linter_results (env : environment)
       else
         if verbose = LintVerbosity.high then "/- OK: " ++ linter.no_errors_found ++ " -/"
         else format.nil
-  let s := format.intercalate "\n" (formatted_results.filter fun f => ¬f.is_nil)
+  let s := format.intercalate "\n" (formatted_results.filterₓ fun f => ¬f.is_nil)
   let s :=
     if verbose = LintVerbosity.low then s
     else
@@ -229,7 +229,7 @@ unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) 
     (slow : Bool) (verbose : LintVerbosity) (checks : List (Name × linter)) :
     tactic (name_set × format) := do
   let e ← get_env
-  let non_auto_decls := decls.filter fun d => ¬d.is_auto_or_internal e
+  let non_auto_decls := decls.filterₓ fun d => ¬d.is_auto_or_internal e
   let results ← lint_core decls non_auto_decls checks
   let s :=
     format_linter_results e results decls non_auto_decls group_by_filename where_desc slow verbose
@@ -246,7 +246,7 @@ unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.
     (extra : List Name := []) (use_only : Bool := false) : tactic (name_set × format) := do
   let checks ← get_checks slow extra use_only
   let e ← get_env
-  let l := e.filter fun d => e.in_current_file d.to_name
+  let l := e.filterₓ fun d => e.in_current_file d.to_name
   lint_aux l none "in the current file" slow verbose checks
 #align lint lint
 
@@ -312,7 +312,7 @@ unsafe def lint_cmd_aux
     ←-- allow either order of *-
         if verbosity.isSome then return verbosity
       else parse_verbosity
-  let verbosity := verbosity.getOrElse LintVerbosity.medium
+  let verbosity := verbosity.getD LintVerbosity.medium
   let (use_only, extra) ← parse_lint_additions
   let (failed, s) ← scope fast_only.isNone verbosity extra use_only
   when ¬s <| trace s

@@ -89,7 +89,7 @@ section Bind
 /-- The monadic bind operation for `pmf`. -/
 def bind (p : Pmf α) (f : α → Pmf β) : Pmf β :=
   ⟨fun b => ∑' a, p a * f a b,
-    Ennreal.summable.has_sum_iff.2
+    Ennreal.summable.hasSum_iff.2
       (Ennreal.tsum_comm.trans <| by simp only [Ennreal.tsum_mul_left, tsum_coe, mul_one])⟩
 #align pmf.bind Pmf.bind
 
@@ -188,7 +188,7 @@ section BindOnSupport
   `p.bind f` is equivalent to `p.bind_on_support (λ a _, f a)`, see `bind_on_support_eq_bind` -/
 def bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf β) : Pmf β :=
   ⟨fun b => ∑' a, p a * if h : p a = 0 then 0 else f a h b,
-    Ennreal.summable.has_sum_iff.2
+    Ennreal.summable.hasSum_iff.2
       (by
         refine' ennreal.tsum_comm.trans (trans (tsum_congr fun a => _) p.tsum_coe)
         simp_rw [Ennreal.tsum_mul_left]

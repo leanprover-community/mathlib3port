@@ -1044,11 +1044,11 @@ end
 /-- A complemented bounded lattice is one where every element has a (not necessarily unique)
 complement. -/
 class ComplementedLattice (α) [Lattice α] [BoundedOrder α] : Prop where
-  exists_is_compl : ∀ a : α, ∃ b : α, IsCompl a b
+  exists_isCompl : ∀ a : α, ∃ b : α, IsCompl a b
 #align complemented_lattice ComplementedLattice
 -/
 
-export ComplementedLattice (exists_is_compl)
+export ComplementedLattice (exists_isCompl)
 
 namespace ComplementedLattice
 

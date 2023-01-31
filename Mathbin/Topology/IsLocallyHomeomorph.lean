@@ -52,7 +52,7 @@ theorem mk (h : ∀ x ∈ s, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀
         map_source' := fun x hx => by rw [he x hx] <;> exact e.map_source' hx
         left_inv' := fun x hx => by rw [he x hx] <;> exact e.left_inv' hx
         right_inv' := fun y hy => by rw [he _ (e.map_target' hy)] <;> exact e.right_inv' hy
-        continuous_to_fun := (continuousOn_congr he).mpr e.continuous_to_fun },
+        continuous_toFun := (continuousOn_congr he).mpr e.continuous_to_fun },
       hx, rfl⟩
 #align is_locally_homeomorph_on.mk IsLocallyHomeomorphOn.mk
 
@@ -131,7 +131,7 @@ protected theorem isOpenMap (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
 protected theorem comp (hg : IsLocallyHomeomorph g) (hf : IsLocallyHomeomorph f) :
     IsLocallyHomeomorph (g ∘ f) :=
   isLocallyHomeomorph_iff_isLocallyHomeomorphOn_univ.mpr
-    (hg.IsLocallyHomeomorphOn.comp hf.IsLocallyHomeomorphOn (Set.univ.maps_to_univ f))
+    (hg.IsLocallyHomeomorphOn.comp hf.IsLocallyHomeomorphOn (Set.univ.mapsTo_univ f))
 #align is_locally_homeomorph.comp IsLocallyHomeomorph.comp
 
 end IsLocallyHomeomorph

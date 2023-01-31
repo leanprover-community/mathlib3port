@@ -131,7 +131,7 @@ def commMonoid [h : MulOneClass X]
     mul := (· * ·)
     one := 1
     mul_comm := (mul_comm h₁ MulOneClass.isUnital Distrib).comm
-    mul_assoc := (mul_assoc h₁ MulOneClass.isUnital Distrib).assoc }
+    mul_assoc := (mul_assoc h₁ MulOneClass.isUnital Distrib).and_assoc }
 #align eckmann_hilton.comm_monoid EckmannHilton.commMonoid
 #align eckmann_hilton.add_comm_monoid EckmannHilton.addCommMonoid
 

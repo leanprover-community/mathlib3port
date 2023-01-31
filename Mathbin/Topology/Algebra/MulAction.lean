@@ -128,7 +128,7 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
 instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
-      this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
+      this.comp (MulOpposite.continuous_unop.Prod_map continuous_id)
     simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
 #align has_continuous_smul.op HasContinuousSmul.op
 #align has_continuous_vadd.op HasContinuousVadd.op
@@ -136,7 +136,7 @@ instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasCon
 @[to_additive]
 instance MulOpposite.hasContinuousSmul : HasContinuousSmul M Xᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <|
-      continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
+      continuous_smul.comp <| continuous_id.Prod_map MulOpposite.continuous_unop⟩
 #align mul_opposite.has_continuous_smul MulOpposite.hasContinuousSmul
 #align add_opposite.has_continuous_vadd AddOpposite.has_continuous_vadd
 
@@ -218,7 +218,7 @@ include G
 /-- An `add_torsor` for a connected space is a connected space. This is not an instance because
 it loops for a group as a torsor over itself. -/
 protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=
-  { is_preconnected_univ :=
+  { isPreconnected_univ :=
       by
       convert
         is_preconnected_univ.image (Equiv.vaddConst (Classical.arbitrary P) : G → P)

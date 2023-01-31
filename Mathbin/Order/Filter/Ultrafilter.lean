@@ -154,7 +154,7 @@ but is expected to have type
   forall {α : Type.{u1}} (f : Ultrafilter.{u1} α) {g : Filter.{u1} α}, (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) g (Ultrafilter.toFilter.{u1} α f))) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) g)
 Case conversion may be inaccurate. Consider using '#align ultrafilter.le_of_inf_ne_bot' Ultrafilter.le_of_inf_neBot'ₓ'. -/
 theorem le_of_inf_neBot' (f : Ultrafilter α) {g : Filter α} (hg : NeBot (g ⊓ f)) : ↑f ≤ g :=
-  f.le_of_inf_ne_bot <| by rwa [inf_comm]
+  f.le_of_inf_neBot <| by rwa [inf_comm]
 #align ultrafilter.le_of_inf_ne_bot' Ultrafilter.le_of_inf_neBot'
 
 /- warning: ultrafilter.inf_ne_bot_iff -> Ultrafilter.inf_neBot_iff is a dubious translation:
@@ -186,8 +186,7 @@ Case conversion may be inaccurate. Consider using '#align ultrafilter.compl_not_
 @[simp]
 theorem compl_not_mem_iff : sᶜ ∉ f ↔ s ∈ f :=
   ⟨fun hsc =>
-    le_principal_iff.1 <|
-      f.le_of_inf_ne_bot ⟨fun h => hsc <| mem_of_eq_bot <| by rwa [compl_compl]⟩,
+    le_principal_iff.1 <| f.le_of_inf_neBot ⟨fun h => hsc <| mem_of_eq_bot <| by rwa [compl_compl]⟩,
     compl_not_mem⟩
 #align ultrafilter.compl_not_mem_iff Ultrafilter.compl_not_mem_iff
 
@@ -647,7 +646,7 @@ theorem exists_ultrafilter_of_finite_inter_nonempty (S : Set (Set α))
     ∃ F : Ultrafilter α, S ⊆ F.sets :=
   haveI : ne_bot (generate S) :=
     generate_ne_bot_iff.2 fun t hts ht =>
-      ht.coe_to_finset ▸ cond ht.toFinset (ht.coe_to_finset.symm ▸ hts)
+      ht.coe_toFinset ▸ cond ht.toFinset (ht.coe_to_finset.symm ▸ hts)
   ⟨of (generate S), fun t ht => (of_le <| generate S) <| generate_sets.basic ht⟩
 #align ultrafilter.exists_ultrafilter_of_finite_inter_nonempty Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty
 -/
@@ -698,7 +697,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {a : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)))
 Case conversion may be inaccurate. Consider using '#align filter.le_pure_iff' Filter.le_pure_iff'ₓ'. -/
 theorem le_pure_iff' : f ≤ pure a ↔ f = ⊥ ∨ f = pure a :=
-  isAtom_pure.le_iff
+  isAtom_pure.le_iffₓ
 #align filter.le_pure_iff' Filter.le_pure_iff'
 
 /- warning: filter.Iic_pure -> Filter.Iic_pure is a dubious translation:

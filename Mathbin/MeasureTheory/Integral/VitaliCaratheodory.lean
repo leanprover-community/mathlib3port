@@ -157,7 +157,7 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
     abel
 #align measure_theory.simple_func.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge
 
-open SimpleFunc (eapproxDiff tsum_eapprox_diff)
+open SimpleFunc (eapproxDiff tsum_eapproxDiff)
 
 /-- Given a measurable function `f` with values in `ℝ≥0`, there exists a lower semicontinuous
 function `g ≥ f` with integral arbitrarily close to that of `f`. Formulation in terms of

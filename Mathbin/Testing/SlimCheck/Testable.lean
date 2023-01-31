@@ -289,7 +289,7 @@ def andCounterExample {p q : Prop} : TestResult p → TestResult q → TestResul
   | failure Hce xs n, _ => failure (fun h => Hce h.1) xs n
   | _, failure Hce xs n => failure (fun h => Hce h.2) xs n
   | success xs, success ys => success <| combine (combine (PSum.inr And.intro) xs) ys
-  | gave_up n, gave_up m => gave_up <| n + m
+  | gave_up n, gave_up m => gaveUp <| n + m
   | gave_up n, _ => gaveUp n
   | _, gave_up n => gaveUp n
 #align slim_check.and_counter_example SlimCheck.andCounterExample
@@ -300,7 +300,7 @@ def orCounterExample {p q : Prop} : TestResult p → TestResult q → TestResult
     failure (fun h => or_iff_not_and_not.1 h ⟨Hce, Hce'⟩) (xs ++ ys) (n + n')
   | success xs, _ => success <| combine (PSum.inr Or.inl) xs
   | _, success ys => success <| combine (PSum.inr Or.inr) ys
-  | gave_up n, gave_up m => gave_up <| n + m
+  | gave_up n, gave_up m => gaveUp <| n + m
   | gave_up n, _ => gaveUp n
   | _, gave_up n => gaveUp n
 #align slim_check.or_counter_example SlimCheck.orCounterExample
@@ -562,11 +562,11 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
             ()
       else pure ()
     let ⟨y, r, ⟨h₁⟩⟩ ←
-      (SampleableExt.shrink x).mfirst fun ⟨a, h⟩ => do
+      (SampleableExt.shrink x).firstM fun ⟨a, h⟩ => do
           let ⟨r⟩ ←
             monadLift
                 (Uliftable.up <| Testable.run (β (interp α a)) cfg true :
-                  Gen (ULift <| test_result <| β <| interp α a))
+                  Gen (ULift <| TestResult <| β <| interp α a))
           if is_failure r then
               pure (⟨a, r, ⟨h⟩⟩ : Σa, test_result (β (interp α a)) × PLift (sizeof_lt a x))
             else failure

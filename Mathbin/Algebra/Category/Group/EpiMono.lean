@@ -123,7 +123,7 @@ instance : SMul B X'
     | from_coset y =>
       from_coset
         ⟨b *l y, by
-          rw [← Subtype.val_eq_coe, ← y.2.some_spec, leftCoset_assoc]
+          rw [← Subtype.val_eq_coe, ← y.2.choose_spec, leftCoset_assoc]
           use b * y.2.some⟩
     | ∞ => ∞
 

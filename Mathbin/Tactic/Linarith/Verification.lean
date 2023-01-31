@@ -65,7 +65,7 @@ unsafe def add_exprs : List pexpr → pexpr
 `ineq_const_nm R1 R2` produces the strength of the inequality in the sum `R`,
 along with the name of a lemma to apply in order to conclude `t1 + t2 R 0`.
 -/
-unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
+unsafe def ineq_const_nm : Ineq → Ineq → Name × Ineq
   | Eq, Eq => (`` eq_of_eq_of_eq, Eq)
   | Eq, le => (`` le_of_eq_of_le, le)
   | Eq, lt => (`` lt_of_eq_of_lt, lt)
@@ -82,7 +82,7 @@ unsafe def ineq_const_nm : Ineq → Ineq → Name × ineq
 of `t2 R2 0`. It uses `mk_single_comp_zero_pf` to prove `t1 + coeff*t2 R 0`, and returns `R`
 along with this proof.
 -/
-unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (ineq × expr) := do
+unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (Ineq × expr) := do
   let (iq, h') ← mk_single_comp_zero_pf coeff npf
   let (nm, niq) := ineq_const_nm c iq
   Prod.mk niq <$> mk_app nm [pf, h']
@@ -190,14 +190,14 @@ unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tacti
       (comps, max_var)
       ← linear_forms_and_max_var cfg.Transparency inputs
     let certificate ←
-      cfg.oracle.getOrElse fourier_motzkin.produce_certificate comps max_var <|>
+      cfg.oracle.getD fourier_motzkin.produce_certificate comps max_var <|>
           fail "linarith failed to find a contradiction"
     linarith_trace "linarith has found a contradiction"
     let enum_inputs := inputs.enum
     let-- construct a list pairing nonzero coeffs with the proof of their corresponding comparison
     zip := enum_inputs.filterMap fun ⟨n, e⟩ => Prod.mk e <$> certificate.find n
     let mls ←
-      zip.mmap fun ⟨e, n⟩ => do
+      zip.mapM fun ⟨e, n⟩ => do
           let e ← term_of_ineq_prf e
           return (mul_expr n e)
     let sm

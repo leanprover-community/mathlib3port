@@ -542,12 +542,12 @@ theorem IsTorsionBySet.mk_smul (b : R) (x : M) :
 
 /-- A `(R ⧸ I)`-module is a `R`-module which `is_torsion_by_set R M I`. -/
 def IsTorsionBySet.module : Module (R ⧸ I) M :=
-  @Function.Surjective.moduleLeft _ _ _ _ _ _ _ hM.HasSmul _ Ideal.Quotient.mk_surjective
+  @Function.Surjective.moduleLeft _ _ _ _ _ _ _ hM.SMul _ Ideal.Quotient.mk_surjective
     (IsTorsionBySet.mk_smul hM)
 #align module.is_torsion_by_set.module Module.IsTorsionBySet.module
 
 instance IsTorsionBySet.isScalarTower {S : Type _} [SMul S R] [SMul S M] [IsScalarTower S R M]
-    [IsScalarTower S R R] : @IsScalarTower S (R ⧸ I) M _ (IsTorsionBySet.module hM).toHasSmul _
+    [IsScalarTower S R R] : @IsScalarTower S (R ⧸ I) M _ (IsTorsionBySet.module hM).toSMul _
     where smul_assoc b d x := Quotient.inductionOn' d fun c => (smul_assoc b c x : _)
 #align module.is_torsion_by_set.is_scalar_tower Module.IsTorsionBySet.isScalarTower
 
@@ -677,7 +677,7 @@ theorem isTorsion_by_ideal_of_finite_of_isTorsion [Module.Finite R M] (hM : Modu
   · refine' Set.Nonempty.ne_empty ⟨_, _, (∏ x in S, (@hM x).some : R⁰).2⟩
     rw [Subtype.val_eq_coe, Submonoid.coe_finset_prod]
     apply Ideal.prod_mem_prod
-    exact fun x _ => (@hM x).some_spec
+    exact fun x _ => (@hM x).choose_spec
   · rw [Module.isTorsionBySet_iff_torsionBySet_eq_top, eq_top_iff, ← h, span_le]
     intro x hx
     apply torsion_by_set_le_torsion_by_set_of_subset

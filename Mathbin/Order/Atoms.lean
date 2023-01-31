@@ -477,20 +477,20 @@ variable (α) [CompleteLattice α]
 #print IsAtomistic /-
 /-- A lattice is atomistic iff every element is a `Sup` of a set of atoms. -/
 class IsAtomistic : Prop where
-  eq_Sup_atoms : ∀ b : α, ∃ s : Set α, b = supₛ s ∧ ∀ a, a ∈ s → IsAtom a
+  eq_supₛ_atoms : ∀ b : α, ∃ s : Set α, b = supₛ s ∧ ∀ a, a ∈ s → IsAtom a
 #align is_atomistic IsAtomistic
 -/
 
 #print IsCoatomistic /-
 /-- A lattice is coatomistic iff every element is an `Inf` of a set of coatoms. -/
 class IsCoatomistic : Prop where
-  eq_Inf_coatoms : ∀ b : α, ∃ s : Set α, b = infₛ s ∧ ∀ a, a ∈ s → IsCoatom a
+  eq_infₛ_coatoms : ∀ b : α, ∃ s : Set α, b = infₛ s ∧ ∀ a, a ∈ s → IsCoatom a
 #align is_coatomistic IsCoatomistic
 -/
 
-export IsAtomistic (eq_Sup_atoms)
+export IsAtomistic (eq_supₛ_atoms)
 
-export IsCoatomistic (eq_Inf_coatoms)
+export IsCoatomistic (eq_infₛ_coatoms)
 
 variable {α}
 
@@ -834,25 +834,25 @@ open Classical
 /-- A simple `bounded_order` is also complete. -/
 protected noncomputable def completeLattice : CompleteLattice α :=
   { (inferInstance : Lattice α),
-    (inferInstance : BoundedOrder
-        α) with
-    sup := fun s => if ⊤ ∈ s then ⊤ else ⊥
-    inf := fun s => if ⊥ ∈ s then ⊥ else ⊤
-    le_Sup := fun s x h => by
+    (inferInstance :
+      BoundedOrder α) with
+    supₛ := fun s => if ⊤ ∈ s then ⊤ else ⊥
+    infₛ := fun s => if ⊥ ∈ s then ⊥ else ⊤
+    le_sup := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
       · rw [if_pos h]
-    Sup_le := fun s x h => by
+    sup_le := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_neg]
         intro con
         exact bot_ne_top (eq_top_iff.2 (h ⊤ Con))
       · exact le_top
-    Inf_le := fun s x h => by
+    inf_le := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_pos h]
       · exact le_top
-    le_Inf := fun s x h => by
+    le_inf := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · exact bot_le
       · rw [if_neg]
@@ -866,13 +866,13 @@ protected noncomputable def completeLattice : CompleteLattice α :=
 protected noncomputable def completeBooleanAlgebra : CompleteBooleanAlgebra α :=
   { IsSimpleOrder.completeLattice,
     IsSimpleOrder.booleanAlgebra with
-    infi_sup_le_sup_Inf := fun x s =>
+    infᵢ_sup_le_sup_inf := fun x s =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_sup_eq, ← infₛ_eq_infᵢ]
         exact le_rfl
       · simp only [top_sup_eq, le_top]
-    inf_Sup_le_supr_inf := fun x s =>
+    inf_sup_le_supᵢ_inf := fun x s =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · simp only [bot_inf_eq, bot_le]
@@ -980,7 +980,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_embedding.is_coatom_of_map_top_of_image OrderEmbedding.isCoatom_of_map_top_of_imageₓ'. -/
 theorem isCoatom_of_map_top_of_image [OrderTop α] [OrderTop β] (f : β ↪o α) (htop : f ⊤ = ⊤) {b : β}
     (hb : IsCoatom (f b)) : IsCoatom b :=
-  f.dual.is_atom_of_map_bot_of_image htop hb
+  f.dual.isAtom_of_map_bot_of_image htop hb
 #align order_embedding.is_coatom_of_map_top_of_image OrderEmbedding.isCoatom_of_map_top_of_image
 
 end OrderEmbedding
@@ -1081,7 +1081,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_coatom_of_l_top GaloisCoinsertion.isCoatom_of_l_topₓ'. -/
 theorem isCoatom_of_l_top [OrderTop α] [OrderTop β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (hbot : l ⊤ = ⊤) {a : α} (hb : IsCoatom (l a)) : IsCoatom a :=
-  gi.dual.is_atom_of_u_bot hbot hb.dual
+  gi.dual.isAtom_of_u_bot hbot hb.dual
 #align galois_coinsertion.is_coatom_of_l_top GaloisCoinsertion.isCoatom_of_l_top
 
 /- warning: galois_coinsertion.is_coatom_iff -> GaloisCoinsertion.isCoatom_iff is a dubious translation:
@@ -1093,7 +1093,7 @@ Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_
 theorem isCoatom_iff [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b)
     (b : β) : IsCoatom (u b) ↔ IsCoatom b :=
-  gi.dual.is_atom_iff htop h_coatom b
+  gi.dual.isAtom_iff htop h_coatom b
 #align galois_coinsertion.is_coatom_iff GaloisCoinsertion.isCoatom_iff
 
 /- warning: galois_coinsertion.is_coatom_iff' -> GaloisCoinsertion.isCoatom_iff' is a dubious translation:
@@ -1105,7 +1105,7 @@ Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_
 theorem isCoatom_iff' [OrderTop α] [OrderTop β] [IsCoatomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (htop : l ⊤ = ⊤) (h_coatom : ∀ b, IsCoatom b → l (u b) = b)
     (a : α) : IsCoatom (l a) ↔ IsCoatom a :=
-  gi.dual.is_atom_iff' htop h_coatom a
+  gi.dual.isAtom_iff' htop h_coatom a
 #align galois_coinsertion.is_coatom_iff' GaloisCoinsertion.isCoatom_iff'
 
 /- warning: galois_coinsertion.is_atom_of_image -> GaloisCoinsertion.isAtom_of_image is a dubious translation:
@@ -1116,7 +1116,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_atom_of_image GaloisCoinsertion.isAtom_of_imageₓ'. -/
 theorem isAtom_of_image [OrderBot α] [OrderBot β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) {a : α} (hb : IsAtom (l a)) : IsAtom a :=
-  gi.dual.is_coatom_of_image hb.dual
+  gi.dual.isCoatom_of_image hb.dual
 #align galois_coinsertion.is_atom_of_image GaloisCoinsertion.isAtom_of_image
 
 /- warning: galois_coinsertion.is_atom_iff -> GaloisCoinsertion.isAtom_iff is a dubious translation:
@@ -1128,7 +1128,7 @@ Case conversion may be inaccurate. Consider using '#align galois_coinsertion.is_
 theorem isAtom_iff [OrderBot α] [OrderBot β] [IsAtomic β] {l : α → β} {u : β → α}
     (gi : GaloisCoinsertion l u) (h_atom : ∀ b, IsAtom b → l (u b) = b) (a : α) :
     IsAtom (l a) ↔ IsAtom a :=
-  gi.dual.is_coatom_iff h_atom a
+  gi.dual.isCoatom_iff h_atom a
 #align galois_coinsertion.is_atom_iff GaloisCoinsertion.isAtom_iff
 
 end GaloisCoinsertion
@@ -1145,8 +1145,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.is_atom_iff OrderIso.isAtom_iffₓ'. -/
 @[simp]
 theorem isAtom_iff [OrderBot α] [OrderBot β] (f : α ≃o β) (a : α) : IsAtom (f a) ↔ IsAtom a :=
-  ⟨f.toGaloisCoinsertion.is_atom_of_image, fun ha =>
-    f.toGaloisInsertion.is_atom_of_u_bot (map_bot f.symm) <| (f.symm_apply_apply a).symm ▸ ha⟩
+  ⟨f.toGaloisCoinsertion.isAtom_of_image, fun ha =>
+    f.toGaloisInsertion.isAtom_of_u_bot (map_bot f.symm) <| (f.symm_apply_apply a).symm ▸ ha⟩
 #align order_iso.is_atom_iff OrderIso.isAtom_iff
 
 /- warning: order_iso.is_coatom_iff -> OrderIso.isCoatom_iff is a dubious translation:
@@ -1157,7 +1157,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.is_coatom_iff OrderIso.isCoatom_iffₓ'. -/
 @[simp]
 theorem isCoatom_iff [OrderTop α] [OrderTop β] (f : α ≃o β) (a : α) : IsCoatom (f a) ↔ IsCoatom a :=
-  f.dual.is_atom_iff a
+  f.dual.isAtom_iff a
 #align order_iso.is_coatom_iff OrderIso.isCoatom_iff
 
 /- warning: order_iso.is_simple_order_iff -> OrderIso.isSimpleOrder_iff is a dubious translation:
@@ -1179,7 +1179,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.is_simple_order OrderIso.isSimpleOrderₓ'. -/
 theorem isSimpleOrder [BoundedOrder α] [BoundedOrder β] [h : IsSimpleOrder β] (f : α ≃o β) :
     IsSimpleOrder α :=
-  f.is_simple_order_iff.mpr h
+  f.isSimpleOrder_iff.mpr h
 #align order_iso.is_simple_order OrderIso.isSimpleOrder
 
 /- warning: order_iso.is_atomic_iff -> OrderIso.isAtomic_iff is a dubious translation:
@@ -1220,13 +1220,13 @@ include hc
 #print IsCompl.isAtom_iff_isCoatom /-
 theorem isAtom_iff_isCoatom : IsAtom a ↔ IsCoatom b :=
   Set.isSimpleOrder_Iic_iff_isAtom.symm.trans <|
-    hc.IicOrderIsoIci.is_simple_order_iff.trans Set.isSimpleOrder_Ici_iff_isCoatom
+    hc.IicOrderIsoIci.isSimpleOrder_iff.trans Set.isSimpleOrder_Ici_iff_isCoatom
 #align is_compl.is_atom_iff_is_coatom IsCompl.isAtom_iff_isCoatom
 -/
 
 #print IsCompl.isCoatom_iff_isAtom /-
 theorem isCoatom_iff_isAtom : IsCoatom a ↔ IsAtom b :=
-  hc.symm.is_atom_iff_is_coatom.symm
+  hc.symm.isAtom_iff_isCoatom.symm
 #align is_compl.is_coatom_iff_is_atom IsCompl.isCoatom_iff_isAtom
 -/
 
@@ -1317,14 +1317,14 @@ theorem isCoatom_singleton_compl (x : α) : IsCoatom ({x}ᶜ : Set α) :=
 #align set.is_coatom_singleton_compl Set.isCoatom_singleton_compl
 
 instance : IsAtomistic (Set α)
-    where eq_Sup_atoms s :=
+    where eq_supₛ_atoms s :=
     ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton],
       by
       rintro - ⟨x, hx, rfl⟩
       exact is_atom_singleton x⟩
 
 instance : IsCoatomistic (Set α)
-    where eq_Inf_coatoms s :=
+    where eq_infₛ_coatoms s :=
     ⟨(fun x => {x}ᶜ) '' sᶜ, by
       rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl],
       by

@@ -83,7 +83,7 @@ protected def map (f : α → β) (m : MeasurableSpace α) : MeasurableSpace β
   MeasurableSet' s := measurable_set[m] <| f ⁻¹' s
   measurable_set_empty := m.measurable_set_empty
   measurable_set_compl s hs := m.measurable_set_compl _ hs
-  measurable_set_Union f hf := by
+  measurable_set_unionᵢ f hf := by
     rw [preimage_Union]
     exact m.measurable_set_Union _ hf
 #align measurable_space.map MeasurableSpace.map
@@ -105,9 +105,9 @@ protected def comap (f : α → β) (m : MeasurableSpace β) : MeasurableSpace �
   MeasurableSet' s := ∃ s', measurable_set[m] s' ∧ f ⁻¹' s' = s
   measurable_set_empty := ⟨∅, m.measurable_set_empty, rfl⟩
   measurable_set_compl := fun s ⟨s', h₁, h₂⟩ => ⟨s'ᶜ, m.measurable_set_compl _ h₁, h₂ ▸ rfl⟩
-  measurable_set_Union s hs :=
+  measurable_set_unionᵢ s hs :=
     let ⟨s', hs'⟩ := Classical.axiom_of_choice hs
-    ⟨⋃ i, s' i, m.measurable_set_Union _ fun i => (hs' i).left, by simp [hs']⟩
+    ⟨⋃ i, s' i, m.measurable_set_unionᵢ _ fun i => (hs' i).left, by simp [hs']⟩
 #align measurable_space.comap MeasurableSpace.comap
 
 theorem comap_eq_generateFrom (m : MeasurableSpace β) (f : α → β) :
@@ -161,7 +161,7 @@ theorem comap_sup : (m₁ ⊔ m₂).comap g = m₁.comap g ⊔ m₂.comap g :=
 
 @[simp]
 theorem comap_supᵢ {m : ι → MeasurableSpace α} : (⨆ i, m i).comap g = ⨆ i, (m i).comap g :=
-  (gc_comap_map g).l_supr
+  (gc_comap_map g).l_supᵢ
 #align measurable_space.comap_supr MeasurableSpace.comap_supᵢ
 
 @[simp]
@@ -176,7 +176,7 @@ theorem map_inf : (m₁ ⊓ m₂).map f = m₁.map f ⊓ m₂.map f :=
 
 @[simp]
 theorem map_infᵢ {m : ι → MeasurableSpace α} : (⨅ i, m i).map f = ⨅ i, (m i).map f :=
-  (gc_comap_map f).u_infi
+  (gc_comap_map f).u_infᵢ
 #align measurable_space.map_infi MeasurableSpace.map_infᵢ
 
 theorem comap_map_le : (m.map f).comap f ≤ m :=
@@ -193,8 +193,8 @@ theorem comap_generateFrom {f : α → β} {s : Set (Set β)} :
     (generateFrom s).comap f = generateFrom (preimage f '' s) :=
   le_antisymm
     (comap_le_iff_le_map.2 <|
-      generate_from_le fun t hts => GenerateMeasurable.basic _ <| mem_image_of_mem _ <| hts)
-    (generate_from_le fun t ⟨u, hu, Eq⟩ => Eq ▸ ⟨u, GenerateMeasurable.basic _ hu, rfl⟩)
+      generateFrom_le fun t hts => GenerateMeasurable.basic _ <| mem_image_of_mem _ <| hts)
+    (generateFrom_le fun t ⟨u, hu, Eq⟩ => Eq ▸ ⟨u, GenerateMeasurable.basic _ hu, rfl⟩)
 #align measurable_space.comap_generate_from MeasurableSpace.comap_generateFrom
 
 end MeasurableSpace
@@ -433,7 +433,7 @@ theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f 
 theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N : ℕ}
     (hN : ∀ k ≤ N, MeasurableSet { x | Nat.findGreatest (p x) N = k }) :
     Measurable fun x => Nat.findGreatest (p x) N :=
-  measurable_to_nat fun x => hN _ N.find_greatest_le
+  measurable_to_nat fun x => hN _ N.findGreatest_le
 #align measurable_find_greatest' measurable_find_greatest'
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr measurable_set.inter, ",", expr measurable_set.const, ",", expr measurable_set.Inter, ",", expr measurable_set.compl, ",", expr hN, "]"],
@@ -533,7 +533,7 @@ theorem measurable_subtype_coe {p : α → Prop} : Measurable (coe : Subtype p �
 #align measurable_subtype_coe measurable_subtype_coe
 
 instance {p : α → Prop} [MeasurableSingletonClass α] : MeasurableSingletonClass (Subtype p)
-    where measurable_set_singleton x :=
+    where measurableSet_singleton x :=
     by
     have : MeasurableSet {(x : α)} := measurable_set_singleton _
     convert @measurable_subtype_coe α _ p _ this
@@ -1061,7 +1061,7 @@ structure MeasurableEmbedding {α β : Type _} [MeasurableSpace α] [MeasurableS
   Prop where
   Injective : Injective f
   Measurable : Measurable f
-  measurable_set_image' : ∀ ⦃s⦄, MeasurableSet s → MeasurableSet (f '' s)
+  measurableSet_image' : ∀ ⦃s⦄, MeasurableSet s → MeasurableSet (f '' s)
 #align measurable_embedding MeasurableEmbedding
 
 namespace MeasurableEmbedding
@@ -1073,7 +1073,7 @@ include mα
 theorem measurableSet_image (hf : MeasurableEmbedding f) {s : Set α} :
     MeasurableSet (f '' s) ↔ MeasurableSet s :=
   ⟨fun h => by simpa only [hf.injective.preimage_image] using hf.measurable h, fun h =>
-    hf.measurable_set_image' h⟩
+    hf.measurableSet_image' h⟩
 #align measurable_embedding.measurable_set_image MeasurableEmbedding.measurableSet_image
 
 theorem id : MeasurableEmbedding (id : α → α) :=
@@ -1089,7 +1089,7 @@ theorem comp (hg : MeasurableEmbedding g) (hf : MeasurableEmbedding f) :
 theorem subtype_coe {s : Set α} (hs : MeasurableSet s) : MeasurableEmbedding (coe : s → α) :=
   { Injective := Subtype.coe_injective
     Measurable := measurable_subtype_coe
-    measurable_set_image' := fun _ => MeasurableSet.subtype_image hs }
+    measurableSet_image' := fun _ => MeasurableSet.subtype_image hs }
 #align measurable_embedding.subtype_coe MeasurableEmbedding.subtype_coe
 
 theorem measurableSet_range (hf : MeasurableEmbedding f) : MeasurableSet (range f) :=
@@ -1106,7 +1106,7 @@ theorem measurableSet_preimage (hf : MeasurableEmbedding f) {s : Set β} :
 theorem measurable_rangeSplitting (hf : MeasurableEmbedding f) : Measurable (rangeSplitting f) :=
   fun s hs => by
   rwa [preimage_range_splitting hf.injective, ←
-    (subtype_coe hf.measurable_set_range).measurable_set_image, ← image_comp,
+    (subtype_coe hf.measurable_set_range).measurableSet_image, ← image_comp,
     coe_comp_range_factorization, hf.measurable_set_image]
 #align measurable_embedding.measurable_range_splitting MeasurableEmbedding.measurable_rangeSplitting
 
@@ -1233,7 +1233,7 @@ theorem toEquiv_injective : Injective (toEquiv : α ≃ᵐ β → α ≃ β) :=
 
 @[ext]
 theorem ext {e₁ e₂ : α ≃ᵐ β} (h : (e₁ : α → β) = e₂) : e₁ = e₂ :=
-  to_equiv_injective <| Equiv.coe_fn_injective h
+  toEquiv_injective <| Equiv.coe_fn_injective h
 #align measurable_equiv.ext MeasurableEquiv.ext
 
 @[simp]
@@ -1316,7 +1316,7 @@ theorem measurableSet_image (e : α ≃ᵐ β) {s : Set α} : MeasurableSet (e '
 protected theorem measurableEmbedding (e : α ≃ᵐ β) : MeasurableEmbedding e :=
   { Injective := e.Injective
     Measurable := e.Measurable
-    measurable_set_image' := fun s => e.measurable_set_image.2 }
+    measurableSet_image' := fun s => e.measurableSet_image.2 }
 #align measurable_equiv.measurable_embedding MeasurableEquiv.measurableEmbedding
 
 /-- Equal measurable spaces are equivalent. -/
@@ -1396,16 +1396,16 @@ def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t
     where
   toEquiv := Equiv.Set.prod s t
   measurable_to_fun :=
-    measurable_id.subtype_coe.fst.subtype_mk.prod_mk measurable_id.subtype_coe.snd.subtype_mk
+    measurable_id.subtype_val.fst.subtype_mk.prod_mk measurable_id.subtype_val.snd.subtype_mk
   measurable_inv_fun :=
-    Measurable.subtype_mk <| measurable_id.fst.subtype_coe.prod_mk measurable_id.snd.subtype_coe
+    Measurable.subtype_mk <| measurable_id.fst.subtype_val.prod_mk measurable_id.snd.subtype_val
 #align measurable_equiv.set.prod MeasurableEquiv.Set.prod
 
 /-- `univ α ≃ α` as measurable spaces. -/
 def Set.univ (α : Type _) [MeasurableSpace α] : (univ : Set α) ≃ᵐ α
     where
   toEquiv := Equiv.Set.univ α
-  measurable_to_fun := measurable_id.subtype_coe
+  measurable_to_fun := measurable_id.subtype_val
   measurable_inv_fun := measurable_id.subtype_mk
 #align measurable_equiv.set.univ MeasurableEquiv.Set.univ
 
@@ -1602,7 +1602,7 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
 noncomputable def equivImage (s : Set α) (hf : MeasurableEmbedding f) : s ≃ᵐ f '' s
     where
   toEquiv := Equiv.Set.image f s hf.Injective
-  measurable_to_fun := (hf.Measurable.comp measurable_id.subtype_coe).subtype_mk
+  measurable_to_fun := (hf.Measurable.comp measurable_id.subtype_val).subtype_mk
   measurable_inv_fun := by
     rintro t ⟨u, hu, rfl⟩; simp [preimage_preimage, set.image_symm_preimage hf.injective]
     exact measurable_subtype_coe (hf.measurable_set_image' hu)
@@ -1677,7 +1677,7 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
   rintro x hx ⟨y, hy, rfl⟩
   rw [mem_Inter] at hx
   apply hy
-  rw [(inj_on_of_injective hf.injective _).image_Inter_eq]
+  rw [(inj_on_of_injective hf.injective _).image_interᵢ_eq]
   swap
   · infer_instance
   rw [mem_Inter]
@@ -1835,7 +1835,7 @@ theorem coe_inter (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∩ 
 #align measurable_set.coe_inter MeasurableSet.coe_inter
 
 instance : SDiff (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x \ y, x.Prop.diff y.Prop⟩⟩
+  ⟨fun x y => ⟨x \ y, x.Prop.diffₓ y.Prop⟩⟩
 
 @[simp]
 theorem coe_sdiff (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s \ t) = (s \ t : Set α) :=

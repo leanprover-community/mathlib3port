@@ -56,7 +56,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.smul_comm_cla
 @[to_additive]
 instance smulCommClass_left [MulAction G β] [SMul α β] [SMulCommClass G α β] (S : Subgroup G) :
     SMulCommClass S α β :=
-  S.toSubmonoid.smul_comm_class_left
+  S.toSubmonoid.smulCommClass_left
 #align subgroup.smul_comm_class_left Subgroup.smulCommClass_left
 #align add_subgroup.vadd_comm_class_left AddSubgroup.vaddCommClass_left
 
@@ -69,7 +69,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.smul_comm_cla
 @[to_additive]
 instance smulCommClass_right [SMul α β] [MulAction G β] [SMulCommClass α G β] (S : Subgroup G) :
     SMulCommClass α S β :=
-  S.toSubmonoid.smul_comm_class_right
+  S.toSubmonoid.smulCommClass_right
 #align subgroup.smul_comm_class_right Subgroup.smulCommClass_right
 #align add_subgroup.vadd_comm_class_right AddSubgroup.vaddCommClass_right
 
@@ -79,7 +79,7 @@ instance [SMul α β] [MulAction G α] [MulAction G β] [IsScalarTower G α β] 
   S.toSubmonoid.IsScalarTower
 
 instance [MulAction G α] [FaithfulSMul G α] (S : Subgroup G) : FaithfulSMul S α :=
-  S.toSubmonoid.HasFaithfulSmul
+  S.toSubmonoid.FaithfulSMul
 
 /-- The action by a subgroup is the action by the underlying group. -/
 instance [AddMonoid α] [DistribMulAction G α] (S : Subgroup G) : DistribMulAction S α :=

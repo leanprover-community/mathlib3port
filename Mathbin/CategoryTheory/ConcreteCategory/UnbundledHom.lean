@@ -46,9 +46,9 @@ instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype 
     where
   toFun _ _ _ _ := Subtype.val
   id α Iα := ⟨id, hom_id hom Iα⟩
-  id_to_fun := by intros <;> rfl
+  id_toFun := by intros <;> rfl
   comp _ _ _ _ _ _ g f := ⟨g.1 ∘ f.1, hom_comp c g.2 f.2⟩
-  comp_to_fun := by intros <;> rfl
+  comp_toFun := by intros <;> rfl
   hom_ext := by intros <;> apply Subtype.eq
 #align category_theory.unbundled_hom.bundled_hom CategoryTheory.UnbundledHom.bundledHom
 

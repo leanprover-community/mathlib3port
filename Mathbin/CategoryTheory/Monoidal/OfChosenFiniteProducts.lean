@@ -51,19 +51,19 @@ def BinaryFan.swap {P Q : C} (t : BinaryFan P Q) : BinaryFan Q P :=
 #align category_theory.limits.binary_fan.swap CategoryTheory.Limits.BinaryFan.swap
 
 @[simp]
-theorem BinaryFan.swap_fst {P Q : C} (t : BinaryFan P Q) : t.swap.fst = t.snd :=
+theorem BinaryFan.swap_fst {P Q : C} (t : BinaryFan P Q) : t.symm.fst = t.snd :=
   rfl
 #align category_theory.limits.binary_fan.swap_fst CategoryTheory.Limits.BinaryFan.swap_fst
 
 @[simp]
-theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.swap.snd = t.fst :=
+theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.symm.snd = t.fst :=
   rfl
 #align category_theory.limits.binary_fan.swap_snd CategoryTheory.Limits.BinaryFan.swap_snd
 
 /-- If a cone `t` over `P Q` is a limit cone, then `t.swap` is a limit cone over `Q P`.
 -/
 @[simps]
-def IsLimit.swapBinaryFan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.swap
+def IsLimit.swapBinaryFan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.symm
     where
   lift s := I.lift (BinaryFan.swap s)
   fac' s := by rintro ⟨⟨⟩⟩ <;> simp
@@ -103,14 +103,14 @@ def BinaryFan.assoc {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q :
 
 @[simp]
 theorem BinaryFan.assoc_fst {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z}
-    (Q : IsLimit sYZ) (s : BinaryFan sXY.x Z) : (s.assoc Q).fst = s.fst ≫ sXY.fst :=
+    (Q : IsLimit sYZ) (s : BinaryFan sXY.x Z) : (s.and_assoc Q).fst = s.fst ≫ sXY.fst :=
   rfl
 #align category_theory.limits.binary_fan.assoc_fst CategoryTheory.Limits.BinaryFan.assoc_fst
 
 @[simp]
 theorem BinaryFan.assoc_snd {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z}
     (Q : IsLimit sYZ) (s : BinaryFan sXY.x Z) :
-    (s.assoc Q).snd = Q.lift (BinaryFan.mk (s.fst ≫ sXY.snd) s.snd) :=
+    (s.and_assoc Q).snd = Q.lift (BinaryFan.mk (s.fst ≫ sXY.snd) s.snd) :=
   rfl
 #align category_theory.limits.binary_fan.assoc_snd CategoryTheory.Limits.BinaryFan.assoc_snd
 
@@ -141,7 +141,7 @@ theorem BinaryFan.assocInv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sX
 -/
 @[simps]
 def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : BinaryFan Y Z}
-    (Q : IsLimit sYZ) {s : BinaryFan sXY.x Z} (R : IsLimit s) : IsLimit (s.assoc Q)
+    (Q : IsLimit sYZ) {s : BinaryFan sXY.x Z} (R : IsLimit s) : IsLimit (s.and_assoc Q)
     where
   lift t := R.lift (BinaryFan.assocInv P t)
   fac' t := by
@@ -349,8 +349,8 @@ def monoidalOfChosenFiniteProducts : MonoidalCategory C
   rightUnitor X := BinaryFan.rightUnitor 𝒯.IsLimit (ℬ X 𝒯.Cone.x).IsLimit
   pentagon' := pentagon ℬ
   triangle' := triangle 𝒯 ℬ
-  left_unitor_naturality' _ _ f := leftUnitor_naturality 𝒯 ℬ f
-  right_unitor_naturality' _ _ f := rightUnitor_naturality 𝒯 ℬ f
+  leftUnitor_naturality' _ _ f := leftUnitor_naturality 𝒯 ℬ f
+  rightUnitor_naturality' _ _ f := rightUnitor_naturality 𝒯 ℬ f
   associator_naturality' _ _ _ _ _ _ f₁ f₂ f₃ := associator_naturality ℬ f₁ f₂ f₃
 #align category_theory.monoidal_of_chosen_finite_products CategoryTheory.monoidalOfChosenFiniteProducts
 

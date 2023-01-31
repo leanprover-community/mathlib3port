@@ -109,7 +109,7 @@ but is expected to have type
   forall {n : Int} {a : Int}, (Dvd.dvd.{0} Int Int.instDvdInt n a) -> (Int.ModEq n (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a)
 Case conversion may be inaccurate. Consider using '#align has_dvd.dvd.zero_modeq_int Dvd.dvd.zero_modEq_intₓ'. -/
 theorem Dvd.dvd.zero_modEq_int (h : n ∣ a) : 0 ≡ a [ZMOD n] :=
-  h.modeq_zero_int.symm
+  h.modEq_zero_int.symm
 #align has_dvd.dvd.zero_modeq_int Dvd.dvd.zero_modEq_int
 
 /- warning: int.modeq_iff_dvd -> Int.modEq_iff_dvd is a dubious translation:
@@ -161,7 +161,7 @@ but is expected to have type
   forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
 Case conversion may be inaccurate. Consider using '#align int.modeq.of_dvd Int.ModEq.of_dvdₓ'. -/
 protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
-  modeq_of_dvd <| d.trans h.Dvd
+  modEq_of_dvd <| d.trans h.Dvd
 #align int.modeq.of_dvd Int.ModEq.of_dvd
 
 #print Int.ModEq.mul_left' /-
@@ -331,7 +331,7 @@ theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℤ} (hmn : m.natAbs.coprime n.
 theorem gcd_a_modEq (a b : ℕ) : (a : ℤ) * Nat.gcdA a b ≡ Nat.gcd a b [ZMOD b] :=
   by
   rw [← add_zero ((a : ℤ) * _), Nat.gcd_eq_gcd_ab]
-  exact (dvd_mul_right _ _).zero_modeq_int.add_left _
+  exact (dvd_mul_right _ _).zero_modEq_int.add_left _
 #align int.gcd_a_modeq Int.gcd_a_modEq
 -/
 
@@ -339,7 +339,7 @@ theorem gcd_a_modEq (a b : ℕ) : (a : ℤ) * Nat.gcdA a b ≡ Nat.gcd a b [ZMOD
 theorem modEq_add_fac {a b n : ℤ} (c : ℤ) (ha : a ≡ b [ZMOD n]) : a + n * c ≡ b [ZMOD n] :=
   calc
     a + n * c ≡ b + n * c [ZMOD n] := ha.add_right _
-    _ ≡ b + 0 [ZMOD n] := (dvd_mul_right _ _).modeq_zero_int.add_left _
+    _ ≡ b + 0 [ZMOD n] := (dvd_mul_right _ _).modEq_zero_int.add_left _
     _ ≡ b [ZMOD n] := by rw [add_zero]
     
 #align int.modeq_add_fac Int.modEq_add_fac
@@ -357,7 +357,7 @@ theorem mod_coprime {a b : ℕ} (hab : Nat.coprime a b) : ∃ y : ℤ, a * y ≡
     have hgcd : Nat.gcd a b = 1 := Nat.coprime.gcd_eq_one hab
     calc
       ↑a * Nat.gcdA a b ≡ ↑a * Nat.gcdA a b + ↑b * Nat.gcdB a b [ZMOD ↑b] :=
-        modeq.symm <| modEq_add_fac _ <| ModEq.refl _
+        ModEq.symm <| modEq_add_fac _ <| ModEq.refl _
       _ ≡ 1 [ZMOD ↑b] := by rw [← Nat.gcd_eq_gcd_ab, hgcd] <;> rfl
       ⟩
 #align int.mod_coprime Int.mod_coprime

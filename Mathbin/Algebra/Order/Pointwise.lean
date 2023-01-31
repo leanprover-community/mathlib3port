@@ -81,7 +81,7 @@ Case conversion may be inaccurate. Consider using '#align cSup_inv csupₛ_inv�
 theorem csupₛ_inv (hs₀ : s.Nonempty) (hs₁ : BddBelow s) : supₛ s⁻¹ = (infₛ s)⁻¹ :=
   by
   rw [← image_inv]
-  exact ((OrderIso.inv α).map_cInf' hs₀ hs₁).symm
+  exact ((OrderIso.inv α).map_cinfₛ' hs₀ hs₁).symm
 #align cSup_inv csupₛ_inv
 #align cSup_neg csupₛ_neg
 
@@ -95,7 +95,7 @@ Case conversion may be inaccurate. Consider using '#align cInf_inv cinfₛ_inv�
 theorem cinfₛ_inv (hs₀ : s.Nonempty) (hs₁ : BddAbove s) : infₛ s⁻¹ = (supₛ s)⁻¹ :=
   by
   rw [← image_inv]
-  exact ((OrderIso.inv α).map_cSup' hs₀ hs₁).symm
+  exact ((OrderIso.inv α).map_csupₛ' hs₀ hs₁).symm
 #align cInf_inv cinfₛ_inv
 #align cInf_neg cinfₛ_neg
 
@@ -108,8 +108,8 @@ Case conversion may be inaccurate. Consider using '#align cSup_mul csupₛ_mul�
 @[to_additive]
 theorem csupₛ_mul (hs₀ : s.Nonempty) (hs₁ : BddAbove s) (ht₀ : t.Nonempty) (ht₁ : BddAbove t) :
     supₛ (s * t) = supₛ s * supₛ t :=
-  csupₛ_image2_eq_csupₛ_csupₛ (fun _ => (OrderIso.mulRight _).to_galois_connection)
-    (fun _ => (OrderIso.mulLeft _).to_galois_connection) hs₀ hs₁ ht₀ ht₁
+  csupₛ_image2_eq_csupₛ_csupₛ (fun _ => (OrderIso.mulRight _).to_galoisConnection)
+    (fun _ => (OrderIso.mulLeft _).to_galoisConnection) hs₀ hs₁ ht₀ ht₁
 #align cSup_mul csupₛ_mul
 #align cSup_add csupₛ_add
 
@@ -122,8 +122,8 @@ Case conversion may be inaccurate. Consider using '#align cInf_mul cinfₛ_mul�
 @[to_additive]
 theorem cinfₛ_mul (hs₀ : s.Nonempty) (hs₁ : BddBelow s) (ht₀ : t.Nonempty) (ht₁ : BddBelow t) :
     infₛ (s * t) = infₛ s * infₛ t :=
-  cinfₛ_image2_eq_cinfₛ_cinfₛ (fun _ => (OrderIso.mulRight _).symm.to_galois_connection)
-    (fun _ => (OrderIso.mulLeft _).symm.to_galois_connection) hs₀ hs₁ ht₀ ht₁
+  cinfₛ_image2_eq_cinfₛ_cinfₛ (fun _ => (OrderIso.mulRight _).symm.to_galoisConnection)
+    (fun _ => (OrderIso.mulLeft _).symm.to_galoisConnection) hs₀ hs₁ ht₀ ht₁
 #align cInf_mul cinfₛ_mul
 #align cInf_add cinfₛ_add
 
@@ -206,7 +206,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_inv supₛ_invₓ'
 theorem supₛ_inv (s : Set α) : supₛ s⁻¹ = (infₛ s)⁻¹ :=
   by
   rw [← image_inv, supₛ_image]
-  exact ((OrderIso.inv α).map_Inf _).symm
+  exact ((OrderIso.inv α).map_infₛ _).symm
 #align Sup_inv supₛ_inv
 #align Sup_neg supₛ_neg
 
@@ -220,7 +220,7 @@ Case conversion may be inaccurate. Consider using '#align Inf_inv infₛ_invₓ'
 theorem infₛ_inv (s : Set α) : infₛ s⁻¹ = (supₛ s)⁻¹ :=
   by
   rw [← image_inv, infₛ_image]
-  exact ((OrderIso.inv α).map_Sup _).symm
+  exact ((OrderIso.inv α).map_supₛ _).symm
 #align Inf_inv infₛ_inv
 #align Inf_neg infₛ_neg
 
@@ -232,8 +232,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Sup_mul supₛ_mulₓ'. -/
 @[to_additive]
 theorem supₛ_mul : supₛ (s * t) = supₛ s * supₛ t :=
-  supₛ_image2_eq_supₛ_supₛ (fun _ => (OrderIso.mulRight _).to_galois_connection) fun _ =>
-    (OrderIso.mulLeft _).to_galois_connection
+  supₛ_image2_eq_supₛ_supₛ (fun _ => (OrderIso.mulRight _).to_galoisConnection) fun _ =>
+    (OrderIso.mulLeft _).to_galoisConnection
 #align Sup_mul supₛ_mul
 #align Sup_add supₛ_add
 
@@ -245,8 +245,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_mul infₛ_mulₓ'. -/
 @[to_additive]
 theorem infₛ_mul : infₛ (s * t) = infₛ s * infₛ t :=
-  infₛ_image2_eq_infₛ_infₛ (fun _ => (OrderIso.mulRight _).symm.to_galois_connection) fun _ =>
-    (OrderIso.mulLeft _).symm.to_galois_connection
+  infₛ_image2_eq_infₛ_infₛ (fun _ => (OrderIso.mulRight _).symm.to_galoisConnection) fun _ =>
+    (OrderIso.mulLeft _).symm.to_galoisConnection
 #align Inf_mul infₛ_mul
 #align Inf_add infₛ_add
 

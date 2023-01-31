@@ -442,7 +442,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
         congr 2 <;> ext x <;> simp_rw [RingHom.comp_apply, of_f]⟩)
     fun n z ih =>
     let ⟨i, x, h⟩ := exists_of z
-    ⟨i, c x * X ^ (n + 1), by rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
+    ⟨i, c x * x ^ (n + 1), by rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
 #align ring.direct_limit.polynomial.exists_of Ring.DirectLimit.Polynomial.exists_of
 
 end

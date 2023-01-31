@@ -722,7 +722,7 @@ unsafe def normalize' (atoms : ref (Buffer expr)) (red : Transparency)
         [`` horner.equations._eqn_1, `` add_zero, `` one_mul, `` pow_one, `` neg_mul,
           `` add_neg_eq_sub]
       | _ => []
-    let lemmas ← lemmas.mfoldl simp_lemmas.add_simp simp_lemmas.mk
+    let lemmas ← lemmas.foldlM simp_lemmas.add_simp simp_lemmas.mk
     trans_conv
         (fun e => do
           guard (mode ≠ normalize_mode.raw)

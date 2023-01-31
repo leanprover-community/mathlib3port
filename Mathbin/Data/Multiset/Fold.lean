@@ -39,13 +39,13 @@ include hc ha
 /-- `fold op b s` folds a commutative associative operation `op` over
   the multiset `s`. -/
 def fold : α → Multiset α → α :=
-  foldr op (left_comm _ hc.comm ha.assoc)
+  foldr op (left_comm _ hc.comm ha.and_assoc)
 #align multiset.fold Multiset.fold
 -/
 
 #print Multiset.fold_eq_foldr /-
 theorem fold_eq_foldr (b : α) (s : Multiset α) :
-    fold op b s = foldr op (left_comm _ hc.comm ha.assoc) b s :=
+    fold op b s = foldr op (left_comm _ hc.comm ha.and_assoc) b s :=
   rfl
 #align multiset.fold_eq_foldr Multiset.fold_eq_foldr
 -/
@@ -65,7 +65,7 @@ theorem coe_fold_l (b : α) (l : List α) : fold op b l = l.foldl op b :=
 
 #print Multiset.fold_eq_foldl /-
 theorem fold_eq_foldl (b : α) (s : Multiset α) :
-    fold op b s = foldl op (right_comm _ hc.comm ha.assoc) b s :=
+    fold op b s = foldl op (right_comm _ hc.comm ha.and_assoc) b s :=
   Quot.inductionOn s fun l => coe_fold_l _ _ _
 #align multiset.fold_eq_foldl Multiset.fold_eq_foldl
 -/

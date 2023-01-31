@@ -54,7 +54,7 @@ theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
 -/
 
 #print Option.isNone_iff_eq_none /-
-theorem isNone_iff_eq_none {o : Option α} : o.isNone = tt ↔ o = none :=
+theorem isNone_iff_eq_none {o : Option α} : o.isNone = true ↔ o = none :=
   ⟨Option.eq_none_of_isNone, fun e => e.symm ▸ rfl⟩
 #align option.is_none_iff_eq_none Option.isNone_iff_eq_none
 -/
@@ -86,7 +86,7 @@ instance decidableForallMem {p : α → Prop} [DecidablePred p] :
     ∀ o : Option α, Decidable (∀ a ∈ o, p a)
   | none => isTrue (by simp [false_imp_iff])
   | some a =>
-    if h : p a then is_true fun o e => some_inj.1 e ▸ h else is_false <| mt (fun H => H _ rfl) h
+    if h : p a then isTrue fun o e => some_inj.1 e ▸ h else isFalse <| mt (fun H => H _ rfl) h
 #align option.decidable_forall_mem Option.decidableForallMem
 -/
 
@@ -99,7 +99,7 @@ Case conversion may be inaccurate. Consider using '#align option.decidable_exist
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] :
     ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
-  | some a => if h : p a then is_true <| ⟨_, rfl, h⟩ else is_false fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
+  | some a => if h : p a then isTrue <| ⟨_, rfl, h⟩ else isFalse fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 #align option.decidable_exists_mem Option.decidableExistsMem
 
 #print Option.iget /-

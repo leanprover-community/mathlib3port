@@ -93,7 +93,7 @@ private unsafe def simp_is_conditional (ty : expr) : tactic Bool :=
 #align simp_is_conditional simp_is_conditional
 
 private unsafe def heuristic_simp_lemma_extraction (prf : expr) : tactic (List Name) :=
-  prf.list_constant.toList.mfilter is_simp_lemma
+  prf.list_constant.toList.filterM is_simp_lemma
 #align heuristic_simp_lemma_extraction heuristic_simp_lemma_extraction
 
 /-- Checks whether two expressions are equal for the simplifier. That is,

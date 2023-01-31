@@ -139,7 +139,7 @@ theorem smul_subset_of_coprime (han : (orderOf a).coprime n) :
   simp only [mem_Union, exists_prop]
   refine' ⟨a * b, _, hc⟩
   rw [← hb] at han⊢
-  exact (Commute.all a b).order_of_mul_eq_mul_order_of_of_coprime han
+  exact (Commute.all a b).orderOf_mul_eq_mul_orderOf_of_coprime han
 #align approx_order_of.smul_subset_of_coprime approxOrderOf.smul_subset_of_coprime
 #align approx_add_order_of.vadd_subset_of_coprime approxAddOrderOf.vadd_subset_of_coprime
 
@@ -153,7 +153,7 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
   · intro b hb
     rw [← hb] at han hn
     rw [sq] at han
-    rwa [(Commute.all a b).order_of_mul_eq_right_of_forall_prime_mul_dvd (order_of_pos_iff.mp hn)
+    rwa [(Commute.all a b).orderOf_mul_eq_right_of_forall_prime_mul_dvd (order_of_pos_iff.mp hn)
         fun p hp hp' => dvd_trans (mul_dvd_mul_right hp' <| orderOf a) han]
   let f : { b : A | orderOf b = n } → { b : A | orderOf b = n } := fun b => ⟨a * b, han b.property⟩
   have hf : surjective f := by

@@ -51,7 +51,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mem_accumulate Set.mem_accumulateₓ'. -/
 @[simp]
 theorem mem_accumulate [LE α] {x : α} {z : β} : z ∈ Accumulate s x ↔ ∃ y ≤ x, z ∈ s y :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align set.mem_accumulate Set.mem_accumulate
 
 /- warning: set.subset_accumulate -> Set.subset_accumulate is a dubious translation:
@@ -70,7 +70,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : α -> (Set.{u1} β)} [_inst_1 : Preorder.{u2} α], Monotone.{u2, u1} α (Set.{u1} β) _inst_1 (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (Set.Accumulate.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) s)
 Case conversion may be inaccurate. Consider using '#align set.monotone_accumulate Set.monotone_accumulateₓ'. -/
 theorem monotone_accumulate [Preorder α] : Monotone (Accumulate s) := fun x y hxy =>
-  bUnion_subset_bUnion_left fun z hz => le_trans hz hxy
+  bunionᵢ_subset_bunionᵢ_left fun z hz => le_trans hz hxy
 #align set.monotone_accumulate Set.monotone_accumulate
 
 /- warning: set.bUnion_accumulate -> Set.bunionᵢ_accumulate is a dubious translation:

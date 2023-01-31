@@ -28,8 +28,8 @@ variable [AddMonoidWithOne α] [AddMonoidWithOne β]
 instance : AddMonoidWithOne (α × β) :=
   { Prod.addMonoid, Prod.hasOne with
     natCast := fun n => (n, n)
-    nat_cast_zero := congr_arg₂ Prod.mk Nat.cast_zero Nat.cast_zero
-    nat_cast_succ := fun n => congr_arg₂ Prod.mk (Nat.cast_succ _) (Nat.cast_succ _) }
+    natCast_zero := congr_arg₂ Prod.mk Nat.cast_zero Nat.cast_zero
+    natCast_succ := fun n => congr_arg₂ Prod.mk (Nat.cast_succ _) (Nat.cast_succ _) }
 
 /- warning: prod.fst_nat_cast -> Prod.fst_natCast is a dubious translation:
 lean 3 declaration is

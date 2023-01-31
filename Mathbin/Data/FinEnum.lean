@@ -63,7 +63,7 @@ def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' :
     where
   card := xs.length
   Equiv :=
-    ⟨fun x => ⟨xs.indexOf x, by rw [List.indexOf_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
+    ⟨fun x => ⟨xs.indexOfₓ x, by rw [List.indexOf_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
       xs.nthLe _ h, fun x => by simp [of_nodup_list._match_1], fun ⟨i, h⟩ => by
       simp [of_nodup_list._match_1, *] <;> rw [List.nthLe_index_of] <;> apply List.nodup_dedup⟩
 #align fin_enum.of_nodup_list FinEnum.ofNodupList

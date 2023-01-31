@@ -41,7 +41,7 @@ instance forget₂AddCommGroupFull : Full (forget₂ (ModuleCat ℤ) AddCommGrou
 
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is essentially surjective. -/
 instance forget₂_addCommGroupCat_essSurj : EssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
-    where mem_ess_image A :=
+    where mem_essImage A :=
     ⟨ModuleCat.of ℤ A,
       ⟨{  Hom := 𝟙 A
           inv := 𝟙 A }⟩⟩

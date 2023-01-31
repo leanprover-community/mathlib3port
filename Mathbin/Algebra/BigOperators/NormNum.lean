@@ -137,7 +137,7 @@ unsafe def eval_list : expr → tactic (List expr × expr)
     pure (x::xs, Eq)
   | e@q(List.range $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat q(ℕ) i
+    let eis ← (List.range n).mapM fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
   | q(@List.map $(α) $(β) $(ef) $(exs)) => do
@@ -147,7 +147,7 @@ unsafe def eval_list : expr → tactic (List expr × expr)
     pure (ys, Eq)
   | e@q(@List.finRange $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.finRange n).mmap fun i => expr.of_nat q(Fin $(en)) i
+    let eis ← (List.finRange n).mapM fun i => expr.of_nat q(Fin $(en)) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
   | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
@@ -191,7 +191,7 @@ unsafe def eval_multiset : expr → tactic (List expr × expr)
     pure (x::xs, Eq)
   | e@q(Multiset.range $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat q(ℕ) i
+    let eis ← (List.range n).mapM fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
     pure (eis, Eq)
   | q(@coe (@coeToLift (@coeBase Multiset.hasCoe)) $(exs)) => do
@@ -236,28 +236,28 @@ unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × 
   | e@q(@Finset.Icc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.Icc a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Icc a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
   | e@q(@Finset.Ico $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.Ico a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Ico a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
   | e@q(@Finset.Ioc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.Ioc a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Ioc a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
   | e@q(@Finset.Ioo $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
-    let eis ← (Finset.Ioo a b).val.unquot.mmap fun i => expr.of_int α i
+    let eis ← (Finset.Ioo a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
     pure (eis, Eq, nd)
@@ -313,7 +313,7 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) :
     eval_finset args
   | e@q(Finset.range $(en)) => do
     let n ← expr.to_nat en
-    let eis ← (List.range n).mmap fun i => expr.of_nat q(ℕ) i
+    let eis ← (List.range n).mapM fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(List.nodup_range $(en))
     pure (eis, Eq, nd)

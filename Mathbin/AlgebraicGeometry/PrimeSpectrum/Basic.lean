@@ -279,7 +279,7 @@ theorem zeroLocus_bot : zeroLocus ((⊥ : Ideal R) : Set R) = Set.univ :=
 
 @[simp]
 theorem zeroLocus_singleton_zero : zeroLocus ({0} : Set R) = Set.univ :=
-  zero_locus_bot
+  zeroLocus_bot
 #align prime_spectrum.zero_locus_singleton_zero PrimeSpectrum.zeroLocus_singleton_zero
 
 @[simp]
@@ -347,12 +347,12 @@ theorem vanishingIdeal_union (t t' : Set (PrimeSpectrum R)) :
 
 theorem zeroLocus_supᵢ {ι : Sort _} (I : ι → Ideal R) :
     zeroLocus ((⨆ i, I i : Ideal R) : Set R) = ⋂ i, zeroLocus (I i) :=
-  (gc R).l_supr
+  (gc R).l_supᵢ
 #align prime_spectrum.zero_locus_supr PrimeSpectrum.zeroLocus_supᵢ
 
 theorem zeroLocus_unionᵢ {ι : Sort _} (s : ι → Set R) :
     zeroLocus (⋃ i, s i) = ⋂ i, zeroLocus (s i) :=
-  (gc_set R).l_supr
+  (gc_set R).l_supᵢ
 #align prime_spectrum.zero_locus_Union PrimeSpectrum.zeroLocus_unionᵢ
 
 theorem zeroLocus_bUnion (s : Set (Set R)) :
@@ -361,7 +361,7 @@ theorem zeroLocus_bUnion (s : Set (Set R)) :
 
 theorem vanishingIdeal_unionᵢ {ι : Sort _} (t : ι → Set (PrimeSpectrum R)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
-  (gc R).u_infi
+  (gc R).u_infᵢ
 #align prime_spectrum.vanishing_ideal_Union PrimeSpectrum.vanishingIdeal_unionᵢ
 
 theorem zeroLocus_inf (I J : Ideal R) :
@@ -445,7 +445,7 @@ theorem isClosed_iff_zeroLocus_ideal (Z : Set (PrimeSpectrum R)) :
 theorem isClosed_iff_zeroLocus_radical_ideal (Z : Set (PrimeSpectrum R)) :
     IsClosed Z ↔ ∃ I : Ideal R, I.IsRadical ∧ Z = zeroLocus I :=
   (isClosed_iff_zeroLocus_ideal _).trans
-    ⟨fun ⟨I, hI⟩ => ⟨_, I.radical_is_radical, (zeroLocus_radical I).substr hI⟩, fun ⟨I, _, hI⟩ =>
+    ⟨fun ⟨I, hI⟩ => ⟨_, I.radical_isRadical, (zeroLocus_radical I).substr hI⟩, fun ⟨I, _, hI⟩ =>
       ⟨I, hI⟩⟩
 #align prime_spectrum.is_closed_iff_zero_locus_radical_ideal PrimeSpectrum.isClosed_iff_zeroLocus_radical_ideal
 
@@ -573,7 +573,7 @@ theorem isIrreducible_zeroLocus_iff_of_radical (I : Ideal R) (hI : I.IsRadical) 
 
 theorem isIrreducible_zeroLocus_iff (I : Ideal R) :
     IsIrreducible (zeroLocus (I : Set R)) ↔ I.radical.IsPrime :=
-  zeroLocus_radical I ▸ isIrreducible_zeroLocus_iff_of_radical _ I.radical_is_radical
+  zeroLocus_radical I ▸ isIrreducible_zeroLocus_iff_of_radical _ I.radical_isRadical
 #align prime_spectrum.is_irreducible_zero_locus_iff PrimeSpectrum.isIrreducible_zeroLocus_iff
 
 theorem isIrreducible_iff_vanishingIdeal_isPrime {s : Set (PrimeSpectrum R)} :
@@ -611,7 +611,7 @@ This function is continuous. -/
 def comap (f : R →+* S) : C(PrimeSpectrum S, PrimeSpectrum R)
     where
   toFun y := ⟨Ideal.comap f y.asIdeal, inferInstance⟩
-  continuous_to_fun :=
+  continuous_toFun :=
     by
     simp only [continuous_iff_isClosed, is_closed_iff_zero_locus]
     rintro _ ⟨s, rfl⟩
@@ -928,7 +928,7 @@ end BasicOpen
 
 /-- The prime spectrum of a commutative ring is a compact topological space. -/
 instance : CompactSpace (PrimeSpectrum R)
-    where is_compact_univ := by
+    where isCompact_univ := by
     convert is_compact_basic_open (1 : R)
     rw [basic_open_one]
     rfl

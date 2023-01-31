@@ -51,7 +51,7 @@ instance str (C : GroupoidCat.{v, u}) : Groupoid.{v, u} C.α :=
 #align category_theory.Groupoid.str CategoryTheory.GroupoidCat.str
 
 instance : CoeSort GroupoidCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `Groupoid` from the underlying type and the typeclass. -/
 def of (C : Type u) [Groupoid.{v} C] : GroupoidCat.{v, u} :=
@@ -76,14 +76,14 @@ instance category : LargeCategory.{max v u} GroupoidCat.{v, u}
 
 /-- Functor that gets the set of objects of a groupoid. It is not
 called `forget`, because it is not a faithful functor. -/
-def objects : Groupoid.{v, u} ⥤ Type u
+def objects : GroupoidCat.{v, u} ⥤ Type u
     where
   obj := Bundled.α
   map C D F := F.obj
 #align category_theory.Groupoid.objects CategoryTheory.GroupoidCat.objects
 
 /-- Forgetting functor to `Cat` -/
-def forgetToCat : Groupoid.{v, u} ⥤ Cat.{v, u}
+def forgetToCat : GroupoidCat.{v, u} ⥤ Cat.{v, u}
     where
   obj C := Cat.of C
   map C D := id

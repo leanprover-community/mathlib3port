@@ -51,7 +51,7 @@ instance bundledHom : BundledHom AssocRingHom :=
 deriving instance LargeCategory, ConcreteCategory for SemiRing
 
 instance : CoeSort SemiRing (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled SemiRing from the underlying type and typeclass. -/
 def of (R : Type u) [Semiring R] : SemiRing :=
@@ -162,7 +162,7 @@ instance : BundledHom.ParentProjection @CommSemiring.toSemiring :=
 deriving instance LargeCategory, ConcreteCategory for CommSemiRing
 
 instance : CoeSort CommSemiRing (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled CommSemiRing from the underlying type and typeclass. -/
 def of (R : Type u) [CommSemiring R] : CommSemiRing :=
@@ -216,7 +216,7 @@ instance : BundledHom.ParentProjection @CommRing.toRing :=
 deriving instance LargeCategory, ConcreteCategory for CommRingCat
 
 instance : CoeSort CommRingCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled CommRing from the underlying type and typeclass. -/
 def of (R : Type u) [CommRing R] : CommRingCat :=

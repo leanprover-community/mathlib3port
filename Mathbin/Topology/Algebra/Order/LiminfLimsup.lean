@@ -44,21 +44,21 @@ theorem Filter.Tendsto.isBoundedUnder_le {f : Filter β} {u : β → α} {a : α
 
 theorem Filter.Tendsto.bddAbove_range_of_cofinite {u : β → α} {a : α}
     (h : Tendsto u cofinite (𝓝 a)) : BddAbove (Set.range u) :=
-  h.is_bounded_under_le.bdd_above_range_of_cofinite
+  h.isBoundedUnder_le.bddAbove_range_of_cofinite
 #align filter.tendsto.bdd_above_range_of_cofinite Filter.Tendsto.bddAbove_range_of_cofinite
 
 theorem Filter.Tendsto.bddAbove_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) :
     BddAbove (Set.range u) :=
-  h.is_bounded_under_le.bdd_above_range
+  h.isBoundedUnder_le.bddAbove_range
 #align filter.tendsto.bdd_above_range Filter.Tendsto.bddAbove_range
 
 theorem isCobounded_ge_nhds (a : α) : (𝓝 a).IsCobounded (· ≥ ·) :=
-  (isBounded_le_nhds a).is_cobounded_flip
+  (isBounded_le_nhds a).isCobounded_flip
 #align is_cobounded_ge_nhds isCobounded_ge_nhds
 
 theorem Filter.Tendsto.isCoboundedUnder_ge {f : Filter β} {u : β → α} {a : α} [NeBot f]
     (h : Tendsto u f (𝓝 a)) : f.IsCoboundedUnder (· ≥ ·) u :=
-  h.is_bounded_under_le.is_cobounded_flip
+  h.isBoundedUnder_le.isCobounded_flip
 #align filter.tendsto.is_cobounded_under_ge Filter.Tendsto.isCoboundedUnder_ge
 
 theorem isBounded_le_atBot (α : Type _) [hα : Nonempty α] [Preorder α] :
@@ -73,7 +73,7 @@ theorem Filter.Tendsto.isBoundedUnder_le_atBot {α : Type _} [Nonempty α] [Preo
 
 theorem bddAbove_range_of_tendsto_atTop_atBot {α : Type _} [Nonempty α] [SemilatticeSup α]
     {u : ℕ → α} (hx : Tendsto u atTop atBot) : BddAbove (Set.range u) :=
-  (Filter.Tendsto.isBoundedUnder_le_atBot hx).bdd_above_range
+  (Filter.Tendsto.isBoundedUnder_le_atBot hx).bddAbove_range
 #align bdd_above_range_of_tendsto_at_top_at_bot bddAbove_range_of_tendsto_atTop_atBot
 
 end OrderClosedTopology
@@ -93,21 +93,21 @@ theorem Filter.Tendsto.isBoundedUnder_ge {f : Filter β} {u : β → α} {a : α
 
 theorem Filter.Tendsto.bddBelow_range_of_cofinite {u : β → α} {a : α}
     (h : Tendsto u cofinite (𝓝 a)) : BddBelow (Set.range u) :=
-  h.is_bounded_under_ge.bdd_below_range_of_cofinite
+  h.isBoundedUnder_ge.bddBelow_range_of_cofinite
 #align filter.tendsto.bdd_below_range_of_cofinite Filter.Tendsto.bddBelow_range_of_cofinite
 
 theorem Filter.Tendsto.bddBelow_range {u : ℕ → α} {a : α} (h : Tendsto u atTop (𝓝 a)) :
     BddBelow (Set.range u) :=
-  h.is_bounded_under_ge.bdd_below_range
+  h.isBoundedUnder_ge.bddBelow_range
 #align filter.tendsto.bdd_below_range Filter.Tendsto.bddBelow_range
 
 theorem isCobounded_le_nhds (a : α) : (𝓝 a).IsCobounded (· ≤ ·) :=
-  (isBounded_ge_nhds a).is_cobounded_flip
+  (isBounded_ge_nhds a).isCobounded_flip
 #align is_cobounded_le_nhds isCobounded_le_nhds
 
 theorem Filter.Tendsto.isCoboundedUnder_le {f : Filter β} {u : β → α} {a : α} [NeBot f]
     (h : Tendsto u f (𝓝 a)) : f.IsCoboundedUnder (· ≤ ·) u :=
-  h.is_bounded_under_ge.is_cobounded_flip
+  h.isBoundedUnder_ge.isCobounded_flip
 #align filter.tendsto.is_cobounded_under_le Filter.Tendsto.isCoboundedUnder_le
 
 theorem isBounded_ge_atTop (α : Type _) [hα : Nonempty α] [Preorder α] :
@@ -122,7 +122,7 @@ theorem Filter.Tendsto.isBoundedUnder_ge_atTop {α : Type _} [Nonempty α] [Preo
 
 theorem bddBelow_range_of_tendsto_atTop_atTop {α : Type _} [Nonempty α] [SemilatticeInf α]
     {u : ℕ → α} (hx : Tendsto u atTop atTop) : BddBelow (Set.range u) :=
-  (Filter.Tendsto.isBoundedUnder_ge_atTop hx).bdd_below_range
+  (Filter.Tendsto.isBoundedUnder_ge_atTop hx).bddBelow_range
 #align bdd_below_range_of_tendsto_at_top_at_top bddBelow_range_of_tendsto_atTop_atTop
 
 end OrderClosedTopology
@@ -174,12 +174,12 @@ theorem liminf_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝 
   le_antisymm
     (calc
       f.liminf ≤ f.limsup := liminf_le_limsup hb_le hb_ge
-      _ ≤ (𝓝 a).limsup := limsup_le_limsup_of_le h hb_ge.is_cobounded_flip (isBounded_le_nhds a)
+      _ ≤ (𝓝 a).limsup := limsup_le_limsup_of_le h hb_ge.isCobounded_flip (isBounded_le_nhds a)
       _ = a := limsup_nhds a
       )
     (calc
       a = (𝓝 a).liminf := (liminf_nhds a).symm
-      _ ≤ f.liminf := liminf_le_liminf_of_le h (isBounded_ge_nhds a) hb_le.is_cobounded_flip
+      _ ≤ f.liminf := liminf_le_liminf_of_le h (isBounded_ge_nhds a) hb_le.isCobounded_flip
       )
 #align Liminf_eq_of_le_nhds liminf_eq_of_le_nhds
 
@@ -348,7 +348,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.map_limsup_of
 to the `filter.liminf` of the images. -/
 theorem Antitone.map_limsup_of_continuousAt {f : R → S} (f_decr : Antitone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.limsup a)) : f (F.limsup a) = F.liminf (f ∘ a) :=
-  f_decr.map_Limsup_of_continuous_at f_cont
+  f_decr.map_limsup_of_continuousAt f_cont
 #align antitone.map_limsup_of_continuous_at Antitone.map_limsup_of_continuousAt
 
 /-- An antitone function between complete linear ordered spaces sends a `filter.Liminf`
@@ -370,7 +370,7 @@ Case conversion may be inaccurate. Consider using '#align antitone.map_liminf_of
 to the `filter.limsup` of the images. -/
 theorem Antitone.map_liminf_of_continuousAt {f : R → S} (f_decr : Antitone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.liminf a)) : f (F.liminf a) = F.limsup (f ∘ a) :=
-  f_decr.map_Liminf_of_continuous_at f_cont
+  f_decr.map_liminf_of_continuousAt f_cont
 #align antitone.map_liminf_of_continuous_at Antitone.map_liminf_of_continuousAt
 
 /-- A monotone function between complete linear ordered spaces sends a `filter.Limsup`
@@ -391,7 +391,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.map_limsup_of
 to the `filter.limsup` of the images. -/
 theorem Monotone.map_limsup_of_continuousAt {f : R → S} (f_incr : Monotone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.limsup a)) : f (F.limsup a) = F.limsup (f ∘ a) :=
-  f_incr.map_Limsup_of_continuous_at f_cont
+  f_incr.map_limsup_of_continuousAt f_cont
 #align monotone.map_limsup_of_continuous_at Monotone.map_limsup_of_continuousAt
 
 /-- A monotone function between complete linear ordered spaces sends a `filter.Liminf`
@@ -412,7 +412,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.map_liminf_of
 to the `filter.liminf` of the images. -/
 theorem Monotone.map_liminf_of_continuousAt {f : R → S} (f_incr : Monotone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.liminf a)) : f (F.liminf a) = F.liminf (f ∘ a) :=
-  f_incr.map_Liminf_of_continuous_at f_cont
+  f_incr.map_liminf_of_continuousAt f_cont
 #align monotone.map_liminf_of_continuous_at Monotone.map_liminf_of_continuousAt
 
 end Monotone

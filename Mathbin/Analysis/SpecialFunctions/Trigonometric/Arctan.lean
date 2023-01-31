@@ -103,7 +103,7 @@ theorem continuousOn_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) :=
 
 theorem surjOn_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) univ :=
   have := neg_lt_self pi_div_two_pos
-  continuousOn_tan_Ioo.surj_on_of_tendsto (nonempty_Ioo.2 this)
+  continuousOn_tan_Ioo.surjOn_of_tendsto (nonempty_Ioo.2 this)
     (by simp [tendsto_tan_neg_pi_div_two, this]) (by simp [tendsto_tan_pi_div_two, this])
 #align real.surj_on_tan Real.surjOn_tan
 
@@ -218,7 +218,7 @@ theorem arccos_eq_arctan {x : ℝ} (h : 0 < x) : arccos x = arctan (sqrt (1 - x 
 
 @[continuity]
 theorem continuous_arctan : Continuous arctan :=
-  continuous_subtype_coe.comp tanOrderIso.toHomeomorph.continuous_inv_fun
+  continuous_subtype_val.comp tanOrderIso.toHomeomorph.continuous_invFun
 #align real.continuous_arctan Real.continuous_arctan
 
 theorem continuousAt_arctan {x : ℝ} : ContinuousAt arctan x :=
@@ -238,12 +238,12 @@ def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
   right_inv' y hy := tan_arctan y
   open_source := isOpen_Ioo
   open_target := isOpen_univ
-  continuous_to_fun := continuousOn_tan_Ioo
-  continuous_inv_fun := continuous_arctan.ContinuousOn
+  continuous_toFun := continuousOn_tan_Ioo
+  continuous_invFun := continuous_arctan.ContinuousOn
 #align real.tan_local_homeomorph Real.tanLocalHomeomorph
 
 @[simp]
-theorem coe_tanLocalHomeomorph : ⇑tan_local_homeomorph = tan :=
+theorem coe_tanLocalHomeomorph : ⇑tanLocalHomeomorph = tan :=
   rfl
 #align real.coe_tan_local_homeomorph Real.coe_tanLocalHomeomorph
 

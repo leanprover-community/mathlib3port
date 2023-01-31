@@ -40,12 +40,12 @@ namespace Complex
 If `f` is differentiable and `w` is in the interior of the ball, then the integral from `0` to
 `2 * π` of this gives the value `f(w)`. -/
 def circleTransform (f : ℂ → E) (θ : ℝ) : E :=
-  (2 * ↑π * I)⁻¹ • deriv (circleMap z R) θ • (circleMap z R θ - w)⁻¹ • f (circleMap z R θ)
+  (2 * ↑π * i)⁻¹ • deriv (circleMap z R) θ • (circleMap z R θ - w)⁻¹ • f (circleMap z R θ)
 #align complex.circle_transform Complex.circleTransform
 
 /-- The derivative of `circle_transform` w.r.t `w`.-/
 def circleTransformDeriv (f : ℂ → E) (θ : ℝ) : E :=
-  (2 * ↑π * I)⁻¹ • deriv (circleMap z R) θ • ((circleMap z R θ - w) ^ 2)⁻¹ • f (circleMap z R θ)
+  (2 * ↑π * i)⁻¹ • deriv (circleMap z R) θ • ((circleMap z R θ - w) ^ 2)⁻¹ • f (circleMap z R θ)
 #align complex.circle_transform_deriv Complex.circleTransformDeriv
 
 theorem circleTransformDeriv_periodic (f : ℂ → E) :
@@ -72,7 +72,7 @@ theorem circleTransformDeriv_eq (f : ℂ → E) :
 
 theorem integral_circleTransform [CompleteSpace E] (f : ℂ → E) :
     (∫ θ : ℝ in 0 ..2 * π, circleTransform R z w f θ) =
-      (2 * ↑π * I)⁻¹ • ∮ z in C(z, R), (z - w)⁻¹ • f z :=
+      (2 * ↑π * i)⁻¹ • ∮ z in C(z, R), (z - w)⁻¹ • f z :=
   by
   simp_rw [circle_transform, circleIntegral, deriv_circleMap, circleMap]
   simp

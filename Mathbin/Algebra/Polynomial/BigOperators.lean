@@ -58,7 +58,7 @@ theorem natDegree_multiset_sum_le (l : Multiset S[X]) :
 #align polynomial.nat_degree_multiset_sum_le Polynomial.natDegree_multiset_sum_le
 
 theorem natDegree_sum_le (f : ι → S[X]) :
-    natDegree (∑ i in s, f i) ≤ s.fold max 0 (nat_degree ∘ f) := by
+    natDegree (∑ i in s, f i) ≤ s.fold max 0 (natDegree ∘ f) := by
   simpa using nat_degree_multiset_sum_le (s.val.map f)
 #align polynomial.nat_degree_sum_le Polynomial.natDegree_sum_le
 
@@ -258,7 +258,7 @@ open Monic
 -- Eventually this can be generalized with Vieta's formulas
 -- plus the connection between roots and factorization.
 theorem multiset_prod_x_sub_c_nextCoeff (t : Multiset R) :
-    nextCoeff (t.map fun x => X - c x).Prod = -t.Sum :=
+    nextCoeff (t.map fun x => x - c x).Prod = -t.Sum :=
   by
   rw [next_coeff_multiset_prod]
   · simp only [next_coeff_X_sub_C]
@@ -268,12 +268,12 @@ theorem multiset_prod_x_sub_c_nextCoeff (t : Multiset R) :
 #align polynomial.multiset_prod_X_sub_C_next_coeff Polynomial.multiset_prod_x_sub_c_nextCoeff
 
 theorem prod_x_sub_c_nextCoeff {s : Finset ι} (f : ι → R) :
-    nextCoeff (∏ i in s, X - c (f i)) = -∑ i in s, f i := by
+    nextCoeff (∏ i in s, x - c (f i)) = -∑ i in s, f i := by
   simpa using multiset_prod_X_sub_C_next_coeff (s.1.map f)
 #align polynomial.prod_X_sub_C_next_coeff Polynomial.prod_x_sub_c_nextCoeff
 
 theorem multiset_prod_x_sub_c_coeff_card_pred (t : Multiset R) (ht : 0 < t.card) :
-    (t.map fun x => X - c x).Prod.coeff (t.card - 1) = -t.Sum :=
+    (t.map fun x => x - c x).Prod.coeff (t.card - 1) = -t.Sum :=
   by
   nontriviality R
   convert multiset_prod_X_sub_C_next_coeff (by assumption)
@@ -290,7 +290,7 @@ theorem multiset_prod_x_sub_c_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
 #align polynomial.multiset_prod_X_sub_C_coeff_card_pred Polynomial.multiset_prod_x_sub_c_coeff_card_pred
 
 theorem prod_x_sub_c_coeff_card_pred (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :
-    (∏ i in s, X - c (f i)).coeff (s.card - 1) = -∑ i in s, f i := by
+    (∏ i in s, x - c (f i)).coeff (s.card - 1) = -∑ i in s, f i := by
   simpa using multiset_prod_X_sub_C_coeff_card_pred (s.1.map f) (by simpa using hs)
 #align polynomial.prod_X_sub_C_coeff_card_pred Polynomial.prod_x_sub_c_coeff_card_pred
 

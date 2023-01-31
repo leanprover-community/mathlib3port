@@ -1093,11 +1093,11 @@ theorem Valid'.dual_iff {t : Ordnode α} {o₁ o₂} : Valid' o₁ t o₂ ↔ @V
 #align ordnode.valid'.dual_iff Ordnode.Valid'.dual_iff
 
 theorem Valid.dual {t : Ordnode α} : Valid t → @Valid αᵒᵈ _ (dual t) :=
-  valid'.dual
+  Valid'.dual
 #align ordnode.valid.dual Ordnode.Valid.dual
 
 theorem Valid.dual_iff {t : Ordnode α} : Valid t ↔ @Valid αᵒᵈ _ (dual t) :=
-  valid'.dual_iff
+  Valid'.dual_iff
 #align ordnode.valid.dual_iff Ordnode.Valid.dual_iff
 
 theorem Valid'.left {s l x r o₁ o₂} (H : Valid' o₁ (@node α s l x r) o₂) : Valid' o₁ l x :=

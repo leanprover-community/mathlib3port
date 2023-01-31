@@ -110,11 +110,11 @@ instance uniqueGalX : Unique (x : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_x _)
 #align polynomial.gal.unique_gal_X Polynomial.Gal.uniqueGalX
 
-instance uniqueGalXSubC (x : F) : Unique (X - c x).Gal :=
+instance uniqueGalXSubC (x : F) : Unique (x - c x).Gal :=
   uniqueGalOfSplits _ (splits_x_sub_c _)
 #align polynomial.gal.unique_gal_X_sub_C Polynomial.Gal.uniqueGalXSubC
 
-instance uniqueGalXPow (n : ℕ) : Unique (X ^ n : F[X]).Gal :=
+instance uniqueGalXPow (n : ℕ) : Unique (x ^ n : F[X]).Gal :=
   uniqueGalOfSplits _ (splits_x_pow _ _)
 #align polynomial.gal.unique_gal_X_pow Polynomial.Gal.uniqueGalXPow
 
@@ -298,12 +298,12 @@ theorem mul_splits_in_splittingField_of_mul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ 
   · rw [←
       (splitting_field.lift q₁
           (splits_of_splits_of_dvd _ (mul_ne_zero hq₁ hq₂) (splitting_field.splits _)
-            (dvd_mul_right q₁ q₂))).comp_algebra_map]
+            (dvd_mul_right q₁ q₂))).comp_algebraMap]
     exact splits_comp_of_splits _ _ h₁
   · rw [←
       (splitting_field.lift q₂
           (splits_of_splits_of_dvd _ (mul_ne_zero hq₁ hq₂) (splitting_field.splits _)
-            (dvd_mul_left q₂ q₁))).comp_algebra_map]
+            (dvd_mul_left q₂ q₁))).comp_algebraMap]
     exact splits_comp_of_splits _ _ h₂
 #align polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mul_splits_in_splittingField_of_mul
 
@@ -411,7 +411,7 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
   · haveI : IsEmpty (p.root_set ℂ) := by
       rw [hp, root_set_zero]
       infer_instance
-    simp_rw [(gal_action_hom p ℂ _).support.eq_empty_of_is_empty, hp, root_set_zero,
+    simp_rw [(gal_action_hom p ℂ _).support.eq_empty_of_isEmpty, hp, root_set_zero,
       Set.toFinset_empty, Finset.card_empty]
   have inj : Function.Injective (IsScalarTower.toAlgHom ℚ ℝ ℂ) := (algebraMap ℝ ℂ).Injective
   rw [← Finset.card_image_of_injective _ Subtype.coe_injective, ←

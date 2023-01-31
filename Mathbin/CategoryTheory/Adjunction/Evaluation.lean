@@ -40,7 +40,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D
     where
   obj d :=
     { obj := fun t => ∐ fun i : c ⟶ t => d
-      map := fun u v f => sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f
+      map := fun u v f => Sigma.desc fun g => (Sigma.ι fun _ => d) <| g ≫ f
       map_id' := by
         intros ; ext ⟨j⟩; simp only [cofan.mk_ι_app, colimit.ι_desc, category.comp_id]
         congr 1; rw [category.comp_id]
@@ -48,7 +48,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D
         intros ; ext; simp only [cofan.mk_ι_app, colimit.ι_desc_assoc, colimit.ι_desc]
         congr 1; rw [category.assoc] }
   map d₁ d₂ f :=
-    { app := fun e => sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h
+    { app := fun e => Sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h
       naturality' := by
         intros
         ext
@@ -73,7 +73,7 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
     { homEquiv := fun d F =>
         { toFun := fun f => Sigma.ι (fun _ => d) (𝟙 _) ≫ f.app c
           invFun := fun f =>
-            { app := fun e => sigma.desc fun h => f ≫ F.map h
+            { app := fun e => Sigma.desc fun h => f ≫ F.map h
               naturality' := by
                 intros
                 ext
@@ -90,12 +90,12 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
           right_inv := fun f => by
             dsimp
             simp }
-      hom_equiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm' := by
         intros
         ext
         dsimp
         simp
-      hom_equiv_naturality_right' := by
+      homEquiv_naturality_right' := by
         intros
         dsimp
         simp }
@@ -126,7 +126,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D
     where
   obj d :=
     { obj := fun t => ∏ fun i : t ⟶ c => d
-      map := fun u v f => pi.lift fun g => Pi.π _ <| f ≫ g
+      map := fun u v f => Pi.lift fun g => Pi.π _ <| f ≫ g
       map_id' := by
         intros ; ext ⟨j⟩; dsimp
         simp only [limit.lift_π, category.id_comp, fan.mk_π_app]
@@ -136,7 +136,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D
         simp only [limit.lift_π, fan.mk_π_app, category.assoc]
         congr 1; simp }
   map d₁ d₂ f :=
-    { app := fun t => pi.lift fun g => Pi.π _ g ≫ f
+    { app := fun t => Pi.lift fun g => Pi.π _ g ≫ f
       naturality' := by
         intros
         ext
@@ -160,7 +160,7 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
   Adjunction.mkOfHomEquiv
     { homEquiv := fun F d =>
         { toFun := fun f =>
-            { app := fun t => pi.lift fun g => F.map g ≫ f
+            { app := fun t => Pi.lift fun g => F.map g ≫ f
               naturality' := by
                 intros
                 ext
@@ -178,11 +178,11 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
               fan.mk_π_app]
             congr
             rw [category.comp_id] }
-      hom_equiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm' := by
         intros
         dsimp
         simp
-      hom_equiv_naturality_right' := by
+      homEquiv_naturality_right' := by
         intros
         ext
         dsimp

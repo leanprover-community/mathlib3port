@@ -54,7 +54,7 @@ class Arborescence (V : Type u) [Quiver.{v} V] : Type max u v where
 #print Quiver.root /-
 /-- The root of an arborescence. -/
 def root (V : Type u) [Quiver V] [Arborescence V] : V :=
-  arborescence.root
+  Arborescence.root
 #align quiver.root Quiver.root
 -/
 

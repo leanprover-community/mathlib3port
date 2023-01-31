@@ -60,7 +60,7 @@ theorem mkDerivationₗ_x (f : σ → A) (i : σ) : mkDerivationₗ R f (x i) = 
 
 @[simp]
 theorem derivation_c (D : Derivation R (MvPolynomial σ R) A) (a : R) : D (c a) = 0 :=
-  D.map_algebra_map a
+  D.map_algebraMap a
 #align mv_polynomial.derivation_C MvPolynomial.derivation_c
 
 @[simp]
@@ -71,7 +71,7 @@ theorem derivation_c_mul (D : Derivation R (MvPolynomial σ R) A) (a : R) (f : M
 /-- If two derivations agree on `X i`, `i ∈ s`, then they agree on all polynomials from
 `mv_polynomial.supported R s`. -/
 theorem derivation_eqOn_supported {D₁ D₂ : Derivation R (MvPolynomial σ R) A} {s : Set σ}
-    (h : Set.EqOn (D₁ ∘ X) (D₂ ∘ X) s) {f : MvPolynomial σ R} (hf : f ∈ supported R s) :
+    (h : Set.EqOn (D₁ ∘ x) (D₂ ∘ x) s) {f : MvPolynomial σ R} (hf : f ∈ supported R s) :
     D₁ f = D₂ f :=
   Derivation.eqOn_adjoin (Set.ball_image_iff.2 h) hf
 #align mv_polynomial.derivation_eq_on_supported MvPolynomial.derivation_eqOn_supported

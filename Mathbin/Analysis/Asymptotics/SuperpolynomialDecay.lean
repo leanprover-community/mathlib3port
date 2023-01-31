@@ -287,7 +287,7 @@ theorem superpolynomialDecay_param_mul_iff (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k (k * f) ↔ SuperpolynomialDecay l k f :=
   ⟨fun h =>
     (h.inv_param_mul hk).congr'
-      ((hk.eventually_ne_at_top 0).mono fun x hx => by simp [← mul_assoc, inv_mul_cancel hx]),
+      ((hk.eventually_ne_atTop 0).mono fun x hx => by simp [← mul_assoc, inv_mul_cancel hx]),
     fun h => h.param_mul⟩
 #align asymptotics.superpolynomial_decay_param_mul_iff Asymptotics.superpolynomialDecay_param_mul_iff
 

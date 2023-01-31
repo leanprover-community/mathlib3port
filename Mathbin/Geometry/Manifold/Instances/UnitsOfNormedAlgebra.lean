@@ -71,7 +71,7 @@ theorem chartAt_source {a : Rˣ} : (chartAt R a).source = Set.univ :=
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 R]
 
 instance : SmoothManifoldWithCorners 𝓘(𝕜, R) Rˣ :=
-  openEmbedding_coe.singleton_smooth_manifold_with_corners 𝓘(𝕜, R)
+  openEmbedding_coe.singleton_smoothManifoldWithCorners 𝓘(𝕜, R)
 
 end Units
 

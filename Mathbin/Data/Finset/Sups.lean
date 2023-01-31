@@ -117,15 +117,15 @@ theorem sups_nonempty_iff : (s ⊻ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 #align finset.sups_nonempty_iff Finset.sups_nonempty_iff
 
 theorem Nonempty.sups : s.Nonempty → t.Nonempty → (s ⊻ t).Nonempty :=
-  nonempty.image₂
+  Nonempty.image₂
 #align finset.nonempty.sups Finset.Nonempty.sups
 
 theorem Nonempty.of_sups_left : (s ⊻ t).Nonempty → s.Nonempty :=
-  nonempty.of_image₂_left
+  Nonempty.of_image₂_left
 #align finset.nonempty.of_sups_left Finset.Nonempty.of_sups_left
 
 theorem Nonempty.of_sups_right : (s ⊻ t).Nonempty → t.Nonempty :=
-  nonempty.of_image₂_right
+  Nonempty.of_image₂_right
 #align finset.nonempty.of_sups_right Finset.Nonempty.of_sups_right
 
 @[simp]
@@ -184,12 +184,12 @@ theorem subset_sups {s t : Set α} :
 
 variable (s t u)
 
-theorem bunionᵢ_image_sup_left : (s.bUnion fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
-  bUnion_image_left
+theorem bunionᵢ_image_sup_left : (s.bunionᵢ fun a => t.image <| (· ⊔ ·) a) = s ⊻ t :=
+  bunionᵢ_image_left
 #align finset.bUnion_image_sup_left Finset.bunionᵢ_image_sup_left
 
-theorem bunionᵢ_image_sup_right : (t.bUnion fun b => s.image fun a => a ⊔ b) = s ⊻ t :=
-  bUnion_image_right
+theorem bunionᵢ_image_sup_right : (t.bunionᵢ fun b => s.image fun a => a ⊔ b) = s ⊻ t :=
+  bunionᵢ_image_right
 #align finset.bUnion_image_sup_right Finset.bunionᵢ_image_sup_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -292,15 +292,15 @@ theorem infs_nonempty_iff : (s ⊼ t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 #align finset.infs_nonempty_iff Finset.infs_nonempty_iff
 
 theorem Nonempty.infs : s.Nonempty → t.Nonempty → (s ⊼ t).Nonempty :=
-  nonempty.image₂
+  Nonempty.image₂
 #align finset.nonempty.infs Finset.Nonempty.infs
 
 theorem Nonempty.of_infs_left : (s ⊼ t).Nonempty → s.Nonempty :=
-  nonempty.of_image₂_left
+  Nonempty.of_image₂_left
 #align finset.nonempty.of_infs_left Finset.Nonempty.of_infs_left
 
 theorem Nonempty.of_infs_right : (s ⊼ t).Nonempty → t.Nonempty :=
-  nonempty.of_image₂_right
+  Nonempty.of_image₂_right
 #align finset.nonempty.of_infs_right Finset.Nonempty.of_infs_right
 
 @[simp]
@@ -359,12 +359,12 @@ theorem subset_infs {s t : Set α} :
 
 variable (s t u)
 
-theorem bunionᵢ_image_inf_left : (s.bUnion fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
-  bUnion_image_left
+theorem bunionᵢ_image_inf_left : (s.bunionᵢ fun a => t.image <| (· ⊓ ·) a) = s ⊼ t :=
+  bunionᵢ_image_left
 #align finset.bUnion_image_inf_left Finset.bunionᵢ_image_inf_left
 
-theorem bunionᵢ_image_inf_right : (t.bUnion fun b => s.image fun a => a ⊓ b) = s ⊼ t :=
-  bUnion_image_right
+theorem bunionᵢ_image_inf_right : (t.bunionᵢ fun b => s.image fun a => a ⊓ b) = s ⊼ t :=
+  bunionᵢ_image_right
 #align finset.bUnion_image_inf_right Finset.bunionᵢ_image_inf_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -401,7 +401,7 @@ variable [SemilatticeSup α] [OrderBot α] [@DecidableRel α Disjoint] (s s₁ s
 /-- The finset of elements of the form `a ⊔ b` where `a ∈ s`, `b ∈ t` and `a` and `b` are disjoint.
 -/
 def disjSups : Finset α :=
-  ((s ×ˢ t).filter fun ab : α × α => Disjoint ab.1 ab.2).image fun ab => ab.1 ⊔ ab.2
+  ((s ×ˢ t).filterₓ fun ab : α × α => Disjoint ab.1 ab.2).image fun ab => ab.1 ⊔ ab.2
 #align finset.disj_sups Finset.disjSups
 
 -- mathport name: finset.disj_sups
@@ -451,7 +451,7 @@ theorem forall_disjSups_iff {p : α → Prop} :
 
 @[simp]
 theorem disjSups_subset_iff : s ○ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, Disjoint a b → a ⊔ b ∈ u :=
-  forall_disj_sups_iff
+  forall_disjSups_iff
 #align finset.disj_sups_subset_iff Finset.disjSups_subset_iff
 
 theorem Nonempty.of_disjSups_left : (s ○ t).Nonempty → s.Nonempty :=

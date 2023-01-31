@@ -205,7 +205,7 @@ def transpose (μ : YoungDiagram) : YoungDiagram
 #align young_diagram.transpose YoungDiagram.transpose
 
 @[simp]
-theorem mem_transpose {μ : YoungDiagram} {c : ℕ × ℕ} : c ∈ μ.transpose ↔ c.swap ∈ μ := by
+theorem mem_transpose {μ : YoungDiagram} {c : ℕ × ℕ} : c ∈ μ.transpose ↔ c.symm ∈ μ := by
   simp [transpose]
 #align young_diagram.mem_transpose YoungDiagram.mem_transpose
 
@@ -275,7 +275,7 @@ as the smallest `j` such that `(i, j) ∉ μ`. -/
 
 /-- The `i`-th row of a Young diagram consists of the cells whose first coordinate is `i`. -/
 def row (μ : YoungDiagram) (i : ℕ) : Finset (ℕ × ℕ) :=
-  μ.cells.filter fun c => c.fst = i
+  μ.cells.filterₓ fun c => c.fst = i
 #align young_diagram.row YoungDiagram.row
 
 theorem mem_row_iff {μ : YoungDiagram} {i : ℕ} {c : ℕ × ℕ} : c ∈ μ.row i ↔ c ∈ μ ∧ c.fst = i := by
@@ -343,7 +343,7 @@ This section has an identical API to the rows section. -/
 
 /-- The `j`-th column of a Young diagram consists of the cells whose second coordinate is `j`. -/
 def col (μ : YoungDiagram) (j : ℕ) : Finset (ℕ × ℕ) :=
-  μ.cells.filter fun c => c.snd = j
+  μ.cells.filterₓ fun c => c.snd = j
 #align young_diagram.col YoungDiagram.col
 
 theorem mem_col_iff {μ : YoungDiagram} {j : ℕ} {c : ℕ × ℕ} : c ∈ μ.col j ↔ c ∈ μ ∧ c.snd = j := by
@@ -428,7 +428,7 @@ theorem length_rowLens {μ : YoungDiagram} : μ.rowLens.length = μ.colLen 0 := 
 #align young_diagram.length_row_lens YoungDiagram.length_rowLens
 
 theorem rowLens_sorted (μ : YoungDiagram) : μ.rowLens.Sorted (· ≥ ·) :=
-  (List.pairwise_le_range _).map _ μ.row_len_anti
+  (List.pairwise_le_range _).map _ μ.rowLen_anti
 #align young_diagram.row_lens_sorted YoungDiagram.rowLens_sorted
 
 theorem pos_of_mem_rowLens (μ : YoungDiagram) (x : ℕ) (hx : x ∈ μ.rowLens) : 0 < x :=
@@ -538,7 +538,7 @@ A Young diagram `μ` is equivalent to a list of row lengths. -/
 @[simps]
 def equivListRowLens : YoungDiagram ≃ { w : List ℕ // w.Sorted (· ≥ ·) ∧ ∀ x ∈ w, 0 < x }
     where
-  toFun μ := ⟨μ.rowLens, μ.row_lens_sorted, μ.pos_of_mem_row_lens⟩
+  toFun μ := ⟨μ.rowLens, μ.rowLens_sorted, μ.pos_of_mem_rowLens⟩
   invFun ww := ofRowLens ww.1 ww.2.1
   left_inv μ := ofRowLens_to_rowLens_eq_self
   right_inv := fun ⟨w, hw⟩ => Subtype.mk_eq_mk.mpr (rowLens_ofRowLens_eq_self hw.2)

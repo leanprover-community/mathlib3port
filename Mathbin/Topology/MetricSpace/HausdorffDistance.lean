@@ -581,7 +581,7 @@ theorem not_mem_of_dist_lt_infDist (h : dist x y < infDist x s) : y ∉ s := fun
 
 theorem disjoint_ball_infDist : Disjoint (ball x (infDist x s)) s :=
   disjoint_left.2 fun y hy =>
-    not_mem_of_dist_lt_inf_dist <|
+    not_mem_of_dist_lt_infDist <|
       calc
         dist x y = dist y x := dist_comm _ _
         _ < infDist x s := hy
@@ -684,7 +684,7 @@ theorem infDist_inter_closedBall_of_mem (h : y ∈ s) :
 
 theorem IsCompact.exists_infDist_eq_dist (h : IsCompact s) (hne : s.Nonempty) (x : α) :
     ∃ y ∈ s, infDist x s = dist x y :=
-  let ⟨y, hys, hy⟩ := h.exists_inf_edist_eq_edist hne x
+  let ⟨y, hys, hy⟩ := h.exists_infEdist_eq_edist hne x
   ⟨y, hys, by rw [inf_dist, dist_edist, hy]⟩
 #align is_compact.exists_inf_dist_eq_dist IsCompact.exists_infDist_eq_dist
 
@@ -1035,7 +1035,7 @@ theorem thickening_subset_of_subset (δ : ℝ) {E₁ E₂ : Set α} (h : E₁ �
 
 theorem mem_thickening_iff_exists_edist_lt {δ : ℝ} (E : Set α) (x : α) :
     x ∈ thickening δ E ↔ ∃ z ∈ E, edist x z < Ennreal.ofReal δ :=
-  inf_edist_lt_iff
+  infEdist_lt_iff
 #align metric.mem_thickening_iff_exists_edist_lt Metric.mem_thickening_iff_exists_edist_lt
 
 /-- The frontier of the (open) thickening of a set is contained in an `inf_edist` level set. -/
@@ -1275,7 +1275,7 @@ theorem self_subset_cthickening {δ : ℝ} (E : Set α) : E ⊆ cthickening δ E
 #align metric.self_subset_cthickening Metric.self_subset_cthickening
 
 theorem thickening_mem_nhdsSet (E : Set α) {δ : ℝ} (hδ : 0 < δ) : thickening δ E ∈ 𝓝ˢ E :=
-  isOpen_thickening.mem_nhds_set.2 <| self_subset_thickening hδ E
+  isOpen_thickening.mem_nhdsSet.2 <| self_subset_thickening hδ E
 #align metric.thickening_mem_nhds_set Metric.thickening_mem_nhdsSet
 
 theorem cthickening_mem_nhdsSet (E : Set α) {δ : ℝ} (hδ : 0 < δ) : cthickening δ E ∈ 𝓝ˢ E :=
@@ -1397,7 +1397,7 @@ theorem Disjoint.exists_cthickenings (hst : Disjoint s t) (hs : IsCompact s) (ht
 
 theorem IsCompact.exists_cthickening_subset_open (hs : IsCompact s) (ht : IsOpen t) (hst : s ⊆ t) :
     ∃ δ, 0 < δ ∧ cthickening δ s ⊆ t :=
-  (hst.disjoint_compl_right.exists_cthickenings hs ht.is_closed_compl).imp fun δ h =>
+  (hst.disjoint_compl_right.exists_cthickenings hs ht.isClosed_compl).imp fun δ h =>
     ⟨h.1, disjoint_compl_right_iff_subset.1 <| h.2.mono_right <| self_subset_cthickening _⟩
 #align is_compact.exists_cthickening_subset_open IsCompact.exists_cthickening_subset_open
 
@@ -1592,7 +1592,7 @@ theorem infEdist_le_infEdist_cthickening_add :
 theorem infEdist_le_infEdist_thickening_add :
     infEdist x s ≤ infEdist x (thickening δ s) + Ennreal.ofReal δ :=
   infEdist_le_infEdist_cthickening_add.trans <|
-    add_le_add_right (inf_edist_anti <| thickening_subset_cthickening _ _) _
+    add_le_add_right (infEdist_anti <| thickening_subset_cthickening _ _) _
 #align metric.inf_edist_le_inf_edist_thickening_add Metric.infEdist_le_infEdist_thickening_add
 
 /-- For the equality, see `thickening_thickening`. -/

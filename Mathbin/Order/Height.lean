@@ -71,7 +71,7 @@ variable {s} {l : List α} {a : α}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem cons_mem_subchain_iff :
-    (a::l) ∈ s.subchain ↔ a ∈ s ∧ l ∈ s.subchain ∧ ∀ b ∈ l.head', a < b :=
+    (a::l) ∈ s.subchain ↔ a ∈ s ∧ l ∈ s.subchain ∧ ∀ b ∈ l.head?, a < b :=
   by
   refine'
     ⟨fun h =>
@@ -855,7 +855,7 @@ theorem chainHeight_image (f : α → β) (hf : ∀ {x y}, x < y ↔ f x < f y) 
 variable (s)
 
 @[simp]
-theorem chainHeight_dual : (of_dual ⁻¹' s).chainHeight = s.chainHeight := by
+theorem chainHeight_dual : (ofDual ⁻¹' s).chainHeight = s.chainHeight := by
   apply le_antisymm <;>
     · rw [chain_height_le_chain_height_iff]
       rintro l ⟨h₁, h₂⟩
@@ -986,7 +986,7 @@ theorem wellFoundedGT_of_chainHeight_ne_top (s : Set α) (hs : s.chainHeight ≠
 
 theorem wellFoundedLT_of_chainHeight_ne_top (s : Set α) (hs : s.chainHeight ≠ ⊤) :
     WellFoundedLT s :=
-  wellFoundedGT_of_chainHeight_ne_top (of_dual ⁻¹' s) <| by rwa [chain_height_dual]
+  wellFoundedGT_of_chainHeight_ne_top (ofDual ⁻¹' s) <| by rwa [chain_height_dual]
 #align set.well_founded_lt_of_chain_height_ne_top Set.wellFoundedLT_of_chainHeight_ne_top
 
 end Preorder

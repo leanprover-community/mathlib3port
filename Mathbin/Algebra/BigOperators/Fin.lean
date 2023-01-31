@@ -290,7 +290,7 @@ variable [CommMonoid α]
 
 @[to_additive]
 theorem prod_take_ofFn {n : ℕ} (f : Fin n → α) (i : ℕ) :
-    ((ofFn f).take i).Prod = ∏ j in Finset.univ.filter fun j : Fin n => j.val < i, f j :=
+    ((ofFn f).take i).Prod = ∏ j in Finset.univ.filterₓ fun j : Fin n => j.val < i, f j :=
   by
   have A : ∀ j : Fin n, ¬(j : ℕ) < 0 := fun j => not_lt_bot
   induction' i with i IH; · simp [A]
@@ -298,8 +298,8 @@ theorem prod_take_ofFn {n : ℕ} (f : Fin n → α) (i : ℕ) :
   · have : i < length (of_fn f) := by rwa [length_of_fn f]
     rw [prod_take_succ _ _ this]
     have A :
-      ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i + 1) =
-        ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Fin n)} :=
+      ((Finset.univ : Finset (Fin n)).filterₓ fun j => j.val < i + 1) =
+        ((Finset.univ : Finset (Fin n)).filterₓ fun j => j.val < i) ∪ {(⟨i, h⟩ : Fin n)} :=
       by
       ext ⟨_, _⟩
       simp [Nat.lt_succ_iff_lt_or_eq]

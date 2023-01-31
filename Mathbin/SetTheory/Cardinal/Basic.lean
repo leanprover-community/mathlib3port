@@ -513,8 +513,8 @@ instance : CommSemiring Cardinal.{u} where
   left_distrib a b c := induction_on₃ a b c fun α β γ => mk_congr <| Equiv.prodSumDistrib α β γ
   right_distrib a b c := induction_on₃ a b c fun α β γ => mk_congr <| Equiv.sumProdDistrib α β γ
   npow n c := c^n
-  npow_zero' := @power_zero
-  npow_succ' n c := show (c^n + 1) = c * (c^n) by rw [power_add, power_one, mul_comm']
+  npow_zero := @power_zero
+  npow_succ n c := show (c^n + 1) = c * (c^n) by rw [power_add, power_one, mul_comm']
 
 theorem power_bit0 (a b : Cardinal) : (a^bit0 b) = (a^b) * (a^b) :=
   power_add
@@ -972,7 +972,7 @@ theorem prod_const' (ι : Type u) (a : Cardinal.{u}) : (prod fun _ : ι => a) = 
 #align cardinal.prod_const' Cardinal.prod_const'
 
 theorem prod_le_prod {ι} (f g : ι → Cardinal) (H : ∀ i, f i ≤ g i) : prod f ≤ prod g :=
-  ⟨embedding.Pi_congr_right fun i =>
+  ⟨Embedding.piCongrRight fun i =>
       Classical.choice <| by have := H i <;> rwa [← mk_out (f i), ← mk_out (g i)] at this⟩
 #align cardinal.prod_le_prod Cardinal.prod_le_prod
 
@@ -1034,7 +1034,7 @@ theorem lift_down {a : Cardinal.{u}} {b : Cardinal.{max u v}} : b ≤ lift a →
         ⟨#Set.range f,
           Eq.symm <|
             lift_mk_eq.2
-              ⟨embedding.equiv_of_surjective (embedding.cod_restrict _ f Set.mem_range_self)
+              ⟨embedding.equiv_of_surjective (Embedding.codRestrict _ f Set.mem_range_self)
                   fun ⟨a, ⟨b, e⟩⟩ => ⟨b, Subtype.eq e⟩⟩⟩
 #align cardinal.lift_down Cardinal.lift_down
 
@@ -1338,7 +1338,7 @@ alias lt_aleph_0_iff_set_finite ↔ _ _root_.set.finite.lt_aleph_0
 
 @[simp]
 theorem lt_aleph0_iff_subtype_finite {p : α → Prop} : (#{ x // p x }) < ℵ₀ ↔ { x | p x }.Finite :=
-  lt_aleph_0_iff_set_finite
+  lt_aleph0_iff_set_finite
 #align cardinal.lt_aleph_0_iff_subtype_finite Cardinal.lt_aleph0_iff_subtype_finite
 
 theorem mk_le_aleph0_iff : (#α) ≤ ℵ₀ ↔ Countable α := by
@@ -1361,7 +1361,7 @@ alias le_aleph_0_iff_set_countable ↔ _ _root_.set.countable.le_aleph_0
 @[simp]
 theorem le_aleph0_iff_subtype_countable {p : α → Prop} :
     (#{ x // p x }) ≤ ℵ₀ ↔ { x | p x }.Countable :=
-  le_aleph_0_iff_set_countable
+  le_aleph0_iff_set_countable
 #align cardinal.le_aleph_0_iff_subtype_countable Cardinal.le_aleph0_iff_subtype_countable
 
 instance canLiftCardinalNat : CanLift Cardinal ℕ coe fun x => x < ℵ₀ :=
@@ -1492,7 +1492,7 @@ theorem aleph0_mul_aleph0 : ℵ₀ * ℵ₀ = ℵ₀ :=
 
 @[simp]
 theorem nat_mul_aleph0 {n : ℕ} (hn : n ≠ 0) : ↑n * ℵ₀ = ℵ₀ :=
-  le_antisymm (lift_mk_fin n ▸ mk_le_aleph_0) <|
+  le_antisymm (lift_mk_fin n ▸ mk_le_aleph0) <|
     le_mul_of_one_le_left (zero_le _) <| by
       rwa [← Nat.cast_one, nat_cast_le, Nat.one_le_iff_ne_zero]
 #align cardinal.nat_mul_aleph_0 Cardinal.nat_mul_aleph0
@@ -1504,7 +1504,7 @@ theorem aleph0_mul_nat {n : ℕ} (hn : n ≠ 0) : ℵ₀ * n = ℵ₀ := by rw [
 @[simp]
 theorem add_le_aleph0 {c₁ c₂ : Cardinal} : c₁ + c₂ ≤ ℵ₀ ↔ c₁ ≤ ℵ₀ ∧ c₂ ≤ ℵ₀ :=
   ⟨fun h => ⟨le_self_add.trans h, le_add_self.trans h⟩, fun h =>
-    aleph_0_add_aleph_0 ▸ add_le_add h.1 h.2⟩
+    aleph0_add_aleph0 ▸ add_le_add h.1 h.2⟩
 #align cardinal.add_le_aleph_0 Cardinal.add_le_aleph0
 
 @[simp]
@@ -1519,7 +1519,7 @@ theorem nat_add_aleph0 (n : ℕ) : ↑n + ℵ₀ = ℵ₀ := by rw [add_comm, al
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to 0. -/
 def toNat : ZeroHom Cardinal ℕ :=
-  ⟨fun c => if h : c < aleph_0.{v} then Classical.choose (lt_aleph0.1 h) else 0,
+  ⟨fun c => if h : c < aleph0.{v} then Classical.choose (lt_aleph0.1 h) else 0,
     by
     have h : 0 < ℵ₀ := nat_lt_aleph_0 0
     rw [dif_pos h, ← Cardinal.nat_cast_inj, ← Classical.choose_spec (lt_aleph_0.1 h),
@@ -1572,7 +1572,7 @@ theorem toNat_cast (n : ℕ) : Cardinal.toNat n = n :=
 
 /-- `to_nat` has a right-inverse: coercion. -/
 theorem toNat_rightInverse : Function.RightInverse (coe : ℕ → Cardinal) toNat :=
-  to_nat_cast
+  toNat_cast
 #align cardinal.to_nat_right_inverse Cardinal.toNat_rightInverse
 
 theorem toNat_surjective : Surjective toNat :=
@@ -1608,7 +1608,7 @@ theorem one_toNat : toNat 1 = 1 := by rw [← to_nat_cast 1, Nat.cast_one]
 theorem toNat_eq_iff {c : Cardinal} {n : ℕ} (hn : n ≠ 0) : toNat c = n ↔ c = n :=
   ⟨fun h =>
     (cast_toNat_of_lt_aleph0
-            (lt_of_not_ge (hn ∘ h.symm.trans ∘ to_nat_apply_of_aleph_0_le))).symm.trans
+            (lt_of_not_ge (hn ∘ h.symm.trans ∘ toNat_apply_of_aleph0_le))).symm.trans
       (congr_arg coe h),
     fun h => (congr_arg toNat h).trans (toNat_cast n)⟩
 #align cardinal.to_nat_eq_iff Cardinal.toNat_eq_iff
@@ -1782,7 +1782,7 @@ theorem mk_pUnit : (#PUnit) = 1 :=
 #align cardinal.mk_punit Cardinal.mk_pUnit
 
 theorem mk_unit : (#Unit) = 1 :=
-  mk_punit
+  mk_pUnit
 #align cardinal.mk_unit Cardinal.mk_unit
 
 @[simp]

@@ -209,7 +209,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
     apply int.gcd_eq_one_iff_coprime.mpr
     apply @IsCoprime.of_mul_left_left _ _ _ a
     rw [← sq, ht1, (by ring : m ^ 2 - n ^ 2 = m ^ 2 + -n * n)]
-    exact (int.gcd_eq_one_iff_coprime.mp ht4).pow_left.add_mul_right_left (-n)
+    exact (int.gcd_eq_one_iff_coprime.mp ht4).pow_leftₓ.add_mul_right_left (-n)
   -- m is positive because b is non-zero and b ^ 2 = 2 * m * n and we already have 0 ≤ m.
   have hb20 : b ^ 2 ≠ 0 := mt pow_eq_zero h.1.2.1
   have h4 : 0 < m := by

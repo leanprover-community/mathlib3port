@@ -47,7 +47,7 @@ In particular, the second property is automatically satisfied if the imaginary p
 `l`. -/
 structure IsExpCmpFilter (l : Filter ℂ) : Prop where
   tendsto_re : Tendsto re l atTop
-  is_O_im_pow_re : ∀ n : ℕ, (fun z : ℂ => z.im ^ n) =O[l] fun z => Real.exp z.re
+  isO_im_pow_re : ∀ n : ℕ, (fun z : ℂ => z.im ^ n) =O[l] fun z => Real.exp z.re
 #align complex.is_exp_cmp_filter Complex.IsExpCmpFilter
 
 namespace IsExpCmpFilter
@@ -62,11 +62,11 @@ variable {l : Filter ℂ}
 theorem of_isO_im_re_rpow (hre : Tendsto re l atTop) (r : ℝ) (hr : im =O[l] fun z => z.re ^ r) :
     IsExpCmpFilter l :=
   ⟨hre, fun n =>
-    is_o.is_O <|
+    IsOCat.isO <|
       calc
         (fun z : ℂ => z.im ^ n) =O[l] fun z => (z.re ^ r) ^ n := hr.pow n
         _ =ᶠ[l] fun z => z.re ^ (r * n) :=
-          (hre.eventually_ge_at_top 0).mono fun z hz => by
+          (hre.eventually_ge_atTop 0).mono fun z hz => by
             simp only [Real.rpow_mul hz r n, Real.rpow_nat_cast]
         _ =o[l] fun z => Real.exp z.re := (isOCat_rpow_exp_atTop _).comp_tendsto hre
         ⟩
@@ -94,7 +94,7 @@ theorem of_bounded_under_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder 
 
 
 theorem eventually_ne (hl : IsExpCmpFilter l) : ∀ᶠ w : ℂ in l, w ≠ 0 :=
-  hl.tendsto_re.eventually_ne_at_top' _
+  hl.tendsto_re.eventually_ne_atTop' _
 #align complex.is_exp_cmp_filter.eventually_ne Complex.IsExpCmpFilter.eventually_ne
 
 theorem tendsto_abs_re (hl : IsExpCmpFilter l) : Tendsto (fun z : ℂ => |z.re|) l atTop :=
@@ -114,7 +114,7 @@ theorem isOCat_im_pow_exp_re (hl : IsExpCmpFilter l) (n : ℕ) :
   flip IsOCat.of_pow two_ne_zero <|
     calc
       (fun z : ℂ => (z.im ^ n) ^ 2) = fun z => z.im ^ (2 * n) := by simp only [pow_mul']
-      _ =O[l] fun z => Real.exp z.re := hl.is_O_im_pow_re _
+      _ =O[l] fun z => Real.exp z.re := hl.isO_im_pow_re _
       _ = fun z => Real.exp z.re ^ 1 := by simp only [pow_one]
       _ =o[l] fun z => Real.exp z.re ^ 2 :=
         (isOCat_pow_pow_atTop_of_lt one_lt_two).comp_tendsto <|
@@ -135,7 +135,7 @@ theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) 
     (fun z => Real.log (abs z)) =O[l] fun z =>
         Real.log (Real.sqrt 2) + Real.log (max z.re (|z.im|)) :=
       IsO.of_bound 1 <|
-        (hl.tendsto_re.eventually_ge_at_top 1).mono fun z hz =>
+        (hl.tendsto_re.eventually_ge_atTop 1).mono fun z hz =>
           by
           have h2 : 0 < Real.sqrt 2 := by simp
           have hz' : 1 ≤ abs z := hz.trans (re_le_abs z)
@@ -172,15 +172,15 @@ theorem isOCat_cpow_exp (hl : IsExpCmpFilter l) (a : ℂ) {b : ℝ} (hb : 0 < b)
     (fun z => z ^ a) =o[l] fun z => exp (b * z) :=
   calc
     (fun z => z ^ a) =Θ[l] fun z => abs z ^ re a :=
-      is_Theta_cpow_const_rpow fun _ _ => hl.eventually_ne
+      isTheta_cpow_const_rpow fun _ _ => hl.eventually_ne
     _ =ᶠ[l] fun z => Real.exp (re a * Real.log (abs z)) :=
       hl.eventually_ne.mono fun z hz => by simp only [Real.rpow_def_of_pos, abs.pos hz, mul_comm]
     _ =o[l] fun z => exp (b * z) :=
-      is_o.of_norm_right <|
+      IsOCat.of_norm_right <|
         by
         simp only [norm_eq_abs, abs_exp, of_real_mul_re, Real.isOCat_exp_comp_exp_comp]
         refine'
-          (is_equivalent.refl.sub_is_o _).symm.tendsto_at_top (hl.tendsto_re.const_mul_at_top hb)
+          (is_equivalent.refl.sub_is_o _).symm.tendsto_atTop (hl.tendsto_re.const_mul_at_top hb)
         exact (hl.is_o_log_abs_re.const_mul_left _).const_mul_right hb.ne'
     
 #align complex.is_exp_cmp_filter.is_o_cpow_exp Complex.IsExpCmpFilter.isOCat_cpow_exp
@@ -195,7 +195,8 @@ theorem isOCat_cpow_mul_exp {b₁ b₂ : ℝ} (hl : IsExpCmpFilter l) (hb : b₁
         simp only
         rw [mul_right_comm, ← cpow_add _ _ hz, add_sub_cancel'_right]
     _ =o[l] fun z => z ^ a₂ * exp (b₁ * z) * exp (↑(b₂ - b₁) * z) :=
-      (isO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_is_o <| hl.is_o_cpow_exp _ (sub_pos.2 hb)
+      (isO_refl (fun z => z ^ a₂ * exp (b₁ * z)) l).mul_isOCat <|
+        hl.isOCat_cpow_exp _ (sub_pos.2 hb)
     _ =ᶠ[l] fun z => z ^ a₂ * exp (b₂ * z) := by
       simp only [of_real_sub, sub_mul, mul_assoc, ← exp_add, add_sub_cancel'_right]
     

@@ -65,7 +65,7 @@ theorem pow_arith_mean_le_arith_mean_pow (w z : ι → ℝ) (hw : ∀ i ∈ s, 0
 theorem pow_arith_mean_le_arith_mean_pow_of_even (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i)
     (hw' : (∑ i in s, w i) = 1) {n : ℕ} (hn : Even n) :
     (∑ i in s, w i * z i) ^ n ≤ ∑ i in s, w i * z i ^ n :=
-  hn.convex_on_pow.map_sum_le hw hw' fun _ _ => trivial
+  hn.convexOn_pow.map_sum_le hw hw' fun _ _ => trivial
 #align real.pow_arith_mean_le_arith_mean_pow_of_even Real.pow_arith_mean_le_arith_mean_pow_of_even
 
 theorem zpow_arith_mean_le_arith_mean_zpow (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i)

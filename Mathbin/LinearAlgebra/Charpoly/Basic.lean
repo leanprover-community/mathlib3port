@@ -93,7 +93,7 @@ theorem aeval_eq_aeval_mod_charpoly (p : R[X]) : aeval f p = aeval f (p %ₘ f.c
 
 /-- Any endomorphism power can be computed as the sum of endomorphism powers less than the
 dimension of the module. -/
-theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (X ^ k %ₘ f.charpoly) := by
+theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (x ^ k %ₘ f.charpoly) := by
   rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
 #align linear_map.pow_eq_aeval_mod_charpoly LinearMap.pow_eq_aeval_mod_charpoly
 

@@ -390,14 +390,14 @@ theorem getOrElse_of_not_dom (a : Part α) (h : ¬a.Dom) [Decidable a.Dom] (d : 
 #print Part.getOrElse_none /-
 @[simp]
 theorem getOrElse_none (d : α) [Decidable (none : Part α).Dom] : getOrElse none d = d :=
-  none.get_or_else_of_not_dom not_none_dom d
+  none.getOrElse_of_not_dom not_none_dom d
 #align part.get_or_else_none Part.getOrElse_none
 -/
 
 #print Part.getOrElse_some /-
 @[simp]
 theorem getOrElse_some (a : α) (d : α) [Decidable (some a).Dom] : getOrElse (some a) d = a :=
-  (some a).get_or_else_of_dom (some_dom a) d
+  (some a).getOrElse_of_dom (some_dom a) d
 #align part.get_or_else_some Part.getOrElse_some
 -/
 
@@ -477,7 +477,7 @@ instance : Coe (Option α) (Part α) :=
 #print Part.mem_coe /-
 @[simp]
 theorem mem_coe {a : α} {o : Option α} : a ∈ (o : Part α) ↔ a ∈ o :=
-  mem_of_option
+  mem_ofOption
 #align part.mem_coe Part.mem_coe
 -/
 

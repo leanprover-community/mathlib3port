@@ -119,7 +119,7 @@ theorem toMatrix_unitsSmul [DecidableEq ι] (e : Basis ι R₂ M₂) (w : ι →
 @[simp]
 theorem toMatrix_isUnitSmul [DecidableEq ι] (e : Basis ι R₂ M₂) {w : ι → R₂}
     (hw : ∀ i, IsUnit (w i)) : e.toMatrix (e.isUnitSmul hw) = diagonal w :=
-  e.to_matrix_units_smul _
+  e.toMatrix_unitsSmul _
 #align basis.to_matrix_is_unit_smul Basis.toMatrix_isUnitSmul
 
 @[simp]

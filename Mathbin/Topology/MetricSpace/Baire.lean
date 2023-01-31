@@ -376,14 +376,14 @@ theorem dense_bUnion_interior_of_closed {S : Set β} {f : β → Set α} (hc : �
 are dense. Formulated here with `⋃₀`. -/
 theorem dense_unionₛ_interior_of_closed {S : Set (Set α)} (hc : ∀ s ∈ S, IsClosed s)
     (hS : S.Countable) (hU : ⋃₀ S = univ) : Dense (⋃ s ∈ S, interior s) :=
-  isGδ_univ.dense_sUnion_interior_of_closed dense_univ hS hc hU.ge
+  isGδ_univ.dense_unionₛ_interior_of_closed dense_univ hS hc hU.ge
 #align dense_sUnion_interior_of_closed dense_unionₛ_interior_of_closed
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with an index set which is an encodable type. -/
 theorem dense_unionᵢ_interior_of_closed [Encodable β] {f : β → Set α} (hc : ∀ s, IsClosed (f s))
     (hU : (⋃ s, f s) = univ) : Dense (⋃ s, interior (f s)) :=
-  isGδ_univ.dense_Union_interior_of_closed dense_univ hc hU.ge
+  isGδ_univ.dense_unionᵢ_interior_of_closed dense_univ hc hU.ge
 #align dense_Union_interior_of_closed dense_unionᵢ_interior_of_closed
 
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets

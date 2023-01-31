@@ -101,7 +101,7 @@ theorem realize_liftAt {n n' m : ℕ} {t : L.term (Sum α (Fin n))} {v : Sum α 
 
 @[simp]
 theorem realize_constants {c : L.Constants} {v : α → M} : c.term.realize v = c :=
-  fun_map_eq_coe_constants
+  funMap_eq_coe_constants
 #align first_order.language.term.realize_constants FirstOrder.Language.Term.realize_constants
 
 @[simp]
@@ -453,7 +453,7 @@ theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → 
 
 @[simp]
 theorem realize_liftAt_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M}
-    {xs : Fin (n + 1) → M} : (φ.liftAt 1 n).realize v xs ↔ φ.realize v (xs ∘ cast_succ) :=
+    {xs : Fin (n + 1) → M} : (φ.liftAt 1 n).realize v xs ↔ φ.realize v (xs ∘ castSucc) :=
   by
   rw [realize_lift_at_one (refl n), iff_eq_eq]
   refine' congr rfl (congr rfl (funext fun i => _))
@@ -491,7 +491,7 @@ theorem realize_constantsVarsEquiv [L[[α]].Structure M] [(lhomWithConstants L �
   by
   refine' realize_map_term_rel_id (fun n t xs => realize_constants_vars_equiv_left) fun n R xs => _
   rw [←
-    (Lhom_with_constants L α).map_on_relation
+    (Lhom_with_constants L α).map_onRelation
       (Equiv.sumEmpty (L.relations n) ((constants_on α).Relations n) R) xs]
   rcongr
   cases R
@@ -634,17 +634,17 @@ theorem realize_bot : (⊥ : L.Formula α).realize v ↔ False :=
 
 @[simp]
 theorem realize_top : (⊤ : L.Formula α).realize v ↔ True :=
-  bounded_formula.realize_top
+  BoundedFormula.realize_top
 #align first_order.language.formula.realize_top FirstOrder.Language.Formula.realize_top
 
 @[simp]
 theorem realize_inf : (φ ⊓ ψ).realize v ↔ φ.realize v ∧ ψ.realize v :=
-  bounded_formula.realize_inf
+  BoundedFormula.realize_inf
 #align first_order.language.formula.realize_inf FirstOrder.Language.Formula.realize_inf
 
 @[simp]
 theorem realize_imp : (φ.imp ψ).realize v ↔ φ.realize v → ψ.realize v :=
-  bounded_formula.realize_imp
+  BoundedFormula.realize_imp
 #align first_order.language.formula.realize_imp FirstOrder.Language.Formula.realize_imp
 
 @[simp]
@@ -674,12 +674,12 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.term _} :
 
 @[simp]
 theorem realize_sup : (φ ⊔ ψ).realize v ↔ φ.realize v ∨ ψ.realize v :=
-  bounded_formula.realize_sup
+  BoundedFormula.realize_sup
 #align first_order.language.formula.realize_sup FirstOrder.Language.Formula.realize_sup
 
 @[simp]
 theorem realize_iff : (φ.Iff ψ).realize v ↔ (φ.realize v ↔ ψ.realize v) :=
-  bounded_formula.realize_iff
+  BoundedFormula.realize_iff
 #align first_order.language.formula.realize_iff FirstOrder.Language.Formula.realize_iff
 
 @[simp]
@@ -715,7 +715,7 @@ end Formula
 @[simp]
 theorem Lhom.realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Formula α)
     {v : α → M} : (φ.onFormula ψ).realize v ↔ ψ.realize v :=
-  φ.realize_on_bounded_formula ψ
+  φ.realize_onBoundedFormula ψ
 #align first_order.language.Lhom.realize_on_formula FirstOrder.Language.Lhom.realize_onFormula
 
 @[simp]
@@ -777,7 +777,7 @@ end Formula
 @[simp]
 theorem Lhom.realize_onSentence [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Sentence) : M ⊨ φ.onSentence ψ ↔ M ⊨ ψ :=
-  φ.realize_on_formula ψ
+  φ.realize_onFormula ψ
 #align first_order.language.Lhom.realize_on_sentence FirstOrder.Language.Lhom.realize_onSentence
 
 variable (L)
@@ -1102,7 +1102,7 @@ theorem model_infiniteTheory_iff : M ⊨ L.infiniteTheory ↔ Infinite M := by
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_infiniteTheory [h : Infinite M] : M ⊨ L.infiniteTheory :=
-  L.model_infinite_theory_iff.2 h
+  L.model_infiniteTheory_iff.2 h
 #align first_order.language.model_infinite_theory FirstOrder.Language.model_infiniteTheory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1114,7 +1114,7 @@ theorem model_nonemptyTheory_iff : M ⊨ L.nonemptyTheory ↔ Nonempty M := by
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_nonempty [h : Nonempty M] : M ⊨ L.nonemptyTheory :=
-  L.model_nonempty_theory_iff.2 h
+  L.model_nonemptyTheory_iff.2 h
 #align first_order.language.model_nonempty FirstOrder.Language.model_nonempty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1137,7 +1137,7 @@ theorem model_distinctConstantsTheory {M : Type w} [L[[α]].Structure M] (s : Se
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem card_le_of_model_distinctConstantsTheory (s : Set α) (M : Type w) [L[[α]].Structure M]
     [h : M ⊨ L.distinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
-  lift_mk_le'.2 ⟨⟨_, Set.injOn_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
+  lift_mk_le'.2 ⟨⟨_, Set.injOn_iff_injective.1 ((L.model_distinctConstantsTheory s).1 h)⟩⟩
 #align first_order.language.card_le_of_model_distinct_constants_theory FirstOrder.Language.card_le_of_model_distinctConstantsTheory
 
 end Cardinality
@@ -1174,11 +1174,11 @@ theorem theory_model_iff (h : M ≅[L] N) : M ⊨ T ↔ N ⊨ T := by
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem theory_model [MT : M ⊨ T] (h : M ≅[L] N) : N ⊨ T :=
-  h.Theory_model_iff.1 MT
+  h.theory_model_iff.1 MT
 #align first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.theory_model
 
 theorem nonempty_iff (h : M ≅[L] N) : Nonempty M ↔ Nonempty N :=
-  (model_nonemptyTheory_iff L).symm.trans (h.Theory_model_iff.trans (model_nonemptyTheory_iff L))
+  (model_nonemptyTheory_iff L).symm.trans (h.theory_model_iff.trans (model_nonemptyTheory_iff L))
 #align first_order.language.elementarily_equivalent.nonempty_iff FirstOrder.Language.ElementarilyEquivalent.nonempty_iff
 
 theorem nonempty [Mn : Nonempty M] (h : M ≅[L] N) : Nonempty N :=
@@ -1186,7 +1186,7 @@ theorem nonempty [Mn : Nonempty M] (h : M ≅[L] N) : Nonempty N :=
 #align first_order.language.elementarily_equivalent.nonempty FirstOrder.Language.ElementarilyEquivalent.nonempty
 
 theorem infinite_iff (h : M ≅[L] N) : Infinite M ↔ Infinite N :=
-  (model_infiniteTheory_iff L).symm.trans (h.Theory_model_iff.trans (model_infiniteTheory_iff L))
+  (model_infiniteTheory_iff L).symm.trans (h.theory_model_iff.trans (model_infiniteTheory_iff L))
 #align first_order.language.elementarily_equivalent.infinite_iff FirstOrder.Language.ElementarilyEquivalent.infinite_iff
 
 theorem infinite [Mi : Infinite M] (h : M ≅[L] N) : Infinite N :=

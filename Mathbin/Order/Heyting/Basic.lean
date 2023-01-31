@@ -1690,7 +1690,7 @@ theorem compl_compl_himp_distrib (a b : α) : (a ⇨ b)ᶜᶜ = aᶜᶜ ⇨ bᶜ
 instance : CoheytingAlgebra αᵒᵈ :=
   { OrderDual.lattice α,
     OrderDual.boundedOrder α with
-    hnot := to_dual ∘ compl ∘ of_dual
+    hnot := toDual ∘ compl ∘ ofDual
     sdiff := fun a b => toDual (ofDual b ⇨ ofDual a)
     sdiff_le_iff := fun a b c => by
       rw [sup_comm]
@@ -2068,7 +2068,7 @@ theorem hnot_hnot_sdiff_distrib (a b : α) : ￢￢(a \ b) = ￢￢a \ ￢￢b :
 instance : HeytingAlgebra αᵒᵈ :=
   { OrderDual.lattice α,
     OrderDual.boundedOrder α with
-    compl := to_dual ∘ hnot ∘ of_dual
+    compl := toDual ∘ hnot ∘ ofDual
     himp := fun a b => toDual (ofDual b \ ofDual a)
     le_himp_iff := fun a b c => by
       rw [inf_comm]
@@ -2339,49 +2339,49 @@ instance : BiheytingAlgebra PUnit := by
 
 #print PUnit.top_eq /-
 @[simp]
-theorem top_eq : (⊤ : PUnit) = star :=
+theorem top_eq : (⊤ : PUnit) = unit :=
   rfl
 #align punit.top_eq PUnit.top_eq
 -/
 
 #print PUnit.bot_eq /-
 @[simp]
-theorem bot_eq : (⊥ : PUnit) = star :=
+theorem bot_eq : (⊥ : PUnit) = unit :=
   rfl
 #align punit.bot_eq PUnit.bot_eq
 -/
 
 #print PUnit.sup_eq /-
 @[simp]
-theorem sup_eq : a ⊔ b = star :=
+theorem sup_eq : a ⊔ b = unit :=
   rfl
 #align punit.sup_eq PUnit.sup_eq
 -/
 
 #print PUnit.inf_eq /-
 @[simp]
-theorem inf_eq : a ⊓ b = star :=
+theorem inf_eq : a ⊓ b = unit :=
   rfl
 #align punit.inf_eq PUnit.inf_eq
 -/
 
 #print PUnit.compl_eq /-
 @[simp]
-theorem compl_eq : aᶜ = star :=
+theorem compl_eq : aᶜ = unit :=
   rfl
 #align punit.compl_eq PUnit.compl_eq
 -/
 
 #print PUnit.sdiff_eq /-
 @[simp]
-theorem sdiff_eq : a \ b = star :=
+theorem sdiff_eq : a \ b = unit :=
   rfl
 #align punit.sdiff_eq PUnit.sdiff_eq
 -/
 
 #print PUnit.hnot_eq /-
 @[simp, nolint simp_nf]
-theorem hnot_eq : ￢a = star :=
+theorem hnot_eq : ￢a = unit :=
   rfl
 #align punit.hnot_eq PUnit.hnot_eq
 -/
@@ -2389,7 +2389,7 @@ theorem hnot_eq : ￢a = star :=
 #print PUnit.himp_eq /-
 -- eligible for `dsimp`
 @[simp]
-theorem himp_eq : a ⇨ b = star :=
+theorem himp_eq : a ⇨ b = unit :=
   rfl
 #align punit.himp_eq PUnit.himp_eq
 -/

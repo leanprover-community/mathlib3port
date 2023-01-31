@@ -81,14 +81,14 @@ instance : NormalizationMonoid R[X]
   normUnit p :=
     ⟨c ↑(normUnit p.leadingCoeff), c ↑(normUnit p.leadingCoeff)⁻¹, by
       rw [← RingHom.map_mul, Units.mul_inv, C_1], by rw [← RingHom.map_mul, Units.inv_mul, C_1]⟩
-  norm_unit_zero := Units.ext (by simp)
-  norm_unit_mul p q hp0 hq0 :=
+  normUnit_zero := Units.ext (by simp)
+  normUnit_mul p q hp0 hq0 :=
     Units.ext
       (by
         dsimp
         rw [Ne.def, ← leading_coeff_eq_zero] at *
         rw [leading_coeff_mul, norm_unit_mul hp0 hq0, Units.val_mul, C_mul])
-  norm_unit_coe_units u :=
+  normUnit_coe_units u :=
     Units.ext
       (by
         rw [← mul_one u⁻¹, Units.val_mul, Units.eq_inv_mul_iff_mul_eq]
@@ -214,12 +214,12 @@ theorem divByMonic_eq_div (p : R[X]) (hq : Monic q) : p /ₘ q = p / q :=
     simp only [monic.def.1 hq, inv_one, C_1, one_mul, mul_one]
 #align polynomial.div_by_monic_eq_div Polynomial.divByMonic_eq_div
 
-theorem mod_x_sub_c_eq_c_eval (p : R[X]) (a : R) : p % (X - c a) = c (p.eval a) :=
+theorem mod_x_sub_c_eq_c_eval (p : R[X]) (a : R) : p % (x - c a) = c (p.eval a) :=
   modByMonic_eq_mod p (monic_x_sub_c a) ▸ modByMonic_x_sub_c_eq_c_eval _ _
 #align polynomial.mod_X_sub_C_eq_C_eval Polynomial.mod_x_sub_c_eq_c_eval
 
-theorem mul_div_eq_iff_isRoot : (X - c a) * (p / (X - c a)) = p ↔ IsRoot p a :=
-  divByMonic_eq_div p (monic_x_sub_c a) ▸ mul_div_by_monic_eq_iff_is_root
+theorem mul_div_eq_iff_isRoot : (x - c a) * (p / (x - c a)) = p ↔ IsRoot p a :=
+  divByMonic_eq_div p (monic_x_sub_c a) ▸ mul_divByMonic_eq_iff_isRoot
 #align polynomial.mul_div_eq_iff_is_root Polynomial.mul_div_eq_iff_isRoot
 
 instance : EuclideanDomain R[X] :=
@@ -229,7 +229,7 @@ instance : EuclideanDomain R[X] :=
     quotient_zero := by simp [div_def]
     remainder := (· % ·)
     R := _
-    r_well_founded := degree_lt_wf
+    r_wellFounded := degree_lt_wf
     quotient_mul_add_remainder_eq := quotient_mul_add_remainder_eq_aux
     remainder_lt := fun p q hq => remainder_lt_aux _ hq
     mul_left_not_lt := fun p q hq => not_lt_of_ge (degree_le_mul_left _ hq) }
@@ -384,12 +384,12 @@ theorem rootSet_monomial [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn :
 #align polynomial.root_set_monomial Polynomial.rootSet_monomial
 
 theorem rootSet_c_mul_x_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
-    (ha : a ≠ 0) : (c a * X ^ n).rootSet S = {0} := by
+    (ha : a ≠ 0) : (c a * x ^ n).rootSet S = {0} := by
   rw [C_mul_X_pow_eq_monomial, root_set_monomial hn ha]
 #align polynomial.root_set_C_mul_X_pow Polynomial.rootSet_c_mul_x_pow
 
 theorem rootSet_x_pow [CommRing S] [IsDomain S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) :
-    (X ^ n : R[X]).rootSet S = {0} :=
+    (x ^ n : R[X]).rootSet S = {0} :=
   by
   rw [← one_mul (X ^ n : R[X]), ← C_1, root_set_C_mul_X_pow hn]
   exact one_ne_zero
@@ -515,7 +515,7 @@ theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=
 then `f / (X - a)` is coprime with `X - a`.
 Note that we do not assume `f a = 0`, because `f / (X - a) = (f - f a) / (X - a)`. -/
 theorem isCoprime_of_is_root_of_eval_derivative_ne_zero {K : Type _} [Field K] (f : K[X]) (a : K)
-    (hf' : f.derivative.eval a ≠ 0) : IsCoprime (X - c a : K[X]) (f /ₘ (X - c a)) :=
+    (hf' : f.derivative.eval a ≠ 0) : IsCoprime (x - c a : K[X]) (f /ₘ (x - c a)) :=
   by
   refine'
     Or.resolve_left

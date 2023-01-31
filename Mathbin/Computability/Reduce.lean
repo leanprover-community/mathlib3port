@@ -331,12 +331,12 @@ variable {γ : Type w} [Primcodable γ] [Inhabited γ]
 /-- Computable and injective mapping of predicates to sets of natural numbers.
 -/
 def toNat (p : Set α) : Set ℕ :=
-  { n | p ((Encodable.decode α n).getOrElse default) }
+  { n | p ((Encodable.decode α n).getD default) }
 #align to_nat toNat
 
 @[simp]
 theorem toNat_manyOneReducible {p : Set α} : toNat p ≤₀ p :=
-  ⟨fun n => (Encodable.decode α n).getOrElse default,
+  ⟨fun n => (Encodable.decode α n).getD default,
     Computable.option_getD Computable.decode (Computable.const _), fun _ => Iff.rfl⟩
 #align to_nat_many_one_reducible toNat_manyOneReducible
 

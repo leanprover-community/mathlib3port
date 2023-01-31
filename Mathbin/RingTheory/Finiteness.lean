@@ -435,7 +435,7 @@ variable {R : Type _} {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 variable {M N : Submodule R A}
 
 theorem Fg.mul (hm : M.Fg) (hn : N.Fg) : (M * N).Fg :=
-  hm.map₂ _ hn
+  hm.zipWith _ hn
 #align submodule.fg.mul Submodule.Fg.mul
 
 theorem Fg.pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
@@ -592,7 +592,7 @@ theorem trans {R : Type _} (A B : Type _) [CommSemiring R] [CommSemiring A] [Alg
   | ⟨⟨s, hs⟩⟩, ⟨⟨t, ht⟩⟩ =>
     ⟨Submodule.fg_def.2
         ⟨Set.image2 (· • ·) (↑s : Set A) (↑t : Set B),
-          Set.Finite.image2 _ s.finite_to_set t.finite_to_set, by
+          Set.Finite.image2 _ s.finite_toSet t.finite_toSet, by
           rw [Set.image2_smul, Submodule.span_smul_of_span_eq_top hs (↑t : Set B), ht,
             Submodule.restrictScalars_top]⟩⟩
 #align module.finite.trans Module.Finite.trans
@@ -622,7 +622,7 @@ instance Module.Finite.base_change [CommSemiring R] [Semiring A] [Algebra R A] [
 instance Module.Finite.tensorProduct [CommSemiring R] [AddCommMonoid M] [Module R M]
     [AddCommMonoid N] [Module R N] [hM : Module.Finite R M] [hN : Module.Finite R N] :
     Module.Finite R (TensorProduct R M N)
-    where out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.map₂ _ hN.out)
+    where out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.zipWith _ hN.out)
 #align module.finite.tensor_product Module.Finite.tensorProduct
 
 namespace Algebra

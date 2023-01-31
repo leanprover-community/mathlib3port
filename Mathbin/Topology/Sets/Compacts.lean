@@ -452,10 +452,10 @@ instance : Bot (CompactOpens α) :=
   ⟨⟨⊥, isOpen_empty⟩⟩
 
 instance [T2Space α] : SDiff (CompactOpens α) :=
-  ⟨fun s t => ⟨⟨s \ t, s.IsCompact.diff t.IsOpen⟩, s.IsOpen.sdiff t.IsCompact.IsClosed⟩⟩
+  ⟨fun s t => ⟨⟨s \ t, s.IsCompact.diffₓ t.IsOpen⟩, s.IsOpen.sdiff t.IsCompact.IsClosed⟩⟩
 
 instance [T2Space α] [CompactSpace α] : HasCompl (CompactOpens α) :=
-  ⟨fun s => ⟨⟨sᶜ, s.IsOpen.is_closed_compl.IsCompact⟩, s.IsCompact.IsClosed.is_open_compl⟩⟩
+  ⟨fun s => ⟨⟨sᶜ, s.IsOpen.isClosed_compl.IsCompact⟩, s.IsCompact.IsClosed.isOpen_compl⟩⟩
 
 instance : SemilatticeSup (CompactOpens α) :=
   SetLike.coe_injective.SemilatticeSup _ fun _ _ => rfl

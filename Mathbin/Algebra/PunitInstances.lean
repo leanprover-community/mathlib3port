@@ -45,7 +45,7 @@ instance : CommGroup PUnit := by
 
 #print PUnit.one_eq /-
 @[simp, to_additive]
-theorem one_eq : (1 : PUnit) = star :=
+theorem one_eq : (1 : PUnit) = unit :=
   rfl
 #align punit.one_eq PUnit.one_eq
 #align punit.zero_eq PUnit.zero_eq
@@ -53,7 +53,7 @@ theorem one_eq : (1 : PUnit) = star :=
 
 #print PUnit.mul_eq /-
 @[simp, to_additive]
-theorem mul_eq : x * y = star :=
+theorem mul_eq : x * y = unit :=
   rfl
 #align punit.mul_eq PUnit.mul_eq
 #align punit.add_eq PUnit.add_eq
@@ -62,7 +62,7 @@ theorem mul_eq : x * y = star :=
 #print PUnit.div_eq /-
 -- `sub_eq` simplifies `punit.sub_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
-theorem div_eq : x / y = star :=
+theorem div_eq : x / y = unit :=
   rfl
 #align punit.div_eq PUnit.div_eq
 #align punit.sub_eq PUnit.sub_eq
@@ -71,7 +71,7 @@ theorem div_eq : x / y = star :=
 #print PUnit.inv_eq /-
 -- `neg_eq` simplifies `punit.neg_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
-theorem inv_eq : x⁻¹ = star :=
+theorem inv_eq : x⁻¹ = unit :=
   rfl
 #align punit.inv_eq PUnit.inv_eq
 #align punit.neg_eq PUnit.neg_eq
@@ -99,14 +99,14 @@ instance : NormalizedGCDMonoid PUnit := by
 
 #print PUnit.gcd_eq /-
 @[simp]
-theorem gcd_eq : gcd x y = star :=
+theorem gcd_eq : gcd x y = unit :=
   rfl
 #align punit.gcd_eq PUnit.gcd_eq
 -/
 
 #print PUnit.lcm_eq /-
 @[simp]
-theorem lcm_eq : lcm x y = star :=
+theorem lcm_eq : lcm x y = unit :=
   rfl
 #align punit.lcm_eq PUnit.lcm_eq
 -/
@@ -139,7 +139,7 @@ instance : SMul R PUnit :=
 
 #print PUnit.smul_eq /-
 @[simp, to_additive]
-theorem smul_eq (r : R) : r • y = star :=
+theorem smul_eq (r : R) : r • y = unit :=
   rfl
 #align punit.smul_eq PUnit.smul_eq
 #align punit.vadd_eq PUnit.vadd_eq

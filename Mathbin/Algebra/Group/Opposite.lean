@@ -55,8 +55,8 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne αᵐᵒᵖ :=
   { MulOpposite.addMonoid α,
     MulOpposite.hasOne α with
     natCast := fun n => op n
-    nat_cast_zero := show op ((0 : ℕ) : α) = 0 by simp
-    nat_cast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp }
+    natCast_zero := show op ((0 : ℕ) : α) = 0 by simp
+    natCast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp }
 
 instance [AddCommMonoid α] : AddCommMonoid αᵐᵒᵖ :=
   unop_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
@@ -73,8 +73,8 @@ instance [AddGroupWithOne α] : AddGroupWithOne αᵐᵒᵖ :=
   { MulOpposite.addMonoidWithOne α,
     MulOpposite.addGroup α with
     intCast := fun n => op n
-    int_cast_of_nat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_ofNat]
-    int_cast_neg_succ_of_nat := fun n =>
+    intCast_ofNat := fun n => show op ((n : ℤ) : α) = op n by rw [Int.cast_ofNat]
+    intCast_negSucc := fun n =>
       show op _ = op (-unop (op ((n + 1 : ℕ) : α))) by erw [unop_op, Int.cast_negSucc] <;> rfl }
 
 instance [AddCommGroup α] : AddCommGroup αᵐᵒᵖ :=
@@ -121,8 +121,8 @@ instance [Monoid α] : Monoid αᵐᵒᵖ :=
   { MulOpposite.semigroup α,
     MulOpposite.mulOneClass α with
     npow := fun n x => op <| x.unop ^ n
-    npow_zero' := fun x => unop_injective <| Monoid.npow_zero x.unop
-    npow_succ' := fun n x => unop_injective <| pow_succ' x.unop n }
+    npow_zero := fun x => unop_injective <| Monoid.npow_zero x.unop
+    npow_succ := fun n x => unop_injective <| pow_succ' x.unop n }
 
 @[to_additive]
 instance [RightCancelMonoid α] : LeftCancelMonoid αᵐᵒᵖ :=
@@ -254,7 +254,7 @@ theorem Commute.unop [Mul α] {x y : αᵐᵒᵖ} (h : Commute x y) : Commute (u
 #print MulOpposite.commute_op /-
 @[simp, to_additive]
 theorem commute_op [Mul α] {x y : α} : Commute (op x) (op y) ↔ Commute x y :=
-  semiconj_by_op
+  semiconjBy_op
 #align mul_opposite.commute_op MulOpposite.commute_op
 #align add_opposite.commute_op AddOpposite.commute_op
 -/
@@ -262,7 +262,7 @@ theorem commute_op [Mul α] {x y : α} : Commute (op x) (op y) ↔ Commute x y :
 #print MulOpposite.commute_unop /-
 @[simp, to_additive]
 theorem commute_unop [Mul α] {x y : αᵐᵒᵖ} : Commute (unop x) (unop y) ↔ Commute x y :=
-  semiconj_by_unop
+  semiconjBy_unop
 #align mul_opposite.commute_unop MulOpposite.commute_unop
 #align add_opposite.commute_unop AddOpposite.commute_unop
 -/
@@ -279,7 +279,7 @@ def opAddEquiv [Add α] : α ≃+ αᵐᵒᵖ :=
 
 #print MulOpposite.opAddEquiv_toEquiv /-
 @[simp]
-theorem opAddEquiv_toEquiv [Add α] : (opAddEquiv : α ≃+ αᵐᵒᵖ).toEquiv = op_equiv :=
+theorem opAddEquiv_toEquiv [Add α] : (opAddEquiv : α ≃+ αᵐᵒᵖ).toEquiv = opEquiv :=
   rfl
 #align mul_opposite.op_add_equiv_to_equiv MulOpposite.opAddEquiv_toEquiv
 -/
@@ -364,7 +364,7 @@ def opMulEquiv [Mul α] : α ≃* αᵃᵒᵖ :=
 
 #print AddOpposite.opMulEquiv_toEquiv /-
 @[simp]
-theorem opMulEquiv_toEquiv [Mul α] : (opMulEquiv : α ≃* αᵃᵒᵖ).toEquiv = op_equiv :=
+theorem opMulEquiv_toEquiv [Mul α] : (opMulEquiv : α ≃* αᵃᵒᵖ).toEquiv = opEquiv :=
   rfl
 #align add_opposite.op_mul_equiv_to_equiv AddOpposite.opMulEquiv_toEquiv
 -/

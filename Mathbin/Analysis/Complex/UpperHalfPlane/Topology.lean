@@ -35,11 +35,11 @@ instance : TopologicalSpace ℍ :=
   Subtype.topologicalSpace
 
 theorem openEmbedding_coe : OpenEmbedding (coe : ℍ → ℂ) :=
-  IsOpen.openEmbedding_subtype_coe <| isOpen_lt continuous_const Complex.continuous_im
+  IsOpen.openEmbedding_subtype_val <| isOpen_lt continuous_const Complex.continuous_im
 #align upper_half_plane.open_embedding_coe UpperHalfPlane.openEmbedding_coe
 
 theorem embedding_coe : Embedding (coe : ℍ → ℂ) :=
-  embedding_subtype_coe
+  embedding_subtype_val
 #align upper_half_plane.embedding_coe UpperHalfPlane.embedding_coe
 
 theorem continuous_coe : Continuous (coe : ℍ → ℂ) :=

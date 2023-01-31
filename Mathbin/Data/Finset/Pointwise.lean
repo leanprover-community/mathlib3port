@@ -372,19 +372,19 @@ theorem mul_nonempty : (s * t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 
 @[to_additive]
 theorem Nonempty.mul : s.Nonempty → t.Nonempty → (s * t).Nonempty :=
-  nonempty.image₂
+  Nonempty.image₂
 #align finset.nonempty.mul Finset.Nonempty.mul
 #align finset.nonempty.add Finset.Nonempty.add
 
 @[to_additive]
 theorem Nonempty.of_mul_left : (s * t).Nonempty → s.Nonempty :=
-  nonempty.of_image₂_left
+  Nonempty.of_image₂_left
 #align finset.nonempty.of_mul_left Finset.Nonempty.of_mul_left
 #align finset.nonempty.of_add_left Finset.Nonempty.of_add_left
 
 @[to_additive]
 theorem Nonempty.of_mul_right : (s * t).Nonempty → t.Nonempty :=
-  nonempty.of_image₂_right
+  Nonempty.of_image₂_right
 #align finset.nonempty.of_mul_right Finset.Nonempty.of_mul_right
 #align finset.nonempty.of_add_right Finset.Nonempty.of_add_right
 
@@ -584,19 +584,19 @@ theorem div_nonempty : (s / t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 
 @[to_additive]
 theorem Nonempty.div : s.Nonempty → t.Nonempty → (s / t).Nonempty :=
-  nonempty.image₂
+  Nonempty.image₂
 #align finset.nonempty.div Finset.Nonempty.div
 #align finset.nonempty.sub Finset.Nonempty.sub
 
 @[to_additive]
 theorem Nonempty.of_div_left : (s / t).Nonempty → s.Nonempty :=
-  nonempty.of_image₂_left
+  Nonempty.of_image₂_left
 #align finset.nonempty.of_div_left Finset.Nonempty.of_div_left
 #align finset.nonempty.of_sub_left Finset.Nonempty.of_sub_left
 
 @[to_additive]
 theorem Nonempty.of_div_right : (s / t).Nonempty → t.Nonempty :=
-  nonempty.of_image₂_right
+  Nonempty.of_image₂_right
 #align finset.nonempty.of_div_right Finset.Nonempty.of_div_right
 #align finset.nonempty.of_sub_right Finset.Nonempty.of_sub_right
 
@@ -1281,19 +1281,19 @@ theorem smul_nonempty_iff : (s • t).Nonempty ↔ s.Nonempty ∧ t.Nonempty :=
 
 @[to_additive]
 theorem Nonempty.smul : s.Nonempty → t.Nonempty → (s • t).Nonempty :=
-  nonempty.image₂
+  Nonempty.image₂
 #align finset.nonempty.smul Finset.Nonempty.smul
 #align finset.nonempty.vadd Finset.Nonempty.vadd
 
 @[to_additive]
 theorem Nonempty.of_smul_left : (s • t).Nonempty → s.Nonempty :=
-  nonempty.of_image₂_left
+  Nonempty.of_image₂_left
 #align finset.nonempty.of_smul_left Finset.Nonempty.of_smul_left
 #align finset.nonempty.of_vadd_left Finset.Nonempty.of_vadd_left
 
 @[to_additive]
 theorem Nonempty.of_smul_right : (s • t).Nonempty → t.Nonempty :=
-  nonempty.of_image₂_right
+  Nonempty.of_image₂_right
 #align finset.nonempty.of_smul_right Finset.Nonempty.of_smul_right
 #align finset.nonempty.of_vadd_right Finset.Nonempty.of_vadd_right
 
@@ -1434,15 +1434,15 @@ theorem vsub_nonempty : (s -ᵥ t : Finset α).Nonempty ↔ s.Nonempty ∧ t.Non
 #align finset.vsub_nonempty Finset.vsub_nonempty
 
 theorem Nonempty.vsub : s.Nonempty → t.Nonempty → (s -ᵥ t : Finset α).Nonempty :=
-  nonempty.image₂
+  Nonempty.image₂
 #align finset.nonempty.vsub Finset.Nonempty.vsub
 
 theorem Nonempty.of_vsub_left : (s -ᵥ t : Finset α).Nonempty → s.Nonempty :=
-  nonempty.of_image₂_left
+  Nonempty.of_image₂_left
 #align finset.nonempty.of_vsub_left Finset.Nonempty.of_vsub_left
 
 theorem Nonempty.of_vsub_right : (s -ᵥ t : Finset α).Nonempty → t.Nonempty :=
-  nonempty.of_image₂_right
+  Nonempty.of_image₂_right
 #align finset.nonempty.of_vsub_right Finset.Nonempty.of_vsub_right
 
 @[simp]
@@ -1618,8 +1618,8 @@ theorem smul_finset_inter_subset : a • (s₁ ∩ s₂) ⊆ a • s₁ ∩ a �
 #align finset.vadd_finset_inter_subset Finset.vadd_finset_inter_subset
 
 @[simp]
-theorem bunionᵢ_smul_finset (s : Finset α) (t : Finset β) : s.bUnion (· • t) = s • t :=
-  bUnion_image_left
+theorem bunionᵢ_smul_finset (s : Finset α) (t : Finset β) : s.bunionᵢ (· • t) = s • t :=
+  bunionᵢ_image_left
 #align finset.bUnion_smul_finset Finset.bunionᵢ_smul_finset
 
 end SMul
@@ -1633,7 +1633,7 @@ variable [DecidableEq γ]
 @[to_additive]
 instance sMulCommClass_finset [SMul α γ] [SMul β γ] [SMulCommClass α β γ] :
     SMulCommClass α β (Finset γ) :=
-  ⟨fun _ _ => commute.finset_image <| smul_comm _ _⟩
+  ⟨fun _ _ => Commute.finset_image <| smul_comm _ _⟩
 #align finset.smul_comm_class_finset Finset.sMulCommClass_finset
 #align finset.vadd_comm_class_finset Finset.vadd_comm_class_finset
 
@@ -1744,7 +1744,7 @@ instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
 
 instance noZeroSMulDivisors_finset [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors α (Finset β) :=
-  coe_injective.NoZeroSmulDivisors _ coe_zero coe_smul_finset
+  coe_injective.NoZeroSMulDivisors _ coe_zero coe_smul_finset
 #align finset.no_zero_smul_divisors_finset Finset.noZeroSMulDivisors_finset
 
 end Instances

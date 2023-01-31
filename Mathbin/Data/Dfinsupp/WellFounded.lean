@@ -100,7 +100,7 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
 variable {r s}
 
 theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
-    (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.erase i) :
+    (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.eraseₓ i) :
     Acc (Dfinsupp.Lex r s) x := by
   classical
     convert ←
@@ -167,7 +167,7 @@ theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded
   ⟨fun x => by classical exact lex.acc hbot hs x fun i _ => hr.apply i⟩
 #align dfinsupp.lex.well_founded Dfinsupp.Lex.wellFounded
 
-theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.swap) :
+theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.symm) :
     WellFounded (Dfinsupp.Lex r s) :=
   Lex.wellFounded hbot hs <|
     Subrelation.wf

@@ -94,7 +94,7 @@ theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : R[ε])
 @[ext]
 theorem algHom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε] →ₐ[R] A⦄
     (h : f ε = g ε) : f = g :=
-  alg_hom_ext' <| LinearMap.ext_ring <| h
+  algHom_ext' <| LinearMap.ext_ring <| h
 #align dual_number.alg_hom_ext DualNumber.algHom_ext
 
 variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
@@ -124,7 +124,7 @@ theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : R[ε]) = e :=
 -- Lifting `dual_number.eps` itself gives the identity.
 @[simp]
 theorem lift_eps : lift ⟨ε, eps_mul_eps⟩ = AlgHom.id R R[ε] :=
-  alg_hom_ext <| lift_apply_eps _
+  algHom_ext <| lift_apply_eps _
 #align dual_number.lift_eps DualNumber.lift_eps
 
 end DualNumber

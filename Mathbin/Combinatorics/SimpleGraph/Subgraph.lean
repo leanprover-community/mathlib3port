@@ -267,7 +267,7 @@ def incidenceSet (G' : Subgraph G) (v : V) : Set (Sym2 V) :=
 #align simple_graph.subgraph.incidence_set SimpleGraph.Subgraph.incidenceSet
 
 theorem incidenceSet_subset_incidenceSet (G' : Subgraph G) (v : V) :
-    G'.incidenceSet v ⊆ G.incidenceSet v := fun e h => ⟨G'.edge_set_subset h.1, h.2⟩
+    G'.incidenceSet v ⊆ G.incidenceSet v := fun e h => ⟨G'.edgeSet_subset h.1, h.2⟩
 #align simple_graph.subgraph.incidence_set_subset_incidence_set SimpleGraph.Subgraph.incidenceSet_subset_incidenceSet
 
 theorem incidenceSet_subset (G' : Subgraph G) (v : V) : G'.incidenceSet v ⊆ G'.edgeSet := fun _ h =>
@@ -652,7 +652,7 @@ instance neighborSet.decidablePred (G' : Subgraph G) [h : DecidableRel G'.Adj] (
 /-- If a graph is locally finite at a vertex, then so is a subgraph of that graph. -/
 instance finiteAt {G' : Subgraph G} (v : G'.verts) [DecidableRel G'.Adj]
     [Fintype (G.neighborSet v)] : Fintype (G'.neighborSet v) :=
-  Set.fintypeSubset (G.neighborSet v) (G'.neighbor_set_subset v)
+  Set.fintypeSubset (G.neighborSet v) (G'.neighborSet_subset v)
 #align simple_graph.subgraph.finite_at SimpleGraph.Subgraph.finiteAt
 
 /-- If a subgraph is locally finite at a vertex, then so are subgraphs of that subgraph.
@@ -828,7 +828,7 @@ theorem map_subgraphOfAdj (f : G →g G') {v w : V} (hvw : G.Adj v w) :
 
 theorem neighborSet_subgraphOfAdj_subset {u v w : V} (hvw : G.Adj v w) :
     (G.subgraphOfAdj hvw).neighborSet u ⊆ {v, w} :=
-  (G.subgraphOfAdj hvw).neighbor_set_subset_verts _
+  (G.subgraphOfAdj hvw).neighborSet_subset_verts _
 #align simple_graph.neighbor_set_subgraph_of_adj_subset SimpleGraph.neighborSet_subgraphOfAdj_subset
 
 @[simp]

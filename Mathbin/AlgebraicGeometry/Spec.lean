@@ -147,7 +147,7 @@ def Spec.toSheafedSpace : CommRingCatᵒᵖ ⥤ SheafedSpace CommRingCat
 /-- Spec, as a contravariant functor from commutative rings to presheafed spaces.
 -/
 def Spec.toPresheafedSpace : CommRingCatᵒᵖ ⥤ PresheafedSpace.{u} CommRingCat.{u} :=
-  Spec.to_SheafedSpace ⋙ SheafedSpace.forget_to_PresheafedSpace
+  Spec.toSheafedSpace ⋙ SheafedSpace.forgetToPresheafedSpace
 #align algebraic_geometry.Spec.to_PresheafedSpace AlgebraicGeometry.Spec.toPresheafedSpace
 
 @[simp]
@@ -196,7 +196,7 @@ def Spec.locallyRingedSpaceObj (R : CommRingCat) : LocallyRingedSpace :=
   { Spec.sheafedSpaceObj R with
     LocalRing := fun x =>
       @RingEquiv.localRing _ (show LocalRing (Localization.AtPrime _) by infer_instance) _
-        (iso.CommRing_iso_to_ring_equiv <| stalkIso R x).symm }
+        (Iso.commRingIsoToRingEquiv <| stalkIso R x).symm }
 #align algebraic_geometry.Spec.LocallyRingedSpace_obj AlgebraicGeometry.Spec.locallyRingedSpaceObj
 
 @[elementwise]
@@ -241,7 +241,7 @@ def Spec.locallyRingedSpaceMap {R S : CommRingCat} (f : R ⟶ S) :
       -- Here, we are showing that the map on prime spectra induced by `f` is really a morphism of
       -- *locally* ringed spaces, i.e. that the induced map on the stalks is a local ring homomorphism.
       rw [← local_ring_hom_comp_stalk_iso_apply] at ha
-      replace ha := (stalk_iso S p).Hom.is_unit_map ha
+      replace ha := (stalk_iso S p).Hom.isUnit_map ha
       rw [iso.inv_hom_id_apply] at ha
       replace ha := IsLocalRingHom.map_nonunit _ ha
       convert RingHom.isUnit_map (stalk_iso R (PrimeSpectrum.comap f p)).inv ha
@@ -305,7 +305,7 @@ theorem Spec_Γ_naturality {R S : CommRingCat} (f : R ⟶ S) :
 /-- The counit (`Spec_Γ_identity.inv.op`) of the adjunction `Γ ⊣ Spec` is an isomorphism. -/
 @[simps hom_app inv_app]
 def specΓIdentity : Spec.toLocallyRingedSpace.rightOp ⋙ Γ ≅ 𝟭 _ :=
-  iso.symm <| NatIso.ofComponents (fun R => asIso (toSpecΓ R) : _) fun _ _ => Spec_Γ_naturality
+  Iso.symm <| NatIso.ofComponents (fun R => asIso (toSpecΓ R) : _) fun _ _ => Spec_Γ_naturality
 #align algebraic_geometry.Spec_Γ_identity AlgebraicGeometry.specΓIdentity
 
 end SpecΓ

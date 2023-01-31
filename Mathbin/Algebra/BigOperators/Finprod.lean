@@ -147,7 +147,7 @@ Case conversion may be inaccurate. Consider using '#align finprod_eq_prod_plift_
 @[to_additive]
 theorem finprod_eq_prod_pLift_of_mulSupport_subset {f : α → M} {s : Finset (PLift α)}
     (hs : mulSupport (f ∘ PLift.down) ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i.down :=
-  finprod_eq_prod_pLift_of_mulSupport_toFinset_subset (s.finite_to_set.Subset hs) fun x hx =>
+  finprod_eq_prod_pLift_of_mulSupport_toFinset_subset (s.finite_toSet.Subset hs) fun x hx =>
     by
     rw [finite.mem_to_finset] at hx
     exact hs hx
@@ -337,7 +337,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.map_finprod_plift MonoidHom.map_finprod_pLiftₓ'. -/
 @[to_additive]
 theorem MonoidHom.map_finprod_pLift (f : M →* N) (g : α → M)
-    (h : (mul_support <| g ∘ PLift.down).Finite) : f (∏ᶠ x, g x) = ∏ᶠ x, f (g x) :=
+    (h : (mulSupport <| g ∘ PLift.down).Finite) : f (∏ᶠ x, g x) = ∏ᶠ x, f (g x) :=
   by
   rw [finprod_eq_prod_pLift_of_mulSupport_subset h.coe_to_finset.ge,
     finprod_eq_prod_pLift_of_mulSupport_subset, f.map_prod]
@@ -355,7 +355,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.map_finprod
 @[to_additive]
 theorem MonoidHom.map_finprod_Prop {p : Prop} (f : M →* N) (g : p → M) :
     f (∏ᶠ x, g x) = ∏ᶠ x, f (g x) :=
-  f.map_finprod_plift g (Set.toFinite _)
+  f.map_finprod_pLift g (Set.toFinite _)
 #align monoid_hom.map_finprod_Prop MonoidHom.map_finprod_Prop
 #align add_monoid_hom.map_finsum_Prop AddMonoidHom.map_finsum_Prop
 
@@ -514,7 +514,7 @@ Case conversion may be inaccurate. Consider using '#align finprod_eq_prod_of_mul
 @[to_additive]
 theorem finprod_eq_prod_of_mulSupport_toFinset_subset (f : α → M) (hf : (mulSupport f).Finite)
     {s : Finset α} (h : hf.toFinset ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i :=
-  finprod_eq_prod_of_mulSupport_subset _ fun x hx => h <| hf.mem_to_finset.2 hx
+  finprod_eq_prod_of_mulSupport_subset _ fun x hx => h <| hf.mem_toFinset.2 hx
 #align finprod_eq_prod_of_mul_support_to_finset_subset finprod_eq_prod_of_mulSupport_toFinset_subset
 #align finsum_eq_sum_of_support_to_finset_subset finsum_eq_sum_of_support_toFinset_subset
 
@@ -619,7 +619,7 @@ Case conversion may be inaccurate. Consider using '#align finprod_cond_ne finpro
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
-    (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.erase a, f i :=
+    (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.eraseₓ a, f i :=
   by
   apply finprod_cond_eq_prod_of_cond_iff
   intro x hx
@@ -967,7 +967,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.map_finprod
 @[to_additive]
 theorem MonoidHom.map_finprod {f : α → M} (g : M →* N) (hf : (mulSupport f).Finite) :
     g (∏ᶠ i, f i) = ∏ᶠ i, g (f i) :=
-  g.map_finprod_plift f <| hf.Preimage <| Equiv.plift.Injective.InjOn _
+  g.map_finprod_pLift f <| hf.Preimage <| Equiv.plift.Injective.InjOn _
 #align monoid_hom.map_finprod MonoidHom.map_finprod
 #align add_monoid_hom.map_finsum AddMonoidHom.map_finsum
 
@@ -1764,7 +1764,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mul_support_of_fiberwise_prod_subset_image Finset.mulSupport_of_fiberwise_prod_subset_imageₓ'. -/
 @[to_additive]
 theorem Finset.mulSupport_of_fiberwise_prod_subset_image [DecidableEq β] (s : Finset α) (f : α → M)
-    (g : α → β) : (mulSupport fun b => (s.filter fun a => g a = b).Prod f) ⊆ s.image g :=
+    (g : α → β) : (mulSupport fun b => (s.filterₓ fun a => g a = b).Prod f) ⊆ s.image g :=
   by
   simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe, Function.support_subset_iff]
   intro b h
@@ -1789,7 +1789,7 @@ iterating this lemma, e.g., if we have `f : α × β × γ → M`. -/
 theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finset (α × β))
     (f : α × β → M) :
     (∏ᶠ (ab) (h : ab ∈ s), f ab) =
-      ∏ᶠ (a) (b) (h : b ∈ (s.filter fun ab => Prod.fst ab = a).image Prod.snd), f (a, b) :=
+      ∏ᶠ (a) (b) (h : b ∈ (s.filterₓ fun ab => Prod.fst ab = a).image Prod.snd), f (a, b) :=
   by
   have :
     ∀ a,

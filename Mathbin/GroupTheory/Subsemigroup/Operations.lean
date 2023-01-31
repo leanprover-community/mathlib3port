@@ -194,7 +194,7 @@ theorem AddSubsemigroup.toSubsemigroup_closure (S : Set A) :
     (AddSubsemigroup.closure S).toSubsemigroup =
       Subsemigroup.closure (Multiplicative.toAdd ⁻¹' S) :=
   le_antisymm
-    (AddSubsemigroup.toSubsemigroup.to_galois_connection.l_le <|
+    (AddSubsemigroup.toSubsemigroup.to_galoisConnection.l_le <|
       AddSubsemigroup.closure_le.2 Subsemigroup.subset_closure)
     (Subsemigroup.closure_le.2 AddSubsemigroup.subset_closure)
 #align add_subsemigroup.to_subsemigroup_closure AddSubsemigroup.toSubsemigroup_closure
@@ -208,7 +208,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.to_add_su
 theorem Subsemigroup.toAddSubsemigroup'_closure (S : Set (Multiplicative A)) :
     (Subsemigroup.closure S).toAddSubsemigroup' = AddSubsemigroup.closure (Additive.ofMul ⁻¹' S) :=
   le_antisymm
-    (Subsemigroup.toAddSubsemigroup'.to_galois_connection.l_le <|
+    (Subsemigroup.toAddSubsemigroup'.to_galoisConnection.l_le <|
       Subsemigroup.closure_le.2 AddSubsemigroup.subset_closure)
     (AddSubsemigroup.closure_le.2 Subsemigroup.subset_closure)
 #align subsemigroup.to_add_subsemigroup'_closure Subsemigroup.toAddSubsemigroup'_closure
@@ -497,7 +497,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.map_supr 
 @[to_additive]
 theorem map_supᵢ {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup M) :
     (supᵢ s).map f = ⨆ i, (s i).map f :=
-  (gc_map_comap f).l_supr
+  (gc_map_comap f).l_supᵢ
 #align subsemigroup.map_supr Subsemigroup.map_supᵢ
 #align add_subsemigroup.map_supr AddSubsemigroup.map_supᵢ
 
@@ -522,7 +522,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_inf
 @[to_additive]
 theorem comap_infᵢ {ι : Sort _} (f : M →ₙ* N) (s : ι → Subsemigroup N) :
     (infᵢ s).comap f = ⨅ i, (s i).comap f :=
-  (gc_map_comap f).u_infi
+  (gc_map_comap f).u_infᵢ
 #align subsemigroup.comap_infi Subsemigroup.comap_infᵢ
 #align add_subsemigroup.comap_infi AddSubsemigroup.comap_infᵢ
 
@@ -630,7 +630,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_inf
 @[to_additive]
 theorem comap_infᵢ_map_of_injective (S : ι → Subsemigroup M) :
     (⨅ i, (S i).map f).comap f = infᵢ S :=
-  (gciMapComap hf).u_infi_l _
+  (gciMapComap hf).u_infᵢ_l _
 #align subsemigroup.comap_infi_map_of_injective Subsemigroup.comap_infᵢ_map_of_injective
 #align add_subsemigroup.comap_infi_map_of_injective AddSubsemigroup.comap_infᵢ_map_of_injective
 
@@ -655,7 +655,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_sup
 @[to_additive]
 theorem comap_supᵢ_map_of_injective (S : ι → Subsemigroup M) :
     (⨆ i, (S i).map f).comap f = supᵢ S :=
-  (gciMapComap hf).u_supr_l _
+  (gciMapComap hf).u_supᵢ_l _
 #align subsemigroup.comap_supr_map_of_injective Subsemigroup.comap_supᵢ_map_of_injective
 #align add_subsemigroup.comap_supr_map_of_injective AddSubsemigroup.comap_supᵢ_map_of_injective
 
@@ -679,7 +679,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.map_strict_mono_of_injective Subsemigroup.map_strictMono_of_injectiveₓ'. -/
 @[to_additive]
 theorem map_strictMono_of_injective : StrictMono (map f) :=
-  (gciMapComap hf).strict_mono_l
+  (gciMapComap hf).strictMono_l
 #align subsemigroup.map_strict_mono_of_injective Subsemigroup.map_strictMono_of_injective
 #align add_subsemigroup.map_strict_mono_of_injective AddSubsemigroup.map_strictMono_of_injective
 
@@ -756,7 +756,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.map_infi_
 @[to_additive]
 theorem map_infᵢ_comap_of_surjective (S : ι → Subsemigroup N) :
     (⨅ i, (S i).comap f).map f = infᵢ S :=
-  (giMapComap hf).l_infi_u _
+  (giMapComap hf).l_infᵢ_u _
 #align subsemigroup.map_infi_comap_of_surjective Subsemigroup.map_infᵢ_comap_of_surjective
 #align add_subsemigroup.map_infi_comap_of_surjective AddSubsemigroup.map_infᵢ_comap_of_surjective
 
@@ -782,7 +782,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.map_supr_
 @[to_additive]
 theorem map_supᵢ_comap_of_surjective (S : ι → Subsemigroup N) :
     (⨆ i, (S i).comap f).map f = supᵢ S :=
-  (giMapComap hf).l_supr_u _
+  (giMapComap hf).l_supᵢ_u _
 #align subsemigroup.map_supr_comap_of_surjective Subsemigroup.map_supᵢ_comap_of_surjective
 #align add_subsemigroup.map_supr_comap_of_surjective AddSubsemigroup.map_supᵢ_comap_of_surjective
 
@@ -806,7 +806,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.comap_strict_mono_of_surjective Subsemigroup.comap_strictMono_of_surjectiveₓ'. -/
 @[to_additive]
 theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
-  (giMapComap hf).strict_mono_u
+  (giMapComap hf).strictMono_u
 #align subsemigroup.comap_strict_mono_of_surjective Subsemigroup.comap_strictMono_of_surjective
 #align add_subsemigroup.comap_strict_mono_of_surjective AddSubsemigroup.comap_strictMono_of_surjective
 

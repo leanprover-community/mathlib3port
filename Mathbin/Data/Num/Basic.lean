@@ -467,7 +467,7 @@ def abs : ZNum → Num
 def succ : ZNum → ZNum
   | 0 => 1
   | Pos a => pos (PosNum.succ a)
-  | neg a => (PosNum.pred' a).toZnumNeg
+  | neg a => (PosNum.pred' a).toZNumNeg
 #align znum.succ ZNum.succ
 -/
 
@@ -476,7 +476,7 @@ def succ : ZNum → ZNum
   -/
 def pred : ZNum → ZNum
   | 0 => neg 1
-  | Pos a => (PosNum.pred' a).toZnum
+  | Pos a => (PosNum.pred' a).toZNum
   | neg a => neg (PosNum.succ a)
 #align znum.pred ZNum.pred
 -/
@@ -530,8 +530,8 @@ open ZNum
 /-- Subtraction of two `pos_num`s, producing a `znum`.
   -/
 def sub' : PosNum → PosNum → ZNum
-  | a, 1 => (pred' a).toZnum
-  | 1, b => (pred' b).toZnumNeg
+  | a, 1 => (pred' a).toZNum
+  | 1, b => (pred' b).toZNumNeg
   | bit0 a, bit0 b => (sub' a b).bit0
   | bit0 a, bit1 b => (sub' a b).bitm1
   | bit1 a, bit0 b => (sub' a b).bit1

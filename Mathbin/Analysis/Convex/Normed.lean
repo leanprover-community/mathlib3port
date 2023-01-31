@@ -58,7 +58,7 @@ theorem convexOn_univ_norm : ConvexOn ℝ univ (norm : E → ℝ) :=
 
 theorem convexOn_dist (z : E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z := by
   simpa [dist_eq_norm, preimage_preimage] using
-    (convexOn_norm (hs.translate (-z))).comp_affine_map (AffineMap.id ℝ E - AffineMap.const ℝ E z)
+    (convexOn_norm (hs.translate (-z))).comp_affineMap (AffineMap.id ℝ E - AffineMap.const ℝ E z)
 #align convex_on_dist convexOn_dist
 
 theorem convexOn_univ_dist (z : E) : ConvexOn ℝ univ fun z' => dist z' z :=
@@ -92,7 +92,7 @@ theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (cthicken
 of `s` at distance at least `dist x y` from `y`. -/
 theorem convexHull_exists_dist_ge {s : Set E} {x : E} (hx : x ∈ convexHull ℝ s) (y : E) :
     ∃ x' ∈ s, dist x y ≤ dist x' y :=
-  (convexOn_dist y (convex_convexHull ℝ _)).exists_ge_of_mem_convex_hull hx
+  (convexOn_dist y (convex_convexHull ℝ _)).exists_ge_of_mem_convexHull hx
 #align convex_hull_exists_dist_ge convexHull_exists_dist_ge
 
 /-- Given a point `x` in the convex hull of `s` and a point `y` in the convex hull of `t`,

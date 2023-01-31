@@ -191,7 +191,7 @@ theorem nat_cast_zMod_val {n : ℕ} [NeZero n] (a : ZMod n) : (a.val : ZMod n) =
 #align zmod.nat_cast_zmod_val ZMod.nat_cast_zMod_val
 
 theorem nat_cast_rightInverse [NeZero n] : Function.RightInverse val (coe : ℕ → ZMod n) :=
-  nat_cast_zmod_val
+  nat_cast_zMod_val
 #align zmod.nat_cast_right_inverse ZMod.nat_cast_rightInverse
 
 theorem nat_cast_zMod_surjective [NeZero n] : Function.Surjective (coe : ℕ → ZMod n) :=
@@ -209,7 +209,7 @@ theorem int_cast_zMod_cast (a : ZMod n) : ((a : ℤ) : ZMod n) = a :=
 #align zmod.int_cast_zmod_cast ZMod.int_cast_zMod_cast
 
 theorem int_cast_rightInverse : Function.RightInverse (coe : ZMod n → ℤ) (coe : ℤ → ZMod n) :=
-  int_cast_zmod_cast
+  int_cast_zMod_cast
 #align zmod.int_cast_right_inverse ZMod.int_cast_rightInverse
 
 theorem int_cast_surjective : Function.Surjective (coe : ℤ → ZMod n) :=

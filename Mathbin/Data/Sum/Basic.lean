@@ -159,7 +159,7 @@ theorem not_isLeft (x : Sum α β) : not x.isLeft = x.isRight := by cases x <;> 
 
 #print Sum.isLeft_eq_false /-
 @[simp]
-theorem isLeft_eq_false : x.isLeft = ff ↔ x.isRight := by cases x <;> simp
+theorem isLeft_eq_false : x.isLeft = false ↔ x.isRight := by cases x <;> simp
 #align sum.is_left_eq_ff Sum.isLeft_eq_false
 -/
 
@@ -180,7 +180,7 @@ theorem not_isRight (x : Sum α β) : not x.isRight = x.isLeft := by cases x <;>
 
 #print Sum.isRight_eq_false /-
 @[simp]
-theorem isRight_eq_false : x.isRight = ff ↔ x.isLeft := by cases x <;> simp
+theorem isRight_eq_false : x.isRight = false ↔ x.isLeft := by cases x <;> simp
 #align sum.is_right_eq_ff Sum.isRight_eq_false
 -/
 
@@ -601,25 +601,25 @@ theorem swap_rightInverse : Function.RightInverse (@swap α β) swap :=
 
 #print Sum.isLeft_swap /-
 @[simp]
-theorem isLeft_swap (x : Sum α β) : x.swap.isLeft = x.isRight := by cases x <;> rfl
+theorem isLeft_swap (x : Sum α β) : x.symm.isLeft = x.isRight := by cases x <;> rfl
 #align sum.is_left_swap Sum.isLeft_swap
 -/
 
 #print Sum.isRight_swap /-
 @[simp]
-theorem isRight_swap (x : Sum α β) : x.swap.isRight = x.isLeft := by cases x <;> rfl
+theorem isRight_swap (x : Sum α β) : x.symm.isRight = x.isLeft := by cases x <;> rfl
 #align sum.is_right_swap Sum.isRight_swap
 -/
 
 #print Sum.getLeft_swap /-
 @[simp]
-theorem getLeft_swap (x : Sum α β) : x.swap.getLeft = x.getRight := by cases x <;> rfl
+theorem getLeft_swap (x : Sum α β) : x.symm.getLeft = x.getRight := by cases x <;> rfl
 #align sum.get_left_swap Sum.getLeft_swap
 -/
 
 #print Sum.getRight_swap /-
 @[simp]
-theorem getRight_swap (x : Sum α β) : x.swap.getRight = x.getLeft := by cases x <;> rfl
+theorem getRight_swap (x : Sum α β) : x.symm.getRight = x.getLeft := by cases x <;> rfl
 #align sum.get_right_swap Sum.getRight_swap
 -/
 
@@ -734,7 +734,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u2}} {δ : Type.{u1}} {r : α -> γ -> Prop} {s : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u2, u1} γ δ}, (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r s x y) -> (Sum.LiftRel.{u4, u3, u1, u2} β α δ γ s r (Sum.swap.{u3, u4} α β x) (Sum.swap.{u2, u1} γ δ y))
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel.swap Sum.LiftRel.swapₓ'. -/
-protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.swap y.swap :=
+protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.symm y.symm :=
   by
   cases h
   exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
@@ -747,7 +747,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u1}} {δ : Type.{u2}} {r : α -> γ -> Prop} {s : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u1, u2} γ δ}, Iff (Sum.LiftRel.{u4, u3, u2, u1} β α δ γ s r (Sum.swap.{u3, u4} α β x) (Sum.swap.{u1, u2} γ δ y)) (Sum.LiftRel.{u3, u4, u1, u2} α β γ δ r s x y)
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel_swap_iff Sum.liftRel_swap_iffₓ'. -/
 @[simp]
-theorem liftRel_swap_iff : LiftRel s r x.swap y.swap ↔ LiftRel r s x y :=
+theorem liftRel_swap_iff : LiftRel s r x.symm y.symm ↔ LiftRel r s x y :=
   ⟨fun h => by
     rw [← swap_swap x, ← swap_swap y]
     exact h.swap, LiftRel.swap⟩

@@ -51,7 +51,7 @@ instance Closeds.emetricSpace : EmetricSpace (Closeds α)
   edist_comm s t := hausdorffEdist_comm
   edist_triangle s t u := hausdorffEdist_triangle
   eq_of_edist_eq_zero s t h :=
-    closeds.ext <| (hausdorffEdist_zero_iff_eq_of_closed s.closed t.closed).1 h
+    Closeds.ext <| (hausdorffEdist_zero_iff_eq_of_closed s.closed t.closed).1 h
 #align emetric.closeds.emetric_space Emetric.Closeds.emetricSpace
 
 /-- The edistance to a closed set depends continuously on the point and the set -/
@@ -198,7 +198,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
       (Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1 <| by simp [Ennreal.one_lt_two]) (Or.inr <| by simp)
   rw [mul_zero] at this
   obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
-  exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_at_top
+  exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_atTop
   exact ⟨N, fun n hn => lt_of_le_of_lt (main n) (hN n hn)⟩
 #align emetric.closeds.complete_space Emetric.Closeds.completeSpace
 
@@ -261,7 +261,7 @@ instance NonemptyCompacts.emetricSpace : EmetricSpace (NonemptyCompacts α)
   edist_comm s t := hausdorffEdist_comm
   edist_triangle s t u := hausdorffEdist_triangle
   eq_of_edist_eq_zero s t h :=
-    nonempty_compacts.ext <|
+    NonemptyCompacts.ext <|
       by
       have : closure (s : Set α) = closure t := Hausdorff_edist_zero_iff_closure_eq_closure.1 h
       rwa [s.is_compact.is_closed.closure_eq, t.is_compact.is_closed.closure_eq] at this
@@ -319,7 +319,7 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
 from the same statement for closed subsets -/
 instance NonemptyCompacts.completeSpace [CompleteSpace α] : CompleteSpace (NonemptyCompacts α) :=
   (completeSpace_iff_isComplete_range
-        NonemptyCompacts.ToCloseds.uniformEmbedding.to_uniform_inducing).2 <|
+        NonemptyCompacts.ToCloseds.uniformEmbedding.to_uniformInducing).2 <|
     NonemptyCompacts.isClosed_in_closeds.IsComplete
 #align emetric.nonempty_compacts.complete_space Emetric.NonemptyCompacts.completeSpace
 

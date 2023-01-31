@@ -55,7 +55,7 @@ structure GlueData where
   V : J × J → C
   f : ∀ i j, V (i, j) ⟶ U i
   f_mono : ∀ i j, Mono (f i j) := by infer_instance
-  f_has_pullback : ∀ i j k, HasPullback (f i j) (f i k) := by infer_instance
+  f_hasPullback : ∀ i j k, HasPullback (f i j) (f i k) := by infer_instance
   f_id : ∀ i, IsIso (f i i) := by infer_instance
   t : ∀ i j, V (i, j) ⟶ V (j, i)
   t_id : ∀ i, t i i = 𝟙 _

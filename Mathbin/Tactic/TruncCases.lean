@@ -96,7 +96,7 @@ unsafe def trunc_cases (e : parse texpr) (ids : parse with_ident_list) : tactic 
         if e.is_local_constant then return e
       else do
         let n ←
-          match ids.nth 0 with
+          match ids.get? 0 with
             | some n => pure n
             | none => mk_fresh_name
         note n none e

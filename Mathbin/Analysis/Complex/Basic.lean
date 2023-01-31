@@ -268,7 +268,7 @@ theorem continuous_re : Continuous re :=
 #align complex.continuous_re Complex.continuous_re
 
 @[simp]
-theorem reClm_coe : (coe reClm : ℂ →ₗ[ℝ] ℝ) = re_lm :=
+theorem reClm_coe : (coe reClm : ℂ →ₗ[ℝ] ℝ) = reLm :=
   rfl
 #align complex.re_clm_coe Complex.reClm_coe
 
@@ -288,7 +288,7 @@ theorem continuous_im : Continuous im :=
 #align complex.continuous_im Complex.continuous_im
 
 @[simp]
-theorem imClm_coe : (coe imClm : ℂ →ₗ[ℝ] ℝ) = im_lm :=
+theorem imClm_coe : (coe imClm : ℂ →ₗ[ℝ] ℝ) = imLm :=
   rfl
 #align complex.im_clm_coe Complex.imClm_coe
 
@@ -299,7 +299,7 @@ theorem imClm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
 
 theorem restrictScalars_one_smul_right' (x : E) :
     ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
-      reClm.smul_right x + I • imClm.smul_right x :=
+      reClm.smul_right x + i • imClm.smul_right x :=
   by
   ext ⟨a, b⟩
   simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
@@ -324,7 +324,7 @@ theorem conjLie_apply (z : ℂ) : conjLie z = conj z :=
 #align complex.conj_lie_apply Complex.conjLie_apply
 
 @[simp]
-theorem conjLie_symm : conjLie.symm = conj_lie :=
+theorem conjLie_symm : conjLie.symm = conjLie :=
   rfl
 #align complex.conj_lie_symm Complex.conjLie_symm
 
@@ -370,7 +370,7 @@ theorem ringHom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous
 
 /-- Continuous linear equiv version of the conj function, from `ℂ` to `ℂ`. -/
 def conjCle : ℂ ≃L[ℝ] ℂ :=
-  conj_lie
+  conjLie
 #align complex.conj_cle Complex.conjCle
 
 @[simp]
@@ -426,8 +426,8 @@ noncomputable instance : IsROrC ℂ
   re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩
   im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩
   i := Complex.i
-  I_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.i_re]
-  I_mul_I_ax := by simp only [Complex.i_mul_i, eq_self_iff_true, or_true_iff]
+  i_re_ax := by simp only [AddMonoidHom.coe_mk, Complex.i_re]
+  i_mul_i_ax := by simp only [Complex.i_mul_i, eq_self_iff_true, or_true_iff]
   re_add_im_ax z := by
     simp only [AddMonoidHom.coe_mk, Complex.re_add_im, Complex.coe_algebraMap,
       Complex.ofReal_eq_coe]
@@ -441,15 +441,15 @@ noncomputable instance : IsROrC ℂ
   mul_im_ax z w := by simp only [AddMonoidHom.coe_mk, Complex.mul_im]
   conj_re_ax z := rfl
   conj_im_ax z := rfl
-  conj_I_ax := by simp only [Complex.conj_i, RingHom.coe_mk]
+  conj_i_ax := by simp only [Complex.conj_i, RingHom.coe_mk]
   norm_sq_eq_def_ax z := by
     simp only [← Complex.normSq_eq_abs, ← Complex.normSq_apply, AddMonoidHom.coe_mk,
       Complex.norm_eq_abs]
-  mul_im_I_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.i_im]
+  mul_im_i_ax z := by simp only [mul_one, AddMonoidHom.coe_mk, Complex.i_im]
   inv_def_ax z := by
     simp only [Complex.inv_def, Complex.normSq_eq_abs, Complex.coe_algebraMap,
       Complex.ofReal_eq_coe, Complex.norm_eq_abs]
-  div_I_ax := Complex.div_i
+  div_i_ax := Complex.div_i
 
 theorem IsROrC.re_eq_complex_re : ⇑(IsROrC.re : ℂ →+ ℝ) = Complex.re :=
   rfl

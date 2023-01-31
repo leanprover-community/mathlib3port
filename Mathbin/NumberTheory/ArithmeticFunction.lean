@@ -218,8 +218,8 @@ instance [AddMonoidWithOne R] : AddMonoidWithOne (ArithmeticFunction R) :=
   { ArithmeticFunction.addMonoid,
     ArithmeticFunction.hasOne with
     natCast := fun n => ⟨fun x => if x = 1 then (n : R) else 0, by simp⟩
-    nat_cast_zero := by ext <;> simp [Nat.cast]
-    nat_cast_succ := fun _ => by ext <;> by_cases x = 1 <;> simp [Nat.cast, *] }
+    natCast_zero := by ext <;> simp [Nat.cast]
+    natCast_succ := fun _ => by ext <;> by_cases x = 1 <;> simp [Nat.cast, *] }
 
 instance [AddCommMonoid R] : AddCommMonoid (ArithmeticFunction R) :=
   { ArithmeticFunction.addMonoid with add_comm := fun _ _ => ext fun _ => add_comm _ _ }
@@ -1018,8 +1018,8 @@ variable [CommRing R]
 instance : Invertible (ζ : ArithmeticFunction R)
     where
   invOf := μ
-  inv_of_mul_self := coe_moebius_mul_coe_zeta
-  mul_inv_of_self := coe_zeta_mul_coe_moebius
+  invOf_mul_self := coe_moebius_mul_coe_zeta
+  mul_invOf_self := coe_zeta_mul_coe_moebius
 
 /-- A unit in `arithmetic_function R` that evaluates to `ζ`, with inverse `μ`. -/
 def zetaUnit : (ArithmeticFunction R)ˣ :=
@@ -1032,7 +1032,7 @@ theorem coe_zetaUnit : ((zetaUnit : (ArithmeticFunction R)ˣ) : ArithmeticFuncti
 #align nat.arithmetic_function.coe_zeta_unit Nat.ArithmeticFunction.coe_zetaUnit
 
 @[simp]
-theorem inv_zetaUnit : ((zeta_unit⁻¹ : (ArithmeticFunction R)ˣ) : ArithmeticFunction R) = μ :=
+theorem inv_zetaUnit : ((zetaUnit⁻¹ : (ArithmeticFunction R)ˣ) : ArithmeticFunction R) = μ :=
   rfl
 #align nat.arithmetic_function.inv_zeta_unit Nat.ArithmeticFunction.inv_zetaUnit
 

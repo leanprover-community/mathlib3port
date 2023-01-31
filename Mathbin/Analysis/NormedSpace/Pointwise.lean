@@ -353,8 +353,8 @@ theorem closedBall_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) :
 
 theorem closedBall_add_closedBall [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
     closedBall a ε + closedBall b δ = closedBall (a + b) (ε + δ) := by
-  rw [(is_compact_closed_ball _ _).add_closed_ball hδ, cthickening_closedBall hδ hε,
-      vadd_closedBall, vadd_eq_add, add_comm, add_comm δ] <;>
+  rw [(is_compact_closed_ball _ _).add_closedBall hδ, cthickening_closedBall hδ hε, vadd_closedBall,
+      vadd_eq_add, add_comm, add_comm δ] <;>
     infer_instance
 #align closed_ball_add_closed_ball closedBall_add_closedBall
 

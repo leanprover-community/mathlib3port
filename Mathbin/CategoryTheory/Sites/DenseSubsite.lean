@@ -471,7 +471,7 @@ noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J 
     Full (Sites.pullback A H.CompatiblePreserving Hp)
     where
   preimage ℱ ℱ' α := ⟨H.sheafHom α.val⟩
-  witness' ℱ ℱ' α := Sheaf.Hom.ext _ _ <| H.sheaf_hom_restrict_eq α.val
+  witness' ℱ ℱ' α := Sheaf.Hom.ext _ _ <| H.sheafHom_restrict_eq α.val
 #align category_theory.cover_dense.sites.pullback.full CategoryTheory.CoverDense.Sites.Pullback.full
 
 instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
@@ -523,7 +523,7 @@ noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf 
       inverse := sites.copullback A Hl
       unitIso := as_iso α.unit
       counitIso := as_iso α.counit
-      functor_unit_iso_comp' := fun ℱ => by convert α.left_triangle_components }
+      functor_unitIso_comp' := fun ℱ => by convert α.left_triangle_components }
 #align category_theory.cover_dense.Sheaf_equiv_of_cover_preserving_cover_lifting CategoryTheory.CoverDense.sheafEquivOfCoverPreservingCoverLifting
 
 end CategoryTheory.CoverDense

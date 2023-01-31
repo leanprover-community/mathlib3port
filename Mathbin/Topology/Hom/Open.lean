@@ -73,7 +73,7 @@ instance : ContinuousOpenMapClass (α →CO β) α β
     obtain ⟨⟨_, _⟩, _⟩ := f
     obtain ⟨⟨_, _⟩, _⟩ := g
     congr
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
   map_open f := f.map_open'
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`

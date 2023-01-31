@@ -510,7 +510,7 @@ Case conversion may be inaccurate. Consider using '#align con.Inf_to_setoid Con.
     under the map to the underlying equivalence relation. -/
 @[to_additive
       "The infimum of a set of additive congruence relations is the same as the infimum of\nthe set's image under the map to the underlying equivalence relation."]
-theorem infₛ_toSetoid (S : Set (Con M)) : (infₛ S).toSetoid = infₛ (to_setoid '' S) :=
+theorem infₛ_toSetoid (S : Set (Con M)) : (infₛ S).toSetoid = infₛ (toSetoid '' S) :=
   Setoid.ext' fun x y =>
     ⟨fun h r ⟨c, hS, hr⟩ => by rw [← hr] <;> exact h c hS, fun h c hS => h c.toSetoid ⟨c, hS, rfl⟩⟩
 #align con.Inf_to_setoid Con.infₛ_toSetoid
@@ -626,7 +626,7 @@ theorem conGen_le {r : M → M → Prop} {c : Con M} (h : ∀ x y, r x y → @Se
 @[to_additive add_con_gen_mono
       "Given binary relations `r, s` with `r` contained in `s`, the\nsmallest additive congruence relation containing `s` contains the smallest additive congruence\nrelation containing `r`."]
 theorem conGen_mono {r s : M → M → Prop} (h : ∀ x y, r x y → s x y) : conGen r ≤ conGen s :=
-  con_gen_le fun x y hr => ConGen.Rel.of _ _ <| h x y hr
+  conGen_le fun x y hr => ConGen.Rel.of _ _ <| h x y hr
 #align con.con_gen_mono Con.conGen_mono
 #align add_con.add_con_gen_mono AddCon.addConGen_mono
 -/
@@ -1303,7 +1303,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker_eq_lift_of_inj
 @[to_additive
       "Given an `add_monoid` homomorphism `f` from `M` to `P`, the kernel of `f`\nis the unique additive congruence relation on `M` whose induced map from the quotient of `M`\nto `P` is injective."]
 theorem ker_eq_lift_of_injective (H : c ≤ ker f) (h : Injective (c.lift f H)) : ker f = c :=
-  to_setoid_inj <| ker_eq_lift_of_injective f H h
+  toSetoid_inj <| ker_eq_lift_of_injective f H h
 #align con.ker_eq_lift_of_injective Con.ker_eq_lift_of_injective
 #align add_con.ker_eq_lift_of_injective AddCon.ker_eq_lift_of_injective
 
@@ -1453,7 +1453,7 @@ For a `computable` version, see `con.quotient_ker_equiv_of_right_inverse`.
       "The first isomorphism theorem for `add_monoid`s in the case of a surjective\nhomomorphism.\n\nFor a `computable` version, see `add_con.quotient_ker_equiv_of_right_inverse`.\n"]
 noncomputable def quotientKerEquivOfSurjective (f : M →* P) (hf : Surjective f) :
     (ker f).Quotient ≃* P :=
-  quotientKerEquivOfRightInverse _ _ hf.HasRightInverse.some_spec
+  quotientKerEquivOfRightInverse _ _ hf.HasRightInverse.choose_spec
 #align con.quotient_ker_equiv_of_surjective Con.quotientKerEquivOfSurjective
 #align add_con.quotient_ker_equiv_of_surjective AddCon.quotientKerEquivOfSurjective
 
@@ -1467,7 +1467,7 @@ Case conversion may be inaccurate. Consider using '#align con.comap_quotient_equ
 @[to_additive "The second isomorphism theorem for `add_monoid`s."]
 noncomputable def comapQuotientEquiv (f : N →* M) :
     (comap f f.map_mul c).Quotient ≃* (c.mk'.comp f).mrange :=
-  (Con.congr comap_eq).trans <| quotient_ker_equiv_range <| c.mk'.comp f
+  (Con.congr comap_eq).trans <| quotientKerEquivRange <| c.mk'.comp f
 #align con.comap_quotient_equiv Con.comapQuotientEquiv
 #align add_con.comap_quotient_equiv AddCon.comapQuotientEquiv
 

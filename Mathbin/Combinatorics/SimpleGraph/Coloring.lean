@@ -125,7 +125,7 @@ theorem Coloring.not_adj_of_mem_colorClass {c : α} {v w : V} (hv : v ∈ C.colo
 #align simple_graph.coloring.not_adj_of_mem_color_class SimpleGraph.Coloring.not_adj_of_mem_colorClass
 
 theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.colorClass c) :=
-  fun v hv w hw h => C.not_adj_of_mem_color_class hv hw
+  fun v hv w hw h => C.not_adj_of_mem_colorClass hv hw
 #align simple_graph.coloring.color_classes_independent SimpleGraph.Coloring.color_classes_independent
 
 -- TODO make this computable
@@ -348,12 +348,12 @@ theorem Colorable.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGra
 
 theorem Colorable.chromaticNumber_mono (G' : SimpleGraph V) {m : ℕ} (hc : G'.Colorable m)
     (h : G ≤ G') : G.chromaticNumber ≤ G'.chromaticNumber :=
-  hc.chromatic_number_le_of_forall_imp fun n => Colorable.mono_left h
+  hc.chromaticNumber_le_of_forall_imp fun n => Colorable.mono_left h
 #align simple_graph.colorable.chromatic_number_mono SimpleGraph.Colorable.chromaticNumber_mono
 
 theorem Colorable.chromaticNumber_mono_of_embedding {V' : Type _} {G' : SimpleGraph V'} {n : ℕ}
     (h : G'.Colorable n) (f : G ↪g G') : G.chromaticNumber ≤ G'.chromaticNumber :=
-  h.chromatic_number_le_of_forall_imp fun _ => Colorable.of_embedding f
+  h.chromaticNumber_le_of_forall_imp fun _ => Colorable.of_embedding f
 #align simple_graph.colorable.chromatic_number_mono_of_embedding SimpleGraph.Colorable.chromaticNumber_mono_of_embedding
 
 theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
@@ -404,7 +404,7 @@ theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
   apply Nat.not_succ_le_self n
   convert_to (⊤ : SimpleGraph { m | m < n + 1 }).chromaticNumber ≤ _
   · simp
-  refine' (colorable_of_chromatic_number_pos hc).chromatic_number_mono_of_embedding _
+  refine' (colorable_of_chromatic_number_pos hc).chromaticNumber_mono_of_embedding _
   apply embedding.complete_graph
   exact (Function.Embedding.subtype _).trans (Infinite.natEmbedding V)
 #align simple_graph.chromatic_number_top_eq_zero_of_infinite SimpleGraph.chromaticNumber_top_eq_zero_of_infinite
@@ -477,7 +477,7 @@ protected theorem Colorable.cliqueFree {n m : ℕ} (hc : G.Colorable n) (hm : n 
 -- This is just to ensure the chromatic number exists.
 theorem cliqueFree_of_chromaticNumber_lt [Finite V] {n : ℕ} (hc : G.chromaticNumber < n) :
     G.CliqueFree n :=
-  G.colorable_chromatic_number_of_fintype.CliqueFree hc
+  G.colorable_chromaticNumber_of_fintype.CliqueFree hc
 #align simple_graph.clique_free_of_chromatic_number_lt SimpleGraph.cliqueFree_of_chromaticNumber_lt
 
 end SimpleGraph

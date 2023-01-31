@@ -125,7 +125,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.symm_image_image Equiv.symm_image_imageₓ'. -/
 @[simp]
 theorem symm_image_image {α β} (e : α ≃ β) (s : Set α) : e.symm '' (e '' s) = s :=
-  e.left_inverse_symm.image_image s
+  e.leftInverse_symm.image_image s
 #align equiv.symm_image_image Equiv.symm_image_image
 
 /- warning: equiv.eq_image_iff_symm_image_eq -> Equiv.eq_image_iff_symm_image_eq is a dubious translation:
@@ -190,7 +190,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.symm_preimage_preimage Equiv.symm_preimage_preimageₓ'. -/
 @[simp]
 theorem symm_preimage_preimage {α β} (e : α ≃ β) (s : Set β) : e.symm ⁻¹' (e ⁻¹' s) = s :=
-  e.right_inverse_symm.preimage_preimage s
+  e.rightInverse_symm.preimage_preimage s
 #align equiv.symm_preimage_preimage Equiv.symm_preimage_preimage
 
 /- warning: equiv.preimage_symm_preimage -> Equiv.preimage_symm_preimage is a dubious translation:
@@ -201,7 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.preimage_symm_preimage Equiv.preimage_symm_preimageₓ'. -/
 @[simp]
 theorem preimage_symm_preimage {α β} (e : α ≃ β) (s : Set α) : e ⁻¹' (e.symm ⁻¹' s) = s :=
-  e.left_inverse_symm.preimage_preimage s
+  e.leftInverse_symm.preimage_preimage s
 #align equiv.preimage_symm_preimage Equiv.preimage_symm_preimage
 
 /- warning: equiv.preimage_subset -> Equiv.preimage_subset is a dubious translation:
@@ -697,7 +697,7 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
     Sum (s ∪ t : Set α) (s ∩ t : Set α) ≃ Sum (s ∪ t \ s : Set α) (s ∩ t : Set α) := by
       rw [union_diff_self]
     _ ≃ Sum (Sum s (t \ s : Set α)) (s ∩ t : Set α) :=
-      sumCongr (set.union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equiv.refl _)
+      sumCongr (Set.union <| subset_empty_iff.2 (inter_diff_self _ _)) (Equiv.refl _)
     _ ≃ Sum s (Sum (t \ s : Set α) (s ∩ t : Set α)) := sumAssoc _ _ _
     _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
       sumCongr (Equiv.refl _)

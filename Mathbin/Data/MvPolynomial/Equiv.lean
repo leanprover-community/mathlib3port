@@ -165,7 +165,7 @@ with coefficents in multivariable polynomials in the other type.
 See `sum_ring_equiv` for the ring isomorphism.
 -/
 def sumToIter : MvPolynomial (Sum S₁ S₂) R →+* MvPolynomial S₁ (MvPolynomial S₂ R) :=
-  eval₂Hom (c.comp c) fun bc => Sum.recOn bc x (C ∘ X)
+  eval₂Hom (c.comp c) fun bc => Sum.recOn bc x (c ∘ x)
 #align mv_polynomial.sum_to_iter MvPolynomial.sumToIter
 
 @[simp]
@@ -190,7 +190,7 @@ to multivariable polynomials in the sum of the two types.
 See `sum_ring_equiv` for the ring isomorphism.
 -/
 def iterToSum : MvPolynomial S₁ (MvPolynomial S₂ R) →+* MvPolynomial (Sum S₁ S₂) R :=
-  eval₂Hom (eval₂Hom c (X ∘ Sum.inr)) (X ∘ Sum.inl)
+  eval₂Hom (eval₂Hom c (x ∘ Sum.inr)) (x ∘ Sum.inl)
 #align mv_polynomial.iter_to_sum MvPolynomial.iterToSum
 
 theorem iterToSum_c_c (a : R) : iterToSum R S₁ S₂ (c (c a)) = c a :=
@@ -232,8 +232,8 @@ variable {σ}
 /-- A helper function for `sum_ring_equiv`. -/
 @[simps]
 def mvPolynomialEquivMvPolynomial [CommSemiring S₃] (f : MvPolynomial S₁ R →+* MvPolynomial S₂ S₃)
-    (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp c = C)
-    (hfgX : ∀ n, f (g (x n)) = x n) (hgfC : (g.comp f).comp c = C) (hgfX : ∀ n, g (f (x n)) = x n) :
+    (g : MvPolynomial S₂ S₃ →+* MvPolynomial S₁ R) (hfgC : (f.comp g).comp c = c)
+    (hfgX : ∀ n, f (g (x n)) = x n) (hgfC : (g.comp f).comp c = c) (hgfX : ∀ n, g (f (x n)) = x n) :
     MvPolynomial S₁ R ≃+* MvPolynomial S₂ S₃
     where
   toFun := f
@@ -457,7 +457,7 @@ theorem finSuccEquiv_support (f : MvPolynomial (Fin (n + 1)) R) :
 
 theorem finSuccEquiv_support' {f : MvPolynomial (Fin (n + 1)) R} {i : ℕ} :
     Finset.image (Finsupp.cons i) (Polynomial.coeff ((finSuccEquiv R n) f) i).support =
-      f.support.filter fun m => m 0 = i :=
+      f.support.filterₓ fun m => m 0 = i :=
   by
   ext m
   rw [Finset.mem_filter, Finset.mem_image, mem_support_iff]

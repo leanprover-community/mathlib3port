@@ -59,13 +59,13 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
       ZMod.orderOf_dvd_card_sub_one (mt (CharP.cast_eq_zero_iff _ _ _).1 hpb)
     haveI : NeZero (k : ZMod p) :=
       NeZero.of_not_dvd (ZMod p) fun hpk => hpb (dvd_mul_of_dvd_left hpk _)
-    have : k = orderOf (b : ZMod p) := (is_root_cyclotomic_iff.mp hroot).eq_order_of
+    have : k = orderOf (b : ZMod p) := (is_root_cyclotomic_iff.mp hroot).eq_orderOf
     rw [← this] at hdiv
     exact ((modeq_iff_dvd' hprime.1.Pos).2 hdiv).symm
 #align nat.exists_prime_gt_modeq_one Nat.exists_prime_gt_modEq_one
 
 theorem frequently_atTop_modEq_one {k : ℕ} (hk0 : k ≠ 0) :
-    ∃ᶠ p in at_top, Nat.Prime p ∧ p ≡ 1 [MOD k] :=
+    ∃ᶠ p in atTop, Nat.Prime p ∧ p ≡ 1 [MOD k] :=
   by
   refine' frequently_at_top.2 fun n => _
   obtain ⟨p, hp⟩ := exists_prime_gt_modeq_one n hk0

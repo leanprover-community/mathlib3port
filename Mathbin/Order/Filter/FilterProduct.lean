@@ -70,7 +70,7 @@ theorem coe_pos [Preorder β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ ∀*
 #align filter.germ.coe_pos Filter.Germ.coe_pos
 
 theorem const_lt [Preorder β] {x y : β} : x ≤ y → (↑x : β*) ≤ ↑y :=
-  lift_rel_const
+  liftRel_const
 #align filter.germ.const_lt Filter.Germ.const_lt
 
 theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=

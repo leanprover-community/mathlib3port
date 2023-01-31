@@ -177,7 +177,7 @@ noncomputable instance : CompleteLattice (Filtration ι m)
   le := (· ≤ ·)
   le_refl f i := le_rfl
   le_trans f g h h_fg h_gh i := (h_fg i).trans (h_gh i)
-  le_antisymm f g h_fg h_gf := filtration.ext <| funext fun i => (h_fg i).antisymm (h_gf i)
+  le_antisymm f g h_fg h_gf := Filtration.ext <| funext fun i => (h_fg i).antisymm (h_gf i)
   sup := (· ⊔ ·)
   le_sup_left f g i := le_sup_left
   le_sup_right f g i := le_sup_right
@@ -186,19 +186,19 @@ noncomputable instance : CompleteLattice (Filtration ι m)
   inf_le_left f g i := inf_le_left
   inf_le_right f g i := inf_le_right
   le_inf f g h h_fg h_fh i := le_inf (h_fg i) (h_fh i)
-  sup := supₛ
-  le_Sup s f hf_mem i := le_supₛ ⟨f, hf_mem, rfl⟩
-  Sup_le s f h_forall i :=
+  supₛ := supₛ
+  le_sup s f hf_mem i := le_supₛ ⟨f, hf_mem, rfl⟩
+  sup_le s f h_forall i :=
     supₛ_le fun m' hm' => by
       obtain ⟨g, hg_mem, hfm'⟩ := hm'
       rw [← hfm']
       exact h_forall g hg_mem i
-  inf := infₛ
-  Inf_le s f hf_mem i := by
+  infₛ := infₛ
+  inf_le s f hf_mem i := by
     have hs : s.nonempty := ⟨f, hf_mem⟩
     simp only [Inf_def, hs, if_true]
     exact infₛ_le ⟨f, hf_mem, rfl⟩
-  le_Inf s f h_forall i := by
+  le_inf s f h_forall i := by
     by_cases hs : s.nonempty
     swap;
     · simp only [Inf_def, hs, if_false]

@@ -90,7 +90,7 @@ instance : LawfulFunctor PLift where
 
 instance : LawfulApplicative PLift
     where
-  pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
+  pure_seq := fun α β g ⟨x⟩ => rfl
   map_pure α β g x := rfl
   seq_pure := fun α β ⟨g⟩ x => rfl
   seq_assoc := fun α β γ ⟨x⟩ ⟨g⟩ ⟨h⟩ => rfl
@@ -198,8 +198,8 @@ instance : LawfulFunctor ULift where
 
 instance : LawfulApplicative ULift
     where
-  to_is_lawful_functor := ULift.lawfulFunctor
-  pure_seq_eq_map := fun α β g ⟨x⟩ => rfl
+  to_lawfulFunctor := ULift.lawfulFunctor
+  pure_seq := fun α β g ⟨x⟩ => rfl
   map_pure α β g x := rfl
   seq_pure := fun α β ⟨g⟩ x => rfl
   seq_assoc := fun α β γ ⟨x⟩ ⟨g⟩ ⟨h⟩ => rfl

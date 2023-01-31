@@ -267,7 +267,7 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
 
 theorem Subpresheaf.eq_sheafify_iff (h : Presieve.IsSheaf J F) :
     G = G.sheafify J ↔ Presieve.IsSheaf J G.toPresheaf :=
-  ⟨fun e => e.symm ▸ G.sheafify_is_sheaf h, G.eq_sheafify h⟩
+  ⟨fun e => e.symm ▸ G.sheafify_isSheaf h, G.eq_sheafify h⟩
 #align category_theory.grothendieck_topology.subpresheaf.eq_sheafify_iff CategoryTheory.GrothendieckTopology.Subpresheaf.eq_sheafify_iff
 
 theorem Subpresheaf.isSheaf_iff (h : Presieve.IsSheaf J F) :
@@ -281,7 +281,7 @@ theorem Subpresheaf.isSheaf_iff (h : Presieve.IsSheaf J F) :
 
 theorem Subpresheaf.sheafify_sheafify (h : Presieve.IsSheaf J F) :
     (G.sheafify J).sheafify J = G.sheafify J :=
-  ((Subpresheaf.eq_sheafify_iff _ h).mpr <| G.sheafify_is_sheaf h).symm
+  ((Subpresheaf.eq_sheafify_iff _ h).mpr <| G.sheafify_isSheaf h).symm
 #align category_theory.grothendieck_topology.subpresheaf.sheafify_sheafify CategoryTheory.GrothendieckTopology.Subpresheaf.sheafify_sheafify
 
 /-- The lift of a presheaf morphism onto the sheafification subpresheaf.  -/
@@ -393,7 +393,7 @@ theorem toImagePresheaf_ι (f : F' ⟶ F) : toImagePresheaf f ≫ (imagePresheaf
 #align category_theory.grothendieck_topology.to_image_presheaf_ι CategoryTheory.GrothendieckTopology.toImagePresheaf_ι
 
 theorem imagePresheaf_comp_le (f₁ : F ⟶ F') (f₂ : F' ⟶ F'') :
-    imagePresheaf (f₁ ≫ f₂) ≤ imagePresheaf f₂ := fun U x hx => ⟨f₁.app U hx.some, hx.some_spec⟩
+    imagePresheaf (f₁ ≫ f₂) ≤ imagePresheaf f₂ := fun U x hx => ⟨f₁.app U hx.some, hx.choose_spec⟩
 #align category_theory.grothendieck_topology.image_presheaf_comp_le CategoryTheory.GrothendieckTopology.imagePresheaf_comp_le
 
 instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso (toImagePresheaf f) :=

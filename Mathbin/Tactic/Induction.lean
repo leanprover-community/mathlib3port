@@ -287,7 +287,7 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) :
   let decl ← env.get c
   let args ← get_constructor_argument_info iname num_params decl.type
   let non_param_args := args.drop num_params
-  let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
+  let rec_args := non_param_args.filterₓ fun ainfo => ainfo.is_recursive
   pure {
         cname := decl
         non_param_args
@@ -306,7 +306,7 @@ unsafe def get_inductive_info (I : Name) : tactic inductive_info := do
   let num_params := env.inductive_num_params I
   let num_indices := env.inductive_num_indices I
   let constructor_names := env.constructors_of I
-  let constructors ← constructor_names.mmap (get_constructor_info I num_params)
+  let constructors ← constructor_names.mapM (get_constructor_info I num_params)
   pure {
         iname := I
         constructors
@@ -423,7 +423,7 @@ unsafe def apply_constructor_argument_naming_rules (info : constructor_argument_
     (rules : List constructor_argument_naming_rule) : tactic (List Name) := do
   let names ←
     try_core <|
-        rules.mfirst fun r => do
+        rules.firstM fun r => do
           let names ← r info
           match names with
             | [] => failed
@@ -483,7 +483,7 @@ unsafe def constructor_intros (generate_induction_hyps : Bool) (cinfo : construc
   let args := (arg_hyps.map expr.local_pp_name).zip args
   let tt ← pure generate_induction_hyps |
     pure (args, [])
-  let rec_args := args.filter fun x => x.2.is_recursive
+  let rec_args := args.filterₓ fun x => x.2.is_recursive
   let ih_hyps ← intron_fresh cinfo.num_rec_args
   let ihs := (ih_hyps.map expr.local_pp_name).zip rec_args
   pure (args, ihs)
@@ -583,9 +583,9 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
   arg_pp_name_set := name_set.of_list <| args.map Prod.fst
   let iname := iinfo.iname
   let ⟨args, with_patterns⟩ :=
-    args.map₂Left' (fun arg p => (arg, p.getOrElse with_pattern.auto)) with_patterns
+    args.map₂Left' (fun arg p => (arg, p.getD with_pattern.auto)) with_patterns
   let arg_renames ←
-    args.mmapFilter fun ⟨⟨old_ppname, ainfo⟩, with_pat⟩ => do
+    args.filterMapM fun ⟨⟨old_ppname, ainfo⟩, with_pat⟩ => do
         let some new ←
           with_pat.to_name_spec (constructor_argument_names ⟨mpinfo, iinfo, cinfo, ainfo⟩) |
           clear_dependent_if_exists old_ppname >> pure none
@@ -608,10 +608,10 @@ unsafe def constructor_renames (generate_induction_hyps : Bool) (mpinfo : major_
     ← pure generate_induction_hyps |
     pure (new_arg_hyps, [])
   let ih_pp_name_set := name_set.of_list <| ihs.map Prod.fst
-  let ihs := ihs.map₂Left (fun ih p => (ih, p.getOrElse with_pattern.auto)) with_patterns
+  let ihs := ihs.map₂Left (fun ih p => (ih, p.getD with_pattern.auto)) with_patterns
   let single_ih := ihs.length = 1
   let ih_renames ←
-    ihs.mmapFilter fun ⟨⟨ih_hyp_ppname, arg_hyp_ppname, _⟩, with_pat⟩ => do
+    ihs.filterMapM fun ⟨⟨ih_hyp_ppname, arg_hyp_ppname, _⟩, with_pat⟩ => do
         let some arg_hyp ← pure <| arg_hyp_map.find arg_hyp_ppname |
           throwError
               "internal error in constructor_renames: {← arg_hyp_ppname} not found in arg_hyp_map"
@@ -680,21 +680,21 @@ unsafe def to_generalize (major_premise : expr) : GeneralizationMode → tactic 
   | generalize_only ns => do
     let major_premise_rev_deps ← reverse_dependencies_of_hyps [major_premise]
     let major_premise_rev_deps := name_set.of_list <| major_premise_rev_deps.map local_uniq_name
-    let ns ← ns.mmap (Functor.map local_uniq_name ∘ get_local)
+    let ns ← ns.mapM (Functor.map local_uniq_name ∘ get_local)
     pure <| major_premise_rev_deps ns
   | generalize_all_except fixed => do
-    let fixed ← fixed.mmap get_local
+    let fixed ← fixed.mapM get_local
     let tgt ← target
     let tgt_dependencies := tgt.list_local_const_unique_names
     let major_premise_type ← infer_type major_premise
     let major_premise_dependencies ← dependency_name_set_of_hyp_inclusive major_premise
     let defs ← local_defs
     let fixed_dependencies ←
-      (major_premise :: defs ++ fixed).mmap dependency_name_set_of_hyp_inclusive
+      (major_premise :: defs ++ fixed).mapM dependency_name_set_of_hyp_inclusive
     let fixed_dependencies := fixed_dependencies.foldl name_set.union mk_name_set
     let ctx ← local_context
     let to_revert ←
-      ctx.mmapFilter fun h => do
+      ctx.filterMapM fun h => do
           let h_depends_on_major_premise_deps
             ←-- TODO `hyp_depends_on_local_name_set` is somewhat expensive
                 hyp_depends_on_local_name_set
@@ -783,12 +783,12 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
       ←-- Revert the hypotheses which depend on the index args or the major_premise.
             -- We exclude dependencies of the major premise because we can't replace their
             -- index occurrences anyway when we apply the recursor.
-            ctx.mfilter
+            ctx.filterM
           fun h => do
           let dep_of_major_premise := major_premise_deps.contains h.local_uniq_name
           let dep_on_major_premise ← hyp_depends_on_locals h [major_premise]
           let H ← infer_type h
-          let dep_of_index ← js.many fun j => kdepends_on H j
+          let dep_of_index ← js.anyM fun j => kdepends_on H j
           -- TODO We need a variant of `kdepends_on` that takes local defs into account.
               pure <|
               dep_on_major_premise ∧ h ≠ major_premise ∨ dep_of_index ∧ ¬dep_of_major_premise
@@ -802,14 +802,14 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
     go : expr → List expr → tactic (List expr) := fun j ks => do
       let J ← infer_type j
       let k ← mk_local' `index BinderInfo.default J
-      let ks ← ks.mmap fun k' => kreplace k' j k
+      let ks ← ks.mapM fun k' => kreplace k' j k
       pure <| k :: ks
-    let ks ← js.mfoldr go []
+    let ks ← js.foldrM go []
     let js_ks := js.zip ks
     let new_ctx
       ←-- Replace the index args in the relevant context.
-            relevant_ctx.mmap
-          fun h => js_ks.mfoldr (fun ⟨j, k⟩ h => kreplace h j k) h
+            relevant_ctx.mapM
+          fun h => js_ks.foldrM (fun ⟨j, k⟩ h => kreplace h j k) h
     let-- Replace the index args in the major premise.
     new_major_premise_type := major_premise_head.mk_app (major_premise_param_args ++ ks)
     let new_major_premise :=
@@ -817,7 +817,7 @@ unsafe def generalize_complex_index_args (major_premise : expr) (num_params : �
         major_premise.binding_info new_major_premise_type
     let new_tgt
       ←-- Replace the index args in the target.
-            js_ks.mfoldr
+            js_ks.foldrM
           (fun ⟨j, k⟩ tgt => kreplace tgt j k) tgt
     let new_tgt := new_tgt.pis (new_major_premise :: new_ctx)
     let-- Generate the index equations and their proofs.
@@ -926,7 +926,7 @@ newly created local constants.
 -/
 unsafe def assign_locals_to_unassigned_mvars (mvars : List (expr × Name × BinderInfo)) :
     tactic (List expr) :=
-  mvars.mmapFilter fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
+  mvars.filterMapM fun ⟨mv, pp_name, binfo⟩ => assign_local_to_unassigned_mvar mv pp_name binfo
 #align tactic.eliminate.assign_locals_to_unassigned_mvars tactic.eliminate.assign_locals_to_unassigned_mvars
 
 /-
@@ -983,7 +983,7 @@ unsafe def simplify_ih (num_leading_pis : ℕ) (num_generalized : ℕ) (num_inde
           -- - `new_args`: proofs of `yᵢ = zᵢ`.
           -- - `new_index_eq_lcs`: local constants of type `yᵢ = zᵢ` or `yᵢ == zᵢ` used
           --   in `new_args`.
-          index_eq_lcs.mmap
+          index_eq_lcs.mapM
         process_index_equation
   let (new_args, new_index_eq_lcs) := new_index_eq_lcs_new_args.unzip
   let new_index_eq_lcs := new_index_eq_lcs.reduceOption
@@ -994,9 +994,9 @@ unsafe def simplify_ih (num_leading_pis : ℕ) (num_generalized : ℕ) (num_inde
         generalized_arg_mvars
   let new_generalized_arg_lcs
     ←-- Instantiate the metavariables assigned in the previous steps.
-          new_generalized_arg_lcs.mmap
+          new_generalized_arg_lcs.mapM
         instantiate_mvars
-  let new_index_eq_lcs ← new_index_eq_lcs.mmap instantiate_mvars
+  let new_index_eq_lcs ← new_index_eq_lcs.mapM instantiate_mvars
   let b
     ←-- Construct a proof of the new induction hypothesis by applying `ih` to the
         -- `xᵢ` metavariables and the `new_args`, then abstracting over the
@@ -1286,8 +1286,8 @@ open Tactic Tactic.Eliminate Interactive Interactive.Types Lean.Parser
 unsafe def generalisation_mode_parser : lean.parser GeneralizationMode :=
   tk "fixing" *>
       (tk "*" *> pure (GeneralizationMode.generalize_only []) <|>
-        generalization_mode.generalize_all_except <$> many ident) <|>
-    tk "generalizing" *> generalization_mode.generalize_only <$> many ident <|>
+        GeneralizationMode.generalize_all_except <$> many ident) <|>
+    tk "generalizing" *> GeneralizationMode.generalize_only <$> many ident <|>
       pure (GeneralizationMode.generalize_all_except [])
 #align tactic.interactive.generalisation_mode_parser tactic.interactive.generalisation_mode_parser
 

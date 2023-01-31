@@ -35,7 +35,7 @@ instance : BundledHom.ParentProjection @PartialOrder.toPreorder :=
 deriving instance LargeCategory, ConcreteCategory for PartialOrderCat
 
 instance : CoeSort PartialOrderCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled PartialOrder from the underlying type and typeclass. -/
 def of (α : Type _) [PartialOrder α] : PartialOrderCat :=
@@ -83,8 +83,8 @@ def dual : PartialOrderCat ⥤ PartialOrderCat
 @[simps Functor inverse]
 def dualEquiv : PartialOrderCat ≌ PartialOrderCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align PartialOrder.dual_equiv PartialOrderCat.dualEquiv
 
 end PartialOrderCat
@@ -122,9 +122,9 @@ def preorderToPartialOrderForgetAdjunction :
           left_inv := fun f =>
             OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
           right_inv := fun f => OrderHom.ext _ _ <| funext fun x => rfl }
-      hom_equiv_naturality_left_symm' := fun X Y Z f g =>
+      homEquiv_naturality_left_symm' := fun X Y Z f g =>
         OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
-      hom_equiv_naturality_right' := fun X Y Z f g => OrderHom.ext _ _ <| funext fun x => rfl }
+      homEquiv_naturality_right' := fun X Y Z f g => OrderHom.ext _ _ <| funext fun x => rfl }
 #align Preorder_to_PartialOrder_forget_adjunction preorderToPartialOrderForgetAdjunction
 
 /-- `Preorder_to_PartialOrder` and `order_dual` commute. -/

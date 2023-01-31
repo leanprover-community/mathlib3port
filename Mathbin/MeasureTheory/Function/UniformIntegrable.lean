@@ -233,7 +233,7 @@ theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε :
   by
   have hf_mk : mem_ℒp (hf.1.mk f) 1 μ := (mem_ℒp_congr_ae hf.1.ae_eq_mk).mp hf
   obtain ⟨M, hM_pos, hfM⟩ :=
-    hf_mk.integral_indicator_norm_ge_nonneg_le_of_meas μ hf.1.strongly_measurable_mk hε
+    hf_mk.integral_indicator_norm_ge_nonneg_le_of_meas μ hf.1.stronglyMeasurable_mk hε
   refine' ⟨M, hM_pos, (le_of_eq _).trans hfM⟩
   refine' lintegral_congr_ae _
   filter_upwards [hf.1.ae_eq_mk]with x hx
@@ -619,8 +619,8 @@ theorem tendsto_Lp_of_tendsto_ae [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p �
     convert this
     exact funext fun n => snorm_congr_ae ((hf n).ae_eq_mk.sub hg.1.ae_eq_mk)
   refine'
-    tendsto_Lp_of_tendsto_ae_of_meas μ hp hp' (fun n => (hf n).strongly_measurable_mk)
-      hg.1.strongly_measurable_mk (hg.ae_eq hg.1.ae_eq_mk) (hui.ae_eq fun n => (hf n).ae_eq_mk) _
+    tendsto_Lp_of_tendsto_ae_of_meas μ hp hp' (fun n => (hf n).stronglyMeasurable_mk)
+      hg.1.stronglyMeasurable_mk (hg.ae_eq hg.1.ae_eq_mk) (hui.ae_eq fun n => (hf n).ae_eq_mk) _
   have h_ae_forall_eq : ∀ᵐ x ∂μ, ∀ n, f n x = (hf n).mk (f n) x :=
     by
     rw [ae_all_iff]
@@ -733,7 +733,7 @@ theorem unifIntegrableOf' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β
                 (hs.inter (strongly_measurable_const.measurable_set_le (hf i).nnnorm))))
             (strongly_measurable.ae_strongly_measurable
               ((hf i).indicator
-                (hs.inter ((hf i).nnnorm.measurable_set_lt strongly_measurable_const))))
+                (hs.inter ((hf i).nnnorm.measurableSet_lt strongly_measurable_const))))
             hp)
       congr
       change
@@ -906,7 +906,7 @@ theorem uniformIntegrableOf' [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
         le_trans (snorm_mono fun x => _)
           (snorm_add_le
             (strongly_measurable.ae_strongly_measurable
-              ((hf i).indicator ((hf i).nnnorm.measurable_set_lt strongly_measurable_const)))
+              ((hf i).indicator ((hf i).nnnorm.measurableSet_lt strongly_measurable_const)))
             (strongly_measurable.ae_strongly_measurable
               ((hf i).indicator (strongly_measurable_const.measurable_set_le (hf i).nnnorm)))
             hp)

@@ -112,11 +112,11 @@ theorem tendsto_coe' {f : Filter α} [NeBot f] {m : α → ℝ≥0} {x : ℝ} :
 #align nnreal.tendsto_coe' Nnreal.tendsto_coe'
 
 @[simp]
-theorem map_coe_atTop : map (coe : ℝ≥0 → ℝ) atTop = at_top :=
+theorem map_coe_atTop : map (coe : ℝ≥0 → ℝ) atTop = atTop :=
   map_val_Ici_atTop 0
 #align nnreal.map_coe_at_top Nnreal.map_coe_atTop
 
-theorem comap_coe_atTop : comap (coe : ℝ≥0 → ℝ) atTop = at_top :=
+theorem comap_coe_atTop : comap (coe : ℝ≥0 → ℝ) atTop = atTop :=
   (atTop_Ici_eq 0).symm
 #align nnreal.comap_coe_at_top Nnreal.comap_coe_atTop
 

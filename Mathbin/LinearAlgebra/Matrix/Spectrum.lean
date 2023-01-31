@@ -69,10 +69,10 @@ theorem eigenvectorMatrix_mul_inv : hA.eigenvectorMatrix ⬝ hA.eigenvectorMatri
 #align matrix.is_hermitian.eigenvector_matrix_mul_inv Matrix.IsHermitian.eigenvectorMatrix_mul_inv
 
 noncomputable instance : Invertible hA.eigenvectorMatrixInv :=
-  invertibleOfLeftInverse _ _ hA.eigenvector_matrix_mul_inv
+  invertibleOfLeftInverse _ _ hA.eigenvectorMatrix_mul_inv
 
 noncomputable instance : Invertible hA.eigenvectorMatrix :=
-  invertibleOfRightInverse _ _ hA.eigenvector_matrix_mul_inv
+  invertibleOfRightInverse _ _ hA.eigenvectorMatrix_mul_inv
 
 theorem eigenvectorMatrix_apply (i j : n) : hA.eigenvectorMatrix i j = hA.eigenvectorBasis j i := by
   simp_rw [eigenvector_matrix, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis,

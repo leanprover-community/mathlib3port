@@ -64,7 +64,7 @@ noncomputable instance [IsIntegral X] : Field X.functionField :=
       subtype.coe_injective.eq_iff, ← opens.empty_eq]
     erw [basic_open_eq_bot_iff]
     exacts[ha, (RingedSpace.basic_open _ _).Prop]
-  have := (X.presheaf.germ ⟨_, hs⟩).is_unit_map (RingedSpace.is_unit_res_basic_open _ s)
+  have := (X.presheaf.germ ⟨_, hs⟩).isUnit_map (RingedSpace.is_unit_res_basic_open _ s)
   rwa [TopCat.Presheaf.germ_res_apply] at this
 
 theorem germ_injective_of_isIntegral [IsIntegral X] {U : Opens X.carrier} (x : U) :

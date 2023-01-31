@@ -36,7 +36,7 @@ def Frame :=
 namespace Frame
 
 instance : CoeSort Frame (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 instance (X : Frame) : Frame X :=
   X.str
@@ -95,7 +95,7 @@ end Frame
 def topOpToFrame : TopCatᵒᵖ ⥤ Frame
     where
   obj X := Frame.of (Opens (unop X : TopCat))
-  map X Y f := opens.comap <| Quiver.Hom.unop f
+  map X Y f := Opens.comap <| Quiver.Hom.unop f
   map_id' X := Opens.comap_id
 #align Top_op_to_Frame topOpToFrame
 

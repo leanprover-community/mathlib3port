@@ -68,7 +68,7 @@ lean 3 declaration is
 but is expected to have type
   forall {q : Rat}, Eq.{1} Int (Int.floor.{0} Rat Rat.instLinearOrderedRingRat Rat.instFloorRingRatInstLinearOrderedRingRat q) (HDiv.hDiv.{0, 0, 0} Int Int Int (instHDiv.{0} Int Int.instDivInt_1) (Rat.num q) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.floor_def Rat.floor_defₓ'. -/
-protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom :=
+protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.den :=
   by
   cases q
   rfl
@@ -176,7 +176,7 @@ lean 3 declaration is
 but is expected to have type
   forall (q : Rat), LT.lt.{0} Int Int.instLTInt (Rat.num q) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) (Int.floor.{0} Rat Rat.instLinearOrderedRingRat Rat.instFloorRingRatInstLinearOrderedRingRat q) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) (Nat.cast.{0} Int Int.instNatCastInt (Rat.den q)))
 Case conversion may be inaccurate. Consider using '#align rat.num_lt_succ_floor_mul_denom Rat.num_lt_succ_floor_mul_denₓ'. -/
-theorem num_lt_succ_floor_mul_den (q : ℚ) : q.num < (⌊q⌋ + 1) * q.denom :=
+theorem num_lt_succ_floor_mul_den (q : ℚ) : q.num < (⌊q⌋ + 1) * q.den :=
   by
   suffices (q.num : ℚ) < (⌊q⌋ + 1) * q.denom by exact_mod_cast this
   suffices (q.num : ℚ) < (q - fract q + 1) * q.denom
@@ -231,10 +231,10 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
       simpa only [Nat.cast_natAbs, abs_of_nonneg q_num_pos.le] using tmp
     rwa [this]
   -- to show the claim, start with the following inequality
-  have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.denom < q⁻¹.denom :=
+  have q_inv_num_denom_ineq : q⁻¹.num - ⌊q⁻¹⌋ * q⁻¹.den < q⁻¹.den :=
     by
-    have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.denom := Rat.num_lt_succ_floor_mul_den q⁻¹
-    have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.denom + q⁻¹.denom := by rwa [right_distrib, one_mul] at this
+    have : q⁻¹.num < (⌊q⁻¹⌋ + 1) * q⁻¹.den := Rat.num_lt_succ_floor_mul_den q⁻¹
+    have : q⁻¹.num < ⌊q⁻¹⌋ * q⁻¹.den + q⁻¹.den := by rwa [right_distrib, one_mul] at this
     rwa [← sub_lt_iff_lt_add'] at this
   -- use that `q.num` and `q.denom` are coprime to show that q_inv is the unreduced reciprocal
   -- of `q`
@@ -246,7 +246,7 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
     rw [q_inv_def]
     constructor
     · exact_mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
-    · suffices (((q.denom : ℚ) / q.num).denom : ℤ) = q.num.nat_abs by exact_mod_cast this
+    · suffices (((q.denom : ℚ) / q.num).den : ℤ) = q.num.nat_abs by exact_mod_cast this
       rw [q_num_abs_eq_q_num]
       exact_mod_cast Rat.den_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
   rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq

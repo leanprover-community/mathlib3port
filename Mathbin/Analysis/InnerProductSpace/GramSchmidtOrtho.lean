@@ -366,12 +366,12 @@ size of the index set is the dimension of `E`, produce an orthonormal basis for 
 with the orthonormal set produced by the Gram-Schmidt orthonormalization process on the elements of
 `ι` for which this process gives a nonzero number. -/
 noncomputable def gramSchmidtOrthonormalBasis : OrthonormalBasis ι 𝕜 E :=
-  ((gramSchmidtOrthonormal' f).exists_orthonormal_basis_extension_of_card_eq h).some
+  ((gramSchmidtOrthonormal' f).exists_orthonormalBasis_extension_of_card_eq h).some
 #align gram_schmidt_orthonormal_basis gramSchmidtOrthonormalBasis
 
 theorem gramSchmidtOrthonormalBasis_apply {f : ι → E} {i : ι} (hi : gramSchmidtNormed 𝕜 f i ≠ 0) :
     gramSchmidtOrthonormalBasis h f i = gramSchmidtNormed 𝕜 f i :=
-  ((gramSchmidtOrthonormal' f).exists_orthonormal_basis_extension_of_card_eq h).some_spec i hi
+  ((gramSchmidtOrthonormal' f).exists_orthonormalBasis_extension_of_card_eq h).choose_spec i hi
 #align gram_schmidt_orthonormal_basis_apply gramSchmidtOrthonormalBasis_apply
 
 theorem gramSchmidtOrthonormalBasis_apply_of_orthogonal {f : ι → E}

@@ -41,12 +41,12 @@ protected def card (α : Type _) : ℕ :=
 
 @[simp]
 theorem card_eq_fintype_card [Fintype α] : Nat.card α = Fintype.card α :=
-  mk_to_nat_eq_card
+  mk_toNat_eq_card
 #align nat.card_eq_fintype_card Nat.card_eq_fintype_card
 
 @[simp]
 theorem card_eq_zero_of_infinite [Infinite α] : Nat.card α = 0 :=
-  mk_to_nat_of_infinite
+  mk_toNat_of_infinite
 #align nat.card_eq_zero_of_infinite Nat.card_eq_zero_of_infinite
 
 theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
@@ -145,12 +145,12 @@ def card (α : Type _) : PartEnat :=
 
 @[simp]
 theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
-  mk_to_part_enat_eq_coe_card
+  mk_toPartEnat_eq_coe_card
 #align part_enat.card_eq_coe_fintype_card PartEnat.card_eq_coe_fintype_card
 
 @[simp]
 theorem card_eq_top_of_infinite [Infinite α] : card α = ⊤ :=
-  mk_to_part_enat_of_infinite
+  mk_toPartEnat_of_infinite
 #align part_enat.card_eq_top_of_infinite PartEnat.card_eq_top_of_infinite
 
 end PartEnat

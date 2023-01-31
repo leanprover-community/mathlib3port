@@ -90,7 +90,7 @@ theorem continuous_left_toIocMod : ContinuousWithinAt (toIocMod a hp) (Iic x) x 
   rw [(funext fun y => Eq.trans (by rw [neg_neg]) <| toIocMod_neg _ _ _ :
       toIocMod a hp = (fun x => p - x) ∘ toIcoMod (-a) hp ∘ Neg.neg)]
   exact
-    (continuous_sub_left _).ContinuousAt.comp_continuous_within_at <|
+    (continuous_sub_left _).ContinuousAt.comp_continuousWithinAt <|
       (continuous_right_toIcoMod _ _ _).comp continuous_neg.continuous_within_at fun y => neg_le_neg
 #align continuous_left_to_Ioc_mod continuous_left_toIocMod
 
@@ -107,7 +107,7 @@ theorem toIcoMod_eventuallyEq_toIocMod : toIcoMod a hp =ᶠ[𝓝 x] toIocMod a h
 theorem continuousAt_toIcoMod : ContinuousAt (toIcoMod a hp) x :=
   let h := toIcoMod_eventuallyEq_toIocMod a hp hx
   continuousAt_iff_continuous_left_right.2 <|
-    ⟨(continuous_left_toIocMod a hp x).congr_of_eventually_eq (h.filter_mono nhdsWithin_le_nhds)
+    ⟨(continuous_left_toIocMod a hp x).congr_of_eventuallyEq (h.filter_mono nhdsWithin_le_nhds)
         h.eq_of_nhds,
       continuous_right_toIcoMod a hp x⟩
 #align continuous_at_to_Ico_mod continuousAt_toIcoMod
@@ -116,7 +116,7 @@ theorem continuousAt_toIocMod : ContinuousAt (toIocMod a hp) x :=
   let h := toIcoMod_eventuallyEq_toIocMod a hp hx
   continuousAt_iff_continuous_left_right.2 <|
     ⟨continuous_left_toIocMod a hp x,
-      (continuous_right_toIcoMod a hp x).congr_of_eventually_eq
+      (continuous_right_toIcoMod a hp x).congr_of_eventuallyEq
         (h.symm.filter_mono nhdsWithin_le_nhds) h.symm.eq_of_nhds⟩
 #align continuous_at_to_Ioc_mod continuousAt_toIocMod
 
@@ -255,12 +255,12 @@ section Continuity
 
 @[continuity]
 theorem continuous_equivIco_symm : Continuous (equivIco p a).symm :=
-  continuous_quotient_mk'.comp continuous_subtype_coe
+  continuous_quotient_mk'.comp continuous_subtype_val
 #align add_circle.continuous_equiv_Ico_symm AddCircle.continuous_equivIco_symm
 
 @[continuity]
 theorem continuous_equivIoc_symm : Continuous (equivIoc p a).symm :=
-  continuous_quotient_mk'.comp continuous_subtype_coe
+  continuous_quotient_mk'.comp continuous_subtype_val
 #align add_circle.continuous_equiv_Ioc_symm AddCircle.continuous_equivIoc_symm
 
 variable {x : AddCircle p} (hx : x ≠ a)
@@ -409,7 +409,7 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
     exact add_order_of_div_of_gcd_eq_one hn h
 #align add_circle.add_order_of_div_of_gcd_eq_one' AddCircle.addOrderOf_div_of_gcd_eq_one'
 
-theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.denom :=
+theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den :=
   by
   have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by
     norm_cast
@@ -446,7 +446,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
 
 theorem exists_gcd_eq_one_of_isOfFinAddOrder {u : AddCircle p} (h : IsOfFinAddOrder u) :
     ∃ m : ℕ, m.gcd (addOrderOf u) = 1 ∧ m < addOrderOf u ∧ ↑((m : 𝕜) / addOrderOf u * p) = u :=
-  let ⟨m, hl, hg, he⟩ := (add_order_of_eq_pos_iff <| add_orderOf_pos' h).1 rfl
+  let ⟨m, hl, hg, he⟩ := (addOrderOf_eq_pos_iff <| add_orderOf_pos' h).1 rfl
   ⟨m, hg, hl, he⟩
 #align add_circle.exists_gcd_eq_one_of_is_of_fin_add_order AddCircle.exists_gcd_eq_one_of_isOfFinAddOrder
 
@@ -620,7 +620,7 @@ homeomorphism of topological spaces. -/
 def homeoIccQuot : 𝕋 ≃ₜ Quot (EndpointIdent p a)
     where
   toEquiv := equivIccQuot p a
-  continuous_to_fun :=
+  continuous_toFun :=
     by
     simp_rw [quotient_map_quotient_mk.continuous_iff, continuous_iff_continuousAt,
       continuousAt_iff_continuous_left_right]
@@ -632,8 +632,8 @@ def homeoIccQuot : 𝕋 ≃ₜ Quot (EndpointIdent p a)
       rw [inducing_coe.continuous_within_at_iff]
     · apply continuous_left_toIocMod
     · apply continuous_right_toIcoMod
-  continuous_inv_fun :=
-    continuous_quot_lift _ ((AddCircle.continuous_mk' p).comp continuous_subtype_coe)
+  continuous_invFun :=
+    continuous_quot_lift _ ((AddCircle.continuous_mk' p).comp continuous_subtype_val)
 #align add_circle.homeo_Icc_quot AddCircle.homeoIccQuot
 
 /-! We now show that a continuous function on `[a, a + p]` satisfying `f a = f (a + p)` is the
@@ -656,7 +656,7 @@ theorem liftIco_continuous [TopologicalSpace B] {f : 𝕜 → B} (hf : f a = f (
     (hc : ContinuousOn f <| Icc a (a + p)) : Continuous (liftIco p a f) :=
   by
   rw [lift_Ico_eq_lift_Icc hf]
-  refine' Continuous.comp _ (homeo_Icc_quot p a).continuous_to_fun
+  refine' Continuous.comp _ (homeo_Icc_quot p a).continuous_toFun
   exact continuous_coinduced_dom.mpr (continuous_on_iff_continuous_restrict.mp hc)
 #align add_circle.lift_Ico_continuous AddCircle.liftIco_continuous
 

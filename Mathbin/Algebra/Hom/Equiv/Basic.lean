@@ -1033,7 +1033,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_equiv.Pi_congr_right_symm MulEquiv.piCongrRight_symmₓ'. -/
 @[simp, to_additive]
 theorem piCongrRight_symm {η : Type _} {Ms Ns : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)]
-    (es : ∀ j, Ms j ≃* Ns j) : (piCongrRight es).symm = Pi_congr_right fun i => (es i).symm :=
+    (es : ∀ j, Ms j ≃* Ns j) : (piCongrRight es).symm = piCongrRight fun i => (es i).symm :=
   rfl
 #align mul_equiv.Pi_congr_right_symm MulEquiv.piCongrRight_symm
 #align add_equiv.Pi_congr_right_symm AddEquiv.piCongrRight_symm
@@ -1047,7 +1047,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.Pi_congr_rig
 @[simp, to_additive]
 theorem piCongrRight_trans {η : Type _} {Ms Ns Ps : η → Type _} [∀ j, Mul (Ms j)] [∀ j, Mul (Ns j)]
     [∀ j, Mul (Ps j)] (es : ∀ j, Ms j ≃* Ns j) (fs : ∀ j, Ns j ≃* Ps j) :
-    (piCongrRight es).trans (piCongrRight fs) = Pi_congr_right fun i => (es i).trans (fs i) :=
+    (piCongrRight es).trans (piCongrRight fs) = piCongrRight fun i => (es i).trans (fs i) :=
   rfl
 #align mul_equiv.Pi_congr_right_trans MulEquiv.piCongrRight_trans
 #align add_equiv.Pi_congr_right_trans AddEquiv.piCongrRight_trans

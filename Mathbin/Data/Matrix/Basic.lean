@@ -331,7 +331,7 @@ theorem IsSMulRegular.matrix [SMul R S] {k : R} (hk : IsSMulRegular S k) :
 
 theorem IsLeftRegular.matrix [Mul α] {k : α} (hk : IsLeftRegular k) :
     IsSMulRegular (Matrix m n α) k :=
-  hk.IsSmulRegular.Matrix
+  hk.IsSMulRegular.Matrix
 #align is_left_regular.matrix IsLeftRegular.matrix
 
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (Matrix m n α) :=
@@ -1025,8 +1025,8 @@ instance [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix n n α) :=
     one_mul := Matrix.one_mul
     mul_one := Matrix.mul_one
     natCast := fun n => diagonal fun _ => n
-    nat_cast_zero := by ext <;> simp [Nat.cast]
-    nat_cast_succ := fun n => by ext <;> by_cases i = j <;> simp [Nat.cast, *] }
+    natCast_zero := by ext <;> simp [Nat.cast]
+    natCast_succ := fun n => by ext <;> by_cases i = j <;> simp [Nat.cast, *] }
 
 @[simp]
 theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSemiring β]
@@ -2273,7 +2273,7 @@ section Star
 
 /-- When `α` has a star operation, square matrices `matrix n n α` have a star
 operation equal to `matrix.conj_transpose`. -/
-instance [Star α] : Star (Matrix n n α) where star := conjTranspose
+instance [Star α] : Star (Matrix n n α) where unit := conjTranspose
 
 theorem star_eq_conjTranspose [Star α] (M : Matrix m m α) : star M = Mᴴ :=
   rfl

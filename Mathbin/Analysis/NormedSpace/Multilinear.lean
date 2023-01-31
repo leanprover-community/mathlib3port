@@ -941,7 +941,7 @@ theorem mkPiField_apply (z : G) (m : ι → 𝕜) :
 
 theorem mkPiField_apply_one_eq_self (f : ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G) :
     ContinuousMultilinearMap.mkPiField 𝕜 ι (f fun i => 1) = f :=
-  toMultilinearMap_inj f.toMultilinearMap.mk_pi_ring_apply_one_eq_self
+  toMultilinearMap_inj f.toMultilinearMap.mkPiRing_apply_one_eq_self
 #align continuous_multilinear_map.mk_pi_field_apply_one_eq_self ContinuousMultilinearMap.mkPiField_apply_one_eq_self
 
 @[simp]
@@ -983,7 +983,7 @@ protected def piFieldEquiv : G ≃ₗᵢ[𝕜] ContinuousMultilinearMap 𝕜 (fu
     ext m
     simp [smul_smul, mul_comm]
   left_inv z := by simp
-  right_inv f := f.mk_pi_field_apply_one_eq_self
+  right_inv f := f.mkPiField_apply_one_eq_self
   norm_map' := norm_mkPiField
 #align continuous_multilinear_map.pi_field_equiv ContinuousMultilinearMap.piFieldEquiv
 
@@ -1074,7 +1074,7 @@ def mkContinuousLinear (f : G →ₗ[𝕜] MultilinearMap 𝕜 E G') (C : ℝ)
         simp only [SMulHomClass.map_smul]
         rfl }
     (max C 0) fun x =>
-    ((f x).mk_continuous_norm_le' _).trans_eq <| by
+    ((f x).mkContinuous_norm_le' _).trans_eq <| by
       rw [max_mul_of_nonneg _ _ (norm_nonneg x), zero_mul]
 #align multilinear_map.mk_continuous_linear MultilinearMap.mkContinuousLinear
 
@@ -1105,7 +1105,7 @@ def mkContinuousMultilinear (f : MultilinearMap 𝕜 E (MultilinearMap 𝕜 E' G
         ext1
         simp }
     (max C 0) fun m =>
-    ((f m).mk_continuous_norm_le' _).trans_eq <|
+    ((f m).mkContinuous_norm_le' _).trans_eq <|
       by
       rw [max_mul_of_nonneg, zero_mul]
       exact prod_nonneg fun _ _ => norm_nonneg _
@@ -1314,7 +1314,7 @@ theorem ContinuousLinearMap.curry_uncurryLeft
 @[simp]
 theorem ContinuousMultilinearMap.uncurry_curryLeft (f : ContinuousMultilinearMap 𝕜 Ei G) :
     f.curryLeft.uncurryLeft = f :=
-  ContinuousMultilinearMap.toMultilinearMap_inj <| f.toMultilinearMap.uncurry_curry_left
+  ContinuousMultilinearMap.toMultilinearMap_inj <| f.toMultilinearMap.uncurry_curryLeft
 #align continuous_multilinear_map.uncurry_curry_left ContinuousMultilinearMap.uncurry_curryLeft
 
 variable (𝕜 Ei G)

@@ -67,7 +67,7 @@ instance vectorBundle : VectorBundle 𝕜 F (Bundle.Trivial B F)
     intro e he
     rw [eq_trivialization B F e]
     infer_instance
-  continuous_on_coord_change' := by
+  continuousOn_coord_change' := by
     intro e e' he he'
     obtain rfl := eq_trivialization B F e
     obtain rfl := eq_trivialization B F e'
@@ -95,7 +95,7 @@ variable {F₁ E₁ F₂ E₂} [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module �
 
 instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e₂).isLinear 𝕜
     where linear := fun x ⟨h₁, h₂⟩ =>
-    (((e₁.linear 𝕜 h₁).mk' _).prod_map ((e₂.linear 𝕜 h₂).mk' _)).isLinear
+    (((e₁.linear 𝕜 h₁).mk' _).Prod_map ((e₂.linear 𝕜 h₂).mk' _)).isLinear
 #align trivialization.prod.is_linear Trivialization.prod.isLinear
 
 variable {e₁ e₂} [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E₂ x)]
@@ -123,7 +123,7 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
   trivialization_linear' := by
     rintro _ ⟨e₁, e₂, he₁, he₂, rfl⟩; skip
     infer_instance
-  continuous_on_coord_change' :=
+  continuousOn_coord_change' :=
     by
     rintro _ _ ⟨e₁, e₂, he₁, he₂, rfl⟩ ⟨e₁', e₂', he₁', he₂', rfl⟩; skip
     refine'
@@ -139,7 +139,7 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
       show
         (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =
           (e₁.coord_changeL 𝕜 e₁' b v₁, e₂.coord_changeL 𝕜 e₂' b v₂)
-      rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod e₂).coord_changeL_apply']
+      rw [e₁.coord_changeL_apply e₁', e₂.coord_changeL_apply e₂', (e₁.prod e₂).coordChangeL_apply']
       exacts[rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
 #align vector_bundle.prod VectorBundle.prod
 
@@ -155,7 +155,7 @@ theorem Trivialization.continuousLinearEquivAt_prod {e₁ : Trivialization F₁ 
   ext1
   funext v
   obtain ⟨v₁, v₂⟩ := v
-  rw [(e₁.prod e₂).continuous_linear_equiv_at_apply 𝕜, Trivialization.prod]
+  rw [(e₁.prod e₂).continuousLinearEquivAt_apply 𝕜, Trivialization.prod]
   exact (congr_arg Prod.snd (prod_apply 𝕜 hx₁ hx₂ v₁ v₂) : _)
 #align trivialization.continuous_linear_equiv_at_prod Trivialization.continuousLinearEquivAt_prod
 
@@ -189,7 +189,7 @@ instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
   trivialization_linear' := by
     rintro _ ⟨e, he, rfl⟩; skip
     infer_instance
-  continuous_on_coord_change' :=
+  continuousOn_coord_change' :=
     by
     rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩; skip
     refine'
@@ -197,7 +197,7 @@ instance VectorBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
         _
     rintro b (hb : f b ∈ e.base_set ∩ e'.base_set); ext v
     show ((e.pullback f).coordChangeL 𝕜 (e'.pullback f) b) v = (e.coord_changeL 𝕜 e' (f b)) v
-    rw [e.coord_changeL_apply e' hb, (e.pullback f).coord_changeL_apply' _]
+    rw [e.coord_changeL_apply e' hb, (e.pullback f).coordChangeL_apply' _]
     exacts[rfl, hb]
 #align vector_bundle.pullback VectorBundle.pullback
 

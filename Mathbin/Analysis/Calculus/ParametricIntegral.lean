@@ -207,7 +207,7 @@ theorem hasFderivAt_integral_of_dominated_of_fderiv_le {F : H → α → E} {F' 
     apply (h_diff.and h_bound).mono
     rintro a ⟨ha_deriv, ha_bound⟩
     refine'
-      (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_fderiv_within_le
+      (convex_ball _ _).lipschitzOnWith_of_nnnorm_has_fderiv_within_le
         (fun x x_in => (ha_deriv x x_in).HasFderivWithinAt) fun x x_in => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
@@ -267,7 +267,7 @@ theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E}
     apply (h_diff.and h_bound).mono
     rintro a ⟨ha_deriv, ha_bound⟩
     refine'
-      (convex_ball _ _).lipschitz_on_with_of_nnnorm_has_deriv_within_le
+      (convex_ball _ _).lipschitzOnWith_of_nnnorm_has_deriv_within_le
         (fun x x_in => (ha_deriv x x_in).HasDerivWithinAt) fun x x_in => _
     rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)

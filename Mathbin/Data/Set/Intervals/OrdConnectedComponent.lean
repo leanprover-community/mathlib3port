@@ -48,7 +48,7 @@ theorem mem_ordConnectedComponent : y ∈ ordConnectedComponent s x ↔ [x, y] �
 
 #print Set.dual_ordConnectedComponent /-
 theorem dual_ordConnectedComponent :
-    ordConnectedComponent (of_dual ⁻¹' s) (toDual x) = of_dual ⁻¹' ordConnectedComponent s x :=
+    ordConnectedComponent (ofDual ⁻¹' s) (toDual x) = ofDual ⁻¹' ordConnectedComponent s x :=
   ext <|
     toDual.Surjective.forall.2 fun x =>
       by
@@ -142,7 +142,7 @@ theorem ordConnectedComponent_eq (h : [x, y] ⊆ s) :
 -/
 
 instance : OrdConnected (ordConnectedComponent s x) :=
-  ord_connected_of_uIcc_subset_left fun y hy z hz => (uIcc_subset_uIcc_left hz).trans hy
+  ordConnected_of_uIcc_subset_left fun y hy z hz => (uIcc_subset_uIcc_left hz).trans hy
 
 #print Set.ordConnectedProj /-
 /-- Projection from `s : set α` to `α` sending each order connected component of `s` to a single
@@ -170,7 +170,7 @@ theorem mem_ordConnectedComponent_ordConnectedProj (s : Set α) (x : s) :
 @[simp]
 theorem ordConnectedComponent_ordConnectedProj (s : Set α) (x : s) :
     ordConnectedComponent s (ordConnectedProj s x) = ordConnectedComponent s x :=
-  ord_connected_component_eq <| mem_ordConnectedComponent_ordConnectedProj _ _
+  ordConnectedComponent_eq <| mem_ordConnectedComponent_ordConnectedProj _ _
 #align set.ord_connected_component_ord_connected_proj Set.ordConnectedComponent_ordConnectedProj
 -/
 
@@ -199,7 +199,7 @@ def ordConnectedSection (s : Set α) : Set α :=
 
 #print Set.dual_ordConnectedSection /-
 theorem dual_ordConnectedSection (s : Set α) :
-    ordConnectedSection (of_dual ⁻¹' s) = of_dual ⁻¹' ordConnectedSection s :=
+    ordConnectedSection (ofDual ⁻¹' s) = ofDual ⁻¹' ordConnectedSection s :=
   by
   simp only [ord_connected_section, ord_connected_proj]
   congr 1 with x; simp only; congr 1
@@ -209,7 +209,7 @@ theorem dual_ordConnectedSection (s : Set α) :
 
 #print Set.ordConnectedSection_subset /-
 theorem ordConnectedSection_subset : ordConnectedSection s ⊆ s :=
-  range_subset_iff.2 fun x => ord_connected_component_subset <| Nonempty.some_mem _
+  range_subset_iff.2 fun x => ordConnectedComponent_subset <| Nonempty.some_mem _
 #align set.ord_connected_section_subset Set.ordConnectedSection_subset
 -/
 
@@ -251,7 +251,7 @@ Case conversion may be inaccurate. Consider using '#align set.disjoint_left_ord_
 theorem disjoint_left_ordSeparatingSet : Disjoint s (ordSeparatingSet s t) :=
   Disjoint.inter_right' _ <|
     disjoint_unionᵢ₂_right.2 fun x hx =>
-      disjoint_compl_right.mono_right <| ord_connected_component_subset
+      disjoint_compl_right.mono_right <| ordConnectedComponent_subset
 #align set.disjoint_left_ord_separating_set Set.disjoint_left_ordSeparatingSet
 
 /- warning: set.disjoint_right_ord_separating_set -> Set.disjoint_right_ordSeparatingSet is a dubious translation:
@@ -261,12 +261,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) t (Set.ordSeparatingSet.{u1} α _inst_1 s t)
 Case conversion may be inaccurate. Consider using '#align set.disjoint_right_ord_separating_set Set.disjoint_right_ordSeparatingSetₓ'. -/
 theorem disjoint_right_ordSeparatingSet : Disjoint t (ordSeparatingSet s t) :=
-  ordSeparatingSet_comm t s ▸ disjoint_left_ord_separating_set
+  ordSeparatingSet_comm t s ▸ disjoint_left_ordSeparatingSet
 #align set.disjoint_right_ord_separating_set Set.disjoint_right_ordSeparatingSet
 
 #print Set.dual_ordSeparatingSet /-
 theorem dual_ordSeparatingSet :
-    ordSeparatingSet (of_dual ⁻¹' s) (of_dual ⁻¹' t) = of_dual ⁻¹' ordSeparatingSet s t := by
+    ordSeparatingSet (ofDual ⁻¹' s) (ofDual ⁻¹' t) = ofDual ⁻¹' ordSeparatingSet s t := by
   simp only [ord_separating_set, mem_preimage, ← to_dual.surjective.Union_comp, of_dual_to_dual,
     dual_ord_connected_component, ← preimage_compl, preimage_inter, preimage_Union]
 #align set.dual_ord_separating_set Set.dual_ordSeparatingSet
@@ -275,7 +275,7 @@ theorem dual_ordSeparatingSet :
 #print Set.ordT5Nhd /-
 /-- An auxiliary neighborhood that will be used in the proof of `order_topology.t5_space`. -/
 def ordT5Nhd (s t : Set α) : Set α :=
-  ⋃ x ∈ s, ordConnectedComponent (tᶜ ∩ (ord_connected_section <| ordSeparatingSet s t)ᶜ) x
+  ⋃ x ∈ s, ordConnectedComponent (tᶜ ∩ (ordConnectedSection <| ordSeparatingSet s t)ᶜ) x
 #align set.ord_t5_nhd Set.ordT5Nhd
 -/
 

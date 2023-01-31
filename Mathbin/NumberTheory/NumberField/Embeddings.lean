@@ -70,7 +70,7 @@ The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` o
 the minimal polynomial of `x` over `ℚ`. -/
 theorem range_eval_eq_rootSet_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A :=
   by
-  convert (NumberField.isAlgebraic K).range_eval_eq_root_set_minpoly A x using 1
+  convert (NumberField.isAlgebraic K).range_eval_eq_rootSet_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
 #align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_rootSet_minpoly
@@ -110,7 +110,7 @@ theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K 
   refine' this.subset fun x hx => _; simp_rw [mem_Union]
   have h_map_ℚ_minpoly := minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hx.1
   refine' ⟨_, ⟨_, fun i => _⟩, mem_root_set.2 ⟨minpoly.ne_zero hx.1, minpoly.aeval ℤ x⟩⟩
-  · rw [← (minpoly.monic hx.1).nat_degree_map (algebraMap ℤ ℚ), ← h_map_ℚ_minpoly]
+  · rw [← (minpoly.monic hx.1).natDegree_map (algebraMap ℤ ℚ), ← h_map_ℚ_minpoly]
     exact minpoly.natDegree_le (isIntegral_of_isScalarTower hx.1)
   rw [mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
   refine' (Eq.trans_le _ <| coeff_bdd_of_norm_le hx.2 i).trans (Nat.le_ceil _)
@@ -268,7 +268,7 @@ instance : NonnegHomClass (InfinitePlace K) K ℝ
     where
   coe w x := w x
   coe_injective' _ _ h := Subtype.eq (AbsoluteValue.ext fun x => congr_fun h x)
-  map_nonneg w x := w.1.Nonneg _
+  map_nonneg w x := w.1.NonNeg _
 
 theorem coe_mk (φ : K →+* ℂ) : ⇑(mk φ) = place φ :=
   rfl
@@ -284,7 +284,7 @@ noncomputable def embedding (w : InfinitePlace K) : K →+* ℂ :=
 #align number_field.infinite_place.embedding NumberField.InfinitePlace.embedding
 
 theorem mk_embedding (w : InfinitePlace K) : mk (embedding w) = w :=
-  Subtype.ext w.2.some_spec
+  Subtype.ext w.2.choose_spec
 #align number_field.infinite_place.mk_embedding NumberField.InfinitePlace.mk_embedding
 
 theorem pos_iff (w : InfinitePlace K) (x : K) : 0 < w x ↔ x ≠ 0 :=

@@ -98,7 +98,7 @@ theorem DirectedOn.strictConvex_unionₛ {S : Set (Set E)} (hdir : DirectedOn (�
     (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀ S) :=
   by
   rw [sUnion_eq_Union]
-  exact (directedOn_iff_directed.1 hdir).strict_convex_Union fun s => hS _ s.2
+  exact (directedOn_iff_directed.1 hdir).strictConvex_unionᵢ fun s => hS _ s.2
 #align directed_on.strict_convex_sUnion DirectedOn.strictConvex_unionₛ
 
 end SMul

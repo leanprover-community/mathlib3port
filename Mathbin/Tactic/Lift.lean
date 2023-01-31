@@ -158,7 +158,7 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
               if
                 n ≠ [ ]
                 then
-                return n . head
+                return n . headI
                 else
                 if e . is_local_constant then return e . local_pp_name else get_unused_name
           let

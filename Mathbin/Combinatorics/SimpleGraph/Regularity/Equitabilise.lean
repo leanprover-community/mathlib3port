@@ -41,8 +41,8 @@ union of parts of `Q` plus at most `m` extra elements, there are `b` parts of si
 theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card) :
     ∃ Q : Finpartition s,
       (∀ x : Finset α, x ∈ Q.parts → x.card = m ∨ x.card = m + 1) ∧
-        (∀ x, x ∈ P.parts → (x \ (Q.parts.filter fun y => y ⊆ x).bUnion id).card ≤ m) ∧
-          (Q.parts.filter fun i => card i = m + 1).card = b :=
+        (∀ x, x ∈ P.parts → (x \ (Q.parts.filterₓ fun y => y ⊆ x).bunionᵢ id).card ≤ m) ∧
+          (Q.parts.filterₓ fun i => card i = m + 1).card = b :=
   by
   -- Get rid of the easy case `m = 0`
   obtain rfl | m_pos := m.eq_zero_or_pos
@@ -152,7 +152,7 @@ variable {P h}
 
 theorem card_eq_of_mem_parts_equitabilise :
     t ∈ (P.equitabilise h).parts → t.card = m ∨ t.card = m + 1 :=
-  (P.equitabilise_aux h).some_spec.1 _
+  (P.equitabilise_aux h).choose_spec.1 _
 #align finpartition.card_eq_of_mem_parts_equitabilise Finpartition.card_eq_of_mem_parts_equitabilise
 
 theorem equitabiliseIsEquipartition : (P.equitabilise h).IsEquipartition :=
@@ -162,19 +162,19 @@ theorem equitabiliseIsEquipartition : (P.equitabilise h).IsEquipartition :=
 variable (P h)
 
 theorem card_filter_equitabilise_big :
-    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m + 1).card = b :=
-  (P.equitabilise_aux h).some_spec.2.2
+    ((P.equitabilise h).parts.filterₓ fun u : Finset α => u.card = m + 1).card = b :=
+  (P.equitabilise_aux h).choose_spec.2.2
 #align finpartition.card_filter_equitabilise_big Finpartition.card_filter_equitabilise_big
 
 theorem card_filter_equitabilise_small (hm : m ≠ 0) :
-    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m).card = a :=
+    ((P.equitabilise h).parts.filterₓ fun u : Finset α => u.card = m).card = a :=
   by
   refine' (mul_eq_mul_right_iff.1 <| (add_left_inj (b * (m + 1))).1 _).resolve_right hm
   rw [h, ← (P.equitabilise h).sum_card_parts]
   have hunion :
     (P.equitabilise h).parts =
-      ((P.equitabilise h).parts.filter fun u => u.card = m) ∪
-        (P.equitabilise h).parts.filter fun u => u.card = m + 1 :=
+      ((P.equitabilise h).parts.filterₓ fun u => u.card = m) ∪
+        (P.equitabilise h).parts.filterₓ fun u => u.card = m + 1 :=
     by
     rw [← filter_or, filter_true_of_mem]
     exact fun x => card_eq_of_mem_parts_equitabilise
@@ -196,7 +196,7 @@ theorem card_parts_equitabilise (hm : m ≠ 0) : (P.equitabilise h).parts.card =
 #align finpartition.card_parts_equitabilise Finpartition.card_parts_equitabilise
 
 theorem card_parts_equitabilise_subset_le :
-    t ∈ P.parts → (t \ ((P.equitabilise h).parts.filter fun u => u ⊆ t).bUnion id).card ≤ m :=
+    t ∈ P.parts → (t \ ((P.equitabilise h).parts.filterₓ fun u => u ⊆ t).bunionᵢ id).card ≤ m :=
   (Classical.choose_spec <| P.equitabilise_aux h).2.1 t
 #align finpartition.card_parts_equitabilise_subset_le Finpartition.card_parts_equitabilise_subset_le
 

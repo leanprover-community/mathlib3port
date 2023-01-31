@@ -46,7 +46,7 @@ variable (r : α → β → Prop) [∀ a, DecidablePred (r a)] {s s₁ s₂ : Fi
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Finset of edges of a relation between two finsets of vertices. -/
 def interedges (s : Finset α) (t : Finset β) : Finset (α × β) :=
-  (s ×ˢ t).filter fun e => r e.1 e.2
+  (s ×ˢ t).filterₓ fun e => r e.1 e.2
 #align rel.interedges Rel.interedges
 
 /-- Edge density of a relation between two finsets of vertices. -/
@@ -107,19 +107,19 @@ section DecidableEq
 variable [DecidableEq α] [DecidableEq β]
 
 theorem interedges_bunionᵢ_left (s : Finset ι) (t : Finset β) (f : ι → Finset α) :
-    interedges r (s.bUnion f) t = s.bUnion fun a => interedges r (f a) t :=
+    interedges r (s.bunionᵢ f) t = s.bunionᵢ fun a => interedges r (f a) t :=
   ext fun a => by simp only [mem_bUnion, mem_interedges_iff, exists_and_right]
 #align rel.interedges_bUnion_left Rel.interedges_bunionᵢ_left
 
 theorem interedges_bunionᵢ_right (s : Finset α) (t : Finset ι) (f : ι → Finset β) :
-    interedges r s (t.bUnion f) = t.bUnion fun b => interedges r s (f b) :=
+    interedges r s (t.bunionᵢ f) = t.bunionᵢ fun b => interedges r s (f b) :=
   ext fun a => by simp only [mem_interedges_iff, mem_bUnion, ← exists_and_left, ← exists_and_right]
 #align rel.interedges_bUnion_right Rel.interedges_bunionᵢ_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem interedges_bunionᵢ (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset β) :
-    interedges r (s.bUnion f) (t.bUnion g) =
-      (s ×ˢ t).bUnion fun ab => interedges r (f ab.1) (g ab.2) :=
+    interedges r (s.bunionᵢ f) (t.bunionᵢ g) =
+      (s ×ˢ t).bunionᵢ fun ab => interedges r (f ab.1) (g ab.2) :=
   by simp_rw [product_bUnion, interedges_bUnion_left, interedges_bUnion_right]
 #align rel.interedges_bUnion Rel.interedges_bunionᵢ
 
@@ -271,7 +271,7 @@ variable {r} (hr : Symmetric r)
 include hr
 
 @[simp]
-theorem swap_mem_interedges_iff {x : α × α} : x.swap ∈ interedges r s t ↔ x ∈ interedges r t s :=
+theorem swap_mem_interedges_iff {x : α × α} : x.symm ∈ interedges r s t ↔ x ∈ interedges r t s :=
   by
   rw [mem_interedges_iff, mem_interedges_iff, hr.iff]
   exact and_left_comm
@@ -282,9 +282,9 @@ theorem mk_mem_interedges_comm : (a, b) ∈ interedges r s t ↔ (b, a) ∈ inte
 #align rel.mk_mem_interedges_comm Rel.mk_mem_interedges_comm
 
 theorem card_interedges_comm (s t : Finset α) : (interedges r s t).card = (interedges r t s).card :=
-  Finset.card_congr (fun (x : α × α) _ => x.swap) (fun x => (swap_mem_interedges_iff hr).2)
+  Finset.card_congr (fun (x : α × α) _ => x.symm) (fun x => (swap_mem_interedges_iff hr).2)
     (fun _ _ _ _ h => Prod.swap_injective h) fun x h =>
-    ⟨x.swap, (swap_mem_interedges_iff hr).2 h, x.swap_swap⟩
+    ⟨x.symm, (swap_mem_interedges_iff hr).2 h, x.swap_swap⟩
 #align rel.card_interedges_comm Rel.card_interedges_comm
 
 theorem edgeDensity_comm (s t : Finset α) : edgeDensity r s t = edgeDensity r t s := by
@@ -316,7 +316,7 @@ def edgeDensity : Finset α → Finset α → ℚ :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem interedges_def (s t : Finset α) :
-    G.interedges s t = (s ×ˢ t).filter fun e => G.Adj e.1 e.2 :=
+    G.interedges s t = (s ×ˢ t).filterₓ fun e => G.Adj e.1 e.2 :=
   rfl
 #align simple_graph.interedges_def SimpleGraph.interedges_def
 
@@ -363,19 +363,19 @@ section DecidableEq
 variable [DecidableEq α]
 
 theorem interedges_bunionᵢ_left (s : Finset ι) (t : Finset α) (f : ι → Finset α) :
-    G.interedges (s.bUnion f) t = s.bUnion fun a => G.interedges (f a) t :=
+    G.interedges (s.bunionᵢ f) t = s.bunionᵢ fun a => G.interedges (f a) t :=
   interedges_bunionᵢ_left _ _ _ _
 #align simple_graph.interedges_bUnion_left SimpleGraph.interedges_bunionᵢ_left
 
 theorem interedges_bunionᵢ_right (s : Finset α) (t : Finset ι) (f : ι → Finset α) :
-    G.interedges s (t.bUnion f) = t.bUnion fun b => G.interedges s (f b) :=
+    G.interedges s (t.bunionᵢ f) = t.bunionᵢ fun b => G.interedges s (f b) :=
   interedges_bunionᵢ_right _ _ _ _
 #align simple_graph.interedges_bUnion_right SimpleGraph.interedges_bunionᵢ_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem interedges_bunionᵢ (s : Finset ι) (t : Finset κ) (f : ι → Finset α) (g : κ → Finset α) :
-    G.interedges (s.bUnion f) (t.bUnion g) =
-      (s ×ˢ t).bUnion fun ab => G.interedges (f ab.1) (g ab.2) :=
+    G.interedges (s.bunionᵢ f) (t.bunionᵢ g) =
+      (s ×ˢ t).bunionᵢ fun ab => G.interedges (f ab.1) (g ab.2) :=
   interedges_bunionᵢ _ _ _ _ _
 #align simple_graph.interedges_bUnion SimpleGraph.interedges_bunionᵢ
 
@@ -385,7 +385,7 @@ theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
     (G.interedges s t).card + (Gᶜ.interedges s t).card = s.card * t.card :=
   by
   rw [← card_product, interedges_def, interedges_def]
-  have : ((s ×ˢ t).filter fun e => Gᶜ.Adj e.1 e.2) = (s ×ˢ t).filter fun e => ¬G.adj e.1 e.2 :=
+  have : ((s ×ˢ t).filterₓ fun e => Gᶜ.Adj e.1 e.2) = (s ×ˢ t).filterₓ fun e => ¬G.adj e.1 e.2 :=
     by
     refine' filter_congr fun x hx => _
     rw [mem_product] at hx
@@ -427,7 +427,7 @@ theorem edgeDensity_empty_right (s : Finset α) : G.edgeDensity s ∅ = 0 :=
 #align simple_graph.edge_density_empty_right SimpleGraph.edgeDensity_empty_right
 
 @[simp]
-theorem swap_mem_interedges_iff {x : α × α} : x.swap ∈ G.interedges s t ↔ x ∈ G.interedges t s :=
+theorem swap_mem_interedges_iff {x : α × α} : x.symm ∈ G.interedges s t ↔ x ∈ G.interedges t s :=
   swap_mem_interedges_iff G.symm
 #align simple_graph.swap_mem_interedges_iff SimpleGraph.swap_mem_interedges_iff
 

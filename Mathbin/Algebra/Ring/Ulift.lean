@@ -256,7 +256,7 @@ instance field [Field α] : Field (ULift α) :=
         div := Div.div
         zpow := fun n a => ULift.up (a.down ^ n)
         ratCast := coe
-        rat_cast_mk := of_rat_mk
+        ratCast_mk := of_rat_mk
         qsmul := (· • ·) } <;>
     pi_instance_derive_field
   -- `mul_inv_cancel` requires special attention: it leaves the goal `∀ {a}, a ≠ 0 → a * a⁻¹ = 1`.

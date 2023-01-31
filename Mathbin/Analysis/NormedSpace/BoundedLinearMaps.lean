@@ -93,7 +93,7 @@ namespace IsBoundedLinearMap
 
 /-- Construct a linear map from a function `f` satisfying `is_bounded_linear_map 𝕜 f`. -/
 def toLinearMap (f : E → F) (h : IsBoundedLinearMap 𝕜 f) : E →ₗ[𝕜] F :=
-  IsLinearMap.mk' _ h.to_is_linear_map
+  IsLinearMap.mk' _ h.to_isLinearMap
 #align is_bounded_linear_map.to_linear_map IsBoundedLinearMap.toLinearMap
 
 /-- Construct a continuous linear map from is_bounded_linear_map -/
@@ -196,7 +196,7 @@ theorem isO_id {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) : f 
 
 theorem isO_comp {E : Type _} {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) {f : E → F} (l : Filter E) :
     (fun x' => g (f x')) =O[l] f :=
-  (hg.is_O_id ⊤).comp_tendsto le_top
+  (hg.isO_id ⊤).comp_tendsto le_top
 #align is_bounded_linear_map.is_O_comp IsBoundedLinearMap.isO_comp
 
 theorem isO_sub {f : E → F} (h : IsBoundedLinearMap 𝕜 f) (l : Filter E) (x : E) :
@@ -420,14 +420,14 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     simpa [mul_assoc] using hC a b
   have h₁ : (fun e : E × F => f (e.1 - x.1, e.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
-    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_is_o _
+    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_isOCat _
     rw [Asymptotics.isOCat_const_iff one_ne]
     convert ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
     · simp
     infer_instance
   have h₂ : (fun e : E × F => f (x.1, e.2 - x.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
-    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_is_o _
+    refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_isOCat _
     rw [Asymptotics.isOCat_const_iff one_ne]
     convert (continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
     · simp
@@ -511,12 +511,12 @@ theorem isBoundedBilinearMapComp :
 
 theorem ContinuousLinearMap.isBoundedLinearMap_comp_left (g : F →L[𝕜] G) :
     IsBoundedLinearMap 𝕜 fun f : E →L[𝕜] F => ContinuousLinearMap.comp g f :=
-  isBoundedBilinearMapComp.is_bounded_linear_map_right _
+  isBoundedBilinearMapComp.isBoundedLinearMap_right _
 #align continuous_linear_map.is_bounded_linear_map_comp_left ContinuousLinearMap.isBoundedLinearMap_comp_left
 
 theorem ContinuousLinearMap.isBoundedLinearMap_comp_right (f : E →L[𝕜] F) :
     IsBoundedLinearMap 𝕜 fun g : F →L[𝕜] G => ContinuousLinearMap.comp g f :=
-  isBoundedBilinearMapComp.is_bounded_linear_map_left _
+  isBoundedBilinearMapComp.isBoundedLinearMap_left _
 #align continuous_linear_map.is_bounded_linear_map_comp_right ContinuousLinearMap.isBoundedLinearMap_comp_right
 
 theorem isBoundedBilinearMapApply : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
@@ -642,7 +642,7 @@ theorem Continuous.clm_comp {X} [TopologicalSpace X] {g : X → F →L[𝕜] G} 
 theorem ContinuousOn.clm_comp {X} [TopologicalSpace X] {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F}
     {s : Set X} (hg : ContinuousOn g s) (hf : ContinuousOn f s) :
     ContinuousOn (fun x => (g x).comp (f x)) s :=
-  (compL 𝕜 E F G).continuous₂.comp_continuous_on (hg.Prod hf)
+  (compL 𝕜 E F G).continuous₂.comp_continuousOn (hg.Prod hf)
 #align continuous_on.clm_comp ContinuousOn.clm_comp
 
 namespace ContinuousLinearEquiv

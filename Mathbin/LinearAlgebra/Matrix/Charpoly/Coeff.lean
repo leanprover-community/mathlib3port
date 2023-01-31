@@ -61,7 +61,7 @@ namespace Matrix
 variable (M)
 
 theorem charpoly_sub_diagonal_degree_lt :
-    (M.charpoly - ∏ i : n, X - c (M i i)).degree < ↑(Fintype.card n - 1) :=
+    (M.charpoly - ∏ i : n, x - c (M i i)).degree < ↑(Fintype.card n - 1) :=
   by
   rw [charpoly, det_apply', ← insert_erase (mem_univ (Equiv.refl n)),
     sum_insert (not_mem_erase (Equiv.refl n) univ), add_comm]
@@ -78,7 +78,7 @@ theorem charpoly_sub_diagonal_degree_lt :
 #align matrix.charpoly_sub_diagonal_degree_lt Matrix.charpoly_sub_diagonal_degree_lt
 
 theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤ k) :
-    M.charpoly.coeff k = (∏ i : n, X - c (M i i)).coeff k :=
+    M.charpoly.coeff k = (∏ i : n, x - c (M i i)).coeff k :=
   by
   apply eq_of_sub_eq_zero; rw [← coeff_sub]; apply Polynomial.coeff_eq_zero_of_degree_lt
   apply lt_of_lt_of_le (charpoly_sub_diagonal_degree_lt M) _; rw [WithBot.coe_le_coe]; apply h
@@ -202,7 +202,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
     matPolyEquiv ((expand K k : K[X] →+* K[X]).mapMatrix (charmatrix (M ^ k))) =
-      X ^ k - c (M ^ k) :=
+      x ^ k - c (M ^ k) :=
   by
   ext m
   rw [coeff_sub, coeff_C, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
@@ -230,7 +230,7 @@ theorem aeval_eq_aeval_mod_charpoly (M : Matrix n n R) (p : R[X]) :
 
 TODO: add the statement for negative powers phrased with `zpow`. -/
 theorem pow_eq_aeval_mod_charpoly (M : Matrix n n R) (k : ℕ) :
-    M ^ k = aeval M (X ^ k %ₘ M.charpoly) := by rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
+    M ^ k = aeval M (x ^ k %ₘ M.charpoly) := by rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
 #align matrix.pow_eq_aeval_mod_charpoly Matrix.pow_eq_aeval_mod_charpoly
 
 end Matrix

@@ -78,7 +78,7 @@ instance [Preorder β] [OrderTop β] : OrderTop (α →o β)
   le_top a x := le_top
 
 instance [CompleteLattice β] : InfSet (α →o β)
-    where inf s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infᵢ₂_mono fun f _ => f.mono h⟩
+    where infₛ s := ⟨fun x => ⨅ f ∈ s, (f : _) x, fun x y h => infᵢ₂_mono fun f _ => f.mono h⟩
 
 /- warning: order_hom.Inf_apply -> OrderHom.infₛ_apply is a dubious translation:
 lean 3 declaration is
@@ -115,7 +115,7 @@ theorem coe_infᵢ {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) :
 #align order_hom.coe_infi OrderHom.coe_infᵢ
 
 instance [CompleteLattice β] : SupSet (α →o β)
-    where sup s := ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => supᵢ₂_mono fun f _ => f.mono h⟩
+    where supₛ s := ⟨fun x => ⨆ f ∈ s, (f : _) x, fun x y h => supᵢ₂_mono fun f _ => f.mono h⟩
 
 /- warning: order_hom.Sup_apply -> OrderHom.supₛ_apply is a dubious translation:
 lean 3 declaration is
@@ -154,12 +154,12 @@ theorem coe_supᵢ {ι : Sort _} [CompleteLattice β] (f : ι → α →o β) :
 instance [CompleteLattice β] : CompleteLattice (α →o β) :=
   { (_ : Lattice (α →o β)), OrderHom.orderTop,
     OrderHom.orderBot with
-    sup := supₛ
-    le_Sup := fun s f hf x => le_supᵢ_of_le f (le_supᵢ _ hf)
-    Sup_le := fun s f hf x => supᵢ₂_le fun g hg => hf g hg x
-    inf := infₛ
-    le_Inf := fun s f hf x => le_infᵢ₂ fun g hg => hf g hg x
-    Inf_le := fun s f hf x => infᵢ_le_of_le f (infᵢ_le _ hf) }
+    supₛ := supₛ
+    le_sup := fun s f hf x => le_supᵢ_of_le f (le_supᵢ _ hf)
+    sup_le := fun s f hf x => supᵢ₂_le fun g hg => hf g hg x
+    infₛ := infₛ
+    le_inf := fun s f hf x => le_infᵢ₂ fun g hg => hf g hg x
+    inf_le := fun s f hf x => infᵢ_le_of_le f (infᵢ_le _ hf) }
 
 #print OrderHom.iterate_sup_le_sup_iff /-
 theorem iterate_sup_le_sup_iff {α : Type _} [SemilatticeSup α] (f : α →o α) :

@@ -139,7 +139,7 @@ theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n 
 #align catalan_eq_central_binom_div catalan_eq_centralBinom_div
 
 theorem succ_mul_catalan_eq_centralBinom (n : ℕ) : (n + 1) * catalan n = n.centralBinom :=
-  (Nat.eq_mul_of_div_eq_right n.succ_dvd_central_binom (catalan_eq_centralBinom_div n).symm).symm
+  (Nat.eq_mul_of_div_eq_right n.succ_dvd_centralBinom (catalan_eq_centralBinom_div n).symm).symm
 #align succ_mul_catalan_eq_central_binom succ_mul_catalan_eq_centralBinom
 
 theorem catalan_two : catalan 2 = 2 := by

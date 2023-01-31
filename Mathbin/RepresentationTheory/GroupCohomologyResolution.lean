@@ -335,8 +335,8 @@ def compForgetAugmented : SimplicialObject.Augmented (Type u) :=
 /-- The augmented Čech nerve of the map from `fin 1 → G` to the terminal object in `Type u` has an
 extra degeneracy. -/
 def extraDegeneracyAugmentedCechNerve :
-    ExtraDegeneracy (arrow.mk <| terminal.from G).augmentedCechNerve :=
-  augmentedCechNerve.extraDegeneracy (arrow.mk <| terminal.from G)
+    ExtraDegeneracy (Arrow.mk <| terminal.from G).augmentedCechNerve :=
+  augmentedCechNerve.extraDegeneracy (Arrow.mk <| terminal.from G)
     ⟨fun x => (1 : G),
       @Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _⟩
 #align classifying_space_universal_cover.extra_degeneracy_augmented_cech_nerve classifyingSpaceUniversalCover.extraDegeneracyAugmentedCechNerve
@@ -560,7 +560,7 @@ def GroupCohomology.projectiveResolution :
 #align group_cohomology.ProjectiveResolution GroupCohomology.projectiveResolution
 
 instance : EnoughProjectives (Rep k G) :=
-  Rep.equivalenceModuleMonoidAlgebra.enough_projectives_iff.2
+  Rep.equivalenceModuleMonoidAlgebra.enoughProjectives_iff.2
     ModuleCat.moduleCat_enoughProjectives.{u}
 
 /-- Given a `k`-linear `G`-representation `V`, `Extⁿ(k, V)` (where `k` is a trivial `k`-linear

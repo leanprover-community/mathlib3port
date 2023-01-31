@@ -260,7 +260,7 @@ theorem compTendsto'_coe (f : Germ l β) {lc : Filter γ} {g : γ → α} (hg : 
 
 @[simp, norm_cast]
 theorem const_inj [NeBot l] {a b : β} : (↑a : Germ l β) = ↑b ↔ a = b :=
-  coe_eq.trans <| const_eventually_eq
+  coe_eq.trans <| const_eventuallyEq
 #align filter.germ.const_inj Filter.Germ.const_inj
 
 @[simp]
@@ -441,8 +441,8 @@ instance [CommMonoid M] : CommMonoid (Germ l M) :=
 instance [AddMonoidWithOne M] : AddMonoidWithOne (Germ l M) :=
   { Germ.hasOne, Germ.addMonoid with
     natCast := fun n => ↑(n : M)
-    nat_cast_zero := congr_arg coe Nat.cast_zero
-    nat_cast_succ := fun n => congr_arg coe (Nat.cast_succ _) }
+    natCast_zero := congr_arg coe Nat.cast_zero
+    natCast_succ := fun n => congr_arg coe (Nat.cast_succ _) }
 
 @[to_additive]
 instance [Inv G] : Inv (Germ l G) :=
@@ -654,12 +654,12 @@ theorem coe_nonneg [LE β] [Zero β] {f : α → β} : 0 ≤ (f : Germ l β) ↔
 #align filter.germ.coe_nonneg Filter.Germ.coe_nonneg
 
 theorem const_le [LE β] {x y : β} : x ≤ y → (↑x : Germ l β) ≤ ↑y :=
-  lift_rel_const
+  liftRel_const
 #align filter.germ.const_le Filter.Germ.const_le
 
 @[simp, norm_cast]
 theorem const_le_iff [LE β] [NeBot l] {x y : β} : (↑x : Germ l β) ≤ ↑y ↔ x ≤ y :=
-  lift_rel_const_iff
+  liftRel_const_iff
 #align filter.germ.const_le_iff Filter.Germ.const_le_iff
 
 instance [Preorder β] : Preorder (Germ l β)

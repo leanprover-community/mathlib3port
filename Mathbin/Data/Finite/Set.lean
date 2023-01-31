@@ -33,7 +33,7 @@ variable {α : Type u} {β : Type v} {ι : Sort w}
 #print Finite.Set.finite_of_finite_image /-
 theorem Finite.Set.finite_of_finite_image (s : Set α) {f : α → β} (h : s.InjOn f)
     [Finite (f '' s)] : Finite s :=
-  Finite.of_equiv _ (Equiv.ofBijective _ h.bij_on_image.Bijective).symm
+  Finite.of_equiv _ (Equiv.ofBijective _ h.bijOn_image.Bijective).symm
 #align finite.set.finite_of_finite_image Finite.Set.finite_of_finite_image
 -/
 

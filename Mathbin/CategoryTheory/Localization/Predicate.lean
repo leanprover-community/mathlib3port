@@ -52,13 +52,13 @@ identifies the category `D` with the localized category of `C` with respect
 to `W : morphism_property C`. -/
 class IsLocalization : Prop where
   inverts : W.IsInvertedBy L
-  nonempty_is_equivalence : Nonempty (IsEquivalence (Localization.Construction.lift L inverts))
+  nonempty_isEquivalence : Nonempty (IsEquivalence (Localization.Construction.lift L inverts))
 #align category_theory.functor.is_localization CategoryTheory.Functor.IsLocalization
 
 instance qIsLocalization : W.q.IsLocalization W
     where
-  inverts := W.Q_inverts
-  nonempty_is_equivalence :=
+  inverts := W.q_inverts
+  nonempty_isEquivalence :=
     by
     suffices localization.construction.lift W.Q W.Q_inverts = 𝟭 _
       by
@@ -88,7 +88,7 @@ the universal property of the localization. -/
 @[simps]
 def strictUniversalPropertyFixedTargetQ : StrictUniversalPropertyFixedTarget W.q W E
     where
-  inverts := W.Q_inverts
+  inverts := W.q_inverts
   lift := Construction.lift
   fac := Construction.fac
   uniq := Construction.uniq
@@ -122,9 +122,9 @@ theorem IsLocalization.mk' (h₁ : Localization.StrictUniversalPropertyFixedTarg
     (h₂ : Localization.StrictUniversalPropertyFixedTarget L W W.Localization) :
     IsLocalization L W :=
   { inverts := h₁.inverts
-    nonempty_is_equivalence :=
+    nonempty_isEquivalence :=
       Nonempty.intro
-        { inverse := h₂.lift W.q W.Q_inverts
+        { inverse := h₂.lift W.q W.q_inverts
           unitIso :=
             eqToIso
               (Localization.Construction.uniq _ _
@@ -137,7 +137,7 @@ theorem IsLocalization.mk' (h₁ : Localization.StrictUniversalPropertyFixedTarg
                 (by
                   simp only [← functor.assoc, h₂.fac, localization.construction.fac,
                     functor.comp_id]))
-          functor_unit_iso_comp' := fun X => by
+          functor_unitIso_comp' := fun X => by
             simpa only [eq_to_iso.hom, eq_to_hom_app, eq_to_hom_map, eq_to_hom_trans,
               eq_to_hom_refl] } }
 #align category_theory.functor.is_localization.mk' CategoryTheory.Functor.IsLocalization.mk'
@@ -166,7 +166,7 @@ def isoOfHom {X Y : C} (f : X ⟶ Y) (hf : W f) : L.obj X ≅ L.obj Y :=
 #align category_theory.localization.iso_of_hom CategoryTheory.Localization.isoOfHom
 
 instance : IsEquivalence (Localization.Construction.lift L (inverts L W)) :=
-  (inferInstance : L.IsLocalization W).nonempty_is_equivalence.some
+  (inferInstance : L.IsLocalization W).nonempty_isEquivalence.some
 
 /-- A chosen equivalence of categories `W.localization ≅ D` for a functor
 `L : C ⥤ D` which satisfies `L.is_localization W`. This shall be used in
@@ -402,7 +402,7 @@ theorem ofIso {L₁ L₂ : C ⥤ D} (e : L₁ ≅ L₂) [L₁.IsLocalization W] 
   let F₂ := localization.construction.lift L₂ h
   exact
     { inverts := h
-      nonempty_is_equivalence :=
+      nonempty_isEquivalence :=
         Nonempty.intro (is_equivalence.of_iso (lift_nat_iso W.Q W L₁ L₂ F₁ F₂ e) inferInstance) }
 #align category_theory.functor.is_localization.of_iso CategoryTheory.Functor.IsLocalization.ofIso
 
@@ -420,7 +420,7 @@ theorem ofEquivalenceTarget {E : Type _} [Category E] (L' : C ⥤ E) (eq : D ≌
   let e' : F₁ ⋙ eq.functor ≅ F₂ := lift_nat_iso W.Q W (L ⋙ eq.functor) L' _ _ e
   exact
     { inverts := h
-      nonempty_is_equivalence := Nonempty.intro (is_equivalence.of_iso e' inferInstance) }
+      nonempty_isEquivalence := Nonempty.intro (is_equivalence.of_iso e' inferInstance) }
 #align category_theory.functor.is_localization.of_equivalence_target CategoryTheory.Functor.IsLocalization.ofEquivalenceTarget
 
 end IsLocalization

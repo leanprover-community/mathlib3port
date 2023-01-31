@@ -40,7 +40,7 @@ you should parametrize over `(F : Type*) [continuous_add_monoid_hom_class F A B]
 When you extend this structure, make sure to extend `continuous_add_monoid_hom_class`. -/
 structure ContinuousAddMonoidHom (A B : Type _) [AddMonoid A] [AddMonoid B] [TopologicalSpace A]
   [TopologicalSpace B] extends A →+ B where
-  continuous_to_fun : Continuous to_fun
+  continuous_toFun : Continuous to_fun
 #align continuous_add_monoid_hom ContinuousAddMonoidHom
 
 /-- The type of continuous monoid homomorphisms from `A` to `B`.
@@ -51,7 +51,7 @@ you should parametrize over `(F : Type*) [continuous_monoid_hom_class F A B] (f 
 When you extend this structure, make sure to extend `continuous_add_monoid_hom_class`. -/
 @[to_additive]
 structure ContinuousMonoidHom extends A →* B where
-  continuous_to_fun : Continuous to_fun
+  continuous_toFun : Continuous to_fun
 #align continuous_monoid_hom ContinuousMonoidHom
 #align continuous_add_monoid_hom ContinuousAddMonoidHom
 
@@ -109,7 +109,7 @@ instance : ContinuousMonoidHomClass (ContinuousMonoidHom A B) A B
     congr
   map_mul f := f.map_mul'
   map_one f := f.map_one'
-  map_continuous f := f.continuous_to_fun
+  map_continuous f := f.continuous_toFun
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -141,14 +141,14 @@ theorem toContinuousMap_injective : Injective (toContinuousMap : _ → C(A, B)) 
 @[to_additive "Construct a `continuous_add_monoid_hom` from a `continuous` `add_monoid_hom`.",
   simps]
 def mk' (f : A →* B) (hf : Continuous f) : ContinuousMonoidHom A B :=
-  { f with continuous_to_fun := hf }
+  { f with continuous_toFun := hf }
 #align continuous_monoid_hom.mk' ContinuousMonoidHom.mk'
 #align continuous_add_monoid_hom.mk' ContinuousAddMonoidHom.mk'
 
 /-- Composition of two continuous homomorphisms. -/
 @[to_additive "Composition of two continuous homomorphisms.", simps]
 def comp (g : ContinuousMonoidHom B C) (f : ContinuousMonoidHom A B) : ContinuousMonoidHom A C :=
-  mk' (g.toMonoidHom.comp f.toMonoidHom) (g.continuous_to_fun.comp f.continuous_to_fun)
+  mk' (g.toMonoidHom.comp f.toMonoidHom) (g.continuous_toFun.comp f.continuous_toFun)
 #align continuous_monoid_hom.comp ContinuousMonoidHom.comp
 #align continuous_add_monoid_hom.comp ContinuousAddMonoidHom.comp
 
@@ -156,7 +156,7 @@ def comp (g : ContinuousMonoidHom B C) (f : ContinuousMonoidHom A B) : Continuou
 @[to_additive "Product of two continuous homomorphisms on the same space.", simps]
 def prod (f : ContinuousMonoidHom A B) (g : ContinuousMonoidHom A C) :
     ContinuousMonoidHom A (B × C) :=
-  mk' (f.toMonoidHom.Prod g.toMonoidHom) (f.continuous_to_fun.prod_mk g.continuous_to_fun)
+  mk' (f.toMonoidHom.Prod g.toMonoidHom) (f.continuous_toFun.prod_mk g.continuous_toFun)
 #align continuous_monoid_hom.prod ContinuousMonoidHom.prod
 #align continuous_add_monoid_hom.sum ContinuousAddMonoidHom.sum
 
@@ -164,7 +164,7 @@ def prod (f : ContinuousMonoidHom A B) (g : ContinuousMonoidHom A C) :
 @[to_additive "Product of two continuous homomorphisms on different spaces.", simps]
 def prodMap (f : ContinuousMonoidHom A C) (g : ContinuousMonoidHom B D) :
     ContinuousMonoidHom (A × B) (C × D) :=
-  mk' (f.toMonoidHom.prod_map g.toMonoidHom) (f.continuous_to_fun.prod_map g.continuous_to_fun)
+  mk' (f.toMonoidHom.Prod_map g.toMonoidHom) (f.continuous_toFun.Prod_map g.continuous_toFun)
 #align continuous_monoid_hom.prod_map ContinuousMonoidHom.prodMap
 #align continuous_add_monoid_hom.sum_map ContinuousAddMonoidHom.sumMap
 
@@ -250,7 +250,7 @@ variable {A B C D E}
 @[to_additive "Coproduct of two continuous homomorphisms to the same space.", simps]
 def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) :
     ContinuousMonoidHom (A × B) E :=
-  (mul E).comp (f.prod_map g)
+  (mul E).comp (f.Prod_map g)
 #align continuous_monoid_hom.coprod ContinuousMonoidHom.coprod
 #align continuous_add_monoid_hom.coprod ContinuousAddMonoidHom.coprod
 
@@ -388,7 +388,7 @@ def compLeft (f : ContinuousMonoidHom A B) :
   toFun g := g.comp f
   map_one' := rfl
   map_mul' g h := rfl
-  continuous_to_fun := f.continuous_comp_left
+  continuous_toFun := f.continuous_comp_left
 #align continuous_monoid_hom.comp_left ContinuousMonoidHom.compLeft
 #align continuous_add_monoid_hom.comp_left ContinuousAddMonoidHom.compLeft
 
@@ -403,7 +403,7 @@ def compRight {B : Type _} [CommGroup B] [TopologicalSpace B] [TopologicalGroup 
   toFun g := f.comp g
   map_one' := ext fun a => map_one f
   map_mul' g h := ext fun a => map_mul f (g a) (h a)
-  continuous_to_fun := f.continuous_comp_right
+  continuous_toFun := f.continuous_comp_right
 #align continuous_monoid_hom.comp_right ContinuousMonoidHom.compRight
 #align continuous_add_monoid_hom.comp_right ContinuousAddMonoidHom.compRight
 
@@ -462,7 +462,7 @@ noncomputable def mapHom [LocallyCompactSpace E] :
   toFun := map
   map_one' := map_one
   map_mul' := map_mul
-  continuous_to_fun := continuous_of_continuous_uncurry _ continuous_comp
+  continuous_toFun := continuous_of_continuous_uncurry _ continuous_comp
 #align pontryagin_dual.map_hom PontryaginDual.mapHom
 
 end PontryaginDual

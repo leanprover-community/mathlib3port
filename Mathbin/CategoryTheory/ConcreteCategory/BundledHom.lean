@@ -36,8 +36,8 @@ structure BundledHom where
   comp : ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ), hom Iβ Iγ → hom Iα Iβ → hom Iα Iγ
   hom_ext : ∀ {α β : Type u} (Iα : c α) (Iβ : c β), Function.Injective (to_fun Iα Iβ) := by
     obviously
-  id_to_fun : ∀ {α : Type u} (I : c α), to_fun I I (id I) = _root_.id := by obviously
-  comp_to_fun :
+  id_toFun : ∀ {α : Type u} (I : c α), to_fun I I (id I) = id := by obviously
+  comp_toFun :
     ∀ {α β γ : Type u} (Iα : c α) (Iβ : c β) (Iγ : c γ) (f : hom Iα Iβ) (g : hom Iβ Iγ),
       to_fun Iα Iγ (comp Iα Iβ Iγ g f) = to_fun Iβ Iγ g ∘ to_fun Iα Iβ f := by
     obviously
@@ -78,7 +78,7 @@ instance concreteCategory : ConcreteCategory.{u} (Bundled c)
   forget :=
     { obj := fun X => X
       map := fun X Y f => 𝒞.toFun X.str Y.str f
-      map_id' := fun X => 𝒞.id_to_fun X.str
+      map_id' := fun X => 𝒞.id_toFun X.str
       map_comp' := by intros <;> erw [𝒞.comp_to_fun] <;> rfl }
   forget_faithful := { map_injective' := by intros <;> apply 𝒞.hom_ext }
 #align category_theory.bundled_hom.concrete_category CategoryTheory.BundledHom.concreteCategory

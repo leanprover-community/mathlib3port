@@ -94,7 +94,7 @@ theorem not_mem_mkRbmap : ∀ k : α, k ∉ mkRbmap α β lt := by
   simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem]
 #align rbmap.not_mem_mk_rbmap Rbmap.not_mem_mkRbmap
 
-theorem not_mem_of_empty {m : Rbmap α β lt} (k : α) : m.Empty = tt → k ∉ m := by
+theorem not_mem_of_empty {m : Rbmap α β lt} (k : α) : m.Empty = true → k ∉ m := by
   cases' m with n p <;> cases n <;>
     simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem, Rbmap.empty, Rbtree.empty, false_imp_iff]
 #align rbmap.not_mem_of_empty Rbmap.not_mem_of_empty
@@ -222,7 +222,7 @@ theorem find_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt) :
 #align rbmap.find_correct Rbmap.find_correct
 
 theorem constains_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt) :
-    k ∈ m ↔ m.contains k = tt := by
+    k ∈ m ↔ m.contains k = true := by
   apply Iff.intro
   · intro h
     have h := Iff.mp (find_entry_correct k m) h

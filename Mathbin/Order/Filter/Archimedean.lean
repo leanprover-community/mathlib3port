@@ -31,7 +31,7 @@ open Filter Set
 #print Nat.comap_cast_atTop /-
 @[simp]
 theorem Nat.comap_cast_atTop [StrictOrderedSemiring R] [Archimedean R] :
-    comap (coe : ℕ → R) atTop = at_top :=
+    comap (coe : ℕ → R) atTop = atTop :=
   comap_embedding_atTop (fun _ _ => Nat.cast_le) exists_nat_ge
 #align nat.comap_coe_at_top Nat.comap_cast_atTop
 -/
@@ -46,7 +46,7 @@ theorem tendsto_nat_cast_atTop_iff [StrictOrderedSemiring R] [Archimedean R] {f 
 #print tendsto_nat_cast_atTop_atTop /-
 theorem tendsto_nat_cast_atTop_atTop [StrictOrderedSemiring R] [Archimedean R] :
     Tendsto (coe : ℕ → R) atTop atTop :=
-  Nat.mono_cast.tendsto_at_top_at_top exists_nat_ge
+  Nat.mono_cast.tendsto_atTop_atTop exists_nat_ge
 #align tendsto_coe_nat_at_top_at_top tendsto_nat_cast_atTop_atTop
 -/
 
@@ -58,7 +58,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.comap_coe_at_top Int.comap_cast_atTopₓ'. -/
 @[simp]
 theorem Int.comap_cast_atTop [StrictOrderedRing R] [Archimedean R] :
-    comap (coe : ℤ → R) atTop = at_top :=
+    comap (coe : ℤ → R) atTop = atTop :=
   comap_embedding_atTop (fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by exact_mod_cast hn⟩
@@ -72,7 +72,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.comap_coe_at_bot Int.comap_cast_atBotₓ'. -/
 @[simp]
 theorem Int.comap_cast_atBot [StrictOrderedRing R] [Archimedean R] :
-    comap (coe : ℤ → R) atBot = at_bot :=
+    comap (coe : ℤ → R) atBot = atBot :=
   comap_embedding_atBot (fun _ _ => Int.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] using hn⟩
@@ -108,7 +108,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align tendsto_coe_int_at_top_at_top tendsto_int_cast_atTop_atTopₓ'. -/
 theorem tendsto_int_cast_atTop_atTop [StrictOrderedRing R] [Archimedean R] :
     Tendsto (coe : ℤ → R) atTop atTop :=
-  Int.cast_mono.tendsto_at_top_at_top fun b =>
+  Int.cast_mono.tendsto_atTop_atTop fun b =>
     let ⟨n, hn⟩ := exists_nat_ge b
     ⟨n, by exact_mod_cast hn⟩
 #align tendsto_coe_int_at_top_at_top tendsto_int_cast_atTop_atTop
@@ -121,7 +121,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.comap_coe_at_top Rat.comap_cast_atTopₓ'. -/
 @[simp]
 theorem Rat.comap_cast_atTop [LinearOrderedField R] [Archimedean R] :
-    comap (coe : ℚ → R) atTop = at_top :=
+    comap (coe : ℚ → R) atTop = atTop :=
   comap_embedding_atTop (fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge r
     ⟨n, by simpa⟩
@@ -135,7 +135,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.comap_coe_at_bot Rat.comap_cast_atBotₓ'. -/
 @[simp]
 theorem Rat.comap_cast_atBot [LinearOrderedField R] [Archimedean R] :
-    comap (coe : ℚ → R) atBot = at_bot :=
+    comap (coe : ℚ → R) atBot = atBot :=
   comap_embedding_atBot (fun _ _ => Rat.cast_le) fun r =>
     let ⟨n, hn⟩ := exists_nat_ge (-r)
     ⟨-n, by simpa [neg_le] ⟩
@@ -172,8 +172,8 @@ Case conversion may be inaccurate. Consider using '#align at_top_countable_basis
 theorem atTop_hasCountableBasis_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
     (atTop : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => Ici n :=
   { Countable := to_countable _
-    to_has_basis :=
-      atTop_basis.to_has_basis
+    to_hasBasis :=
+      atTop_basis.to_hasBasis
         (fun x hx =>
           let ⟨n, hn⟩ := exists_nat_ge x
           ⟨n, trivial, Ici_subset_Ici.2 hn⟩)
@@ -189,8 +189,8 @@ Case conversion may be inaccurate. Consider using '#align at_bot_countable_basis
 theorem atBot_hasCountableBasis_of_archimedean [LinearOrderedRing R] [Archimedean R] :
     (atBot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => Iic m :=
   { Countable := to_countable _
-    to_has_basis :=
-      atBot_basis.to_has_basis
+    to_hasBasis :=
+      atBot_basis.to_hasBasis
         (fun x hx =>
           let ⟨m, hm⟩ := exists_int_lt x
           ⟨m, trivial, Iic_subset_Iic.2 hm.le⟩)

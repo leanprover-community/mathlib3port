@@ -102,7 +102,7 @@ theorem toTopsp_isTopologicalBasis (F : Ctop α σ) :
 theorem mem_nhds_toTopsp (F : Ctop α σ) {s : Set α} {a : α} :
     s ∈ @nhds _ F.toTopsp a ↔ ∃ b, a ∈ F b ∧ F b ⊆ s :=
   (@TopologicalSpace.IsTopologicalBasis.mem_nhds_iff _ F.toTopsp _ _ _
-        F.to_topsp_is_topological_basis).trans <|
+        F.toTopsp_isTopologicalBasis).trans <|
     ⟨fun ⟨_, ⟨x, rfl⟩, h⟩ => ⟨x, h⟩, fun ⟨x, h⟩ => ⟨_, ⟨x, rfl⟩, h⟩⟩
 #align ctop.mem_nhds_to_topsp Ctop.mem_nhds_toTopsp
 
@@ -145,7 +145,7 @@ theorem isOpen_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
 theorem isClosed_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
     IsClosed s ↔ ∀ a, (∀ b, a ∈ F.f b → ∃ z, z ∈ F.f b ∩ s) → a ∈ s :=
   isOpen_compl_iff.symm.trans <|
-    F.is_open_iff.trans <|
+    F.isOpen_iff.trans <|
       forall_congr' fun a =>
         show (a ∉ s → ∃ b : F.σ, a ∈ F.f b ∧ ∀ z ∈ F.f b, z ∉ s) ↔ _ by
           haveI := Classical.propDecidable <;> rw [not_imp_comm] <;>
@@ -235,7 +235,7 @@ theorem nhds_f (F : Realizer α) (a : α) (s) : (F.nhds a).f s = F.f s.1 :=
 
 theorem tendsto_nhds_iff {m : β → α} {f : Filter β} (F : f.Realizer) (R : Realizer α) {a : α} :
     Tendsto m f (𝓝 a) ↔ ∀ t, a ∈ R.f t → ∃ s, ∀ x ∈ F.f s, m x ∈ R.f t :=
-  (F.tendsto_iff _ (R.nhds a)).trans Subtype.forall
+  (F.tendsto_iffₓ _ (R.nhds a)).trans Subtype.forall
 #align ctop.realizer.tendsto_nhds_iff Ctop.Realizer.tendsto_nhds_iff
 
 end Ctop.Realizer
@@ -263,10 +263,10 @@ theorem locallyFinite_iff_exists_realizer [TopologicalSpace α] (F : Realizer α
           let ⟨h, h'⟩ := h₁ x
           F.mem_nhds.1 h
     ⟨⟨fun x => ⟨g₂ x, (h₂ x).1⟩, fun x =>
-        finite.fintype <|
+        Finite.fintype <|
           let ⟨h, h'⟩ := h₁ x
           h'.Subset fun i hi => hi.mono (inter_subset_inter_right _ (h₂ x).2)⟩⟩,
-    fun ⟨R⟩ => R.to_locally_finite⟩
+    fun ⟨R⟩ => R.to_locallyFinite⟩
 #align locally_finite_iff_exists_realizer locallyFinite_iff_exists_realizer
 
 instance [TopologicalSpace α] [Finite β] (F : Realizer α) (f : β → Set α) :

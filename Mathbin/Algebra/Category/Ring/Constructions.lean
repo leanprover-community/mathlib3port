@@ -231,7 +231,7 @@ instance : IsLocalRingHom (equalizerFork f g).ι :=
   rw [isUnit_iff_exists_inv]
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
-instance equalizer_ι_isLocalRingHom (F : walking_parallel_pair ⥤ CommRingCat.{u}) :
+instance equalizer_ι_isLocalRingHom (F : WalkingParallelPair ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F WalkingParallelPair.zero) :=
   by
   have := lim_map_π (diagram_iso_parallel_pair F).Hom walking_parallel_pair.zero
@@ -251,7 +251,7 @@ open CategoryTheory.Limits.WalkingParallelPair Opposite
 
 open CategoryTheory.Limits.WalkingParallelPairHom
 
-instance equalizer_ι_is_local_ring_hom' (F : walking_parallel_pairᵒᵖ ⥤ CommRingCat.{u}) :
+instance equalizer_ι_is_local_ring_hom' (F : WalkingParallelPairᵒᵖ ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) :=
   by
   have : _ = limit.π F (walking_parallel_pair_op_equiv.functor.obj _) :=

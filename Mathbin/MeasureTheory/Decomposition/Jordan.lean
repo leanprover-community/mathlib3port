@@ -374,7 +374,7 @@ private theorem eq_of_pos_part_eq_pos_part {j₁ j₂ : JordanDecomposition α}
 #align measure_theory.jordan_decomposition.eq_of_pos_part_eq_pos_part measure_theory.jordan_decomposition.eq_of_pos_part_eq_pos_part
 
 /-- The Jordan decomposition of a signed measure is unique. -/
-theorem toSignedMeasure_injective : injective <| @JordanDecomposition.toSignedMeasure α _ :=
+theorem toSignedMeasure_injective : Injective <| @JordanDecomposition.toSignedMeasure α _ :=
   by
   /- The main idea is that two Jordan decompositions of a signed measure provide two
     Hahn decompositions for that measure. Then, from `of_symm_diff_compl_positive_negative`,
@@ -608,7 +608,7 @@ theorem mutuallySingular_ennreal_iff (s : SignedMeasure α) (μ : VectorMeasure 
 theorem totalVariation_mutuallySingular_iff (s : SignedMeasure α) (μ : Measure α) :
     s.totalVariation ⊥ₘ μ ↔
       s.toJordanDecomposition.posPart ⊥ₘ μ ∧ s.toJordanDecomposition.negPart ⊥ₘ μ :=
-  measure.mutually_singular.add_left_iff
+  Measure.MutuallySingular.add_left_iff
 #align measure_theory.signed_measure.total_variation_mutually_singular_iff MeasureTheory.SignedMeasure.totalVariation_mutuallySingular_iff
 
 end SignedMeasure

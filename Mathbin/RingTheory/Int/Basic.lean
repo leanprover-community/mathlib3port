@@ -93,11 +93,11 @@ section NormalizationMonoid
 instance : NormalizationMonoid ℤ
     where
   normUnit := fun a : ℤ => if 0 ≤ a then 1 else -1
-  norm_unit_zero := if_pos le_rfl
-  norm_unit_mul a b hna hnb := by
+  normUnit_zero := if_pos le_rfl
+  normUnit_mul a b hna hnb := by
     cases' hna.lt_or_lt with ha ha <;> cases' hnb.lt_or_lt with hb hb <;>
       simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le]
-  norm_unit_coe_units u :=
+  normUnit_coe_units u :=
     (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one) fun eq =>
       Eq.symm ▸ if_neg (not_le_of_gt <| show (-1 : ℤ) < 0 by decide)
 
@@ -114,7 +114,7 @@ theorem normalize_of_nonpos {z : ℤ} (h : z ≤ 0) : normalize z = -z :=
 #align int.normalize_of_nonpos Int.normalize_of_nonpos
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
-  normalize_of_nonneg (coe_nat_le_coe_nat_of_le <| Nat.zero_le n)
+  normalize_of_nonneg (ofNat_le_ofNat_of_le <| Nat.zero_le n)
 #align int.normalize_coe_nat Int.normalize_coe_nat
 
 theorem abs_eq_normalize (z : ℤ) : |z| = normalize z := by

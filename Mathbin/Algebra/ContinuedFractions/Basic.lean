@@ -201,7 +201,7 @@ equal to one.
 -/
 def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α)
     [One α] : Prop :=
-  ∀ (n : ℕ) (aₙ : α), g.partialNumerators.nth n = some aₙ → aₙ = 1
+  ∀ (n : ℕ) (aₙ : α), g.partialNumerators.get? n = some aₙ → aₙ = 1
 #align generalized_continued_fraction.is_simple_continued_fraction GeneralizedContinuedFraction.IsSimpleContinuedFraction
 
 variable (α)
@@ -264,7 +264,7 @@ A simple continued fraction is a *(regular) continued fraction* ((r)cf) if all p
 def SimpleContinuedFraction.IsContinuedFraction [One α] [Zero α] [LT α]
     (s : SimpleContinuedFraction α) : Prop :=
   ∀ (n : ℕ) (bₙ : α),
-    (↑s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
+    (↑s : GeneralizedContinuedFraction α).partialDenominators.get? n = some bₙ → 0 < bₙ
 #align simple_continued_fraction.is_continued_fraction SimpleContinuedFraction.IsContinuedFraction
 
 variable (α)
@@ -371,7 +371,7 @@ def continuantsAux (g : GeneralizedContinuedFraction K) : Stream' (Pair K)
   | 0 => ⟨1, 0⟩
   | 1 => ⟨g.h, 1⟩
   | n + 2 =>
-    match g.s.nth n with
+    match g.s.get? n with
     | none => continuants_aux (n + 1)
     | some gp => nextContinuants gp.a gp.b (continuants_aux n) (continuants_aux <| n + 1)
 #align generalized_continued_fraction.continuants_aux GeneralizedContinuedFraction.continuantsAux
@@ -404,7 +404,7 @@ For example, `convergents'_aux [(1, 2), (3, 4), (5, 6)] 2 = 1 / (2 + 3 / 4)` and
 def convergents'Aux : SeqCat (Pair K) → ℕ → K
   | s, 0 => 0
   | s, n + 1 =>
-    match s.head with
+    match s.headI with
     | none => 0
     | some gp => gp.a / (gp.b + convergents'_aux s.tail n)
 #align generalized_continued_fraction.convergents'_aux GeneralizedContinuedFraction.convergents'Aux
@@ -433,7 +433,7 @@ protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
 @[ext]
 protected theorem ext {g g' : GeneralizedContinuedFraction α} (hyp : g.h = g'.h ∧ g.s = g'.s) :
     g = g' :=
-  GeneralizedContinuedFraction.ext_iff.elimRight hyp
+  GeneralizedContinuedFraction.ext_iff.right hyp
 #align generalized_continued_fraction.ext GeneralizedContinuedFraction.ext
 
 end GeneralizedContinuedFraction

@@ -698,7 +698,7 @@ end Magma
 /-- Free additive semigroup over a given alphabet. -/
 @[ext]
 structure FreeAddSemigroup (α : Type u) where
-  head : α
+  headI : α
   tail : List α
 #align free_add_semigroup FreeAddSemigroup
 -/
@@ -707,7 +707,7 @@ structure FreeAddSemigroup (α : Type u) where
 /-- Free semigroup over a given alphabet. -/
 @[ext, to_additive]
 structure FreeSemigroup (α : Type u) where
-  head : α
+  headI : α
   tail : List α
 #align free_semigroup FreeSemigroup
 #align free_add_semigroup FreeAddSemigroup

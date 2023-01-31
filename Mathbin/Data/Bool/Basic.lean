@@ -44,14 +44,14 @@ theorem coeSort_false : coeSort.{1, 1} false = False :=
 
 #print Bool.decide_True /-
 -- TODO: duplicate of a lemma in core
-theorem decide_True {h} : @decide True h = tt :=
+theorem decide_True {h} : @decide True h = true :=
   decide_True' h
 #align bool.to_bool_true Bool.decide_True
 -/
 
 #print Bool.decide_False /-
 -- TODO: duplicate of a lemma in core
-theorem decide_False {h} : @decide False h = ff :=
+theorem decide_False {h} : @decide False h = false :=
   decide_False' h
 #align bool.to_bool_false Bool.decide_False
 -/
@@ -78,14 +78,14 @@ theorem of_decide_iff {p : Prop} [Decidable p] : decide p ↔ p :=
 
 #print Bool.true_eq_decide_iff /-
 @[simp]
-theorem true_eq_decide_iff {p : Prop} [Decidable p] : tt = decide p ↔ p :=
+theorem true_eq_decide_iff {p : Prop} [Decidable p] : true = decide p ↔ p :=
   eq_comm.trans of_decide_iff
 #align bool.tt_eq_to_bool_iff Bool.true_eq_decide_iff
 -/
 
 #print Bool.false_eq_decide_iff /-
 @[simp]
-theorem false_eq_decide_iff {p : Prop} [Decidable p] : ff = decide p ↔ ¬p :=
+theorem false_eq_decide_iff {p : Prop} [Decidable p] : false = decide p ↔ ¬p :=
   eq_comm.trans (Bool.decide_false_iff _)
 #align bool.ff_eq_to_bool_iff Bool.false_eq_decide_iff
 -/
@@ -118,20 +118,20 @@ theorem decide_eq {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q
 -/
 
 #print Bool.not_false' /-
-theorem not_false' : ¬ff :=
-  ff_ne_tt
+theorem not_false' : ¬false :=
+  false_ne_true
 #align bool.not_ff Bool.not_false'
 -/
 
 #print Bool.default_bool /-
 @[simp]
-theorem default_bool : default = ff :=
+theorem default_bool : default = false :=
   rfl
 #align bool.default_bool Bool.default_bool
 -/
 
 #print Bool.dichotomy /-
-theorem dichotomy (b : Bool) : b = ff ∨ b = tt := by cases b <;> simp
+theorem dichotomy (b : Bool) : b = false ∨ b = true := by cases b <;> simp
 #align bool.dichotomy Bool.dichotomy
 -/
 
@@ -198,7 +198,7 @@ theorem cond_not {α} (b : Bool) (t e : α) : cond (!b) t e = cond b e t := by c
 -/
 
 #print Bool.not_ne_id /-
-theorem not_ne_id : not ≠ id := fun h => ff_ne_tt <| congr_fun h true
+theorem not_ne_id : not ≠ id := fun h => false_ne_true <| congr_fun h true
 #align bool.bnot_ne_id Bool.not_ne_id
 -/
 
@@ -208,12 +208,12 @@ theorem coe_bool_iff : ∀ {a b : Bool}, (a ↔ b) ↔ a = b := by decide
 -/
 
 #print Bool.eq_true_of_ne_false /-
-theorem eq_true_of_ne_false : ∀ {a : Bool}, a ≠ ff → a = tt := by decide
+theorem eq_true_of_ne_false : ∀ {a : Bool}, a ≠ false → a = true := by decide
 #align bool.eq_tt_of_ne_ff Bool.eq_true_of_ne_false
 -/
 
 #print Bool.eq_false_of_ne_true /-
-theorem eq_false_of_ne_true : ∀ {a : Bool}, a ≠ tt → a = ff := by decide
+theorem eq_false_of_ne_true : ∀ {a : Bool}, a ≠ true → a = false := by decide
 #align bool.eq_ff_of_ne_tt Bool.eq_false_of_ne_true
 -/
 
@@ -300,14 +300,14 @@ theorem or_and_distrib_right (a b c : Bool) : (a && b || c) = ((a || c) && (b ||
 
 #print Bool.not_false /-
 @[simp]
-theorem not_false : !ff = tt :=
+theorem not_false : !false = true :=
   rfl
 #align bool.bnot_ff Bool.not_false
 -/
 
 #print Bool.not_true /-
 @[simp]
-theorem not_true : !tt = ff :=
+theorem not_true : !true = false :=
   rfl
 #align bool.bnot_tt Bool.not_true
 -/
@@ -340,13 +340,13 @@ theorem not_not_eq : ∀ {a b : Bool}, ¬!a = b ↔ a = b := by decide
 
 #print Bool.ne_not /-
 theorem ne_not {a b : Bool} : a ≠ !b ↔ a = b :=
-  not_eq_bnot
+  not_eq_not
 #align bool.ne_bnot Bool.ne_not
 -/
 
 #print Bool.not_ne /-
 theorem not_ne {a b : Bool} : !a ≠ b ↔ a = b :=
-  bnot_not_eq
+  not_not_eq
 #align bool.bnot_ne Bool.not_ne
 -/
 
@@ -377,7 +377,7 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Bool}, (Eq.{1} Bool (not (Decidable.decide (Eq.{1} Bool a Bool.false) (instDecidableEqBool a Bool.false))) Bool.true) -> (Eq.{1} Bool a Bool.true)
 Case conversion may be inaccurate. Consider using '#align bool.eq_tt_of_bnot_eq_ff Bool.eq_true_of_not_eq_false'ₓ'. -/
-theorem eq_true_of_not_eq_false' : ∀ {a : Bool}, !a = ff → a = tt := by decide
+theorem eq_true_of_not_eq_false' : ∀ {a : Bool}, !a = false → a = true := by decide
 #align bool.eq_tt_of_bnot_eq_ff Bool.eq_true_of_not_eq_false'
 
 /- warning: bool.eq_ff_of_bnot_eq_tt -> Bool.eq_false_of_not_eq_true' is a dubious translation:
@@ -386,30 +386,30 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Bool}, (Eq.{1} Bool (not (Decidable.decide (Eq.{1} Bool a Bool.true) (instDecidableEqBool a Bool.true))) Bool.true) -> (Eq.{1} Bool a Bool.false)
 Case conversion may be inaccurate. Consider using '#align bool.eq_ff_of_bnot_eq_tt Bool.eq_false_of_not_eq_true'ₓ'. -/
-theorem eq_false_of_not_eq_true' : ∀ {a : Bool}, !a = tt → a = ff := by decide
+theorem eq_false_of_not_eq_true' : ∀ {a : Bool}, !a = true → a = false := by decide
 #align bool.eq_ff_of_bnot_eq_tt Bool.eq_false_of_not_eq_true'
 
 #print Bool.and_not_self /-
 @[simp]
-theorem and_not_self : ∀ x, (x && !x) = ff := by decide
+theorem and_not_self : ∀ x, (x && !x) = false := by decide
 #align bool.band_bnot_self Bool.and_not_self
 -/
 
 #print Bool.not_and_self /-
 @[simp]
-theorem not_and_self : ∀ x, (!x && x) = ff := by decide
+theorem not_and_self : ∀ x, (!x && x) = false := by decide
 #align bool.bnot_band_self Bool.not_and_self
 -/
 
 #print Bool.or_not_self /-
 @[simp]
-theorem or_not_self : ∀ x, (x || !x) = tt := by decide
+theorem or_not_self : ∀ x, (x || !x) = true := by decide
 #align bool.bor_bnot_self Bool.or_not_self
 -/
 
 #print Bool.not_or_self /-
 @[simp]
-theorem not_or_self : ∀ x, (!x || x) = tt := by decide
+theorem not_or_self : ∀ x, (!x || x) = true := by decide
 #align bool.bnot_bor_self Bool.not_or_self
 -/
 
@@ -431,13 +431,13 @@ theorem xor_left_comm : ∀ a b c, xor a (xor b c) = xor b (xor a c) := by decid
 
 #print Bool.xor_not_left /-
 @[simp]
-theorem xor_not_left : ∀ a, xor (!a) a = tt := by decide
+theorem xor_not_left : ∀ a, xor (!a) a = true := by decide
 #align bool.bxor_bnot_left Bool.xor_not_left
 -/
 
 #print Bool.xor_not_right /-
 @[simp]
-theorem xor_not_right : ∀ a, xor a (!a) = tt := by decide
+theorem xor_not_right : ∀ a, xor a (!a) = true := by decide
 #align bool.bxor_bnot_right Bool.xor_not_right
 -/
 
@@ -472,7 +472,7 @@ theorem and_xor_distrib_right (a b c : Bool) : (xor a b && c) = xor (a && c) (b 
 -/
 
 #print Bool.xor_iff_ne /-
-theorem xor_iff_ne : ∀ {x y : Bool}, xor x y = tt ↔ x ≠ y := by decide
+theorem xor_iff_ne : ∀ {x y : Bool}, xor x y = true ↔ x ≠ y := by decide
 #align bool.bxor_iff_ne Bool.xor_iff_ne
 -/
 
@@ -509,7 +509,7 @@ theorem not_inj : ∀ {a b : Bool}, !a = !b → a = b := by decide
 #align bool.bnot_inj Bool.not_inj
 
 instance : LinearOrder Bool where
-  le a b := a = ff ∨ b = tt
+  le a b := a = false ∨ b = true
   le_refl := by decide
   le_trans := by decide
   le_antisymm := by decide
@@ -529,26 +529,26 @@ instance : LinearOrder Bool where
 
 #print Bool.false_le /-
 @[simp]
-theorem false_le {x : Bool} : ff ≤ x :=
+theorem false_le {x : Bool} : false ≤ x :=
   Or.intro_left _ rfl
 #align bool.ff_le Bool.false_le
 -/
 
 #print Bool.le_true /-
 @[simp]
-theorem le_true {x : Bool} : x ≤ tt :=
+theorem le_true {x : Bool} : x ≤ true :=
   Or.intro_right _ rfl
 #align bool.le_tt Bool.le_true
 -/
 
 #print Bool.lt_iff /-
-theorem lt_iff : ∀ {x y : Bool}, x < y ↔ x = ff ∧ y = tt := by decide
+theorem lt_iff : ∀ {x y : Bool}, x < y ↔ x = false ∧ y = true := by decide
 #align bool.lt_iff Bool.lt_iff
 -/
 
 #print Bool.false_lt_true /-
 @[simp]
-theorem false_lt_true : ff < tt :=
+theorem false_lt_true : false < true :=
   lt_iff.2 ⟨rfl, rfl⟩
 #align bool.ff_lt_tt Bool.false_lt_true
 -/

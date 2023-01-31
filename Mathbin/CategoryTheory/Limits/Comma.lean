@@ -174,8 +174,8 @@ end Comma
 
 namespace Arrow
 
-instance hasLimit (F : J ⥤ Arrow T) [i₁ : HasLimit (F ⋙ left_func)]
-    [i₂ : HasLimit (F ⋙ right_func)] : HasLimit F :=
+instance hasLimit (F : J ⥤ Arrow T) [i₁ : HasLimit (F ⋙ leftFunc)] [i₂ : HasLimit (F ⋙ rightFunc)] :
+    HasLimit F :=
   @Comma.hasLimit _ _ _ _ _ i₁ i₂ _
 #align category_theory.arrow.has_limit CategoryTheory.Arrow.hasLimit
 
@@ -186,8 +186,8 @@ instance hasLimits [HasLimits T] : HasLimits (Arrow T) :=
   ⟨inferInstance⟩
 #align category_theory.arrow.has_limits CategoryTheory.Arrow.hasLimits
 
-instance hasColimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ left_func)]
-    [i₂ : HasColimit (F ⋙ right_func)] : HasColimit F :=
+instance hasColimit (F : J ⥤ Arrow T) [i₁ : HasColimit (F ⋙ leftFunc)]
+    [i₂ : HasColimit (F ⋙ rightFunc)] : HasColimit F :=
   @Comma.hasColimit _ _ _ _ _ i₁ i₂ _
 #align category_theory.arrow.has_colimit CategoryTheory.Arrow.hasColimit
 
@@ -219,7 +219,7 @@ instance hasLimits [HasLimits A] [PreservesLimits G] : HasLimits (StructuredArro
 
 noncomputable instance createsLimit [i : PreservesLimit (F ⋙ proj X G) G] :
     CreatesLimit F (proj X G) :=
-  creates_limit_of_reflects_iso fun c t =>
+  createsLimitOfReflectsIso fun c t =>
     { liftedCone := @Comma.coneOfPreserves _ _ _ _ _ i punitCone t
       makesLimit := Comma.coneOfPreservesIsLimit _ punitConeIsLimit _
       validLift := Cones.ext (Iso.refl _) fun j => (id_comp _).symm }
@@ -264,7 +264,7 @@ instance hasColimits [HasColimits A] [PreservesColimits G] : HasColimits (Costru
 
 noncomputable instance createsColimit [i : PreservesColimit (F ⋙ proj G X) G] :
     CreatesColimit F (proj G X) :=
-  creates_colimit_of_reflects_iso fun c t =>
+  createsColimitOfReflectsIso fun c t =>
     { liftedCocone := @Comma.coconeOfPreserves _ _ _ _ _ i t punitCocone
       makesColimit := Comma.coconeOfPreservesIsColimit _ _ punitCoconeIsColimit
       validLift := Cocones.ext (Iso.refl _) fun j => comp_id _ }

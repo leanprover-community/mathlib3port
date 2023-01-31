@@ -391,7 +391,7 @@ theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c 
 @[elab_as_elim]
 theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b)
     (refl : P b refl)
-    (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h :=
+    (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.headI h')) : P a h :=
   by
   induction h generalizing P
   case refl => exact refl
@@ -480,7 +480,7 @@ theorem trans_left (hab : TransGen r a b) (hbc : ReflTransGen r b c) : TransGen 
 #print Relation.TransGen.trans /-
 @[trans]
 theorem trans (hab : TransGen r a b) (hbc : TransGen r b c) : TransGen r a c :=
-  trans_left hab hbc.to_refl
+  trans_left hab hbc.to_reflTransGen
 #align relation.trans_gen.trans Relation.TransGen.trans
 -/
 
@@ -501,7 +501,7 @@ theorem tail' (hab : ReflTransGen r a b) (hbc : r b c) : TransGen r a c :=
 
 #print Relation.TransGen.head /-
 theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
-  head' hab hbc.to_refl
+  head' hab hbc.to_reflTransGen
 #align relation.trans_gen.head Relation.TransGen.head
 -/
 
@@ -509,7 +509,7 @@ theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
 @[elab_as_elim]
 theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
     (base : ∀ {a} (h : r a b), P a (single h))
-    (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h :=
+    (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.headI h')) : P a h :=
   by
   induction h generalizing P
   case single a h => exact base h
@@ -697,7 +697,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align relation.refl_trans_gen.lift Relation.ReflTransGen.liftₓ'. -/
 theorem ReflTransGen.lift {p : β → β → Prop} {a b : α} (f : α → β)
     (h : ∀ a b, r a b → p (f a) (f b)) (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) :=
-  ReflTransGen.trans_induction_on hab (fun a => refl) (fun a b => refl_trans_gen.single ∘ h _ _)
+  ReflTransGen.trans_induction_on hab (fun a => refl) (fun a b => ReflTransGen.single ∘ h _ _)
     fun a b c _ _ => trans
 #align relation.refl_trans_gen.lift Relation.ReflTransGen.lift
 
@@ -903,7 +903,7 @@ theorem Equivalence.eqvGen_iff (h : Equivalence r) : EqvGen r a b ↔ r a b :=
 
 #print Equivalence.eqvGen_eq /-
 theorem Equivalence.eqvGen_eq (h : Equivalence r) : EqvGen r = r :=
-  funext fun _ => funext fun _ => propext <| h.eqv_gen_iff
+  funext fun _ => funext fun _ => propext <| h.eqvGen_iff
 #align equivalence.eqv_gen_eq Equivalence.eqvGen_eq
 -/
 

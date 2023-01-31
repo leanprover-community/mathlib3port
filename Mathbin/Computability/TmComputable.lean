@@ -301,7 +301,7 @@ instance inhabitedTm2EvalsTo : Inhabited (EvalsTo (fun _ : Unit => some ⟨⟩) 
 
 /-- A proof that the identity map on α is computable in time. -/
 def idComputableInTime {α : Type} (ea : FinEncoding α) : @Tm2ComputableInTime α α ea ea id :=
-  tm2_computable_in_poly_time.to_tm2_computable_in_time <| idComputableInPolyTime ea
+  Tm2ComputableInPolyTime.toTm2ComputableInTime <| idComputableInPolyTime ea
 #align turing.id_computable_in_time Turing.idComputableInTime
 
 instance inhabitedTm2ComputableInTime :
@@ -311,7 +311,7 @@ instance inhabitedTm2ComputableInTime :
 
 /-- A proof that the identity map on α is computable. -/
 def idComputable {α : Type} (ea : FinEncoding α) : @Tm2Computable α α ea ea id :=
-  tm2_computable_in_time.to_tm2_computable <| idComputableInTime ea
+  Tm2ComputableInTime.toTm2Computable <| idComputableInTime ea
 #align turing.id_computable Turing.idComputable
 
 instance inhabitedTm2Computable :

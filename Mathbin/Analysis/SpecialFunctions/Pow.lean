@@ -480,7 +480,7 @@ theorem of_real_cpow {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : ((x ^ y : ℝ) : ℂ) 
 #align complex.of_real_cpow Complex.of_real_cpow
 
 theorem of_real_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
-    (x : ℂ) ^ y = (-x : ℂ) ^ y * exp (π * I * y) :=
+    (x : ℂ) ^ y = (-x : ℂ) ^ y * exp (π * i * y) :=
   by
   rcases hx.eq_or_lt with (rfl | hlt)
   · rcases eq_or_ne y 0 with (rfl | hy) <;> simp [*]
@@ -547,7 +547,7 @@ theorem isTheta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).
     (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re :=
   calc
     (fun x => f x ^ g x) =Θ[l] fun x => abs (f x) ^ (g x).re / Real.exp (arg (f x) * im (g x)) :=
-      is_Theta_of_norm_eventually_eq' <| hl.mono fun x => abs_cpow_of_imp
+      isTheta_of_norm_eventually_eq' <| hl.mono fun x => abs_cpow_of_imp
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       (isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl_im)
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
@@ -1100,7 +1100,7 @@ theorem continuousAt_rpow_of_pos (p : ℝ × ℝ) (hp : 0 < p.2) :
   · exact continuous_at_rpow_of_ne (x, y) hx
   have A : tendsto (fun p : ℝ × ℝ => exp (log p.1 * p.2)) (𝓝[≠] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
     tendsto_exp_at_bot.comp
-      ((tendsto_log_nhds_within_zero.comp tendsto_fst).at_bot_mul hp tendsto_snd)
+      ((tendsto_log_nhds_within_zero.comp tendsto_fst).atBot_mul hp tendsto_snd)
   have B : tendsto (fun p : ℝ × ℝ => p.1 ^ p.2) (𝓝[≠] 0 ×ᶠ 𝓝 y) (𝓝 0) :=
     squeeze_zero_norm (fun p => abs_rpow_le_exp_log_mul p.1 p.2) A
   have C : tendsto (fun p : ℝ × ℝ => p.1 ^ p.2) (𝓝[{0}] 0 ×ᶠ 𝓝 y) (pure 0) :=
@@ -1234,7 +1234,7 @@ theorem tendsto_rpow_atTop {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ => x ^ 
 /-- The function `x ^ (-y)` tends to `0` at `+∞` for any positive real `y`. -/
 theorem tendsto_rpow_neg_atTop {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ => x ^ (-y)) atTop (𝓝 0) :=
   Tendsto.congr' (eventuallyEq_of_mem (Ioi_mem_atTop 0) fun x hx => (rpow_neg (le_of_lt hx) y).symm)
-    (tendsto_rpow_atTop hy).inv_tendsto_at_top
+    (tendsto_rpow_atTop hy).inv_tendsto_atTop
 #align tendsto_rpow_neg_at_top tendsto_rpow_neg_atTop
 
 /-- The function `x ^ (a / (b * x + c))` tends to `1` at `+∞`, for any real numbers `a`, `b`, and
@@ -1302,7 +1302,7 @@ theorem tendsto_exp_mul_div_rpow_atTop (s : ℝ) (b : ℝ) (hb : 0 < b) :
 theorem tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0 (s : ℝ) (b : ℝ) (hb : 0 < b) :
     Tendsto (fun x : ℝ => x ^ s * exp (-b * x)) atTop (𝓝 0) :=
   by
-  refine' (tendsto_exp_mul_div_rpow_atTop s b hb).inv_tendsto_at_top.congr' _
+  refine' (tendsto_exp_mul_div_rpow_atTop s b hb).inv_tendsto_atTop.congr' _
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident x],\n  [\"using\", expr by simp [] [] [] [\"[\", expr exp_neg, \",\", expr inv_div, \",\", expr div_eq_mul_inv _\n    (exp _), \"]\"] [] []]]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
 #align tendsto_rpow_mul_exp_neg_mul_at_top_nhds_0 tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0
@@ -1331,8 +1331,8 @@ theorem IsO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) :
 
 theorem IsOCat.rpow (hr : 0 < r) (hg : 0 ≤ᶠ[l] g) (h : f =o[l] g) :
     (fun x => f x ^ r) =o[l] fun x => g x ^ r :=
-  is_o.of_is_O_with fun c hc =>
-    ((h.forall_is_O_with (rpow_pos_of_pos hc r⁻¹)).rpow (rpow_nonneg_of_nonneg hc.le _) hr.le
+  IsOCat.of_isOWith fun c hc =>
+    ((h.forall_isOWith (rpow_pos_of_pos hc r⁻¹)).rpow (rpow_nonneg_of_nonneg hc.le _) hr.le
           hg).congr_const
       (by rw [← rpow_mul hc.le, inv_mul_cancel hr.ne', rpow_one])
 #align asymptotics.is_o.rpow Asymptotics.IsOCat.rpow
@@ -1343,55 +1343,55 @@ open Asymptotics
 
 /-- `x ^ s = o(exp(b * x))` as `x → ∞` for any real `s` and positive `b`. -/
 theorem isOCat_rpow_exp_pos_mul_atTop (s : ℝ) {b : ℝ} (hb : 0 < b) :
-    (fun x : ℝ => x ^ s) =o[at_top] fun x => exp (b * x) :=
-  Iff.mpr (is_o_iff_tendsto fun x h => absurd h (exp_pos _).ne') <| by
+    (fun x : ℝ => x ^ s) =o[atTop] fun x => exp (b * x) :=
+  Iff.mpr (isOCat_iff_tendsto fun x h => absurd h (exp_pos _).ne') <| by
     simpa only [div_eq_mul_inv, exp_neg, neg_mul] using
       tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0 s b hb
 #align is_o_rpow_exp_pos_mul_at_top isOCat_rpow_exp_pos_mul_atTop
 
 /-- `x ^ k = o(exp(b * x))` as `x → ∞` for any integer `k` and positive `b`. -/
 theorem isOCat_zpow_exp_pos_mul_atTop (k : ℤ) {b : ℝ} (hb : 0 < b) :
-    (fun x : ℝ => x ^ k) =o[at_top] fun x => exp (b * x) := by
+    (fun x : ℝ => x ^ k) =o[atTop] fun x => exp (b * x) := by
   simpa only [rpow_int_cast] using isOCat_rpow_exp_pos_mul_atTop k hb
 #align is_o_zpow_exp_pos_mul_at_top isOCat_zpow_exp_pos_mul_atTop
 
 /-- `x ^ k = o(exp(b * x))` as `x → ∞` for any natural `k` and positive `b`. -/
 theorem isOCat_pow_exp_pos_mul_atTop (k : ℕ) {b : ℝ} (hb : 0 < b) :
-    (fun x : ℝ => x ^ k) =o[at_top] fun x => exp (b * x) := by
+    (fun x : ℝ => x ^ k) =o[atTop] fun x => exp (b * x) := by
   simpa using isOCat_zpow_exp_pos_mul_atTop k hb
 #align is_o_pow_exp_pos_mul_at_top isOCat_pow_exp_pos_mul_atTop
 
 /-- `x ^ s = o(exp x)` as `x → ∞` for any real `s`. -/
-theorem isOCat_rpow_exp_atTop (s : ℝ) : (fun x : ℝ => x ^ s) =o[at_top] exp := by
+theorem isOCat_rpow_exp_atTop (s : ℝ) : (fun x : ℝ => x ^ s) =o[atTop] exp := by
   simpa only [one_mul] using isOCat_rpow_exp_pos_mul_atTop s one_pos
 #align is_o_rpow_exp_at_top isOCat_rpow_exp_atTop
 
-theorem isOCat_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[at_top] fun x => x ^ r :=
+theorem isOCat_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[atTop] fun x => x ^ r :=
   calc
-    log =O[at_top] fun x => r * log x := isO_self_const_mul _ hr.ne' _ _
-    _ =ᶠ[at_top] fun x => log (x ^ r) :=
+    log =O[atTop] fun x => r * log x := isO_self_const_mul _ hr.ne' _ _
+    _ =ᶠ[atTop] fun x => log (x ^ r) :=
       (eventually_gt_atTop 0).mono fun x hx => (log_rpow hx _).symm
-    _ =o[at_top] fun x => x ^ r := isOCat_log_id_atTop.comp_tendsto (tendsto_rpow_atTop hr)
+    _ =o[atTop] fun x => x ^ r := isOCat_log_id_atTop.comp_tendsto (tendsto_rpow_atTop hr)
     
 #align is_o_log_rpow_at_top isOCat_log_rpow_atTop
 
 theorem isOCat_log_rpow_rpow_atTop {s : ℝ} (r : ℝ) (hs : 0 < s) :
-    (fun x => log x ^ r) =o[at_top] fun x => x ^ s :=
+    (fun x => log x ^ r) =o[atTop] fun x => x ^ s :=
   let r' := max r 1
   have hr : 0 < r' := lt_max_iff.2 <| Or.inr one_pos
   have H : 0 < s / r' := div_pos hs hr
   calc
-    (fun x => log x ^ r) =O[at_top] fun x => log x ^ r' :=
+    (fun x => log x ^ r) =O[atTop] fun x => log x ^ r' :=
       IsO.of_bound 1 <|
-        (tendsto_log_atTop.eventually_ge_at_top 1).mono fun x hx =>
+        (tendsto_log_atTop.eventually_ge_atTop 1).mono fun x hx =>
           by
           have hx₀ : 0 ≤ log x := zero_le_one.trans hx
           simp [norm_eq_abs, abs_rpow_of_nonneg, abs_rpow_of_nonneg hx₀,
             rpow_le_rpow_of_exponent_le (hx.trans (le_abs_self _))]
-    _ =o[at_top] fun x => (x ^ (s / r')) ^ r' :=
+    _ =o[atTop] fun x => (x ^ (s / r')) ^ r' :=
       (isOCat_log_rpow_atTop H).rpow hr <|
         (tendsto_rpow_atTop H).Eventually <| eventually_ge_atTop 0
-    _ =ᶠ[at_top] fun x => x ^ s :=
+    _ =ᶠ[atTop] fun x => x ^ s :=
       (eventually_ge_atTop 0).mono fun x hx => by simp only [← rpow_mul hx, div_mul_cancel _ hr.ne']
     
 #align is_o_log_rpow_rpow_at_top isOCat_log_rpow_rpow_atTop
@@ -1769,7 +1769,7 @@ theorem Real.toNnreal_rpow_of_nonneg {x y : ℝ} (hx : 0 ≤ x) :
 #align real.to_nnreal_rpow_of_nonneg Real.toNnreal_rpow_of_nonneg
 
 theorem eventually_pow_one_div_le (x : ℝ≥0) {y : ℝ≥0} (hy : 1 < y) :
-    ∀ᶠ n : ℕ in at_top, x ^ (1 / n : ℝ) ≤ y :=
+    ∀ᶠ n : ℕ in atTop, x ^ (1 / n : ℝ) ≤ y :=
   by
   obtain ⟨m, hm⟩ := add_one_pow_unbounded_of_pos x (tsub_pos_of_lt hy)
   rw [tsub_add_cancel_of_le hy.le] at hm
@@ -2406,7 +2406,7 @@ theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0∞
 #align ennreal.tendsto_rpow_at_top Ennreal.tendsto_rpow_at_top
 
 theorem eventually_pow_one_div_le {x : ℝ≥0∞} (hx : x ≠ ∞) {y : ℝ≥0∞} (hy : 1 < y) :
-    ∀ᶠ n : ℕ in at_top, x ^ (1 / n : ℝ) ≤ y :=
+    ∀ᶠ n : ℕ in atTop, x ^ (1 / n : ℝ) ≤ y :=
   by
   lift x to ℝ≥0 using hx
   by_cases y = ∞

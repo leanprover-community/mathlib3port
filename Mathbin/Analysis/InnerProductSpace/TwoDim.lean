@@ -339,7 +339,7 @@ theorem rightAngleRotation_neg_orientation (x : E) :
 @[simp]
 theorem rightAngleRotation_trans_neg_orientation :
     (-o).rightAngleRotation = o.rightAngleRotation.trans (LinearIsometryEquiv.neg ℝ) :=
-  LinearIsometryEquiv.ext <| o.right_angle_rotation_neg_orientation
+  LinearIsometryEquiv.ext <| o.rightAngleRotation_neg_orientation
 #align orientation.right_angle_rotation_trans_neg_orientation Orientation.rightAngleRotation_trans_neg_orientation
 
 theorem rightAngleRotation_map {F : Type _} [InnerProductSpace ℝ F] [Fact (finrank ℝ F = 2)]
@@ -372,13 +372,13 @@ theorem rightAngleRotation_map' {F : Type _} [InnerProductSpace ℝ F] [Fact (fi
     (φ : E ≃ₗᵢ[ℝ] F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).rightAngleRotation =
       (φ.symm.trans o.rightAngleRotation).trans φ :=
-  LinearIsometryEquiv.ext <| o.right_angle_rotation_map φ
+  LinearIsometryEquiv.ext <| o.rightAngleRotation_map φ
 #align orientation.right_angle_rotation_map' Orientation.rightAngleRotation_map'
 
 /-- `J` commutes with any positively-oriented isometric automorphism. -/
 theorem linearIsometryEquiv_comp_right_angle_rotation' (φ : E ≃ₗᵢ[ℝ] E)
     (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) : LinearIsometryEquiv.trans J φ = φ.trans J :=
-  LinearIsometryEquiv.ext <| o.linear_isometry_equiv_comp_right_angle_rotation φ hφ
+  LinearIsometryEquiv.ext <| o.linearIsometryEquiv_comp_rightAngleRotation φ hφ
 #align orientation.linear_isometry_equiv_comp_right_angle_rotation' Orientation.linearIsometryEquiv_comp_right_angle_rotation'
 
 /-- For a nonzero vector `x` in an oriented two-dimensional real inner product space `E`,
@@ -427,7 +427,7 @@ theorem inner_mul_inner_add_areaForm_mul_area_form' (a x : E) :
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ‖a‖ ^ 2 * ⟪x, y⟫`. -/
 theorem inner_mul_inner_add_areaForm_mul_areaForm (a x y : E) :
     ⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ‖a‖ ^ 2 * ⟪x, y⟫ :=
-  congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_inner_add_area_form_mul_area_form' a x)
+  congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_inner_add_areaForm_mul_area_form' a x)
 #align orientation.inner_mul_inner_add_area_form_mul_area_form Orientation.inner_mul_inner_add_areaForm_mul_areaForm
 
 theorem inner_sq_add_areaForm_sq (a b : E) : ⟪a, b⟫ ^ 2 + ω a b ^ 2 = ‖a‖ ^ 2 * ‖b‖ ^ 2 := by
@@ -457,7 +457,7 @@ theorem inner_mul_areaForm_sub' (a x : E) :
 
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ‖a‖ ^ 2 * ω x y`. -/
 theorem inner_mul_areaForm_sub (a x y : E) : ⟪a, x⟫ * ω a y - ω a x * ⟪a, y⟫ = ‖a‖ ^ 2 * ω x y :=
-  congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_area_form_sub' a x)
+  congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_areaForm_sub' a x)
 #align orientation.inner_mul_area_form_sub Orientation.inner_mul_areaForm_sub
 
 theorem nonneg_inner_and_areaForm_eq_zero_iff_sameRay (x y : E) :
@@ -637,7 +637,7 @@ protected theorem areaForm (w z : ℂ) : Complex.orientation.areaForm w z = (con
 #align complex.area_form Complex.areaForm
 
 @[simp]
-protected theorem rightAngleRotation (z : ℂ) : Complex.orientation.rightAngleRotation z = I * z :=
+protected theorem rightAngleRotation (z : ℂ) : Complex.orientation.rightAngleRotation z = i * z :=
   by
   apply ext_inner_right ℝ
   intro w
@@ -680,7 +680,7 @@ theorem areaForm_map_complex (f : E ≃ₗᵢ[ℝ] ℂ)
 evaluated in terms of a complex-number representation of the space. -/
 theorem rightAngleRotation_map_complex (f : E ≃ₗᵢ[ℝ] ℂ)
     (hf : Orientation.map (Fin 2) f.toLinearEquiv o = Complex.orientation) (x : E) :
-    f (J x) = I * f x :=
+    f (J x) = i * f x :=
   by
   rw [← Complex.rightAngleRotation, ← hf, o.right_angle_rotation_map]
   simp

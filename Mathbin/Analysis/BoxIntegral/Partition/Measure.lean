@@ -46,11 +46,11 @@ namespace Box
 variable (I : Box ι)
 
 theorem measure_icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
-  show μ (Icc I.lower I.upper) < ∞ from I.is_compact_Icc.measure_lt_top
+  show μ (Icc I.lower I.upper) < ∞ from I.isCompact_Icc.measure_lt_top
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
-  (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
+  (measure_mono <| coe_subset_icc).trans_lt (I.measure_Icc_lt_top μ)
 #align box_integral.box.measure_coe_lt_top BoxIntegral.Box.measure_coe_lt_top
 
 section Countable
@@ -82,17 +82,17 @@ theorem coe_ae_eq_icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc :=
 #align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_icc
 
 theorem ioo_ae_eq_icc : I.Ioo =ᵐ[volume] I.Icc :=
-  measure.univ_pi_Ioo_ae_eq_Icc
+  Measure.univ_pi_Ioo_ae_eq_Icc
 #align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.ioo_ae_eq_icc
 
 end Box
 
 theorem Prepartition.measure_union_toReal [Finite ι] {I : Box ι} (π : Prepartition I)
     (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
-    (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal :=
+    (μ π.unionᵢ).toReal = ∑ J in π.boxes, (μ J).toReal :=
   by
   erw [← Ennreal.toReal_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
-  exacts[fun J hJ => J.measurable_set_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
+  exacts[fun J hJ => J.measurableSet_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
 #align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_union_toReal
 
 end BoxIntegral

@@ -31,7 +31,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 @[protect_proj]
 structure ContMdiffMap where
   toFun : M → M'
-  cont_mdiff_to_fun : ContMdiff I I' n to_fun
+  contMdiff_toFun : ContMdiff I I' n to_fun
 #align cont_mdiff_map ContMdiffMap
 
 /-- Bundled smooth maps. -/
@@ -57,7 +57,7 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
   ⟨ContMdiffMap.toFun⟩
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.cont_mdiff_to_fun.Continuous⟩⟩
+  ⟨fun f => ⟨f, f.contMdiff_toFun.Continuous⟩⟩
 
 attribute [to_additive_ignore_args 21]
   ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
@@ -70,11 +70,11 @@ theorem coeFn_mk (f : M → M') (hf : ContMdiff I I' n f) : (mk f hf : M → M')
 #align cont_mdiff_map.coe_fn_mk ContMdiffMap.coeFn_mk
 
 protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
-  f.cont_mdiff_to_fun
+  f.contMdiff_toFun
 #align cont_mdiff_map.cont_mdiff ContMdiffMap.contMdiff
 
 protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
-  f.cont_mdiff_to_fun
+  f.contMdiff_toFun
 #align cont_mdiff_map.smooth ContMdiffMap.smooth
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
@@ -106,7 +106,7 @@ def id : C^n⟮I, M; I, M⟯ :=
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯
     where
   toFun a := f (g a)
-  cont_mdiff_to_fun := f.cont_mdiff_to_fun.comp g.cont_mdiff_to_fun
+  contMdiff_toFun := f.contMdiff_toFun.comp g.contMdiff_toFun
 #align cont_mdiff_map.comp ContMdiffMap.comp
 
 @[simp]

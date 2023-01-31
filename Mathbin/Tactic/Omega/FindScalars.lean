@@ -22,8 +22,8 @@ namespace Omega
 /-- Divide linear combinations into three groups by the coefficient of the
     `m`th variable in their resultant terms: negative, zero, or positive. -/
 unsafe def trisect (m : Nat) :
-    List (List Nat × term) →
-      List (List Nat × term) × List (List Nat × term) × List (List Nat × term)
+    List (List Nat × Term) →
+      List (List Nat × Term) × List (List Nat × Term) × List (List Nat × Term)
   | [] => ([], [], [])
   | (p, t) :: pts =>
     let (neg, zero, Pos) := trisect pts
@@ -33,7 +33,7 @@ unsafe def trisect (m : Nat) :
 
 /-- Use two linear combinations to obtain a third linear combination
     whose resultant term does not include the `m`th variable. -/
-unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → tactic (List Nat × term)
+unsafe def elim_var_aux (m : Nat) : (List Nat × Term) × List Nat × Term → tactic (List Nat × Term)
   | ((p1, t1), (p2, t2)) =>
     let n := Int.natAbs (get m t1.snd)
     let o := Int.natAbs (get m t2.snd)
@@ -47,8 +47,8 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × term) × List Nat × term → t
     include occurrences of the `m`th variable with positive coefficients,
     and one with negative coefficients) and linearly combine them in every
     possible way that eliminates the `m`th variable. -/
-unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) :
-    tactic (List (List Nat × term)) :=
+unsafe def elim_var (m : Nat) (neg pos : List (List Nat × Term)) :
+    tactic (List (List Nat × Term)) :=
   let pairs := List.product neg Pos
   Monad.mapM (elim_var_aux m) pairs
 #align omega.elim_var omega.elim_var
@@ -56,7 +56,7 @@ unsafe def elim_var (m : Nat) (neg pos : List (List Nat × term)) :
 /-- Search through a list of (linear combination × resultant term) pairs,
     find the first pair whose resultant term has a negative constant term,
     and return its linear combination -/
-unsafe def find_neg_const : List (List Nat × term) → tactic (List Nat)
+unsafe def find_neg_const : List (List Nat × Term) → tactic (List Nat)
   | [] => tactic.failed
   | (π, ⟨c, _⟩) :: l => if c < 0 then return π else find_neg_const l
 #align omega.find_neg_const omega.find_neg_const
@@ -65,7 +65,7 @@ unsafe def find_neg_const : List (List Nat × term) → tactic (List Nat)
     When all variables have been eliminated, find and return the
     linear combination which produces a constraint of the form
     `0 < k + t` such that `k` is the constant term of the RHS and `k < 0`. -/
-unsafe def find_scalars_core : Nat → List (List Nat × term) → tactic (List Nat)
+unsafe def find_scalars_core : Nat → List (List Nat × Term) → tactic (List Nat)
   | 0, pts => find_neg_const pts
   | m + 1, pts =>
     let (neg, zero, Pos) := trisect m pts
@@ -78,7 +78,7 @@ unsafe def find_scalars_core : Nat → List (List Nat × term) → tactic (List 
     linear combination of input constraints. -/
 unsafe def find_scalars (ts : List Term) : tactic (List Nat) :=
   find_scalars_core (ts.map fun t : Term => t.snd.length).maximum.iget
-    (ts.mapWithIndex fun m t => (List.Func.set 1 [] m, t))
+    (ts.mapIdx fun m t => (List.Func.set 1 [] m, t))
 #align omega.find_scalars omega.find_scalars
 
 end Omega

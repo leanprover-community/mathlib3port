@@ -270,7 +270,7 @@ unsafe def apply_declaration (close_goals : Bool) (opt : suggest_opt := { }) (d 
 -- we use `unpack_iff_both` to ensure this isn't reachable
 /-- An `application` records the result of a successful application of a library lemma. -/
 unsafe structure application where
-  State : tactic_state
+  StateM : tactic_state
   script : String
   decl : Option declaration
   num_goals : ℕ
@@ -305,7 +305,7 @@ private unsafe def apply_declaration_script (g : expr) (hyps : List expr) (opt :
       let s ← read
       let m ← tactic_statement g
       return
-          { State := s
+          { StateM := s
             decl := d
             script := m
             num_goals := ng
@@ -404,7 +404,7 @@ unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := { 
 /-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
 -/
 unsafe def library_search (opt : suggest_opt := { }) : tactic String :=
-  (suggest_core opt).mfirst fun a => do
+  (suggest_core opt).firstM fun a => do
     guard (a = 0)
     write a
     return a
@@ -448,9 +448,9 @@ unsafe def suggest (n : parse (parser.optional (with_desc "n" small_nat)))
     (use : parse <| tk "using" *> many ident_ <|> return []) (opt : suggest_opt := { }) :
     tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
-  let use ← use.mmap get_local
+  let use ← use.mapM get_local
   let L ←
-    tactic.suggest_scripts (n.getOrElse 50)
+    tactic.suggest_scripts (n.getD 50)
         { opt with
           compulsory_hyps := use
           lemma_thunks := some lemma_thunks
@@ -538,7 +538,7 @@ unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : par
     (attr_names : parse with_ident_list) (use : parse <| tk "using" *> many ident_ <|> return [])
     (opt : suggest_opt := { }) : tactic Unit := do
   let (lemma_thunks, ctx_thunk) ← mk_assumption_set false hs attr_names
-  let use ← use.mmap get_local
+  let use ← use.mapM get_local
   (tactic.library_search
           { opt with
             compulsory_hyps := use
@@ -587,7 +587,7 @@ unsafe def library_search_hole_cmd : hole_command
     let script ← library_search
     -- Is there a better API for dropping the 'Try this: exact ' prefix on this string?
         return
-        [((script "Try this: exact ").getOrElse script, "by library_search")]
+        [((script "Try this: exact ").getD script, "by library_search")]
 #align tactic.library_search_hole_cmd tactic.library_search_hole_cmd
 
 add_tactic_doc

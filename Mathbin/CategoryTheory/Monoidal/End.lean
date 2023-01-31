@@ -82,8 +82,8 @@ def tensoringRightMonoidal [MonoidalCategory.{v} C] : MonoidalFunctor C (C ⥤ C
       ext Y; dsimp
       rw [tensor_id, category.comp_id, right_unitor_tensor_inv, category.assoc,
         iso.inv_hom_id_assoc, ← id_tensor_comp, iso.inv_hom_id, tensor_id]
-    ε_is_iso := by infer_instance
-    μ_is_iso := fun X Y =>
+    ε_isIso := by infer_instance
+    μ_isIso := fun X Y =>
       ⟨⟨{   app := fun Z => (α_ Z X Y).inv
             naturality' := fun Z Z' f => by
               dsimp
@@ -341,7 +341,7 @@ noncomputable def equivOfTensorIsoUnit (m n : M) (h₁ : m ⊗ n ≅ 𝟙_ M) (h
   inverse := F.obj n
   unitIso := (unitOfTensorIsoUnit F m n h₁).symm
   counitIso := unitOfTensorIsoUnit F n m h₂
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     intro X
     dsimp
     simp only [μ_naturalityᵣ_assoc, μ_naturalityₗ_assoc, ε_inv_app_obj, category.assoc,

@@ -124,7 +124,7 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
   -- if a < 0
   · have : tendsto (fun x => (a * x + b) * x + c) at_top at_bot :=
       tendsto_at_bot_add_const_right _ c
-        ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).at_bot_mul_at_top
+        ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).atBot_mul_atTop
           tendsto_id)
     rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
     exact False.elim ((h x).not_lt <| by rwa [← add_mul])

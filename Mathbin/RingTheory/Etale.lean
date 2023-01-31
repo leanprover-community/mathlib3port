@@ -176,7 +176,7 @@ noncomputable def FormallySmooth.lift [FormallySmooth R A] (I : Ideal B) (hI : I
 @[simp]
 theorem FormallySmooth.comp_lift [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I)
     (g : A →ₐ[R] B ⧸ I) : (Ideal.Quotient.mkₐ R I).comp (FormallySmooth.lift I hI g) = g :=
-  (FormallySmooth.exists_lift I hI g).some_spec
+  (FormallySmooth.exists_lift I hI g).choose_spec
 #align algebra.formally_smooth.comp_lift Algebra.FormallySmooth.comp_lift
 
 @[simp]
@@ -378,7 +378,7 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
   constructor
   · intro
     have surj : Function.Surjective f.ker_square_lift := fun x =>
-      ⟨Submodule.Quotient.mk (hf x).some, (hf x).some_spec⟩
+      ⟨Submodule.Quotient.mk (hf x).some, (hf x).choose_spec⟩
     have sqz : RingHom.ker f.ker_square_lift.to_ring_hom ^ 2 = 0 := by
       rw [AlgHom.ker_ker_sqare_lift, Ideal.cotangentIdeal_square, Ideal.zero_eq_bot]
     refine'

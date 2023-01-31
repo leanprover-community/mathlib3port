@@ -172,7 +172,7 @@ instance [SigmaFinite μ] : SigmaFinite (μ.singularPart ν) :=
 
 instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] :
     IsLocallyFiniteMeasure (μ.singularPart ν) :=
-  is_locally_finite_measure_of_le <| singularPart_le μ ν
+  isLocallyFiniteMeasureOfLe <| singularPart_le μ ν
 
 instance [IsFiniteMeasure μ] : IsFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
   isFiniteMeasureOfLe μ <| withDensity_rnDeriv_le μ ν
@@ -182,7 +182,7 @@ instance [SigmaFinite μ] : SigmaFinite (ν.withDensity <| μ.rnDeriv ν) :=
 
 instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] :
     IsLocallyFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
-  is_locally_finite_measure_of_le <| withDensity_rnDeriv_le μ ν
+  isLocallyFiniteMeasureOfLe <| withDensity_rnDeriv_le μ ν
 
 theorem lintegral_rnDeriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measure α) {s : Set α}
     (hs : μ s ≠ ∞) : (∫⁻ x in s, μ.rnDeriv ν x ∂ν) < ∞ :=

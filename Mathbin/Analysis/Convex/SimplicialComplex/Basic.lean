@@ -63,7 +63,7 @@ structure SimplicialComplex where
   not_empty_mem : ∅ ∉ faces
   indep : ∀ {s}, s ∈ faces → AffineIndependent 𝕜 (coe : (s : Set E) → E)
   down_closed : ∀ {s t}, s ∈ faces → t ⊆ s → t ≠ ∅ → t ∈ faces
-  inter_subset_convex_hull :
+  inter_subset_convexHull :
     ∀ {s t},
       s ∈ faces → t ∈ faces → convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t ⊆ convexHull 𝕜 (s ∩ t : Set E)
 #align geometry.simplicial_complex Geometry.SimplicialComplex
@@ -82,7 +82,7 @@ def space (K : SimplicialComplex 𝕜 E) : Set E :=
 #align geometry.simplicial_complex.space Geometry.SimplicialComplex.space
 
 theorem mem_space_iff : x ∈ K.space ↔ ∃ s ∈ K.faces, x ∈ convexHull 𝕜 (s : Set E) :=
-  mem_Union₂
+  mem_unionᵢ₂
 #align geometry.simplicial_complex.mem_space_iff Geometry.SimplicialComplex.mem_space_iff
 
 theorem convexHull_subset_space (hs : s ∈ K.faces) : convexHull 𝕜 ↑s ⊆ K.space :=
@@ -95,7 +95,7 @@ protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.space :=
 
 theorem convexHull_inter_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t = convexHull 𝕜 (s ∩ t : Set E) :=
-  (K.inter_subset_convex_hull hs ht).antisymm <|
+  (K.inter_subset_convexHull hs ht).antisymm <|
     subset_inter (convexHull_mono <| Set.inter_subset_left _ _) <|
       convexHull_mono <| Set.inter_subset_right _ _
 #align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convexHull_inter_convexHull
@@ -134,7 +134,7 @@ def ofErase (faces : Set (Finset E))
   not_empty_mem h := h.2 (mem_singleton _)
   indep s hs := indep _ hs.1
   down_closed s t hs hts ht := ⟨down_closed _ hs.1 _ hts, ht⟩
-  inter_subset_convex_hull s t hs ht := inter_subset_convex_hull _ hs.1 _ ht.1
+  inter_subset_convexHull s t hs ht := inter_subset_convex_hull _ hs.1 _ ht.1
 #align geometry.simplicial_complex.of_erase Geometry.SimplicialComplex.ofErase
 
 /-- Construct a simplicial complex as a subset of a given simplicial complex. -/
@@ -145,8 +145,7 @@ def ofSubcomplex (K : SimplicialComplex 𝕜 E) (faces : Set (Finset E)) (subset
     not_empty_mem := fun h => K.not_empty_mem (subset h)
     indep := fun s hs => K.indep (subset hs)
     down_closed := fun s t hs hts _ => down_closed hs hts
-    inter_subset_convex_hull := fun s t hs ht =>
-      K.inter_subset_convex_hull (subset hs) (subset ht) }
+    inter_subset_convexHull := fun s t hs ht => K.inter_subset_convexHull (subset hs) (subset ht) }
 #align geometry.simplicial_complex.of_subcomplex Geometry.SimplicialComplex.ofSubcomplex
 
 /-! ### Vertices -/
@@ -170,7 +169,7 @@ theorem vertices_eq : K.vertices = ⋃ k ∈ K.faces, (k : Set E) :=
 #align geometry.simplicial_complex.vertices_eq Geometry.SimplicialComplex.vertices_eq
 
 theorem vertices_subset_space : K.vertices ⊆ K.space :=
-  vertices_eq.Subset.trans <| Union₂_mono fun x hx => subset_convexHull 𝕜 x
+  vertices_eq.Subset.trans <| unionᵢ₂_mono fun x hx => subset_convexHull 𝕜 x
 #align geometry.simplicial_complex.vertices_subset_space Geometry.SimplicialComplex.vertices_subset_space
 
 theorem vertex_mem_convexHull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
@@ -239,7 +238,7 @@ instance : HasInf (SimplicialComplex 𝕜 E) :=
       not_empty_mem := fun h => K.not_empty_mem (Set.inter_subset_left _ _ h)
       indep := fun s hs => K.indep hs.1
       down_closed := fun s t hs hst ht => ⟨K.down_closed hs.1 hst ht, L.down_closed hs.2 hst ht⟩
-      inter_subset_convex_hull := fun s t hs ht => K.inter_subset_convex_hull hs.1 ht.1 }⟩
+      inter_subset_convexHull := fun s t hs ht => K.inter_subset_convexHull hs.1 ht.1 }⟩
 
 instance : SemilatticeInf (SimplicialComplex 𝕜 E) :=
   {
@@ -255,7 +254,7 @@ instance : Bot (SimplicialComplex 𝕜 E) :=
       not_empty_mem := Set.not_mem_empty ∅
       indep := fun s hs => (Set.not_mem_empty _ hs).elim
       down_closed := fun s _ hs => (Set.not_mem_empty _ hs).elim
-      inter_subset_convex_hull := fun s _ hs => (Set.not_mem_empty _ hs).elim }⟩
+      inter_subset_convexHull := fun s _ hs => (Set.not_mem_empty _ hs).elim }⟩
 
 instance : OrderBot (SimplicialComplex 𝕜 E) :=
   { SimplicialComplex.hasBot 𝕜 E with bot_le := fun K => Set.empty_subset _ }

@@ -77,7 +77,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} R], Not (IsPrimePow.{u1} R _inst_1 (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R (MonoidWithZero.toMonoid.{u1} R (CommMonoidWithZero.toMonoidWithZero.{u1} R _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align not_is_prime_pow_one not_isPrimePow_oneₓ'. -/
 theorem not_isPrimePow_one : ¬IsPrimePow (1 : R) :=
-  isUnit_one.not_is_prime_pow
+  isUnit_one.not_isPrimePow
 #align not_is_prime_pow_one not_isPrimePow_one
 
 #print Prime.isPrimePow /-
@@ -162,7 +162,7 @@ but is expected to have type
   forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Disjoint.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors a)) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors b)))
 Case conversion may be inaccurate. Consider using '#align nat.disjoint_divisors_filter_prime_pow Nat.disjoint_divisors_filter_isPrimePowₓ'. -/
 theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.coprime b) :
-    Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) :=
+    Disjoint (a.divisors.filterₓ IsPrimePow) (b.divisors.filterₓ IsPrimePow) :=
   by
   simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]
   rintro n han ha hn hbn hb -

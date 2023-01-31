@@ -276,7 +276,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulActionWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
-  { hf.MulAction f smul, hf.SmulWithZero f smul with }
+  { hf.MulAction f smul, hf.SMulWithZero f smul with }
 #align function.injective.mul_action_with_zero Function.Injective.mulActionWithZero
 -/
 
@@ -286,7 +286,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
-  { hf.MulAction f smul, hf.SmulWithZero f smul with }
+  { hf.MulAction f smul, hf.SMulWithZero f smul with }
 #align function.surjective.mul_action_with_zero Function.Surjective.mulActionWithZero
 -/
 

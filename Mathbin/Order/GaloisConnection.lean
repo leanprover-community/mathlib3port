@@ -152,32 +152,32 @@ theorem upperBounds_l_image (s : Set α) : upperBounds (l '' s) = u ⁻¹' upper
 
 #print GaloisConnection.lowerBounds_u_image /-
 theorem lowerBounds_u_image (s : Set β) : lowerBounds (u '' s) = l ⁻¹' lowerBounds s :=
-  gc.dual.upper_bounds_l_image s
+  gc.dual.upperBounds_l_image s
 #align galois_connection.lower_bounds_u_image GaloisConnection.lowerBounds_u_image
 -/
 
 #print GaloisConnection.bddAbove_l_image /-
 theorem bddAbove_l_image {s : Set α} : BddAbove (l '' s) ↔ BddAbove s :=
-  ⟨fun ⟨x, hx⟩ => ⟨u x, by rwa [gc.upper_bounds_l_image] at hx⟩, gc.monotone_l.map_bdd_above⟩
+  ⟨fun ⟨x, hx⟩ => ⟨u x, by rwa [gc.upper_bounds_l_image] at hx⟩, gc.monotone_l.map_bddAbove⟩
 #align galois_connection.bdd_above_l_image GaloisConnection.bddAbove_l_image
 -/
 
 #print GaloisConnection.bddBelow_u_image /-
 theorem bddBelow_u_image {s : Set β} : BddBelow (u '' s) ↔ BddBelow s :=
-  gc.dual.bdd_above_l_image
+  gc.dual.bddAbove_l_image
 #align galois_connection.bdd_below_u_image GaloisConnection.bddBelow_u_image
 -/
 
 #print GaloisConnection.isLUB_l_image /-
 theorem isLUB_l_image {s : Set α} {a : α} (h : IsLUB s a) : IsLUB (l '' s) (l a) :=
-  ⟨gc.monotone_l.mem_upper_bounds_image h.left, fun b hb =>
+  ⟨gc.monotone_l.mem_upperBounds_image h.left, fun b hb =>
     gc.l_le <| h.right <| by rwa [gc.upper_bounds_l_image] at hb⟩
 #align galois_connection.is_lub_l_image GaloisConnection.isLUB_l_image
 -/
 
 #print GaloisConnection.isGLB_u_image /-
 theorem isGLB_u_image {s : Set β} {b : β} (h : IsGLB s b) : IsGLB (u '' s) (u b) :=
-  gc.dual.is_lub_l_image h
+  gc.dual.isLUB_l_image h
 #align galois_connection.is_glb_u_image GaloisConnection.isGLB_u_image
 -/
 
@@ -189,19 +189,19 @@ theorem isLeast_l {a : α} : IsLeast { b | a ≤ u b } (l a) :=
 
 #print GaloisConnection.isGreatest_u /-
 theorem isGreatest_u {b : β} : IsGreatest { a | l a ≤ b } (u b) :=
-  gc.dual.is_least_l
+  gc.dual.isLeast_l
 #align galois_connection.is_greatest_u GaloisConnection.isGreatest_u
 -/
 
 #print GaloisConnection.isGLB_l /-
 theorem isGLB_l {a : α} : IsGLB { b | a ≤ u b } (l a) :=
-  gc.is_least_l.IsGlb
+  gc.isLeast_l.IsGLB
 #align galois_connection.is_glb_l GaloisConnection.isGLB_l
 -/
 
 #print GaloisConnection.isLUB_u /-
 theorem isLUB_u {b : β} : IsLUB { a | l a ≤ b } (u b) :=
-  gc.is_greatest_u.IsLub
+  gc.isGreatest_u.IsLUB
 #align galois_connection.is_lub_u GaloisConnection.isLUB_u
 -/
 
@@ -373,7 +373,7 @@ include gc
 
 #print GaloisConnection.l_sup /-
 theorem l_sup : l (a₁ ⊔ a₂) = l a₁ ⊔ l a₂ :=
-  (gc.is_lub_l_image isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
+  (gc.isLUB_l_image isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
 #align galois_connection.l_sup GaloisConnection.l_sup
 -/
 
@@ -431,7 +431,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {f : ι -> β}, Eq.{succ u1} α (u (infᵢ.{u2, u3} β (CompleteLattice.toInfSet.{u2} β _inst_2) ι f)) (infᵢ.{u1, u3} α (CompleteLattice.toInfSet.{u1} α _inst_1) ι (fun (i : ι) => u (f i))))
 Case conversion may be inaccurate. Consider using '#align galois_connection.u_infi GaloisConnection.u_infᵢₓ'. -/
 theorem u_infᵢ {f : ι → β} : u (infᵢ f) = ⨅ i, u (f i) :=
-  gc.dual.l_supr
+  gc.dual.l_supᵢ
 #align galois_connection.u_infi GaloisConnection.u_infᵢ
 
 /- warning: galois_connection.u_infi₂ -> GaloisConnection.u_infᵢ₂ is a dubious translation:
@@ -443,7 +443,7 @@ Case conversion may be inaccurate. Consider using '#align galois_connection.u_in
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem u_infᵢ₂ {f : ∀ i, κ i → β} : u (⨅ (i) (j), f i j) = ⨅ (i) (j), u (f i j) :=
-  gc.dual.l_supr₂
+  gc.dual.l_supᵢ₂
 #align galois_connection.u_infi₂ GaloisConnection.u_infᵢ₂
 
 /- warning: galois_connection.l_Sup -> GaloisConnection.l_supₛ is a dubious translation:
@@ -462,7 +462,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {l : α -> β} {u : β -> α}, (GaloisConnection.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) l u) -> (forall {s : Set.{u2} β}, Eq.{succ u1} α (u (InfSet.infₛ.{u2} β (CompleteLattice.toInfSet.{u2} β _inst_2) s)) (infᵢ.{u1, succ u2} α (CompleteLattice.toInfSet.{u1} α _inst_1) β (fun (a : β) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α _inst_1) (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) a s) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) a s) => u a))))
 Case conversion may be inaccurate. Consider using '#align galois_connection.u_Inf GaloisConnection.u_infₛₓ'. -/
 theorem u_infₛ {s : Set β} : u (infₛ s) = ⨅ a ∈ s, u a :=
-  gc.dual.l_Sup
+  gc.dual.l_supₛ
 #align galois_connection.u_Inf GaloisConnection.u_infₛ
 
 end CompleteLattice
@@ -566,27 +566,27 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Sup_image2_eq_Sup_Sup supₛ_image2_eq_supₛ_supₛₓ'. -/
 theorem supₛ_image2_eq_supₛ_supₛ (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : supₛ (image2 l s t) = l (supₛ s) (supₛ t) := by
-  simp_rw [supₛ_image2, ← (h₂ _).l_Sup, ← (h₁ _).l_Sup]
+  simp_rw [supₛ_image2, ← (h₂ _).l_supₛ, ← (h₁ _).l_supₛ]
 #align Sup_image2_eq_Sup_Sup supₛ_image2_eq_supₛ_supₛ
 
 #print supₛ_image2_eq_supₛ_infₛ /-
 theorem supₛ_image2_eq_supₛ_infₛ (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) :
+    (h₂ : ∀ a, GaloisConnection (l a ∘ ofDual) (toDual ∘ u₂ a)) :
     supₛ (image2 l s t) = l (supₛ s) (infₛ t) :=
   @supₛ_image2_eq_supₛ_supₛ _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Sup_image2_eq_Sup_Inf supₛ_image2_eq_supₛ_infₛ
 -/
 
 #print supₛ_image2_eq_infₛ_supₛ /-
-theorem supₛ_image2_eq_infₛ_supₛ (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
+theorem supₛ_image2_eq_infₛ_supₛ (h₁ : ∀ b, GaloisConnection (swap l b ∘ ofDual) (toDual ∘ u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : supₛ (image2 l s t) = l (infₛ s) (supₛ t) :=
   @supₛ_image2_eq_supₛ_supₛ αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Sup_image2_eq_Inf_Sup supₛ_image2_eq_infₛ_supₛ
 -/
 
 #print supₛ_image2_eq_infₛ_infₛ /-
-theorem supₛ_image2_eq_infₛ_infₛ (h₁ : ∀ b, GaloisConnection (swap l b ∘ of_dual) (to_dual ∘ u₁ b))
-    (h₂ : ∀ a, GaloisConnection (l a ∘ of_dual) (to_dual ∘ u₂ a)) :
+theorem supₛ_image2_eq_infₛ_infₛ (h₁ : ∀ b, GaloisConnection (swap l b ∘ ofDual) (toDual ∘ u₁ b))
+    (h₂ : ∀ a, GaloisConnection (l a ∘ ofDual) (toDual ∘ u₂ a)) :
     supₛ (image2 l s t) = l (infₛ s) (infₛ t) :=
   @supₛ_image2_eq_supₛ_supₛ αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Sup_image2_eq_Inf_Inf supₛ_image2_eq_infₛ_infₛ
@@ -600,27 +600,27 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_image2_eq_Inf_Inf infₛ_image2_eq_infₛ_infₛₓ'. -/
 theorem infₛ_image2_eq_infₛ_infₛ (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
     (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : infₛ (image2 u s t) = u (infₛ s) (infₛ t) := by
-  simp_rw [infₛ_image2, ← (h₂ _).u_Inf, ← (h₁ _).u_Inf]
+  simp_rw [infₛ_image2, ← (h₂ _).u_infₛ, ← (h₁ _).u_infₛ]
 #align Inf_image2_eq_Inf_Inf infₛ_image2_eq_infₛ_infₛ
 
 #print infₛ_image2_eq_infₛ_supₛ /-
 theorem infₛ_image2_eq_infₛ_supₛ (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
-    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) :
+    (h₂ : ∀ a, GaloisConnection (toDual ∘ l₂ a) (u a ∘ ofDual)) :
     infₛ (image2 u s t) = u (infₛ s) (supₛ t) :=
   @infₛ_image2_eq_infₛ_infₛ _ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Inf_image2_eq_Inf_Sup infₛ_image2_eq_infₛ_supₛ
 -/
 
 #print infₛ_image2_eq_supₛ_infₛ /-
-theorem infₛ_image2_eq_supₛ_infₛ (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
+theorem infₛ_image2_eq_supₛ_infₛ (h₁ : ∀ b, GaloisConnection (toDual ∘ l₁ b) (swap u b ∘ ofDual))
     (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : infₛ (image2 u s t) = u (supₛ s) (infₛ t) :=
   @infₛ_image2_eq_infₛ_infₛ αᵒᵈ _ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Inf_image2_eq_Sup_Inf infₛ_image2_eq_supₛ_infₛ
 -/
 
 #print infₛ_image2_eq_supₛ_supₛ /-
-theorem infₛ_image2_eq_supₛ_supₛ (h₁ : ∀ b, GaloisConnection (to_dual ∘ l₁ b) (swap u b ∘ of_dual))
-    (h₂ : ∀ a, GaloisConnection (to_dual ∘ l₂ a) (u a ∘ of_dual)) :
+theorem infₛ_image2_eq_supₛ_supₛ (h₁ : ∀ b, GaloisConnection (toDual ∘ l₁ b) (swap u b ∘ ofDual))
+    (h₂ : ∀ a, GaloisConnection (toDual ∘ l₂ a) (u a ∘ ofDual)) :
     infₛ (image2 u s t) = u (supₛ s) (supₛ t) :=
   @infₛ_image2_eq_infₛ_infₛ αᵒᵈ βᵒᵈ _ _ _ _ _ _ _ _ _ h₁ h₂
 #align Inf_image2_eq_Sup_Sup infₛ_image2_eq_supₛ_supₛ
@@ -640,7 +640,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.bdd_above_image OrderIso.bddAbove_imageₓ'. -/
 @[simp]
 theorem bddAbove_image (e : α ≃o β) {s : Set α} : BddAbove (e '' s) ↔ BddAbove s :=
-  e.to_galois_connection.bdd_above_l_image
+  e.to_galoisConnection.bddAbove_l_image
 #align order_iso.bdd_above_image OrderIso.bddAbove_image
 
 /- warning: order_iso.bdd_below_image -> OrderIso.bddBelow_image is a dubious translation:
@@ -651,7 +651,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_iso.bdd_below_image OrderIso.bddBelow_imageₓ'. -/
 @[simp]
 theorem bddBelow_image (e : α ≃o β) {s : Set α} : BddBelow (e '' s) ↔ BddBelow s :=
-  e.dual.bdd_above_image
+  e.dual.bddAbove_image
 #align order_iso.bdd_below_image OrderIso.bddBelow_image
 
 /- warning: order_iso.bdd_above_preimage -> OrderIso.bddAbove_preimage is a dubious translation:
@@ -723,7 +723,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso.to_galois_in
 protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisInsertion oi oi.symm where
   choice b h := oi b
-  gc := oi.to_galois_connection
+  gc := oi.to_galoisConnection
   le_l_u g := le_of_eq (oi.right_inv g).symm
   choice_eq b h := rfl
 #align order_iso.to_galois_insertion OrderIso.toGaloisInsertion
@@ -768,13 +768,13 @@ theorem leftInverse_l_u [Preorder α] [PartialOrder β] (gi : GaloisInsertion l 
 
 #print GaloisInsertion.l_surjective /-
 theorem l_surjective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) : Surjective l :=
-  gi.left_inverse_l_u.Surjective
+  gi.leftInverse_l_u.Surjective
 #align galois_insertion.l_surjective GaloisInsertion.l_surjective
 -/
 
 #print GaloisInsertion.u_injective /-
 theorem u_injective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) : Injective u :=
-  gi.left_inverse_l_u.Injective
+  gi.leftInverse_l_u.Injective
 #align galois_insertion.u_injective GaloisInsertion.u_injective
 -/
 
@@ -797,7 +797,7 @@ Case conversion may be inaccurate. Consider using '#align galois_insertion.l_sup
 theorem l_supᵢ_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     (f : ι → β) : l (⨆ i, u (f i)) = ⨆ i, f i :=
   calc
-    l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_supr
+    l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_supᵢ
     _ = ⨆ i : ι, f i := congr_arg _ <| funext fun i => gi.l_u_eq (f i)
     
 #align galois_insertion.l_supr_u GaloisInsertion.l_supᵢ_u
@@ -844,7 +844,7 @@ Case conversion may be inaccurate. Consider using '#align galois_insertion.l_inf
 theorem l_infᵢ_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     (f : ι → β) : l (⨅ i, u (f i)) = ⨅ i, f i :=
   calc
-    l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_arg l gi.gc.u_infi.symm
+    l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_arg l gi.gc.u_infᵢ.symm
     _ = ⨅ i : ι, f i := gi.l_u_eq _
     
 #align galois_insertion.l_infi_u GaloisInsertion.l_infᵢ_u
@@ -882,7 +882,7 @@ theorem l_infᵢ_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : G
     {ι : Sort x} (f : ι → α) (hf : ∀ i, u (l (f i)) = f i) : l (⨅ i, f i) = ⨅ i, l (f i) :=
   calc
     l (⨅ i, f i) = l (⨅ i : ι, u (l (f i))) := by simp [hf]
-    _ = ⨅ i, l (f i) := gi.l_infi_u _
+    _ = ⨅ i, l (f i) := gi.l_infᵢ_u _
     
 #align galois_insertion.l_infi_of_ul_eq_self GaloisInsertion.l_infᵢ_of_ul_eq_self
 
@@ -918,7 +918,7 @@ theorem strictMono_u [Preorder α] [Preorder β] (gi : GaloisInsertion l u) : St
 theorem isLUB_of_u_image [Preorder α] [Preorder β] (gi : GaloisInsertion l u) {s : Set β} {a : α}
     (hs : IsLUB (u '' s) a) : IsLUB s (l a) :=
   ⟨fun x hx => (gi.le_l_u x).trans <| gi.gc.monotone_l <| hs.1 <| mem_image_of_mem _ hx, fun x hx =>
-    gi.gc.l_le <| hs.2 <| gi.gc.monotone_u.mem_upper_bounds_image hx⟩
+    gi.gc.l_le <| hs.2 <| gi.gc.monotone_u.mem_upperBounds_image hx⟩
 #align galois_insertion.is_lub_of_u_image GaloisInsertion.isLUB_of_u_image
 -/
 
@@ -926,7 +926,7 @@ theorem isLUB_of_u_image [Preorder α] [Preorder β] (gi : GaloisInsertion l u) 
 theorem isGLB_of_u_image [Preorder α] [Preorder β] (gi : GaloisInsertion l u) {s : Set β} {a : α}
     (hs : IsGLB (u '' s) a) : IsGLB s (l a) :=
   ⟨fun x hx => gi.gc.l_le <| hs.1 <| mem_image_of_mem _ hx, fun x hx =>
-    (gi.le_l_u x).trans <| gi.gc.monotone_l <| hs.2 <| gi.gc.monotone_u.mem_lower_bounds_image hx⟩
+    (gi.le_l_u x).trans <| gi.gc.monotone_l <| hs.2 <| gi.gc.monotone_u.mem_lowerBounds_image hx⟩
 #align galois_insertion.is_glb_of_u_image GaloisInsertion.isGLB_of_u_image
 -/
 
@@ -1007,17 +1007,17 @@ def liftBoundedOrder [Preorder α] [BoundedOrder α] (gi : GaloisInsertion l u) 
 def liftCompleteLattice [CompleteLattice α] (gi : GaloisInsertion l u) : CompleteLattice β :=
   { gi.liftBoundedOrder,
     gi.liftLattice with
-    sup := fun s => l (supₛ (u '' s))
-    Sup_le := fun s => (gi.is_lub_of_u_image (isLUB_supₛ _)).2
-    le_Sup := fun s => (gi.is_lub_of_u_image (isLUB_supₛ _)).1
-    inf := fun s =>
+    supₛ := fun s => l (supₛ (u '' s))
+    sup_le := fun s => (gi.isLUB_of_u_image (isLUB_supₛ _)).2
+    le_sup := fun s => (gi.isLUB_of_u_image (isLUB_supₛ _)).1
+    infₛ := fun s =>
       gi.choice (infₛ (u '' s)) <|
         (isGLB_infₛ _).2 <|
-          gi.gc.monotone_u.mem_lower_bounds_image (gi.is_glb_of_u_image <| isGLB_infₛ _).1
-    Inf_le := fun s => by
+          gi.gc.monotone_u.mem_lowerBounds_image (gi.isGLB_of_u_image <| isGLB_infₛ _).1
+    inf_le := fun s => by
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (isGLB_infₛ _)).1
-    le_Inf := fun s => by
+    le_inf := fun s => by
       rw [gi.choice_eq]
       exact (gi.is_glb_of_u_image (isGLB_infₛ _)).2 }
 #align galois_insertion.lift_complete_lattice GaloisInsertion.liftCompleteLattice
@@ -1044,8 +1044,8 @@ structure GaloisCoinsertion [Preorder α] [Preorder β] (l : α → β) (u : β 
 /-- Make a `galois_insertion` between `αᵒᵈ` and `βᵒᵈ` from a `galois_coinsertion` between `α` and
 `β`. -/
 def GaloisCoinsertion.dual [Preorder α] [Preorder β] {l : α → β} {u : β → α} :
-    GaloisCoinsertion l u → GaloisInsertion (to_dual ∘ u ∘ of_dual) (to_dual ∘ l ∘ of_dual) :=
-  fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+    GaloisCoinsertion l u → GaloisInsertion (toDual ∘ u ∘ ofDual) (toDual ∘ l ∘ ofDual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 #align galois_coinsertion.dual GaloisCoinsertion.dual
 -/
 
@@ -1053,8 +1053,8 @@ def GaloisCoinsertion.dual [Preorder α] [Preorder β] {l : α → β} {u : β �
 /-- Make a `galois_coinsertion` between `αᵒᵈ` and `βᵒᵈ` from a `galois_insertion` between `α` and
 `β`. -/
 def GaloisInsertion.dual [Preorder α] [Preorder β] {l : α → β} {u : β → α} :
-    GaloisInsertion l u → GaloisCoinsertion (to_dual ∘ u ∘ of_dual) (to_dual ∘ l ∘ of_dual) :=
-  fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+    GaloisInsertion l u → GaloisCoinsertion (toDual ∘ u ∘ ofDual) (toDual ∘ l ∘ ofDual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 #align galois_insertion.dual GaloisInsertion.dual
 -/
 
@@ -1062,8 +1062,8 @@ def GaloisInsertion.dual [Preorder α] [Preorder β] {l : α → β} {u : β →
 /-- Make a `galois_insertion` between `α` and `β` from a `galois_coinsertion` between `αᵒᵈ` and
 `βᵒᵈ`. -/
 def GaloisCoinsertion.ofDual [Preorder α] [Preorder β] {l : αᵒᵈ → βᵒᵈ} {u : βᵒᵈ → αᵒᵈ} :
-    GaloisCoinsertion l u → GaloisInsertion (of_dual ∘ u ∘ to_dual) (of_dual ∘ l ∘ to_dual) :=
-  fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+    GaloisCoinsertion l u → GaloisInsertion (ofDual ∘ u ∘ toDual) (ofDual ∘ l ∘ toDual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 #align galois_coinsertion.of_dual GaloisCoinsertion.ofDual
 -/
 
@@ -1071,8 +1071,8 @@ def GaloisCoinsertion.ofDual [Preorder α] [Preorder β] {l : αᵒᵈ → βᵒ
 /-- Make a `galois_coinsertion` between `α` and `β` from a `galois_insertion` between `αᵒᵈ` and
 `βᵒᵈ`. -/
 def GaloisInsertion.ofDual [Preorder α] [Preorder β] {l : αᵒᵈ → βᵒᵈ} {u : βᵒᵈ → αᵒᵈ} :
-    GaloisInsertion l u → GaloisCoinsertion (of_dual ∘ u ∘ to_dual) (of_dual ∘ l ∘ to_dual) :=
-  fun x => ⟨x.1, x.2.dual, x.3, x.4⟩
+    GaloisInsertion l u → GaloisCoinsertion (ofDual ∘ u ∘ toDual) (ofDual ∘ l ∘ toDual) := fun x =>
+  ⟨x.1, x.2.dual, x.3, x.4⟩
 #align galois_insertion.of_dual GaloisInsertion.ofDual
 -/
 
@@ -1086,7 +1086,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso.to_galois_co
 protected def OrderIso.toGaloisCoinsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisCoinsertion oi oi.symm where
   choice b h := oi.symm b
-  gc := oi.to_galois_connection
+  gc := oi.to_galoisConnection
   u_l_le g := le_of_eq (oi.left_inv g)
   choice_eq b h := rfl
 #align order_iso.to_galois_coinsertion OrderIso.toGaloisCoinsertion
@@ -1165,7 +1165,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_infi_l GaloisCoinsertion.u_infᵢ_lₓ'. -/
 theorem u_infᵢ_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     (f : ι → α) : u (⨅ i, l (f i)) = ⨅ i, f i :=
-  gi.dual.l_supr_u _
+  gi.dual.l_supᵢ_u _
 #align galois_coinsertion.u_infi_l GaloisCoinsertion.u_infᵢ_l
 
 /- warning: galois_coinsertion.u_Inf_l_image -> GaloisCoinsertion.u_infₛ_l_image is a dubious translation:
@@ -1176,7 +1176,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_Inf_l_image GaloisCoinsertion.u_infₛ_l_imageₓ'. -/
 theorem u_infₛ_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     (s : Set α) : u (infₛ (l '' s)) = infₛ s :=
-  gi.dual.l_Sup_u_image _
+  gi.dual.l_supₛ_u_image _
 #align galois_coinsertion.u_Inf_l_image GaloisCoinsertion.u_infₛ_l_image
 
 #print GaloisCoinsertion.u_sup_l /-
@@ -1194,7 +1194,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_supr_l GaloisCoinsertion.u_supᵢ_lₓ'. -/
 theorem u_supᵢ_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     (f : ι → α) : u (⨆ i, l (f i)) = ⨆ i, f i :=
-  gi.dual.l_infi_u _
+  gi.dual.l_infᵢ_u _
 #align galois_coinsertion.u_supr_l GaloisCoinsertion.u_supᵢ_l
 
 /- warning: galois_coinsertion.u_bsupr_l -> GaloisCoinsertion.u_bsupᵢ_l is a dubious translation:
@@ -1207,7 +1207,7 @@ Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_b
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 theorem u_bsupᵢ_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ (i) (hi : p i), α) : u (⨆ (i) (hi), l (f i hi)) = ⨆ (i) (hi), f i hi :=
-  gi.dual.l_binfi_u _
+  gi.dual.l_binfᵢ_u _
 #align galois_coinsertion.u_bsupr_l GaloisCoinsertion.u_bsupᵢ_l
 
 /- warning: galois_coinsertion.u_Sup_l_image -> GaloisCoinsertion.u_supₛ_l_image is a dubious translation:
@@ -1218,7 +1218,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_Sup_l_image GaloisCoinsertion.u_supₛ_l_imageₓ'. -/
 theorem u_supₛ_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     (s : Set α) : u (supₛ (l '' s)) = supₛ s :=
-  gi.dual.l_Inf_u_image _
+  gi.dual.l_infₛ_u_image _
 #align galois_coinsertion.u_Sup_l_image GaloisCoinsertion.u_supₛ_l_image
 
 /- warning: galois_coinsertion.u_supr_of_lu_eq_self -> GaloisCoinsertion.u_supᵢ_of_lu_eq_self is a dubious translation:
@@ -1229,7 +1229,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_supr_of_lu_eq_self GaloisCoinsertion.u_supᵢ_of_lu_eq_selfₓ'. -/
 theorem u_supᵢ_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     {ι : Sort x} (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
-  gi.dual.l_infi_of_ul_eq_self _ hf
+  gi.dual.l_infᵢ_of_ul_eq_self _ hf
 #align galois_coinsertion.u_supr_of_lu_eq_self GaloisCoinsertion.u_supᵢ_of_lu_eq_self
 
 /- warning: galois_coinsertion.u_bsupr_of_lu_eq_self -> GaloisCoinsertion.u_bsupᵢ_of_lu_eq_self is a dubious translation:
@@ -1243,7 +1243,7 @@ Case conversion may be inaccurate. Consider using '#align galois_coinsertion.u_b
 theorem u_bsupᵢ_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     {ι : Sort x} {p : ι → Prop} (f : ∀ (i) (hi : p i), β) (hf : ∀ i hi, l (u (f i hi)) = f i hi) :
     u (⨆ (i) (hi), f i hi) = ⨆ (i) (hi), u (f i hi) :=
-  gi.dual.l_binfi_of_ul_eq_self _ hf
+  gi.dual.l_binfᵢ_of_ul_eq_self _ hf
 #align galois_coinsertion.u_bsupr_of_lu_eq_self GaloisCoinsertion.u_bsupᵢ_of_lu_eq_self
 
 #print GaloisCoinsertion.l_le_l_iff /-
@@ -1255,21 +1255,21 @@ theorem l_le_l_iff [Preorder α] [Preorder β] (gi : GaloisCoinsertion l u) {a b
 
 #print GaloisCoinsertion.strictMono_l /-
 theorem strictMono_l [Preorder α] [Preorder β] (gi : GaloisCoinsertion l u) : StrictMono l :=
-  fun a b h => gi.dual.strict_mono_u h
+  fun a b h => gi.dual.strictMono_u h
 #align galois_coinsertion.strict_mono_l GaloisCoinsertion.strictMono_l
 -/
 
 #print GaloisCoinsertion.isGLB_of_l_image /-
 theorem isGLB_of_l_image [Preorder α] [Preorder β] (gi : GaloisCoinsertion l u) {s : Set α} {a : β}
     (hs : IsGLB (l '' s) a) : IsGLB s (u a) :=
-  gi.dual.is_lub_of_u_image hs
+  gi.dual.isLUB_of_u_image hs
 #align galois_coinsertion.is_glb_of_l_image GaloisCoinsertion.isGLB_of_l_image
 -/
 
 #print GaloisCoinsertion.isLUB_of_l_image /-
 theorem isLUB_of_l_image [Preorder α] [Preorder β] (gi : GaloisCoinsertion l u) {s : Set α} {a : β}
     (hs : IsLUB (l '' s) a) : IsLUB s (u a) :=
-  gi.dual.is_glb_of_u_image hs
+  gi.dual.isGLB_of_u_image hs
 #align galois_coinsertion.is_lub_of_l_image GaloisCoinsertion.isLUB_of_l_image
 -/
 
@@ -1335,8 +1335,8 @@ def liftCompleteLattice [CompleteLattice β] (gi : GaloisCoinsertion l u) : Comp
   {
     @OrderDual.completeLattice _
       gi.dual.liftCompleteLattice with
-    inf := fun s => u (infₛ (l '' s))
-    sup := fun s => gi.choice (supₛ (l '' s)) _ }
+    infₛ := fun s => u (infₛ (l '' s))
+    supₛ := fun s => gi.choice (supₛ (l '' s)) _ }
 #align galois_coinsertion.lift_complete_lattice GaloisCoinsertion.liftCompleteLattice
 -/
 

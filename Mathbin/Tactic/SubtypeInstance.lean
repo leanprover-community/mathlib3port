@@ -39,7 +39,7 @@ unsafe def derive_field_subtype : tactic Unit := do
       let q(Set $(α)) ← infer_type s
       let e ← mk_const Field
       let expl_arity ← get_expl_arity <| e α
-      let xs ← (iota expl_arity).mmap fun _ => intro1
+      let xs ← (iota expl_arity).mapM fun _ => intro1
       let args ← xs fun x => mk_app `subtype.val [x]
       let hyps ← xs fun x => mk_app `subtype.property [x]
       let val ← mk_app Field args

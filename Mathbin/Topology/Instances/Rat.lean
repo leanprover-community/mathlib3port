@@ -93,7 +93,7 @@ instance : NoncompactSpace ℚ :=
 
 -- TODO(Mario): Find a way to use rat_add_continuous_lemma
 theorem uniformContinuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=
-  Rat.uniformEmbedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2 <| by
+  Rat.uniformEmbedding_coe_real.to_uniformInducing.uniformContinuous_iff.2 <| by
     simp only [(· ∘ ·), Rat.cast_add] <;>
       exact
         real.uniform_continuous_add.comp

@@ -27,7 +27,7 @@ namespace List
 
 #print List.all_nil /-
 @[simp]
-theorem all_nil (p : α → Bool) : all [] p = tt :=
+theorem all_nil (p : α → Bool) : all [] p = true :=
   rfl
 #align list.all_nil List.all_nil
 -/
@@ -54,7 +54,7 @@ theorem all_iff_forall_prop : (all l fun a => p a) ↔ ∀ a ∈ l, p a := by
 
 #print List.any_nil /-
 @[simp]
-theorem any_nil (p : α → Bool) : any [] p = ff :=
+theorem any_nil (p : α → Bool) : any [] p = false :=
   rfl
 #align list.any_nil List.any_nil
 -/

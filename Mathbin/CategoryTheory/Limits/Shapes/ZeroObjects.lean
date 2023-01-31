@@ -190,7 +190,7 @@ protected def HasZeroObject.hasZero : Zero C where zero := HasZeroObject.zero.so
 scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
 
 theorem isZero_zero : IsZero (0 : C) :=
-  HasZeroObject.zero.some_spec
+  HasZeroObject.zero.choose_spec
 #align category_theory.limits.is_zero_zero CategoryTheory.Limits.isZero_zero
 
 instance hasZeroObject_op : HasZeroObject Cᵒᵖ :=

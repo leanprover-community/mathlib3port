@@ -158,14 +158,14 @@ open Function
 
 @[user_attribute]
 unsafe def monotonicity.attr :
-    user_attribute (native.rb_lmap MonoKey Name) (Option MonoKey × mono_selection)
+    user_attribute (native.rb_lmap MonoKey Name) (Option MonoKey × MonoSelection)
     where
   Name := `mono
   descr := "monotonicity of function `f` wrt relations `R₀` and `R₁`: R₀ x y → R₁ (f x) (f y)"
   cache_cfg :=
     { dependencies := []
       mk_cache := fun ls => do
-        let ps ← ls.mmap monotonicity.attr.get_param
+        let ps ← ls.mapM monotonicity.attr.get_param
         let ps := ps.filterMap Prod.fst
         pure <| (ps ls).foldl (flip <| uncurry fun k n m => m k n) (native.rb_lmap.mk mono_key _) }
   after_set :=
@@ -178,9 +178,9 @@ unsafe def monotonicity.attr :
 #align tactic.interactive.monotonicity.attr tactic.interactive.monotonicity.attr
 
 unsafe def filter_instances (e : MonoSelection) (ns : List Name) : tactic (List Name) :=
-  ns.mfilter fun n => do
+  ns.filterM fun n => do
     let d ← user_attribute.get_param_untyped monotonicity.attr n
-    let (_, d) ← to_expr ``(id $(d)) >>= eval_expr (Option MonoKey × mono_selection)
+    let (_, d) ← to_expr ``(id $(d)) >>= eval_expr (Option MonoKey × MonoSelection)
     return (e = d : Bool)
 #align tactic.interactive.filter_instances tactic.interactive.filter_instances
 

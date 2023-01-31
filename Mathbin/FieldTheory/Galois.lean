@@ -49,7 +49,7 @@ variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 /-- A field extension E/F is galois if it is both separable and normal. Note that in mathlib
 a separable extension of fields is by definition algebraic. -/
 class IsGalois : Prop where
-  [to_is_separable : IsSeparable F E]
+  [to_isSeparable : IsSeparable F E]
   [to_normal : Normal F E]
 #align is_galois IsGalois
 
@@ -57,7 +57,7 @@ variable {F E}
 
 theorem isGalois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h =>
-    { to_is_separable := h.1
+    { to_isSeparable := h.1
       to_normal := h.2 }⟩
 #align is_galois_iff isGalois_iff
 
@@ -164,7 +164,7 @@ variable (F K E : Type _) [Field F] [Field K] [Field E] {E' : Type _} [Field E']
 variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem IsGalois.tower_top_of_isGalois [IsGalois F E] : IsGalois K E :=
-  { to_is_separable := isSeparable_tower_top_of_isSeparable F K E
+  { to_isSeparable := isSeparable_tower_top_of_isSeparable F K E
     to_normal := Normal.tower_top_of_normal F K E }
 #align is_galois.tower_top_of_is_galois IsGalois.tower_top_of_isGalois
 
@@ -186,7 +186,7 @@ theorem isGalois_iff_isGalois_bot : IsGalois (⊥ : IntermediateField F E) E ↔
 #align is_galois_iff_is_galois_bot isGalois_iff_isGalois_bot
 
 theorem IsGalois.of_algEquiv [h : IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
-  { to_is_separable := IsSeparable.of_algHom F E f.symm
+  { to_isSeparable := IsSeparable.of_algHom F E f.symm
     to_normal := Normal.of_algEquiv f }
 #align is_galois.of_alg_equiv IsGalois.of_algEquiv
 
@@ -216,7 +216,7 @@ def FixedPoints.intermediateField (M : Type _) [Monoid M] [MulSemiringAction M E
     [SMulCommClass M F E] : IntermediateField F E :=
   { FixedPoints.subfield M E with
     carrier := MulAction.fixedPoints M E
-    algebra_map_mem' := fun a g => by rw [Algebra.algebraMap_eq_smul_one, smul_comm, smul_one] }
+    algebraMap_mem' := fun a g => by rw [Algebra.algebraMap_eq_smul_one, smul_comm, smul_one] }
 #align fixed_points.intermediate_field FixedPoints.intermediateField
 
 namespace IntermediateField

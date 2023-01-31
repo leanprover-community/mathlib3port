@@ -69,7 +69,7 @@ theorem isClique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ :=
 #align simple_graph.is_clique_iff_induce_eq SimpleGraph.isClique_iff_induce_eq
 
 instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
-  decidable_of_iff' _ G.is_clique_iff
+  decidable_of_iff' _ G.isClique_iff
 
 variable {G H}
 
@@ -114,7 +114,7 @@ theorem isNClique_iff : G.IsNClique n s ↔ G.IsClique s ∧ s.card = n :=
 
 instance [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {s : Finset α} :
     Decidable (G.IsNClique n s) :=
-  decidable_of_iff' _ G.is_n_clique_iff
+  decidable_of_iff' _ G.isNClique_iff
 
 variable {G H}
 
@@ -298,7 +298,7 @@ variable (G) [Fintype α] [DecidableEq α] [DecidableRel G.Adj] {n : ℕ} {a b c
 
 /-- The `n`-cliques in a graph as a finset. -/
 def cliqueFinset (n : ℕ) : Finset (Finset α) :=
-  univ.filter <| G.IsNClique n
+  univ.filterₓ <| G.IsNClique n
 #align simple_graph.clique_finset SimpleGraph.cliqueFinset
 
 theorem mem_cliqueFinset_iff : s ∈ G.cliqueFinset n ↔ G.IsNClique n s :=

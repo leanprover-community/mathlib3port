@@ -317,7 +317,7 @@ theorem strongEpi_map_of_strongEpi (adj : F ⊣ F') (f : A ⟶ B) [h₁ : F'.Pre
 
 instance strongEpi_map_of_isEquivalence [IsEquivalence F] (f : A ⟶ B) [h : StrongEpi f] :
     StrongEpi (F.map f) :=
-  F.asEquivalence.toAdjunction.strong_epi_map_of_strong_epi f
+  F.asEquivalence.toAdjunction.strongEpi_map_of_strongEpi f
 #align category_theory.adjunction.strong_epi_map_of_is_equivalence CategoryTheory.Adjunction.strongEpi_map_of_isEquivalence
 
 end CategoryTheory.Adjunction

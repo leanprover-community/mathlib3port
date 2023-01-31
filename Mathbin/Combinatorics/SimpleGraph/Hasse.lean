@@ -88,16 +88,16 @@ theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hass
   fun a b => by
   rw [reachable_iff_refl_trans_gen]
   exact
-    reflTransGen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_is_max)
-      fun c hc => Or.inr <| covby_succ_of_not_is_max hc.2.not_is_max
+    reflTransGen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_isMax)
+      fun c hc => Or.inr <| covby_succ_of_not_is_max hc.2.not_isMax
 #align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
 theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected :=
   fun a b => by
   rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
   exact
-    reflTransGen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_is_min)
-      fun c hc => Or.inr <| pred_covby_of_not_is_min hc.1.not_is_min
+    reflTransGen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_isMin)
+      fun c hc => Or.inr <| pred_covby_of_not_is_min hc.1.not_isMin
 #align simple_graph.hasse_preconnected_of_pred SimpleGraph.hasse_preconnected_of_pred
 
 end LinearOrder

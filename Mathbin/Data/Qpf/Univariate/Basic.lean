@@ -91,7 +91,7 @@ theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) (x : F α) 
 theorem lawfulFunctor
     (h : ∀ α β : Type u, @Functor.mapConst F _ α _ = Functor.map ∘ Function.const β) :
     LawfulFunctor F :=
-  { map_const_eq := h
+  { mapConst_eq := h
     id_map := @id_map F _ _
     comp_map := @comp_map F _ _ }
 #align qpf.is_lawful_functor Qpf.lawfulFunctor
@@ -265,7 +265,7 @@ def fixToW : Fix F → q.p.W :=
 
 /-- constructor of a type defined by a qpf -/
 def Fix.mk (x : F (Fix F)) : Fix F :=
-  Quot.mk _ (PFunctor.W.mk (fix_to_W <$> repr x))
+  Quot.mk _ (PFunctor.W.mk (fixToW <$> repr x))
 #align qpf.fix.mk Qpf.Fix.mk
 
 /-- destructor of a type defined by a qpf -/
@@ -276,7 +276,7 @@ def Fix.dest : Fix F → F (Fix F) :=
 theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
     Fix.rec g (Fix.mk x) = g (Fix.rec g <$> x) :=
   by
-  have : recF g ∘ fix_to_W = Fix.rec g := by
+  have : recF g ∘ fixToW = Fix.rec g := by
     apply funext
     apply Quotient.ind
     intro x

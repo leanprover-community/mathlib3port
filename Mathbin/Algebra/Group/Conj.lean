@@ -311,7 +311,7 @@ theorem exists_rep (a : ConjClasses α) : ∃ a0 : α, ConjClasses.mk a0 = a :=
 #print ConjClasses.map /-
 /-- A `monoid_hom` maps conjugacy classes of one group to conjugacy classes of another. -/
 def map (f : α →* β) : ConjClasses α → ConjClasses β :=
-  Quotient.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_isConj.2 (f.map_is_conj ab)
+  Quotient.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_isConj.2 (f.map_isConj ab)
 #align conj_classes.map ConjClasses.map
 -/
 

@@ -54,7 +54,7 @@ variable {Ω : Type _} [MeasurableSpace Ω]
 This is a probability measure when `s` is finite and nonempty and is given by
 `probability_theory.cond_count_is_probability_measure`. -/
 def condCount (s : Set Ω) : Measure Ω :=
-  measure.count[|s]
+  Measure.count[|s]
 #align probability_theory.cond_count ProbabilityTheory.condCount
 
 @[simp]

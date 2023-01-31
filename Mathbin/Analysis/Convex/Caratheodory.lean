@@ -56,7 +56,7 @@ namespace Caratheodory
 then it is in the convex hull of a strict subset of `t`. -/
 theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coe : t → E))
     {x : E} (m : x ∈ convexHull 𝕜 (↑t : Set E)) :
-    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) :=
+    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.eraseₓ y) : Set E) :=
   by
   simp only [Finset.convexHull_eq, mem_set_of_eq] at m⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m

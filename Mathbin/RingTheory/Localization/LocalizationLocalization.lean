@@ -200,7 +200,7 @@ noncomputable def localizationAlgebraOfSubmonoidLe (M N : Submonoid R) (h : M â‰
 localization maps -/
 theorem localization_isScalarTower_of_submonoid_le (M N : Submonoid R) (h : M â‰¤ N)
     [IsLocalization M S] [IsLocalization N T] :
-    @IsScalarTower R S T _ (localizationAlgebraOfSubmonoidLe S T M N h).toHasSmul _ :=
+    @IsScalarTower R S T _ (localizationAlgebraOfSubmonoidLe S T M N h).toSMul _ :=
   letI := localization_algebra_of_submonoid_le S T M N h
   IsScalarTower.of_algebraMap_eq' (IsLocalization.lift_comp _).symm
 #align is_localization.localization_is_scalar_tower_of_submonoid_le IsLocalization.localization_isScalarTower_of_submonoid_le

@@ -309,7 +309,7 @@ instance : Coe (FreeRing α) (FreeCommRing α) :=
 
 /-- The natural map `free_ring α → free_comm_ring α`, as a `ring_hom`. -/
 def coeRingHom : FreeRing α →+* FreeCommRing α :=
-  to_free_comm_ring
+  toFreeCommRing
 #align free_ring.coe_ring_hom FreeRing.coeRingHom
 
 @[simp, norm_cast]

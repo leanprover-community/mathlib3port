@@ -61,7 +61,7 @@ open Expr Polynomial
     | q( Zero.zero ) => pure q( 0 )
       | q( One.one ) => pure q( 0 )
       | q( - $ ( f ) ) => guess_degree f
-      | app q( ⇑ C ) x => pure q( 0 )
+      | app q( ⇑ c ) x => pure q( 0 )
       | q( x ) => pure q( 1 )
       | q( bit0 $ ( a ) ) => guess_degree a
       | q( bit1 $ ( a ) ) => guess_degree a
@@ -69,19 +69,19 @@ open Expr Polynomial
         q( $ ( a ) + $ ( b ) )
         =>
         do
-          let [ da , db ] ← [ a , b ] . mmap guess_degree
+          let [ da , db ] ← [ a , b ] . mapM guess_degree
             pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) - $ ( b ) )
         =>
         do
-          let [ da , db ] ← [ a , b ] . mmap guess_degree
+          let [ da , db ] ← [ a , b ] . mapM guess_degree
             pure <| expr.mk_app q( ( max : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) * $ ( b ) )
         =>
         do
-          let [ da , db ] ← [ a , b ] . mmap guess_degree
+          let [ da , db ] ← [ a , b ] . mapM guess_degree
             pure <| expr.mk_app q( ( ( · + · ) : ℕ → ℕ → ℕ ) ) [ da , db ]
       |
         q( $ ( a ) ^ $ ( b ) )
@@ -135,7 +135,7 @@ open Expr Polynomial
                 q( $ ( tl1 ) * $ ( tl2 ) )
                 =>
                 do
-                  let [ d1 , d2 ] ← [ tl1 , tl2 ] . mmap guess_degree
+                  let [ d1 , d2 ] ← [ tl1 , tl2 ] . mapM guess_degree
                     refine
                       `
                         `(
@@ -144,13 +144,13 @@ open Expr Polynomial
                             ( add_le_add _ _ ) . trans ( _ : $ ( d1 ) + $ ( d2 ) ≤ $ ( tr ) )
                           )
               | q( - $ ( f ) ) => refine ` `( ( natDegree_neg _ ) . le . trans _ )
-              | q( X ^ $ ( n ) ) => refine ` `( ( natDegree_x_pow_le $ ( n ) ) . trans _ )
+              | q( x ^ $ ( n ) ) => refine ` `( ( natDegree_x_pow_le $ ( n ) ) . trans _ )
               |
                 app q( ⇑ ( @ monomial $ ( R ) $ ( inst ) $ ( n ) ) ) x
                 =>
                 refine ` `( ( natDegree_monomial_le $ ( x ) ) . trans _ )
               |
-                app q( ⇑ C ) x
+                app q( ⇑ c ) x
                 =>
                 refine ` `( ( natDegree_c $ ( x ) ) . le . trans ( Nat.zero_le $ ( tr ) ) )
               | q( x ) => refine ` `( natDegree_x_le . trans _ )

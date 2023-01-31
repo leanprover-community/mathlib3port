@@ -38,7 +38,7 @@ namespace CliffordAlgebra
 
 instance : StarRing (CliffordAlgebra Q)
     where
-  star x := reverse (involute x)
+  unit x := reverse (involute x)
   star_involutive x := by
     simp only [reverse_involute_commute.eq, reverse_reverse, involute_involute]
   star_mul x y := by simp only [map_mul, reverse.map_mul]

@@ -84,7 +84,7 @@ instance hasForgetToBipointed : HasForget₂ Twop Bipointed :=
 /-- Swaps the pointed elements of a two-pointed type. `two_pointing.swap` as a functor. -/
 @[simps]
 def swap : Twop ⥤ Twop where
-  obj X := ⟨X, X.toTwoPointing.swap⟩
+  obj X := ⟨X, X.toTwoPointing.symm⟩
   map X Y f := ⟨f.toFun, f.map_snd, f.map_fst⟩
 #align Twop.swap Twop.swap
 
@@ -105,7 +105,7 @@ def swapEquiv : Twop ≌ Twop :=
 #align Twop.swap_equiv Twop.swapEquiv
 
 @[simp]
-theorem swapEquiv_symm : swapEquiv.symm = swap_equiv :=
+theorem swapEquiv_symm : swapEquiv.symm = swapEquiv :=
   rfl
 #align Twop.swap_equiv_symm Twop.swapEquiv_symm
 
@@ -172,7 +172,7 @@ def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :
             exact f.map_snd.symm
             rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm' := fun X' X Y f g =>
         by
         ext
         cases x <;> rfl }
@@ -191,7 +191,7 @@ def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
             exact f.map_fst.symm
             rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      hom_equiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm' := fun X' X Y f g =>
         by
         ext
         cases x <;> rfl }

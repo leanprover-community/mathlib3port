@@ -173,7 +173,7 @@ instance : Field (hat K) :=
 
 instance : TopologicalDivisionRing (hat K) :=
   { Completion.top_ring_compl with
-    continuous_at_inv₀ := by
+    continuousAt_inv₀ := by
       intro x x_ne
       have : { y | hat_inv y = y⁻¹ } ∈ 𝓝 x :=
         haveI : {(0 : hat K)}ᶜ ⊆ { y : hat K | hat_inv y = y⁻¹ } :=

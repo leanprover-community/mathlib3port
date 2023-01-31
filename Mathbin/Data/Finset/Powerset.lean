@@ -312,7 +312,7 @@ but is expected to have type
   forall {α : Type.{u1}} {n : Nat} {s : Finset.{u1} α}, Eq.{succ u1} (Finset.{u1} (Finset.{u1} α)) (Finset.powersetLen.{u1} α n s) (Finset.filter.{u1} (Finset.{u1} α) (fun (x : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α x) n) (fun (a : Finset.{u1} α) => instDecidableEqNat (Finset.card.{u1} α a) n) (Finset.powerset.{u1} α s))
 Case conversion may be inaccurate. Consider using '#align finset.powerset_len_eq_filter Finset.powersetLen_eq_filterₓ'. -/
 theorem powersetLen_eq_filter {n} {s : Finset α} :
-    powersetLen n s = (powerset s).filter fun x => x.card = n :=
+    powersetLen n s = (powerset s).filterₓ fun x => x.card = n :=
   by
   ext
   simp [mem_powerset_len]
@@ -379,8 +379,8 @@ theorem pairwise_disjoint_powersetLen (s : Finset α) :
 #print Finset.powerset_card_disjUnionᵢ /-
 theorem powerset_card_disjUnionᵢ (s : Finset α) :
     Finset.powerset s =
-      (range (s.card + 1)).disjUnion (fun i => powersetLen i s)
-        (s.pairwise_disjoint_powerset_len.set_pairwise _) :=
+      (range (s.card + 1)).disjUnionₓ (fun i => powersetLen i s)
+        (s.pairwise_disjoint_powersetLen.set_pairwise _) :=
   by
   refine' ext fun a => ⟨fun ha => _, fun ha => _⟩
   · rw [mem_disj_Union]
@@ -394,7 +394,7 @@ theorem powerset_card_disjUnionᵢ (s : Finset α) :
 
 #print Finset.powerset_card_bunionᵢ /-
 theorem powerset_card_bunionᵢ [DecidableEq (Finset α)] (s : Finset α) :
-    Finset.powerset s = (range (s.card + 1)).bUnion fun i => powersetLen i s := by
+    Finset.powerset s = (range (s.card + 1)).bunionᵢ fun i => powersetLen i s := by
   simpa only [disj_Union_eq_bUnion] using powerset_card_disj_Union s
 #align finset.powerset_card_bUnion Finset.powerset_card_bunionᵢ
 -/

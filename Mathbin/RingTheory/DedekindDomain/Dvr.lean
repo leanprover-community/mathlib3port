@@ -120,7 +120,7 @@ theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (
 theorem IsLocalization.AtPrime.isDedekindDomain [IsDedekindDomain A] (P : Ideal A) [P.IsPrime]
     (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ] [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] :
     IsDedekindDomain Aₘ :=
-  IsLocalization.isDedekindDomain A P.prime_compl_le_non_zero_divisors Aₘ
+  IsLocalization.isDedekindDomain A P.primeCompl_le_nonZeroDivisors Aₘ
 #align is_localization.at_prime.is_dedekind_domain IsLocalization.AtPrime.isDedekindDomain
 
 theorem IsLocalization.AtPrime.not_isField {P : Ideal A} (hP : P ≠ ⊥) [pP : P.IsPrime] (Aₘ : Type _)

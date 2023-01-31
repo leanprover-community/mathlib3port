@@ -172,7 +172,7 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
     choose! v hvc hiv using hx
     rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with
       ⟨i, hxi : x ∈ u i, hmax : ∀ j, x ∈ u j → v i ≤ v j → v i = v j⟩
-    rcases mem_Union.1 ((v i).subset_Union hxs) with ⟨j, hj⟩
+    rcases mem_Union.1 ((v i).subset_unionᵢ hxs) with ⟨j, hj⟩
     use j
     have hj' : x ∈ u j := (v i).Subset _ hj
     have : v j ≤ v i := (hc.total (hvc _ hxi) (hvc _ hj')).elim (fun h => (hmax j hj' h).ge) id
@@ -264,7 +264,7 @@ theorem exists_subset_unionᵢ_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOp
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ unionᵢ v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_unionᵢ_closure_subset hs uo uf us
-  ⟨fun i => closure (v i), Subset.trans hsv (Union_mono fun i => subset_closure), fun i =>
+  ⟨fun i => closure (v i), Subset.trans hsv (unionᵢ_mono fun i => subset_closure), fun i =>
     isClosed_closure, hv⟩
 #align exists_subset_Union_closed_subset exists_subset_unionᵢ_closed_subset
 

@@ -44,7 +44,7 @@ def Nodupkeys (s : Multiset (Sigma β)) : Prop :=
 #align multiset.nodupkeys Multiset.Nodupkeys
 
 @[simp]
-theorem coe_nodupkeys {l : List (Sigma β)} : @Nodupkeys α β l ↔ l.Nodupkeys :=
+theorem coe_nodupkeys {l : List (Sigma β)} : @Nodupkeys α β l ↔ l.NodupKeys :=
   Iff.rfl
 #align multiset.coe_nodupkeys Multiset.coe_nodupkeys
 
@@ -57,12 +57,12 @@ end Multiset
   a quotient of `alist β` by permutation of the underlying list. -/
 structure Finmap (β : α → Type v) : Type max u v where
   entries : Multiset (Sigma β)
-  Nodupkeys : entries.Nodupkeys
+  NodupKeys : entries.NodupKeys
 #align finmap Finmap
 
 /-- The quotient map from `alist` to `finmap`. -/
 def AList.toFinmap (s : AList β) : Finmap β :=
-  ⟨s.entries, s.Nodupkeys⟩
+  ⟨s.entries, s.NodupKeys⟩
 #align alist.to_finmap AList.toFinmap
 
 -- mathport name: to_finmap
@@ -80,7 +80,7 @@ theorem AList.toFinmap_entries (s : AList β) : ⟦s⟧.entries = s.entries :=
 /-- Given `l : list (sigma β)`, create a term of type `finmap β` by removing
 entries with duplicate keys. -/
 def List.toFinmap [DecidableEq α] (s : List (Sigma β)) : Finmap β :=
-  s.toAlist.toFinmap
+  s.toAList.toFinmap
 #align list.to_finmap List.toFinmap
 
 namespace Finmap
@@ -264,12 +264,12 @@ def lookup (a : α) (s : Finmap β) : Option (β a) :=
 #align finmap.lookup Finmap.lookup
 
 @[simp]
-theorem lookup_toFinmap (a : α) (s : AList β) : lookup a ⟦s⟧ = s.lookup a :=
+theorem lookup_toFinmap (a : α) (s : AList β) : lookup a ⟦s⟧ = s.dlookup a :=
   rfl
 #align finmap.lookup_to_finmap Finmap.lookup_toFinmap
 
 @[simp]
-theorem lookup_list_toFinmap (a : α) (s : List (Sigma β)) : lookup a s.toFinmap = s.lookup a := by
+theorem lookup_list_toFinmap (a : α) (s : List (Sigma β)) : lookup a s.toFinmap = s.dlookup a := by
   rw [List.toFinmap, lookup_to_finmap, lookup_to_alist]
 #align finmap.lookup_list_to_finmap Finmap.lookup_list_toFinmap
 
@@ -278,7 +278,7 @@ theorem lookup_empty (a) : lookup a (∅ : Finmap β) = none :=
   rfl
 #align finmap.lookup_empty Finmap.lookup_empty
 
-theorem lookup_isSome {a : α} {s : Finmap β} : (s.lookup a).isSome ↔ a ∈ s :=
+theorem lookup_isSome {a : α} {s : Finmap β} : (s.dlookup a).isSome ↔ a ∈ s :=
   induction_on s fun s => AList.lookup_isSome
 #align finmap.lookup_is_some Finmap.lookup_isSome
 
@@ -287,23 +287,23 @@ theorem lookup_eq_none {a} {s : Finmap β} : lookup a s = none ↔ a ∉ s :=
 #align finmap.lookup_eq_none Finmap.lookup_eq_none
 
 @[simp]
-theorem lookup_singleton_eq {a : α} {b : β a} : (singleton a b).lookup a = some b := by
+theorem lookup_singleton_eq {a : α} {b : β a} : (singleton a b).dlookup a = some b := by
   rw [singleton, lookup_to_finmap, AList.singleton, AList.lookup, lookup_cons_eq]
 #align finmap.lookup_singleton_eq Finmap.lookup_singleton_eq
 
 instance (a : α) (s : Finmap β) : Decidable (a ∈ s) :=
   decidable_of_iff _ lookup_isSome
 
-theorem mem_iff {a : α} {s : Finmap β} : a ∈ s ↔ ∃ b, s.lookup a = some b :=
+theorem mem_iff {a : α} {s : Finmap β} : a ∈ s ↔ ∃ b, s.dlookup a = some b :=
   induction_on s fun s =>
-    Iff.trans List.mem_keys <| exists_congr fun b => (mem_lookup_iff s.Nodupkeys).symm
+    Iff.trans List.mem_keys <| exists_congr fun b => (mem_lookup_iff s.NodupKeys).symm
 #align finmap.mem_iff Finmap.mem_iff
 
-theorem mem_of_lookup_eq_some {a : α} {b : β a} {s : Finmap β} (h : s.lookup a = some b) : a ∈ s :=
+theorem mem_of_lookup_eq_some {a : α} {b : β a} {s : Finmap β} (h : s.dlookup a = some b) : a ∈ s :=
   mem_iff.mpr ⟨_, h⟩
 #align finmap.mem_of_lookup_eq_some Finmap.mem_of_lookup_eq_some
 
-theorem ext_lookup {s₁ s₂ : Finmap β} : (∀ x, s₁.lookup x = s₂.lookup x) → s₁ = s₂ :=
+theorem ext_lookup {s₁ s₂ : Finmap β} : (∀ x, s₁.dlookup x = s₂.dlookup x) → s₁ = s₂ :=
   induction_on₂ s₁ s₂ fun s₁ s₂ h =>
     by
     simp only [AList.lookup, lookup_to_finmap] at h
@@ -379,16 +379,16 @@ def erase (a : α) (s : Finmap β) : Finmap β :=
 #align finmap.erase Finmap.erase
 
 @[simp]
-theorem erase_toFinmap (a : α) (s : AList β) : erase a ⟦s⟧ = ⟦s.erase a⟧ := by simp [erase]
+theorem erase_toFinmap (a : α) (s : AList β) : erase a ⟦s⟧ = ⟦s.eraseₓ a⟧ := by simp [erase]
 #align finmap.erase_to_finmap Finmap.erase_toFinmap
 
 @[simp]
-theorem keys_erase_to_finset (a : α) (s : AList β) : keys ⟦s.erase a⟧ = (keys ⟦s⟧).erase a := by
+theorem keys_erase_to_finset (a : α) (s : AList β) : keys ⟦s.eraseₓ a⟧ = (keys ⟦s⟧).eraseₓ a := by
   simp [Finset.erase, keys, AList.erase, keys_kerase]
 #align finmap.keys_erase_to_finset Finmap.keys_erase_to_finset
 
 @[simp]
-theorem keys_erase (a : α) (s : Finmap β) : (erase a s).keys = s.keys.erase a :=
+theorem keys_erase (a : α) (s : Finmap β) : (erase a s).keys = s.keys.eraseₓ a :=
   induction_on s fun s => by simp
 #align finmap.keys_erase Finmap.keys_erase
 
@@ -421,7 +421,7 @@ theorem erase_erase {a a' : α} {s : Finmap β} : erase a (erase a' s) = erase a
 /-- `sdiff s s'` consists of all key-value pairs from `s` and `s'` where the keys are in `s` or
 `s'` but not both. -/
 def sdiff (s s' : Finmap β) : Finmap β :=
-  s'.foldl (fun s x _ => s.erase x) (fun a₀ a₁ _ a₂ _ => erase_erase) s
+  s'.foldl (fun s x _ => s.eraseₓ x) (fun a₀ a₁ _ a₂ _ => erase_erase) s
 #align finmap.sdiff Finmap.sdiff
 
 instance : SDiff (Finmap β) :=
@@ -591,8 +591,8 @@ theorem union_empty {s₁ : Finmap β} : s₁ ∪ ∅ = s₁ :=
       simp [-empty_to_finmap, AList.toFinmap_eq, union_to_finmap, AList.union_assoc]
 #align finmap.union_empty Finmap.union_empty
 
-theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.lookup a = some b) :
-    s.erase a ∪ singleton a b = s :=
+theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.dlookup a = some b) :
+    s.eraseₓ a ∪ singleton a b = s :=
   ext_lookup fun x => by
     by_cases h' : x = a
     · subst a
@@ -649,7 +649,7 @@ theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' :
   ⟨fun h'' => by
     apply ext_lookup
     intro x
-    have : (s₁ ∪ s₃).lookup x = (s₂ ∪ s₃).lookup x := h'' ▸ rfl
+    have : (s₁ ∪ s₃).dlookup x = (s₂ ∪ s₃).dlookup x := h'' ▸ rfl
     by_cases hs₁ : x ∈ s₁
     · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
     · by_cases hs₂ : x ∈ s₂

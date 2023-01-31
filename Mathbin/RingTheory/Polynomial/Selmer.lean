@@ -50,7 +50,7 @@ theorem X_pow_sub_X_sub_one_irreducible_aux (z : ℂ) : ¬(z ^ n = z + 1 ∧ z ^
   · exact z_ne_zero (pow_eq_zero (by rwa [key, add_self_eq_zero] at h2))
 #align polynomial.X_pow_sub_X_sub_one_irreducible_aux Polynomial.X_pow_sub_X_sub_one_irreducible_aux
 
-theorem x_pow_sub_x_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℤ[X]) :=
+theorem x_pow_sub_x_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (x ^ n - x - 1 : ℤ[X]) :=
   by
   by_cases hn0 : n = 0
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]
@@ -72,7 +72,7 @@ theorem x_pow_sub_x_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (X ^ n - X
   exact ⟨rfl, by linear_combination -h2⟩
 #align polynomial.X_pow_sub_X_sub_one_irreducible Polynomial.x_pow_sub_x_sub_one_irreducible
 
-theorem x_pow_sub_x_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (X ^ n - X - 1 : ℚ[X]) :=
+theorem x_pow_sub_x_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (x ^ n - x - 1 : ℚ[X]) :=
   by
   by_cases hn0 : n = 0
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]

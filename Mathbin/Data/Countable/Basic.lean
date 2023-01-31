@@ -106,10 +106,10 @@ instance (priority := 500) SetCoe.countable {α} [Countable α] (s : Set α) : C
 -/
 
 instance [Countable α] [Countable β] : Countable (PSum α β) :=
-  Countable.of_equiv (Sum (PLift α) (PLift β)) (Equiv.plift.sumPsum Equiv.plift)
+  Countable.of_equiv (Sum (PLift α) (PLift β)) (Equiv.plift.sumPSum Equiv.plift)
 
 instance [Countable α] [Countable β] : Countable (PProd α β) :=
-  Countable.of_equiv (PLift α × PLift β) (Equiv.plift.prodPprod Equiv.plift)
+  Countable.of_equiv (PLift α × PLift β) (Equiv.plift.prodPProd Equiv.plift)
 
 instance [Countable α] [∀ a, Countable (π a)] : Countable (PSigma π) :=
   Countable.of_equiv (Σa : PLift α, PLift (π a.down)) (Equiv.psigmaEquivSigmaPLift π).symm

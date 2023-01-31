@@ -39,7 +39,7 @@ def FintypeCat :=
 namespace FintypeCat
 
 instance : CoeSort FintypeCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `Fintype` from the underlying type and typeclass. -/
 def of (X : Type _) [Fintype X] : FintypeCat :=
@@ -152,7 +152,7 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
 #align Fintype.skeleton.is_skeletal FintypeCat.Skeleton.is_skeletal
 
 /-- The canonical fully faithful embedding of `Fintype.skeleton` into `Fintype`. -/
-def incl : skeleton.{u} ⥤ FintypeCat.{u}
+def incl : Skeleton.{u} ⥤ FintypeCat.{u}
     where
   obj X := FintypeCat.of (ULift (Fin X.len))
   map _ _ f := f
@@ -163,7 +163,7 @@ instance : Full incl where preimage _ _ f := f
 instance : Faithful incl where
 
 instance : EssSurj incl :=
-  ess_surj.mk fun X =>
+  EssSurj.mk fun X =>
     let F := Fintype.equivFin X
     ⟨mk (Fintype.card X),
       Nonempty.intro
@@ -174,7 +174,7 @@ noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
-noncomputable def equivalence : skeleton ≌ FintypeCat :=
+noncomputable def equivalence : Skeleton ≌ FintypeCat :=
   incl.asEquivalence
 #align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalence
 

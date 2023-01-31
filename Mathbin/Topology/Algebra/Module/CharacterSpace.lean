@@ -241,7 +241,7 @@ def gelfandTransform : A →ₐ[𝕜] C(characterSpace 𝕜 A, 𝕜)
     where
   toFun a :=
     { toFun := fun φ => φ a
-      continuous_to_fun := (eval_continuous a).comp continuous_induced_dom }
+      continuous_toFun := (eval_continuous a).comp continuous_induced_dom }
   map_one' := by
     ext
     simp only [coe_mk, coe_one, Pi.one_apply, map_one a]

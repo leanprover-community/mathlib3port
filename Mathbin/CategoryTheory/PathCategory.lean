@@ -261,7 +261,7 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
         apply quotient.comp_closure.of
         simp [paths_hom_rel])
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
-  functor_unit_iso_comp' := by
+  functor_unitIso_comp' := by
     intros
     cases X
     dsimp

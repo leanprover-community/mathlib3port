@@ -115,7 +115,7 @@ theorem differentiableOn_update_limUnder_of_bddAbove {f : ℂ → E} {s : Set �
     (hd : DifferentiableOn ℂ f (s \ {c})) (hb : BddAbove (norm ∘ f '' (s \ {c}))) :
     DifferentiableOn ℂ (update f c (limUnder (𝓝[≠] c) f)) s :=
   differentiableOn_update_limUnder_of_isOCat hc hd <|
-    is_bounded_under.is_o_sub_self_inv <|
+    IsBoundedUnder.isOCat_sub_self_inv <|
       let ⟨C, hC⟩ := hb
       ⟨C + ‖f c‖,
         eventually_map.2 <|
@@ -143,20 +143,20 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under {f
     (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z)
     (hb : IsBoundedUnder (· ≤ ·) (𝓝[≠] c) fun z => ‖f z - f c‖) :
     Tendsto f (𝓝[≠] c) (𝓝 <| limUnder (𝓝[≠] c) f) :=
-  tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isOCat hd hb.is_o_sub_self_inv
+  tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isOCat hd hb.isOCat_sub_self_inv
 #align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under
 
 /-- The Cauchy formula for the derivative of a holomorphic function. -/
 theorem two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
     (hU : IsOpen U) {c w₀ : ℂ} {R : ℝ} {f : ℂ → E} (hc : closedBall c R ⊆ U)
     (hf : DifferentiableOn ℂ f U) (hw₀ : w₀ ∈ ball c R) :
-    ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z) = deriv f w₀ :=
+    ((2 * π * i : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z) = deriv f w₀ :=
   by
   -- We apply the removable singularity theorem and the Cauchy formula to `dslope f w₀`
   have hR : 0 < R := not_le.mp (ball_eq_empty.not.mp (nonempty_of_mem hw₀).ne_empty)
   have hf' : DifferentiableOn ℂ (dslope f w₀) U :=
     (differentiable_on_dslope (hU.mem_nhds ((ball_subset_closed_ball.trans hc) hw₀))).mpr hf
-  have h0 := (hf'.diff_cont_on_cl_ball hc).two_pi_I_inv_smul_circle_integral_sub_inv_smul hw₀
+  have h0 := (hf'.diff_cont_on_cl_ball hc).two_pi_i_inv_smul_circleIntegral_sub_inv_smul hw₀
   rw [← dslope_same, ← h0]
   congr 1
   trans ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • (f z - f w₀)

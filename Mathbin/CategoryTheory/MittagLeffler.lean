@@ -73,7 +73,7 @@ def eventualRange (j : J) :=
 
 theorem mem_eventualRange_iff {x : F.obj j} :
     x ∈ F.eventualRange j ↔ ∀ ⦃i⦄ (f : i ⟶ j), x ∈ range (F.map f) :=
-  mem_Inter₂
+  mem_interᵢ₂
 #align category_theory.functor.mem_eventual_range_iff CategoryTheory.Functor.mem_eventualRange_iff
 
 /-- The functor `F : J ⥤ Type v` satisfies the Mittag-Leffler condition if for all `j : J`,
@@ -90,7 +90,7 @@ theorem isMittagLeffler_iff_eventualRange :
     F.IsMittagLeffler ↔ ∀ j : J, ∃ (i : _)(f : i ⟶ j), F.eventualRange j = range (F.map f) :=
   forall_congr' fun j =>
     exists₂_congr fun i f =>
-      ⟨fun h => (interᵢ₂_subset _ _).antisymm <| subset_interᵢ₂ h, fun h => h ▸ Inter₂_subset⟩
+      ⟨fun h => (interᵢ₂_subset _ _).antisymm <| subset_interᵢ₂ h, fun h => h ▸ interᵢ₂_subset⟩
 #align category_theory.functor.is_mittag_leffler_iff_eventual_range CategoryTheory.Functor.isMittagLeffler_iff_eventualRange
 
 theorem IsMittagLeffler.subset_image_eventualRange (h : F.IsMittagLeffler) (f : j ⟶ i) :
@@ -150,7 +150,7 @@ theorem eventualRange_mapsTo (f : j ⟶ i) :
 
 theorem IsMittagLeffler.eq_image_eventualRange (h : F.IsMittagLeffler) (f : j ⟶ i) :
     F.eventualRange i = F.map f '' F.eventualRange j :=
-  (h.subset_image_eventual_range F f).antisymm <| mapsTo'.1 (F.eventual_range_maps_to f)
+  (h.subset_image_eventualRange F f).antisymm <| mapsTo'.1 (F.eventualRange_mapsTo f)
 #align category_theory.functor.is_mittag_leffler.eq_image_eventual_range CategoryTheory.Functor.IsMittagLeffler.eq_image_eventualRange
 
 theorem eventualRange_eq_iff {f : i ⟶ j} :
@@ -207,7 +207,7 @@ theorem isMittagLeffler_of_exists_finite_range
         ⟨⟨k, g⟩, rfl⟩⟩
   rintro _ ⟨⟨k', g'⟩, rfl⟩ hl
   refine' (eq_of_le_of_not_lt hl _).ge
-  have := hmin _ ⟨k', g', (m.finite_to_set.subset <| hm.substr hl).coe_to_finset⟩
+  have := hmin _ ⟨k', g', (m.finite_to_set.subset <| hm.substr hl).coe_toFinset⟩
   rwa [Finset.lt_iff_ssubset, ← Finset.coe_ssubset, Set.Finite.coe_toFinset, hm] at this
 #align category_theory.functor.is_mittag_leffler_of_exists_finite_range CategoryTheory.Functor.isMittagLeffler_of_exists_finite_range
 
@@ -217,7 +217,7 @@ theorem isMittagLeffler_of_exists_finite_range
 def toEventualRanges : J ⥤ Type v
     where
   obj j := F.eventualRange j
-  map i j f := (F.eventual_range_maps_to f).restrict _ _ _
+  map i j f := (F.eventualRange_mapsTo f).restrict _ _ _
   map_id' i := by
     simp_rw [F.map_id]
     ext
@@ -258,7 +258,7 @@ theorem surjective_toEventualRanges (h : F.IsMittagLeffler) (f : i ⟶ j) :
 theorem toEventualRanges_nonempty (h : F.IsMittagLeffler) [∀ j : J, Nonempty (F.obj j)] (j : J) :
     Nonempty (F.toEventualRanges.obj j) :=
   by
-  let ⟨i, f, h⟩ := F.is_mittag_leffler_iff_eventual_range.1 h j
+  let ⟨i, f, h⟩ := F.isMittagLeffler_iff_eventualRange.1 h j
   rw [to_eventual_ranges_obj, h]
   infer_instance
 #align category_theory.functor.to_eventual_ranges_nonempty CategoryTheory.Functor.toEventualRanges_nonempty

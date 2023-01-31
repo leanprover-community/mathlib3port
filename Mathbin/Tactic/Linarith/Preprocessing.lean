@@ -208,9 +208,9 @@ unsafe def nat_to_int : global_preprocessor
   do
     let l ←
       lock_tactic_state <|
-          l.mmap fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
+          l.mapM fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
     let nonnegs ←
-      l.mfoldl
+      l.foldlM
           (fun (es : expr_set) h => do
             let (a, b) ← infer_type h >>= get_rel_sides
             return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
@@ -283,8 +283,8 @@ unsafe def cancel_denoms : preprocessor
           then
           do let s ← find_squares s e1 return ( s ( e1 , ff ) )
           else
-          e . mfoldl find_squares s
-      | s , e => e . mfoldl find_squares s
+          e . foldlM find_squares s
+      | s , e => e . foldlM find_squares s
 #align linarith.find_squares linarith.find_squares
 
 /-- `nlinarith_extras` is the preprocessor corresponding to the `nlinarith` tactic.
@@ -299,7 +299,7 @@ unsafe def nlinarith_extras : global_preprocessor
     where
   Name := "nonlinear arithmetic extras"
   transform ls := do
-    let s ← ls.mfoldr (fun h s' => infer_type h >>= find_squares s') mk_rb_set
+    let s ← ls.foldrM (fun h s' => infer_type h >>= find_squares s') mk_rb_set
     let new_es ←
       s.mfold ([] : List expr) fun ⟨e, is_sq⟩ new_es =>
           (do
@@ -311,11 +311,11 @@ unsafe def nlinarith_extras : global_preprocessor
     linarith_trace s
     linarith_trace_proofs "so we added proofs" new_es
     let with_comps ←
-      (new_es ++ ls).mmap fun e => do
+      (new_es ++ ls).mapM fun e => do
           let tp ← infer_type e
           return <| (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
     let products ←
-      with_comps.mmapUpperTriangle fun ⟨posa, a⟩ ⟨posb, b⟩ =>
+      with_comps.mapDiagM fun ⟨posa, a⟩ ⟨posb, b⟩ =>
           (some <$>
               match posa, posb with
               | ineq.eq, _ => mk_app `` zero_mul_eq [a, b]
@@ -340,14 +340,14 @@ This produces `2^n` branches when there are `n` such hypotheses in the input.
 unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
   (do
       let e ←
-        hs.mfind fun e : expr => do
+        hs.findM fun e : expr => do
             let e ← infer_type e
             guard <| e
       let [(_, ng1), (_, ng2)] ← to_expr ``(Or.elim (lt_or_gt_of_ne $(e))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1
-          let ls ← remove_ne_aux <| hs.removeAll [e]
+          let ls ← remove_ne_aux <| hs.removeAllₓ [e]
           return <| ls fun b : branch => (b.1, h :: b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do

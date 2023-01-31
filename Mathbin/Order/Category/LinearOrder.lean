@@ -34,7 +34,7 @@ instance : BundledHom.ParentProjection @LinearOrder.toPartialOrder :=
 deriving instance LargeCategory, ConcreteCategory for LinearOrderCat
 
 instance : CoeSort LinearOrderCat (Type _) :=
-  bundled.has_coe_to_sort
+  Bundled.hasCoeToSort
 
 /-- Construct a bundled `LinearOrder` from the underlying type and typeclass. -/
 def of (α : Type _) [LinearOrder α] : LinearOrderCat :=
@@ -84,8 +84,8 @@ def dual : LinearOrderCat ⥤ LinearOrderCat
 @[simps Functor inverse]
 def dualEquiv : LinearOrderCat ≌ LinearOrderCat :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align LinearOrder.dual_equiv LinearOrderCat.dualEquiv
 
 end LinearOrderCat

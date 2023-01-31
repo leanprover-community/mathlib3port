@@ -125,8 +125,8 @@ def dual : FinBoolAlg ⥤ FinBoolAlg where
 @[simps Functor inverse]
 def dualEquiv : FinBoolAlg ≌ FinBoolAlg :=
   Equivalence.mk dual dual
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align FinBoolAlg.dual_equiv FinBoolAlg.dualEquiv
 
 end FinBoolAlg

@@ -165,7 +165,7 @@ namespace Final
 variable (F : C ⥤ D) [Final F]
 
 instance (d : D) : Nonempty (StructuredArrow d F) :=
-  is_connected.is_nonempty
+  IsConnected.is_nonempty
 
 variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 
@@ -440,7 +440,7 @@ namespace Initial
 variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D] (F : C ⥤ D) [Initial F]
 
 instance (d : D) : Nonempty (CostructuredArrow F d) :=
-  is_connected.is_nonempty
+  IsConnected.is_nonempty
 
 variable {E : Type u₃} [Category.{v₃} E] (G : D ⥤ E)
 

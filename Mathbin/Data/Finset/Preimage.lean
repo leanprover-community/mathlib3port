@@ -34,7 +34,7 @@ section Preimage
 #print Finset.preimage /-
 /-- Preimage of `s : finset β` under a map `f` injective of `f ⁻¹' s` as a `finset`.  -/
 noncomputable def preimage (s : Finset β) (f : α → β) (hf : Set.InjOn f (f ⁻¹' ↑s)) : Finset α :=
-  (s.finite_to_set.Preimage hf).toFinset
+  (s.finite_toSet.Preimage hf).toFinset
 #align finset.preimage Finset.preimage
 -/
 
@@ -125,7 +125,8 @@ theorem map_subset_iff_subset_preimage {f : α ↪ β} {s : Finset α} {t : Fins
 
 #print Finset.image_preimage /-
 theorem image_preimage [DecidableEq β] (f : α → β) (s : Finset β) [∀ x, Decidable (x ∈ Set.range f)]
-    (hf : Set.InjOn f (f ⁻¹' ↑s)) : image f (preimage s f hf) = s.filter fun x => x ∈ Set.range f :=
+    (hf : Set.InjOn f (f ⁻¹' ↑s)) :
+    image f (preimage s f hf) = s.filterₓ fun x => x ∈ Set.range f :=
   Finset.coe_inj.1 <| by
     simp only [coe_image, coe_preimage, coe_filter, Set.image_preimage_eq_inter_range,
       Set.sep_mem_eq]
@@ -166,7 +167,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.sigma_preimage_mk Finset.sigma_preimage_mkₓ'. -/
 theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σa, β a)) (t : Finset α) :
     (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) =
-      s.filter fun a => a.1 ∈ t :=
+      s.filterₓ fun a => a.1 ∈ t :=
   by
   ext x
   simp [and_comm']
@@ -202,7 +203,7 @@ end Preimage
 @[to_additive]
 theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x ∈ Set.range f]
     (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β) :
-    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by
+    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filterₓ fun x => x ∈ Set.range f, g x := by
   haveI := Classical.decEq γ <;>
     calc
       (∏ x in preimage s f hf, g (f x)) = ∏ x in image f (preimage s f hf), g x :=

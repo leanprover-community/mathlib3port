@@ -102,7 +102,7 @@ theorem differentiableAt_arctan (x : ℝ) : DifferentiableAt ℝ arctan x :=
 #align real.differentiable_at_arctan Real.differentiableAt_arctan
 
 theorem differentiable_arctan : Differentiable ℝ arctan :=
-  differentiable_at_arctan
+  differentiableAt_arctan
 #align real.differentiable_arctan Real.differentiable_arctan
 
 @[simp]
@@ -113,7 +113,7 @@ theorem deriv_arctan : deriv arctan = fun x => 1 / (1 + x ^ 2) :=
 theorem contDiff_arctan {n : ℕ∞} : ContDiff ℝ n arctan :=
   contDiff_iff_contDiffAt.2 fun x =>
     have : cos (arctan x) ≠ 0 := (cos_arctan_pos x).ne'
-    tanLocalHomeomorph.cont_diff_at_symm_deriv (by simpa) trivial (hasDerivAt_tan this)
+    tanLocalHomeomorph.contDiffAt_symm_deriv (by simpa) trivial (hasDerivAt_tan this)
       (contDiffAt_tan.2 this)
 #align real.cont_diff_arctan Real.contDiff_arctan
 
@@ -146,7 +146,7 @@ theorem HasDerivAt.arctan (hf : HasDerivAt f f' x) :
 
 theorem HasDerivWithinAt.arctan (hf : HasDerivWithinAt f f' s x) :
     HasDerivWithinAt (fun x => arctan (f x)) (1 / (1 + f x ^ 2) * f') s x :=
-  (Real.hasDerivAt_arctan (f x)).comp_has_deriv_within_at x hf
+  (Real.hasDerivAt_arctan (f x)).comp_hasDerivWithinAt x hf
 #align has_deriv_within_at.arctan HasDerivWithinAt.arctan
 
 theorem derivWithin_arctan (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
@@ -169,17 +169,17 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 
 theorem HasStrictFderivAt.arctan (hf : HasStrictFderivAt f f' x) :
     HasStrictFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=
-  (hasStrictDerivAt_arctan (f x)).comp_has_strict_fderiv_at x hf
+  (hasStrictDerivAt_arctan (f x)).comp_hasStrictFderivAt x hf
 #align has_strict_fderiv_at.arctan HasStrictFderivAt.arctan
 
 theorem HasFderivAt.arctan (hf : HasFderivAt f f' x) :
     HasFderivAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') x :=
-  (hasDerivAt_arctan (f x)).comp_has_fderiv_at x hf
+  (hasDerivAt_arctan (f x)).comp_hasFderivAt x hf
 #align has_fderiv_at.arctan HasFderivAt.arctan
 
 theorem HasFderivWithinAt.arctan (hf : HasFderivWithinAt f f' s x) :
     HasFderivWithinAt (fun x => arctan (f x)) ((1 / (1 + f x ^ 2)) • f') s x :=
-  (hasDerivAt_arctan (f x)).comp_has_fderiv_within_at x hf
+  (hasDerivAt_arctan (f x)).comp_hasFderivWithinAt x hf
 #align has_fderiv_within_at.arctan HasFderivWithinAt.arctan
 
 theorem fderivWithin_arctan (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
@@ -223,11 +223,11 @@ theorem ContDiff.arctan (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => arctan 
 
 theorem ContDiffWithinAt.arctan (h : ContDiffWithinAt ℝ n f s x) :
     ContDiffWithinAt ℝ n (fun x => arctan (f x)) s x :=
-  contDiff_arctan.comp_cont_diff_within_at h
+  contDiff_arctan.comp_contDiffWithinAt h
 #align cont_diff_within_at.arctan ContDiffWithinAt.arctan
 
 theorem ContDiffOn.arctan (h : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x => arctan (f x)) s :=
-  contDiff_arctan.comp_cont_diff_on h
+  contDiff_arctan.comp_contDiffOn h
 #align cont_diff_on.arctan ContDiffOn.arctan
 
 end fderiv

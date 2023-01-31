@@ -86,7 +86,7 @@ open Valued
 instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
     TopologicalDivisionRing K :=
   { (by infer_instance : TopologicalRing K) with
-    continuous_at_inv₀ := by
+    continuousAt_inv₀ := by
       intro x x_ne s s_in
       cases' valued.mem_nhds.mp s_in with γ hs; clear s_in
       rw [mem_map, Valued.mem_nhds]
@@ -379,7 +379,7 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀
       rw [this.mem_iff]
       exact exists_congr fun γ => by simp
     simp_rw [← closure_coe_completion_v_lt]
-    exact (has_basis_nhds_zero K Γ₀).has_basis_of_dense_inducing completion.dense_inducing_coe
+    exact (has_basis_nhds_zero K Γ₀).hasBasis_of_denseInducing completion.dense_inducing_coe
 #align valued.valued_completion Valued.valuedCompletion
 
 end Valued

@@ -74,7 +74,7 @@ def index (V : OpensLeCover U) : ι :=
 /-- The morphism from `V` to `U i` for some `i`.
 -/
 def homToIndex (V : OpensLeCover U) : V.obj ⟶ U (index V) :=
-  V.property.some_spec.Hom
+  V.property.choose_spec.Hom
 #align Top.presheaf.sheaf_condition.opens_le_cover.hom_to_index TopCat.Presheaf.SheafCondition.OpensLeCover.homToIndex
 
 end OpensLeCover
@@ -135,7 +135,7 @@ def generateEquivalenceOpensLe :
           ⟨U i, h.Hom, (hY.substr (le_supᵢ U i)).Hom, ⟨i, rfl⟩, rfl⟩⟩
       map := fun _ _ g => Over.homMk g }
   unitIso :=
-    eq_to_iso <|
+    eqToIso <|
       CategoryTheory.Functor.ext
         (by
           rintro ⟨⟨_, _⟩, _⟩
@@ -145,7 +145,7 @@ def generateEquivalenceOpensLe :
           intros
           ext)
   counitIso :=
-    eq_to_iso <|
+    eqToIso <|
       CategoryTheory.Functor.hext
         (by
           intro

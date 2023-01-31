@@ -64,12 +64,12 @@ def cantorFunctionAux (c : ℝ) (f : ℕ → Bool) (n : ℕ) : ℝ :=
 #align cardinal.cantor_function_aux Cardinal.cantorFunctionAux
 
 @[simp]
-theorem cantorFunctionAux_true (h : f n = tt) : cantorFunctionAux c f n = c ^ n := by
+theorem cantorFunctionAux_true (h : f n = true) : cantorFunctionAux c f n = c ^ n := by
   simp [cantor_function_aux, h]
 #align cardinal.cantor_function_aux_tt Cardinal.cantorFunctionAux_true
 
 @[simp]
-theorem cantorFunctionAux_false (h : f n = ff) : cantorFunctionAux c f n = 0 := by
+theorem cantorFunctionAux_false (h : f n = false) : cantorFunctionAux c f n = 0 := by
   simp [cantor_function_aux, h]
 #align cardinal.cantor_function_aux_ff Cardinal.cantorFunctionAux_false
 
@@ -128,7 +128,7 @@ theorem cantorFunction_succ (f : ℕ → Bool) (h1 : 0 ≤ c) (h2 : c < 1) :
 lexicographic order. The lexicographic order doesn't exist for these infinitary products, so we
 explicitly write out what it means. -/
 theorem increasing_cantorFunction (h1 : 0 < c) (h2 : c < 1 / 2) {n : ℕ} {f g : ℕ → Bool}
-    (hn : ∀ k < n, f k = g k) (fn : f n = ff) (gn : g n = tt) :
+    (hn : ∀ k < n, f k = g k) (fn : f n = false) (gn : g n = true) :
     cantorFunction c f < cantorFunction c g :=
   by
   have h3 : c < 1 := by

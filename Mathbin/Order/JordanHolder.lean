@@ -83,9 +83,9 @@ Examples include `subgroup G` if `G` is a group, and `submodule R M` if `M` is a
 -/
 class JordanHolderLattice (X : Type u) [Lattice X] where
   IsMaximal : X → X → Prop
-  lt_of_is_maximal : ∀ {x y}, is_maximal x y → x < y
-  sup_eq_of_is_maximal : ∀ {x y z}, is_maximal x z → is_maximal y z → x ≠ y → x ⊔ y = z
-  is_maximal_inf_left_of_is_maximal_sup :
+  lt_of_isMaximal : ∀ {x y}, is_maximal x y → x < y
+  sup_eq_of_isMaximal : ∀ {x y z}, is_maximal x z → is_maximal y z → x ≠ y → x ⊔ y = z
+  isMaximal_inf_left_of_isMaximal_sup :
     ∀ {x y}, is_maximal x (x ⊔ y) → is_maximal y (x ⊔ y) → is_maximal (x ⊓ y) x
   Iso : X × X → X × X → Prop
   iso_symm : ∀ {x y}, iso x y → iso y x
@@ -153,7 +153,7 @@ instance : CoeFun (CompositionSeries X) fun x => Fin (x.length + 1) → X
 instance [Inhabited X] : Inhabited (CompositionSeries X) :=
   ⟨{  length := 0
       series := default
-      step' := fun x => x.elim0 }⟩
+      step' := fun x => x.elim0ₓ }⟩
 
 variable {X}
 
@@ -262,7 +262,7 @@ theorem toList_sorted (s : CompositionSeries X) : s.toList.Sorted (· < ·) :=
 #align composition_series.to_list_sorted CompositionSeries.toList_sorted
 
 theorem toList_nodup (s : CompositionSeries X) : s.toList.Nodup :=
-  s.to_list_sorted.Nodup
+  s.toList_sorted.Nodup
 #align composition_series.to_list_nodup CompositionSeries.toList_nodup
 
 @[simp]
@@ -288,7 +288,7 @@ theorem length_ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l
 #align composition_series.length_of_list CompositionSeries.length_ofList
 
 theorem ofList_toList (s : CompositionSeries X) :
-    ofList s.toList s.to_list_ne_nil s.chain'_to_list = s :=
+    ofList s.toList s.toList_ne_nil s.chain'_toList = s :=
   by
   refine' ext_fun _ _
   · rw [length_of_list, length_to_list, Nat.succ_sub_one]
@@ -299,7 +299,7 @@ theorem ofList_toList (s : CompositionSeries X) :
 
 @[simp]
 theorem ofList_to_list' (s : CompositionSeries X) :
-    ofList s.toList s.to_list_ne_nil s.chain'_to_list = s :=
+    ofList s.toList s.toList_ne_nil s.chain'_toList = s :=
   ofList_toList s
 #align composition_series.of_list_to_list' CompositionSeries.ofList_to_list'
 
@@ -319,13 +319,13 @@ theorem toList_ofList (l : List X) (hl : l ≠ []) (hc : List.Chain' IsMaximal l
 /-- Two `composition_series` are equal if they have the same elements. See also `ext_fun`. -/
 @[ext]
 theorem ext {s₁ s₂ : CompositionSeries X} (h : ∀ x, x ∈ s₁ ↔ x ∈ s₂) : s₁ = s₂ :=
-  to_list_injective <|
+  toList_injective <|
     List.eq_of_perm_of_sorted
       (by
         classical exact
             List.perm_of_nodup_nodup_toFinset_eq s₁.to_list_nodup s₂.to_list_nodup
               (Finset.ext <| by simp [*]))
-      s₁.to_list_sorted s₂.to_list_sorted
+      s₁.toList_sorted s₂.toList_sorted
 #align composition_series.ext CompositionSeries.ext
 
 /-- The largest element of a `composition_series` -/
@@ -649,7 +649,7 @@ theorem symm {s₁ s₂ : CompositionSeries X} (h : Equivalent s₁ s₂) : Equi
 @[trans]
 theorem trans {s₁ s₂ s₃ : CompositionSeries X} (h₁ : Equivalent s₁ s₂) (h₂ : Equivalent s₂ s₃) :
     Equivalent s₁ s₃ :=
-  ⟨h₁.some.trans h₂.some, fun i => iso_trans (h₁.some_spec i) (h₂.some_spec (h₁.some i))⟩
+  ⟨h₁.some.trans h₂.some, fun i => iso_trans (h₁.choose_spec i) (h₂.choose_spec (h₁.some i))⟩
 #align composition_series.equivalent.trans CompositionSeries.Equivalent.trans
 
 theorem append {s₁ s₂ t₁ t₂ : CompositionSeries X} (hs : s₁.top = s₂.bot) (ht : t₁.top = t₂.bot)
