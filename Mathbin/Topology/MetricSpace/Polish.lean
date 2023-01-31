@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.polish
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -450,7 +450,7 @@ end CompleteCopy
 this set is open and closed. It turns out that this notion is equivalent to being Borel-measurable,
 but this is nontrivial (see `is_clopenable_iff_measurable_set`). -/
 def IsClopenable [t : TopologicalSpace α] (s : Set α) : Prop :=
-  ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ @IsClosed α t' s ∧ @IsOpen α t' s
+  ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ is_closed[t'] s ∧ is_open[t'] s
 #align polish_space.is_clopenable PolishSpace.IsClopenable
 
 /-- Given a closed set `s` in a Polish space, one can construct a finer Polish topology for
@@ -495,14 +495,14 @@ theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α
         ext x
         simp only [Equiv.symm_symm, mem_preimage, Equiv.Set.sumCompl_apply_inr]
       rwa [this]
-  · have : @IsClosed α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) :=
+  · have : is_closed[t'] (g ⁻¹' range (Sum.inl : s → Sum s t)) :=
       by
       apply IsClosed.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
       · exact isClosed_range_inl
     convert this
     exact A.symm
-  · have : @IsOpen α t' (g ⁻¹' range (Sum.inl : s → Sum s t)) :=
+  · have : is_open[t'] (g ⁻¹' range (Sum.inl : s → Sum s t)) :=
       by
       apply IsOpen.preimage
       · exact @Homeomorph.continuous _ _ t' _ g
@@ -528,14 +528,14 @@ theorem IsClopenable.unionᵢ [t : TopologicalSpace α] [PolishSpace α] {s : �
   obtain ⟨t', t'm, -, t'_polish⟩ :
     ∃ t' : TopologicalSpace α, (∀ n : ℕ, t' ≤ m n) ∧ t' ≤ t ∧ @PolishSpace α t' :=
     exists_polish_space_forall_le m mt m_polish
-  have A : @IsOpen α t' (⋃ n, s n) := by
+  have A : is_open[t'] (⋃ n, s n) := by
     apply isOpen_unionᵢ
     intro n
     apply t'm n
     exact m_open n
   obtain ⟨t'', t''_le, t''_polish, h1, h2⟩ :
     ∃ t'' : TopologicalSpace α,
-      t'' ≤ t' ∧ @PolishSpace α t'' ∧ @IsClosed α t'' (⋃ n, s n) ∧ @IsOpen α t'' (⋃ n, s n) :=
+      t'' ≤ t' ∧ @PolishSpace α t'' ∧ is_closed[t''] (⋃ n, s n) ∧ is_open[t''] (⋃ n, s n) :=
     @IsOpen.isClopenable α t' t'_polish _ A
   exact ⟨t'', t''_le.trans ((t'm 0).trans (mt 0)), t''_polish, h1, h2⟩
 #align polish_space.is_clopenable.Union PolishSpace.IsClopenable.unionᵢ

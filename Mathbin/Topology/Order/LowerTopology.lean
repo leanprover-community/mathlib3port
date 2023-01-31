@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module topology.order.lower_topology
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -257,7 +257,7 @@ instance [Preorder α] [TopologicalSpace α] [LowerTopology α] [OrderBot α] [P
       exact ((LowerTopology.isClosed_ici _).Prod <| LowerTopology.isClosed_ici _).is_open_compl
     rw [(lower_topology.is_topological_basis.prod
           LowerTopology.isTopologicalBasis).eq_generate_from,
-      le_generateFrom_iff_subset_isOpen, image2_subset_iff]
+      le_generate_from_iff_subset_is_open, image2_subset_iff]
     rintro _ ⟨s, hs, rfl⟩ _ ⟨t, ht, rfl⟩
     dsimp
     simp_rw [coe_upperClosure, compl_Union, prod_eq, preimage_Inter, preimage_compl]

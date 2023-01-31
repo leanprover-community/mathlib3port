@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.bases
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem IsTopologicalBasis.insert_empty {s : Set (Set α)} (h : IsTopologicalBas
     obtain ⟨t₃, h₃, hs⟩ := h.exists_subset_inter _ h₁ _ h₂ x ⟨hx₁, hx₂⟩
     exact ⟨t₃, Or.inr h₃, hs⟩
   · rw [h.eq_generate_from]
-    refine' le_antisymm (le_generateFrom fun t => _) (generateFrom_mono <| subset_insert ∅ s)
+    refine' le_antisymm (le_generateFrom fun t => _) (generate_from_anti <| subset_insert ∅ s)
     rintro (rfl | ht)
     · convert isOpen_empty
     · exact generate_open.basic t ht
@@ -99,7 +99,7 @@ theorem IsTopologicalBasis.diff_empty {s : Set (Set α)} (h : IsTopologicalBasis
     obtain ⟨t₃, h₃, hs⟩ := h.exists_subset_inter _ h₁ _ h₂ x hx
     exact ⟨t₃, ⟨h₃, nonempty.ne_empty ⟨x, hs.1⟩⟩, hs⟩
   · rw [h.eq_generate_from]
-    refine' le_antisymm (generateFrom_mono <| diff_subset s _) (le_generateFrom fun t ht => _)
+    refine' le_antisymm (generate_from_anti <| diff_subset s _) (le_generateFrom fun t ht => _)
     obtain rfl | he := eq_or_ne t ∅
     · convert isOpen_empty
     exact generate_open.basic t ⟨ht, he⟩
@@ -110,7 +110,7 @@ subcollections of `s` form a topological basis. -/
 theorem isTopologicalBasis_of_subbasis {s : Set (Set α)} (hs : t = generateFrom s) :
     IsTopologicalBasis ((fun f => ⋂₀ f) '' { f : Set (Set α) | f.Finite ∧ f ⊆ s }) :=
   by
-  refine' ⟨_, _, hs.trans (le_antisymm (le_generateFrom _) <| generateFrom_mono fun t ht => _)⟩
+  refine' ⟨_, _, hs.trans (le_antisymm (le_generateFrom _) <| generate_from_anti fun t ht => _)⟩
   · rintro _ ⟨t₁, ⟨hft₁, ht₁b⟩, rfl⟩ _ ⟨t₂, ⟨hft₂, ht₂b⟩, rfl⟩ x h
     exact ⟨_, ⟨_, ⟨hft₁.union hft₂, union_subset ht₁b ht₂b⟩, sInter_union t₁ t₂⟩, h, subset.rfl⟩
   · rw [sUnion_image, Union₂_eq_univ_iff]

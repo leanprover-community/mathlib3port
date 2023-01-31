@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.separation
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,8 +179,9 @@ theorem idRel_sub_separation_relation (α : Type _) [UniformSpace α] : idRel �
 theorem separationRel_comap {f : α → β}
     (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) : 𝓢 α = Prod.map f f ⁻¹' 𝓢 β :=
   by
+  subst h
   dsimp [separationRel]
-  simp_rw [uniformity_comap h, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).sInter_sets, ←
+  simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).sInter_sets, ←
     preimage_Inter, sInter_eq_bInter]
   rfl
 #align separation_rel_comap separationRel_comap
@@ -310,7 +311,8 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
         have ht' : ∀ {a₁ a₂}, a₁ ≈ a₂ → (a₁, a₂) ∈ t := fun a₁ a₂ h => interₛ_subset_of_mem ht h
         u.uniformity.sets_of_superset ht fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoid.symm h₂) h₁,
         fun h => u.uniformity.sets_of_superset h <| by simp (config := { contextual := true })⟩
-    simp [TopologicalSpace.coinduced, u.is_open_uniformity, uniformity, forall_quotient_iff]
+    simp only [isOpen_coinduced, isOpen_uniformity, uniformity, forall_quotient_iff, mem_preimage,
+      mem_map, preimage_set_of_eq, Quotient.eq']
     exact ⟨fun h a ha => (this a ha).mp <| h a ha, fun h a ha => (this a ha).mpr <| h a ha⟩
 #align uniform_space.separation_setoid.uniform_space UniformSpace.separationSetoid.uniformSpace
 

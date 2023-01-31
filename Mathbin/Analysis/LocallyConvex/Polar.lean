@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.polar
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,6 +41,8 @@ polar
 
 
 variable {𝕜 E F : Type _}
+
+open Topology
 
 namespace LinearMap
 
@@ -127,8 +129,7 @@ theorem tripolar_eq_polar (s : Set E) : B.polar (B.flip.polar (B.polar s)) = B.p
 #align linear_map.tripolar_eq_polar LinearMap.tripolar_eq_polar
 
 /-- The polar set is closed in the weak topology induced by `B.flip`. -/
-theorem polar_weak_closed (s : Set E) :
-    @IsClosed _ (WeakBilin.topologicalSpace B.flip) (B.polar s) :=
+theorem polar_weak_closed (s : Set E) : is_closed[WeakBilin.topologicalSpace B.flip] (B.polar s) :=
   by
   rw [polar_eq_Inter]
   refine' isClosed_interᵢ fun x => isClosed_interᵢ fun _ => _

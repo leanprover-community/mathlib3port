@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 
 ! This file was ported from Lean 3 source module topology.continuous_function.t0_sierpinski
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
   · intro u h
     rw [← generateFrom_unionᵢ_isOpen]
     apply is_open_generate_from_of_mem
-    simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, isOpen_induced_iff']
+    simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, isOpen_induced_iff]
     exact ⟨⟨u, h⟩, {True}, isOpen_singleton_true, by simp [Set.preimage]⟩
 #align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
 
@@ -46,7 +46,7 @@ variable (X : Type _) [TopologicalSpace X]
 /-- The continuous map from `X` to the product of copies of the Sierpinski space, (one copy for each
 open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given by `x ∈ u`.
 -/
-def productOfMemOpens : ContinuousMap X (Opens X → Prop)
+def productOfMemOpens : C(X, Opens X → Prop)
     where
   toFun x u := x ∈ u
   continuous_to_fun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property

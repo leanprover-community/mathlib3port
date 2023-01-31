@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.polish
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ theorem MeasurableSet.analyticSet {α : Type _} [t : TopologicalSpace α] [Polis
     topology `t'`. It is analytic for this topology. As the identity from `t'` to `t` is continuous
     and the image of an analytic set is analytic, it follows that `s` is also analytic for `t`. -/
   obtain ⟨t', t't, t'_polish, s_closed, s_open⟩ :
-    ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ @IsClosed α t' s ∧ @IsOpen α t' s :=
+    ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ is_closed[t'] s ∧ is_open[t'] s :=
     hs.is_clopenable
   have A := @IsClosed.analyticSet α t' t'_polish s s_closed
   convert @analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
@@ -633,7 +633,7 @@ theorem MeasurableSet.image_of_continuousOn_injOn (hs : MeasurableSet s) (f_cont
     (f_inj : InjOn f s) : MeasurableSet (f '' s) :=
   by
   obtain ⟨t', t't, t'_polish, s_closed, s_open⟩ :
-    ∃ t' : TopologicalSpace γ, t' ≤ tγ ∧ @PolishSpace γ t' ∧ @IsClosed γ t' s ∧ @IsOpen γ t' s :=
+    ∃ t' : TopologicalSpace γ, t' ≤ tγ ∧ @PolishSpace γ t' ∧ is_closed[t'] s ∧ is_open[t'] s :=
     hs.is_clopenable
   exact
     @IsClosed.measurableSet_image_of_continuousOn_injOn γ t' t'_polish β _ _ _ _ s s_closed f
@@ -709,7 +709,7 @@ theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
   refine' ⟨fun hs => _, fun hs => hs.IsClopenable⟩
   -- consider a finer topology `t'` in which `s` is open and closed.
   obtain ⟨t', t't, t'_polish, s_closed, s_open⟩ :
-    ∃ t' : TopologicalSpace γ, t' ≤ tγ ∧ @PolishSpace γ t' ∧ @IsClosed γ t' s ∧ @IsOpen γ t' s := hs
+    ∃ t' : TopologicalSpace γ, t' ≤ tγ ∧ @PolishSpace γ t' ∧ is_closed[t'] s ∧ is_open[t'] s := hs
   -- the identity is continuous from `t'` to `tγ`.
   have C : @Continuous γ γ t' tγ id := continuous_id_of_le t't
   -- therefore, it is also a measurable embedding, by the Lusin-Souslin theorem

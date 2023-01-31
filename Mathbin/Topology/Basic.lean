@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,15 +73,13 @@ universe u v w
 #print TopologicalSpace /-
 /-- A topology on `α`. -/
 @[protect_proj]
-structure TopologicalSpace (α : Type u) where
+class TopologicalSpace (α : Type u) where
   IsOpen : Set α → Prop
   is_open_univ : IsOpen univ
   is_open_inter : ∀ s t, IsOpen s → IsOpen t → IsOpen (s ∩ t)
   is_open_sUnion : ∀ s, (∀ t ∈ s, IsOpen t) → IsOpen (⋃₀ s)
 #align topological_space TopologicalSpace
 -/
-
-attribute [class] TopologicalSpace
 
 /- warning: topological_space.of_closed -> TopologicalSpace.ofClosed is a dubious translation:
 lean 3 declaration is
@@ -109,10 +107,28 @@ section TopologicalSpace
 
 variable {α : Type u} {β : Type v} {ι : Sort w} {a : α} {s s₁ s₂ t : Set α} {p p₁ p₂ : α → Prop}
 
+#print IsOpen /-
+/-- `is_open s` means that `s` is open in the ambient topological space on `α` -/
+def IsOpen [TopologicalSpace α] (s : Set α) : Prop :=
+  @TopologicalSpace.IsOpen _ ‹_› s
+#align is_open IsOpen
+-/
+
+-- mathport name: is_open_of
+scoped[Topology] notation "is_open[" t "]" => @IsOpen hole! t
+
+theorem isOpen_mk {p h₁ h₂ h₃} {s : Set α} : is_open[⟨p, h₁, h₂, h₃⟩] s ↔ p s :=
+  Iff.rfl
+#align is_open_mk isOpen_mk
+
 #print topologicalSpace_eq /-
 @[ext]
-theorem topologicalSpace_eq : ∀ {f g : TopologicalSpace α}, f.IsOpen = g.IsOpen → f = g
-  | ⟨a, _, _, _⟩, ⟨b, _, _, _⟩, rfl => rfl
+theorem topologicalSpace_eq {f g : TopologicalSpace α} (h : is_open[f] = is_open[g]) : f = g :=
+  by
+  cases f
+  cases g
+  congr
+  exact h
 #align topological_space_eq topologicalSpace_eq
 -/
 
@@ -120,17 +136,10 @@ section
 
 variable [TopologicalSpace α]
 
-#print IsOpen /-
-/-- `is_open s` means that `s` is open in the ambient topological space on `α` -/
-def IsOpen (s : Set α) : Prop :=
-  TopologicalSpace.IsOpen ‹_› s
-#align is_open IsOpen
--/
-
 #print isOpen_univ /-
 @[simp]
 theorem isOpen_univ : IsOpen (univ : Set α) :=
-  TopologicalSpace.isOpen_univ _
+  TopologicalSpace.isOpen_univ
 #align is_open_univ isOpen_univ
 -/
 
@@ -141,12 +150,12 @@ but is expected to have type
   forall {α : Type.{u1}} {s₁ : Set.{u1} α} {s₂ : Set.{u1} α} [_inst_1 : TopologicalSpace.{u1} α], (IsOpen.{u1} α _inst_1 s₁) -> (IsOpen.{u1} α _inst_1 s₂) -> (IsOpen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁ s₂))
 Case conversion may be inaccurate. Consider using '#align is_open.inter IsOpen.interₓ'. -/
 theorem IsOpen.inter (h₁ : IsOpen s₁) (h₂ : IsOpen s₂) : IsOpen (s₁ ∩ s₂) :=
-  TopologicalSpace.isOpen_inter _ s₁ s₂ h₁ h₂
+  TopologicalSpace.isOpen_inter s₁ s₂ h₁ h₂
 #align is_open.inter IsOpen.inter
 
 #print isOpen_unionₛ /-
 theorem isOpen_unionₛ {s : Set (Set α)} (h : ∀ t ∈ s, IsOpen t) : IsOpen (⋃₀ s) :=
-  TopologicalSpace.isOpen_unionₛ _ s h
+  TopologicalSpace.isOpen_unionₛ s h
 #align is_open_sUnion isOpen_unionₛ
 -/
 
@@ -154,7 +163,7 @@ end
 
 #print topologicalSpace_eq_iff /-
 theorem topologicalSpace_eq_iff {t t' : TopologicalSpace α} :
-    t = t' ↔ ∀ s, @IsOpen α t s ↔ @IsOpen α t' s :=
+    t = t' ↔ ∀ s, is_open[t] s ↔ is_open[t'] s :=
   ⟨fun h s => h ▸ Iff.rfl, fun h => by
     ext
     exact h _⟩
@@ -162,7 +171,7 @@ theorem topologicalSpace_eq_iff {t t' : TopologicalSpace α} :
 -/
 
 #print isOpen_fold /-
-theorem isOpen_fold {s : Set α} {t : TopologicalSpace α} : t.IsOpen s = @IsOpen α t s :=
+theorem isOpen_fold {s : Set α} {t : TopologicalSpace α} : t.IsOpen s = is_open[t] s :=
   rfl
 #align is_open_fold isOpen_fold
 -/
@@ -261,6 +270,9 @@ class IsClosed (s : Set α) : Prop where
   is_open_compl : IsOpen (sᶜ)
 #align is_closed IsClosed
 -/
+
+-- mathport name: is_closed_of
+scoped[Topology] notation "is_closed[" t "]" => @IsClosed hole! t
 
 /- warning: is_open_compl_iff -> isOpen_compl_iff is a dubious translation:
 lean 3 declaration is

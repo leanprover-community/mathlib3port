@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1570,36 +1570,6 @@ theorem TopologicalSpace.subset_trans {X : Type _} [tX : TopologicalSpace X] {s 
       TopologicalSpace.induced (Set.inclusion ts) (tX.induced _)
   rw [← induced_compose]
 #align topological_space.subset_trans TopologicalSpace.subset_trans
-
-/-- The topology pulled-back under an inclusion `f : X → Y` from the discrete topology (`⊥`) is the
-discrete topology.
-This version does not assume the choice of a topology on either the source `X`
-nor the target `Y` of the inclusion `f`. -/
-theorem induced_bot {X Y : Type _} {f : X → Y} (hf : Function.Injective f) :
-    TopologicalSpace.induced f ⊥ = ⊥ :=
-  eq_of_nhds_eq_nhds (by simp [nhds_induced, ← Set.image_singleton, hf.preimage_image, nhds_bot])
-#align induced_bot induced_bot
-
-/-- The topology induced under an inclusion `f : X → Y` from the discrete topological space `Y`
-is the discrete topology on `X`. -/
-theorem discreteTopology_induced {X Y : Type _} [tY : TopologicalSpace Y] [DiscreteTopology Y]
-    {f : X → Y} (hf : Function.Injective f) : @DiscreteTopology X (TopologicalSpace.induced f tY) :=
-  by apply DiscreteTopology.mk <;> · rw [DiscreteTopology.eq_bot Y, induced_bot hf]
-#align discrete_topology_induced discreteTopology_induced
-
-theorem Embedding.discreteTopology {X Y : Type _} [TopologicalSpace X] [tY : TopologicalSpace Y]
-    [DiscreteTopology Y] {f : X → Y} (hf : Embedding f) : DiscreteTopology X :=
-  ⟨by rw [hf.induced, DiscreteTopology.eq_bot Y, induced_bot hf.inj]⟩
-#align embedding.discrete_topology Embedding.discreteTopology
-
-/-- Let `s, t ⊆ X` be two subsets of a topological space `X`.  If `t ⊆ s` and the topology induced
-by `X`on `s` is discrete, then also the topology induces on `t` is discrete.  -/
-theorem DiscreteTopology.of_subset {X : Type _} [TopologicalSpace X] {s t : Set X}
-    (ds : DiscreteTopology s) (ts : t ⊆ s) : DiscreteTopology t :=
-  by
-  rw [TopologicalSpace.subset_trans ts, ds.eq_bot]
-  exact { eq_bot := induced_bot (Set.inclusion_injective ts) }
-#align discrete_topology.of_subset DiscreteTopology.of_subset
 
 /-- A T₂ space, also known as a Hausdorff space, is one in which for every
   `x ≠ y` there exists disjoint open sets around `x` and `y`. This is
@@ -3255,7 +3225,7 @@ theorem regularSpaceInf {X} {T : Set (TopologicalSpace X)} (h : ∀ t ∈ T, @Re
     ∀ a,
       (𝓝 a).HasBasis
         (fun If : ΣI : Set T, I → Set X =>
-          If.1.Finite ∧ ∀ i : If.1, If.2 i ∈ @nhds X i a ∧ @IsClosed X i (If.2 i))
+          If.1.Finite ∧ ∀ i : If.1, If.2 i ∈ @nhds X i a ∧ is_closed[↑i] (If.2 i))
         fun If => ⋂ i : If.1, If.snd i :=
     by
     intro a
@@ -3553,7 +3523,7 @@ theorem connectedComponent_eq_interᵢ_clopen [T2Space α] [CompactSpace α] (x 
   -- We do this by showing that any disjoint cover by two closed sets implies
   -- that one of these closed sets must contain our whole thing.
   -- To reduce to the case where the cover is disjoint on all of `α` we need that `s` is closed
-  have hs : @IsClosed α _ (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z) :=
+  have hs : IsClosed (⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z : Set α) :=
     isClosed_interᵢ fun Z => Z.2.1.2
   rw [isPreconnected_iff_subset_of_fully_disjoint_closed hs]
   intro a b ha hb hab ab_disj

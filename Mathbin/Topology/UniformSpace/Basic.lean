@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -301,14 +301,15 @@ theorem UniformSpace.core_eq :
   A metric space has a natural uniformity, and a uniform space has a natural topology.
   A topological group also has a natural uniformity, even when it is not metrizable. -/
 class UniformSpace (α : Type u) extends TopologicalSpace α, UniformSpace.Core α where
-  is_open_uniformity : ∀ s, IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ uniformity
+  is_open_uniformity :
+    ∀ s, @IsOpen _ to_topological_space s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ uniformity
 #align uniform_space UniformSpace
 
 /-- Alternative constructor for `uniform_space α` when a topology is already given. -/
 @[match_pattern]
 def UniformSpace.mk' {α} (t : TopologicalSpace α) (c : UniformSpace.Core α)
     (is_open_uniformity :
-      ∀ s : Set α, t.IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ c.uniformity) :
+      ∀ s : Set α, IsOpen s ↔ ∀ x ∈ s, { p : α × α | p.1 = x → p.2 ∈ s } ∈ c.uniformity) :
     UniformSpace α :=
   ⟨c, isOpen_uniformity⟩
 #align uniform_space.mk' UniformSpace.mk'
@@ -333,12 +334,20 @@ def UniformSpace.ofCoreEq {α : Type u} (u : UniformSpace.Core α) (t : Topologi
 
 theorem UniformSpace.toCore_toTopologicalSpace (u : UniformSpace α) :
     u.toCore.toTopologicalSpace = u.toTopologicalSpace :=
-  topologicalSpace_eq <|
-    funext fun s => by rw [UniformSpace.Core.toTopologicalSpace, UniformSpace.isOpen_uniformity]
+  topologicalSpace_eq <| funext fun s => by rw [UniformSpace.isOpen_uniformity, isOpen_mk]
 #align uniform_space.to_core_to_topological_space UniformSpace.toCore_toTopologicalSpace
 
+/-- The uniformity is a filter on α × α (inferred from an ambient uniform space
+  structure on α). -/
+def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
+  (@UniformSpace.toCore α _).uniformity
+#align uniformity uniformity
+
+-- mathport name: uniformity_of
+scoped[Topology] notation "𝓤[" u "]" => @uniformity hole! u
+
 @[ext]
-theorem uniformSpace_eq : ∀ {u₁ u₂ : UniformSpace α}, u₁.uniformity = u₂.uniformity → u₁ = u₂
+theorem uniformSpace_eq : ∀ {u₁ u₂ : UniformSpace α}, 𝓤[u₁] = 𝓤[u₂] → u₁ = u₂
   | UniformSpace.mk' t₁ u₁ o₁, UniformSpace.mk' t₂ u₂ o₂, h =>
     by
     have : u₁ = u₂ := UniformSpace.core_eq h
@@ -367,12 +376,6 @@ theorem UniformSpace.replaceTopology_eq {α : Type _} [i : TopologicalSpace α] 
 section UniformSpace
 
 variable [UniformSpace α]
-
-/-- The uniformity is a filter on α × α (inferred from an ambient uniform space
-  structure on α). -/
-def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
-  (@UniformSpace.toCore α _).uniformity
-#align uniformity uniformity
 
 -- mathport name: uniformity
 scoped[uniformity] notation "𝓤" => uniformity
@@ -1194,7 +1197,7 @@ instance : PartialOrder (UniformSpace α)
 instance : InfSet (UniformSpace α) :=
   ⟨fun s =>
     UniformSpace.ofCore
-      { uniformity := ⨅ u ∈ s, @uniformity α u
+      { uniformity := ⨅ u ∈ s, 𝓤[u]
         refl := le_infᵢ fun u => le_infᵢ fun hu => u.refl
         symm :=
           le_infᵢ fun u =>
@@ -1212,7 +1215,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Inf_le infₛ_leₓ'. -/
 private theorem infₛ_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) :
     infₛ tt ≤ t :=
-  show (⨅ u ∈ tt, @uniformity α u) ≤ t.uniformity from infᵢ_le_of_le t <| infᵢ_le _ h
+  show (⨅ u ∈ tt, 𝓤[u]) ≤ 𝓤[t] from infᵢ₂_le t h
 #align Inf_le infₛ_le
 
 /- warning: le_Inf -> le_infₛ is a dubious translation:
@@ -1223,7 +1226,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_Inf le_infₛₓ'. -/
 private theorem le_infₛ {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' ∈ tt, t ≤ t') :
     t ≤ infₛ tt :=
-  show t.uniformity ≤ ⨅ u ∈ tt, @uniformity α u from le_infᵢ fun t' => le_infᵢ fun ht' => h t' ht'
+  show 𝓤[t] ≤ ⨅ u ∈ tt, 𝓤[u] from le_infᵢ₂ h
 #align le_Inf le_infₛ
 
 instance : Top (UniformSpace α) :=
@@ -1275,26 +1278,13 @@ instance : CompleteLattice (UniformSpace α) :=
     le_Inf := fun s a hs => le_infₛ hs
     Inf_le := fun s a ha => infₛ_le ha }
 
-theorem infᵢ_uniformity {ι : Sort _} {u : ι → UniformSpace α} :
-    (infᵢ u).uniformity = ⨅ i, (u i).uniformity :=
-  show (⨅ (a) (h : ∃ i : ι, u i = a), a.uniformity) = _ from
-    le_antisymm (le_infᵢ fun i => infᵢ_le_of_le (u i) <| infᵢ_le _ ⟨i, rfl⟩)
-      (le_infᵢ fun a => le_infᵢ fun ⟨i, (ha : u i = a)⟩ => ha ▸ infᵢ_le _ _)
+theorem infᵢ_uniformity {ι : Sort _} {u : ι → UniformSpace α} : 𝓤[infᵢ u] = ⨅ i, 𝓤[u i] :=
+  infᵢ_range
 #align infi_uniformity infᵢ_uniformity
 
-theorem infᵢ_uniformity' {ι : Sort _} {u : ι → UniformSpace α} :
-    @uniformity α (infᵢ u) = ⨅ i, @uniformity α (u i) :=
-  infᵢ_uniformity
-#align infi_uniformity' infᵢ_uniformity'
-
-theorem inf_uniformity {u v : UniformSpace α} : (u ⊓ v).uniformity = u.uniformity ⊓ v.uniformity :=
+theorem inf_uniformity {u v : UniformSpace α} : 𝓤[u ⊓ v] = 𝓤[u] ⊓ 𝓤[v] :=
   rfl
 #align inf_uniformity inf_uniformity
-
-theorem inf_uniformity' {u v : UniformSpace α} :
-    @uniformity α (u ⊓ v) = @uniformity α u ⊓ @uniformity α v :=
-  rfl
-#align inf_uniformity' inf_uniformity'
 
 instance inhabitedUniformSpace : Inhabited (UniformSpace α) :=
   ⟨⊥⟩
@@ -1308,7 +1298,7 @@ instance inhabitedUniformSpaceCore : Inhabited (UniformSpace.Core α) :=
   is the inverse image in the filter sense of the induced function `α × α → β × β`. -/
 def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α
     where
-  uniformity := u.uniformity.comap fun p : α × α => (f p.1, f p.2)
+  uniformity := 𝓤[u].comap fun p : α × α => (f p.1, f p.2)
   toTopologicalSpace := u.toTopologicalSpace.induced f
   refl := le_trans (by simp <;> exact fun ⟨a, b⟩ (h : a = b) => h ▸ rfl) (comap_mono u.refl)
   symm := by
@@ -1326,20 +1316,23 @@ def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α
       nhds_eq_comap_uniformity, comap_comap, ← mem_comap_prod_mk, ← uniformity]
 #align uniform_space.comap UniformSpace.comap
 
-theorem uniformity_comap [UniformSpace α] [UniformSpace β] {f : α → β}
-    (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) :
-    𝓤 α = comap (Prod.map f f) (𝓤 β) := by
-  rw [h]
+theorem uniformity_comap [UniformSpace β] (f : α → β) :
+    𝓤[UniformSpace.comap f ‹_›] = comap (Prod.map f f) (𝓤 β) :=
   rfl
 #align uniformity_comap uniformity_comap
 
-theorem uniformSpace_comap_id {α : Type _} : UniformSpace.comap (id : α → α) = id := by
-  ext u <;> dsimp only [UniformSpace.comap, id] <;> rw [Prod.id_prod, Filter.comap_id]
+@[simp]
+theorem uniformSpace_comap_id {α : Type _} : UniformSpace.comap (id : α → α) = id :=
+  by
+  ext : 2
+  rw [uniformity_comap, Prod.map_id, comap_id]
 #align uniform_space_comap_id uniformSpace_comap_id
 
 theorem UniformSpace.comap_comap {α β γ} [uγ : UniformSpace γ] {f : α → β} {g : β → γ} :
-    UniformSpace.comap (g ∘ f) uγ = UniformSpace.comap f (UniformSpace.comap g uγ) := by
-  ext <;> dsimp only [UniformSpace.comap] <;> rw [Filter.comap_comap]
+    UniformSpace.comap (g ∘ f) uγ = UniformSpace.comap f (UniformSpace.comap g uγ) :=
+  by
+  ext1
+  simp only [uniformity_comap, comap_comap, Prod.map_comp_map]
 #align uniform_space.comap_comap UniformSpace.comap_comap
 
 theorem UniformSpace.comap_inf {α γ} {u₁ u₂ : UniformSpace γ} {f : α → γ} :
@@ -1351,15 +1344,14 @@ theorem UniformSpace.comap_infᵢ {ι α γ} {u : ι → UniformSpace γ} {f : �
     (⨅ i, u i).comap f = ⨅ i, (u i).comap f :=
   by
   ext : 1
-  change 𝓤 _ = 𝓤 _
-  simp [uniformity_comap rfl, infᵢ_uniformity']
+  simp [uniformity_comap, infᵢ_uniformity]
 #align uniform_space.comap_infi UniformSpace.comap_infᵢ
 
 theorem UniformSpace.comap_mono {α γ} {f : α → γ} : Monotone fun u : UniformSpace γ => u.comap f :=
   by
   intro u₁ u₂ hu
   change 𝓤 _ ≤ 𝓤 _
-  rw [uniformity_comap rfl]
+  rw [uniformity_comap]
   exact comap_mono hu
 #align uniform_space.comap_mono UniformSpace.comap_mono
 
@@ -1420,12 +1412,8 @@ theorem toTopologicalSpace_infᵢ {ι : Sort _} {u : ι → UniformSpace α} :
     (infᵢ u).toTopologicalSpace = ⨅ i, (u i).toTopologicalSpace :=
   by
   refine' eq_of_nhds_eq_nhds fun a => _
-  rw [nhds_infᵢ, nhds_eq_uniformity]
-  change (infᵢ u).uniformity.lift' (preimage <| Prod.mk a) = _
-  rw [infᵢ_uniformity, lift'_infi_of_map_univ _ preimage_univ]
-  · simp only [nhds_eq_uniformity]
-    rfl
-  · exact ball_inter _
+  simp only [nhds_infᵢ, nhds_eq_uniformity, infᵢ_uniformity]
+  exact lift'_infi_of_map_univ (ball_inter _) preimage_univ
 #align to_topological_space_infi toTopologicalSpace_infᵢ
 
 theorem toTopologicalSpace_infₛ {s : Set (UniformSpace α)} :
@@ -1467,27 +1455,27 @@ theorem uniformContinuous_infₛ_dom {f : α → β} {u₁ : Set (UniformSpace �
     {u : UniformSpace α} (h₁ : u ∈ u₁) (hf : @UniformContinuous u u₂ f) :
     @UniformContinuous (infₛ u₁) u₂ f :=
   by
-  rw [UniformContinuous, infₛ_eq_infᵢ', infᵢ_uniformity']
+  rw [UniformContinuous, infₛ_eq_infᵢ', infᵢ_uniformity]
   exact tendsto_infi' ⟨u, h₁⟩ hf
 #align uniform_continuous_Inf_dom uniformContinuous_infₛ_dom
 
 theorem uniformContinuous_infₛ_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : Set (UniformSpace β)}
     (h : ∀ u ∈ u₂, @UniformContinuous u₁ u f) : @UniformContinuous u₁ (infₛ u₂) f :=
   by
-  rw [UniformContinuous, infₛ_eq_infᵢ', infᵢ_uniformity']
+  rw [UniformContinuous, infₛ_eq_infᵢ', infᵢ_uniformity]
   exact tendsto_infi.mpr fun ⟨u, hu⟩ => h u hu
 #align uniform_continuous_Inf_rng uniformContinuous_infₛ_rng
 
 theorem uniformContinuous_infᵢ_dom {f : α → β} {u₁ : ι → UniformSpace α} {u₂ : UniformSpace β}
     {i : ι} (hf : @UniformContinuous (u₁ i) u₂ f) : @UniformContinuous (infᵢ u₁) u₂ f :=
   by
-  rw [UniformContinuous, infᵢ_uniformity']
+  rw [UniformContinuous, infᵢ_uniformity]
   exact tendsto_infi' i hf
 #align uniform_continuous_infi_dom uniformContinuous_infᵢ_dom
 
 theorem uniformContinuous_infᵢ_rng {f : α → β} {u₁ : UniformSpace α} {u₂ : ι → UniformSpace β}
     (h : ∀ i, @UniformContinuous u₁ (u₂ i) f) : @UniformContinuous u₁ (infᵢ u₂) f := by
-  rwa [UniformContinuous, infᵢ_uniformity', tendsto_infi]
+  rwa [UniformContinuous, infᵢ_uniformity, tendsto_infi]
 #align uniform_continuous_infi_rng uniformContinuous_infᵢ_rng
 
 end UniformContinuousInfi
@@ -1683,7 +1671,7 @@ theorem mem_uniformity_of_uniformContinuous_invariant [UniformSpace α] [Uniform
 
 theorem mem_uniform_prod [t₁ : UniformSpace α] [t₂ : UniformSpace β] {a : Set (α × α)}
     {b : Set (β × β)} (ha : a ∈ 𝓤 α) (hb : b ∈ 𝓤 β) :
-    { p : (α × β) × α × β | (p.1.1, p.2.1) ∈ a ∧ (p.1.2, p.2.2) ∈ b } ∈ @uniformity (α × β) _ := by
+    { p : (α × β) × α × β | (p.1.1, p.2.1) ∈ a ∧ (p.1.2, p.2.2) ∈ b } ∈ 𝓤 (α × β) := by
   rw [uniformity_prod] <;> exact inter_mem_inf (preimage_mem_comap ha) (preimage_mem_comap hb)
 #align mem_uniform_prod mem_uniform_prod
 

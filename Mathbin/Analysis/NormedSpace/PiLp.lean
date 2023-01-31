@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -423,7 +423,7 @@ theorem antilipschitzWith_equiv_aux :
       
 #align pi_Lp.antilipschitz_with_equiv_aux PiLp.antilipschitzWith_equiv_aux
 
-theorem aux_uniformity_eq : 𝓤 (PiLp p β) = @uniformity _ (PiCat.uniformSpace _) :=
+theorem aux_uniformity_eq : 𝓤 (PiLp p β) = 𝓤[PiCat.uniformSpace _] :=
   by
   have A : UniformInducing (PiLp.equiv p β) :=
     (antilipschitz_with_equiv_aux p β).UniformInducing

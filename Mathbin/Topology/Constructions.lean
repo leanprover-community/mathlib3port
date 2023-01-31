@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -627,8 +627,8 @@ theorem Filter.HasBasis.prod_nhds' {ιa ιb : Type _} {pa : ιa → Prop} {pb : 
 #align filter.has_basis.prod_nhds' Filter.HasBasis.prod_nhds'
 
 instance [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × β) :=
-  ⟨eq_of_nhds_eq_nhds fun ⟨a, b⟩ => by
-      rw [nhds_prod_eq, nhds_discrete α, nhds_discrete β, nhds_bot, Filter.prod_pure_pure]⟩
+  discreteTopology_iff_nhds.2 fun ⟨a, b⟩ => by
+    rw [nhds_prod_eq, nhds_discrete α, nhds_discrete β, Filter.prod_pure_pure]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_mem_nhds_iff {s : Set α} {t : Set β} {a : α} {b : β} :
@@ -1226,6 +1226,17 @@ theorem Embedding.codRestrict {e : α → β} (he : Embedding e) (s : Set β) (h
   embedding_of_embedding_compose (he.Continuous.codRestrict hs) continuous_subtype_coe he
 #align embedding.cod_restrict Embedding.codRestrict
 
+theorem embedding_inclusion {s t : Set α} (h : s ⊆ t) : Embedding (Set.inclusion h) :=
+  embedding_subtype_coe.codRestrict _ _
+#align embedding_inclusion embedding_inclusion
+
+/-- Let `s, t ⊆ X` be two subsets of a topological space `X`.  If `t ⊆ s` and the topology induced
+by `X`on `s` is discrete, then also the topology induces on `t` is discrete.  -/
+theorem DiscreteTopology.of_subset {X : Type _} [TopologicalSpace X] {s t : Set X}
+    (ds : DiscreteTopology s) (ts : t ⊆ s) : DiscreteTopology t :=
+  (embedding_inclusion ts).DiscreteTopology
+#align discrete_topology.of_subset DiscreteTopology.of_subset
+
 end Subtype
 
 section Quotient
@@ -1432,7 +1443,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   by
   let G := { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s }
   rw [pi_eq_generateFrom]
-  refine' le_antisymm (generateFrom_mono _) (le_generateFrom _)
+  refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
@@ -1450,8 +1461,9 @@ theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π 
   by
   cases nonempty_fintype ι
   rw [pi_generateFrom_eq]
-  refine' le_antisymm (generateFrom_mono _) (le_generateFrom _)
-  exact fun s ⟨t, ht, Eq⟩ => ⟨t, Finset.univ, by simp [ht, Eq]⟩
+  refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
+  · rintro s ⟨t, ht, rfl⟩
+    exact ⟨t, Finset.univ, by simp [ht]⟩
   · rintro s ⟨t, i, ht, rfl⟩
     apply isOpen_iff_forall_mem_open.2 _
     intro f hf
@@ -1646,6 +1658,13 @@ theorem continuous_uLift_down [TopologicalSpace α] : Continuous (ULift.down : U
 theorem continuous_uLift_up [TopologicalSpace α] : Continuous (ULift.up : α → ULift.{v, u} α) :=
   continuous_induced_rng.2 continuous_id
 #align continuous_ulift_up continuous_uLift_up
+
+theorem embedding_uLift_down [TopologicalSpace α] : Embedding (ULift.down : ULift.{v, u} α → α) :=
+  ⟨⟨rfl⟩, ULift.down_injective⟩
+#align embedding_ulift_down embedding_uLift_down
+
+instance [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (ULift α) :=
+  embedding_uLift_down.DiscreteTopology
 
 end ULift
 

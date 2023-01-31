@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,8 +278,8 @@ theorem mono_iff_injective {X Y : CompHausCat.{u}} (f : X ⟶ Y) : Mono f ↔ Fu
   by
   constructor
   · intro hf x₁ x₂ h
-    let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_of_discreteTopology⟩
-    let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_of_discreteTopology⟩
+    let g₁ : of PUnit ⟶ X := ⟨fun _ => x₁, continuous_const⟩
+    let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_const⟩
     have : g₁ ≫ f = g₂ ≫ f := by
       ext
       exact h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Calle Sönne
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,6 +48,8 @@ profinite
 universe u
 
 open CategoryTheory
+
+open Topology
 
 /-- The type of profinite topological spaces. -/
 structure ProfiniteCat where
@@ -173,13 +175,18 @@ theorem CompHausCat.toProfinite_obj' (X : CompHausCat) :
 #align CompHaus.to_Profinite_obj' CompHausCat.toProfinite_obj'
 
 /-- Finite types are given the discrete topology. -/
-def FintypeCat.discreteTopology (A : FintypeCat) : TopologicalSpace A :=
+def FintypeCat.botTopology (A : FintypeCat) : TopologicalSpace A :=
   ⊥
-#align Fintype.discrete_topology FintypeCat.discreteTopology
+#align Fintype.bot_topology FintypeCat.botTopology
 
 section DiscreteTopology
 
-attribute [local instance] FintypeCat.discreteTopology
+attribute [local instance] FintypeCat.botTopology
+
+@[local instance]
+theorem FintypeCat.discreteTopology (A : FintypeCat) : DiscreteTopology A :=
+  ⟨rfl⟩
+#align Fintype.discrete_topology FintypeCat.discreteTopology
 
 /-- The natural functor from `Fintype` to `Profinite`, endowing a finite type with the
 discrete topology. -/
@@ -327,18 +334,17 @@ theorem epi_iff_surjective {X Y : ProfiniteCat.{u}} (f : X ⟶ Y) : Epi f ↔ Fu
   constructor
   · contrapose!
     rintro ⟨y, hy⟩ hf
+    skip
     let C := Set.range f
     have hC : IsClosed C := (isCompact_range f.continuous).IsClosed
     let U := Cᶜ
-    have hU : IsOpen U := is_open_compl_iff.mpr hC
     have hyU : y ∈ U := by
       refine' Set.mem_compl _
       rintro ⟨y', hy'⟩
       exact hy y' hy'
-    have hUy : U ∈ nhds y := hU.mem_nhds hyU
+    have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
-      letI : TopologicalSpace (ULift.{u} <| Fin 2) := ⊥
       let Z := of (ULift.{u} <| Fin 2)
       let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
       let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩

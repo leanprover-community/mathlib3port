@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.discrete_quotient
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,16 +114,12 @@ instance : CoeSort (DiscreteQuotient X) (Type _) :=
   ⟨fun S => Quotient S.Setoid⟩
 
 instance : TopologicalSpace S :=
-  ⊥
+  Quotient.topologicalSpace
 
 /-- The projection from `X` to the given discrete quotient. -/
 def proj : X → S :=
   Quotient.mk''
 #align discrete_quotient.proj DiscreteQuotient.proj
-
-theorem proj_surjective : Function.Surjective S.proj :=
-  Quotient.surjective_Quotient_mk''
-#align discrete_quotient.proj_surjective DiscreteQuotient.proj_surjective
 
 theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = setOf (S.Rel x) :=
   by
@@ -133,29 +129,40 @@ theorem fiber_eq (x : X) : S.proj ⁻¹' {S.proj x} = setOf (S.Rel x) :=
   exact ⟨fun h => S.symm _ _ h, fun h => S.symm _ _ h⟩
 #align discrete_quotient.fiber_eq DiscreteQuotient.fiber_eq
 
-theorem proj_isLocallyConstant : IsLocallyConstant S.proj :=
-  by
-  rw [(IsLocallyConstant.tFAE S.proj).out 0 3]
-  intro x
-  rcases S.proj_surjective x with ⟨x, rfl⟩
-  simp [fiber_eq, (S.clopen x).1]
-#align discrete_quotient.proj_is_locally_constant DiscreteQuotient.proj_isLocallyConstant
+theorem proj_surjective : Function.Surjective S.proj :=
+  Quotient.surjective_Quotient_mk''
+#align discrete_quotient.proj_surjective DiscreteQuotient.proj_surjective
+
+theorem proj_quotientMap : QuotientMap S.proj :=
+  quotientMap_quot_mk
+#align discrete_quotient.proj_quotient_map DiscreteQuotient.proj_quotientMap
 
 theorem proj_continuous : Continuous S.proj :=
-  IsLocallyConstant.continuous <| proj_isLocallyConstant _
+  S.proj_quotient_map.Continuous
 #align discrete_quotient.proj_continuous DiscreteQuotient.proj_continuous
 
-theorem fiber_closed (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
-  IsClosed.preimage S.proj_continuous ⟨trivial⟩
-#align discrete_quotient.fiber_closed DiscreteQuotient.fiber_closed
+instance : DiscreteTopology S :=
+  singletons_open_iff_discrete.1 <|
+    S.proj_surjective.forall.2 fun x =>
+      by
+      rw [← S.proj_quotient_map.is_open_preimage, fiber_eq]
+      exact (S.clopen _).1
 
-theorem fiber_open (A : Set S) : IsOpen (S.proj ⁻¹' A) :=
-  IsOpen.preimage S.proj_continuous trivial
-#align discrete_quotient.fiber_open DiscreteQuotient.fiber_open
+theorem proj_isLocallyConstant : IsLocallyConstant S.proj :=
+  (IsLocallyConstant.iff_continuous S.proj).2 S.proj_continuous
+#align discrete_quotient.proj_is_locally_constant DiscreteQuotient.proj_isLocallyConstant
 
 theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
-  ⟨fiber_open _ _, fiber_closed _ _⟩
+  (isClopen_discrete A).Preimage S.proj_continuous
 #align discrete_quotient.fiber_clopen DiscreteQuotient.fiber_clopen
+
+theorem fiber_open (A : Set S) : IsOpen (S.proj ⁻¹' A) :=
+  (S.fiber_clopen A).1
+#align discrete_quotient.fiber_open DiscreteQuotient.fiber_open
+
+theorem fiber_closed (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
+  (S.fiber_clopen A).2
+#align discrete_quotient.fiber_closed DiscreteQuotient.fiber_closed
 
 instance : PartialOrder (DiscreteQuotient X)
     where
@@ -461,29 +468,18 @@ def discreteQuotient : DiscreteQuotient X
   clopen x := f.IsLocallyConstant.is_clopen_fiber _
 #align locally_constant.discrete_quotient LocallyConstant.discreteQuotient
 
-/-- The function from the discrete quotient associated to a locally constant function. -/
-def lift : f.DiscreteQuotient → α := fun a => Quotient.liftOn' a f fun a b h => h.symm
+/-- The (locally constant) function from the discrete quotient associated to a locally constant
+function. -/
+def lift : LocallyConstant f.DiscreteQuotient α :=
+  ⟨fun a => Quotient.liftOn' a f fun a b h => h.symm, fun A => isOpen_discrete _⟩
 #align locally_constant.lift LocallyConstant.lift
 
-theorem lift_isLocallyConstant : IsLocallyConstant f.lift := fun A => trivial
-#align locally_constant.lift_is_locally_constant LocallyConstant.lift_isLocallyConstant
-
-/-- A locally constant version of `locally_constant.lift`. -/
-def locallyConstantLift : LocallyConstant f.DiscreteQuotient α :=
-  ⟨f.lift, f.lift_is_locally_constant⟩
-#align locally_constant.locally_constant_lift LocallyConstant.locallyConstantLift
-
 @[simp]
-theorem lift_eq_coe : f.lift = f.locallyConstantLift :=
-  rfl
-#align locally_constant.lift_eq_coe LocallyConstant.lift_eq_coe
-
-@[simp]
-theorem factors : f.locallyConstantLift ∘ f.DiscreteQuotient.proj = f :=
+theorem lift_comp_proj : f.lift ∘ f.DiscreteQuotient.proj = f :=
   by
   ext
   rfl
-#align locally_constant.factors LocallyConstant.factors
+#align locally_constant.lift_comp_proj LocallyConstant.lift_comp_proj
 
 end LocallyConstant
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_group
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,10 +297,8 @@ theorem uniformity_eq_comap_nhds_one_swapped :
 theorem UniformGroup.ext {G : Type _} [Group G] {u v : UniformSpace G} (hu : @UniformGroup G u _)
     (hv : @UniformGroup G v _)
     (h : @nhds _ u.toTopologicalSpace 1 = @nhds _ v.toTopologicalSpace 1) : u = v :=
-  by
-  refine' uniformSpace_eq _
-  change @uniformity _ u = @uniformity _ v
-  rw [@uniformity_eq_comap_nhds_one _ u _ hu, @uniformity_eq_comap_nhds_one _ v _ hv, h]
+  uniformSpace_eq <| by
+    rw [@uniformity_eq_comap_nhds_one _ u _ hu, @uniformity_eq_comap_nhds_one _ v _ hv, h]
 #align uniform_group.ext UniformGroup.ext
 #align uniform_add_group.ext UniformAddGroup.ext
 
@@ -771,7 +769,6 @@ theorem UniformGroup.toUniformSpace_eq {G : Type _} [u : UniformSpace G] [Group 
     [UniformGroup G] : TopologicalGroup.toUniformSpace G = u :=
   by
   ext : 1
-  show @uniformity G (TopologicalGroup.toUniformSpace G) = 𝓤 G
   rw [uniformity_eq_comap_nhds_one' G, uniformity_eq_comap_nhds_one G]
 #align uniform_group.to_uniform_space_eq UniformGroup.toUniformSpace_eq
 #align uniform_add_group.to_uniform_space_eq UniformAddGroup.toUniformSpace_eq

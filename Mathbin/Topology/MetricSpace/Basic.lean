@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1383,7 +1383,7 @@ theorem Metric.inseparable_iff {x y : α} : Inseparable x y ↔ dist x y = 0 := 
 See Note [forgetful inheritance].
 -/
 def PseudoMetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoMetricSpace α)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : PseudoMetricSpace α
+    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : PseudoMetricSpace α
     where
   dist := @dist _ m.toHasDist
   dist_self := dist_self
@@ -1396,8 +1396,8 @@ def PseudoMetricSpace.replaceUniformity {α} [U : UniformSpace α] (m : PseudoMe
 #align pseudo_metric_space.replace_uniformity PseudoMetricSpace.replaceUniformity
 
 theorem PseudoMetricSpace.replaceUniformity_eq {α} [U : UniformSpace α] (m : PseudoMetricSpace α)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) :
-    m.replaceUniformity H = m := by
+    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : m.replaceUniformity H = m :=
+  by
   ext
   rfl
 #align pseudo_metric_space.replace_uniformity_eq PseudoMetricSpace.replaceUniformity_eq
@@ -3319,14 +3319,14 @@ end Metric
 See Note [forgetful inheritance].
 -/
 def MetricSpace.replaceUniformity {γ} [U : UniformSpace γ] (m : MetricSpace γ)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) : MetricSpace γ :=
+    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : MetricSpace γ :=
   { PseudoMetricSpace.replaceUniformity m.toPseudoMetricSpace H with
     eq_of_dist_eq_zero := @eq_of_dist_eq_zero _ _ }
 #align metric_space.replace_uniformity MetricSpace.replaceUniformity
 
 theorem MetricSpace.replaceUniformity_eq {γ} [U : UniformSpace γ] (m : MetricSpace γ)
-    (H : @uniformity _ U = @uniformity _ PseudoEmetricSpace.toUniformSpace) :
-    m.replaceUniformity H = m := by
+    (H : 𝓤[U] = 𝓤[PseudoEmetricSpace.toUniformSpace]) : m.replaceUniformity H = m :=
+  by
   ext
   rfl
 #align metric_space.replace_uniformity_eq MetricSpace.replaceUniformity_eq

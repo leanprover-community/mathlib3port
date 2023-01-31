@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.category.Top.limits
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1207,6 +1207,7 @@ theorem NonemptySectionsOfFintypeCofilteredSystem.init {J : Type u} [SmallCatego
     [hne : ∀ j : J, Nonempty (F.obj j)] : F.sections.Nonempty :=
   by
   let F' : J ⥤ TopCat := F ⋙ TopCat.discrete
+  haveI : ∀ j, DiscreteTopology (F'.obj j) := fun _ => ⟨rfl⟩
   haveI : ∀ j : J, Fintype (F'.obj j) := hf
   haveI : ∀ j : J, Nonempty (F'.obj j) := hne
   obtain ⟨⟨u, hu⟩⟩ := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system F'

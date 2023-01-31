@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence_topology
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,8 +368,8 @@ protected theorem infᵢ_eq {u : ι → UniformSpace γ} : 𝒰(α, γ, ⨅ i, u
   -- This follows directly from the fact that the upper adjoint in a Galois connection maps
   -- infimas to infimas.
   ext : 1
-  change UniformFun.filter α γ (@uniformity _ (⨅ i, u i)) = @uniformity _ (⨅ i, 𝒰(α, γ, u i))
-  rw [infᵢ_uniformity', infᵢ_uniformity']
+  change UniformFun.filter α γ 𝓤[⨅ i, u i] = 𝓤[⨅ i, 𝒰(α, γ, u i)]
+  rw [infᵢ_uniformity, infᵢ_uniformity]
   exact (UniformFun.gc α γ).u_infi
 #align uniform_fun.infi_eq UniformFun.infᵢ_eq
 
@@ -435,7 +435,7 @@ protected theorem postcomp_uniformInducing [UniformSpace γ] {f : γ → β} (hf
   constructor
   replace hf : (𝓤 β).comap (Prod.map f f) = _ := hf.comap_uniformity
   change comap (Prod.map (of_fun ∘ (· ∘ ·) f ∘ to_fun) (of_fun ∘ (· ∘ ·) f ∘ to_fun)) _ = _
-  rw [← uniformity_comap rfl] at hf⊢
+  rw [← uniformity_comap] at hf⊢
   congr
   rw [← uniformSpace_eq hf, UniformFun.comap_eq]
   rfl
@@ -523,7 +523,7 @@ protected def uniformEquivProdArrow [UniformSpace γ] : (α →ᵤ β × γ) ≃
         comap (Prod.map (Equiv.arrowProdEquivProdArrow _ _ _) (Equiv.arrowProdEquivProdArrow _ _ _))
             _ =
           _
-      rw [← uniformity_comap rfl]
+      rw [← uniformity_comap]
       congr
       rw [Prod.uniformSpace, Prod.uniformSpace, UniformSpace.comap_inf, UniformFun.inf_eq]
       congr <;> rw [← UniformSpace.comap_comap, UniformFun.comap_eq] <;> rfl)
@@ -546,7 +546,7 @@ protected def uniformEquivPiComm : UniformEquiv (α →ᵤ ∀ i, δ i) (∀ i, 
     (by
       constructor
       change comap (Prod.map Function.swap Function.swap) _ = _
-      rw [← uniformity_comap rfl]
+      rw [← uniformity_comap]
       congr
       rw [PiCat.uniformSpace, UniformSpace.ofCoreEq_toCore, PiCat.uniformSpace,
         UniformSpace.ofCoreEq_toCore, UniformSpace.comap_infᵢ, UniformFun.infᵢ_eq]
@@ -643,7 +643,7 @@ protected theorem hasBasis_uniformity_of_basis_aux₁ {p : ι → Prop} {s : ι 
     (@uniformity (α →ᵤ[𝔖] β) ((UniformFun.uniformSpace S β).comap S.restrict)).HasBasis p fun i =>
       UniformOnFun.gen 𝔖 S (s i) :=
   by
-  simp_rw [UniformOnFun.gen_eq_preimage_restrict, uniformity_comap rfl]
+  simp_rw [UniformOnFun.gen_eq_preimage_restrict, uniformity_comap]
   exact (UniformFun.hasBasis_uniformity_of_basis S β hb).comap _
 #align uniform_on_fun.has_basis_uniformity_of_basis_aux₁ UniformOnFun.hasBasis_uniformity_of_basis_aux₁
 
@@ -667,7 +667,7 @@ protected theorem hasBasis_uniformity_of_basis (h : 𝔖.Nonempty) (h' : Directe
     (𝓤 (α →ᵤ[𝔖] β)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
       UniformOnFun.gen 𝔖 Si.1 (s Si.2) :=
   by
-  simp only [infᵢ_uniformity']
+  simp only [infᵢ_uniformity]
   exact
     has_basis_binfi_of_directed h (fun S => UniformOnFun.gen 𝔖 S ∘ s) _
       (fun S hS => UniformOnFun.hasBasis_uniformity_of_basis_aux₁ α β 𝔖 hb S)
@@ -707,10 +707,8 @@ protected theorem uniformContinuous_restrict (h : s ∈ 𝔖) :
     UniformContinuous (UniformFun.ofFun ∘ (s.restrict : (α → β) → s → β) ∘ toFun 𝔖) :=
   by
   change _ ≤ _
-  rw [UniformOnFun.uniformSpace, map_le_iff_le_comap, uniformity, infᵢ_uniformity]
-  refine' infᵢ_le_of_le s _
-  rw [infᵢ_uniformity]
-  exact infᵢ_le _ h
+  simp only [UniformOnFun.uniformSpace, map_le_iff_le_comap, infᵢ_uniformity]
+  exact infᵢ₂_le s h
 #align uniform_on_fun.uniform_continuous_restrict UniformOnFun.uniformContinuous_restrict
 
 variable {α}
@@ -796,7 +794,7 @@ protected theorem postcomp_uniformInducing [UniformSpace γ] {f : γ → β} (hf
   constructor
   replace hf : (𝓤 β).comap (Prod.map f f) = _ := hf.comap_uniformity
   change comap (Prod.map (of_fun 𝔖 ∘ (· ∘ ·) f ∘ to_fun 𝔖) (of_fun 𝔖 ∘ (· ∘ ·) f ∘ to_fun 𝔖)) _ = _
-  rw [← uniformity_comap rfl] at hf⊢
+  rw [← uniformity_comap] at hf⊢
   congr
   rw [← uniformSpace_eq hf, UniformOnFun.comap_eq]
   rfl
@@ -905,25 +903,22 @@ protected theorem tendsto_iff_tendstoUniformlyOn {F : ι → α →ᵤ[𝔖] β}
 isomorphism between `α →ᵤ[𝔖] β × γ` and `(α →ᵤ[𝔖] β) × (α →ᵤ[𝔖] γ)`. -/
 protected def uniformEquivProdArrow [UniformSpace γ] :
     (α →ᵤ[𝔖] β × γ) ≃ᵤ (α →ᵤ[𝔖] β) × (α →ᵤ[𝔖] γ) :=
-  (-- Denote `φ` this bijection. We want to show that
-        -- `comap φ (𝒱(α, β, 𝔖, uβ) × 𝒱(α, γ, 𝔖, uγ)) = 𝒱(α, β × γ, 𝔖, uβ × uγ)`.
-        -- But `uβ × uγ` is defined as `comap fst uβ ⊓ comap snd uγ`, so we just have to apply
-        -- `uniform_convergence_on.inf_eq` and `uniform_convergence_on.comap_eq`, which leaves us to check
-        -- that some square commutes.
-        -- We could also deduce this from `uniform_convergence.uniform_equiv_prod_arrow`, but it turns out
-        -- to be more annoying.
-        Equiv.arrowProdEquivProdArrow
-        _ _ _).toUniformEquivOfUniformInducing
+  ((-- Denote `φ` this bijection. We want to show that
+              -- `comap φ (𝒱(α, β, 𝔖, uβ) × 𝒱(α, γ, 𝔖, uγ)) = 𝒱(α, β × γ, 𝔖, uβ × uγ)`.
+              -- But `uβ × uγ` is defined as `comap fst uβ ⊓ comap snd uγ`, so we just have to apply
+              -- `uniform_convergence_on.inf_eq` and `uniform_convergence_on.comap_eq`, which leaves us to check
+              -- that some square commutes.
+              -- We could also deduce this from `uniform_convergence.uniform_equiv_prod_arrow`, but it turns out
+              -- to be more annoying.
+              UniformOnFun.ofFun
+              𝔖).symm.trans <|
+        (Equiv.arrowProdEquivProdArrow _ _ _).trans <|
+          (UniformOnFun.ofFun 𝔖).prodCongr (UniformOnFun.ofFun 𝔖)).toUniformEquivOfUniformInducing
     (by
       constructor
-      change
-        comap (Prod.map (Equiv.arrowProdEquivProdArrow _ _ _) (Equiv.arrowProdEquivProdArrow _ _ _))
-            _ =
-          _
-      rw [← uniformity_comap rfl]
-      congr
-      rw [Prod.uniformSpace, Prod.uniformSpace, UniformSpace.comap_inf, UniformOnFun.inf_eq]
-      congr <;> rw [← UniformSpace.comap_comap, UniformOnFun.comap_eq] <;> rfl)
+      rw [uniformity_prod, comap_inf, comap_comap, comap_comap, UniformOnFun.inf_eq, inf_uniformity,
+        UniformOnFun.comap_eq, UniformOnFun.comap_eq, uniformity_comap, uniformity_comap]
+      rfl)
 #align uniform_on_fun.uniform_equiv_prod_arrow UniformOnFun.uniformEquivProdArrow
 
 -- the relevant diagram commutes by definition
@@ -944,7 +939,7 @@ protected def uniformEquivPiComm : (α →ᵤ[𝔖] ∀ i, δ i) ≃ᵤ ∀ i, �
     (by
       constructor
       change comap (Prod.map Function.swap Function.swap) _ = _
-      rw [← uniformity_comap rfl]
+      rw [← uniformity_comap]
       congr
       rw [PiCat.uniformSpace, UniformSpace.ofCoreEq_toCore, PiCat.uniformSpace,
         UniformSpace.ofCoreEq_toCore, UniformSpace.comap_infᵢ, UniformOnFun.infᵢ_eq]

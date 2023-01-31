@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.list
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
       case
         cons a s as ss ht h ih t hts =>
         rcases mem_nhds_iff.1 ht with ⟨u, hut, hu⟩
-        rcases ih (subset.refl _) with ⟨v, hv, hvss⟩
+        rcases ih _ subset.rfl with ⟨v, hv, hvss⟩
         exact
           ⟨u::v, List.Forall₂.cons hu hv,
             subset.trans (Set.seq_mono (Set.image_subset _ hut) hvss) hts⟩

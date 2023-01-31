@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -419,8 +419,8 @@ instance inhabited {α : Type u} [Ring α] : Inhabited (RingTopology α) :=
 @[ext]
 theorem ext' {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g :=
   by
-  ext
-  rw [h]
+  ext : 2
+  exact h
 #align ring_topology.ext' RingTopology.ext'
 
 /-- The ordering on ring topologies on the ring `α`.
@@ -501,22 +501,8 @@ def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
 #align ring_topology.to_add_group_topology RingTopology.toAddGroupTopology
 
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
-def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α)
-    where
-  toFun t := t.toAddGroupTopology
-  inj' := by
-    intro t₁ t₂ h_eq
-    dsimp only at h_eq
-    ext
-    have h_t₁ : t₁.to_topological_space = t₁.to_add_group_topology.to_topological_space := rfl
-    rw [h_t₁, h_eq]
-    rfl
-  map_rel_iff' := by
-    intro t₁ t₂
-    rw [embedding.coe_fn_mk]
-    have h_le : t₁ ≤ t₂ ↔ t₁.to_topological_space ≤ t₂.to_topological_space := by rfl
-    rw [h_le]
-    rfl
+def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) :=
+  OrderEmbedding.ofMapLeIff toAddGroupTopology fun _ _ => Iff.rfl
 #align ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbedding
 
 end RingTopology

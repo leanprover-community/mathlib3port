@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module topology.instances.discrete
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ instance (priority := 100) DiscreteTopology.orderTopology_of_pred_succ [h : Disc
 
 instance (priority := 100) DiscreteTopology.metrizableSpace [DiscreteTopology α] :
     MetrizableSpace α := by
-  rw [DiscreteTopology.eq_bot α]
+  obtain rfl := DiscreteTopology.eq_bot α
   exact @UniformSpace.metrizableSpace α ⊥ (is_countably_generated_principal _) _
 #align discrete_topology.metrizable_space DiscreteTopology.metrizableSpace
 

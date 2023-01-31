@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -768,10 +768,6 @@ theorem iff_continuous {_ : TopologicalSpace Y} [DiscreteTopology Y] (f : X → 
   ⟨IsLocallyConstant.continuous, fun h s => h.is_open_preimage s (isOpen_discrete _)⟩
 #align is_locally_constant.iff_continuous IsLocallyConstant.iff_continuous
 
-theorem iff_continuous_bot (f : X → Y) : IsLocallyConstant f ↔ @Continuous X Y _ ⊥ f :=
-  iff_continuous f
-#align is_locally_constant.iff_continuous_bot IsLocallyConstant.iff_continuous_bot
-
 theorem of_constant (f : X → Y) (h : ∀ x y, f x = f y) : IsLocallyConstant f :=
   (iff_eventually_eq f).2 fun x => eventually_of_forall fun x' => h _ _
 #align is_locally_constant.of_constant IsLocallyConstant.of_constant
@@ -839,8 +835,7 @@ theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f �
 
 theorem range_finite [CompactSpace X] {f : X → Y} (hf : IsLocallyConstant f) :
     (Set.range f).Finite := by
-  letI : TopologicalSpace Y := ⊥
-  haveI : DiscreteTopology Y := ⟨rfl⟩
+  letI : TopologicalSpace Y := ⊥; haveI := discreteTopology_bot Y
   rw [@iff_continuous X Y ‹_› ‹_›] at hf
   exact (isCompact_range hf).finite_of_discrete
 #align is_locally_constant.range_finite IsLocallyConstant.range_finite
@@ -904,6 +899,7 @@ theorem of_constant_on_preconnected_clopens [LocallyConnectedSpace X] {f : X →
 end IsLocallyConstant
 
 /-- A (bundled) locally constant function from a topological space `X` to a type `Y`. -/
+@[protect_proj]
 structure LocallyConstant (X Y : Type _) [TopologicalSpace X] where
   toFun : X → Y
   IsLocallyConstant : IsLocallyConstant to_fun

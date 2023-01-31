@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1938,7 +1938,10 @@ theorem toTopologicalSpace_top : (⊤ : GroupTopology α).toTopologicalSpace = �
 @[to_additive]
 instance : Bot (GroupTopology α) :=
   ⟨{  toTopologicalSpace := ⊥
-      continuous_mul := by continuity
+      continuous_mul := by
+        letI : TopologicalSpace α := ⊥
+        haveI := discreteTopology_bot α
+        continuity
       continuous_inv := continuous_bot }⟩
 
 @[simp, to_additive]

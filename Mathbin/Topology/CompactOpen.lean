@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.compact_open
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -223,7 +223,7 @@ theorem compactOpen_le_induced (s : Set α) :
       TopologicalSpace.induced (ContinuousMap.restrict s) ContinuousMap.compactOpen :=
   by
   simp only [induced_generateFrom_eq, ContinuousMap.compactOpen]
-  apply generateFrom_mono
+  apply TopologicalSpace.generateFrom_anti
   rintro b ⟨a, ⟨c, hc, u, hu, rfl⟩, rfl⟩
   refine' ⟨coe '' c, hc.image continuous_subtype_coe, u, hu, _⟩
   ext f
@@ -243,7 +243,7 @@ theorem compactOpen_eq_Inf_induced :
   · refine' le_infᵢ₂ _
     exact fun s hs => compact_open_le_induced s
   simp only [← generateFrom_unionᵢ, induced_generateFrom_eq, ContinuousMap.compactOpen]
-  apply generateFrom_mono
+  apply TopologicalSpace.generateFrom_anti
   rintro _ ⟨s, hs, u, hu, rfl⟩
   rw [mem_Union₂]
   refine' ⟨s, hs, _, ⟨univ, is_compact_iff_is_compact_univ.mp hs, u, hu, rfl⟩, _⟩
