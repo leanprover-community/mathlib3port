@@ -251,28 +251,28 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSMul 𝕜 β]
 
-theorem convex_iic (r : β) : Convex 𝕜 (Iic r) := fun x hx y hy a b ha hb hab =>
+theorem convex_Iic (r : β) : Convex 𝕜 (Iic r) := fun x hx y hy a b ha hb hab =>
   calc
     a • x + b • y ≤ a • r + b • r :=
       add_le_add (smul_le_smul_of_nonneg hx ha) (smul_le_smul_of_nonneg hy hb)
     _ = r := Convex.combo_self hab _
     
-#align convex_Iic convex_iic
+#align convex_Iic convex_Iic
 
-theorem convex_ici (r : β) : Convex 𝕜 (Ici r) :=
-  @convex_iic 𝕜 βᵒᵈ _ _ _ _ r
-#align convex_Ici convex_ici
+theorem convex_Ici (r : β) : Convex 𝕜 (Ici r) :=
+  @convex_Iic 𝕜 βᵒᵈ _ _ _ _ r
+#align convex_Ici convex_Ici
 
-theorem convex_icc (r s : β) : Convex 𝕜 (Icc r s) :=
-  Ici_inter_Iic.subst ((convex_ici r).inter <| convex_iic s)
-#align convex_Icc convex_icc
+theorem convex_Icc (r s : β) : Convex 𝕜 (Icc r s) :=
+  Ici_inter_Iic.subst ((convex_Ici r).inter <| convex_Iic s)
+#align convex_Icc convex_Icc
 
 theorem convex_halfspace_le {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w ≤ r } :=
-  (convex_iic r).is_linear_preimage h
+  (convex_Iic r).is_linear_preimage h
 #align convex_halfspace_le convex_halfspace_le
 
 theorem convex_halfspace_ge {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | r ≤ f w } :=
-  (convex_ici r).is_linear_preimage h
+  (convex_Ici r).is_linear_preimage h
 #align convex_halfspace_ge convex_halfspace_ge
 
 theorem convex_hyperplane {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w = r } :=
@@ -287,7 +287,7 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSMul 𝕜 β]
 
-theorem convex_iio (r : β) : Convex 𝕜 (Iio r) :=
+theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) :=
   by
   intro x hx y hy a b ha hb hab
   obtain rfl | ha' := ha.eq_or_lt
@@ -299,30 +299,30 @@ theorem convex_iio (r : β) : Convex 𝕜 (Iio r) :=
       add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hx ha') (smul_le_smul_of_nonneg hy.le hb)
     _ = r := Convex.combo_self hab _
     
-#align convex_Iio convex_iio
+#align convex_Iio convex_Iio
 
-theorem convex_ioi (r : β) : Convex 𝕜 (Ioi r) :=
-  @convex_iio 𝕜 βᵒᵈ _ _ _ _ r
-#align convex_Ioi convex_ioi
+theorem convex_Ioi (r : β) : Convex 𝕜 (Ioi r) :=
+  @convex_Iio 𝕜 βᵒᵈ _ _ _ _ r
+#align convex_Ioi convex_Ioi
 
-theorem convex_ioo (r s : β) : Convex 𝕜 (Ioo r s) :=
-  Ioi_inter_Iio.subst ((convex_ioi r).inter <| convex_iio s)
-#align convex_Ioo convex_ioo
+theorem convex_Ioo (r s : β) : Convex 𝕜 (Ioo r s) :=
+  Ioi_inter_Iio.subst ((convex_Ioi r).inter <| convex_Iio s)
+#align convex_Ioo convex_Ioo
 
-theorem convex_ico (r s : β) : Convex 𝕜 (Ico r s) :=
-  Ici_inter_Iio.subst ((convex_ici r).inter <| convex_iio s)
-#align convex_Ico convex_ico
+theorem convex_Ico (r s : β) : Convex 𝕜 (Ico r s) :=
+  Ici_inter_Iio.subst ((convex_Ici r).inter <| convex_Iio s)
+#align convex_Ico convex_Ico
 
-theorem convex_ioc (r s : β) : Convex 𝕜 (Ioc r s) :=
-  Ioi_inter_Iic.subst ((convex_ioi r).inter <| convex_iic s)
-#align convex_Ioc convex_ioc
+theorem convex_Ioc (r s : β) : Convex 𝕜 (Ioc r s) :=
+  Ioi_inter_Iic.subst ((convex_Ioi r).inter <| convex_Iic s)
+#align convex_Ioc convex_Ioc
 
 theorem convex_halfspace_lt {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | f w < r } :=
-  (convex_iio r).is_linear_preimage h
+  (convex_Iio r).is_linear_preimage h
 #align convex_halfspace_lt convex_halfspace_lt
 
 theorem convex_halfspace_gt {f : E → β} (h : IsLinearMap 𝕜 f) (r : β) : Convex 𝕜 { w | r < f w } :=
-  (convex_ioi r).is_linear_preimage h
+  (convex_Ioi r).is_linear_preimage h
 #align convex_halfspace_gt convex_halfspace_gt
 
 end OrderedCancelAddCommMonoid
@@ -332,7 +332,7 @@ section LinearOrderedAddCommMonoid
 variable [LinearOrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSMul 𝕜 β]
 
 theorem convex_uIcc (r s : β) : Convex 𝕜 (uIcc r s) :=
-  convex_icc _ _
+  convex_Icc _ _
 #align convex_uIcc convex_uIcc
 
 end LinearOrderedAddCommMonoid
@@ -597,9 +597,9 @@ theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommM
   by
   refine' convex_iff_segment_subset.mpr fun x hx y hy => _
   obtain hxy | hyx := h.total hx hy
-  · exact (segment_subset_icc hxy).trans (hs.out hx hy)
+  · exact (segment_subset_Icc hxy).trans (hs.out hx hy)
   · rw [segment_symm]
-    exact (segment_subset_icc hyx).trans (hs.out hy hx)
+    exact (segment_subset_Icc hyx).trans (hs.out hy hx)
 #align set.ord_connected.convex_of_chain Set.OrdConnected.convex_of_chain
 
 theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid E] [Module 𝕜 E]

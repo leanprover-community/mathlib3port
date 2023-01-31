@@ -412,7 +412,7 @@ instance {F F' : Cᵒᵖ ⥤ Type max v w} (f : F ⟶ F') [hf : Mono f] : IsIso 
 /-- The image sheaf of a morphism between sheaves, defined to be the sheafification of
 `image_presheaf`. -/
 @[simps]
-def imageSheaf {F F' : SheafCat J (Type w)} (f : F ⟶ F') : SheafCat J (Type w) :=
+def imageSheaf {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Sheaf J (Type w) :=
   ⟨((imagePresheaf f.1).sheafify J).toPresheaf,
     by
     rw [is_sheaf_iff_is_sheaf_of_type]
@@ -423,30 +423,30 @@ def imageSheaf {F F' : SheafCat J (Type w)} (f : F ⟶ F') : SheafCat J (Type w)
 
 /-- A morphism factors through the image sheaf. -/
 @[simps]
-def toImageSheaf {F F' : SheafCat J (Type w)} (f : F ⟶ F') : F ⟶ imageSheaf f :=
+def toImageSheaf {F F' : Sheaf J (Type w)} (f : F ⟶ F') : F ⟶ imageSheaf f :=
   ⟨toImagePresheafSheafify J f.1⟩
 #align category_theory.grothendieck_topology.to_image_sheaf CategoryTheory.GrothendieckTopology.toImageSheaf
 
 /-- The inclusion of the image sheaf to the target. -/
 @[simps]
-def imageSheafι {F F' : SheafCat J (Type w)} (f : F ⟶ F') : imageSheaf f ⟶ F' :=
+def imageSheafι {F F' : Sheaf J (Type w)} (f : F ⟶ F') : imageSheaf f ⟶ F' :=
   ⟨Subpresheaf.ι _⟩
 #align category_theory.grothendieck_topology.image_sheaf_ι CategoryTheory.GrothendieckTopology.imageSheafι
 
 @[simp, reassoc.1]
-theorem toImageSheaf_ι {F F' : SheafCat J (Type w)} (f : F ⟶ F') :
+theorem toImageSheaf_ι {F F' : Sheaf J (Type w)} (f : F ⟶ F') :
     toImageSheaf f ≫ imageSheafι f = f := by
   ext1
   simp [to_image_presheaf_sheafify]
 #align category_theory.grothendieck_topology.to_image_sheaf_ι CategoryTheory.GrothendieckTopology.toImageSheaf_ι
 
-instance {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Mono (imageSheafι f) :=
+instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Mono (imageSheafι f) :=
   (sheafToPresheaf J _).mono_of_mono_map
     (by
       dsimp
       infer_instance)
 
-instance {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) :=
+instance {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) :=
   by
   refine' ⟨fun G' g₁ g₂ e => _⟩
   ext (U⟨s, hx⟩)
@@ -461,7 +461,7 @@ instance {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Epi (toImageSheaf f) :=
   convert this <;> exact E.symm
 
 /-- The mono factorization given by `image_sheaf` for a morphism. -/
-def imageMonoFactorization {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Limits.MonoFactorisation f
+def imageMonoFactorization {F F' : Sheaf J (Type w)} (f : F ⟶ F') : Limits.MonoFactorisation f
     where
   i := imageSheaf f
   m := imageSheafι f
@@ -469,7 +469,7 @@ def imageMonoFactorization {F F' : SheafCat J (Type w)} (f : F ⟶ F') : Limits.
 #align category_theory.grothendieck_topology.image_mono_factorization CategoryTheory.GrothendieckTopology.imageMonoFactorization
 
 /-- The mono factorization given by `image_sheaf` for a morphism is an image. -/
-noncomputable def imageFactorization {F F' : SheafCat J (Type max v u)} (f : F ⟶ F') :
+noncomputable def imageFactorization {F F' : Sheaf J (Type max v u)} (f : F ⟶ F') :
     Limits.ImageFactorisation f where
   f := imageMonoFactorization f
   IsImage :=
@@ -494,7 +494,7 @@ noncomputable def imageFactorization {F F' : SheafCat J (Type max v u)} (f : F �
         rw [is_iso.inv_comp_eq, to_image_presheaf_ι] }
 #align category_theory.grothendieck_topology.image_factorization CategoryTheory.GrothendieckTopology.imageFactorization
 
-instance : Limits.HasImages (SheafCat J (Type max v u)) :=
+instance : Limits.HasImages (Sheaf J (Type max v u)) :=
   ⟨fun _ _ f => ⟨⟨imageFactorization f⟩⟩⟩
 
 end Image

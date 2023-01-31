@@ -1221,15 +1221,19 @@ theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonemp
 
 end
 
+#print Option.to_list_some /-
 @[simp]
-theorem toList_some (a : α) : (a : Option α).toList = [a] :=
+theorem to_list_some (a : α) : (a : Option α).toList = [a] :=
   rfl
-#align option.to_list_some Option.toList_some
+#align option.to_list_some Option.to_list_some
+-/
 
+#print Option.to_list_none /-
 @[simp]
-theorem toList_none (α : Type _) : (none : Option α).toList = [] :=
+theorem to_list_none (α : Type _) : (none : Option α).toList = [] :=
   rfl
-#align option.to_list_none Option.toList_none
+#align option.to_list_none Option.to_list_none
+-/
 
 /- warning: option.elim_none_some -> Option.elim_none_some is a dubious translation:
 lean 3 declaration is

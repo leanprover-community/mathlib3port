@@ -62,7 +62,7 @@ theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurabl
 
 end
 
-namespace L2Cat
+namespace L2
 
 variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measure α} [InnerProductSpace 𝕜 E]
   [NormedAddCommGroup F]
@@ -75,7 +75,7 @@ theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ‖f x‖ ^
   have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mul, h_two]
   exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
-#align measure_theory.L2.snorm_rpow_two_norm_lt_top MeasureTheory.L2Cat.snorm_rpow_two_norm_lt_top
+#align measure_theory.L2.snorm_rpow_two_norm_lt_top MeasureTheory.L2.snorm_rpow_two_norm_lt_top
 
 theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ :=
   by
@@ -95,7 +95,7 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
   · exact ((Lp.ae_strongly_measurable g).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
   simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_one]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
-#align measure_theory.L2.snorm_inner_lt_top MeasureTheory.L2Cat.snorm_inner_lt_top
+#align measure_theory.L2.snorm_inner_lt_top MeasureTheory.L2.snorm_inner_lt_top
 
 section InnerProductSpace
 
@@ -108,7 +108,7 @@ instance : HasInner 𝕜 (α →₂[μ] E) :=
 
 theorem inner_def (f g : α →₂[μ] E) : ⟪f, g⟫ = ∫ a : α, ⟪f a, g a⟫ ∂μ :=
   rfl
-#align measure_theory.L2.inner_def MeasureTheory.L2Cat.inner_def
+#align measure_theory.L2.inner_def MeasureTheory.L2.inner_def
 
 theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
     (∫ a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) :=
@@ -125,7 +125,7 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
   rw [← Real.rpow_nat_cast _ 2, ← h_two, ←
     Ennreal.ofReal_rpow_of_nonneg (norm_nonneg _) zero_le_two, ofReal_norm_eq_coe_nnnorm]
   norm_cast
-#align measure_theory.L2.integral_inner_eq_sq_snorm MeasureTheory.L2Cat.integral_inner_eq_sq_snorm
+#align measure_theory.L2.integral_inner_eq_sq_snorm MeasureTheory.L2.integral_inner_eq_sq_snorm
 
 private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.re ⟪f, f⟫ :=
   by
@@ -147,14 +147,14 @@ theorem mem_L1_inner (f g : α →₂[μ] E) :
   by
   simp_rw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
   exact snorm_inner_lt_top f g
-#align measure_theory.L2.mem_L1_inner MeasureTheory.L2Cat.mem_L1_inner
+#align measure_theory.L2.mem_L1_inner MeasureTheory.L2.mem_L1_inner
 
 theorem integrableInner (f g : α →₂[μ] E) : Integrable (fun x : α => ⟪f x, g x⟫) μ :=
   (integrable_congr
         (AeEqFun.coeFn_mk (fun x => ⟪f x, g x⟫)
           ((lp.aeStronglyMeasurable f).inner (lp.aeStronglyMeasurable g)))).mp
     (AeEqFun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
-#align measure_theory.L2.integrable_inner MeasureTheory.L2Cat.integrableInner
+#align measure_theory.L2.integrable_inner MeasureTheory.L2.integrableInner
 
 private theorem add_left' (f f' g : α →₂[μ] E) : ⟪f + f', g⟫ = inner f g + inner f' g :=
   by
@@ -180,7 +180,7 @@ instance innerProductSpace : InnerProductSpace 𝕜 (α →₂[μ] E)
   conj_sym _ _ := by simp_rw [inner_def, ← integral_conj, inner_conj_sym]
   add_left := add_left'
   smul_left := smul_left'
-#align measure_theory.L2.inner_product_space MeasureTheory.L2Cat.innerProductSpace
+#align measure_theory.L2.inner_product_space MeasureTheory.L2.innerProductSpace
 
 end InnerProductSpace
 
@@ -218,7 +218,7 @@ theorem inner_indicatorConstLp_eq_set_integral_inner (f : lp E 2 μ) (hs : Measu
     rw [hx hxs]
     exact inner_zero_left
   rw [h_left, h_right, add_zero]
-#align measure_theory.L2.inner_indicator_const_Lp_eq_set_integral_inner MeasureTheory.L2Cat.inner_indicatorConstLp_eq_set_integral_inner
+#align measure_theory.L2.inner_indicator_const_Lp_eq_set_integral_inner MeasureTheory.L2.inner_indicatorConstLp_eq_set_integral_inner
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
 equal to the inner product of the constant `c` and the integral of `f` over `s`. -/
@@ -227,7 +227,7 @@ theorem inner_indicatorConstLp_eq_inner_set_integral [CompleteSpace E] [NormedSp
     (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ⟪c, ∫ x in s, f x ∂μ⟫ := by
   rw [← integral_inner (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs),
     L2.inner_indicator_const_Lp_eq_set_integral_inner]
-#align measure_theory.L2.inner_indicator_const_Lp_eq_inner_set_integral MeasureTheory.L2Cat.inner_indicatorConstLp_eq_inner_set_integral
+#align measure_theory.L2.inner_indicator_const_Lp_eq_inner_set_integral MeasureTheory.L2.inner_indicatorConstLp_eq_inner_set_integral
 
 variable {𝕜}
 
@@ -238,11 +238,11 @@ theorem inner_indicatorConstLp_one (hs : MeasurableSet s) (hμs : μ s ≠ ∞) 
   by
   rw [L2.inner_indicator_const_Lp_eq_inner_set_integral 𝕜 hs hμs (1 : 𝕜) f]
   simp
-#align measure_theory.L2.inner_indicator_const_Lp_one MeasureTheory.L2Cat.inner_indicatorConstLp_one
+#align measure_theory.L2.inner_indicator_const_Lp_one MeasureTheory.L2.inner_indicatorConstLp_one
 
 end IndicatorConstLp
 
-end L2Cat
+end L2
 
 section InnerContinuous
 

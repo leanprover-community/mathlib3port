@@ -9,7 +9,7 @@ Authors: Joël Riou
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.MorphismProperty
-import Mathbin.CategoryTheory.Category.QuivCat
+import Mathbin.CategoryTheory.Category.Quiv
 
 /-!
 
@@ -147,7 +147,7 @@ include G hG
 /-- The lifting of a functor to the path category of `loc_quiver W` -/
 @[simps]
 def liftToPathCategory : Paths (LocQuiver W) ⥤ D :=
-  QuivCat.lift
+  Quiv.lift
     { obj := fun X => G.obj X.obj
       map := fun X Y => by
         rintro (f | ⟨g, hg⟩)

@@ -1890,12 +1890,12 @@ instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [
   · replace h : x ≠ y := fun c => (c.subst h) rfl
     exact separated_by_openEmbedding openEmbedding_inr h
 
-instance PiCat.t2Space {α : Type _} {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)]
+instance Pi.t2Space {α : Type _} {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)]
     [∀ a, T2Space (β a)] : T2Space (∀ a, β a) :=
   ⟨fun x y h =>
     let ⟨i, hi⟩ := not_forall.mp (mt funext h)
     separated_by_continuous (continuous_apply i) hi⟩
-#align Pi.t2_space PiCat.t2Space
+#align Pi.t2_space Pi.t2Space
 
 instance Sigma.t2Space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)]
     [∀ a, T2Space (α a)] : T2Space (Σi, α i) :=

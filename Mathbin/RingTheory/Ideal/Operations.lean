@@ -2643,7 +2643,7 @@ theorem quotientEquiv_symm_mk (I : Ideal R) (J : Ideal S) (f : R ≃+* S)
 theorem quotientMap_injective' {J : Ideal R} {I : Ideal S} {f : R →+* S} {H : J ≤ I.comap f}
     (h : I.comap f ≤ J) : Function.Injective (quotientMap I f H) :=
   by
-  refine' (injective_iff_map_eq_zero (quotient_map I f H)).2 fun a ha => _
+  refine' (injective_iff_map_eq_zero (QuotientMap I f H)).2 fun a ha => _
   obtain ⟨r, rfl⟩ := quotient.mk_surjective a
   rw [quotient_map_mk, quotient.eq_zero_iff_mem] at ha
   exact quotient.eq_zero_iff_mem.mpr (h ha)

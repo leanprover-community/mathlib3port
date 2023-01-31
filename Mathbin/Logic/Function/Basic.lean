@@ -982,7 +982,7 @@ theorem update_apply {β : Sort _} (f : α → β) (a' : α) (b : β) (a : α) :
   dsimp only [update]
   congr
   funext
-  rw [eq_ndrec_constant]
+  rw [eq_rec_constant]
 #align function.update_apply Function.update_apply
 
 #print Function.update_same /-

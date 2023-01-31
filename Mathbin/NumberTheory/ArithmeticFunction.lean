@@ -302,7 +302,7 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) :
     simp only [mul_assoc]
   · rintro ⟨⟨a, b⟩, ⟨c, d⟩⟩ ⟨⟨i, j⟩, ⟨k, l⟩⟩ H₁ H₂
     simp only [Finset.mem_sigma, mem_divisors_antidiagonal, and_imp, Prod.mk.inj_iff, add_comm,
-      hEq_iff_eq] at H₁ H₂⊢
+      heq_iff_eq] at H₁ H₂⊢
     rintro rfl h2 rfl rfl
     exact ⟨⟨Eq.trans H₁.2.1.symm H₂.2.1, rfl⟩, rfl, rfl⟩
   · rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H
@@ -313,7 +313,7 @@ theorem mul_smul' (f g : ArithmeticFunction R) (h : ArithmeticFunction M) :
       rw [mul_ne_zero_iff] at *
       exact ⟨n0.1, j0.1⟩
     · simp only [true_and_iff, mem_divisors_antidiagonal, and_true_iff, Prod.mk.inj_iff,
-        eq_self_iff_true, Ne.def, mem_sigma, hEq_iff_eq] at H⊢
+        eq_self_iff_true, Ne.def, mem_sigma, heq_iff_eq] at H⊢
       rw [H.2.1]
 #align nat.arithmetic_function.mul_smul' Nat.ArithmeticFunction.mul_smul'
 

@@ -224,7 +224,7 @@ noncomputable def binaryCoproductIso (X Y : Type u) : Limits.coprod X Y ≅ Sum 
   colimit.isoColimitCocone (binaryCoproductColimitCocone X Y)
 #align category_theory.limits.types.binary_coproduct_iso CategoryTheory.Limits.Types.binaryCoproductIso
 
-open CategoryTheory.TypeCat
+open CategoryTheory.Type
 
 @[simp, elementwise]
 theorem binaryCoproductIso_inl_comp_hom (X Y : Type u) :

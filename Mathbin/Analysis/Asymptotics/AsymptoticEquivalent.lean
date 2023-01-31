@@ -81,17 +81,10 @@ scoped notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent l u v
 
 variable {u v w : α → β} {l : Filter α}
 
-theorem IsEquivalent.isO (h : u ~[l] v) : (u - v) =o[l] v :=
+theorem IsEquivalent.isOCat (h : u ~[l] v) : (u - v) =o[l] v :=
   h
-#align asymptotics.is_equivalent.is_o Asymptotics.IsEquivalent.isO
+#align asymptotics.is_equivalent.is_o Asymptotics.IsEquivalent.isOCat
 
-/- warning: asymptotics.is_equivalent.is_O clashes with asymptotics.is_equivalent.is_o -> Asymptotics.IsEquivalent.isO
-warning: asymptotics.is_equivalent.is_O -> Asymptotics.IsEquivalent.isO is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u2} β] {u : α -> β} {v : α -> β} {l : Filter.{u1} α}, (Asymptotics.IsEquivalent.{u1, u2} α β _inst_1 l u v) -> (Asymptotics.IsO.{u1, u2, u2} α β β (NormedAddCommGroup.toHasNorm.{u2} β _inst_1) (NormedAddCommGroup.toHasNorm.{u2} β _inst_1) l u v)
-but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : NormedAddCommGroup.{u2} β] {u : α -> β} {v : α -> β} {l : Filter.{u1} α}, (Asymptotics.IsEquivalent.{u1, u2} α β _inst_1 l u v) -> (Asymptotics.IsO.{u1, u2, u2} α β β (NormedAddCommGroup.toHasNorm.{u2} β _inst_1) (NormedAddCommGroup.toHasNorm.{u2} β _inst_1) l (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (α -> β) (α -> β) (α -> β) (instHSub.{max u1 u2} (α -> β) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => β) (fun (i : α) => SubNegMonoid.toHasSub.{u2} β (AddGroup.toSubNegMonoid.{u2} β (NormedAddGroup.toAddGroup.{u2} β (NormedAddCommGroup.toNormedAddGroup.{u2} β _inst_1)))))) u v) v)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_equivalent.is_O Asymptotics.IsEquivalent.isOₓ'. -/
 theorem IsEquivalent.isO (h : u ~[l] v) : u =O[l] v :=
   (IsO.congr_of_sub h.IsO.symm).mp (isO_refl _ _)
 #align asymptotics.is_equivalent.is_O Asymptotics.IsEquivalent.isO
@@ -180,21 +173,21 @@ theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) :
   ⟨huv.tendsto_nhds, huv.symm.tendsto_nhds⟩
 #align asymptotics.is_equivalent.tendsto_nhds_iff Asymptotics.IsEquivalent.tendsto_nhds_iff
 
-theorem IsEquivalent.add_isO (huv : u ~[l] v) (hwv : w =o[l] v) : u + w ~[l] v := by
+theorem IsEquivalent.add_isOCat (huv : u ~[l] v) (hwv : w =o[l] v) : u + w ~[l] v := by
   simpa only [is_equivalent, add_sub_right_comm] using huv.add hwv
-#align asymptotics.is_equivalent.add_is_o Asymptotics.IsEquivalent.add_isO
+#align asymptotics.is_equivalent.add_is_o Asymptotics.IsEquivalent.add_isOCat
 
-theorem IsEquivalent.sub_isO (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] v := by
+theorem IsEquivalent.sub_isOCat (huv : u ~[l] v) (hwv : w =o[l] v) : u - w ~[l] v := by
   simpa only [sub_eq_add_neg] using huv.add_is_o hwv.neg_left
-#align asymptotics.is_equivalent.sub_is_o Asymptotics.IsEquivalent.sub_isO
+#align asymptotics.is_equivalent.sub_is_o Asymptotics.IsEquivalent.sub_isOCat
 
-theorem IsO.add_isEquivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
+theorem IsOCat.add_isEquivalent (hu : u =o[l] w) (hv : v ~[l] w) : u + v ~[l] w :=
   add_comm v u ▸ hv.add_is_o hu
-#align asymptotics.is_o.add_is_equivalent Asymptotics.IsO.add_isEquivalent
+#align asymptotics.is_o.add_is_equivalent Asymptotics.IsOCat.add_isEquivalent
 
-theorem IsO.isEquivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
+theorem IsOCat.isEquivalent (huv : (u - v) =o[l] v) : u ~[l] v :=
   huv
-#align asymptotics.is_o.is_equivalent Asymptotics.IsO.isEquivalent
+#align asymptotics.is_o.is_equivalent Asymptotics.IsOCat.isEquivalent
 
 theorem IsEquivalent.neg (huv : u ~[l] v) : (fun x => -u x) ~[l] fun x => -v x :=
   by
@@ -371,6 +364,6 @@ open Asymptotics
 variable {α β : Type _} [NormedAddCommGroup β]
 
 theorem Filter.EventuallyEq.isEquivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
-  IsEquivalent.congr_right (isO_refl_left _ _) h
+  IsEquivalent.congr_right (isOCat_refl_left _ _) h
 #align filter.eventually_eq.is_equivalent Filter.EventuallyEq.isEquivalent
 

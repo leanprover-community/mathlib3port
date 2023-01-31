@@ -80,7 +80,7 @@ and matrix entries in `i`-th block living in the endomorphisms of `s i`. -/
 noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype β]
     {f : α → ι} {g : β → ι} :
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃
-      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i))
+      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i))
     where
   toFun z i j k :=
     eqToHom
@@ -120,7 +120,7 @@ variable [Preadditive C] [HasFiniteBiproducts C]
 noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Type} [Fintype α]
     [Fintype β] {f : α → ι} {g : β → ι} :
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃+
-      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) :=
+      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
   { o.matrixDecomposition with
     map_add' := fun w z => by
       ext
@@ -178,7 +178,7 @@ variable {R : Type _} [Semiring R] [Linear R C]
 noncomputable def matrixDecompositionLinearEquiv (o : HomOrthogonal s) {α β : Type} [Fintype α]
     [Fintype β] {f : α → ι} {g : β → ι} :
     ((⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b)) ≃ₗ[R]
-      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (EndCat (s i)) :=
+      ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
   { o.matrixDecompositionAddEquiv with
     map_smul' := fun w z => by
       ext
@@ -194,7 +194,7 @@ if `s i` is simple (as then `End (s i)` is a division ring).
 -/
 
 
-variable [∀ i, InvariantBasisNumber (EndCat (s i))]
+variable [∀ i, InvariantBasisNumber (End (s i))]
 
 /-- Given a hom orthogonal family `s : ι → C`
 for which each `End (s i)` is a ring with invariant basis number (e.g. if each `s i` is simple),

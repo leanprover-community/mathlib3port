@@ -55,7 +55,7 @@ theorem StrictMonoOn.continuous_at_right_of_exists_between {f : α → β} {s : 
       self_mem_nhdsWithin]with _ hxs hxa using hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     rw [h_mono.lt_iff_lt has hcs] at hac
-    filter_upwards [hs, ico_mem_nhdsWithin_ici (left_mem_Ico.2 hac)]
+    filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)]
     rintro x hx ⟨hax, hxc⟩
     exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
 #align strict_mono_on.continuous_at_right_of_exists_between StrictMonoOn.continuous_at_right_of_exists_between
@@ -76,7 +76,7 @@ theorem continuous_at_right_of_monotoneOn_of_exists_between {f : α → β} {s :
   · filter_upwards [hs, self_mem_nhdsWithin]with _ hxs hxa using hb.trans_le (h_mono has hxs hxa)
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     have : a < c := not_le.1 fun h => hac.not_le <| h_mono hcs has h
-    filter_upwards [hs, ico_mem_nhdsWithin_ici (left_mem_Ico.2 this)]
+    filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 this)]
     rintro x hx ⟨hax, hxc⟩
     exact (h_mono hx hcs hxc.le).trans_lt hcb
 #align continuous_at_right_of_monotone_on_of_exists_between continuous_at_right_of_monotoneOn_of_exists_between
@@ -89,9 +89,9 @@ theorem continuous_at_right_of_monotoneOn_of_closure_image_mem_nhdsWithin [Dense
     (hfs : closure (f '' s) ∈ 𝓝[≥] f a) : ContinuousWithinAt f (Ici a) a :=
   by
   refine' continuous_at_right_of_monotoneOn_of_exists_between h_mono hs fun b hb => _
-  rcases(mem_nhdsWithin_ici_iff_exists_mem_ioc_ico_subset hb).1 hfs with ⟨b', ⟨hab', hbb'⟩, hb'⟩
+  rcases(mem_nhdsWithin_Ici_iff_exists_mem_Ioc_Ico_subset hb).1 hfs with ⟨b', ⟨hab', hbb'⟩, hb'⟩
   rcases exists_between hab' with ⟨c', hc'⟩
-  rcases mem_closure_iff.1 (hb' ⟨hc'.1.le, hc'.2⟩) (Ioo (f a) b') isOpen_ioo hc' with
+  rcases mem_closure_iff.1 (hb' ⟨hc'.1.le, hc'.2⟩) (Ioo (f a) b') isOpen_Ioo hc' with
     ⟨_, hc, ⟨c, hcs, rfl⟩⟩
   exact ⟨c, hcs, hc.1, hc.2.trans_le hbb'⟩
 #align continuous_at_right_of_monotone_on_of_closure_image_mem_nhds_within continuous_at_right_of_monotoneOn_of_closure_image_mem_nhdsWithin

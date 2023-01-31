@@ -104,19 +104,19 @@ theorem arg_mul_cos_add_sin_mul_i {r : ℝ} (hr : 0 < r) {θ : ℝ} (hθ : θ �
     mk_eq_add_mul_I, neg_div, mul_div_cancel_left _ hr.ne', mul_nonneg_iff_right_nonneg_of_pos hr]
   by_cases h₁ : θ ∈ Icc (-(π / 2)) (π / 2)
   · rw [if_pos]
-    exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_icc h₁]
+    exacts[Real.arcsin_sin' h₁, Real.cos_nonneg_of_mem_Icc h₁]
   · rw [mem_Icc, not_and_or, not_le, not_le] at h₁
     cases h₁
     · replace hθ := hθ.1
       have hcos : Real.cos θ < 0 := by
         rw [← neg_pos, ← Real.cos_add_pi]
-        refine' Real.cos_pos_of_mem_ioo ⟨_, _⟩ <;> linarith
+        refine' Real.cos_pos_of_mem_Ioo ⟨_, _⟩ <;> linarith
       have hsin : Real.sin θ < 0 := Real.sin_neg_of_neg_of_neg_pi_lt (by linarith) hθ
       rw [if_neg, if_neg, ← Real.sin_add_pi, Real.arcsin_sin, add_sub_cancel] <;> [linarith,
         linarith, exact hsin.not_le, exact hcos.not_le]
     · replace hθ := hθ.2
       have hcos : Real.cos θ < 0 := Real.cos_neg_of_pi_div_two_lt_of_lt h₁ (by linarith)
-      have hsin : 0 ≤ Real.sin θ := Real.sin_nonneg_of_mem_icc ⟨by linarith, hθ⟩
+      have hsin : 0 ≤ Real.sin θ := Real.sin_nonneg_of_mem_Icc ⟨by linarith, hθ⟩
       rw [if_neg, if_pos, ← Real.sin_sub_pi, Real.arcsin_sin, sub_add_cancel] <;> [linarith,
         linarith, exact hsin, exact hcos.not_le]
 #align complex.arg_mul_cos_add_sin_mul_I Complex.arg_mul_cos_add_sin_mul_i
@@ -137,7 +137,7 @@ theorem ext_abs_arg_iff {x y : ℂ} : x = y ↔ abs x = abs y ∧ arg x = arg y 
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, and_imp.2 ext_abs_arg⟩
 #align complex.ext_abs_arg_iff Complex.ext_abs_arg_iff
 
-theorem arg_mem_ioc (z : ℂ) : arg z ∈ Ioc (-π) π :=
+theorem arg_mem_Ioc (z : ℂ) : arg z ∈ Ioc (-π) π :=
   by
   have hπ : 0 < π := Real.pi_pos
   rcases eq_or_ne z 0 with (rfl | hz); simp [hπ, hπ.le]
@@ -146,19 +146,19 @@ theorem arg_mem_ioc (z : ℂ) : arg z ∈ Ioc (-π) π :=
   rw [← abs_mul_cos_add_sin_mul_I z, ← cos_add_int_mul_two_pi _ N, ← sin_add_int_mul_two_pi _ N]
   simp only [← of_real_one, ← of_real_bit0, ← of_real_mul, ← of_real_add, ← of_real_int_cast]
   rwa [arg_mul_cos_add_sin_mul_I (abs.pos hz) hN]
-#align complex.arg_mem_Ioc Complex.arg_mem_ioc
+#align complex.arg_mem_Ioc Complex.arg_mem_Ioc
 
 @[simp]
 theorem range_arg : range arg = Ioc (-π) π :=
-  (range_subset_iff.2 arg_mem_ioc).antisymm fun x hx => ⟨_, arg_cos_add_sin_mul_i hx⟩
+  (range_subset_iff.2 arg_mem_Ioc).antisymm fun x hx => ⟨_, arg_cos_add_sin_mul_i hx⟩
 #align complex.range_arg Complex.range_arg
 
 theorem arg_le_pi (x : ℂ) : arg x ≤ π :=
-  (arg_mem_ioc x).2
+  (arg_mem_Ioc x).2
 #align complex.arg_le_pi Complex.arg_le_pi
 
 theorem neg_pi_lt_arg (x : ℂ) : -π < arg x :=
-  (arg_mem_ioc x).1
+  (arg_mem_Ioc x).1
 #align complex.neg_pi_lt_arg Complex.neg_pi_lt_arg
 
 theorem abs_arg_le_pi (z : ℂ) : |arg z| ≤ π :=
@@ -171,7 +171,7 @@ theorem arg_nonneg_iff {z : ℂ} : 0 ≤ arg z ↔ 0 ≤ z.im :=
   rcases eq_or_ne z 0 with (rfl | h₀); · simp
   calc
     0 ≤ arg z ↔ 0 ≤ Real.sin (arg z) :=
-      ⟨fun h => Real.sin_nonneg_of_mem_icc ⟨h, arg_le_pi z⟩,
+      ⟨fun h => Real.sin_nonneg_of_mem_Icc ⟨h, arg_le_pi z⟩,
         by
         contrapose!
         intro h
@@ -454,7 +454,7 @@ theorem arg_mul_cos_add_sin_mul_i_eq_toIocMod {r : ℝ} (hr : 0 < r) (θ : ℝ) 
   by
   have hi : toIocMod (-π) Real.two_pi_pos θ ∈ Ioc (-π) π :=
     by
-    convert toIocMod_mem_ioc _ Real.two_pi_pos _
+    convert toIocMod_mem_Ioc _ Real.two_pi_pos _
     ring
   convert arg_mul_cos_add_sin_mul_I hr hi using 3
   simp [toIocMod, cos_sub_int_mul_two_pi, sin_sub_int_mul_two_pi]
@@ -513,7 +513,7 @@ theorem arg_div_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
 @[simp]
 theorem arg_coe_angle_toReal_eq_arg (z : ℂ) : (arg z : Real.Angle).toReal = arg z :=
   by
-  rw [Real.Angle.toReal_coe_eq_self_iff_mem_ioc]
+  rw [Real.Angle.toReal_coe_eq_self_iff_mem_Ioc]
   exact arg_mem_Ioc _
 #align complex.arg_coe_angle_to_real_eq_arg Complex.arg_coe_angle_toReal_eq_arg
 

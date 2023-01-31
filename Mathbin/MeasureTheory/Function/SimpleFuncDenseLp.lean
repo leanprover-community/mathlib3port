@@ -63,7 +63,7 @@ namespace SimpleFunc
 /-! ### Lp approximation by simple functions -/
 
 
-section LpCat
+section Lp
 
 variable [MeasurableSpace β] [MeasurableSpace E] [NormedAddCommGroup E] [NormedAddCommGroup F]
   {q : ℝ} {p : ℝ≥0∞}
@@ -211,7 +211,7 @@ theorem tendsto_approxOn_range_lp [BorelSpace E] {f : β → E} [hp : Fact (1 �
     tendsto_approx_on_range_Lp_snorm hp_ne_top fmeas hf.2
 #align measure_theory.simple_func.tendsto_approx_on_range_Lp MeasureTheory.SimpleFunc.tendsto_approxOn_range_lp
 
-end LpCat
+end Lp
 
 /-! ### L1 approximation by simple functions -/
 
@@ -431,7 +431,7 @@ end SimpleFunc
 /-! Construction of the space of `Lp` simple functions, and its dense embedding into `Lp`. -/
 
 
-namespace LpCat
+namespace Lp
 
 open AeEqFun
 
@@ -974,7 +974,7 @@ end Order
 
 end SimpleFunc
 
-end LpCat
+end Lp
 
 variable [MeasurableSpace α] [NormedAddCommGroup E] {f : α → E} {p : ℝ≥0∞} {μ : Measure α}
 
@@ -1054,17 +1054,17 @@ section Integrable
 -- mathport name: «expr →₁ₛ[ ] »
 notation:25 α " →₁ₛ[" μ "] " E => @MeasureTheory.lp.simpleFunc α E _ _ 1 μ
 
-theorem L1Cat.SimpleFunc.toLp_one_eq_toL1 (f : α →ₛ E) (hf : Integrable f μ) :
+theorem L1.SimpleFunc.toLp_one_eq_toL1 (f : α →ₛ E) (hf : Integrable f μ) :
     (lp.simpleFunc.toLp f (memℒp_one_iff_integrable.2 hf) : α →₁[μ] E) = hf.toL1 f :=
   rfl
-#align measure_theory.L1.simple_func.to_Lp_one_eq_to_L1 MeasureTheory.L1Cat.SimpleFunc.toLp_one_eq_toL1
+#align measure_theory.L1.simple_func.to_Lp_one_eq_to_L1 MeasureTheory.L1.SimpleFunc.toLp_one_eq_toL1
 
-protected theorem L1Cat.SimpleFunc.integrable (f : α →₁ₛ[μ] E) :
+protected theorem L1.SimpleFunc.integrable (f : α →₁ₛ[μ] E) :
     Integrable (lp.simpleFunc.toSimpleFunc f) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
   exact Lp.simple_func.mem_ℒp f
-#align measure_theory.L1.simple_func.integrable MeasureTheory.L1Cat.SimpleFunc.integrable
+#align measure_theory.L1.simple_func.integrable MeasureTheory.L1.SimpleFunc.integrable
 
 /-- To prove something for an arbitrary integrable function in a normed group,
 it suffices to show that

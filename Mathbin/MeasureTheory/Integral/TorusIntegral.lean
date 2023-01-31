@@ -137,7 +137,7 @@ variable {f g : ℂⁿ → E} {c : ℂⁿ} {R : ℝⁿ}
 
 /-- Constant functions are torus integrable -/
 theorem torusIntegrable_const (a : E) (c : ℂⁿ) (R : ℝⁿ) : TorusIntegrable (fun _ => a) c R := by
-  simp [TorusIntegrable, measure_icc_lt_top]
+  simp [TorusIntegrable, measure_Icc_lt_top]
 #align torus_integrable.torus_integrable_const TorusIntegrable.torusIntegrable_const
 
 /-- If `f` is torus integrable then `-f` is torus integrable. -/
@@ -228,7 +228,7 @@ theorem norm_torusIntegral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (tor
     ‖∯ x in T(c, R), f x‖ ≤ ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C :=
   calc
     ‖∯ x in T(c, R), f x‖ ≤ (∏ i, |R i|) * C * (volume (Icc (0 : ℝⁿ) fun _ => 2 * π)).toReal :=
-      norm_set_integral_le_of_norm_le_const' measure_icc_lt_top measurableSet_icc fun θ hθ =>
+      norm_set_integral_le_of_norm_le_const' measure_Icc_lt_top measurableSet_Icc fun θ hθ =>
         calc
           ‖(∏ i : Fin n, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ)‖ =
               (∏ i : Fin n, |R i|) * ‖f (torusMap c R θ)‖ :=
@@ -237,7 +237,7 @@ theorem norm_torusIntegral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (tor
             mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg fun _ _ => abs_nonneg _)
           
     _ = ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C := by
-      simp only [Pi.zero_def, Real.volume_icc_pi_toReal fun _ => real.two_pi_pos.le, sub_zero,
+      simp only [Pi.zero_def, Real.volume_Icc_pi_toReal fun _ => real.two_pi_pos.le, sub_zero,
         Fin.prod_const, mul_assoc, mul_comm ((2 * π) ^ (n : ℕ))]
     
 #align norm_torus_integral_le_of_norm_le_const norm_torusIntegral_le_of_norm_le_const
@@ -279,11 +279,11 @@ theorem torusIntegral_succAbove {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : �
   have heπ : (e ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) ×ˢ Icc (0 : ℝⁿ) fun _ => 2 * π :=
     ((OrderIso.piFinSuccAboveIso (fun _ => ℝ) i).symm.preimage_Icc _ _).trans (Icc_prod_eq _ _)
   rw [torusIntegral, ← hem.map_eq, set_integral_map_equiv, heπ, measure.volume_eq_prod,
-    set_integral_prod, circleIntegral_def_icc]
-  · refine' set_integral_congr measurableSet_icc fun θ hθ => _
+    set_integral_prod, circleIntegral_def_Icc]
+  · refine' set_integral_congr measurableSet_Icc fun θ hθ => _
     simp only [torusIntegral, ← integral_smul, deriv_circleMap, i.prod_univ_succ_above _, smul_smul,
       torusMap, circleMap_zero]
-    refine' set_integral_congr measurableSet_icc fun Θ hΘ => _
+    refine' set_integral_congr measurableSet_Icc fun Θ hΘ => _
     simp only [MeasurableEquiv.piFinSuccAboveEquiv_symm_apply, i.insert_nth_apply_same,
       i.insert_nth_apply_succ_above, (· ∘ ·)]
     congr 2

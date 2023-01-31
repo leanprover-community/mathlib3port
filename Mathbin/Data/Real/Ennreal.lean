@@ -1006,48 +1006,48 @@ protected theorem exists_nat_gt {r : ℝ≥0∞} (h : r ≠ ∞) : ∃ n : ℕ, 
 #align ennreal.exists_nat_gt Ennreal.exists_nat_gt
 
 @[simp]
-theorem unionᵢ_iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ :=
+theorem unionᵢ_Iio_coe_nat : (⋃ n : ℕ, Iio (n : ℝ≥0∞)) = {∞}ᶜ :=
   by
   ext x
   rw [mem_Union]
   exact ⟨fun ⟨n, hn⟩ => ne_top_of_lt hn, Ennreal.exists_nat_gt⟩
-#align ennreal.Union_Iio_coe_nat Ennreal.unionᵢ_iio_coe_nat
+#align ennreal.Union_Iio_coe_nat Ennreal.unionᵢ_Iio_coe_nat
 
 @[simp]
-theorem unionᵢ_iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
+theorem unionᵢ_Iic_coe_nat : (⋃ n : ℕ, Iic (n : ℝ≥0∞)) = {∞}ᶜ :=
   Subset.antisymm (Union_subset fun n x hx => ne_top_of_le_ne_top (nat_ne_top n) hx) <|
     Union_Iio_coe_nat ▸ unionᵢ_mono fun n => Iio_subset_Iic_self
-#align ennreal.Union_Iic_coe_nat Ennreal.unionᵢ_iic_coe_nat
+#align ennreal.Union_Iic_coe_nat Ennreal.unionᵢ_Iic_coe_nat
 
 @[simp]
-theorem unionᵢ_ioc_coe_nat : (⋃ n : ℕ, Ioc a n) = Ioi a \ {∞} := by
+theorem unionᵢ_Ioc_coe_nat : (⋃ n : ℕ, Ioc a n) = Ioi a \ {∞} := by
   simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic_coe_nat, diff_eq]
-#align ennreal.Union_Ioc_coe_nat Ennreal.unionᵢ_ioc_coe_nat
+#align ennreal.Union_Ioc_coe_nat Ennreal.unionᵢ_Ioc_coe_nat
 
 @[simp]
-theorem unionᵢ_ioo_coe_nat : (⋃ n : ℕ, Ioo a n) = Ioi a \ {∞} := by
+theorem unionᵢ_Ioo_coe_nat : (⋃ n : ℕ, Ioo a n) = Ioi a \ {∞} := by
   simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio_coe_nat, diff_eq]
-#align ennreal.Union_Ioo_coe_nat Ennreal.unionᵢ_ioo_coe_nat
+#align ennreal.Union_Ioo_coe_nat Ennreal.unionᵢ_Ioo_coe_nat
 
 @[simp]
-theorem unionᵢ_icc_coe_nat : (⋃ n : ℕ, Icc a n) = Ici a \ {∞} := by
+theorem unionᵢ_Icc_coe_nat : (⋃ n : ℕ, Icc a n) = Ici a \ {∞} := by
   simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic_coe_nat, diff_eq]
-#align ennreal.Union_Icc_coe_nat Ennreal.unionᵢ_icc_coe_nat
+#align ennreal.Union_Icc_coe_nat Ennreal.unionᵢ_Icc_coe_nat
 
 @[simp]
-theorem unionᵢ_ico_coe_nat : (⋃ n : ℕ, Ico a n) = Ici a \ {∞} := by
+theorem unionᵢ_Ico_coe_nat : (⋃ n : ℕ, Ico a n) = Ici a \ {∞} := by
   simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio_coe_nat, diff_eq]
-#align ennreal.Union_Ico_coe_nat Ennreal.unionᵢ_ico_coe_nat
+#align ennreal.Union_Ico_coe_nat Ennreal.unionᵢ_Ico_coe_nat
 
 @[simp]
-theorem interᵢ_ici_coe_nat : (⋂ n : ℕ, Ici (n : ℝ≥0∞)) = {∞} := by
+theorem interᵢ_Ici_coe_nat : (⋂ n : ℕ, Ici (n : ℝ≥0∞)) = {∞} := by
   simp only [← compl_Iio, ← compl_Union, Union_Iio_coe_nat, compl_compl]
-#align ennreal.Inter_Ici_coe_nat Ennreal.interᵢ_ici_coe_nat
+#align ennreal.Inter_Ici_coe_nat Ennreal.interᵢ_Ici_coe_nat
 
 @[simp]
-theorem interᵢ_ioi_coe_nat : (⋂ n : ℕ, Ioi (n : ℝ≥0∞)) = {∞} := by
+theorem interᵢ_Ioi_coe_nat : (⋂ n : ℕ, Ioi (n : ℝ≥0∞)) = {∞} := by
   simp only [← compl_Iic, ← compl_Union, Union_Iic_coe_nat, compl_compl]
-#align ennreal.Inter_Ioi_coe_nat Ennreal.interᵢ_ioi_coe_nat
+#align ennreal.Inter_Ioi_coe_nat Ennreal.interᵢ_Ioi_coe_nat
 
 theorem add_lt_add (ac : a < c) (bd : b < d) : a + b < c + d :=
   by
@@ -1430,16 +1430,16 @@ section Interval
 
 variable {x y z : ℝ≥0∞} {ε ε₁ ε₂ : ℝ≥0∞} {s : Set ℝ≥0∞}
 
-protected theorem ico_eq_iio : Ico 0 y = Iio y :=
+protected theorem Ico_eq_Iio : Ico 0 y = Iio y :=
   Ico_bot
-#align ennreal.Ico_eq_Iio Ennreal.ico_eq_iio
+#align ennreal.Ico_eq_Iio Ennreal.Ico_eq_Iio
 
-theorem mem_iio_self_add : x ≠ ∞ → ε ≠ 0 → x ∈ Iio (x + ε) := fun xt ε0 => lt_add_right xt ε0
-#align ennreal.mem_Iio_self_add Ennreal.mem_iio_self_add
+theorem mem_Iio_self_add : x ≠ ∞ → ε ≠ 0 → x ∈ Iio (x + ε) := fun xt ε0 => lt_add_right xt ε0
+#align ennreal.mem_Iio_self_add Ennreal.mem_Iio_self_add
 
-theorem mem_ioo_self_sub_add : x ≠ ∞ → x ≠ 0 → ε₁ ≠ 0 → ε₂ ≠ 0 → x ∈ Ioo (x - ε₁) (x + ε₂) :=
+theorem mem_Ioo_self_sub_add : x ≠ ∞ → x ≠ 0 → ε₁ ≠ 0 → ε₂ ≠ 0 → x ∈ Ioo (x - ε₁) (x + ε₂) :=
   fun xt x0 ε0 ε0' => ⟨Ennreal.sub_lt_self xt x0 ε0, lt_add_right xt ε0'⟩
-#align ennreal.mem_Ioo_self_sub_add Ennreal.mem_ioo_self_sub_add
+#align ennreal.mem_Ioo_self_sub_add Ennreal.mem_Ioo_self_sub_add
 
 end Interval
 
@@ -2104,7 +2104,7 @@ theorem zpow_lt_top (ha : a ≠ 0) (h'a : a ≠ ∞) (n : ℤ) : a ^ n < ∞ :=
   · simp only [Ennreal.pow_pos ha.bot_lt (n + 1), zpow_negSucc, inv_lt_top]
 #align ennreal.zpow_lt_top Ennreal.zpow_lt_top
 
-theorem exists_mem_ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
+theorem exists_mem_Ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
     ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ (n + 1)) :=
   by
   lift x to ℝ≥0 using h'x
@@ -2112,14 +2112,14 @@ theorem exists_mem_ico_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
   have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n ≤ x ∧ x < y ^ (n + 1) :=
     by
-    refine' Nnreal.exists_mem_ico_zpow _ (one_lt_coe_iff.1 hy)
+    refine' Nnreal.exists_mem_Ico_zpow _ (one_lt_coe_iff.1 hy)
     simpa only [Ne.def, coe_eq_zero] using hx
   refine' ⟨n, _, _⟩
   · rwa [← Ennreal.coe_zpow A, Ennreal.coe_le_coe]
   · rwa [← Ennreal.coe_zpow A, Ennreal.coe_lt_coe]
-#align ennreal.exists_mem_Ico_zpow Ennreal.exists_mem_ico_zpow
+#align ennreal.exists_mem_Ico_zpow Ennreal.exists_mem_Ico_zpow
 
-theorem exists_mem_ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
+theorem exists_mem_Ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) (hy : 1 < y) (h'y : y ≠ ⊤) :
     ∃ n : ℤ, x ∈ Ioc (y ^ n) (y ^ (n + 1)) :=
   by
   lift x to ℝ≥0 using h'x
@@ -2127,14 +2127,14 @@ theorem exists_mem_ioc_zpow {x y : ℝ≥0∞} (hx : x ≠ 0) (h'x : x ≠ ∞) 
   have A : y ≠ 0 := by simpa only [Ne.def, coe_eq_zero] using (zero_lt_one.trans hy).ne'
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, y ^ n < x ∧ x ≤ y ^ (n + 1) :=
     by
-    refine' Nnreal.exists_mem_ioc_zpow _ (one_lt_coe_iff.1 hy)
+    refine' Nnreal.exists_mem_Ioc_zpow _ (one_lt_coe_iff.1 hy)
     simpa only [Ne.def, coe_eq_zero] using hx
   refine' ⟨n, _, _⟩
   · rwa [← Ennreal.coe_zpow A, Ennreal.coe_lt_coe]
   · rwa [← Ennreal.coe_zpow A, Ennreal.coe_le_coe]
-#align ennreal.exists_mem_Ioc_zpow Ennreal.exists_mem_ioc_zpow
+#align ennreal.exists_mem_Ioc_zpow Ennreal.exists_mem_Ioc_zpow
 
-theorem ioo_zero_top_eq_unionᵢ_ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y ≠ ⊤) :
+theorem Ioo_zero_top_eq_unionᵢ_Ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y ≠ ⊤) :
     Ioo (0 : ℝ≥0∞) (∞ : ℝ≥0∞) = ⋃ n : ℤ, Ico (y ^ n) (y ^ (n + 1)) :=
   by
   ext x
@@ -2148,7 +2148,7 @@ theorem ioo_zero_top_eq_unionᵢ_ico_zpow {y : ℝ≥0∞} (hy : 1 < y) (h'y : y
       exact Ennreal.zpow_pos (zero_lt_one.trans hy).ne' h'y _
     · apply lt_trans h'n _
       exact Ennreal.zpow_lt_top (zero_lt_one.trans hy).ne' h'y _
-#align ennreal.Ioo_zero_top_eq_Union_Ico_zpow Ennreal.ioo_zero_top_eq_unionᵢ_ico_zpow
+#align ennreal.Ioo_zero_top_eq_Union_Ico_zpow Ennreal.Ioo_zero_top_eq_unionᵢ_Ico_zpow
 
 theorem zpow_le_of_le {x : ℝ≥0∞} (hx : 1 ≤ x) {a b : ℤ} (h : a ≤ b) : x ^ a ≤ x ^ b :=
   by

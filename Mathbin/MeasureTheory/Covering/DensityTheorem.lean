@@ -63,7 +63,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
     by
     intro x
     apply frequently_iff.2 fun U hU => _
-    obtain ⟨ε, εpos, hε⟩ := mem_nhdsWithin_ioi_iff_exists_ioc_subset.1 hU
+    obtain ⟨ε, εpos, hε⟩ := mem_nhdsWithin_Ioi_iff_exists_Ioc_subset.1 hU
     refine' ⟨min ε R, hε ⟨lt_min εpos Rpos, min_le_left _ _⟩, _⟩
     exact
       measure_mul_le_scaling_constant_of_mul μ ⟨zero_lt_three, le_max_right _ _⟩ (min_le_right _ _)

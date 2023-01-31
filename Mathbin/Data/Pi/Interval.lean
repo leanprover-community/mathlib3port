@@ -38,25 +38,25 @@ instance : LocallyFiniteOrder (∀ i, α i) :=
 
 variable (a b : ∀ i, α i)
 
-theorem icc_eq : Icc a b = piFinset fun i => Icc (a i) (b i) :=
+theorem Icc_eq : Icc a b = piFinset fun i => Icc (a i) (b i) :=
   rfl
-#align pi.Icc_eq Pi.icc_eq
+#align pi.Icc_eq Pi.Icc_eq
 
-theorem card_icc : (Icc a b).card = ∏ i, (Icc (a i) (b i)).card :=
+theorem card_Icc : (Icc a b).card = ∏ i, (Icc (a i) (b i)).card :=
   card_piFinset _
-#align pi.card_Icc Pi.card_icc
+#align pi.card_Icc Pi.card_Icc
 
-theorem card_ico : (Ico a b).card = (∏ i, (Icc (a i) (b i)).card) - 1 := by
+theorem card_Ico : (Ico a b).card = (∏ i, (Icc (a i) (b i)).card) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
-#align pi.card_Ico Pi.card_ico
+#align pi.card_Ico Pi.card_Ico
 
-theorem card_ioc : (Ioc a b).card = (∏ i, (Icc (a i) (b i)).card) - 1 := by
+theorem card_Ioc : (Ioc a b).card = (∏ i, (Icc (a i) (b i)).card) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
-#align pi.card_Ioc Pi.card_ioc
+#align pi.card_Ioc Pi.card_Ioc
 
-theorem card_ioo : (Ioo a b).card = (∏ i, (Icc (a i) (b i)).card) - 2 := by
+theorem card_Ioo : (Ioo a b).card = (∏ i, (Icc (a i) (b i)).card) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
-#align pi.card_Ioo Pi.card_ioo
+#align pi.card_Ioo Pi.card_Ioo
 
 end LocallyFinite
 
@@ -72,13 +72,13 @@ instance : LocallyFiniteOrderBot (∀ i, α i) :=
   LocallyFiniteOrderTop.ofIic _ (fun b => pi_finset fun i => Iic (b i)) fun b x => by
     simp_rw [mem_pi_finset, mem_Iic, le_def]
 
-theorem card_iic : (Iic b).card = ∏ i, (Iic (b i)).card :=
+theorem card_Iic : (Iic b).card = ∏ i, (Iic (b i)).card :=
   card_piFinset _
-#align pi.card_Iic Pi.card_iic
+#align pi.card_Iic Pi.card_Iic
 
-theorem card_iio : (Iio b).card = (∏ i, (Iic (b i)).card) - 1 := by
+theorem card_Iio : (Iio b).card = (∏ i, (Iic (b i)).card) - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
-#align pi.card_Iio Pi.card_iio
+#align pi.card_Iio Pi.card_Iio
 
 end Bot
 
@@ -90,13 +90,13 @@ instance : LocallyFiniteOrderTop (∀ i, α i) :=
   LocallyFiniteOrderTop.ofIci _ (fun a => pi_finset fun i => Ici (a i)) fun a x => by
     simp_rw [mem_pi_finset, mem_Ici, le_def]
 
-theorem card_ici : (Ici a).card = ∏ i, (Ici (a i)).card :=
+theorem card_Ici : (Ici a).card = ∏ i, (Ici (a i)).card :=
   card_piFinset _
-#align pi.card_Ici Pi.card_ici
+#align pi.card_Ici Pi.card_Ici
 
-theorem card_ioi : (Ioi a).card = (∏ i, (Ici (a i)).card) - 1 := by
+theorem card_Ioi : (Ioi a).card = (∏ i, (Ici (a i)).card) - 1 := by
   rw [card_Ioi_eq_card_Ici_sub_one, card_Ici]
-#align pi.card_Ioi Pi.card_ioi
+#align pi.card_Ioi Pi.card_Ioi
 
 end Top
 

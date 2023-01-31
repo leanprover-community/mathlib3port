@@ -284,23 +284,23 @@ variable (J : GrothendieckTopology C)
 variable (A : Type u₂) [Category.{v₂} A]
 
 /-- The category of sheaves taking values in `A` on a grothendieck topology. -/
-structure SheafCat where
+structure Sheaf where
   val : Cᵒᵖ ⥤ A
   cond : Presheaf.IsSheaf J val
-#align category_theory.Sheaf CategoryTheory.SheafCat
+#align category_theory.Sheaf CategoryTheory.Sheaf
 
-namespace SheafCat
+namespace Sheaf
 
 variable {J A}
 
 /-- Morphisms between sheaves are just morphisms of presheaves. -/
 @[ext]
-structure Hom (X Y : SheafCat J A) where
+structure Hom (X Y : Sheaf J A) where
   val : X.val ⟶ Y.val
-#align category_theory.Sheaf.hom CategoryTheory.SheafCat.Hom
+#align category_theory.Sheaf.hom CategoryTheory.Sheaf.Hom
 
 @[simps]
-instance : Category (SheafCat J A) where
+instance : Category (Sheaf J A) where
   Hom := Hom
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.val ≫ g.val⟩
@@ -309,16 +309,16 @@ instance : Category (SheafCat J A) where
   assoc' X Y Z W f g h := Hom.ext _ _ <| assoc _ _ _
 
 -- Let's make the inhabited linter happy...
-instance (X : SheafCat J A) : Inhabited (Hom X X) :=
+instance (X : Sheaf J A) : Inhabited (Hom X X) :=
   ⟨𝟙 X⟩
 
-end SheafCat
+end Sheaf
 
 /-- The inclusion functor from sheaves to presheaves. -/
 @[simps]
-def sheafToPresheaf : SheafCat J A ⥤ Cᵒᵖ ⥤ A
+def sheafToPresheaf : Sheaf J A ⥤ Cᵒᵖ ⥤ A
     where
-  obj := SheafCat.val
+  obj := Sheaf.val
   map _ _ f := f.val
   map_id' X := rfl
   map_comp' X Y Z f g := rfl
@@ -330,19 +330,18 @@ instance : Faithful (sheafToPresheaf J A) where
 
 /-- This is stated as a lemma to prevent class search from forming a loop since a sheaf morphism is
 monic if and only if it is monic as a presheaf morphism (under suitable assumption).-/
-theorem SheafCat.Hom.mono_of_presheaf_mono {F G : SheafCat J A} (f : F ⟶ G) [h : Mono f.1] :
-    Mono f :=
+theorem Sheaf.Hom.mono_of_presheaf_mono {F G : Sheaf J A} (f : F ⟶ G) [h : Mono f.1] : Mono f :=
   (sheafToPresheaf J A).mono_of_mono_map h
-#align category_theory.Sheaf.hom.mono_of_presheaf_mono CategoryTheory.SheafCat.Hom.mono_of_presheaf_mono
+#align category_theory.Sheaf.hom.mono_of_presheaf_mono CategoryTheory.Sheaf.Hom.mono_of_presheaf_mono
 
-instance SheafCat.Hom.epi_of_presheaf_epi {F G : SheafCat J A} (f : F ⟶ G) [h : Epi f.1] : Epi f :=
+instance Sheaf.Hom.epi_of_presheaf_epi {F G : Sheaf J A} (f : F ⟶ G) [h : Epi f.1] : Epi f :=
   (sheafToPresheaf J A).epi_of_epi_map h
-#align category_theory.Sheaf.hom.epi_of_presheaf_epi CategoryTheory.SheafCat.Hom.epi_of_presheaf_epi
+#align category_theory.Sheaf.hom.epi_of_presheaf_epi CategoryTheory.Sheaf.Hom.epi_of_presheaf_epi
 
 /-- The sheaf of sections guaranteed by the sheaf condition. -/
 @[simps]
-def sheafOver {A : Type u₂} [Category.{v₂} A] {J : GrothendieckTopology C} (ℱ : SheafCat J A)
-    (E : A) : SheafOfTypesCat J :=
+def sheafOver {A : Type u₂} [Category.{v₂} A] {J : GrothendieckTopology C} (ℱ : Sheaf J A) (E : A) :
+    SheafOfTypes J :=
   ⟨ℱ.val ⋙ coyoneda.obj (op E), ℱ.cond E⟩
 #align category_theory.sheaf_over CategoryTheory.sheafOver
 
@@ -371,7 +370,7 @@ theorem isSheaf_iff_isSheaf_of_type (P : Cᵒᵖ ⥤ Type w) :
 /-- The category of sheaves taking values in Type is the same as the category of set-valued sheaves.
 -/
 @[simps]
-def sheafEquivSheafOfTypes : SheafCat J (Type w) ≌ SheafOfTypesCat J
+def sheafEquivSheafOfTypes : Sheaf J (Type w) ≌ SheafOfTypes J
     where
   Functor :=
     { obj := fun S => ⟨S.val, (isSheaf_iff_isSheaf_of_type _ _).1 S.2⟩
@@ -383,30 +382,30 @@ def sheafEquivSheafOfTypes : SheafCat J (Type w) ≌ SheafOfTypesCat J
   counitIso := NatIso.ofComponents (fun X => ⟨⟨𝟙 _⟩, ⟨𝟙 _⟩, by tidy, by tidy⟩) (by tidy)
 #align category_theory.Sheaf_equiv_SheafOfTypes CategoryTheory.sheafEquivSheafOfTypes
 
-instance : Inhabited (SheafCat (⊥ : GrothendieckTopology C) (Type w)) :=
+instance : Inhabited (Sheaf (⊥ : GrothendieckTopology C) (Type w)) :=
   ⟨(sheafEquivSheafOfTypes _).inverse.obj default⟩
 
 variable {J} {A}
 
 /-- If the empty sieve is a cover of `X`, then `F(X)` is terminal. -/
-def SheafCat.isTerminalOfBotCover (F : SheafCat J A) (X : C) (H : ⊥ ∈ J X) :
+def Sheaf.isTerminalOfBotCover (F : Sheaf J A) (X : C) (H : ⊥ ∈ J X) :
     IsTerminal (F.1.obj (op X)) :=
   by
   apply (config := { instances := false }) is_terminal.of_unique
   intro Y
   choose t h using F.2 Y _ H (by tidy) (by tidy)
   exact ⟨⟨t⟩, fun a => h.2 a (by tidy)⟩
-#align category_theory.Sheaf.is_terminal_of_bot_cover CategoryTheory.SheafCat.isTerminalOfBotCover
+#align category_theory.Sheaf.is_terminal_of_bot_cover CategoryTheory.Sheaf.isTerminalOfBotCover
 
 section Preadditive
 
 open Preadditive
 
-variable [Preadditive A] {P Q : SheafCat J A}
+variable [Preadditive A] {P Q : Sheaf J A}
 
 instance sheafHomHasZsmul : SMul ℤ (P ⟶ Q)
     where smul n f :=
-    SheafCat.Hom.mk
+    Sheaf.Hom.mk
       { app := fun U => n • f.1.app U
         naturality' := fun U V i =>
           by
@@ -426,7 +425,7 @@ instance : Neg (P ⟶ Q) where neg f := Sheaf.hom.mk <| -f.1
 
 instance sheafHomHasNsmul : SMul ℕ (P ⟶ Q)
     where smul n f :=
-    SheafCat.Hom.mk
+    Sheaf.Hom.mk
       { app := fun U => n • f.1.app U
         naturality' := fun U V i => by
           induction' n with n ih
@@ -436,18 +435,18 @@ instance sheafHomHasNsmul : SMul ℕ (P ⟶ Q)
               add_comp] }
 #align category_theory.Sheaf_hom_has_nsmul CategoryTheory.sheafHomHasNsmul
 
-instance : Zero (P ⟶ Q) where zero := SheafCat.Hom.mk 0
+instance : Zero (P ⟶ Q) where zero := Sheaf.Hom.mk 0
 
 instance : Add (P ⟶ Q) where add f g := Sheaf.hom.mk <| f.1 + g.1
 
 @[simp]
-theorem SheafCat.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.1.app U :=
+theorem Sheaf.Hom.add_app (f g : P ⟶ Q) (U) : (f + g).1.app U = f.1.app U + g.1.app U :=
   rfl
-#align category_theory.Sheaf.hom.add_app CategoryTheory.SheafCat.Hom.add_app
+#align category_theory.Sheaf.hom.add_app CategoryTheory.Sheaf.Hom.add_app
 
 instance : AddCommGroup (P ⟶ Q) :=
-  Function.Injective.addCommGroup (fun f : SheafCat.Hom P Q => f.1)
-    (fun _ _ h => SheafCat.Hom.ext _ _ h) rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Function.Injective.addCommGroup (fun f : Sheaf.Hom P Q => f.1) (fun _ _ h => Sheaf.Hom.ext _ _ h)
+    rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => by
       dsimp at *
       ext
@@ -457,7 +456,7 @@ instance : AddCommGroup (P ⟶ Q) :=
     ext
     simpa [*]
 
-instance : Preadditive (SheafCat J A)
+instance : Preadditive (Sheaf J A)
     where
   homGroup P Q := inferInstance
   add_comp' P Q R f f' g := by

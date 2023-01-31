@@ -99,11 +99,11 @@ theorem existsUnique_zsmul_near_of_pos' {a : α} (ha : 0 < a) (g : α) :
     existsUnique_zsmul_near_of_pos ha g
 #align exists_unique_zsmul_near_of_pos' existsUnique_zsmul_near_of_pos'
 
-theorem existsUnique_sub_zsmul_mem_ico {a : α} (ha : 0 < a) (b c : α) :
+theorem existsUnique_sub_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b - m • a ∈ Set.Ico c (c + a) := by
   simpa only [mem_Ico, le_sub_iff_add_le, zero_add, add_comm c, sub_lt_iff_lt_add', add_assoc] using
     existsUnique_zsmul_near_of_pos' ha (b - c)
-#align exists_unique_sub_zsmul_mem_Ico existsUnique_sub_zsmul_mem_ico
+#align exists_unique_sub_zsmul_mem_Ico existsUnique_sub_zsmul_mem_Ico
 
 /- warning: exists_unique_add_zsmul_mem_Ico -> existsUnique_add_zsmul_mem_Ico is a dubious translation:
 lean 3 declaration is
@@ -115,7 +115,7 @@ theorem existsUnique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b + m • a ∈ Set.Ico c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, neg_zsmul, ← sub_eq_add_neg] using
-      existsUnique_sub_zsmul_mem_ico ha b c
+      existsUnique_sub_zsmul_mem_Ico ha b c
 #align exists_unique_add_zsmul_mem_Ico existsUnique_add_zsmul_mem_Ico
 
 /- warning: exists_unique_add_zsmul_mem_Ioc -> existsUnique_add_zsmul_mem_Ioc is a dubious translation:
@@ -132,12 +132,12 @@ theorem existsUnique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
       existsUnique_zsmul_near_of_pos ha (c - b)
 #align exists_unique_add_zsmul_mem_Ioc existsUnique_add_zsmul_mem_Ioc
 
-theorem existsUnique_sub_zsmul_mem_ioc {a : α} (ha : 0 < a) (b c : α) :
+theorem existsUnique_sub_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b - m • a ∈ Set.Ioc c (c + a) :=
   (Equiv.neg ℤ).Bijective.exists_unique_iff.2 <| by
     simpa only [Equiv.neg_apply, neg_zsmul, sub_neg_eq_add] using
       existsUnique_add_zsmul_mem_Ioc ha b c
-#align exists_unique_sub_zsmul_mem_Ioc existsUnique_sub_zsmul_mem_ioc
+#align exists_unique_sub_zsmul_mem_Ioc existsUnique_sub_zsmul_mem_Ioc
 
 end LinearOrderedAddCommGroup
 

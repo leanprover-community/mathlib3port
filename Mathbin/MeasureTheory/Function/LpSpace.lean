@@ -1674,7 +1674,7 @@ theorem toLp_sub {f g : α → E} (hf : Memℒp f p μ) (hg : Memℒp g p μ) :
 
 end Memℒp
 
-namespace LpCat
+namespace Lp
 
 instance : CoeFun (lp E p μ) fun _ => α → E :=
   ⟨fun f => ((f : α →ₘ[μ] E) : α → E)⟩
@@ -1968,7 +1968,7 @@ instance [Fact (1 ≤ p)] : NormedSpace 𝕜 (lp E p μ)
 
 end NormedSpace
 
-end LpCat
+end Lp
 
 namespace Memℒp
 
@@ -2512,7 +2512,7 @@ theorem indicatorConstLp_eq_toSpanSingleton_compLp {s : Set α} [NormedSpace ℝ
   by_cases hy_mem : y ∈ s <;> simp [hy_mem, ContinuousLinearMap.lsmul_apply]
 #align measure_theory.indicator_const_Lp_eq_to_span_singleton_comp_Lp MeasureTheory.indicatorConstLp_eq_toSpanSingleton_compLp
 
-namespace LpCat
+namespace Lp
 
 section PosPart
 
@@ -2573,7 +2573,7 @@ theorem continuous_negPart [Fact (1 ≤ p)] : Continuous fun f : lp ℝ p μ => 
 
 end PosPart
 
-end LpCat
+end Lp
 
 end MeasureTheory
 
@@ -2590,7 +2590,7 @@ section CompleteSpace
 
 namespace MeasureTheory
 
-namespace LpCat
+namespace Lp
 
 theorem snorm'_lim_eq_lintegral_liminf {ι} [Nonempty ι] [LinearOrder ι] {f : ι → α → G} {p : ℝ}
     (hp_nonneg : 0 ≤ p) {f_lim : α → G}
@@ -3024,7 +3024,7 @@ instance [CompleteSpace E] [hp : Fact (1 ≤ p)] : CompleteSpace (lp E p μ) :=
   complete_space_Lp_of_cauchy_complete_ℒp fun f hf B hB h_cau =>
     cauchy_complete_ℒp hp.elim hf hB.Ne h_cau
 
-end LpCat
+end Lp
 
 end MeasureTheory
 
@@ -3249,7 +3249,7 @@ end
 
 namespace MeasureTheory
 
-namespace LpCat
+namespace Lp
 
 theorem pow_mul_meas_ge_le_norm (f : lp E p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) (ε : ℝ≥0∞) :
     (ε * μ { x | ε ≤ ‖f x‖₊ ^ p.toReal }) ^ (1 / p.toReal) ≤ Ennreal.ofReal ‖f‖ :=
@@ -3276,7 +3276,7 @@ theorem meas_ge_le_mul_pow_norm (f : lp E p μ) (hp_ne_zero : p ≠ 0) (hp_ne_to
     meas_ge_le_mul_pow_snorm μ hp_ne_zero hp_ne_top (lp.aeStronglyMeasurable f) hε
 #align measure_theory.Lp.meas_ge_le_mul_pow_norm MeasureTheory.lp.meas_ge_le_mul_pow_norm
 
-end LpCat
+end Lp
 
 end MeasureTheory
 

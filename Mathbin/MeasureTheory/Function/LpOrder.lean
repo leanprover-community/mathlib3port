@@ -34,7 +34,7 @@ variable {α E : Type _} {m : MeasurableSpace α} {μ : Measure α} {p : ℝ≥0
 
 namespace MeasureTheory
 
-namespace LpCat
+namespace Lp
 
 section Order
 
@@ -116,7 +116,7 @@ noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) 
 
 end Order
 
-end LpCat
+end Lp
 
 end MeasureTheory
 

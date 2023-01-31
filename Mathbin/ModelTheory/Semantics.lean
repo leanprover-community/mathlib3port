@@ -60,21 +60,21 @@ namespace Language
 
 variable {L : Language.{u, v}} {L' : Language}
 
-variable {M : Type w} {N P : Type _} [L.StructureCat M] [L.StructureCat N] [L.StructureCat P]
+variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structure P]
 
 variable {α : Type u'} {β : Type v'}
 
 open FirstOrder Cardinal
 
-open StructureCat Cardinal Fin
+open Structure Cardinal Fin
 
 namespace Term
 
 /- warning: first_order.language.term.realize -> FirstOrder.Language.Term.realize is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u2, u3} L M] {α : Type.{u4}}, (α -> M) -> (FirstOrder.Language.Term.{u1, u2, u4} L α) -> M
+  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}}, (α -> M) -> (FirstOrder.Language.Term.{u1, u2, u4} L α) -> M
 but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u3, u4} L M] {α : Type.{u2}}, (α -> M) -> (FirstOrder.Language.Term.{u1, u3, u2} L α) -> M
+  forall {L : FirstOrder.Language.{u1, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u3, u4} L M] {α : Type.{u2}}, (α -> M) -> (FirstOrder.Language.Term.{u1, u3, u2} L α) -> M
 Case conversion may be inaccurate. Consider using '#align first_order.language.term.realize FirstOrder.Language.Term.realizeₓ'. -/
 /-- A term `t` with variables indexed by `α` can be evaluated by giving a value to each variable. -/
 @[simp]
@@ -159,7 +159,7 @@ theorem realize_restrictVarLeft [DecidableEq α] {γ : Type _} {t : L.term (Sum 
 #align first_order.language.term.realize_restrict_var_left FirstOrder.Language.Term.realize_restrictVarLeft
 
 @[simp]
-theorem realize_constantsToVars [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M]
+theorem realize_constantsToVars [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {t : L[[α]].term β} {v : β → M} :
     t.constantsToVars.realize (Sum.elim (fun a => ↑(L.con a)) v) = t.realize v :=
   by
@@ -176,7 +176,7 @@ theorem realize_constantsToVars [L[[α]].StructureCat M] [(lhomWithConstants L �
 #align first_order.language.term.realize_constants_to_vars FirstOrder.Language.Term.realize_constantsToVars
 
 @[simp]
-theorem realize_varsToConstants [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M]
+theorem realize_varsToConstants [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {t : L.term (Sum α β)} {v : β → M} :
     t.varsToConstants.realize v = t.realize (Sum.elim (fun a => ↑(L.con a)) v) :=
   by
@@ -185,7 +185,7 @@ theorem realize_varsToConstants [L[[α]].StructureCat M] [(lhomWithConstants L �
   · simp [ih]
 #align first_order.language.term.realize_vars_to_constants FirstOrder.Language.Term.realize_varsToConstants
 
-theorem realize_constantsVarsEquivLeft [L[[α]].StructureCat M]
+theorem realize_constantsVarsEquivLeft [L[[α]].Structure M]
     [(lhomWithConstants L α).IsExpansionOn M] {n} {t : L[[α]].term (Sum β (Fin n))} {v : β → M}
     {xs : Fin n → M} :
     (constantsVarsEquivLeft t).realize (Sum.elim (Sum.elim (fun a => ↑(L.con a)) v) xs) =
@@ -200,18 +200,18 @@ theorem realize_constantsVarsEquivLeft [L[[α]].StructureCat M]
 
 end Term
 
-namespace LhomCat
+namespace Lhom
 
 @[simp]
-theorem realize_onTerm [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (t : L.term α)
+theorem realize_onTerm [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (t : L.term α)
     (v : α → M) : (φ.onTerm t).realize v = t.realize v :=
   by
   induction' t with _ n f ts ih
   · rfl
   · simp only [term.realize, Lhom.on_term, Lhom.map_on_function, ih]
-#align first_order.language.Lhom.realize_on_term FirstOrder.Language.LhomCat.realize_onTerm
+#align first_order.language.Lhom.realize_on_term FirstOrder.Language.Lhom.realize_onTerm
 
-end LhomCat
+end Lhom
 
 @[simp]
 theorem Hom.realize_term (g : M →[L] N) {t : L.term α} {v : α → M} :
@@ -244,9 +244,9 @@ open Term
 
 /- warning: first_order.language.bounded_formula.realize -> FirstOrder.Language.BoundedFormula.Realize is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u2, u3} L M] {α : Type.{u4}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
+  forall {L : FirstOrder.Language.{u1, u2}} {M : Type.{u3}} [_inst_1 : FirstOrder.Language.Structure.{u1, u2, u3} L M] {α : Type.{u4}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u4} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
 but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.StructureCat.{u1, u3, u4} L M] {α : Type.{u2}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
+  forall {L : FirstOrder.Language.{u1, u3}} {M : Type.{u4}} [_inst_1 : FirstOrder.Language.Structure.{u1, u3, u4} L M] {α : Type.{u2}} {l : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u3, u2} L α l) -> (α -> M) -> ((Fin l) -> M) -> Prop
 Case conversion may be inaccurate. Consider using '#align first_order.language.bounded_formula.realize FirstOrder.Language.BoundedFormula.Realizeₓ'. -/
 /-- A bounded formula can be evaluated as true or false by giving values to each free variable. -/
 def Realize : ∀ {l} (f : L.BoundedFormula α l) (v : α → M) (xs : Fin l → M), Prop
@@ -368,7 +368,7 @@ theorem realize_castLe_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.Boun
   simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]
 #align first_order.language.bounded_formula.realize_cast_le_of_eq FirstOrder.Language.BoundedFormula.realize_castLe_of_eq
 
-theorem realize_mapTermRel_id [L'.StructureCat M]
+theorem realize_mapTermRel_id [L'.Structure M]
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n))}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n} {v : α → M}
     {v' : β → M} {xs : Fin n → M}
@@ -386,7 +386,7 @@ theorem realize_mapTermRel_id [L'.StructureCat M]
   · simp only [map_term_rel, realize, ih, id.def]
 #align first_order.language.bounded_formula.realize_map_term_rel_id FirstOrder.Language.BoundedFormula.realize_mapTermRel_id
 
-theorem realize_mapTermRel_add_castLe [L'.StructureCat M] {k : ℕ}
+theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
     {ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin (k + n)))}
     {fr : ∀ n, L.Relations n → L'.Relations n} {n} {φ : L.BoundedFormula α n}
     (v : ∀ {n}, (Fin (k + n) → M) → α → M) {v' : β → M} (xs : Fin (k + n) → M)
@@ -485,7 +485,7 @@ theorem realize_restrictFreeVar [DecidableEq α] {n : ℕ} {φ : L.BoundedFormul
   · simp [restrict_free_var, realize, ih3]
 #align first_order.language.bounded_formula.realize_restrict_free_var FirstOrder.Language.BoundedFormula.realize_restrictFreeVar
 
-theorem realize_constantsVarsEquiv [L[[α]].StructureCat M] [(lhomWithConstants L α).IsExpansionOn M]
+theorem realize_constantsVarsEquiv [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {n} {φ : L[[α]].BoundedFormula β n} {v : β → M} {xs : Fin n → M} :
     (constantsVarsEquiv φ).realize (Sum.elim (fun a => ↑(L.con a)) v) xs ↔ φ.realize v xs :=
   by
@@ -588,12 +588,12 @@ attribute [protected] bounded_formula.falsum bounded_formula.equal bounded_formu
 
 attribute [protected] bounded_formula.imp bounded_formula.all
 
-namespace LhomCat
+namespace Lhom
 
 open BoundedFormula
 
 @[simp]
-theorem realize_onBoundedFormula [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M] {n : ℕ}
+theorem realize_onBoundedFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] {n : ℕ}
     (ψ : L.BoundedFormula α n) {v : α → M} {xs : Fin n → M} :
     (φ.onBoundedFormula ψ).realize v xs ↔ ψ.realize v xs :=
   by
@@ -605,9 +605,9 @@ theorem realize_onBoundedFormula [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsEx
     rfl
   · simp only [on_bounded_formula, ih1, ih2, realize_imp]
   · simp only [on_bounded_formula, ih3, realize_all]
-#align first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.LhomCat.realize_onBoundedFormula
+#align first_order.language.Lhom.realize_on_bounded_formula FirstOrder.Language.Lhom.realize_onBoundedFormula
 
-end LhomCat
+end Lhom
 
 attribute [protected] bounded_formula.falsum bounded_formula.equal bounded_formula.rel
 
@@ -713,18 +713,18 @@ theorem realize_graph {f : L.Functions n} {x : Fin n → M} {y : M} :
 end Formula
 
 @[simp]
-theorem LhomCat.realize_onFormula [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
-    (ψ : L.Formula α) {v : α → M} : (φ.onFormula ψ).realize v ↔ ψ.realize v :=
+theorem Lhom.realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (ψ : L.Formula α)
+    {v : α → M} : (φ.onFormula ψ).realize v ↔ ψ.realize v :=
   φ.realize_on_bounded_formula ψ
-#align first_order.language.Lhom.realize_on_formula FirstOrder.Language.LhomCat.realize_onFormula
+#align first_order.language.Lhom.realize_on_formula FirstOrder.Language.Lhom.realize_onFormula
 
 @[simp]
-theorem LhomCat.setOf_realize_onFormula [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
+theorem Lhom.setOf_realize_onFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Formula α) : (setOf (φ.onFormula ψ).realize : Set (α → M)) = setOf ψ.realize :=
   by
   ext
   simp
-#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.LhomCat.setOf_realize_onFormula
+#align first_order.language.Lhom.set_of_realize_on_formula FirstOrder.Language.Lhom.setOf_realize_onFormula
 
 variable (M)
 
@@ -746,7 +746,7 @@ theorem Sentence.realize_not {φ : L.Sentence} : M ⊨ φ.Not ↔ ¬M ⊨ φ :=
 namespace Formula
 
 @[simp]
-theorem realize_equivSentence_symm_con [L[[α]].StructureCat M]
+theorem realize_equivSentence_symm_con [L[[α]].Structure M]
     [(L.lhomWithConstants α).IsExpansionOn M] (φ : L[[α]].Sentence) :
     ((equivSentence.symm φ).realize fun a => (L.con a : M)) ↔ φ.realize M :=
   by
@@ -759,7 +759,7 @@ theorem realize_equivSentence_symm_con [L[[α]].StructureCat M]
 #align first_order.language.formula.realize_equiv_sentence_symm_con FirstOrder.Language.Formula.realize_equivSentence_symm_con
 
 @[simp]
-theorem realize_equivSentence [L[[α]].StructureCat M] [(L.lhomWithConstants α).IsExpansionOn M]
+theorem realize_equivSentence [L[[α]].Structure M] [(L.lhomWithConstants α).IsExpansionOn M]
     (φ : L.Formula α) : (equivSentence φ).realize M ↔ φ.realize fun a => (L.con a : M) := by
   rw [← realize_equiv_sentence_symm_con M (equiv_sentence φ), _root_.equiv.symm_apply_apply]
 #align first_order.language.formula.realize_equiv_sentence FirstOrder.Language.Formula.realize_equivSentence
@@ -775,15 +775,15 @@ theorem realize_equivSentence_symm (φ : L[[α]].Sentence) (v : α → M) :
 end Formula
 
 @[simp]
-theorem LhomCat.realize_onSentence [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
+theorem Lhom.realize_onSentence [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
     (ψ : L.Sentence) : M ⊨ φ.onSentence ψ ↔ M ⊨ ψ :=
   φ.realize_on_formula ψ
-#align first_order.language.Lhom.realize_on_sentence FirstOrder.Language.LhomCat.realize_onSentence
+#align first_order.language.Lhom.realize_on_sentence FirstOrder.Language.Lhom.realize_onSentence
 
 variable (L)
 
 /-- The complete theory of a structure `M` is the set of all sentences `M` satisfies. -/
-def completeTheory : L.TheoryCat :=
+def completeTheory : L.Theory :=
   { φ | M ⊨ φ }
 #align first_order.language.complete_theory FirstOrder.Language.completeTheory
 
@@ -812,90 +812,90 @@ theorem elementarilyEquivalent_iff : M ≅[L] N ↔ ∀ φ : L.Sentence, M ⊨ �
 variable (M)
 
 /-- A model of a theory is a structure in which every sentence is realized as true. -/
-class TheoryCat.Model (T : L.TheoryCat) : Prop where
+class Theory.Model (T : L.Theory) : Prop where
   realize_of_mem : ∀ φ ∈ T, M ⊨ φ
-#align first_order.language.Theory.model FirstOrder.Language.TheoryCat.Model
+#align first_order.language.Theory.model FirstOrder.Language.Theory.Model
 
 -- mathport name: Theory.model
 infixl:51
   " ⊨ " =>-- input using \|= or \vDash, but not using \models
-  TheoryCat.Model
+  Theory.Model
 
-variable {M} (T : L.TheoryCat)
+variable {M} (T : L.Theory)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem TheoryCat.model_iff : M ⊨ T ↔ ∀ φ ∈ T, M ⊨ φ :=
+theorem Theory.model_iff : M ⊨ T ↔ ∀ φ ∈ T, M ⊨ φ :=
   ⟨fun h => h.realize_of_mem, fun h => ⟨h⟩⟩
-#align first_order.language.Theory.model_iff FirstOrder.Language.TheoryCat.model_iff
+#align first_order.language.Theory.model_iff FirstOrder.Language.Theory.model_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem TheoryCat.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ ∈ T) : M ⊨ φ :=
-  TheoryCat.Model.realize_of_mem φ h
-#align first_order.language.Theory.realize_sentence_of_mem FirstOrder.Language.TheoryCat.realize_sentence_of_mem
+theorem Theory.realize_sentence_of_mem [M ⊨ T] {φ : L.Sentence} (h : φ ∈ T) : M ⊨ φ :=
+  Theory.Model.realize_of_mem φ h
+#align first_order.language.Theory.realize_sentence_of_mem FirstOrder.Language.Theory.realize_sentence_of_mem
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem LhomCat.onTheory_model [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
-    (T : L.TheoryCat) : M ⊨ φ.onTheory T ↔ M ⊨ T := by simp [Theory.model_iff, Lhom.on_Theory]
-#align first_order.language.Lhom.on_Theory_model FirstOrder.Language.LhomCat.onTheory_model
+theorem Lhom.onTheory_model [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (T : L.Theory) :
+    M ⊨ φ.onTheory T ↔ M ⊨ T := by simp [Theory.model_iff, Lhom.on_Theory]
+#align first_order.language.Lhom.on_Theory_model FirstOrder.Language.Lhom.onTheory_model
 
 variable {M} {T}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance model_empty : M ⊨ (∅ : L.TheoryCat) :=
+instance model_empty : M ⊨ (∅ : L.Theory) :=
   ⟨fun φ hφ => (Set.not_mem_empty φ hφ).elim⟩
 #align first_order.language.model_empty FirstOrder.Language.model_empty
 
-namespace TheoryCat
+namespace Theory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Model.mono {T' : L.TheoryCat} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨ T :=
+theorem Model.mono {T' : L.Theory} (h : M ⊨ T') (hs : T ⊆ T') : M ⊨ T :=
   ⟨fun φ hφ => T'.realize_sentence_of_mem (hs hφ)⟩
-#align first_order.language.Theory.model.mono FirstOrder.Language.TheoryCat.Model.mono
+#align first_order.language.Theory.model.mono FirstOrder.Language.Theory.Model.mono
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Model.union {T' : L.TheoryCat} (h : M ⊨ T) (h' : M ⊨ T') : M ⊨ T ∪ T' :=
+theorem Model.union {T' : L.Theory} (h : M ⊨ T) (h' : M ⊨ T') : M ⊨ T ∪ T' :=
   by
   simp only [model_iff, Set.mem_union] at *
   exact fun φ hφ => hφ.elim (h _) (h' _)
-#align first_order.language.Theory.model.union FirstOrder.Language.TheoryCat.Model.union
+#align first_order.language.Theory.model.union FirstOrder.Language.Theory.Model.union
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem model_union_iff {T' : L.TheoryCat} : M ⊨ T ∪ T' ↔ M ⊨ T ∧ M ⊨ T' :=
+theorem model_union_iff {T' : L.Theory} : M ⊨ T ∪ T' ↔ M ⊨ T ∧ M ⊨ T' :=
   ⟨fun h => ⟨h.mono (T.subset_union_left T'), h.mono (T.subset_union_right T')⟩, fun h =>
     h.1.union h.2⟩
-#align first_order.language.Theory.model_union_iff FirstOrder.Language.TheoryCat.model_union_iff
+#align first_order.language.Theory.model_union_iff FirstOrder.Language.Theory.model_union_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.TheoryCat) ↔ M ⊨ φ := by simp
-#align first_order.language.Theory.model_singleton_iff FirstOrder.Language.TheoryCat.model_singleton_iff
+theorem model_singleton_iff {φ : L.Sentence} : M ⊨ ({φ} : L.Theory) ↔ M ⊨ φ := by simp
+#align first_order.language.Theory.model_singleton_iff FirstOrder.Language.Theory.model_singleton_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem model_iff_subset_completeTheory : M ⊨ T ↔ T ⊆ L.completeTheory M :=
   T.model_iff
-#align first_order.language.Theory.model_iff_subset_complete_theory FirstOrder.Language.TheoryCat.model_iff_subset_completeTheory
+#align first_order.language.Theory.model_iff_subset_complete_theory FirstOrder.Language.Theory.model_iff_subset_completeTheory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem CompleteTheory.subset [MT : M ⊨ T] : T ⊆ L.completeTheory M :=
   model_iff_subset_completeTheory.1 MT
-#align first_order.language.Theory.complete_theory.subset FirstOrder.Language.TheoryCat.CompleteTheory.subset
+#align first_order.language.Theory.complete_theory.subset FirstOrder.Language.Theory.CompleteTheory.subset
 
-end TheoryCat
+end Theory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance model_completeTheory : M ⊨ L.completeTheory M :=
-  TheoryCat.model_iff_subset_completeTheory.2 (subset_refl _)
+  Theory.model_iff_subset_completeTheory.2 (subset_refl _)
 #align first_order.language.model_complete_theory FirstOrder.Language.model_completeTheory
 
 variable (M N)
@@ -1010,9 +1010,9 @@ theorem realize_sentence (g : M ≃[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem theoryCat_model (g : M ≃[L] N) [M ⊨ T] : N ⊨ T :=
-  ⟨fun φ hφ => (g.realize_sentence φ).1 (TheoryCat.realize_sentence_of_mem T hφ)⟩
-#align first_order.language.equiv.Theory_model FirstOrder.Language.Equiv.theoryCat_model
+theorem theory_model (g : M ≃[L] N) [M ⊨ T] : N ⊨ T :=
+  ⟨fun φ hφ => (g.realize_sentence φ).1 (Theory.realize_sentence_of_mem T hφ)⟩
+#align first_order.language.equiv.Theory_model FirstOrder.Language.Equiv.theory_model
 
 theorem elementarilyEquivalent (g : M ≃[L] N) : M ≅[L] N :=
   elementarilyEquivalent_iff.2 g.realize_sentence
@@ -1118,7 +1118,7 @@ instance model_nonempty [h : Nonempty M] : M ⊨ L.nonemptyTheory :=
 #align first_order.language.model_nonempty FirstOrder.Language.model_nonempty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem model_distinctConstantsTheory {M : Type w} [L[[α]].StructureCat M] (s : Set α) :
+theorem model_distinctConstantsTheory {M : Type w} [L[[α]].Structure M] (s : Set α) :
     M ⊨ L.distinctConstantsTheory s ↔ Set.InjOn (fun i : α => (L.con i : M)) s :=
   by
   simp only [distinct_constants_theory, Theory.model_iff, Set.mem_image, Set.mem_inter,
@@ -1135,7 +1135,7 @@ theorem model_distinctConstantsTheory {M : Type w} [L[[α]].StructureCat M] (s :
 #align first_order.language.model_distinct_constants_theory FirstOrder.Language.model_distinctConstantsTheory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem card_le_of_model_distinctConstantsTheory (s : Set α) (M : Type w) [L[[α]].StructureCat M]
+theorem card_le_of_model_distinctConstantsTheory (s : Set α) (M : Type w) [L[[α]].Structure M]
     [h : M ⊨ L.distinctConstantsTheory s] : Cardinal.lift.{w} (#s) ≤ Cardinal.lift.{u'} (#M) :=
   lift_mk_le'.2 ⟨⟨_, Set.injOn_iff_injective.1 ((L.model_distinct_constants_theory s).1 h)⟩⟩
 #align first_order.language.card_le_of_model_distinct_constants_theory FirstOrder.Language.card_le_of_model_distinctConstantsTheory
@@ -1166,16 +1166,16 @@ theorem realize_sentence (h : M ≅[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem theoryCat_model_iff (h : M ≅[L] N) : M ⊨ T ↔ N ⊨ T := by
+theorem theory_model_iff (h : M ≅[L] N) : M ⊨ T ↔ N ⊨ T := by
   rw [Theory.model_iff_subset_complete_theory, Theory.model_iff_subset_complete_theory,
     h.complete_theory_eq]
-#align first_order.language.elementarily_equivalent.Theory_model_iff FirstOrder.Language.ElementarilyEquivalent.theoryCat_model_iff
+#align first_order.language.elementarily_equivalent.Theory_model_iff FirstOrder.Language.ElementarilyEquivalent.theory_model_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem theoryCat_model [MT : M ⊨ T] (h : M ≅[L] N) : N ⊨ T :=
+theorem theory_model [MT : M ⊨ T] (h : M ≅[L] N) : N ⊨ T :=
   h.Theory_model_iff.1 MT
-#align first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.theoryCat_model
+#align first_order.language.elementarily_equivalent.Theory_model FirstOrder.Language.ElementarilyEquivalent.theory_model
 
 theorem nonempty_iff (h : M ≅[L] N) : Nonempty M ↔ Nonempty N :=
   (model_nonemptyTheory_iff L).symm.trans (h.Theory_model_iff.trans (model_nonemptyTheory_iff L))

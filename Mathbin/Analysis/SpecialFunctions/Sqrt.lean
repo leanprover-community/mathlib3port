@@ -40,8 +40,8 @@ noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ
   map_target' x hx := mem_Ioi.2 (sqrt_pos.2 hx)
   left_inv' x hx := sqrt_sq (le_of_lt hx)
   right_inv' x hx := sq_sqrt (le_of_lt hx)
-  open_source := isOpen_ioi
-  open_target := isOpen_ioi
+  open_source := isOpen_Ioi
+  open_target := isOpen_Ioi
   continuous_to_fun := (continuous_pow 2).ContinuousOn
   continuous_inv_fun := continuousOn_id.sqrt
 #align real.sq_local_homeomorph Real.sqLocalHomeomorph

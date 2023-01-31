@@ -289,11 +289,11 @@ theorem LowerSemicontinuous.isClosed_preimage {f : α → γ} (hf : LowerSemicon
 variable [TopologicalSpace γ] [OrderTopology γ]
 
 theorem ContinuousWithinAt.lowerSemicontinuousWithinAt {f : α → γ} (h : ContinuousWithinAt f s x) :
-    LowerSemicontinuousWithinAt f s x := fun y hy => h (ioi_mem_nhds hy)
+    LowerSemicontinuousWithinAt f s x := fun y hy => h (Ioi_mem_nhds hy)
 #align continuous_within_at.lower_semicontinuous_within_at ContinuousWithinAt.lowerSemicontinuousWithinAt
 
 theorem ContinuousAt.lowerSemicontinuousAt {f : α → γ} (h : ContinuousAt f x) :
-    LowerSemicontinuousAt f x := fun y hy => h (ioi_mem_nhds hy)
+    LowerSemicontinuousAt f x := fun y hy => h (Ioi_mem_nhds hy)
 #align continuous_at.lower_semicontinuous_at ContinuousAt.lowerSemicontinuousAt
 
 theorem ContinuousOn.lowerSemicontinuousOn {f : α → γ} (h : ContinuousOn f s) :
@@ -322,7 +322,7 @@ theorem ContinuousAt.comp_lowerSemicontinuousWithinAt {g : γ → δ} {f : α �
   intro y hy
   by_cases h : ∃ l, l < f x
   · obtain ⟨z, zlt, hz⟩ : ∃ z < f x, Ioc z (f x) ⊆ g ⁻¹' Ioi y :=
-      exists_ioc_subset_of_mem_nhds (hg (ioi_mem_nhds hy)) h
+      exists_Ioc_subset_of_mem_nhds (hg (Ioi_mem_nhds hy)) h
     filter_upwards [hf z zlt]with a ha
     calc
       y < g (min (f x) (f a)) := hz (by simp [zlt, ha, le_refl])
@@ -401,10 +401,10 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
     mem_nhds_prod_iff'.1 (hcont (is_open_Ioi.mem_nhds hy))
   by_cases hx₁ : ∃ l, l < f x
   · obtain ⟨z₁, z₁lt, h₁⟩ : ∃ z₁ < f x, Ioc z₁ (f x) ⊆ u :=
-      exists_ioc_subset_of_mem_nhds (u_open.mem_nhds xu) hx₁
+      exists_Ioc_subset_of_mem_nhds (u_open.mem_nhds xu) hx₁
     by_cases hx₂ : ∃ l, l < g x
     · obtain ⟨z₂, z₂lt, h₂⟩ : ∃ z₂ < g x, Ioc z₂ (g x) ⊆ v :=
-        exists_ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂
+        exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂
       filter_upwards [hf z₁ z₁lt, hg z₂ z₂lt]with z h₁z h₂z
       have A1 : min (f z) (f x) ∈ u := by
         by_cases H : f z ≤ f x
@@ -439,7 +439,7 @@ theorem LowerSemicontinuousWithinAt.add' {f g : α → γ} (hf : LowerSemicontin
   · simp only [not_exists, not_lt] at hx₁
     by_cases hx₂ : ∃ l, l < g x
     · obtain ⟨z₂, z₂lt, h₂⟩ : ∃ z₂ < g x, Ioc z₂ (g x) ⊆ v :=
-        exists_ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂
+        exists_Ioc_subset_of_mem_nhds (v_open.mem_nhds xv) hx₂
       filter_upwards [hg z₂ z₂lt]with z h₂z
       have A2 : min (g z) (g x) ∈ v := by
         by_cases H : g z ≤ g x
@@ -839,11 +839,11 @@ theorem UpperSemicontinuous.isClosed_preimage {f : α → γ} (hf : UpperSemicon
 variable [TopologicalSpace γ] [OrderTopology γ]
 
 theorem ContinuousWithinAt.upperSemicontinuousWithinAt {f : α → γ} (h : ContinuousWithinAt f s x) :
-    UpperSemicontinuousWithinAt f s x := fun y hy => h (iio_mem_nhds hy)
+    UpperSemicontinuousWithinAt f s x := fun y hy => h (Iio_mem_nhds hy)
 #align continuous_within_at.upper_semicontinuous_within_at ContinuousWithinAt.upperSemicontinuousWithinAt
 
 theorem ContinuousAt.upperSemicontinuousAt {f : α → γ} (h : ContinuousAt f x) :
-    UpperSemicontinuousAt f x := fun y hy => h (iio_mem_nhds hy)
+    UpperSemicontinuousAt f x := fun y hy => h (Iio_mem_nhds hy)
 #align continuous_at.upper_semicontinuous_at ContinuousAt.upperSemicontinuousAt
 
 theorem ContinuousOn.upperSemicontinuousOn {f : α → γ} (h : ContinuousOn f s) :
@@ -1115,9 +1115,9 @@ theorem continuousWithinAt_iff_lower_upperSemicontinuousWithinAt {f : α → γ}
   intro v hv
   simp only [Filter.mem_map]
   by_cases Hl : ∃ l, l < f x
-  · rcases exists_ioc_subset_of_mem_nhds hv Hl with ⟨l, lfx, hl⟩
+  · rcases exists_Ioc_subset_of_mem_nhds hv Hl with ⟨l, lfx, hl⟩
     by_cases Hu : ∃ u, f x < u
-    · rcases exists_ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
+    · rcases exists_Ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
       filter_upwards [h₁ l lfx, h₂ u fxu]with a lfa fau
       cases' le_or_gt (f a) (f x) with h h
       · exact hl ⟨lfa, h⟩
@@ -1126,7 +1126,7 @@ theorem continuousWithinAt_iff_lower_upperSemicontinuousWithinAt {f : α → γ}
       filter_upwards [h₁ l lfx]with a lfa using hl ⟨lfa, Hu (f a)⟩
   · simp only [not_exists, not_lt] at Hl
     by_cases Hu : ∃ u, f x < u
-    · rcases exists_ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
+    · rcases exists_Ico_subset_of_mem_nhds hv Hu with ⟨u, fxu, hu⟩
       filter_upwards [h₂ u fxu]with a lfa
       apply hu
       exact ⟨Hl (f a), lfa⟩

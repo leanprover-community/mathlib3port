@@ -47,10 +47,10 @@ theorem natDegree_det_x_add_c_le (A B : Matrix n n α) :
     Multiset.mem_map, exists_imp, Finset.mem_univ_val]
   intro g
   calc
-    nat_degree (sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤
+    nat_degree (SignType.sign g • ∏ i : n, (X • A.map C + B.map C) (g i) i) ≤
         nat_degree (∏ i : n, (X • A.map C + B.map C) (g i) i) :=
       by
-      cases' Int.units_eq_one_or (sign g) with sg sg
+      cases' Int.units_eq_one_or (SignType.sign g) with sg sg
       · rw [sg, one_smul]
       · rw [sg, Units.neg_smul, one_smul, nat_degree_neg]
     _ ≤ ∑ i : n, nat_degree (((X : α[X]) • A.map C + B.map C) (g i) i) :=
@@ -77,7 +77,7 @@ theorem coeff_det_x_add_c_zero (A B : Matrix n n α) :
   rw [det_apply, finset_sum_coeff, det_apply]
   refine' Finset.sum_congr rfl _
   intro g hg
-  convert coeff_smul (sign g) _ 0
+  convert coeff_smul (SignType.sign g) _ 0
   rw [coeff_zero_prod]
   refine' Finset.prod_congr rfl _
   simp
@@ -91,7 +91,7 @@ theorem coeff_det_x_add_c_card (A B : Matrix n n α) :
   simp only [Algebra.id.smul_eq_mul, Finset.mem_univ, RingHom.mapMatrix_apply, forall_true_left,
     map_apply, Pi.smul_apply]
   intro g
-  convert coeff_smul (sign g) _ _
+  convert coeff_smul (SignType.sign g) _ _
   rw [← mul_one (Fintype.card n)]
   convert (coeff_prod_of_nat_degree_le _ _ _ _).symm
   · ext

@@ -56,7 +56,7 @@ theorem mapCocone :
   unfold functor.map_cocone cocones.functoriality; dsimp; congr
   iterate 2 rw [map_diagram]; rw [opens.map_supr]
   apply Subsingleton.helim; rw [map_diagram, opens.map_supr]
-  apply proof_irrel_hEq
+  apply proof_irrel_heq
 #align Top.presheaf.sheaf_condition_pairwise_intersections.map_cocone TopCat.Presheaf.SheafConditionPairwiseIntersections.mapCocone
 
 theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseIntersections) :

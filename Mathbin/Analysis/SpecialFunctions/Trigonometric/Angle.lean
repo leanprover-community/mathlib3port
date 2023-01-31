@@ -530,9 +530,9 @@ theorem toReal_coe_eq_self_iff {θ : ℝ} : (θ : Angle).toReal = θ ↔ -π < �
   ring_nf
 #align real.angle.to_real_coe_eq_self_iff Real.Angle.toReal_coe_eq_self_iff
 
-theorem toReal_coe_eq_self_iff_mem_ioc {θ : ℝ} : (θ : Angle).toReal = θ ↔ θ ∈ Set.Ioc (-π) π := by
+theorem toReal_coe_eq_self_iff_mem_Ioc {θ : ℝ} : (θ : Angle).toReal = θ ↔ θ ∈ Set.Ioc (-π) π := by
   rw [to_real_coe_eq_self_iff, ← Set.mem_Ioc]
-#align real.angle.to_real_coe_eq_self_iff_mem_Ioc Real.Angle.toReal_coe_eq_self_iff_mem_ioc
+#align real.angle.to_real_coe_eq_self_iff_mem_Ioc Real.Angle.toReal_coe_eq_self_iff_mem_Ioc
 
 theorem toReal_injective : Function.Injective toReal :=
   by
@@ -572,9 +572,9 @@ theorem abs_toReal_le_pi (θ : Angle) : |θ.toReal| ≤ π :=
   abs_le.2 ⟨(neg_pi_lt_toReal _).le, toReal_le_pi _⟩
 #align real.angle.abs_to_real_le_pi Real.Angle.abs_toReal_le_pi
 
-theorem toReal_mem_ioc (θ : Angle) : θ.toReal ∈ Set.Ioc (-π) π :=
+theorem toReal_mem_Ioc (θ : Angle) : θ.toReal ∈ Set.Ioc (-π) π :=
   ⟨neg_pi_lt_toReal _, toReal_le_pi _⟩
-#align real.angle.to_real_mem_Ioc Real.Angle.toReal_mem_ioc
+#align real.angle.to_real_mem_Ioc Real.Angle.toReal_mem_Ioc
 
 @[simp]
 theorem toIocMod_toReal (θ : Angle) : toIocMod (-π) two_pi_pos θ.toReal = θ.toReal :=
@@ -872,23 +872,24 @@ theorem tan_eq_inv_of_two_zsmul_add_two_zsmul_eq_pi {θ ψ : Angle}
 between `0` and `π` and `-1` is the angle is strictly between `-π` and `0`. It is defined as the
 sign of the sine of the angle. -/
 def sign (θ : Angle) : SignType :=
-  sign (sin θ)
+  SignType.sign (sin θ)
 #align real.angle.sign Real.Angle.sign
 
 @[simp]
-theorem sign_zero : (0 : Angle).sign = 0 := by rw [sign, sin_zero, sign_zero]
+theorem sign_zero : (0 : Angle).sign = 0 := by rw [SignType.sign, sin_zero, sign_zero]
 #align real.angle.sign_zero Real.Angle.sign_zero
 
 @[simp]
-theorem sign_coe_pi : (π : Angle).sign = 0 := by rw [sign, sin_coe_pi, _root_.sign_zero]
+theorem sign_coe_pi : (π : Angle).sign = 0 := by rw [SignType.sign, sin_coe_pi, _root_.sign_zero]
 #align real.angle.sign_coe_pi Real.Angle.sign_coe_pi
 
 @[simp]
-theorem sign_neg (θ : Angle) : (-θ).sign = -θ.sign := by simp_rw [sign, sin_neg, Left.sign_neg]
+theorem sign_neg (θ : Angle) : (-θ).sign = -θ.sign := by
+  simp_rw [SignType.sign, sin_neg, Left.sign_neg]
 #align real.angle.sign_neg Real.Angle.sign_neg
 
 theorem sign_antiperiodic : Function.Antiperiodic sign (π : Angle) := fun θ => by
-  rw [sign, sign, sin_add_pi, Left.sign_neg]
+  rw [SignType.sign, SignType.sign, sin_add_pi, Left.sign_neg]
 #align real.angle.sign_antiperiodic Real.Angle.sign_antiperiodic
 
 @[simp]
@@ -911,7 +912,7 @@ theorem sign_pi_sub (θ : Angle) : ((π : Angle) - θ).sign = θ.sign := by
 #align real.angle.sign_pi_sub Real.Angle.sign_pi_sub
 
 theorem sign_eq_zero_iff {θ : Angle} : θ.sign = 0 ↔ θ = 0 ∨ θ = π := by
-  rw [sign, sign_eq_zero_iff, sin_eq_zero_iff]
+  rw [SignType.sign, sign_eq_zero_iff, sin_eq_zero_iff]
 #align real.angle.sign_eq_zero_iff Real.Angle.sign_eq_zero_iff
 
 theorem sign_ne_zero_iff {θ : Angle} : θ.sign ≠ 0 ↔ θ ≠ 0 ∧ θ ≠ π := by
@@ -920,7 +921,7 @@ theorem sign_ne_zero_iff {θ : Angle} : θ.sign ≠ 0 ↔ θ ≠ 0 ∧ θ ≠ π
 
 theorem toReal_neg_iff_sign_neg {θ : Angle} : θ.toReal < 0 ↔ θ.sign = -1 :=
   by
-  rw [sign, ← sin_to_real, sign_eq_neg_one_iff]
+  rw [SignType.sign, ← sin_to_real, sign_eq_neg_one_iff]
   rcases lt_trichotomy θ.to_real 0 with (h | h | h)
   · exact ⟨fun _ => Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_to_real θ), fun _ => h⟩
   · simp [h]
@@ -936,20 +937,20 @@ theorem toReal_nonneg_iff_sign_nonneg {θ : Angle} : 0 ≤ θ.toReal ↔ 0 ≤ �
   · refine' ⟨fun hn => False.elim (h.not_le hn), fun hn => _⟩
     rw [to_real_neg_iff_sign_neg.1 h] at hn
     exact False.elim (hn.not_lt (by decide))
-  · simp [h, sign, ← sin_to_real]
+  · simp [h, SignType.sign, ← sin_to_real]
   · refine' ⟨fun _ => _, fun _ => h.le⟩
-    rw [sign, ← sin_to_real, sign_nonneg_iff]
+    rw [SignType.sign, ← sin_to_real, sign_nonneg_iff]
     exact sin_nonneg_of_nonneg_of_le_pi h.le (to_real_le_pi θ)
 #align real.angle.to_real_nonneg_iff_sign_nonneg Real.Angle.toReal_nonneg_iff_sign_nonneg
 
 @[simp]
-theorem sign_toReal {θ : Angle} (h : θ ≠ π) : sign θ.toReal = θ.sign :=
+theorem sign_toReal {θ : Angle} (h : θ ≠ π) : SignType.sign θ.toReal = θ.sign :=
   by
   rcases lt_trichotomy θ.to_real 0 with (ht | ht | ht)
   · simp [ht, to_real_neg_iff_sign_neg.1 ht]
-  · simp [sign, ht, ← sin_to_real]
+  · simp [SignType.sign, ht, ← sin_to_real]
   ·
-    rw [sign, ← sin_to_real, sign_pos ht,
+    rw [SignType.sign, ← sin_to_real, sign_pos ht,
       sign_pos
         (sin_pos_of_pos_of_lt_pi ht ((to_real_le_pi θ).lt_of_ne (to_real_eq_pi_iff.not.2 h)))]
 #align real.angle.sign_to_real Real.Angle.sign_toReal
@@ -995,24 +996,24 @@ theorem eq_iff_abs_toReal_eq_of_sign_eq {θ ψ : Angle} (h : θ.sign = ψ.sign) 
 
 @[simp]
 theorem sign_coe_pi_div_two : (↑(π / 2) : Angle).sign = 1 := by
-  rw [sign, sin_coe, sin_pi_div_two, sign_one]
+  rw [SignType.sign, sin_coe, sin_pi_div_two, sign_one]
 #align real.angle.sign_coe_pi_div_two Real.Angle.sign_coe_pi_div_two
 
 @[simp]
 theorem sign_coe_neg_pi_div_two : (↑(-π / 2) : Angle).sign = -1 := by
-  rw [sign, sin_coe, neg_div, Real.sin_neg, sin_pi_div_two, Left.sign_neg, sign_one]
+  rw [SignType.sign, sin_coe, neg_div, Real.sin_neg, sin_pi_div_two, Left.sign_neg, sign_one]
 #align real.angle.sign_coe_neg_pi_div_two Real.Angle.sign_coe_neg_pi_div_two
 
 theorem sign_coe_nonneg_of_nonneg_of_le_pi {θ : ℝ} (h0 : 0 ≤ θ) (hpi : θ ≤ π) :
     0 ≤ (θ : Angle).sign := by
-  rw [sign, sign_nonneg_iff]
+  rw [SignType.sign, sign_nonneg_iff]
   exact sin_nonneg_of_nonneg_of_le_pi h0 hpi
 #align real.angle.sign_coe_nonneg_of_nonneg_of_le_pi Real.Angle.sign_coe_nonneg_of_nonneg_of_le_pi
 
 theorem sign_neg_coe_nonpos_of_nonneg_of_le_pi {θ : ℝ} (h0 : 0 ≤ θ) (hpi : θ ≤ π) :
     (-θ : Angle).sign ≤ 0 :=
   by
-  rw [sign, sign_nonpos_iff, sin_neg, Left.neg_nonpos_iff]
+  rw [SignType.sign, sign_nonpos_iff, sin_neg, Left.neg_nonpos_iff]
   exact sin_nonneg_of_nonneg_of_le_pi h0 hpi
 #align real.angle.sign_neg_coe_nonpos_of_nonneg_of_le_pi Real.Angle.sign_neg_coe_nonpos_of_nonneg_of_le_pi
 
@@ -1070,7 +1071,8 @@ theorem continuousAt_sign {θ : Angle} (h0 : θ ≠ 0) (hpi : θ ≠ π) : Conti
 #align real.angle.continuous_at_sign Real.Angle.continuousAt_sign
 
 theorem ContinuousOn.angle_sign_comp {α : Type _} [TopologicalSpace α] {f : α → Angle} {s : Set α}
-    (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) : ContinuousOn (sign ∘ f) s :=
+    (hf : ContinuousOn f s) (hs : ∀ z ∈ s, f z ≠ 0 ∧ f z ≠ π) :
+    ContinuousOn (SignType.sign ∘ f) s :=
   by
   refine' (ContinuousAt.continuousOn fun θ hθ => _).comp hf (Set.mapsTo_image f s)
   obtain ⟨z, hz, rfl⟩ := hθ

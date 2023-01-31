@@ -112,7 +112,7 @@ variable [AddCommMonoid F] [Module 𝕜 F]
 variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
 instance : TopologicalSpace (WeakBilin B) :=
-  TopologicalSpace.induced (fun x y => B x y) PiCat.topologicalSpace
+  TopologicalSpace.induced (fun x y => B x y) Pi.topologicalSpace
 
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is continuous. -/
 theorem coeFn_continuous : Continuous fun (x : WeakBilin B) y => B x y :=

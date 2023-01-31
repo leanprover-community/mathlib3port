@@ -63,25 +63,25 @@ instance : TopologicalAddGroup ℝ := by infer_instance
 instance : ProperSpace ℝ
     where is_compact_closed_ball x r :=
     by
-    rw [Real.closedBall_eq_icc]
+    rw [Real.closedBall_eq_Icc]
     apply is_compact_Icc
 
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
-theorem Real.isTopologicalBasis_ioo_rat :
+theorem Real.isTopologicalBasis_Ioo_rat :
     @IsTopologicalBasis ℝ _ (⋃ (a : ℚ) (b : ℚ) (h : a < b), {Ioo a b}) :=
-  isTopologicalBasis_of_open_of_nhds (by simp (config := { contextual := true }) [isOpen_ioo])
+  isTopologicalBasis_of_open_of_nhds (by simp (config := { contextual := true }) [isOpen_Ioo])
     fun a v hav hv =>
-    let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_ioo_subset.mp (IsOpen.mem_nhds hv hav)
+    let ⟨l, u, ⟨hl, hu⟩, h⟩ := mem_nhds_iff_exists_Ioo_subset.mp (IsOpen.mem_nhds hv hav)
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
     ⟨Ioo q p, by
       simp only [mem_Union]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
-#align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_ioo_rat
+#align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_Ioo_rat
 
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = at_bot ⊔ at_top := by
@@ -169,7 +169,7 @@ instance : CompleteSpace ℝ := by
   refine' this.imp fun N hN n hn => hε (hN n hn)
 
 theorem Real.totallyBounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
-  rw [Real.ball_eq_ioo] <;> apply totallyBounded_ioo
+  rw [Real.ball_eq_Ioo] <;> apply totallyBounded_Ioo
 #align real.totally_bounded_ball Real.totallyBounded_ball
 
 section
@@ -199,17 +199,17 @@ theorem Real.bounded_iff_bddBelow_bddAbove {s : Set ℝ} : Bounded s ↔ BddBelo
     intro bdd
     rcases(bounded_iff_subset_ball 0).1 bdd with ⟨r, hr⟩
     -- hr : s ⊆ closed_ball 0 r
-    rw [Real.closedBall_eq_icc] at hr
+    rw [Real.closedBall_eq_Icc] at hr
     -- hr : s ⊆ Icc (0 - r) (0 + r)
     exact ⟨bdd_below_Icc.mono hr, bdd_above_Icc.mono hr⟩,
     fun h => bounded_of_bddAbove_of_bddBelow h.2 h.1⟩
 #align real.bounded_iff_bdd_below_bdd_above Real.bounded_iff_bddBelow_bddAbove
 
-theorem Real.subset_icc_infₛ_supₛ_of_bounded {s : Set ℝ} (h : Bounded s) :
+theorem Real.subset_Icc_infₛ_supₛ_of_bounded {s : Set ℝ} (h : Bounded s) :
     s ⊆ Icc (infₛ s) (supₛ s) :=
   subset_Icc_cinfₛ_csupₛ (Real.bounded_iff_bddBelow_bddAbove.1 h).1
     (Real.bounded_iff_bddBelow_bddAbove.1 h).2
-#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_icc_infₛ_supₛ_of_bounded
+#align real.subset_Icc_Inf_Sup_of_bounded Real.subset_Icc_infₛ_supₛ_of_bounded
 
 end
 
@@ -258,7 +258,7 @@ theorem tendsto_coe_cofinite : Tendsto (coe : ℤ → ℝ) cofinite (cocompact �
   refine' tendsto_cocompact_of_tendsto_dist_comp_atTop (0 : ℝ) _
   simp only [Filter.tendsto_atTop, eventually_cofinite, not_le, ← mem_ball]
   change ∀ r : ℝ, (coe ⁻¹' ball (0 : ℝ) r).Finite
-  simp [Real.ball_eq_ioo, Set.finite_Ioo]
+  simp [Real.ball_eq_Ioo, Set.finite_Ioo]
 #align int.tendsto_coe_cofinite Int.tendsto_coe_cofinite
 
 /-- For nonzero `a`, the "multiples of `a`" map `zmultiples_hom` from `ℤ` to `ℝ` is discrete, i.e.

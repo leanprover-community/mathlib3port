@@ -31,11 +31,11 @@ namespace FirstOrder
 
 namespace Language
 
-open StructureCat Set
+open Structure Set
 
 variable {L : Language} {ι : Type v} [Preorder ι]
 
-variable {G : ι → Type w} [∀ i, L.StructureCat (G i)]
+variable {G : ι → Type w} [∀ i, L.Structure (G i)]
 
 variable (f : ∀ i j, i ≤ j → G i ↪[L] G j)
 
@@ -54,7 +54,7 @@ theorem map_map [DirectedSystem G fun i j h => f i j h] {i j k} (hij hjk x) :
   DirectedSystem.map_map (fun i j h => f i j h) hij hjk x
 #align first_order.language.directed_system.map_map FirstOrder.Language.DirectedSystem.map_map
 
-variable {G' : ℕ → Type w} [∀ i, L.StructureCat (G' i)] (f' : ∀ n : ℕ, G' n ↪[L] G' (n + 1))
+variable {G' : ℕ → Type w} [∀ i, L.Structure (G' i)] (f' : ∀ n : ℕ, G' n ↪[L] G' (n + 1))
 
 /-- Given a chain of embeddings of structures indexed by `ℕ`, defines a `directed_system` by
 composing them. -/
@@ -131,7 +131,7 @@ def setoid [DirectedSystem G fun i j h => f i j h] [IsDirected ι (· ≤ ·)] :
 
 /-- The structure on the `Σ`-type which becomes the structure on the direct limit after quotienting.
  -/
-noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.StructureCat (Σi, G i)
+noncomputable def sigmaStructure [IsDirected ι (· ≤ ·)] [Nonempty ι] : L.Structure (Σi, G i)
     where
   funMap n F x :=
     ⟨_,
@@ -235,7 +235,7 @@ noncomputable instance prestructure : L.Prestructure (DirectLimit.setoid G f)
 #align first_order.language.direct_limit.prestructure FirstOrder.Language.DirectLimit.prestructure
 
 /-- The `L.Structure` on a direct limit of `L.Structure`s. -/
-noncomputable instance structure : L.StructureCat (DirectLimit G f) :=
+noncomputable instance structure : L.Structure (DirectLimit G f) :=
   language.quotient_structure
 #align first_order.language.direct_limit.Structure FirstOrder.Language.DirectLimit.structure
 
@@ -312,7 +312,7 @@ protected theorem induction_on {C : DirectLimit G f → Prop} (z : DirectLimit G
   h ▸ ih i x
 #align first_order.language.direct_limit.induction_on FirstOrder.Language.DirectLimit.induction_on
 
-variable {P : Type u₁} [L.StructureCat P] (g : ∀ i, G i ↪[L] P)
+variable {P : Type u₁} [L.Structure P] (g : ∀ i, G i ↪[L] P)
 
 variable (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 
@@ -372,9 +372,9 @@ theorem lift_unique (F : DirectLimit G f ↪[L] P) (x) :
 
 /-- The direct limit of countably many countably generated structures is countably generated. -/
 theorem cg {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
-    {G : ι → Type w} [∀ i, L.StructureCat (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
-    (h : ∀ i, StructureCat.Cg L (G i)) [DirectedSystem G fun i j h => f i j h] :
-    StructureCat.Cg L (DirectLimit G f) :=
+    {G : ι → Type w} [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
+    (h : ∀ i, Structure.Cg L (G i)) [DirectedSystem G fun i j h => f i j h] :
+    Structure.Cg L (DirectLimit G f) :=
   by
   refine' ⟨⟨⋃ i, direct_limit.of L ι G f i '' Classical.choose (h i).out, _, _⟩⟩
   · exact Set.countable_unionᵢ fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
@@ -390,9 +390,9 @@ theorem cg {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)
 #align first_order.language.direct_limit.cg FirstOrder.Language.DirectLimit.cg
 
 instance cg' {ι : Type _} [Encodable ι] [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
-    {G : ι → Type w} [∀ i, L.StructureCat (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
-    [h : ∀ i, StructureCat.Cg L (G i)] [DirectedSystem G fun i j h => f i j h] :
-    StructureCat.Cg L (DirectLimit G f) :=
+    {G : ι → Type w} [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
+    [h : ∀ i, Structure.Cg L (G i)] [DirectedSystem G fun i j h => f i j h] :
+    Structure.Cg L (DirectLimit G f) :=
   cg f h
 #align first_order.language.direct_limit.cg' FirstOrder.Language.DirectLimit.cg'
 

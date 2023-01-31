@@ -86,9 +86,9 @@ variable (I M)
 
 /-- The Hausdorffification of a module with respect to an ideal. -/
 @[reducible]
-def HausdorffificationCat : Type _ :=
+def Hausdorffification : Type _ :=
   M ⧸ (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M)
-#align Hausdorffification HausdorffificationCat
+#align Hausdorffification Hausdorffification
 
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
@@ -140,24 +140,24 @@ theorem infᵢ_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Su
 
 end IsHausdorff
 
-namespace HausdorffificationCat
+namespace Hausdorffification
 
 /-- The canonical linear map to the Hausdorffification. -/
-def of : M →ₗ[R] HausdorffificationCat I M :=
+def of : M →ₗ[R] Hausdorffification I M :=
   mkq _
-#align Hausdorffification.of HausdorffificationCat.of
+#align Hausdorffification.of Hausdorffification.of
 
 variable {I M}
 
 @[elab_as_elim]
-theorem induction_on {C : HausdorffificationCat I M → Prop} (x : HausdorffificationCat I M)
+theorem induction_on {C : Hausdorffification I M → Prop} (x : Hausdorffification I M)
     (ih : ∀ x, C (of I M x)) : C x :=
   Quotient.inductionOn' x ih
-#align Hausdorffification.induction_on HausdorffificationCat.induction_on
+#align Hausdorffification.induction_on Hausdorffification.induction_on
 
 variable (I M)
 
-instance : IsHausdorff I (HausdorffificationCat I M) :=
+instance : IsHausdorff I (Hausdorffification I M) :=
   ⟨fun x =>
     Quotient.inductionOn' x fun x hx =>
       (Quotient.mk_eq_zero _).2 <|
@@ -173,7 +173,7 @@ include h
 
 /-- universal property of Hausdorffification: any linear map to a Hausdorff module extends to a
 unique map from the Hausdorffification. -/
-def lift (f : M →ₗ[R] N) : HausdorffificationCat I M →ₗ[R] N :=
+def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
   liftq _ f <|
     map_le_iff_le_comap.1 <|
       h.infi_pow_smul ▸
@@ -182,23 +182,23 @@ def lift (f : M →ₗ[R] N) : HausdorffificationCat I M →ₗ[R] N :=
             by
             rw [map_smul'']
             exact smul_mono le_rfl le_top
-#align Hausdorffification.lift HausdorffificationCat.lift
+#align Hausdorffification.lift Hausdorffification.lift
 
 theorem lift_of (f : M →ₗ[R] N) (x : M) : lift I f (of I M x) = f x :=
   rfl
-#align Hausdorffification.lift_of HausdorffificationCat.lift_of
+#align Hausdorffification.lift_of Hausdorffification.lift_of
 
 theorem lift_comp_of (f : M →ₗ[R] N) : (lift I f).comp (of I M) = f :=
   LinearMap.ext fun _ => rfl
-#align Hausdorffification.lift_comp_of HausdorffificationCat.lift_comp_of
+#align Hausdorffification.lift_comp_of Hausdorffification.lift_comp_of
 
 /-- Uniqueness of lift. -/
-theorem lift_eq (f : M →ₗ[R] N) (g : HausdorffificationCat I M →ₗ[R] N) (hg : g.comp (of I M) = f) :
+theorem lift_eq (f : M →ₗ[R] N) (g : Hausdorffification I M →ₗ[R] N) (hg : g.comp (of I M) = f) :
     g = lift I f :=
   LinearMap.ext fun x => induction_on x fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
-#align Hausdorffification.lift_eq HausdorffificationCat.lift_eq
+#align Hausdorffification.lift_eq Hausdorffification.lift_eq
 
-end HausdorffificationCat
+end Hausdorffification
 
 namespace IsPrecomplete
 

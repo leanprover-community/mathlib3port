@@ -133,13 +133,13 @@ namespace LinHom
 
 universe u
 
-open CategoryTheory ActionCat
+open CategoryTheory Action
 
-section RepCat
+section Rep
 
 variable {k : Type u} [CommRing k] {G : GroupCat.{u}}
 
-theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : G) :
+theorem mem_invariants_iff_comm {X Y : Rep k G} (f : X.V →ₗ[k] Y.V) (g : G) :
     (linHom X.ρ Y.ρ) g f = f ↔ f.comp (X.ρ g) = (Y.ρ g).comp f :=
   by
   dsimp
@@ -152,7 +152,7 @@ theorem mem_invariants_iff_comm {X Y : RepCat k G} (f : X.V →ₗ[k] Y.V) (g : 
 /-- The invariants of the representation `lin_hom X.ρ Y.ρ` correspond to the the representation
 homomorphisms from `X` to `Y` -/
 @[simps]
-def invariantsEquivRepHom (X Y : RepCat k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y
+def invariantsEquivRepHom (X Y : Rep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y
     where
   toFun f := ⟨f.val, fun g => (mem_invariants_iff_comm _ g).1 (f.property g)⟩
   map_add' _ _ := rfl
@@ -166,7 +166,7 @@ def invariantsEquivRepHom (X Y : RepCat k G) : (linHom X.ρ Y.ρ).invariants ≃
     rfl
 #align representation.lin_hom.invariants_equiv_Rep_hom Representation.linHom.invariantsEquivRepHom
 
-end RepCat
+end Rep
 
 section FdRep
 

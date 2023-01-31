@@ -32,18 +32,18 @@ namespace Set
 theorem ordConnectedComponent_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a ↔ s ∈ 𝓝 a :=
   by
   refine' ⟨fun h => mem_of_superset h ord_connected_component_subset, fun h => _⟩
-  rcases exists_icc_mem_subset_of_mem_nhds h with ⟨b, c, ha, ha', hs⟩
+  rcases exists_Icc_mem_subset_of_mem_nhds h with ⟨b, c, ha, ha', hs⟩
   exact mem_of_superset ha' (subset_ord_connected_component ha hs)
 #align set.ord_connected_component_mem_nhds Set.ordConnectedComponent_mem_nhds
 
-theorem compl_section_ordSeparatingSet_mem_nhdsWithin_ici (hd : Disjoint s (closure t))
+theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a :=
   by
   have hmem : tᶜ ∈ 𝓝[≥] a := by
     refine' mem_nhdsWithin_of_mem_nhds _
     rw [← mem_interior_iff_mem_nhds, interior_compl]
     exact disjoint_left.1 hd ha
-  rcases exists_icc_mem_subset_of_mem_nhdsWithin_ici hmem with ⟨b, hab, hmem', hsub⟩
+  rcases exists_Icc_mem_subset_of_mem_nhdsWithin_Ici hmem with ⟨b, hab, hmem', hsub⟩
   by_cases H : Disjoint (Icc a b) (ord_connected_section <| ord_separating_set s t)
   · exact mem_of_superset hmem' (disjoint_left.1 H)
   · simp only [Set.disjoint_left, not_forall, Classical.not_not] at H
@@ -56,7 +56,7 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_ici (hd : Disjoint s (clos
           ne_of_mem_of_not_mem hc <|
             disjoint_left.1
               (disjoint_left_ord_separating_set.mono_right ord_connected_section_subset) ha)
-    refine' mem_of_superset (ico_mem_nhdsWithin_ici (left_mem_Ico.2 hac)) fun x hx hx' => _
+    refine' mem_of_superset (Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)) fun x hx hx' => _
     refine' hx.2.Ne (eq_of_mem_ord_connected_section_of_uIcc_subset hx' hc _)
     refine' subset_inter (subset_Union₂_of_subset a ha _) _
     ·
@@ -72,16 +72,16 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_ici (hd : Disjoint s (clos
       refine' lt_of_not_le fun hyc => _
       have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
       exact hxy (Icc_subset_uIcc ⟨hya.le, hx.1⟩) ha
-#align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ordSeparatingSet_mem_nhdsWithin_ici
+#align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Ici
 
-theorem compl_section_ordSeparatingSet_mem_nhdsWithin_iic (hd : Disjoint s (closure t))
+theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Iic (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a :=
   by
   have hd' : Disjoint (of_dual ⁻¹' s) (closure <| of_dual ⁻¹' t) := hd
   have ha' : toDual a ∈ of_dual ⁻¹' s := ha
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
     compl_section_ord_separating_set_mem_nhds_within_Ici hd' ha'
-#align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ordSeparatingSet_mem_nhdsWithin_iic
+#align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Iic
 
 theorem compl_section_ordSeparatingSet_mem_nhds (hd : Disjoint s (closure t)) (ha : a ∈ s) :
     (ord_connected_section <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a :=

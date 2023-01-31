@@ -89,10 +89,10 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
     by
     apply
       tendsto.congr' _
-        ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_icc_vitaliFamily_right x)))
+        ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitaliFamily_right x)))
     filter_upwards [self_mem_nhdsWithin]
     rintro y (hxy : x < y)
-    simp only [comp_app, StieltjesFunction.measure_icc, Real.volume_icc, Classical.not_not.1 h''x]
+    simp only [comp_app, StieltjesFunction.measure_Icc, Real.volume_Icc, Classical.not_not.1 h''x]
     rw [← Ennreal.ofReal_div_of_pos (sub_pos.2 hxy), Ennreal.toReal_ofReal]
     exact div_nonneg (sub_nonneg.2 (f.mono hxy.le)) (sub_pos.2 hxy).le
   -- Limit on the left, following from differentiation of measures. Its form is not exactly the one
@@ -103,10 +103,10 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
     by
     apply
       tendsto.congr' _
-        ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_icc_vitaliFamily_left x)))
+        ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitaliFamily_left x)))
     filter_upwards [self_mem_nhdsWithin]
     rintro y (hxy : y < x)
-    simp only [comp_app, StieltjesFunction.measure_icc, Real.volume_icc]
+    simp only [comp_app, StieltjesFunction.measure_Icc, Real.volume_Icc]
     rw [← Ennreal.ofReal_div_of_pos (sub_pos.2 hxy), Ennreal.toReal_ofReal, ← neg_neg (y - x),
       div_neg, neg_div', neg_sub, neg_sub]
     exact div_nonneg (sub_nonneg.2 (f.mono.left_lim_le hxy.le)) (sub_pos.2 hxy).le
@@ -123,7 +123,7 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
       simpa using this
     · have : Ioo (x - 1) x ∈ 𝓝[<] x :=
         by
-        apply ioo_mem_nhdsWithin_iio
+        apply Ioo_mem_nhdsWithin_Iio
         exact ⟨by linarith, le_refl _⟩
       filter_upwards [this]
       rintro y ⟨hy : x - 1 < y, h'y : y < x⟩
@@ -186,7 +186,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
         simpa using this
       · have : Ioo x (x + 1) ∈ 𝓝[>] x :=
           by
-          apply ioo_mem_nhdsWithin_ioi
+          apply Ioo_mem_nhdsWithin_Ioi
           exact ⟨le_refl _, by linarith⟩
         filter_upwards [this]
         rintro y ⟨hy : x < y, h'y : y < x + 1⟩
@@ -221,7 +221,7 @@ theorem Monotone.ae_hasDerivAt {f : ℝ → ℝ} (hf : Monotone f) :
         simpa using this
       · have : Ioo (x - 1) x ∈ 𝓝[<] x :=
           by
-          apply ioo_mem_nhdsWithin_iio
+          apply Ioo_mem_nhdsWithin_Iio
           exact ⟨by linarith, le_refl _⟩
         filter_upwards [this]
         rintro y ⟨hy : x - 1 < y, h'y : y < x⟩
@@ -259,7 +259,7 @@ theorem MonotoneOn.ae_differentiableWithinAt_of_mem {f : ℝ → ℝ} {s : Set �
   /- We use a global monotone extension of `f`, and argue that this extension is differentiable
     almost everywhere. Such an extension need not exist (think of `1/x` on `(0, +∞)`), but it exists
     if one restricts first the function to a compact interval `[a, b]`. -/
-  apply ae_of_mem_of_ae_of_mem_inter_ioo
+  apply ae_of_mem_of_ae_of_mem_inter_Ioo
   intro a b as bs hab
   obtain ⟨g, hg, gf⟩ : ∃ g : ℝ → ℝ, Monotone g ∧ eq_on f g (s ∩ Icc a b) :=
     (hf.mono (inter_subset_left s (Icc a b))).exists_monotone_extension
@@ -268,7 +268,7 @@ theorem MonotoneOn.ae_differentiableWithinAt_of_mem {f : ℝ → ℝ} {s : Set �
   filter_upwards [hg.ae_differentiable_at]with x hx
   intro h'x
   apply hx.differentiable_within_at.congr_of_eventually_eq _ (gf ⟨h'x.1, h'x.2.1.le, h'x.2.2.le⟩)
-  have : Ioo a b ∈ 𝓝[s] x := nhdsWithin_le_nhds (ioo_mem_nhds h'x.2.1 h'x.2.2)
+  have : Ioo a b ∈ 𝓝[s] x := nhdsWithin_le_nhds (Ioo_mem_nhds h'x.2.1 h'x.2.2)
   filter_upwards [self_mem_nhdsWithin, this]with y hy h'y
   exact gf ⟨hy, h'y.1.le, h'y.2.le⟩
 #align monotone_on.ae_differentiable_within_at_of_mem MonotoneOn.ae_differentiableWithinAt_of_mem

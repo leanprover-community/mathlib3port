@@ -29,61 +29,60 @@ namespace CategoryTheory
 
 /-- Endomorphisms of an object in a category. Arguments order in multiplication agrees with
 `function.comp`, not with `category.comp`. -/
-def EndCat {C : Type u} [CategoryStruct.{v} C] (X : C) :=
+def End {C : Type u} [CategoryStruct.{v} C] (X : C) :=
   X ⟶ X
-#align category_theory.End CategoryTheory.EndCat
+#align category_theory.End CategoryTheory.End
 
-namespace EndCat
+namespace End
 
 section Struct
 
 variable {C : Type u} [CategoryStruct.{v} C] (X : C)
 
-instance hasOne : One (EndCat X) :=
+instance hasOne : One (End X) :=
   ⟨𝟙 X⟩
-#align category_theory.End.has_one CategoryTheory.EndCat.hasOne
+#align category_theory.End.has_one CategoryTheory.End.hasOne
 
-instance inhabited : Inhabited (EndCat X) :=
+instance inhabited : Inhabited (End X) :=
   ⟨𝟙 X⟩
-#align category_theory.End.inhabited CategoryTheory.EndCat.inhabited
+#align category_theory.End.inhabited CategoryTheory.End.inhabited
 
 /-- Multiplication of endomorphisms agrees with `function.comp`, not `category_struct.comp`. -/
-instance hasMul : Mul (EndCat X) :=
+instance hasMul : Mul (End X) :=
   ⟨fun x y => y ≫ x⟩
-#align category_theory.End.has_mul CategoryTheory.EndCat.hasMul
+#align category_theory.End.has_mul CategoryTheory.End.hasMul
 
 variable {X}
 
 /-- Assist the typechecker by expressing a morphism `X ⟶ X` as a term of `End X`. -/
-def of (f : X ⟶ X) : EndCat X :=
+def of (f : X ⟶ X) : End X :=
   f
-#align category_theory.End.of CategoryTheory.EndCat.of
+#align category_theory.End.of CategoryTheory.End.of
 
 /-- Assist the typechecker by expressing an endomorphism `f : End X` as a term of `X ⟶ X`. -/
-def asHom (f : EndCat X) : X ⟶ X :=
+def asHom (f : End X) : X ⟶ X :=
   f
-#align category_theory.End.as_hom CategoryTheory.EndCat.asHom
+#align category_theory.End.as_hom CategoryTheory.End.asHom
 
 @[simp]
-theorem one_def : (1 : EndCat X) = 𝟙 X :=
+theorem one_def : (1 : End X) = 𝟙 X :=
   rfl
-#align category_theory.End.one_def CategoryTheory.EndCat.one_def
+#align category_theory.End.one_def CategoryTheory.End.one_def
 
 @[simp]
-theorem mul_def (xs ys : EndCat X) : xs * ys = ys ≫ xs :=
+theorem mul_def (xs ys : End X) : xs * ys = ys ≫ xs :=
   rfl
-#align category_theory.End.mul_def CategoryTheory.EndCat.mul_def
+#align category_theory.End.mul_def CategoryTheory.End.mul_def
 
 end Struct
 
 /-- Endomorphisms of an object form a monoid -/
-instance monoid {C : Type u} [Category.{v} C] {X : C} : Monoid (EndCat X) :=
-  { EndCat.hasMul X,
-    EndCat.hasOne X with
+instance monoid {C : Type u} [Category.{v} C] {X : C} : Monoid (End X) :=
+  { End.hasMul X, End.hasOne X with
     mul_one := Category.id_comp
     one_mul := Category.comp_id
     mul_assoc := fun x y z => (Category.assoc z y x).symm }
-#align category_theory.End.monoid CategoryTheory.EndCat.monoid
+#align category_theory.End.monoid CategoryTheory.End.monoid
 
 section MulAction
 
@@ -91,41 +90,41 @@ variable {C : Type u} [Category.{v} C]
 
 open Opposite
 
-instance mulActionRight {X Y : C} : MulAction (EndCat Y) (X ⟶ Y)
+instance mulActionRight {X Y : C} : MulAction (End Y) (X ⟶ Y)
     where
   smul r f := f ≫ r
   one_smul := Category.comp_id
   mul_smul r s f := Eq.symm <| Category.assoc _ _ _
-#align category_theory.End.mul_action_right CategoryTheory.EndCat.mulActionRight
+#align category_theory.End.mul_action_right CategoryTheory.End.mulActionRight
 
-instance mulActionLeft {X : Cᵒᵖ} {Y : C} : MulAction (EndCat X) (unop X ⟶ Y)
+instance mulActionLeft {X : Cᵒᵖ} {Y : C} : MulAction (End X) (unop X ⟶ Y)
     where
   smul r f := r.unop ≫ f
   one_smul := Category.id_comp
   mul_smul r s f := Category.assoc _ _ _
-#align category_theory.End.mul_action_left CategoryTheory.EndCat.mulActionLeft
+#align category_theory.End.mul_action_left CategoryTheory.End.mulActionLeft
 
-theorem smul_right {X Y : C} {r : EndCat Y} {f : X ⟶ Y} : r • f = f ≫ r :=
+theorem smul_right {X Y : C} {r : End Y} {f : X ⟶ Y} : r • f = f ≫ r :=
   rfl
-#align category_theory.End.smul_right CategoryTheory.EndCat.smul_right
+#align category_theory.End.smul_right CategoryTheory.End.smul_right
 
-theorem smul_left {X : Cᵒᵖ} {Y : C} {r : EndCat X} {f : unop X ⟶ Y} : r • f = r.unop ≫ f :=
+theorem smul_left {X : Cᵒᵖ} {Y : C} {r : End X} {f : unop X ⟶ Y} : r • f = r.unop ≫ f :=
   rfl
-#align category_theory.End.smul_left CategoryTheory.EndCat.smul_left
+#align category_theory.End.smul_left CategoryTheory.End.smul_left
 
 end MulAction
 
 /-- In a groupoid, endomorphisms form a group -/
-instance group {C : Type u} [Groupoid.{v} C] (X : C) : Group (EndCat X) :=
-  { EndCat.monoid with
+instance group {C : Type u} [Groupoid.{v} C] (X : C) : Group (End X) :=
+  { End.monoid with
     mul_left_inv := Groupoid.comp_inv
     inv := Groupoid.inv }
-#align category_theory.End.group CategoryTheory.EndCat.group
+#align category_theory.End.group CategoryTheory.End.group
 
-end EndCat
+end End
 
-theorem isUnit_iff_isIso {C : Type u} [Category.{v} C] {X : C} (f : EndCat X) :
-    IsUnit (f : EndCat X) ↔ IsIso f :=
+theorem isUnit_iff_isIso {C : Type u} [Category.{v} C] {X : C} (f : End X) :
+    IsUnit (f : End X) ↔ IsIso f :=
   ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h =>
     ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
 #align category_theory.is_unit_iff_is_iso CategoryTheory.isUnit_iff_isIso
@@ -137,17 +136,17 @@ variable {C : Type u} [Category.{v} C] (X : C)
 The order of arguments in multiplication agrees with
 `function.comp`, not with `category.comp`.
 -/
-def AutCat (X : C) :=
+def Aut (X : C) :=
   X ≅ X
-#align category_theory.Aut CategoryTheory.AutCat
+#align category_theory.Aut CategoryTheory.Aut
 
-namespace AutCat
+namespace Aut
 
-instance inhabited : Inhabited (AutCat X) :=
+instance inhabited : Inhabited (Aut X) :=
   ⟨Iso.refl X⟩
-#align category_theory.Aut.inhabited CategoryTheory.AutCat.inhabited
+#align category_theory.Aut.inhabited CategoryTheory.Aut.inhabited
 
-instance : Group (AutCat X) := by
+instance : Group (Aut X) := by
   refine_struct
             { one := iso.refl X
               inv := iso.symm
@@ -160,37 +159,37 @@ instance : Group (AutCat X) := by
       ext <;>
     simp [flip, (· * ·), Monoid.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoid.one, Inv.inv]
 
-theorem autCat_mul_def (f g : AutCat X) : f * g = g.trans f :=
+theorem aut_mul_def (f g : Aut X) : f * g = g.trans f :=
   rfl
-#align category_theory.Aut.Aut_mul_def CategoryTheory.AutCat.autCat_mul_def
+#align category_theory.Aut.Aut_mul_def CategoryTheory.Aut.aut_mul_def
 
-theorem autCat_inv_def (f : AutCat X) : f⁻¹ = f.symm :=
+theorem aut_inv_def (f : Aut X) : f⁻¹ = f.symm :=
   rfl
-#align category_theory.Aut.Aut_inv_def CategoryTheory.AutCat.autCat_inv_def
+#align category_theory.Aut.Aut_inv_def CategoryTheory.Aut.aut_inv_def
 
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.
 -/
-def unitsEndEquivAut : (EndCat X)ˣ ≃* AutCat X
+def unitsEndEquivAut : (End X)ˣ ≃* Aut X
     where
   toFun f := ⟨f.1, f.2, f.4, f.3⟩
   invFun f := ⟨f.1, f.2, f.4, f.3⟩
   left_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
   right_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
   map_mul' f g := by rcases f with ⟨⟩ <;> rcases g with ⟨⟩ <;> rfl
-#align category_theory.Aut.units_End_equiv_Aut CategoryTheory.AutCat.unitsEndEquivAut
+#align category_theory.Aut.units_End_equiv_Aut CategoryTheory.Aut.unitsEndEquivAut
 
 /-- Isomorphisms induce isomorphisms of the automorphism group -/
-def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : AutCat X ≃* AutCat Y
+def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y
     where
   toFun x := ⟨h.inv ≫ x.Hom ≫ h.Hom, h.inv ≫ x.inv ≫ h.Hom⟩
   invFun y := ⟨h.Hom ≫ y.Hom ≫ h.inv, h.Hom ≫ y.inv ≫ h.inv⟩
   left_inv := by tidy
   right_inv := by tidy
   map_mul' := by simp [Aut_mul_def]
-#align category_theory.Aut.Aut_mul_equiv_of_iso CategoryTheory.AutCat.autMulEquivOfIso
+#align category_theory.Aut.Aut_mul_equiv_of_iso CategoryTheory.Aut.autMulEquivOfIso
 
-end AutCat
+end Aut
 
 namespace Functor
 
@@ -198,7 +197,7 @@ variable {D : Type u'} [Category.{v'} D] (f : C ⥤ D) (X)
 
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps]
-def mapEnd : EndCat X →* EndCat (f.obj X)
+def mapEnd : End X →* End (f.obj X)
     where
   toFun := Functor.map f
   map_mul' x y := f.map_comp y x
@@ -206,8 +205,7 @@ def mapEnd : EndCat X →* EndCat (f.obj X)
 #align category_theory.functor.map_End CategoryTheory.Functor.mapEnd
 
 /-- `f.map_iso` as a group hom between automorphism groups. -/
-def mapAut : AutCat X →* AutCat (f.obj X)
-    where
+def mapAut : Aut X →* Aut (f.obj X) where
   toFun := f.mapIso
   map_mul' x y := f.map_iso_trans y x
   map_one' := f.map_iso_refl X

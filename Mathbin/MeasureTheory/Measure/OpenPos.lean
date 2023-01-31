@@ -134,44 +134,44 @@ section LinearOrder
 variable {X Y : Type _} [TopologicalSpace X] [LinearOrder X] [OrderTopology X]
   {m : MeasurableSpace X} [TopologicalSpace Y] [T2Space Y] (μ : Measure X) [IsOpenPosMeasure μ]
 
-theorem measure_ioi_pos [NoMaxOrder X] (a : X) : 0 < μ (Ioi a) :=
-  isOpen_ioi.measure_pos μ nonempty_Ioi
-#align measure_theory.measure.measure_Ioi_pos MeasureTheory.Measure.measure_ioi_pos
+theorem measure_Ioi_pos [NoMaxOrder X] (a : X) : 0 < μ (Ioi a) :=
+  isOpen_Ioi.measure_pos μ nonempty_Ioi
+#align measure_theory.measure.measure_Ioi_pos MeasureTheory.Measure.measure_Ioi_pos
 
-theorem measure_iio_pos [NoMinOrder X] (a : X) : 0 < μ (Iio a) :=
-  isOpen_iio.measure_pos μ nonempty_Iio
-#align measure_theory.measure.measure_Iio_pos MeasureTheory.Measure.measure_iio_pos
+theorem measure_Iio_pos [NoMinOrder X] (a : X) : 0 < μ (Iio a) :=
+  isOpen_Iio.measure_pos μ nonempty_Iio
+#align measure_theory.measure.measure_Iio_pos MeasureTheory.Measure.measure_Iio_pos
 
-theorem measure_ioo_pos [DenselyOrdered X] {a b : X} : 0 < μ (Ioo a b) ↔ a < b :=
-  (isOpen_ioo.measure_pos_iff μ).trans nonempty_Ioo
-#align measure_theory.measure.measure_Ioo_pos MeasureTheory.Measure.measure_ioo_pos
+theorem measure_Ioo_pos [DenselyOrdered X] {a b : X} : 0 < μ (Ioo a b) ↔ a < b :=
+  (isOpen_Ioo.measure_pos_iff μ).trans nonempty_Ioo
+#align measure_theory.measure.measure_Ioo_pos MeasureTheory.Measure.measure_Ioo_pos
 
-theorem measure_ioo_eq_zero [DenselyOrdered X] {a b : X} : μ (Ioo a b) = 0 ↔ b ≤ a :=
-  (isOpen_ioo.measure_eq_zero_iff μ).trans (Ioo_eq_empty_iff.trans not_lt)
-#align measure_theory.measure.measure_Ioo_eq_zero MeasureTheory.Measure.measure_ioo_eq_zero
+theorem measure_Ioo_eq_zero [DenselyOrdered X] {a b : X} : μ (Ioo a b) = 0 ↔ b ≤ a :=
+  (isOpen_Ioo.measure_eq_zero_iff μ).trans (Ioo_eq_empty_iff.trans not_lt)
+#align measure_theory.measure.measure_Ioo_eq_zero MeasureTheory.Measure.measure_Ioo_eq_zero
 
-theorem eqOn_ioo_of_ae_eq {a b : X} {f g : X → Y} (hfg : f =ᵐ[μ.restrict (Ioo a b)] g)
+theorem eqOn_Ioo_of_ae_eq {a b : X} {f g : X → Y} (hfg : f =ᵐ[μ.restrict (Ioo a b)] g)
     (hf : ContinuousOn f (Ioo a b)) (hg : ContinuousOn g (Ioo a b)) : EqOn f g (Ioo a b) :=
-  eqOn_of_ae_eq hfg hf hg ioo_subset_closure_interior
-#align measure_theory.measure.eq_on_Ioo_of_ae_eq MeasureTheory.Measure.eqOn_ioo_of_ae_eq
+  eqOn_of_ae_eq hfg hf hg Ioo_subset_closure_interior
+#align measure_theory.measure.eq_on_Ioo_of_ae_eq MeasureTheory.Measure.eqOn_Ioo_of_ae_eq
 
-theorem eqOn_ioc_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
+theorem eqOn_Ioc_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
     (hfg : f =ᵐ[μ.restrict (Ioc a b)] g) (hf : ContinuousOn f (Ioc a b))
     (hg : ContinuousOn g (Ioc a b)) : EqOn f g (Ioc a b) :=
-  eqOn_of_ae_eq hfg hf hg (ioc_subset_closure_interior _ _)
-#align measure_theory.measure.eq_on_Ioc_of_ae_eq MeasureTheory.Measure.eqOn_ioc_of_ae_eq
+  eqOn_of_ae_eq hfg hf hg (Ioc_subset_closure_interior _ _)
+#align measure_theory.measure.eq_on_Ioc_of_ae_eq MeasureTheory.Measure.eqOn_Ioc_of_ae_eq
 
-theorem eqOn_ico_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
+theorem eqOn_Ico_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
     (hfg : f =ᵐ[μ.restrict (Ico a b)] g) (hf : ContinuousOn f (Ico a b))
     (hg : ContinuousOn g (Ico a b)) : EqOn f g (Ico a b) :=
-  eqOn_of_ae_eq hfg hf hg (ico_subset_closure_interior _ _)
-#align measure_theory.measure.eq_on_Ico_of_ae_eq MeasureTheory.Measure.eqOn_ico_of_ae_eq
+  eqOn_of_ae_eq hfg hf hg (Ico_subset_closure_interior _ _)
+#align measure_theory.measure.eq_on_Ico_of_ae_eq MeasureTheory.Measure.eqOn_Ico_of_ae_eq
 
-theorem eqOn_icc_of_ae_eq [DenselyOrdered X] {a b : X} (hne : a ≠ b) {f g : X → Y}
+theorem eqOn_Icc_of_ae_eq [DenselyOrdered X] {a b : X} (hne : a ≠ b) {f g : X → Y}
     (hfg : f =ᵐ[μ.restrict (Icc a b)] g) (hf : ContinuousOn f (Icc a b))
     (hg : ContinuousOn g (Icc a b)) : EqOn f g (Icc a b) :=
-  eqOn_of_ae_eq hfg hf hg (closure_interior_icc hne).symm.Subset
-#align measure_theory.measure.eq_on_Icc_of_ae_eq MeasureTheory.Measure.eqOn_icc_of_ae_eq
+  eqOn_of_ae_eq hfg hf hg (closure_interior_Icc hne).symm.Subset
+#align measure_theory.measure.eq_on_Icc_of_ae_eq MeasureTheory.Measure.eqOn_Icc_of_ae_eq
 
 end LinearOrder
 

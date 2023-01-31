@@ -8,7 +8,7 @@ Authors: Scott Morrison
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.RepresentationTheory.RepCat
+import Mathbin.RepresentationTheory.Rep
 import Mathbin.Algebra.Category.FgModule.Limits
 import Mathbin.CategoryTheory.Preadditive.Schur
 import Mathbin.RepresentationTheory.Basic
@@ -47,7 +47,7 @@ open CategoryTheory.Limits
 /- ./././Mathport/Syntax/Translate/Command.lean:323:31: unsupported: @[derive] abbrev -/
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoid G] :=
-  ActionCat (FgModule.{u} k) (MonCat.of G)
+  Action (FgModule.{u} k) (Mon.of G)
 #align fdRep FdRep
 
 namespace FdRep
@@ -86,14 +86,14 @@ def ρ (V : FdRep k G) : G →* V →ₗ[k] V :=
 
 /-- The underlying `linear_equiv` of an isomorphism of representations. -/
 def isoToLinearEquiv {V W : FdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
-  FgModule.isoToLinearEquiv ((ActionCat.forget (FgModule k) (MonCat.of G)).mapIso i)
+  FgModule.isoToLinearEquiv ((Action.forget (FgModule k) (Mon.of G)).mapIso i)
 #align fdRep.iso_to_linear_equiv FdRep.isoToLinearEquiv
 
 theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) :
     W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) :=
   by
   rw [FdRep.isoToLinearEquiv, ← FgModule.Iso.conj_eq_conj, iso.conj_apply]
-  rw [iso.eq_inv_comp ((ActionCat.forget (FgModule k) (MonCat.of G)).mapIso i)]
+  rw [iso.eq_inv_comp ((Action.forget (FgModule k) (Mon.of G)).mapIso i)]
   exact (i.hom.comm g).symm
 #align fdRep.iso.conj_ρ FdRep.Iso.conj_ρ
 
@@ -104,10 +104,10 @@ def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
   ⟨FgModule.of k V, ρ⟩
 #align fdRep.of FdRep.of
 
-instance : HasForget₂ (FdRep k G) (RepCat k G)
-    where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
+instance : HasForget₂ (FdRep k G) (Rep k G)
+    where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (Mon.of G)
 
-theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (RepCat k G)).obj V).ρ = V.ρ :=
+theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (Rep k G)).obj V).ρ = V.ρ :=
   by
   ext (g v)
   rfl
@@ -136,8 +136,7 @@ theorem finrank_hom_simple_simple [IsAlgClosed k] (V W : FdRep k G) [Simple V] [
 
 /-- The forgetful functor to `Rep k G` preserves hom-sets and their vector space structure -/
 def forget₂HomLinearEquiv (X Y : FdRep k G) :
-    ((forget₂ (FdRep k G) (RepCat k G)).obj X ⟶ (forget₂ (FdRep k G) (RepCat k G)).obj Y) ≃ₗ[k]
-      X ⟶ Y
+    ((forget₂ (FdRep k G) (Rep k G)).obj X ⟶ (forget₂ (FdRep k G) (Rep k G)).obj Y) ≃ₗ[k] X ⟶ Y
     where
   toFun f := ⟨f.hom, f.comm⟩
   map_add' _ _ := rfl
@@ -160,7 +159,7 @@ variable {k G : Type u} [Field k] [Group G]
 -- Verify that the right rigid structure is available when the monoid is a group.
 noncomputable instance : RightRigidCategory (FdRep k G) :=
   by
-  change right_rigid_category (ActionCat (FgModule k) (GroupCat.of G))
+  change right_rigid_category (Action (FgModule k) (GroupCat.of G))
   infer_instance
 
 end FdRep
@@ -194,7 +193,7 @@ noncomputable def dualTensorIsoLinHomAux :
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
 noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (linHom ρV W.ρ) :=
   by
-  apply ActionCat.mkIso (dual_tensor_iso_lin_hom_aux ρV W)
+  apply Action.mkIso (dual_tensor_iso_lin_hom_aux ρV W)
   convert dual_tensor_hom_comm ρV W.ρ
 #align fdRep.dual_tensor_iso_lin_hom FdRep.dualTensorIsoLinHom
 

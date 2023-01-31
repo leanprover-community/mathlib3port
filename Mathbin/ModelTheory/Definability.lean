@@ -37,11 +37,11 @@ universe u v w
 
 namespace Set
 
-variable {M : Type w} (A : Set M) (L : FirstOrder.Language.{u, v}) [L.StructureCat M]
+variable {M : Type w} (A : Set M) (L : FirstOrder.Language.{u, v}) [L.Structure M]
 
 open FirstOrder
 
-open FirstOrder.Language FirstOrder.Language.StructureCat
+open FirstOrder.Language FirstOrder.Language.Structure
 
 variable {α : Type _} {β : Type _}
 
@@ -53,7 +53,7 @@ def Definable (s : Set (α → M)) : Prop :=
 
 variable {L} {A} {B : Set M} {s : Set (α → M)}
 
-theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.StructureCat M] (h : A.Definable L s)
+theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h : A.Definable L s)
     (φ : L →ᴸ L') [φ.IsExpansionOn M] : A.Definable L' s :=
   by
   obtain ⟨ψ, rfl⟩ := h
@@ -273,7 +273,7 @@ namespace Language
 
 open Set
 
-variable (L : FirstOrder.Language.{u, v}) {M : Type w} [L.StructureCat M] (A : Set M) (α : Type _)
+variable (L : FirstOrder.Language.{u, v}) {M : Type w} [L.Structure M] (A : Set M) (α : Type _)
 
 /-- Definable sets are subsets of finite Cartesian products of a structure such that membership is
   given by a first-order formula. -/

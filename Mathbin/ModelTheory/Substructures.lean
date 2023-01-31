@@ -48,11 +48,11 @@ namespace Language
 
 variable {L : Language.{u, v}} {M : Type w} {N P : Type _}
 
-variable [L.StructureCat M] [L.StructureCat N] [L.StructureCat P]
+variable [L.Structure M] [L.Structure N] [L.Structure P]
 
 open FirstOrder Cardinal
 
-open StructureCat Cardinal
+open Structure Cardinal
 
 section ClosedUnder
 
@@ -657,7 +657,7 @@ theorem comap_strictMono_of_surjective : StrictMono (comap f) :=
 
 end GaloisInsertion
 
-instance inducedStructure {S : L.Substructure M} : L.StructureCat S
+instance inducedStructure {S : L.Substructure M} : L.Structure S
     where
   funMap n f x := ⟨funMap f fun i => x i, S.fun_mem f (fun i => x i) fun i => (x i).2⟩
   rel_map n r x := RelMap r fun i => (x i : M)
@@ -702,11 +702,11 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure L s → Prop}
 
 end Substructure
 
-namespace LhomCat
+namespace Lhom
 
 open Substructure
 
-variable {L' : Language} [L'.StructureCat M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
+variable {L' : Language} [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M]
 
 include φ
 
@@ -724,20 +724,20 @@ def substructureReduct : L'.Substructure M ↪o L.Substructure M
     simp only [SetLike.coe_set_eq] at h
     exact h
   map_rel_iff' S T := Iff.rfl
-#align first_order.language.Lhom.substructure_reduct FirstOrder.Language.LhomCat.substructureReduct
+#align first_order.language.Lhom.substructure_reduct FirstOrder.Language.Lhom.substructureReduct
 
 @[simp]
 theorem mem_substructureReduct {x : M} {S : L'.Substructure M} :
     x ∈ φ.substructureReduct S ↔ x ∈ S :=
   Iff.rfl
-#align first_order.language.Lhom.mem_substructure_reduct FirstOrder.Language.LhomCat.mem_substructureReduct
+#align first_order.language.Lhom.mem_substructure_reduct FirstOrder.Language.Lhom.mem_substructureReduct
 
 @[simp]
 theorem coe_substructureReduct {S : L'.Substructure M} : (φ.substructureReduct S : Set M) = ↑S :=
   rfl
-#align first_order.language.Lhom.coe_substructure_reduct FirstOrder.Language.LhomCat.coe_substructureReduct
+#align first_order.language.Lhom.coe_substructure_reduct FirstOrder.Language.Lhom.coe_substructureReduct
 
-end LhomCat
+end Lhom
 
 namespace Substructure
 

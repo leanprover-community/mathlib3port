@@ -79,14 +79,14 @@ theorem hasBasis_nhds_zero : (𝓝 (0 : Γ₀)).HasBasis (fun γ : Γ₀ => γ �
   exact directedOn_iff_directed.2 (directed_of_inf fun a b hab => Iio_subset_Iio hab)
 #align linear_ordered_comm_group_with_zero.has_basis_nhds_zero LinearOrderedCommGroupWithZero.hasBasis_nhds_zero
 
-theorem iio_mem_nhds_zero (hγ : γ ≠ 0) : Iio γ ∈ 𝓝 (0 : Γ₀) :=
+theorem Iio_mem_nhds_zero (hγ : γ ≠ 0) : Iio γ ∈ 𝓝 (0 : Γ₀) :=
   hasBasis_nhds_zero.mem_of_mem hγ
-#align linear_ordered_comm_group_with_zero.Iio_mem_nhds_zero LinearOrderedCommGroupWithZero.iio_mem_nhds_zero
+#align linear_ordered_comm_group_with_zero.Iio_mem_nhds_zero LinearOrderedCommGroupWithZero.Iio_mem_nhds_zero
 
 /-- If `γ` is an invertible element of a linearly ordered group with zero element adjoined, then
 `Iio (γ : Γ₀)` is a neighbourhood of `0`. -/
 theorem nhds_zero_of_units (γ : Γ₀ˣ) : Iio ↑γ ∈ 𝓝 (0 : Γ₀) :=
-  iio_mem_nhds_zero γ.NeZero
+  Iio_mem_nhds_zero γ.NeZero
 #align linear_ordered_comm_group_with_zero.nhds_zero_of_units LinearOrderedCommGroupWithZero.nhds_zero_of_units
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (γ₀ «expr ≠ » 0) -/
@@ -141,9 +141,9 @@ theorem tendsto_units {γ₀ : Γ₀ˣ} : Tendsto f l (𝓝 (γ₀ : Γ₀)) ↔
   tendsto_of_ne_zero γ₀.NeZero
 #align linear_ordered_comm_group_with_zero.tendsto_units LinearOrderedCommGroupWithZero.tendsto_units
 
-theorem iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
+theorem Iio_mem_nhds (h : γ₁ < γ₂) : Iio γ₂ ∈ 𝓝 γ₁ := by
   rcases eq_or_ne γ₁ 0 with (rfl | h₀) <;> simp [*, h.ne', Iio_mem_nhds_zero]
-#align linear_ordered_comm_group_with_zero.Iio_mem_nhds LinearOrderedCommGroupWithZero.iio_mem_nhds
+#align linear_ordered_comm_group_with_zero.Iio_mem_nhds LinearOrderedCommGroupWithZero.Iio_mem_nhds
 
 /-!
 ### Open/closed sets
@@ -165,9 +165,9 @@ theorem isClosed_iff {s : Set Γ₀} : IsClosed s ↔ (0 : Γ₀) ∈ s ∨ ∃ 
     compl_subset_compl]
 #align linear_ordered_comm_group_with_zero.is_closed_iff LinearOrderedCommGroupWithZero.isClosed_iff
 
-theorem isOpen_iio {a : Γ₀} : IsOpen (Iio a) :=
+theorem isOpen_Iio {a : Γ₀} : IsOpen (Iio a) :=
   isOpen_iff.mpr <| imp_iff_not_or.mp fun ha => ⟨a, ne_of_gt ha, Subset.rfl⟩
-#align linear_ordered_comm_group_with_zero.is_open_Iio LinearOrderedCommGroupWithZero.isOpen_iio
+#align linear_ordered_comm_group_with_zero.is_open_Iio LinearOrderedCommGroupWithZero.isOpen_Iio
 
 /-!
 ### Instances
@@ -182,7 +182,7 @@ instance (priority := 100) orderClosedTopology : OrderClosedTopology Γ₀
     simp only [← isOpen_compl_iff, compl_set_of, not_le, isOpen_iff_mem_nhds]
     rintro ⟨a, b⟩ (hab : b < a)
     rw [nhds_prod_eq, nhds_of_ne_zero (zero_le'.trans_lt hab).ne', pure_prod]
-    exact iio_mem_nhds hab
+    exact Iio_mem_nhds hab
 #align linear_ordered_comm_group_with_zero.order_closed_topology LinearOrderedCommGroupWithZero.orderClosedTopology
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/

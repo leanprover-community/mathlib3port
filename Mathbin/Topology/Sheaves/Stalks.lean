@@ -8,7 +8,7 @@ Authors: Scott Morrison, Justus Springer
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Topology.Category.TopCat.OpenNhds
+import Mathbin.Topology.Category.Top.OpenNhds
 import Mathbin.Topology.Sheaves.Presheaf
 import Mathbin.Topology.Sheaves.SheafCondition.UniqueGluing
 import Mathbin.CategoryTheory.Adjunction.Evaluation
@@ -16,7 +16,7 @@ import Mathbin.CategoryTheory.Limits.Types
 import Mathbin.CategoryTheory.Limits.Preserves.Filtered
 import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.Tactic.Elementwise
-import Mathbin.Algebra.Category.RingCat.Colimits
+import Mathbin.Algebra.Category.Ring.Colimits
 
 /-!
 # Stalks
@@ -245,7 +245,7 @@ def stalkPullbackHom (f : X ⟶ Y) (F : Y.Presheaf C) (x : X) :
 /-- The morphism `(f⁻¹ℱ)(U) ⟶ ℱ_{f(x)}` for some `U ∋ x`. -/
 def germToPullbackStalk (f : X ⟶ Y) (F : Y.Presheaf C) (U : Opens X) (x : U) :
     (pullbackObj f F).obj (op U) ⟶ F.stalk (f x) :=
-  colimit.desc (LanCat.diagram (Opens.map f).op F (op U))
+  colimit.desc (Lan.diagram (Opens.map f).op F (op U))
     { x := F.stalk (f x)
       ι :=
         { app := fun V => F.germ ⟨f x, V.Hom.unop.le x.2⟩
@@ -508,7 +508,7 @@ theorem stalk_mono_of_mono {F G : Sheaf C X} (f : F ⟶ G) [Mono f] :
 
 theorem mono_of_stalk_mono {F G : Sheaf C X} (f : F ⟶ G) [∀ x, mono <| (stalkFunctor C x).map f.1] :
     Mono f :=
-  (SheafCat.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
+  (Sheaf.Hom.mono_iff_presheaf_mono _ _ _).mpr <|
     (NatTrans.mono_iff_mono_app _ _).mpr fun U =>
       (ConcreteCategory.mono_iff_injective_of_preserves_pullback _).mpr <|
         app_injective_of_stalkFunctor_map_injective f.1 U.unop fun ⟨x, hx⟩ =>

@@ -64,7 +64,7 @@ theorem isIso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X 
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
 -/
-noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (EndCat X) := by
+noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) := by
   classical exact
       {
         (inferInstance :
@@ -164,7 +164,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
 This can't be an instance as `𝕜` would be undetermined.
 -/
 noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
-    Field (EndCat X) := by
+    Field (End X) := by
   classical exact
       { (inferInstance : DivisionRing (End X)) with
         mul_comm := fun f g =>

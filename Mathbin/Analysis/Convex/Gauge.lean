@@ -353,7 +353,7 @@ theorem interior_subset_gauge_lt_one (s : Set E) : interior s ⊆ { x | gauge s 
   have hs' : IsOpen s' := hf.is_open_preimage _ isOpen_interior
   have one_mem : (1 : ℝ) ∈ s' := by simpa only [s', f, Set.mem_preimage, one_smul]
   obtain ⟨ε, hε₀, hε⟩ := (Metric.nhds_basis_closedBall.1 _).1 (isOpen_iff_mem_nhds.1 hs' 1 one_mem)
-  rw [Real.closedBall_eq_icc] at hε
+  rw [Real.closedBall_eq_Icc] at hε
   have hε₁ : 0 < 1 + ε := hε₀.trans (lt_one_add ε)
   have : (1 + ε)⁻¹ < 1 := by
     rw [inv_lt_one_iff]

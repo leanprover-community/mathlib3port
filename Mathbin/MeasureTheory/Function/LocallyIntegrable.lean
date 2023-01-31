@@ -223,7 +223,7 @@ theorem ContinuousOn.integrableOnCompact (hK : IsCompact K) (hf : ContinuousOn f
 
 theorem ContinuousOn.integrableOnIcc [Preorder X] [CompactIccSpace X]
     (hf : ContinuousOn f (Icc a b)) : IntegrableOn f (Icc a b) μ :=
-  hf.integrableOnCompact isCompact_icc
+  hf.integrableOnCompact isCompact_Icc
 #align continuous_on.integrable_on_Icc ContinuousOn.integrableOnIcc
 
 theorem Continuous.integrableOnIcc [Preorder X] [CompactIccSpace X] (hf : Continuous f) :
@@ -310,12 +310,12 @@ theorem Monotone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hmono : Monotone
   intro x
   rcases μ.finite_at_nhds x with ⟨U, hU, h'U⟩
   obtain ⟨a, b, xab, hab, abU⟩ : ∃ a b : X, x ∈ Icc a b ∧ Icc a b ∈ 𝓝 x ∧ Icc a b ⊆ U
-  exact exists_icc_mem_subset_of_mem_nhds hU
+  exact exists_Icc_mem_subset_of_mem_nhds hU
   have ab : a ≤ b := xab.1.trans xab.2
   refine' ⟨Icc a b, hab, _⟩
   exact
     (hmono.monotone_on _).integrableOnOfMeasureNeTop (isLeast_Icc ab) (isGreatest_Icc ab)
-      ((measure_mono abU).trans_lt h'U).Ne measurableSet_icc
+      ((measure_mono abU).trans_lt h'U).Ne measurableSet_Icc
 #align monotone.locally_integrable Monotone.locallyIntegrable
 
 theorem Antitone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hanti : Antitone f) :

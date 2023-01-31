@@ -742,9 +742,9 @@ but is expected to have type
   forall (a : Int) (b : Int), Eq.{1} Int (Int.div a (Int.sign b)) (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) a (Int.sign b))
 Case conversion may be inaccurate. Consider using '#align int.div_sign Int.div_signₓ'. -/
 theorem div_sign : ∀ a b, a / sign b = a * sign b
-  | a, (n + 1 : ℕ) => by unfold sign <;> simp
-  | a, 0 => by simp [sign]
-  | a, -[n+1] => by simp [sign]
+  | a, (n + 1 : ℕ) => by unfold SignType.sign <;> simp
+  | a, 0 => by simp [SignType.sign]
+  | a, -[n+1] => by simp [SignType.sign]
 #align int.div_sign Int.div_sign
 
 #print Int.sign_mul /-

@@ -717,16 +717,16 @@ theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n
 #align nat.prod_factors_gcd_mul_prod_factors_mul Nat.prod_factors_gcd_mul_prod_factors_mul
 #align nat.sum_factors_gcd_add_sum_factors_mul Nat.sum_factors_gcd_add_sum_factors_mul
 
-theorem setOf_pow_dvd_eq_icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
+theorem setOf_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
     { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.Icc 1 (n.factorization p) :=
   by
   ext
   simp [lt_succ_iff, one_le_iff_ne_zero, pp.pow_dvd_iff_le_factorization hn]
-#align nat.set_of_pow_dvd_eq_Icc_factorization Nat.setOf_pow_dvd_eq_icc_factorization
+#align nat.set_of_pow_dvd_eq_Icc_factorization Nat.setOf_pow_dvd_eq_Icc_factorization
 
 /-- The set of positive powers of prime `p` that divide `n` is exactly the set of
 positive natural numbers up to `n.factorization p`. -/
-theorem icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
+theorem Icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
     Icc 1 (n.factorization p) = (Ico 1 n).filter fun i : ℕ => p ^ i ∣ n :=
   by
   rcases eq_or_ne n 0 with (rfl | hn); · simp
@@ -734,14 +734,14 @@ theorem icc_factorization_eq_pow_dvd (n : ℕ) {p : ℕ} (pp : Prime p) :
   simp only [mem_Icc, Finset.mem_filter, mem_Ico, and_assoc', and_congr_right_iff,
     pp.pow_dvd_iff_le_factorization hn, iff_and_self]
   exact fun H1 H2 => lt_of_le_of_lt H2 (factorization_lt p hn)
-#align nat.Icc_factorization_eq_pow_dvd Nat.icc_factorization_eq_pow_dvd
+#align nat.Icc_factorization_eq_pow_dvd Nat.Icc_factorization_eq_pow_dvd
 
 theorem factorization_eq_card_pow_dvd (n : ℕ) {p : ℕ} (pp : p.Prime) :
     n.factorization p = ((Ico 1 n).filter fun i => p ^ i ∣ n).card := by
   simp [← Icc_factorization_eq_pow_dvd n pp]
 #align nat.factorization_eq_card_pow_dvd Nat.factorization_eq_card_pow_dvd
 
-theorem ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
+theorem Ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : n ≤ p ^ b) :
     ((Ico 1 n).filter fun i => p ^ i ∣ n) = (Icc 1 b).filter fun i => p ^ i ∣ n :=
   by
   ext x
@@ -749,7 +749,7 @@ theorem ico_filter_pow_dvd_eq {n p b : ℕ} (pp : p.Prime) (hn : n ≠ 0) (hb : 
   rintro h1 -
   simp [lt_of_pow_dvd_right hn pp.two_le h1,
     (pow_le_iff_le_right pp.two_le).1 ((le_of_dvd hn.bot_lt h1).trans hb)]
-#align nat.Ico_filter_pow_dvd_eq Nat.ico_filter_pow_dvd_eq
+#align nat.Ico_filter_pow_dvd_eq Nat.Ico_filter_pow_dvd_eq
 
 /-! ### Factorization and coprimes -/
 
@@ -957,7 +957,7 @@ theorem card_multiples (n p : ℕ) : card ((Finset.range n).filter fun e => p �
 #align nat.card_multiples Nat.card_multiples
 
 /-- Exactly `n / p` naturals in `(0, n]` are multiples of `p`. -/
-theorem ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filter fun x => p ∣ x).card = n / p :=
+theorem Ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filter fun x => p ∣ x).card = n / p :=
   by
   induction' n with n IH
   · simp
@@ -969,7 +969,7 @@ theorem ioc_filter_dvd_card_eq_div (n p : ℕ) : ((Ioc 0 n).filter fun x => p �
     simp_rw [← Ico_succ_succ, Ico_insert_right (succ_le_succ hn.le), Ico_succ_right]
   simp [Nat.succ_div, add_ite, add_zero, h1, filter_insert, apply_ite card, card_insert_eq_ite, IH,
     Finset.mem_filter, mem_Ioc, not_le.2 (lt_add_one n)]
-#align nat.Ioc_filter_dvd_card_eq_div Nat.ioc_filter_dvd_card_eq_div
+#align nat.Ioc_filter_dvd_card_eq_div Nat.Ioc_filter_dvd_card_eq_div
 
 end Nat
 

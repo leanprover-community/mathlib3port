@@ -180,50 +180,50 @@ variable (C D : Type _) [Category C] [Category D] [Preadditive C] [Preadditive D
 
 /-- Bundled additive functors. -/
 @[nolint has_nonempty_instance]
-def AdditiveFunctorCat :=
+def AdditiveFunctor :=
   FullSubcategory fun F : C ⥤ D => F.Additive deriving Category
-#align category_theory.AdditiveFunctor CategoryTheory.AdditiveFunctorCat
+#align category_theory.AdditiveFunctor CategoryTheory.AdditiveFunctor
 
 -- mathport name: «expr ⥤+ »
-infixr:26 " ⥤+ " => AdditiveFunctorCat
+infixr:26 " ⥤+ " => AdditiveFunctor
 
 instance : Preadditive (C ⥤+ D) :=
   Preadditive.inducedCategory _
 
 /-- An additive functor is in particular a functor. -/
-def AdditiveFunctorCat.forget : (C ⥤+ D) ⥤ C ⥤ D :=
+def AdditiveFunctor.forget : (C ⥤+ D) ⥤ C ⥤ D :=
   fullSubcategoryInclusion _ deriving Full, Faithful
-#align category_theory.AdditiveFunctor.forget CategoryTheory.AdditiveFunctorCat.forget
+#align category_theory.AdditiveFunctor.forget CategoryTheory.AdditiveFunctor.forget
 
 variable {C D}
 
 /-- Turn an additive functor into an object of the category `AdditiveFunctor C D`. -/
-def AdditiveFunctorCat.of (F : C ⥤ D) [F.Additive] : C ⥤+ D :=
+def AdditiveFunctor.of (F : C ⥤ D) [F.Additive] : C ⥤+ D :=
   ⟨F, inferInstance⟩
-#align category_theory.AdditiveFunctor.of CategoryTheory.AdditiveFunctorCat.of
+#align category_theory.AdditiveFunctor.of CategoryTheory.AdditiveFunctor.of
 
 @[simp]
-theorem AdditiveFunctorCat.of_fst (F : C ⥤ D) [F.Additive] : (AdditiveFunctorCat.of F).1 = F :=
+theorem AdditiveFunctor.of_fst (F : C ⥤ D) [F.Additive] : (AdditiveFunctor.of F).1 = F :=
   rfl
-#align category_theory.AdditiveFunctor.of_fst CategoryTheory.AdditiveFunctorCat.of_fst
+#align category_theory.AdditiveFunctor.of_fst CategoryTheory.AdditiveFunctor.of_fst
 
 @[simp]
-theorem AdditiveFunctorCat.forget_obj (F : C ⥤+ D) : (AdditiveFunctorCat.forget C D).obj F = F.1 :=
+theorem AdditiveFunctor.forget_obj (F : C ⥤+ D) : (AdditiveFunctor.forget C D).obj F = F.1 :=
   rfl
-#align category_theory.AdditiveFunctor.forget_obj CategoryTheory.AdditiveFunctorCat.forget_obj
+#align category_theory.AdditiveFunctor.forget_obj CategoryTheory.AdditiveFunctor.forget_obj
 
-theorem AdditiveFunctorCat.forget_obj_of (F : C ⥤ D) [F.Additive] :
-    (AdditiveFunctorCat.forget C D).obj (AdditiveFunctorCat.of F) = F :=
+theorem AdditiveFunctor.forget_obj_of (F : C ⥤ D) [F.Additive] :
+    (AdditiveFunctor.forget C D).obj (AdditiveFunctor.of F) = F :=
   rfl
-#align category_theory.AdditiveFunctor.forget_obj_of CategoryTheory.AdditiveFunctorCat.forget_obj_of
+#align category_theory.AdditiveFunctor.forget_obj_of CategoryTheory.AdditiveFunctor.forget_obj_of
 
 @[simp]
-theorem AdditiveFunctorCat.forget_map (F G : C ⥤+ D) (α : F ⟶ G) :
-    (AdditiveFunctorCat.forget C D).map α = α :=
+theorem AdditiveFunctor.forget_map (F G : C ⥤+ D) (α : F ⟶ G) :
+    (AdditiveFunctor.forget C D).map α = α :=
   rfl
-#align category_theory.AdditiveFunctor.forget_map CategoryTheory.AdditiveFunctorCat.forget_map
+#align category_theory.AdditiveFunctor.forget_map CategoryTheory.AdditiveFunctor.forget_map
 
-instance : Functor.Additive (AdditiveFunctorCat.forget C D) where map_add' F G α β := rfl
+instance : Functor.Additive (AdditiveFunctor.forget C D) where map_add' F G α β := rfl
 
 instance (F : C ⥤+ D) : Functor.Additive F.1 :=
   F.2
@@ -245,66 +245,66 @@ attribute [local instance] preserves_binary_biproducts_of_preserves_binary_produ
 attribute [local instance] preserves_binary_biproducts_of_preserves_binary_coproducts
 
 /-- Turn a left exact functor into an additive functor. -/
-def AdditiveFunctorCat.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
+def AdditiveFunctor.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
     functor.additive_of_preserves_binary_biproducts F deriving
   Full, Faithful
-#align category_theory.AdditiveFunctor.of_left_exact CategoryTheory.AdditiveFunctorCat.ofLeftExact
+#align category_theory.AdditiveFunctor.of_left_exact CategoryTheory.AdditiveFunctor.ofLeftExact
 
 /-- Turn a right exact functor into an additive functor. -/
-def AdditiveFunctorCat.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
+def AdditiveFunctor.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
     functor.additive_of_preserves_binary_biproducts F deriving
   Full, Faithful
-#align category_theory.AdditiveFunctor.of_right_exact CategoryTheory.AdditiveFunctorCat.ofRightExact
+#align category_theory.AdditiveFunctor.of_right_exact CategoryTheory.AdditiveFunctor.ofRightExact
 
 /-- Turn an exact functor into an additive functor. -/
-def AdditiveFunctorCat.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
+def AdditiveFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h.1
     functor.additive_of_preserves_binary_biproducts F deriving
   Full, Faithful
-#align category_theory.AdditiveFunctor.of_exact CategoryTheory.AdditiveFunctorCat.ofExact
+#align category_theory.AdditiveFunctor.of_exact CategoryTheory.AdditiveFunctor.ofExact
 
 end
 
 variable {C D}
 
 @[simp]
-theorem AdditiveFunctorCat.ofLeftExact_obj_fst (F : C ⥤ₗ D) :
-    ((AdditiveFunctorCat.ofLeftExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctor.ofLeftExact_obj_fst (F : C ⥤ₗ D) :
+    ((AdditiveFunctor.ofLeftExact C D).obj F).obj = F.obj :=
   rfl
-#align category_theory.AdditiveFunctor.of_left_exact_obj_fst CategoryTheory.AdditiveFunctorCat.ofLeftExact_obj_fst
+#align category_theory.AdditiveFunctor.of_left_exact_obj_fst CategoryTheory.AdditiveFunctor.ofLeftExact_obj_fst
 
 @[simp]
-theorem AdditiveFunctorCat.ofRightExact_obj_fst (F : C ⥤ᵣ D) :
-    ((AdditiveFunctorCat.ofRightExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctor.ofRightExact_obj_fst (F : C ⥤ᵣ D) :
+    ((AdditiveFunctor.ofRightExact C D).obj F).obj = F.obj :=
   rfl
-#align category_theory.AdditiveFunctor.of_right_exact_obj_fst CategoryTheory.AdditiveFunctorCat.ofRightExact_obj_fst
+#align category_theory.AdditiveFunctor.of_right_exact_obj_fst CategoryTheory.AdditiveFunctor.ofRightExact_obj_fst
 
 @[simp]
-theorem AdditiveFunctorCat.ofExact_obj_fst (F : C ⥤ₑ D) :
-    ((AdditiveFunctorCat.ofExact C D).obj F).obj = F.obj :=
+theorem AdditiveFunctor.ofExact_obj_fst (F : C ⥤ₑ D) :
+    ((AdditiveFunctor.ofExact C D).obj F).obj = F.obj :=
   rfl
-#align category_theory.AdditiveFunctor.of_exact_obj_fst CategoryTheory.AdditiveFunctorCat.ofExact_obj_fst
+#align category_theory.AdditiveFunctor.of_exact_obj_fst CategoryTheory.AdditiveFunctor.ofExact_obj_fst
 
 @[simp]
 theorem AdditiveFunctor.ofLeftExact_map {F G : C ⥤ₗ D} (α : F ⟶ G) :
-    (AdditiveFunctorCat.ofLeftExact C D).map α = α :=
+    (AdditiveFunctor.ofLeftExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_left_exact_map CategoryTheory.AdditiveFunctor.ofLeftExact_map
 
 @[simp]
 theorem AdditiveFunctor.ofRightExact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) :
-    (AdditiveFunctorCat.ofRightExact C D).map α = α :=
+    (AdditiveFunctor.ofRightExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_right_exact_map CategoryTheory.AdditiveFunctor.ofRightExact_map
 
 @[simp]
 theorem AdditiveFunctor.ofExact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
-    (AdditiveFunctorCat.ofExact C D).map α = α :=
+    (AdditiveFunctor.ofExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_exact_map CategoryTheory.AdditiveFunctor.ofExact_map
 

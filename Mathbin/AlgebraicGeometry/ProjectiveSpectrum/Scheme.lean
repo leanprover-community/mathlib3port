@@ -9,7 +9,7 @@ Authors: Jujian Zhang
 ! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.ProjectiveSpectrum.StructureSheaf
-import Mathbin.AlgebraicGeometry.SpecCat
+import Mathbin.AlgebraicGeometry.Spec
 import Mathbin.RingTheory.GradedAlgebra.Radical
 
 /-!
@@ -99,7 +99,7 @@ open CategoryTheory Opposite
 open ProjectiveSpectrum.StructureSheaf
 
 -- mathport name: exprProj
-local notation "Proj" => ProjCat.toLocallyRingedSpace 𝒜
+local notation "Proj" => Proj.toLocallyRingedSpace 𝒜
 
 -- mathport name: «exprProj.T»
 -- `Proj` as a locally ringed space
@@ -124,12 +124,12 @@ local notation "sbo " f => PrimeSpectrum.basicOpen f
 
 -- mathport name: «exprSpec »
 -- basic open sets in `Spec`
-local notation "Spec " ring => SpecCat.locallyRingedSpaceObj (CommRingCat.of Ring)
+local notation "Spec " ring => Spec.locallyRingedSpaceObj (CommRingCat.of Ring)
 
 -- mathport name: «exprSpec.T »
 -- `Spec` as a locally ringed space
 local notation "Spec.T " ring =>
-  (SpecCat.locallyRingedSpaceObj (CommRingCat.of Ring)).toSheafedSpace.toPresheafedSpace.1
+  (Spec.locallyRingedSpaceObj (CommRingCat.of Ring)).toSheafedSpace.toPresheafedSpace.1
 
 -- mathport name: «exprA⁰_ »
 -- the underlying topological space of `Spec`

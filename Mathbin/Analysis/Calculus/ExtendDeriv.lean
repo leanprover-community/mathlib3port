@@ -53,7 +53,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
     · rw [← closure_closure] at hx
       exact hasFderivWithinAt_of_not_mem_closure hx
     push_neg  at hx
-    rw [HasFderivWithinAt, HasFderivAtFilter, Asymptotics.isO_iff]
+    rw [HasFderivWithinAt, HasFderivAtFilter, Asymptotics.isOCat_iff]
     /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in `closure
       s`, where `ε` is an arbitrary positive constant. By continuity of the functions, it suffices to
       prove this for nearby points inside `s`. In a neighborhood of `x`, the derivative of `f` is
@@ -126,13 +126,13 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
   /- This is a specialization of `has_fderiv_at_boundary_of_tendsto_fderiv`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we
     call `t = (a, b)`. Then, we check all the assumptions of this theorem and we apply it. -/
-  obtain ⟨b, ab : a < b, sab : Ioc a b ⊆ s⟩ := mem_nhdsWithin_ioi_iff_exists_ioc_subset.1 hs
+  obtain ⟨b, ab : a < b, sab : Ioc a b ⊆ s⟩ := mem_nhdsWithin_Ioi_iff_exists_Ioc_subset.1 hs
   let t := Ioo a b
   have ts : t ⊆ s := subset.trans Ioo_subset_Ioc_self sab
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
-  have t_conv : Convex ℝ t := convex_ioo a b
-  have t_open : IsOpen t := isOpen_ioo
-  have t_closure : closure t = Icc a b := closure_ioo ab.ne
+  have t_conv : Convex ℝ t := convex_Ioo a b
+  have t_open : IsOpen t := isOpen_Ioo
+  have t_closure : closure t = Icc a b := closure_Ioo ab.ne
   have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y :=
     by
     rw [t_closure]
@@ -154,7 +154,7 @@ theorem has_deriv_at_interval_left_endpoint_of_tendsto_deriv {s : Set ℝ} {e : 
     by
     rw [hasDerivWithinAt_iff_hasFderivWithinAt, ← t_closure]
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
-  exact this.nhds_within (icc_mem_nhdsWithin_ici <| left_mem_Ico.2 ab)
+  exact this.nhds_within (Icc_mem_nhdsWithin_Ici <| left_mem_Ico.2 ab)
 #align has_deriv_at_interval_left_endpoint_of_tendsto_deriv has_deriv_at_interval_left_endpoint_of_tendsto_deriv
 
 /-- If a function is differentiable on the left of a point `a : ℝ`, continuous at `a`, and
@@ -167,13 +167,13 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
   /- This is a specialization of `has_fderiv_at_boundary_of_differentiable`. To be in the setting of
     this theorem, we need to work on an open interval with closure contained in `s ∪ {a}`, that we
     call `t = (b, a)`. Then, we check all the assumptions of this theorem and we apply it. -/
-  obtain ⟨b, ba, sab⟩ : ∃ b ∈ Iio a, Ico b a ⊆ s := mem_nhdsWithin_iio_iff_exists_ico_subset.1 hs
+  obtain ⟨b, ba, sab⟩ : ∃ b ∈ Iio a, Ico b a ⊆ s := mem_nhdsWithin_Iio_iff_exists_Ico_subset.1 hs
   let t := Ioo b a
   have ts : t ⊆ s := subset.trans Ioo_subset_Ico_self sab
   have t_diff : DifferentiableOn ℝ f t := f_diff.mono ts
-  have t_conv : Convex ℝ t := convex_ioo b a
-  have t_open : IsOpen t := isOpen_ioo
-  have t_closure : closure t = Icc b a := closure_ioo (ne_of_lt ba)
+  have t_conv : Convex ℝ t := convex_Ioo b a
+  have t_open : IsOpen t := isOpen_Ioo
+  have t_closure : closure t = Icc b a := closure_Ioo (ne_of_lt ba)
   have t_cont : ∀ y ∈ closure t, ContinuousWithinAt f t y :=
     by
     rw [t_closure]
@@ -195,7 +195,7 @@ theorem has_deriv_at_interval_right_endpoint_of_tendsto_deriv {s : Set ℝ} {e :
     by
     rw [hasDerivWithinAt_iff_hasFderivWithinAt, ← t_closure]
     exact has_fderiv_at_boundary_of_tendsto_fderiv t_diff t_conv t_open t_cont t_diff'
-  exact this.nhds_within (icc_mem_nhdsWithin_iic <| right_mem_Ioc.2 ba)
+  exact this.nhds_within (Icc_mem_nhdsWithin_Iic <| right_mem_Ioc.2 ba)
 #align has_deriv_at_interval_right_endpoint_of_tendsto_deriv has_deriv_at_interval_right_endpoint_of_tendsto_deriv
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » x) -/

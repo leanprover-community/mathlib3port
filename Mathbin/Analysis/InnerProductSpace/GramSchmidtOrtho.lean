@@ -167,20 +167,20 @@ theorem gramSchmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt
         (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gramSchmidt_mem_span le_rfl)
 #align gram_schmidt_mem_span gramSchmidt_mem_span
 
-theorem span_gramSchmidt_iic (f : ι → E) (c : ι) :
+theorem span_gramSchmidt_Iic (f : ι → E) (c : ι) :
     span 𝕜 (gramSchmidt 𝕜 f '' Iic c) = span 𝕜 (f '' Iic c) :=
   span_eq_span (Set.image_subset_iff.2 fun i => gramSchmidt_mem_span _ _) <|
     Set.image_subset_iff.2 fun i => mem_span_gramSchmidt _ _
-#align span_gram_schmidt_Iic span_gramSchmidt_iic
+#align span_gram_schmidt_Iic span_gramSchmidt_Iic
 
-theorem span_gramSchmidt_iio (f : ι → E) (c : ι) :
+theorem span_gramSchmidt_Iio (f : ι → E) (c : ι) :
     span 𝕜 (gramSchmidt 𝕜 f '' Iio c) = span 𝕜 (f '' Iio c) :=
   span_eq_span
       (Set.image_subset_iff.2 fun i hi =>
         span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| gramSchmidt_mem_span _ _ le_rfl) <|
     Set.image_subset_iff.2 fun i hi =>
       span_mono (image_subset _ <| Iic_subset_Iio.2 hi) <| mem_span_gramSchmidt _ _ le_rfl
-#align span_gram_schmidt_Iio span_gramSchmidt_iio
+#align span_gram_schmidt_Iio span_gramSchmidt_Iio
 
 /-- `gram_schmidt` preserves span of vectors. -/
 theorem span_gramSchmidt (f : ι → E) : span 𝕜 (range (gramSchmidt 𝕜 f)) = span 𝕜 (range f) :=
@@ -223,7 +223,7 @@ theorem gramSchmidt_ne_zero_coe {f : ι → E} (n : ι)
   by_contra h
   have h₁ : f n ∈ span 𝕜 (f '' Iio n) :=
     by
-    rw [← span_gramSchmidt_iio 𝕜 f n, gramSchmidt_def' _ f, h, zero_add]
+    rw [← span_gramSchmidt_Iio 𝕜 f n, gramSchmidt_def' _ f, h, zero_add]
     apply Submodule.sum_mem _ _
     simp_intro a ha only [Finset.mem_Ico]
     simp only [Set.mem_image, Set.mem_Iio, orthogonalProjection_singleton]
@@ -255,7 +255,7 @@ theorem gramSchmidt_triangular {i j : ι} (hij : i < j) (b : Basis ι 𝕜 E) :
   by
   have : gramSchmidt 𝕜 b i ∈ span 𝕜 (gramSchmidt 𝕜 b '' Set.Iio j) :=
     subset_span ((Set.mem_image _ _ _).2 ⟨i, hij, rfl⟩)
-  have : gramSchmidt 𝕜 b i ∈ span 𝕜 (b '' Set.Iio j) := by rwa [← span_gramSchmidt_iio 𝕜 b j]
+  have : gramSchmidt 𝕜 b i ∈ span 𝕜 (b '' Set.Iio j) := by rwa [← span_gramSchmidt_Iio 𝕜 b j]
   have : ↑(b.repr (gramSchmidt 𝕜 b i)).support ⊆ Set.Iio j :=
     Basis.repr_support_subset_of_mem_span b (Set.Iio j) this
   exact (Finsupp.mem_supported' _ _).1 ((Finsupp.mem_supported 𝕜 _).2 this) j Set.not_mem_Iio_self

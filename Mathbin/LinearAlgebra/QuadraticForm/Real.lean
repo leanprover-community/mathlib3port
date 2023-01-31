@@ -36,10 +36,10 @@ variable {ι : Type _} [Fintype ι]
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
 noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → ℝ) :
-    Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (sign ∘ w)) :=
+    Isometry (weightedSumSquares ℝ w) (weightedSumSquares ℝ (SignType.sign ∘ w)) :=
   by
   let u i := if h : w i = 0 then (1 : ℝˣ) else Units.mk0 (w i) h
-  have hu' : ∀ i : ι, (sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 :=
+  have hu' : ∀ i : ι, (SignType.sign (u i) * u i) ^ (-(1 / 2 : ℝ)) ≠ 0 :=
     by
     intro i
     refine' (ne_of_lt (Real.rpow_pos_of_pos (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _) _)).symm
@@ -51,7 +51,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   refine' sum_congr rfl fun j hj => _
   have hsum :
     (∑ i : ι, v i • ((isUnit_iff_ne_zero.2 <| hu' i).Unit : ℝ) • (Pi.basisFun ℝ ι) i) j =
-      v j • (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) :=
+      v j • (SignType.sign (u j) * u j) ^ (-(1 / 2 : ℝ)) :=
     by
     rw [Finset.sum_apply, sum_eq_single j, Pi.basisFun_apply, IsUnit.unit_spec,
       LinearMap.stdBasis_apply, Pi.smul_apply, Pi.smul_apply, Function.update_same, smul_eq_mul,
@@ -70,13 +70,16 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
   simp only [hwu, Units.val_mk0]
   suffices
     (u j : ℝ).sign * v j * v j =
-      (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * (sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * u j * v j * v j
+      (SignType.sign (u j) * u j) ^ (-(1 / 2 : ℝ)) * (SignType.sign (u j) * u j) ^ (-(1 / 2 : ℝ)) *
+            u j *
+          v j *
+        v j
     by
     erw [← mul_assoc, this]
     ring
   rw [← Real.rpow_add (sign_mul_pos_of_ne_zero _ <| Units.ne_zero _),
     show -(1 / 2 : ℝ) + -(1 / 2) = -1 by ring, Real.rpow_neg_one, mul_inv, inv_sign,
-    mul_assoc (sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_one]
+    mul_assoc (SignType.sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_one]
   infer_instance
 #align quadratic_form.isometry_sign_weighted_sum_squares QuadraticForm.isometrySignWeightedSumSquares
 
@@ -87,7 +90,7 @@ theorem equivalent_one_neg_one_weighted_sum_squared {M : Type _} [AddCommGroup M
     ∃ w : Fin (FiniteDimensional.finrank ℝ M) → ℝ,
       (∀ i, w i = -1 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares_units_of_nondegenerate' hQ
-  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).NeZero,
+  ⟨SignType.sign ∘ coe ∘ w, fun i => sign_apply_eq_of_ne_zero (w i) (w i).NeZero,
     ⟨hw₁.trans (isometrySignWeightedSumSquares (coe ∘ w))⟩⟩
 #align quadratic_form.equivalent_one_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_neg_one_weighted_sum_squared
 
@@ -98,7 +101,8 @@ theorem equivalent_one_zero_neg_one_weighted_sum_squared {M : Type _} [AddCommGr
     ∃ w : Fin (FiniteDimensional.finrank ℝ M) → ℝ,
       (∀ i, w i = -1 ∨ w i = 0 ∨ w i = 1) ∧ Equivalent Q (weightedSumSquares ℝ w) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weighted_sum_squares
-  ⟨sign ∘ coe ∘ w, fun i => sign_apply_eq (w i), ⟨hw₁.trans (isometrySignWeightedSumSquares w)⟩⟩
+  ⟨SignType.sign ∘ coe ∘ w, fun i => sign_apply_eq (w i),
+    ⟨hw₁.trans (isometrySignWeightedSumSquares w)⟩⟩
 #align quadratic_form.equivalent_one_zero_neg_one_weighted_sum_squared QuadraticForm.equivalent_one_zero_neg_one_weighted_sum_squared
 
 end QuadraticForm

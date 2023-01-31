@@ -245,7 +245,7 @@ theorem sin_eq_sin_iff {x y : ℝ} :
 
 theorem lt_sin_mul {x : ℝ} (hx : 0 < x) (hx' : x < 1) : x < sin (π / 2 * x) := by
   simpa [mul_comm x] using
-    strictConcaveOn_sin_icc.2 ⟨le_rfl, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩
+    strictConcaveOn_sin_Icc.2 ⟨le_rfl, pi_pos.le⟩ ⟨pi_div_two_pos.le, half_le_self pi_pos.le⟩
       pi_div_two_pos.ne (sub_pos.2 hx') hx
 #align real.lt_sin_mul Real.lt_sin_mul
 

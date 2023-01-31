@@ -356,7 +356,7 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) :=
     exact h' rfl
   · have : m = m' ∧ w.to_list = w'.to_list := by
       simpa only [rcons, dif_neg hm, dif_neg hm', true_and_iff, eq_self_iff_true, Subtype.mk_eq_mk,
-        hEq_iff_eq, ← Subtype.ext_iff_val] using he
+        heq_iff_eq, ← Subtype.ext_iff_val] using he
     rcases this with ⟨rfl, h⟩
     congr
     exact word.ext _ _ h

@@ -1577,7 +1577,7 @@ end SubalgebraDim
 
 namespace Module
 
-namespace EndCat
+namespace End
 
 variable [DivisionRing K] [AddCommGroup V] [Module K V]
 
@@ -1648,7 +1648,7 @@ theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : End K V) (m : â„
     exact le_rfl
 #align module.End.ker_pow_le_ker_pow_finrank Module.End.ker_pow_le_ker_pow_finrank
 
-end EndCat
+end End
 
 end Module
 

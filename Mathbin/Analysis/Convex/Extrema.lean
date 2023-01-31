@@ -30,19 +30,19 @@ open Classical Topology
 
 /-- Helper lemma for the more general case: `is_min_on.of_is_local_min_on_of_convex_on`.
 -/
-theorem IsMinOn.of_isLocalMinOn_of_convexOn_icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
+theorem IsMinOn.of_isLocalMinOn_of_convexOn_Icc {f : ℝ → β} {a b : ℝ} (a_lt_b : a < b)
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) :
     IsMinOn f (Icc a b) a := by
   rintro c hc
   dsimp only [mem_set_of_eq]
-  rw [IsLocalMinOn, nhdsWithin_icc_eq_nhdsWithin_ici a_lt_b] at h_local_min
+  rw [IsLocalMinOn, nhdsWithin_Icc_eq_nhdsWithin_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
   · exact le_rfl
   have H₁ : ∀ᶠ y in 𝓝[>] a, f a ≤ f y :=
     h_local_min.filter_mono (nhdsWithin_mono _ Ioi_subset_Ici_self)
-  have H₂ : ∀ᶠ y in 𝓝[>] a, y ∈ Ioc a c := ioc_mem_nhdsWithin_ioi (left_mem_Ico.2 a_lt_c)
+  have H₂ : ∀ᶠ y in 𝓝[>] a, y ∈ Ioc a c := Ioc_mem_nhdsWithin_Ioi (left_mem_Ico.2 a_lt_c)
   rcases(H₁.and H₂).exists with ⟨y, hfy, hy_ac⟩
-  rcases(Convex.mem_ioc a_lt_c).mp hy_ac with ⟨ya, yc, ya₀, yc₀, yac, rfl⟩
+  rcases(Convex.mem_Ioc a_lt_c).mp hy_ac with ⟨ya, yc, ya₀, yc₀, yac, rfl⟩
   suffices : ya • f a + yc • f a ≤ ya • f a + yc • f c
   exact (smul_le_smul_iff_of_pos yc₀).1 (le_of_add_le_add_left this)
   calc
@@ -50,7 +50,7 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn_icc {f : ℝ → β} {a b : ℝ} (a_
     _ ≤ f (ya * a + yc * c) := hfy
     _ ≤ ya • f a + yc • f c := h_conv.2 (left_mem_Icc.2 a_lt_b.le) hc ya₀ yc₀.le yac
     
-#align is_min_on.of_is_local_min_on_of_convex_on_Icc IsMinOn.of_isLocalMinOn_of_convexOn_icc
+#align is_min_on.of_is_local_min_on_of_convex_on_Icc IsMinOn.of_isLocalMinOn_of_convexOn_Icc
 
 /-- A local minimum of a convex function is a global minimum, restricted to a set `s`.
 -/
@@ -70,8 +70,8 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn {f : E → β} {a : E} (a_in_s : a �
     exact h_localmin.comp_continuous_on h_maps hgc.continuous_on (left_mem_Icc.2 zero_le_one)
   have fg_min_on : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0 :=
     by
-    refine' IsMinOn.of_isLocalMinOn_of_convexOn_icc one_pos fg_local_min_on _
-    exact (h_conv.comp_affine_map g).Subset h_maps (convex_icc 0 1)
+    refine' IsMinOn.of_isLocalMinOn_of_convexOn_Icc one_pos fg_local_min_on _
+    exact (h_conv.comp_affine_map g).Subset h_maps (convex_Icc 0 1)
   simpa only [hg0, hg1, comp_app, mem_set_of_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)
 #align is_min_on.of_is_local_min_on_of_convex_on IsMinOn.of_isLocalMinOn_of_convexOn
 

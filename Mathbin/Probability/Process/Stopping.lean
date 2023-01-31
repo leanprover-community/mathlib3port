@@ -201,7 +201,7 @@ theorem IsStoppingTime.measurableSet_lt_of_isLUB (hτ : IsStoppingTime f τ) (i 
     refine' ⟨fun hk_lt_i => _, fun h_exists_k_le_seq => _⟩
     · rw [tendsto_at_top'] at h_tendsto
       have h_nhds : Set.Ici k ∈ 𝓝 i :=
-        mem_nhds_iff.mpr ⟨Set.Ioi k, Set.Ioi_subset_Ici le_rfl, isOpen_ioi, hk_lt_i⟩
+        mem_nhds_iff.mpr ⟨Set.Ioi k, Set.Ioi_subset_Ici le_rfl, isOpen_Ioi, hk_lt_i⟩
       obtain ⟨a, ha⟩ : ∃ a : ℕ, ∀ b : ℕ, b ≥ a → k ≤ seq b := h_tendsto (Set.Ici k) h_nhds
       exact ⟨a, ha a le_rfl⟩
     · obtain ⟨j, hk_seq_j⟩ := h_exists_k_le_seq
@@ -650,7 +650,7 @@ end Countable
 protected theorem measurable [TopologicalSpace ι] [MeasurableSpace ι] [BorelSpace ι]
     [OrderTopology ι] [SecondCountableTopology ι] (hτ : IsStoppingTime f τ) :
     measurable[hτ.MeasurableSpace] τ :=
-  @measurable_of_iic ι Ω _ _ _ hτ.MeasurableSpace _ _ _ _ fun i => hτ.measurable_set_le' i
+  @measurable_of_Iic ι Ω _ _ _ hτ.MeasurableSpace _ _ _ _ fun i => hτ.measurable_set_le' i
 #align measure_theory.is_stopping_time.measurable MeasureTheory.IsStoppingTime.measurable
 
 protected theorem measurable_of_le [TopologicalSpace ι] [MeasurableSpace ι] [BorelSpace ι]
@@ -918,7 +918,7 @@ theorem progMeasurable_min_stopping_time [MetrizableSpace ι] (hτ : IsStoppingT
   apply Measurable.stronglyMeasurable
   refine' measurable_of_restrict_of_restrict_compl hs _ _
   · refine' @Measurable.min _ _ _ _ _ (m_set s) _ _ _ _ _ (h_meas_fst s) _
-    refine' @measurable_of_iic ι s _ _ _ (m_set s) _ _ _ _ fun j => _
+    refine' @measurable_of_Iic ι s _ _ _ (m_set s) _ _ _ _ fun j => _
     have h_set_eq :
       (fun x : s => τ (x : Set.Iic i × Ω).snd) ⁻¹' Set.Iic j =
         (fun x : s => (x : Set.Iic i × Ω).snd) ⁻¹' { ω | τ ω ≤ min i j } :=

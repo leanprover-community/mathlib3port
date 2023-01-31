@@ -108,7 +108,7 @@ variable {K}
 variable {A : Type _} [Category A] {G : C ⥤ D} (H : CoverDense K G)
 
 -- this is not marked with `@[ext]` because `H` can not be inferred from the type
-theorem ext (H : CoverDense K G) (ℱ : SheafOfTypesCat K) (X : D) {s t : ℱ.val.obj (op X)}
+theorem ext (H : CoverDense K G) (ℱ : SheafOfTypes K) (X : D) {s t : ℱ.val.obj (op X)}
     (h : ∀ ⦃Y : C⦄ (f : G.obj Y ⟶ X), ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t :=
   by
   apply (ℱ.cond (sieve.cover_by_image G X) (H.is_cover X)).IsSeparatedFor.ext
@@ -131,7 +131,7 @@ theorem functorPullback_pushforward_covering [Full G] (H : CoverDense K G) {X : 
 `coyoneda` to obtain an hom between the pullbacks of the sheaves of maps from `X`.
 -/
 @[simps]
-def homOver {ℱ : Dᵒᵖ ⥤ A} {ℱ' : SheafCat K A} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) (X : A) :
+def homOver {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) (X : A) :
     G.op ⋙ ℱ ⋙ coyoneda.obj (op X) ⟶ G.op ⋙ (sheafOver ℱ' X).val :=
   whiskerRight α (coyoneda.obj (op X))
 #align category_theory.cover_dense.hom_over CategoryTheory.CoverDense.homOver
@@ -140,12 +140,12 @@ def homOver {ℱ : Dᵒᵖ ⥤ A} {ℱ' : SheafCat K A} (α : G.op ⋙ ℱ ⟶ G
 `coyoneda` to obtain an iso between the pullbacks of the sheaves of maps from `X`.
 -/
 @[simps]
-def isoOver {ℱ ℱ' : SheafCat K A} (α : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : A) :
+def isoOver {ℱ ℱ' : Sheaf K A} (α : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : A) :
     G.op ⋙ (sheafOver ℱ X).val ≅ G.op ⋙ (sheafOver ℱ' X).val :=
   isoWhiskerRight α (coyoneda.obj (op X))
 #align category_theory.cover_dense.iso_over CategoryTheory.CoverDense.isoOver
 
-theorem sheaf_eq_amalgamation (ℱ : SheafCat K A) {X : A} {U : D} {T : Sieve U} (hT)
+theorem sheaf_eq_amalgamation (ℱ : Sheaf K A) {X : A} {U : D} {T : Sieve U} (hT)
     (x : FamilyOfElements _ T) (hx) (t) (h : x.IsAmalgamation t) :
     t = (ℱ.cond X T hT).amalgamate x hx :=
   (ℱ.cond X T hT).IsSeparatedFor x t _ h ((ℱ.cond X T hT).IsAmalgamation hx)
@@ -157,7 +157,7 @@ variable [Full G]
 
 namespace Types
 
-variable {ℱ : Dᵒᵖ ⥤ Type v} {ℱ' : SheafOfTypesCat.{v} K} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val)
+variable {ℱ : Dᵒᵖ ⥤ Type v} {ℱ' : SheafOfTypes.{v} K} (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val)
 
 /--
 (Implementation). Given a section of `ℱ` on `X`, we can obtain a family of elements valued in `ℱ'`
@@ -230,7 +230,7 @@ theorem appHom_valid_glue {X : D} {Y : C} (f : op X ⟶ op (G.obj Y)) :
 (Implementation). The maps given in `app_iso` is inverse to each other and gives a `ℱ(X) ≅ ℱ'(X)`.
 -/
 @[simps]
-noncomputable def appIso {ℱ ℱ' : SheafOfTypesCat.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : D) :
+noncomputable def appIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) (X : D) :
     ℱ.val.obj (op X) ≅ ℱ'.val.obj (op X)
     where
   Hom := appHom H i.Hom X
@@ -266,7 +266,7 @@ noncomputable def presheafHom (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) : ℱ �
 cover-dense, and `ℱ, ℱ'` are sheaves, we may obtain a natural isomorphism between presheaves.
 -/
 @[simps]
-noncomputable def presheafIso {ℱ ℱ' : SheafOfTypesCat.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
+noncomputable def presheafIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
     ℱ.val ≅ ℱ'.val :=
   NatIso.ofComponents (fun X => appIso H i (unop X)) (presheafHom H i.Hom).naturality
 #align category_theory.cover_dense.types.presheaf_iso CategoryTheory.CoverDense.Types.presheafIso
@@ -275,8 +275,8 @@ noncomputable def presheafIso {ℱ ℱ' : SheafOfTypesCat.{v} K} (i : G.op ⋙ �
 cover-dense, and `ℱ, ℱ'` are sheaves, we may obtain a natural isomorphism between sheaves.
 -/
 @[simps]
-noncomputable def sheafIso {ℱ ℱ' : SheafOfTypesCat.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
-    ℱ ≅ ℱ' where
+noncomputable def sheafIso {ℱ ℱ' : SheafOfTypes.{v} K} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
+    where
   Hom := ⟨(presheafIso H i).Hom⟩
   inv := ⟨(presheafIso H i).inv⟩
   hom_inv_id' := by
@@ -291,7 +291,7 @@ end Types
 
 open Types
 
-variable {ℱ : Dᵒᵖ ⥤ A} {ℱ' : SheafCat K A}
+variable {ℱ : Dᵒᵖ ⥤ A} {ℱ' : Sheaf K A}
 
 /-- (Implementation). The sheaf map given in `types.sheaf_hom` is natural in terms of `X`. -/
 @[simps]
@@ -353,7 +353,7 @@ where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
 we may obtain a natural isomorphism between presheaves.
 -/
 @[simps]
-noncomputable def presheafIso {ℱ ℱ' : SheafCat K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
+noncomputable def presheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) :
     ℱ.val ≅ ℱ'.val :=
   by
   have : ∀ X : Dᵒᵖ, is_iso ((sheaf_hom H i.hom).app X) :=
@@ -375,7 +375,7 @@ where `G` is full and cover-dense, and `ℱ', ℱ` are sheaves,
 we may obtain a natural isomorphism between presheaves.
 -/
 @[simps]
-noncomputable def sheafIso {ℱ ℱ' : SheafCat K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
+noncomputable def sheafIso {ℱ ℱ' : Sheaf K A} (i : G.op ⋙ ℱ.val ≅ G.op ⋙ ℱ'.val) : ℱ ≅ ℱ'
     where
   Hom := ⟨(presheafIso H i).Hom⟩
   inv := ⟨(presheafIso H i).inv⟩
@@ -444,8 +444,8 @@ noncomputable def restrictHomEquivHom : (G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) ≃
 /-- Given a full and cover-dense functor `G` and a natural transformation of sheaves `α : ℱ ⟶ ℱ'`,
 if the pullback of `α` along `G` is iso, then `α` is also iso.
 -/
-theorem iso_of_restrict_iso {ℱ ℱ' : SheafCat K A} (α : ℱ ⟶ ℱ')
-    (i : IsIso (whiskerLeft G.op α.val)) : IsIso α :=
+theorem iso_of_restrict_iso {ℱ ℱ' : Sheaf K A} (α : ℱ ⟶ ℱ') (i : IsIso (whiskerLeft G.op α.val)) :
+    IsIso α :=
   by
   convert is_iso.of_iso (sheaf_iso H (as_iso (whisker_left G.op α.val))) using 1
   ext1
@@ -471,7 +471,7 @@ noncomputable instance Sites.Pullback.full [Faithful G] (Hp : CoverPreserving J 
     Full (Sites.pullback A H.CompatiblePreserving Hp)
     where
   preimage ℱ ℱ' α := ⟨H.sheafHom α.val⟩
-  witness' ℱ ℱ' α := SheafCat.Hom.ext _ _ <| H.sheaf_hom_restrict_eq α.val
+  witness' ℱ ℱ' α := Sheaf.Hom.ext _ _ <| H.sheaf_hom_restrict_eq α.val
 #align category_theory.cover_dense.sites.pullback.full CategoryTheory.CoverDense.Sites.Pullback.full
 
 instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
@@ -508,7 +508,7 @@ include Hd Hp Hl
 it induces an equivalence of category of sheaves valued in a complete category.
 -/
 @[simps Functor inverse]
-noncomputable def sheafEquivOfCoverPreservingCoverLifting : SheafCat J A ≌ SheafCat K A :=
+noncomputable def sheafEquivOfCoverPreservingCoverLifting : Sheaf J A ≌ Sheaf K A :=
   by
   symm
   let α := Sites.pullbackCopullbackAdjunction.{w, v, u} A Hp Hl Hd.compatible_preserving

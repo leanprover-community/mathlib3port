@@ -227,14 +227,14 @@ theorem coe_of_h_rat_eq : (↑((of q).h : ℚ) : K) = (of v).h :=
 theorem coe_of_s_nth_rat_eq :
     (((of q).s.nth n).map (Pair.map coe) : Option <| Pair K) = (of v).s.nth n :=
   by
-  simp only [of, int_fract_pair.seq1, Seq.map_nth, Seq.nth_tail]
-  simp only [Seq.nth]
+  simp only [of, int_fract_pair.seq1, SeqCat.map_nth, SeqCat.nth_tail]
+  simp only [SeqCat.nth]
   rw [← int_fract_pair.coe_stream_rat_eq v_eq_q]
   rcases succ_nth_stream_eq : int_fract_pair.stream q (n + 1) with (_ | ⟨_, _⟩) <;>
     simp [Stream'.map, Stream'.nth, succ_nth_stream_eq]
 #align generalized_continued_fraction.coe_of_s_nth_rat_eq GeneralizedContinuedFraction.coe_of_s_nth_rat_eq
 
-theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : Seq <| Pair K) = (of v).s :=
+theorem coe_of_s_rat_eq : ((of q).s.map (Pair.map coe) : SeqCat <| Pair K) = (of v).s :=
   by
   ext n
   rw [← coe_of_s_nth_rat_eq v_eq_q]
@@ -254,7 +254,7 @@ theorem coe_of_rat_eq :
 theorem of_terminates_iff_of_rat_terminates {v : K} {q : ℚ} (v_eq_q : v = (q : K)) :
     (of v).Terminates ↔ (of q).Terminates := by
   constructor <;> intro h <;> cases' h with n h <;> use n <;>
-        simp only [Seq.TerminatedAt, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;>
+        simp only [SeqCat.TerminatedAt, (coe_of_s_nth_rat_eq v_eq_q n).symm] at h⊢ <;>
       cases (of q).s.nth n <;>
     trivial
 #align generalized_continued_fraction.of_terminates_iff_of_rat_terminates GeneralizedContinuedFraction.of_terminates_iff_of_rat_terminates
@@ -352,12 +352,12 @@ theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.s
 end IntFractPair
 
 /-- The continued fraction of a rational number terminates. -/
-theorem terminatesOfRat (q : ℚ) : (of q).Terminates :=
+theorem terminates_of_rat (q : ℚ) : (of q).Terminates :=
   Exists.elim (IntFractPair.exists_nth_stream_eq_none_of_rat q) fun n stream_nth_eq_none =>
     Exists.intro n
       (have : IntFractPair.stream q (n + 1) = none := IntFractPair.stream_isSeq q stream_nth_eq_none
       of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none.elimRight this)
-#align generalized_continued_fraction.terminates_of_rat GeneralizedContinuedFraction.terminatesOfRat
+#align generalized_continued_fraction.terminates_of_rat GeneralizedContinuedFraction.terminates_of_rat
 
 end TerminatesOfRat
 
@@ -369,7 +369,7 @@ theorem terminates_iff_rat (v : K) : (of v).Terminates ↔ ∃ q : ℚ, v = (q :
       show ∃ q : ℚ, v = (q : K) from exists_rat_eq_of_terminates terminates_v)
     fun exists_q_eq_v : ∃ q : ℚ, v = (↑q : K) =>
     Exists.elim exists_q_eq_v fun q => fun v_eq_q : v = ↑q =>
-      have : (of q).Terminates := terminatesOfRat q
+      have : (of q).Terminates := terminates_of_rat q
       (of_terminates_iff_of_rat_terminates v_eq_q).elimRight this
 #align generalized_continued_fraction.terminates_iff_rat GeneralizedContinuedFraction.terminates_iff_rat
 

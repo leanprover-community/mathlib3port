@@ -8,7 +8,7 @@ Authors: Scott Morrison
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.ModuleCat.Basic
+import Mathbin.Algebra.Category.Module.Basic
 import Mathbin.CategoryTheory.Linear.Basic
 import Mathbin.CategoryTheory.Preadditive.Yoneda
 

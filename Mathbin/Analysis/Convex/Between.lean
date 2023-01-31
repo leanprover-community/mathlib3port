@@ -258,7 +258,7 @@ theorem Sbtw.right_ne {x y z : P} (h : Sbtw R x y z) : z ≠ y :=
   h.2.2.symm
 #align sbtw.right_ne Sbtw.right_ne
 
-theorem Sbtw.mem_image_ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z '' Set.Ioo (0 : R) 1 :=
+theorem Sbtw.mem_image_Ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z '' Set.Ioo (0 : R) 1 :=
   by
   rcases h with ⟨⟨t, ht, rfl⟩, hyx, hyz⟩
   rcases Set.eq_endpoints_or_mem_Ioo_of_mem_Icc ht with (rfl | rfl | ho)
@@ -267,7 +267,7 @@ theorem Sbtw.mem_image_ioo {x y z : P} (h : Sbtw R x y z) : y ∈ lineMap x z ''
   · exfalso
     simpa using hyz
   · exact ⟨t, ho, rfl⟩
-#align sbtw.mem_image_Ioo Sbtw.mem_image_ioo
+#align sbtw.mem_image_Ioo Sbtw.mem_image_Ioo
 
 theorem Wbtw.mem_affineSpan {x y z : P} (h : Wbtw R x y z) : y ∈ line[R, x, z] :=
   by
@@ -338,7 +338,7 @@ theorem Sbtw.left_ne_right {x y z : P} (h : Sbtw R x y z) : x ≠ z :=
   h.Wbtw.left_ne_right_of_ne_left h.2.1
 #align sbtw.left_ne_right Sbtw.left_ne_right
 
-theorem sbtw_iff_mem_image_ioo_and_ne [NoZeroSMulDivisors R V] {x y z : P} :
+theorem sbtw_iff_mem_image_Ioo_and_ne [NoZeroSMulDivisors R V] {x y z : P} :
     Sbtw R x y z ↔ y ∈ lineMap x z '' Set.Ioo (0 : R) 1 ∧ x ≠ z :=
   by
   refine' ⟨fun h => ⟨h.mem_image_Ioo, h.left_ne_right⟩, fun h => _⟩
@@ -347,7 +347,7 @@ theorem sbtw_iff_mem_image_ioo_and_ne [NoZeroSMulDivisors R V] {x y z : P} :
   rw [line_map_apply, ← @vsub_ne_zero V, ← @vsub_ne_zero V _ _ _ _ z, vadd_vsub_assoc,
     vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev z x, ← @neg_one_smul R, ← add_smul, ← sub_eq_add_neg]
   simp [smul_ne_zero, hxz.symm, sub_eq_zero, ht.1.Ne.symm, ht.2.Ne]
-#align sbtw_iff_mem_image_Ioo_and_ne sbtw_iff_mem_image_ioo_and_ne
+#align sbtw_iff_mem_image_Ioo_and_ne sbtw_iff_mem_image_Ioo_and_ne
 
 variable (R)
 
@@ -429,7 +429,7 @@ theorem wbtw_lineMap_iff [NoZeroSMulDivisors R V] {x y : P} {r : R} :
 theorem sbtw_lineMap_iff [NoZeroSMulDivisors R V] {x y : P} {r : R} :
     Sbtw R x (lineMap x y r) y ↔ x ≠ y ∧ r ∈ Set.Ioo (0 : R) 1 :=
   by
-  rw [sbtw_iff_mem_image_ioo_and_ne, and_comm', and_congr_right]
+  rw [sbtw_iff_mem_image_Ioo_and_ne, and_comm', and_congr_right]
   intro hxy
   rw [(line_map_injective R hxy).mem_set_image]
 #align sbtw_line_map_iff sbtw_lineMap_iff
@@ -681,15 +681,15 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
       h₁' (Finset.mem_univ i₁) _
   rw [Finset.affineCombinationSingleWeights_apply_self,
     Finset.affineCombinationLineMapWeights_apply_of_ne h₁₂ h₁₃, sbtw_one_zero_iff]
-  have hs : ∀ i : Fin 3, sign (w i) = sign (w i₃) :=
+  have hs : ∀ i : Fin 3, SignType.sign (w i) = SignType.sign (w i₃) :=
     by
     intro i
     rcases h3 i with (rfl | rfl | rfl)
     · exact h₂s
     · exact h₁s
     · rfl
-  have hss : sign (∑ i, w i) = 1 := by simp [hw]
-  have hs' := sign_sum Finset.univ_nonempty (sign (w i₃)) fun i _ => hs i
+  have hss : SignType.sign (∑ i, w i) = 1 := by simp [hw]
+  have hs' := sign_sum Finset.univ_nonempty (SignType.sign (w i₃)) fun i _ => hs i
   rw [hs'] at hss
   simp_rw [hss, sign_eq_one_iff] at hs
   refine' ⟨hs i₁, _⟩
@@ -712,7 +712,7 @@ include V
 
 variable {R}
 
-theorem wbtw_iff_left_eq_or_right_mem_image_ici {x y z : P} :
+theorem wbtw_iff_left_eq_or_right_mem_image_Ici {x y z : P} :
     Wbtw R x y z ↔ x = y ∨ z ∈ lineMap x y '' Set.Ici (1 : R) :=
   by
   refine' ⟨fun h => _, fun h => _⟩
@@ -729,12 +729,12 @@ theorem wbtw_iff_left_eq_or_right_mem_image_ici {x y z : P} :
       refine' ⟨r⁻¹, ⟨inv_nonneg.2 (zero_le_one.trans hr), inv_le_one hr⟩, _⟩
       simp only [line_map_apply, smul_smul, vadd_vsub]
       rw [inv_mul_cancel (one_pos.trans_le hr).ne', one_smul, vsub_vadd]
-#align wbtw_iff_left_eq_or_right_mem_image_Ici wbtw_iff_left_eq_or_right_mem_image_ici
+#align wbtw_iff_left_eq_or_right_mem_image_Ici wbtw_iff_left_eq_or_right_mem_image_Ici
 
-theorem Wbtw.right_mem_image_ici_of_left_ne {x y z : P} (h : Wbtw R x y z) (hne : x ≠ y) :
+theorem Wbtw.right_mem_image_Ici_of_left_ne {x y z : P} (h : Wbtw R x y z) (hne : x ≠ y) :
     z ∈ lineMap x y '' Set.Ici (1 : R) :=
-  (wbtw_iff_left_eq_or_right_mem_image_ici.1 h).resolve_left hne
-#align wbtw.right_mem_image_Ici_of_left_ne Wbtw.right_mem_image_ici_of_left_ne
+  (wbtw_iff_left_eq_or_right_mem_image_Ici.1 h).resolve_left hne
+#align wbtw.right_mem_image_Ici_of_left_ne Wbtw.right_mem_image_Ici_of_left_ne
 
 theorem Wbtw.right_mem_affineSpan_of_left_ne {x y z : P} (h : Wbtw R x y z) (hne : x ≠ y) :
     z ∈ line[R, x, y] :=
@@ -756,7 +756,7 @@ theorem sbtw_iff_left_ne_and_right_mem_image_IoI {x y z : P} :
   · rcases h with ⟨hne, r, hr, rfl⟩
     rw [Set.mem_Ioi] at hr
     refine'
-      ⟨wbtw_iff_left_eq_or_right_mem_image_ici.2
+      ⟨wbtw_iff_left_eq_or_right_mem_image_Ici.2
           (Or.inr (Set.mem_image_of_mem _ (Set.mem_of_mem_of_subset hr Set.Ioi_subset_Ici_self))),
         hne.symm, _⟩
     rw [line_map_apply, ← @vsub_ne_zero V, vsub_vadd_eq_vsub_sub]
@@ -765,24 +765,24 @@ theorem sbtw_iff_left_ne_and_right_mem_image_IoI {x y z : P} :
     exact ⟨hr.ne, hne.symm⟩
 #align sbtw_iff_left_ne_and_right_mem_image_IoI sbtw_iff_left_ne_and_right_mem_image_IoI
 
-theorem Sbtw.right_mem_image_ioi {x y z : P} (h : Sbtw R x y z) :
+theorem Sbtw.right_mem_image_Ioi {x y z : P} (h : Sbtw R x y z) :
     z ∈ lineMap x y '' Set.Ioi (1 : R) :=
   (sbtw_iff_left_ne_and_right_mem_image_IoI.1 h).2
-#align sbtw.right_mem_image_Ioi Sbtw.right_mem_image_ioi
+#align sbtw.right_mem_image_Ioi Sbtw.right_mem_image_Ioi
 
 theorem Sbtw.right_mem_affineSpan {x y z : P} (h : Sbtw R x y z) : z ∈ line[R, x, y] :=
   h.Wbtw.right_mem_affine_span_of_left_ne h.left_ne
 #align sbtw.right_mem_affine_span Sbtw.right_mem_affineSpan
 
-theorem wbtw_iff_right_eq_or_left_mem_image_ici {x y z : P} :
+theorem wbtw_iff_right_eq_or_left_mem_image_Ici {x y z : P} :
     Wbtw R x y z ↔ z = y ∨ x ∈ lineMap z y '' Set.Ici (1 : R) := by
-  rw [wbtw_comm, wbtw_iff_left_eq_or_right_mem_image_ici]
-#align wbtw_iff_right_eq_or_left_mem_image_Ici wbtw_iff_right_eq_or_left_mem_image_ici
+  rw [wbtw_comm, wbtw_iff_left_eq_or_right_mem_image_Ici]
+#align wbtw_iff_right_eq_or_left_mem_image_Ici wbtw_iff_right_eq_or_left_mem_image_Ici
 
-theorem Wbtw.left_mem_image_ici_of_right_ne {x y z : P} (h : Wbtw R x y z) (hne : z ≠ y) :
+theorem Wbtw.left_mem_image_Ici_of_right_ne {x y z : P} (h : Wbtw R x y z) (hne : z ≠ y) :
     x ∈ lineMap z y '' Set.Ici (1 : R) :=
   h.symm.right_mem_image_Ici_of_left_ne hne
-#align wbtw.left_mem_image_Ici_of_right_ne Wbtw.left_mem_image_ici_of_right_ne
+#align wbtw.left_mem_image_Ici_of_right_ne Wbtw.left_mem_image_Ici_of_right_ne
 
 theorem Wbtw.left_mem_affineSpan_of_right_ne {x y z : P} (h : Wbtw R x y z) (hne : z ≠ y) :
     x ∈ line[R, z, y] :=
@@ -794,10 +794,10 @@ theorem sbtw_iff_right_ne_and_left_mem_image_IoI {x y z : P} :
   rw [sbtw_comm, sbtw_iff_left_ne_and_right_mem_image_IoI]
 #align sbtw_iff_right_ne_and_left_mem_image_IoI sbtw_iff_right_ne_and_left_mem_image_IoI
 
-theorem Sbtw.left_mem_image_ioi {x y z : P} (h : Sbtw R x y z) :
+theorem Sbtw.left_mem_image_Ioi {x y z : P} (h : Sbtw R x y z) :
     x ∈ lineMap z y '' Set.Ioi (1 : R) :=
   h.symm.right_mem_image_Ioi
-#align sbtw.left_mem_image_Ioi Sbtw.left_mem_image_ioi
+#align sbtw.left_mem_image_Ioi Sbtw.left_mem_image_Ioi
 
 theorem Sbtw.left_mem_affineSpan {x y z : P} (h : Sbtw R x y z) : x ∈ line[R, z, y] :=
   h.symm.right_mem_affine_span

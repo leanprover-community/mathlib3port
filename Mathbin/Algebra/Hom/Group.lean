@@ -2042,7 +2042,7 @@ protected theorem MonoidHom.map_zpow' [DivInvMonoid M] [DivInvMonoid N] (f : M �
 #align monoid_hom.map_zpow' MonoidHom.map_zpow'
 #align add_monoid_hom.map_zsmul' AddMonoidHom.map_zsmul'
 
-section EndCat
+section End
 
 namespace Monoid
 
@@ -2055,7 +2055,7 @@ protected def End :=
 #align monoid.End Monoid.End
 -/
 
-namespace EndCat
+namespace End
 
 instance : Monoid (Monoid.End M) where
   mul := MonoidHom.comp
@@ -2070,7 +2070,7 @@ instance : Inhabited (Monoid.End M) :=
 instance : MonoidHomClass (Monoid.End M) M M :=
   MonoidHom.monoidHomClass
 
-end EndCat
+end End
 
 /- warning: monoid.coe_one -> Monoid.coe_one is a dubious translation:
 lean 3 declaration is
@@ -2107,7 +2107,7 @@ protected def End :=
 #align add_monoid.End AddMonoid.End
 -/
 
-namespace EndCat
+namespace End
 
 instance : Monoid (AddMonoid.End A)
     where
@@ -2123,7 +2123,7 @@ instance : Inhabited (AddMonoid.End A) :=
 instance : AddMonoidHomClass (AddMonoid.End A) A A :=
   AddMonoidHom.addMonoidHomClass
 
-end EndCat
+end End
 
 /- warning: add_monoid.coe_one -> AddMonoid.coe_one is a dubious translation:
 lean 3 declaration is
@@ -2149,7 +2149,7 @@ theorem coe_mul (f g) : ((f * g : AddMonoid.End A) : A → A) = f ∘ g :=
 
 end AddMonoid
 
-end EndCat
+end End
 
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[to_additive]

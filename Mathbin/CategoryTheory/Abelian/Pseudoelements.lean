@@ -10,7 +10,7 @@ Authors: Markus Himmel
 -/
 import Mathbin.CategoryTheory.Abelian.Exact
 import Mathbin.CategoryTheory.Over
-import Mathbin.Algebra.Category.ModuleCat.EpiMono
+import Mathbin.Algebra.Category.Module.EpiMono
 
 /-!
 # Pseudoelements in abelian categories
@@ -512,7 +512,7 @@ attribute [-instance] hom_to_fun
 
 /-- In the category `Module R`, if `x` and `y` are pseudoequal, then the range of the associated
 morphisms is the same. -/
-theorem ModuleCat.eq_range_of_pseudoequal {R : Type _} [CommRing R] {G : ModuleCat R} {x y : Over G}
+theorem Module.eq_range_of_pseudoequal {R : Type _} [CommRing R] {G : ModuleCat R} {x y : Over G}
     (h : PseudoEqual G x y) : x.Hom.range = y.Hom.range :=
   by
   obtain ⟨P, p, q, hp, hq, H⟩ := h
@@ -527,7 +527,7 @@ theorem ModuleCat.eq_range_of_pseudoequal {R : Type _} [CommRing R] {G : ModuleC
     refine' ⟨p a'', _⟩
     rw [← LinearMap.comp_apply, ← ModuleCat.comp_def, H, ModuleCat.comp_def, LinearMap.comp_apply,
       ha'', ha']
-#align category_theory.abelian.pseudoelement.Module.eq_range_of_pseudoequal CategoryTheory.Abelian.Pseudoelement.ModuleCat.eq_range_of_pseudoequal
+#align category_theory.abelian.pseudoelement.Module.eq_range_of_pseudoequal CategoryTheory.Abelian.Pseudoelement.Module.eq_range_of_pseudoequal
 
 end Module
 

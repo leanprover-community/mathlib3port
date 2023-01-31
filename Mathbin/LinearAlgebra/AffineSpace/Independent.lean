@@ -774,7 +774,8 @@ theorem sign_eq_of_affineCombination_mem_affineSpan_pair {p : ι → P} (h : Aff
     (hw₂ : (∑ i in s, w₂ i) = 1)
     (hs : s.affineCombination p w ∈ line[k, s.affineCombination p w₁, s.affineCombination p w₂])
     {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (hi0 : w₁ i = 0) (hj0 : w₁ j = 0)
-    (hij : sign (w₂ i) = sign (w₂ j)) : sign (w i) = sign (w j) :=
+    (hij : SignType.sign (w₂ i) = SignType.sign (w₂ j)) :
+    SignType.sign (w i) = SignType.sign (w j) :=
   by
   rw [affineCombination_mem_affineSpan_pair h hw hw₁ hw₂] at hs
   rcases hs with ⟨r, hr⟩
@@ -791,7 +792,7 @@ theorem sign_eq_of_affineCombination_mem_affineSpan_single_lineMap {p : ι → P
     (h₁ : i₁ ∈ s) (h₂ : i₂ ∈ s) (h₃ : i₃ ∈ s) (h₁₂ : i₁ ≠ i₂) (h₁₃ : i₁ ≠ i₃) (h₂₃ : i₂ ≠ i₃)
     {c : k} (hc0 : 0 < c) (hc1 : c < 1)
     (hs : s.affineCombination p w ∈ line[k, p i₁, AffineMap.lineMap (p i₂) (p i₃) c]) :
-    sign (w i₂) = sign (w i₃) := by
+    SignType.sign (w i₂) = SignType.sign (w i₃) := by
   classical
     rw [← s.affine_combination_affine_combination_single_weights k p h₁, ←
       s.affine_combination_affine_combination_line_map_weights p h₂ h₃ c] at hs

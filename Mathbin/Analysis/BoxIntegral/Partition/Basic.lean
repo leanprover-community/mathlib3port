@@ -188,7 +188,7 @@ theorem bot_boxes : (⊥ : Prepartition I).boxes = ∅ :=
 /-- An auxiliary lemma used to prove that the same point can't belong to more than
 `2 ^ fintype.card ι` closed boxes of a prepartition. -/
 theorem injOn_setOf_mem_icc_setOf_lower_eq (x : ι → ℝ) :
-    InjOn (fun J : Box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.IccCat } :=
+    InjOn (fun J : Box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.Icc } :=
   by
   rintro J₁ ⟨h₁, hx₁⟩ J₂ ⟨h₂, hx₂⟩ (H : { i | J₁.lower i = x i } = { i | J₂.lower i = x i })
   suffices ∀ i, (Ioc (J₁.lower i) (J₁.upper i) ∩ Ioc (J₂.lower i) (J₂.upper i)).Nonempty
@@ -210,7 +210,7 @@ theorem injOn_setOf_mem_icc_setOf_lower_eq (x : ι → ℝ) :
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
 theorem card_filter_mem_icc_le [Fintype ι] (x : ι → ℝ) :
-    (π.boxes.filter fun J : Box ι => x ∈ J.IccCat).card ≤ 2 ^ Fintype.card ι :=
+    (π.boxes.filter fun J : Box ι => x ∈ J.Icc).card ≤ 2 ^ Fintype.card ι :=
   by
   rw [← Fintype.card_set]
   refine'

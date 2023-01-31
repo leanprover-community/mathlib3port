@@ -262,7 +262,7 @@ theorem discr_powerBasis_eq_norm [IsSeparable K L] :
     · simp only [true_and_iff, mem_univ, Ne.def, mem_sigma, mem_compl, mem_singleton] at hi
       rw [← PowerBasis.liftEquiv_apply_coe, ← PowerBasis.liftEquiv_apply_coe] at h
       exact hi (e.injective <| pb.lift_equiv.injective <| Subtype.eq h.symm)
-  · simp only [Equiv.apply_eq_iff_eq, hEq_iff_eq] at hij
+  · simp only [Equiv.apply_eq_iff_eq, heq_iff_eq] at hij
     have h := hij.2
     rw [← PowerBasis.liftEquiv_apply_coe, ← PowerBasis.liftEquiv_apply_coe] at h
     refine' Sigma.eq (Equiv.injective e (Equiv.injective _ (Subtype.eq h))) (by simp [hij.1])

@@ -201,7 +201,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
   refine' metric.nhds_basis_closed_ball.tendsto_right_iff.2 fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
   have : ∀ᶠ i in at_top, ν (s i) ∈ Icc (ν S - ε) (ν S + ε) :=
-    tendsto_measure_Union h_mono (Ennreal.icc_mem_nhds hfi'.ne (Ennreal.coe_pos.2 ε0).ne')
+    tendsto_measure_Union h_mono (Ennreal.Icc_mem_nhds hfi'.ne (Ennreal.coe_pos.2 ε0).ne')
   refine' this.mono fun i hi => _
   rw [mem_closedBall_iff_norm', ← integral_diff (hsm i) hfi (hfi.mono_set hsub) hsub, ← coe_nnnorm,
     Nnreal.coe_le_coe, ← Ennreal.coe_le_coe]
@@ -398,7 +398,7 @@ theorem norm_set_integral_le_of_norm_le_const_ae' {C : ℝ} (hs : μ s < ∞)
     rw [← h2 h3]
     exact h1 h3
   have B : MeasurableSet { x | ‖(hfm.mk f) x‖ ≤ C } :=
-    hfm.strongly_measurable_mk.norm.measurable measurableSet_iic
+    hfm.strongly_measurable_mk.norm.measurable measurableSet_Iic
   filter_upwards [hfm.ae_eq_mk, (ae_restrict_iff B).2 A]with _ h1 _
   rwa [h1]
 #align measure_theory.norm_set_integral_le_of_norm_le_const_ae' MeasureTheory.norm_set_integral_le_of_norm_le_const_ae'
@@ -464,25 +464,25 @@ theorem set_integral_trim {α} {m m0 : MeasurableSpace α} {μ : Measure α} (hm
   rwa [integral_trim hm hf_meas, restrict_trim hm μ]
 #align measure_theory.set_integral_trim MeasureTheory.set_integral_trim
 
-theorem integral_icc_eq_integral_Ioc' [PartialOrder α] {f : α → E} {a b : α} (ha : μ {a} = 0) :
+theorem integral_Icc_eq_integral_Ioc' [PartialOrder α] {f : α → E} {a b : α} (ha : μ {a} = 0) :
     (∫ t in Icc a b, f t ∂μ) = ∫ t in Ioc a b, f t ∂μ :=
-  set_integral_congr_set_ae (ioc_ae_eq_Icc' ha).symm
-#align measure_theory.integral_Icc_eq_integral_Ioc' MeasureTheory.integral_icc_eq_integral_Ioc'
+  set_integral_congr_set_ae (Ioc_ae_eq_Icc' ha).symm
+#align measure_theory.integral_Icc_eq_integral_Ioc' MeasureTheory.integral_Icc_eq_integral_Ioc'
 
-theorem integral_ioc_eq_integral_Ioo' [PartialOrder α] {f : α → E} {a b : α} (hb : μ {b} = 0) :
+theorem integral_Ioc_eq_integral_Ioo' [PartialOrder α] {f : α → E} {a b : α} (hb : μ {b} = 0) :
     (∫ t in Ioc a b, f t ∂μ) = ∫ t in Ioo a b, f t ∂μ :=
-  set_integral_congr_set_ae (ioo_ae_eq_Ioc' hb).symm
-#align measure_theory.integral_Ioc_eq_integral_Ioo' MeasureTheory.integral_ioc_eq_integral_Ioo'
+  set_integral_congr_set_ae (Ioo_ae_eq_Ioc' hb).symm
+#align measure_theory.integral_Ioc_eq_integral_Ioo' MeasureTheory.integral_Ioc_eq_integral_Ioo'
 
-theorem integral_icc_eq_integral_ioc [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
+theorem integral_Icc_eq_integral_Ioc [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
     (∫ t in Icc a b, f t ∂μ) = ∫ t in Ioc a b, f t ∂μ :=
   integral_Icc_eq_integral_Ioc' <| measure_singleton a
-#align measure_theory.integral_Icc_eq_integral_Ioc MeasureTheory.integral_icc_eq_integral_ioc
+#align measure_theory.integral_Icc_eq_integral_Ioc MeasureTheory.integral_Icc_eq_integral_Ioc
 
-theorem integral_ioc_eq_integral_ioo [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
+theorem integral_Ioc_eq_integral_Ioo [PartialOrder α] {f : α → E} {a b : α} [HasNoAtoms μ] :
     (∫ t in Ioc a b, f t ∂μ) = ∫ t in Ioo a b, f t ∂μ :=
   integral_Ioc_eq_integral_Ioo' <| measure_singleton b
-#align measure_theory.integral_Ioc_eq_integral_Ioo MeasureTheory.integral_ioc_eq_integral_ioo
+#align measure_theory.integral_Ioc_eq_integral_Ioo MeasureTheory.integral_Ioc_eq_integral_Ioo
 
 end NormedAddCommGroup
 
@@ -742,7 +742,7 @@ along `li`. Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_re
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem Filter.Tendsto.integral_sub_linear_isO_ae [NormedSpace ℝ E] [CompleteSpace E]
+theorem Filter.Tendsto.integral_sub_linear_isOCat_ae [NormedSpace ℝ E] [CompleteSpace E]
     {μ : Measure α} {l : Filter α} [l.IsMeasurablyGenerated] {f : α → E} {b : E}
     (h : Tendsto f (l ⊓ μ.ae) (𝓝 b)) (hfm : StronglyMeasurableAtFilter f l μ)
     (hμ : μ.FiniteAtFilter l) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li l.smallSets)
@@ -762,7 +762,7 @@ theorem Filter.Tendsto.integral_sub_linear_isO_ae [NormedSpace ℝ E] [CompleteS
   rw [← set_integral_const, ← integral_sub h_integrable (integrable_on_const.2 <| Or.inr hμs),
     Real.norm_eq_abs, abs_of_nonneg Ennreal.toReal_nonneg]
   exact norm_set_integral_le_of_norm_le_const_ae' hμs h_norm (hfm.sub ae_strongly_measurable_const)
-#align filter.tendsto.integral_sub_linear_is_o_ae Filter.Tendsto.integral_sub_linear_isO_ae
+#align filter.tendsto.integral_sub_linear_is_o_ae Filter.Tendsto.integral_sub_linear_isOCat_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure and `f` is an almost everywhere measurable function that is continuous at a point `a`
@@ -773,16 +773,16 @@ number, we use `(μ (s i)).to_real` in the actual statement.
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousWithinAt.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
-    [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α} [IsLocallyFiniteMeasure μ] {a : α}
-    {t : Set α} {f : α → E} (ha : ContinuousWithinAt f t a) (ht : MeasurableSet t)
-    (hfm : StronglyMeasurableAtFilter f (𝓝[t] a) μ) {s : ι → Set α} {li : Filter ι}
-    (hs : Tendsto s li (𝓝[t] a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
+theorem ContinuousWithinAt.integral_sub_linear_isOCat_ae [TopologicalSpace α]
+    [OpensMeasurableSpace α] [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α}
+    [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (ha : ContinuousWithinAt f t a)
+    (ht : MeasurableSet t) (hfm : StronglyMeasurableAtFilter f (𝓝[t] a) μ) {s : ι → Set α}
+    {li : Filter ι} (hs : Tendsto s li (𝓝[t] a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finite_at_nhds_within a t) hs m hsμ
-#align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_isO_ae
+#align continuous_within_at.integral_sub_linear_is_o_ae ContinuousWithinAt.integral_sub_linear_isOCat_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds` version: if `μ` is a locally finite
 measure and `f` is an almost everywhere measurable function that is continuous at a point `a`, then
@@ -793,14 +793,14 @@ the actual statement.
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousAt.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousAt.integral_sub_linear_isOCat_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] {μ : Measure α} [IsLocallyFiniteMeasure μ] {a : α}
     {f : α → E} (ha : ContinuousAt f a) (hfm : StronglyMeasurableAtFilter f (𝓝 a) μ) {s : ι → Set α}
     {li : Filter ι} (hs : Tendsto s li (𝓝 a).smallSets) (m : ι → ℝ := fun i => (μ (s i)).toReal)
     (hsμ : (fun i => (μ (s i)).toReal) =ᶠ[li] m := by rfl) :
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   (ha.mono_left inf_le_left).integral_sub_linear_is_o_ae hfm (μ.finiteAtNhds a) hs m hsμ
-#align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isO_ae
+#align continuous_at.integral_sub_linear_is_o_ae ContinuousAt.integral_sub_linear_isOCat_ae
 
 /-- Fundamental theorem of calculus for set integrals, `nhds_within` version: if `μ` is a locally
 finite measure, `f` is continuous on a measurable set `t`, and `a ∈ t`, then `∫ x in (s i), f x ∂μ =
@@ -810,7 +810,7 @@ Since `μ (s i)` is an `ℝ≥0∞` number, we use `(μ (s i)).to_real` in the a
 Often there is a good formula for `(μ (s i)).to_real`, so the formalization can take an optional
 argument `m` with this formula and a proof `of `(λ i, (μ (s i)).to_real) =ᶠ[li] m`. Without these
 arguments, `m i = (μ (s i)).to_real` is used in the output. -/
-theorem ContinuousOn.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeasurableSpace α]
+theorem ContinuousOn.integral_sub_linear_isOCat_ae [TopologicalSpace α] [OpensMeasurableSpace α]
     [NormedSpace ℝ E] [CompleteSpace E] [SecondCountableTopologyEither α E] {μ : Measure α}
     [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ha : a ∈ t)
     (ht : MeasurableSet t) {s : ι → Set α} {li : Filter ι} (hs : Tendsto s li (𝓝[t] a).smallSets)
@@ -819,7 +819,7 @@ theorem ContinuousOn.integral_sub_linear_isO_ae [TopologicalSpace α] [OpensMeas
     (fun i => (∫ x in s i, f x ∂μ) - m i • f a) =o[li] m :=
   (hft a ha).integral_sub_linear_is_o_ae ht ⟨t, self_mem_nhdsWithin, hft.AeStronglyMeasurable ht⟩ hs
     m hsμ
-#align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isO_ae
+#align continuous_on.integral_sub_linear_is_o_ae ContinuousOn.integral_sub_linear_isOCat_ae
 
 section
 
@@ -899,7 +899,7 @@ theorem integral_comp_comm' (L : E →L[𝕜] F) {K} (hL : AntilipschitzWith K L
 
 theorem integral_comp_L1_comm (L : E →L[𝕜] F) (φ : α →₁[μ] E) :
     (∫ a, L (φ a) ∂μ) = L (∫ a, φ a ∂μ) :=
-  L.integral_comp_comm (L1Cat.integrableCoeFn φ)
+  L.integral_comp_comm (L1.integrableCoeFn φ)
 #align continuous_linear_map.integral_comp_L1_comm ContinuousLinearMap.integral_comp_L1_comm
 
 end ContinuousLinearMap

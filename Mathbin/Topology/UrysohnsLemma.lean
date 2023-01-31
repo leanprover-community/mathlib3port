@@ -195,7 +195,7 @@ theorem approx_le_approx_of_u_sub_c {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (
       
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_u_sub_c
 
-theorem approx_mem_icc_right_left (c : CU X) (n : ℕ) (x : X) :
+theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
     c.approx n x ∈ Icc (c.right.approx n x) (c.left.approx n x) :=
   by
   induction' n with n ihn generalizing c
@@ -208,7 +208,7 @@ theorem approx_mem_icc_right_left (c : CU X) (n : ℕ) (x : X) :
     refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
       apply approx_le_approx_of_U_sub_C
     exacts[subset_closure, subset_closure]
-#align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_icc_right_left
+#align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
 
 theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x :=
   by
@@ -264,9 +264,9 @@ theorem lim_le_one (c : CU X) (x : X) : c.lim x ≤ 1 :=
   csupᵢ_le fun n => c.approx_le_one _ _
 #align urysohns.CU.lim_le_one Urysohns.CU.lim_le_one
 
-theorem lim_mem_icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
+theorem lim_mem_Icc (c : CU X) (x : X) : c.lim x ∈ Icc (0 : ℝ) 1 :=
   ⟨c.lim_nonneg x, c.lim_le_one x⟩
-#align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_icc
+#align urysohns.CU.lim_mem_Icc Urysohns.CU.lim_mem_Icc
 
 /-- Continuity of `urysohns.CU.lim`. See module docstring for a sketch of the proofs. -/
 theorem continuous_lim (c : CU X) : Continuous c.lim :=
@@ -279,7 +279,7 @@ theorem continuous_lim (c : CU X) : Continuous c.lim :=
   induction' n with n ihn generalizing c
   · refine' eventually_of_forall fun y => _
     rw [pow_zero]
-    exact Real.dist_le_of_mem_icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
+    exact Real.dist_le_of_mem_Icc_01 (c.lim_mem_Icc _) (c.lim_mem_Icc _)
   · by_cases hxl : x ∈ c.left.U
     · filter_upwards [IsOpen.mem_nhds c.left.open_U hxl, ihn c.left]with _ hyl hyd
       rw [pow_succ, c.lim_eq_midpoint, c.lim_eq_midpoint,

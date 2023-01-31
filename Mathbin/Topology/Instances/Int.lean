@@ -62,13 +62,13 @@ theorem preimage_closedBall (x : ℤ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ
   rfl
 #align int.preimage_closed_ball Int.preimage_closedBall
 
-theorem ball_eq_ioo (x : ℤ) (r : ℝ) : ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
-  rw [← preimage_ball, Real.ball_eq_ioo, preimage_Ioo]
-#align int.ball_eq_Ioo Int.ball_eq_ioo
+theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = Ioo ⌊↑x - r⌋ ⌈↑x + r⌉ := by
+  rw [← preimage_ball, Real.ball_eq_Ioo, preimage_Ioo]
+#align int.ball_eq_Ioo Int.ball_eq_Ioo
 
-theorem closedBall_eq_icc (x : ℤ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
-  rw [← preimage_closed_ball, Real.closedBall_eq_icc, preimage_Icc]
-#align int.closed_ball_eq_Icc Int.closedBall_eq_icc
+theorem closedBall_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
+  rw [← preimage_closed_ball, Real.closedBall_eq_Icc, preimage_Icc]
+#align int.closed_ball_eq_Icc Int.closedBall_eq_Icc
 
 instance : ProperSpace ℤ :=
   ⟨by

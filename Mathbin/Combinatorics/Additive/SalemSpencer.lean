@@ -528,7 +528,7 @@ theorem rothNumberNat_zero : rothNumberNat 0 = 0 :=
   rfl
 #align roth_number_nat_zero rothNumberNat_zero
 
-theorem addRothNumber_ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat (b - a) :=
+theorem addRothNumber_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat (b - a) :=
   by
   obtain h | h := le_total b a
   · rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, rothNumberNat_zero, add_roth_number_empty]
@@ -536,7 +536,7 @@ theorem addRothNumber_ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat 
   rw [range_eq_Ico, map_eq_image]
   convert (image_add_left_Ico 0 (b - a) _).symm
   exact (add_tsub_cancel_of_le h).symm
-#align add_roth_number_Ico addRothNumber_ico
+#align add_roth_number_Ico addRothNumber_Ico
 
 open Asymptotics Filter
 

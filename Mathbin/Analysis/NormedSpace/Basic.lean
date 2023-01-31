@@ -152,7 +152,7 @@ theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
   convert this.mem_closure _ _
   · rw [one_smul, sub_add_cancel]
-  · simp [closure_ico zero_ne_one, zero_le_one]
+  · simp [closure_Ico zero_ne_one, zero_le_one]
   · rintro c ⟨hc0, hc1⟩
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
       mul_comm, ← mul_one r]

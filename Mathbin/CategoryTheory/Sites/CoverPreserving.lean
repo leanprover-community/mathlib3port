@@ -105,13 +105,13 @@ This is actually stronger than merely preserving compatible families because of 
 @[nolint has_nonempty_instance]
 structure CompatiblePreserving (K : GrothendieckTopology D) (G : C ⥤ D) : Prop where
   Compatible :
-    ∀ (ℱ : SheafOfTypesCat.{w} K) {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T}
+    ∀ (ℱ : SheafOfTypes.{w} K) {Z} {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T}
       (h : x.Compatible) {Y₁ Y₂} {X} (f₁ : X ⟶ G.obj Y₁) (f₂ : X ⟶ G.obj Y₂) {g₁ : Y₁ ⟶ Z}
       {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂) (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂),
       ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 #align category_theory.compatible_preserving CategoryTheory.CompatiblePreserving
 
-variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypesCat.{w} K) {Z : C}
+variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfTypes.{w} K) {Z : C}
 
 variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Compatible)
 
@@ -201,7 +201,7 @@ then `G.op ⋙ _` pulls sheaves back to sheaves.
 This result is basically <https://stacks.math.columbia.edu/tag/00WW>.
 -/
 theorem pullback_isSheaf_of_coverPreserving {G : C ⥤ D} (hG₁ : CompatiblePreserving.{v₃} K G)
-    (hG₂ : CoverPreserving J K G) (ℱ : SheafCat K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) :=
+    (hG₂ : CoverPreserving J K G) (ℱ : Sheaf K A) : Presheaf.IsSheaf J (G.op ⋙ ℱ.val) :=
   by
   intro X U S hS x hx
   change family_of_elements (G.op ⋙ ℱ.val ⋙ coyoneda.obj (op X)) _ at x
@@ -226,7 +226,7 @@ theorem pullback_isSheaf_of_coverPreserving {G : C ⥤ D} (hG₁ : CompatiblePre
 
 /-- The pullback of a sheaf along a cover-preserving and compatible-preserving functor. -/
 def pullbackSheaf {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G)
-    (ℱ : SheafCat K A) : SheafCat J A :=
+    (ℱ : Sheaf K A) : Sheaf J A :=
   ⟨G.op ⋙ ℱ.val, pullback_isSheaf_of_coverPreserving hG₁ hG₂ ℱ⟩
 #align category_theory.pullback_sheaf CategoryTheory.pullbackSheaf
 
@@ -237,8 +237,7 @@ if `G` is cover-preserving and compatible-preserving.
 -/
 @[simps]
 def Sites.pullback {G : C ⥤ D} (hG₁ : CompatiblePreserving K G) (hG₂ : CoverPreserving J K G) :
-    SheafCat K A ⥤ SheafCat J A
-    where
+    Sheaf K A ⥤ Sheaf J A where
   obj ℱ := pullbackSheaf hG₁ hG₂ ℱ
   map _ _ f := ⟨((whiskeringLeft _ _ _).obj G.op).map f.val⟩
   map_id' ℱ := by
@@ -260,7 +259,7 @@ variable (A : Type u₂) [Category.{v₁} A]
 variable (J : GrothendieckTopology C) (K : GrothendieckTopology D)
 
 instance [HasLimits A] : CreatesLimits (sheafToPresheaf J A) :=
-  CategoryTheory.SheafCat.CategoryTheory.SheafToPresheaf.CategoryTheory.createsLimits.{u₂, v₁, v₁}
+  CategoryTheory.Sheaf.CategoryTheory.SheafToPresheaf.CategoryTheory.createsLimits.{u₂, v₁, v₁}
 
 -- The assumptions so that we have sheafification
 variable [ConcreteCategory.{v₁} A] [PreservesLimits (forget A)] [HasColimits A] [HasLimits A]
@@ -275,7 +274,7 @@ instance {X : C} : IsCofiltered (J.cover X) :=
 /-- The pushforward functor `Sheaf J A ⥤ Sheaf K A` associated to a functor `G : C ⥤ D` in the
 same direction as `G`. -/
 @[simps]
-def Sites.pushforward (G : C ⥤ D) : SheafCat J A ⥤ SheafCat K A :=
+def Sites.pushforward (G : C ⥤ D) : Sheaf J A ⥤ Sheaf K A :=
   sheafToPresheaf J A ⋙ lan G.op ⋙ presheafToSheaf K A
 #align category_theory.sites.pushforward CategoryTheory.Sites.pushforward
 

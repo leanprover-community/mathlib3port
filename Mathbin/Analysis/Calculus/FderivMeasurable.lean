@@ -341,7 +341,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
   -- Let us show that `f` has derivative `f'` at `x`.
   have : HasFderivAt f f' x :=
     by
-    simp only [hasFderivAt_iff_isO_nhds_zero, is_o_iff]
+    simp only [hasFderivAt_iff_isOCat_nhds_zero, is_o_iff]
     /- to get an approximation with a precision `ε`, we will replace `f` with `L e (n e) m` for
         some large enough `e` (yielding a small error by uniform approximation). As one can vary `m`,
         this makes it possible to cover all scales, and thus to obtain a good linear approximation in
@@ -528,10 +528,10 @@ def d (f : ℝ → F) (K : Set F) : Set ℝ :=
   ⋂ e : ℕ, ⋃ n : ℕ, ⋂ (p ≥ n) (q ≥ n), b f K ((1 / 2) ^ p) ((1 / 2) ^ q) ((1 / 2) ^ e)
 #align right_deriv_measurable_aux.D RightDerivMeasurableAux.d
 
-theorem a_mem_nhdsWithin_ioi {L : F} {r ε x : ℝ} (hx : x ∈ a f L r ε) : a f L r ε ∈ 𝓝[>] x :=
+theorem a_mem_nhdsWithin_Ioi {L : F} {r ε x : ℝ} (hx : x ∈ a f L r ε) : a f L r ε ∈ 𝓝[>] x :=
   by
   rcases hx with ⟨r', rr', hr'⟩
-  rw [mem_nhdsWithin_ioi_iff_exists_ioo_subset]
+  rw [mem_nhdsWithin_Ioi_iff_exists_Ioo_subset]
   obtain ⟨s, s_gt, s_lt⟩ : ∃ s : ℝ, r / 2 < s ∧ s < r' := exists_between rr'.1
   have : s ∈ Ioc (r / 2) r := ⟨s_gt, le_of_lt (s_lt.trans_le rr'.2)⟩
   refine'
@@ -544,9 +544,9 @@ theorem a_mem_nhdsWithin_ioi {L : F} {r ε x : ℝ} (hx : x ∈ a f L r ε) : a 
     linarith [hx'.2]
   intro y hy z hz
   exact hr' y (A hy) z (A hz)
-#align right_deriv_measurable_aux.A_mem_nhds_within_Ioi RightDerivMeasurableAux.a_mem_nhdsWithin_ioi
+#align right_deriv_measurable_aux.A_mem_nhds_within_Ioi RightDerivMeasurableAux.a_mem_nhdsWithin_Ioi
 
-theorem b_mem_nhdsWithin_ioi {K : Set F} {r s ε x : ℝ} (hx : x ∈ b f K r s ε) :
+theorem b_mem_nhdsWithin_Ioi {K : Set F} {r s ε x : ℝ} (hx : x ∈ b f K r s ε) :
     b f K r s ε ∈ 𝓝[>] x :=
   by
   obtain ⟨L, LK, hL₁, hL₂⟩ : ∃ L : F, L ∈ K ∧ x ∈ A f L r ε ∧ x ∈ A f L s ε := by
@@ -554,10 +554,10 @@ theorem b_mem_nhdsWithin_ioi {K : Set F} {r s ε x : ℝ} (hx : x ∈ b f K r s 
   filter_upwards [A_mem_nhds_within_Ioi hL₁, A_mem_nhds_within_Ioi hL₂]with y hy₁ hy₂
   simp only [B, mem_Union, mem_inter_iff, exists_prop]
   exact ⟨L, LK, hy₁, hy₂⟩
-#align right_deriv_measurable_aux.B_mem_nhds_within_Ioi RightDerivMeasurableAux.b_mem_nhdsWithin_ioi
+#align right_deriv_measurable_aux.B_mem_nhds_within_Ioi RightDerivMeasurableAux.b_mem_nhdsWithin_Ioi
 
 theorem measurableSet_b {K : Set F} {r s ε : ℝ} : MeasurableSet (b f K r s ε) :=
-  measurableSet_of_mem_nhdsWithin_ioi fun x hx => b_mem_nhdsWithin_ioi hx
+  measurableSet_of_mem_nhdsWithin_Ioi fun x hx => b_mem_nhdsWithin_Ioi hx
 #align right_deriv_measurable_aux.measurable_set_B RightDerivMeasurableAux.measurableSet_b
 
 theorem a_mono (L : F) (r : ℝ) {ε δ : ℝ} (h : ε ≤ δ) : a f L r ε ⊆ a f L r δ :=
@@ -580,8 +580,8 @@ theorem mem_a_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
     ∃ R > 0, ∀ r ∈ Ioo (0 : ℝ) R, x ∈ a f (derivWithin f (Ici x) x) r ε :=
   by
   have := hx.has_deriv_within_at
-  simp_rw [hasDerivWithinAt_iff_isO, is_o_iff] at this
-  rcases mem_nhdsWithin_ici_iff_exists_ico_subset.1 (this (half_pos hε)) with ⟨m, xm, hm⟩
+  simp_rw [hasDerivWithinAt_iff_isOCat, is_o_iff] at this
+  rcases mem_nhdsWithin_Ici_iff_exists_Ico_subset.1 (this (half_pos hε)) with ⟨m, xm, hm⟩
   refine' ⟨m - x, by linarith [show x < m from xm], fun r hr => _⟩
   have : r ∈ Ioc (r / 2) r := ⟨half_lt_self hr.1, le_rfl⟩
   refine' ⟨r, this, fun y hy z hz => _⟩
@@ -748,7 +748,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
   -- Let us show that `f` has right derivative `f'` at `x`.
   have : HasDerivWithinAt f f' (Ici x) x :=
     by
-    simp only [hasDerivWithinAt_iff_isO, is_o_iff]
+    simp only [hasDerivWithinAt_iff_isOCat, is_o_iff]
     /- to get an approximation with a precision `ε`, we will replace `f` with `L e (n e) m` for
         some large enough `e` (yielding a small error by uniform approximation). As one can vary `m`,
         this makes it possible to cover all scales, and thus to obtain a good linear approximation in
@@ -759,7 +759,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     have xmem : x ∈ Ico x (x + (1 / 2) ^ (n e + 1)) := by
       simp only [one_div, left_mem_Ico, lt_add_iff_pos_right, inv_pos, pow_pos, zero_lt_bit0,
         zero_lt_one]
-    filter_upwards [icc_mem_nhdsWithin_ici xmem]with y hy
+    filter_upwards [Icc_mem_nhdsWithin_Ici xmem]with y hy
     -- We need to show that `f y - f x - f' (y - x)` is small. For this, we will work at scale
     -- `k` where `k` is chosen with `‖y - x‖ ∼ 2 ^ (-k)`.
     rcases eq_or_lt_of_le hy.1 with (rfl | xy)
@@ -814,7 +814,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
         mul_le_mul_of_nonneg_left he.le (mul_nonneg (by norm_num) (norm_nonneg _))
       _ = ε * ‖y - x‖ := by ring
       
-  rw [← this.deriv_within (uniqueDiffOn_ici x x le_rfl)] at f'K
+  rw [← this.deriv_within (uniqueDiffOn_Ici x x le_rfl)] at f'K
   exact ⟨this.differentiable_within_at, f'K⟩
 #align right_deriv_measurable_aux.D_subset_differentiable_set RightDerivMeasurableAux.d_subset_differentiable_set
 
@@ -831,26 +831,26 @@ variable (f)
 
 /-- The set of right differentiability points of a function, with derivative in a given complete
 set, is Borel-measurable. -/
-theorem measurableSet_of_differentiableWithinAt_ici_of_isComplete {K : Set F} (hK : IsComplete K) :
+theorem measurableSet_of_differentiableWithinAt_Ici_of_isComplete {K : Set F} (hK : IsComplete K) :
     MeasurableSet { x | DifferentiableWithinAt ℝ f (Ici x) x ∧ derivWithin f (Ici x) x ∈ K } := by
   simp [differentiable_set_eq_D K hK, D, measurable_set_B, MeasurableSet.interᵢ,
     MeasurableSet.unionᵢ]
-#align measurable_set_of_differentiable_within_at_Ici_of_is_complete measurableSet_of_differentiableWithinAt_ici_of_isComplete
+#align measurable_set_of_differentiable_within_at_Ici_of_is_complete measurableSet_of_differentiableWithinAt_Ici_of_isComplete
 
 variable [CompleteSpace F]
 
 /-- The set of right differentiability points of a function taking values in a complete space is
 Borel-measurable. -/
-theorem measurableSet_of_differentiableWithinAt_ici :
+theorem measurableSet_of_differentiableWithinAt_Ici :
     MeasurableSet { x | DifferentiableWithinAt ℝ f (Ici x) x } :=
   by
   have : IsComplete (univ : Set F) := complete_univ
-  convert measurableSet_of_differentiableWithinAt_ici_of_isComplete f this
+  convert measurableSet_of_differentiableWithinAt_Ici_of_isComplete f this
   simp
-#align measurable_set_of_differentiable_within_at_Ici measurableSet_of_differentiableWithinAt_ici
+#align measurable_set_of_differentiable_within_at_Ici measurableSet_of_differentiableWithinAt_Ici
 
 @[measurability]
-theorem measurable_derivWithin_ici [MeasurableSpace F] [BorelSpace F] :
+theorem measurable_derivWithin_Ici [MeasurableSpace F] [BorelSpace F] :
     Measurable fun x => derivWithin f (Ici x) x :=
   by
   refine' measurable_of_isClosed fun s hs => _
@@ -861,55 +861,55 @@ theorem measurable_derivWithin_ici [MeasurableSpace F] [BorelSpace F] :
     Set.ext fun x => mem_preimage.trans derivWithin_mem_iff
   rw [this]
   exact
-    (measurableSet_of_differentiableWithinAt_ici_of_isComplete _ hs.is_complete).union
-      ((measurableSet_of_differentiableWithinAt_ici _).compl.inter (MeasurableSet.const _))
-#align measurable_deriv_within_Ici measurable_derivWithin_ici
+    (measurableSet_of_differentiableWithinAt_Ici_of_isComplete _ hs.is_complete).union
+      ((measurableSet_of_differentiableWithinAt_Ici _).compl.inter (MeasurableSet.const _))
+#align measurable_deriv_within_Ici measurable_derivWithin_Ici
 
-theorem stronglyMeasurable_derivWithin_ici [SecondCountableTopology F] :
+theorem stronglyMeasurable_derivWithin_Ici [SecondCountableTopology F] :
     StronglyMeasurable fun x => derivWithin f (Ici x) x :=
   by
   borelize F
-  exact (measurable_derivWithin_ici f).StronglyMeasurable
-#align strongly_measurable_deriv_within_Ici stronglyMeasurable_derivWithin_ici
+  exact (measurable_derivWithin_Ici f).StronglyMeasurable
+#align strongly_measurable_deriv_within_Ici stronglyMeasurable_derivWithin_Ici
 
 theorem aeMeasurableDerivWithinIci [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
     AeMeasurable (fun x => derivWithin f (Ici x) x) μ :=
-  (measurable_derivWithin_ici f).AeMeasurable
+  (measurable_derivWithin_Ici f).AeMeasurable
 #align ae_measurable_deriv_within_Ici aeMeasurableDerivWithinIci
 
 theorem aeStronglyMeasurableDerivWithinIci [SecondCountableTopology F] (μ : Measure ℝ) :
     AeStronglyMeasurable (fun x => derivWithin f (Ici x) x) μ :=
-  (stronglyMeasurable_derivWithin_ici f).AeStronglyMeasurable
+  (stronglyMeasurable_derivWithin_Ici f).AeStronglyMeasurable
 #align ae_strongly_measurable_deriv_within_Ici aeStronglyMeasurableDerivWithinIci
 
 /-- The set of right differentiability points of a function taking values in a complete space is
 Borel-measurable. -/
-theorem measurableSet_of_differentiableWithinAt_ioi :
+theorem measurableSet_of_differentiableWithinAt_Ioi :
     MeasurableSet { x | DifferentiableWithinAt ℝ f (Ioi x) x } := by
-  simpa [differentiableWithinAt_ioi_iff_ici] using measurableSet_of_differentiableWithinAt_ici f
-#align measurable_set_of_differentiable_within_at_Ioi measurableSet_of_differentiableWithinAt_ioi
+  simpa [differentiableWithinAt_Ioi_iff_Ici] using measurableSet_of_differentiableWithinAt_Ici f
+#align measurable_set_of_differentiable_within_at_Ioi measurableSet_of_differentiableWithinAt_Ioi
 
 @[measurability]
-theorem measurable_derivWithin_ioi [MeasurableSpace F] [BorelSpace F] :
+theorem measurable_derivWithin_Ioi [MeasurableSpace F] [BorelSpace F] :
     Measurable fun x => derivWithin f (Ioi x) x := by
-  simpa [derivWithin_ioi_eq_ici] using measurable_derivWithin_ici f
-#align measurable_deriv_within_Ioi measurable_derivWithin_ioi
+  simpa [derivWithin_Ioi_eq_Ici] using measurable_derivWithin_Ici f
+#align measurable_deriv_within_Ioi measurable_derivWithin_Ioi
 
-theorem stronglyMeasurable_derivWithin_ioi [SecondCountableTopology F] :
+theorem stronglyMeasurable_derivWithin_Ioi [SecondCountableTopology F] :
     StronglyMeasurable fun x => derivWithin f (Ioi x) x :=
   by
   borelize F
-  exact (measurable_derivWithin_ioi f).StronglyMeasurable
-#align strongly_measurable_deriv_within_Ioi stronglyMeasurable_derivWithin_ioi
+  exact (measurable_derivWithin_Ioi f).StronglyMeasurable
+#align strongly_measurable_deriv_within_Ioi stronglyMeasurable_derivWithin_Ioi
 
 theorem aeMeasurableDerivWithinIoi [MeasurableSpace F] [BorelSpace F] (μ : Measure ℝ) :
     AeMeasurable (fun x => derivWithin f (Ioi x) x) μ :=
-  (measurable_derivWithin_ioi f).AeMeasurable
+  (measurable_derivWithin_Ioi f).AeMeasurable
 #align ae_measurable_deriv_within_Ioi aeMeasurableDerivWithinIoi
 
 theorem aeStronglyMeasurableDerivWithinIoi [SecondCountableTopology F] (μ : Measure ℝ) :
     AeStronglyMeasurable (fun x => derivWithin f (Ioi x) x) μ :=
-  (stronglyMeasurable_derivWithin_ioi f).AeStronglyMeasurable
+  (stronglyMeasurable_derivWithin_Ioi f).AeStronglyMeasurable
 #align ae_strongly_measurable_deriv_within_Ioi aeStronglyMeasurableDerivWithinIoi
 
 end RightDeriv

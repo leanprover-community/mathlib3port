@@ -103,23 +103,23 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
   have A : ContinuousOn (fun x => (f x, B x)) (Icc a b) := hf.prod hB
   have : IsClosed s := by
     simp only [s, inter_comm]
-    exact A.preimage_closed_of_closed isClosed_icc OrderClosedTopology.isClosed_le'
+    exact A.preimage_closed_of_closed isClosed_Icc OrderClosedTopology.isClosed_le'
   apply this.Icc_subset_of_forall_exists_gt ha
   rintro x ⟨hxB : f x ≤ B x, xab⟩ y hy
   cases' hxB.lt_or_eq with hxB hxB
   · -- If `f x < B x`, then all we need is continuity of both sides
-    refine' nonempty_of_mem (inter_mem _ (ioc_mem_nhdsWithin_ioi ⟨le_rfl, hy⟩))
+    refine' nonempty_of_mem (inter_mem _ (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, hy⟩))
     have : ∀ᶠ x in 𝓝[Icc a b] x, f x < B x :=
       A x (Ico_subset_Icc_self xab) (IsOpen.mem_nhds (isOpen_lt continuous_fst continuous_snd) hxB)
-    have : ∀ᶠ x in 𝓝[>] x, f x < B x := nhdsWithin_le_of_mem (icc_mem_nhdsWithin_ioi xab) this
+    have : ∀ᶠ x in 𝓝[>] x, f x < B x := nhdsWithin_le_of_mem (Icc_mem_nhdsWithin_Ioi xab) this
     exact this.mono fun y => le_of_lt
   · rcases exists_between (bound x xab hxB) with ⟨r, hfr, hrB⟩
     specialize hf' x xab r hfr
     have HB : ∀ᶠ z in 𝓝[>] x, r < slope B x z :=
       (hasDerivWithinAt_iff_tendsto_slope' <| lt_irrefl x).1 (hB' x xab).Ioi_of_Ici
-        (ioi_mem_nhds hrB)
+        (Ioi_mem_nhds hrB)
     obtain ⟨z, hfz, hzB, hz⟩ : ∃ z, slope f x z < r ∧ r < slope B x z ∧ z ∈ Ioc x y
-    exact (hf'.and_eventually (HB.and (ioc_mem_nhdsWithin_ioi ⟨le_rfl, hy⟩))).exists
+    exact (hf'.and_eventually (HB.and (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, hy⟩))).exists
     refine' ⟨z, _, hz⟩
     have := (hfz.trans hzB).le
     rwa [slope_def_field, slope_def_field, div_le_div_right (sub_pos.2 hz.1), hxB,
@@ -368,7 +368,7 @@ theorem norm_image_sub_le_of_norm_deriv_le_segment' {f' : ℝ → E} {C : ℝ}
   refine'
     norm_image_sub_le_of_norm_deriv_right_le_segment (fun x hx => (hf x hx).ContinuousWithinAt)
       (fun x hx => _) bound
-  exact (hf x <| Ico_subset_Icc_self hx).nhdsWithin (icc_mem_nhdsWithin_ici hx)
+  exact (hf x <| Ico_subset_Icc_self hx).nhdsWithin (Icc_mem_nhdsWithin_Ici hx)
 #align norm_image_sub_le_of_norm_deriv_le_segment' norm_image_sub_le_of_norm_deriv_le_segment'
 
 /-- A function on `[a, b]` with the norm of the derivative within `[a, b]`
@@ -440,9 +440,9 @@ theorem eq_of_derivWithin_eq (fdiff : DifferentiableOn ℝ f (Icc a b))
     ∀ y ∈ Icc a b, f y = g y :=
   by
   have A : ∀ y ∈ Ico a b, HasDerivWithinAt f (derivWithin f (Icc a b) y) (Ici y) y := fun y hy =>
-    (fdiff y (mem_Icc_of_Ico hy)).HasDerivWithinAt.nhdsWithin (icc_mem_nhdsWithin_ici hy)
+    (fdiff y (mem_Icc_of_Ico hy)).HasDerivWithinAt.nhdsWithin (Icc_mem_nhdsWithin_Ici hy)
   have B : ∀ y ∈ Ico a b, HasDerivWithinAt g (derivWithin g (Icc a b) y) (Ici y) y := fun y hy =>
-    (gdiff y (mem_Icc_of_Ico hy)).HasDerivWithinAt.nhdsWithin (icc_mem_nhdsWithin_ici hy)
+    (gdiff y (mem_Icc_of_Ico hy)).HasDerivWithinAt.nhdsWithin (Icc_mem_nhdsWithin_Ici hy)
   exact
     eq_of_has_deriv_right_eq A (fun y hy => (hderiv hy).symm ▸ B y hy) fdiff.continuous_on
       gdiff.continuous_on hi
@@ -804,9 +804,9 @@ omit hff'
 theorem exists_ratio_deriv_eq_ratio_slope :
     ∃ c ∈ Ioo a b, (g b - g a) * deriv f c = (f b - f a) * deriv g c :=
   exists_ratio_hasDerivAt_eq_ratio_slope f (deriv f) hab hfc
-    (fun x hx => ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds isOpen_ioo hx).HasDerivAt) g
+    (fun x hx => ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds isOpen_Ioo hx).HasDerivAt) g
     (deriv g) hgc fun x hx =>
-    ((hgd x hx).DifferentiableAt <| IsOpen.mem_nhds isOpen_ioo hx).HasDerivAt
+    ((hgd x hx).DifferentiableAt <| IsOpen.mem_nhds isOpen_Ioo hx).HasDerivAt
 #align exists_ratio_deriv_eq_ratio_slope exists_ratio_deriv_eq_ratio_slope
 
 omit hfc
@@ -818,14 +818,14 @@ theorem exists_ratio_deriv_eq_ratio_slope' {lfa lga lfb lgb : ℝ}
     (hfb : Tendsto f (𝓝[<] b) (𝓝 lfb)) (hgb : Tendsto g (𝓝[<] b) (𝓝 lgb)) :
     ∃ c ∈ Ioo a b, (lgb - lga) * deriv f c = (lfb - lfa) * deriv g c :=
   exists_ratio_hasDerivAt_eq_ratio_slope' _ _ hab _ _
-    (fun x hx => ((hdf x hx).DifferentiableAt <| ioo_mem_nhds hx.1 hx.2).HasDerivAt)
-    (fun x hx => ((hdg x hx).DifferentiableAt <| ioo_mem_nhds hx.1 hx.2).HasDerivAt) hfa hga hfb hgb
+    (fun x hx => ((hdf x hx).DifferentiableAt <| Ioo_mem_nhds hx.1 hx.2).HasDerivAt)
+    (fun x hx => ((hdg x hx).DifferentiableAt <| Ioo_mem_nhds hx.1 hx.2).HasDerivAt) hfa hga hfb hgb
 #align exists_ratio_deriv_eq_ratio_slope' exists_ratio_deriv_eq_ratio_slope'
 
 /-- Lagrange's **Mean Value Theorem**, `deriv` version. -/
 theorem exists_deriv_eq_slope : ∃ c ∈ Ioo a b, deriv f c = (f b - f a) / (b - a) :=
   exists_hasDerivAt_eq_slope f (deriv f) hab hfc fun x hx =>
-    ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds isOpen_ioo hx).HasDerivAt
+    ((hfd x hx).DifferentiableAt <| IsOpen.mem_nhds isOpen_Ioo hx).HasDerivAt
 #align exists_deriv_eq_slope exists_deriv_eq_slope
 
 end Interval
@@ -843,7 +843,7 @@ theorem Convex.mul_sub_lt_image_sub_of_lt_deriv {D : Set ℝ} (hD : Convex ℝ D
   intro x hx y hy hxy
   have hxyD : Icc x y ⊆ D := hD.ord_connected.out hx hy
   have hxyD' : Ioo x y ⊆ interior D :=
-    subset_sUnion_of_mem ⟨isOpen_ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
+    subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
   obtain ⟨a, a_mem, ha⟩ : ∃ a ∈ Ioo x y, deriv f a = (f y - f x) / (y - x)
   exact exists_deriv_eq_slope f hxy (hf.mono hxyD) (hf'.mono hxyD')
   have : C < (f y - f x) / (y - x) := by
@@ -875,7 +875,7 @@ theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D
   · rw [hxy', sub_self, sub_self, mul_zero]
   have hxyD : Icc x y ⊆ D := hD.ord_connected.out hx hy
   have hxyD' : Ioo x y ⊆ interior D :=
-    subset_sUnion_of_mem ⟨isOpen_ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
+    subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
   obtain ⟨a, a_mem, ha⟩ : ∃ a ∈ Ioo x y, deriv f a = (f y - f x) / (y - x)
   exact exists_deriv_eq_slope f hxy' (hf.mono hxyD) (hf'.mono hxyD')
   have : C ≤ (f y - f x) / (y - x) := by
@@ -1047,10 +1047,10 @@ theorem MonotoneOn.convexOn_of_deriv {D : Set ℝ} (hD : Convex ℝ D) {f : ℝ 
       have hxzD : Icc x z ⊆ D := hD.ord_connected.out hx hz
       have hxyD : Icc x y ⊆ D := subset.trans (Icc_subset_Icc_right <| le_of_lt hyz) hxzD
       have hxyD' : Ioo x y ⊆ interior D :=
-        subset_sUnion_of_mem ⟨isOpen_ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
+        subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
       have hyzD : Icc y z ⊆ D := subset.trans (Icc_subset_Icc_left <| le_of_lt hxy) hxzD
       have hyzD' : Ioo y z ⊆ interior D :=
-        subset_sUnion_of_mem ⟨isOpen_ioo, subset.trans Ioo_subset_Icc_self hyzD⟩
+        subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hyzD⟩
       -- Then we apply MVT to both `[x, y]` and `[y, z]`
       obtain ⟨a, ⟨hxa, hay⟩, ha⟩ : ∃ a ∈ Ioo x y, deriv f a = (f y - f x) / (y - x)
       exact exists_deriv_eq_slope f hxy (hf.mono hxyD) (hf'.mono hxyD')
@@ -1187,10 +1187,10 @@ theorem StrictMonoOn.strictConvexOn_of_deriv {D : Set ℝ} (hD : Convex ℝ D) {
       have hxzD : Icc x z ⊆ D := hD.ord_connected.out hx hz
       have hxyD : Icc x y ⊆ D := subset.trans (Icc_subset_Icc_right <| le_of_lt hyz) hxzD
       have hxyD' : Ioo x y ⊆ interior D :=
-        subset_sUnion_of_mem ⟨isOpen_ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
+        subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hxyD⟩
       have hyzD : Icc y z ⊆ D := subset.trans (Icc_subset_Icc_left <| le_of_lt hxy) hxzD
       have hyzD' : Ioo y z ⊆ interior D :=
-        subset_sUnion_of_mem ⟨isOpen_ioo, subset.trans Ioo_subset_Icc_self hyzD⟩
+        subset_sUnion_of_mem ⟨isOpen_Ioo, subset.trans Ioo_subset_Icc_self hyzD⟩
       -- Then we get points `a` and `b` in each interval `[x, y]` and `[y, z]` where the derivatives
       -- can be compared to the slopes between `x, y` and `y, z` respectively.
       obtain ⟨a, ⟨hxa, hay⟩, ha⟩ : ∃ a ∈ Ioo x y, (f y - f x) / (y - x) < deriv f a
@@ -1406,7 +1406,7 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
     by
     refine' exists_hasDerivAt_eq_slope (f ∘ g) _ (by norm_num) _ _
     · exact fun t Ht => (hfg t Ht).ContinuousWithinAt
-    · exact fun t Ht => (hfg t <| hIccIoo Ht).HasDerivAt (icc_mem_nhds Ht.1 Ht.2)
+    · exact fun t Ht => (hfg t <| hIccIoo Ht).HasDerivAt (Icc_mem_nhds Ht.1 Ht.2)
   -- reinterpret on domain
   rcases hMVT with ⟨t, Ht, hMVT'⟩
   use g t

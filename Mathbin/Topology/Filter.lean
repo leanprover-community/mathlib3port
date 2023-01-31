@@ -51,25 +51,25 @@ basic open sets, see `filter.is_open_iff`. -/
 instance : TopologicalSpace (Filter α) :=
   generate_from <| range <| Iic ∘ 𝓟
 
-theorem isOpen_iic_principal {s : Set α} : IsOpen (Iic (𝓟 s)) :=
+theorem isOpen_Iic_principal {s : Set α} : IsOpen (Iic (𝓟 s)) :=
   GenerateOpen.basic _ (mem_range_self _)
-#align filter.is_open_Iic_principal Filter.isOpen_iic_principal
+#align filter.is_open_Iic_principal Filter.isOpen_Iic_principal
 
 theorem isOpen_setOf_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := by
   simpa only [Iic_principal] using is_open_Iic_principal
 #align filter.is_open_set_of_mem Filter.isOpen_setOf_mem
 
-theorem isTopologicalBasis_iic_principal :
+theorem isTopologicalBasis_Iic_principal :
     IsTopologicalBasis (range (Iic ∘ 𝓟 : Set α → Set (Filter α))) :=
   { exists_subset_inter := by
       rintro _ ⟨s, rfl⟩ _ ⟨t, rfl⟩ l hl
       exact ⟨Iic (𝓟 s) ∩ Iic (𝓟 t), ⟨s ∩ t, by simp⟩, hl, subset.rfl⟩
     sUnion_eq := unionₛ_eq_univ_iff.2 fun l => ⟨Iic ⊤, ⟨univ, congr_arg Iic principal_univ⟩, le_top⟩
     eq_generate_from := rfl }
-#align filter.is_topological_basis_Iic_principal Filter.isTopologicalBasis_iic_principal
+#align filter.is_topological_basis_Iic_principal Filter.isTopologicalBasis_Iic_principal
 
 theorem isOpen_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
-  isTopologicalBasis_iic_principal.open_iff_eq_sUnion.trans <| by
+  isTopologicalBasis_Iic_principal.open_iff_eq_sUnion.trans <| by
     simp only [exists_subset_range_iff, sUnion_image]
 #align filter.is_open_iff Filter.isOpen_iff
 

@@ -423,7 +423,7 @@ theorem antilipschitzWith_equiv_aux :
       
 #align pi_Lp.antilipschitz_with_equiv_aux PiLp.antilipschitzWith_equiv_aux
 
-theorem aux_uniformity_eq : 𝓤 (PiLp p β) = 𝓤[PiCat.uniformSpace _] :=
+theorem aux_uniformity_eq : 𝓤 (PiLp p β) = 𝓤[Pi.uniformSpace _] :=
   by
   have A : UniformInducing (PiLp.equiv p β) :=
     (antilipschitz_with_equiv_aux p β).UniformInducing
@@ -448,7 +448,7 @@ end Aux
 
 
 instance uniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
-  PiCat.uniformSpace _
+  Pi.uniformSpace _
 #align pi_Lp.uniform_space PiLp.uniformSpace
 
 variable [Fintype ι]

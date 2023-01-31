@@ -155,7 +155,7 @@ def IdxCat :=
 -/
 
 #print PFunctor.IdxCat.inhabited /-
-instance IdxCat.inhabited [Inhabited P.A] [Inhabited (P.B default)] : Inhabited P.IdxCat :=
+instance IdxCat.inhabited [Inhabited P.A] [Inhabited (P.B default)] : Inhabited P.Idx :=
   ⟨⟨default, default⟩⟩
 #align pfunctor.Idx.inhabited PFunctor.IdxCat.inhabited
 -/
@@ -165,7 +165,7 @@ variable {P}
 #print PFunctor.Obj.iget /-
 /-- `x.iget i` takes the component of `x` designated by `i` if any is or returns
 a default value -/
-def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.IdxCat) : α :=
+def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.Idx) : α :=
   if h : i.1 = x.1 then x.2 (cast (congr_arg _ h) i.2) else default
 #align pfunctor.obj.iget PFunctor.Obj.iget
 -/
@@ -188,7 +188,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfunctor.iget_map PFunctor.iget_mapₓ'. -/
 @[simp]
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α)
-    (f : α → β) (i : P.IdxCat) (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) :=
+    (f : α → β) (i : P.Idx) (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) :=
   by
   simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
   cases x

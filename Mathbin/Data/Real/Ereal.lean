@@ -1144,22 +1144,22 @@ theorem abs_mul (x y : Ereal) : (x * y).abs = x.abs * y.abs :=
 
 
 @[simp]
-theorem sign_top : sign (⊤ : Ereal) = SignType.pos :=
+theorem sign_top : SignType.sign (⊤ : Ereal) = SignType.pos :=
   rfl
 #align ereal.sign_top Ereal.sign_top
 
 @[simp]
-theorem sign_bot : sign (⊥ : Ereal) = SignType.neg :=
+theorem sign_bot : SignType.sign (⊥ : Ereal) = SignType.neg :=
   rfl
 #align ereal.sign_bot Ereal.sign_bot
 
 @[simp]
-theorem sign_coe (x : ℝ) : sign (x : Ereal) = sign x := by
-  simp only [sign, OrderHom.coe_fun_mk, Ereal.coe_pos, Ereal.coe_neg']
+theorem sign_coe (x : ℝ) : SignType.sign (x : Ereal) = SignType.sign x := by
+  simp only [SignType.sign, OrderHom.coe_fun_mk, Ereal.coe_pos, Ereal.coe_neg']
 #align ereal.sign_coe Ereal.sign_coe
 
 @[simp]
-theorem sign_mul (x y : Ereal) : sign (x * y) = sign x * sign y :=
+theorem sign_mul (x y : Ereal) : SignType.sign (x * y) = SignType.sign x * SignType.sign y :=
   by
   induction x using Ereal.rec <;> induction y using Ereal.rec
   · rfl
@@ -1195,7 +1195,8 @@ theorem sign_mul (x y : Ereal) : sign (x * y) = sign x * sign y :=
   · rfl
 #align ereal.sign_mul Ereal.sign_mul
 
-theorem sign_eq_and_abs_eq_iff_eq {x y : Ereal} : x.abs = y.abs ∧ sign x = sign y ↔ x = y :=
+theorem sign_eq_and_abs_eq_iff_eq {x y : Ereal} :
+    x.abs = y.abs ∧ SignType.sign x = SignType.sign y ↔ x = y :=
   by
   constructor; swap
   · rintro rfl

@@ -253,7 +253,7 @@ theorem integral_boundary_rect_of_differentiableOn_real (f : ℂ → E) (z w : �
     Hd.ContinuousOn
     (fun x hx =>
       Hd.HasFderivAt <| by
-        simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, uIcc, interior_icc] using
+        simpa only [← mem_interior_iff_mem_nhds, interior_re_prod_im, uIcc, interior_Icc] using
           hx.1)
     Hi
 #align complex.integral_boundary_rect_of_differentiable_on_real Complex.integral_boundary_rect_of_differentiableOn_real
@@ -294,7 +294,7 @@ theorem integral_boundary_rect_eq_zero_of_continuousOn_of_differentiableOn (f : 
         I • ∫ y : ℝ in z.im..w.im, f (re z + y * I)) =
       0 :=
   integral_boundary_rect_eq_zero_of_differentiable_on_off_countable f z w ∅ countable_empty Hc
-    fun x hx => Hd.DifferentiableAt <| (isOpen_ioo.reProdIm isOpen_ioo).mem_nhds hx.1
+    fun x hx => Hd.DifferentiableAt <| (isOpen_Ioo.reProdIm isOpen_Ioo).mem_nhds hx.1
 #align complex.integral_boundary_rect_eq_zero_of_continuous_on_of_differentiable_on Complex.integral_boundary_rect_eq_zero_of_continuousOn_of_differentiableOn
 
 /-- **Cauchy-Goursat theorem** for a rectangle: the integral of a complex differentiable function
@@ -532,14 +532,14 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
   set g : ℝ → ℂ := fun x => w + x
   have : tendsto g (𝓝 0) (𝓝 w) :=
     (continuous_const.add continuous_of_real).tendsto' 0 w (add_zero _)
-  rcases mem_nhds_iff_exists_ioo_subset.1 (this <| inter_mem ht <| is_open_ball.mem_nhds hw) with
+  rcases mem_nhds_iff_exists_Ioo_subset.1 (this <| inter_mem ht <| is_open_ball.mem_nhds hw) with
     ⟨l, u, hlu₀, hlu_sub⟩
   obtain ⟨x, hx⟩ : (Ioo l u \ g ⁻¹' s).Nonempty :=
     by
     refine' nonempty_diff.2 fun hsub => _
     have : (Ioo l u).Countable :=
       (hs.preimage ((add_right_injective w).comp of_real_injective)).mono hsub
-    rw [← Cardinal.le_aleph0_iff_set_countable, Cardinal.mk_ioo_real (hlu₀.1.trans hlu₀.2)] at this
+    rw [← Cardinal.le_aleph0_iff_set_countable, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this
     exact this.not_lt Cardinal.aleph0_lt_continuum
   exact ⟨g x, (hlu_sub hx.1).1, (hlu_sub hx.1).2, hx.2⟩
 #align complex.two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable Complex.two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable

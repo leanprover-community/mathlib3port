@@ -234,7 +234,7 @@ theorem sup_exists :
         apply Finset.mem_of_mem_insert_of_ne mf'
         contrapose! h
         obtain ⟨rfl, h⟩ := h
-        rw [hEq_iff_eq, PSigma.mk.inj_iff] at h
+        rw [heq_iff_eq, PSigma.mk.inj_iff] at h
         exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_filtered.sup_exists CategoryTheory.IsFiltered.sup_exists
 
@@ -634,7 +634,7 @@ theorem inf_exists :
         apply Finset.mem_of_mem_insert_of_ne mf'
         contrapose! h
         obtain ⟨rfl, h⟩ := h
-        rw [hEq_iff_eq, PSigma.mk.inj_iff] at h
+        rw [heq_iff_eq, PSigma.mk.inj_iff] at h
         exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_cofiltered.inf_exists CategoryTheory.IsCofiltered.inf_exists
 

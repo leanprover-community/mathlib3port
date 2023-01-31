@@ -262,10 +262,10 @@ theorem UniqueDiffWithinAt.eq_deriv (s : Set 𝕜) (H : UniqueDiffWithinAt 𝕜 
   smulRight_one_eq_iff.mp <| UniqueDiffWithinAt.eq H h h₁
 #align unique_diff_within_at.eq_deriv UniqueDiffWithinAt.eq_deriv
 
-theorem hasDerivAtFilter_iff_isO :
+theorem hasDerivAtFilter_iff_isOCat :
     HasDerivAtFilter f f' x L ↔ (fun x' : 𝕜 => f x' - f x - (x' - x) • f') =o[L] fun x' => x' - x :=
   Iff.rfl
-#align has_deriv_at_filter_iff_is_o hasDerivAtFilter_iff_isO
+#align has_deriv_at_filter_iff_is_o hasDerivAtFilter_iff_isOCat
 
 theorem hasDerivAtFilter_iff_tendsto :
     HasDerivAtFilter f f' x L ↔
@@ -273,11 +273,11 @@ theorem hasDerivAtFilter_iff_tendsto :
   hasFderivAtFilter_iff_tendsto
 #align has_deriv_at_filter_iff_tendsto hasDerivAtFilter_iff_tendsto
 
-theorem hasDerivWithinAt_iff_isO :
+theorem hasDerivWithinAt_iff_isOCat :
     HasDerivWithinAt f f' s x ↔
       (fun x' : 𝕜 => f x' - f x - (x' - x) • f') =o[𝓝[s] x] fun x' => x' - x :=
   Iff.rfl
-#align has_deriv_within_at_iff_is_o hasDerivWithinAt_iff_isO
+#align has_deriv_within_at_iff_is_o hasDerivWithinAt_iff_isOCat
 
 theorem hasDerivWithinAt_iff_tendsto :
     HasDerivWithinAt f f' s x ↔
@@ -285,10 +285,10 @@ theorem hasDerivWithinAt_iff_tendsto :
   hasFderivAtFilter_iff_tendsto
 #align has_deriv_within_at_iff_tendsto hasDerivWithinAt_iff_tendsto
 
-theorem hasDerivAt_iff_isO :
+theorem hasDerivAt_iff_isOCat :
     HasDerivAt f f' x ↔ (fun x' : 𝕜 => f x' - f x - (x' - x) • f') =o[𝓝 x] fun x' => x' - x :=
   Iff.rfl
-#align has_deriv_at_iff_is_o hasDerivAt_iff_isO
+#align has_deriv_at_iff_is_o hasDerivAt_iff_isOCat
 
 theorem hasDerivAt_iff_tendsto :
     HasDerivAt f f' x ↔ Tendsto (fun x' => ‖x' - x‖⁻¹ * ‖f x' - f x - (x' - x) • f'‖) (𝓝 x) (𝓝 0) :=
@@ -348,41 +348,41 @@ theorem hasDerivWithinAt_diff_singleton :
 #align has_deriv_within_at_diff_singleton hasDerivWithinAt_diff_singleton
 
 @[simp]
-theorem hasDerivWithinAt_ioi_iff_ici [PartialOrder 𝕜] :
+theorem hasDerivWithinAt_Ioi_iff_Ici [PartialOrder 𝕜] :
     HasDerivWithinAt f f' (Ioi x) x ↔ HasDerivWithinAt f f' (Ici x) x := by
   rw [← Ici_diff_left, hasDerivWithinAt_diff_singleton]
-#align has_deriv_within_at_Ioi_iff_Ici hasDerivWithinAt_ioi_iff_ici
+#align has_deriv_within_at_Ioi_iff_Ici hasDerivWithinAt_Ioi_iff_Ici
 
-alias hasDerivWithinAt_ioi_iff_ici ↔ HasDerivWithinAt.ici_of_ioi HasDerivWithinAt.ioi_of_ici
-#align has_deriv_within_at.Ici_of_Ioi HasDerivWithinAt.ici_of_ioi
-#align has_deriv_within_at.Ioi_of_Ici HasDerivWithinAt.ioi_of_ici
+alias hasDerivWithinAt_Ioi_iff_Ici ↔ HasDerivWithinAt.Ici_of_Ioi HasDerivWithinAt.Ioi_of_Ici
+#align has_deriv_within_at.Ici_of_Ioi HasDerivWithinAt.Ici_of_Ioi
+#align has_deriv_within_at.Ioi_of_Ici HasDerivWithinAt.Ioi_of_Ici
 
 @[simp]
-theorem hasDerivWithinAt_iio_iff_iic [PartialOrder 𝕜] :
+theorem hasDerivWithinAt_Iio_iff_Iic [PartialOrder 𝕜] :
     HasDerivWithinAt f f' (Iio x) x ↔ HasDerivWithinAt f f' (Iic x) x := by
   rw [← Iic_diff_right, hasDerivWithinAt_diff_singleton]
-#align has_deriv_within_at_Iio_iff_Iic hasDerivWithinAt_iio_iff_iic
+#align has_deriv_within_at_Iio_iff_Iic hasDerivWithinAt_Iio_iff_Iic
 
-alias hasDerivWithinAt_iio_iff_iic ↔ HasDerivWithinAt.iic_of_iio HasDerivWithinAt.iio_of_iic
-#align has_deriv_within_at.Iic_of_Iio HasDerivWithinAt.iic_of_iio
-#align has_deriv_within_at.Iio_of_Iic HasDerivWithinAt.iio_of_iic
+alias hasDerivWithinAt_Iio_iff_Iic ↔ HasDerivWithinAt.Iic_of_Iio HasDerivWithinAt.Iio_of_Iic
+#align has_deriv_within_at.Iic_of_Iio HasDerivWithinAt.Iic_of_Iio
+#align has_deriv_within_at.Iio_of_Iic HasDerivWithinAt.Iio_of_Iic
 
-theorem HasDerivWithinAt.ioi_iff_ioo [LinearOrder 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
+theorem HasDerivWithinAt.Ioi_iff_Ioo [LinearOrder 𝕜] [OrderClosedTopology 𝕜] {x y : 𝕜} (h : x < y) :
     HasDerivWithinAt f f' (Ioo x y) x ↔ HasDerivWithinAt f f' (Ioi x) x :=
-  hasDerivWithinAt_congr_set (isOpen_iio.mem_nhds h) <|
+  hasDerivWithinAt_congr_set (isOpen_Iio.mem_nhds h) <|
     by
     rw [Ioi_inter_Iio, inter_eq_left_iff_subset]
     exact Ioo_subset_Iio_self
-#align has_deriv_within_at.Ioi_iff_Ioo HasDerivWithinAt.ioi_iff_ioo
+#align has_deriv_within_at.Ioi_iff_Ioo HasDerivWithinAt.Ioi_iff_Ioo
 
-alias HasDerivWithinAt.ioi_iff_ioo ↔ HasDerivWithinAt.ioi_of_ioo HasDerivWithinAt.ioo_of_ioi
-#align has_deriv_within_at.Ioi_of_Ioo HasDerivWithinAt.ioi_of_ioo
-#align has_deriv_within_at.Ioo_of_Ioi HasDerivWithinAt.ioo_of_ioi
+alias HasDerivWithinAt.Ioi_iff_Ioo ↔ HasDerivWithinAt.Ioi_of_Ioo HasDerivWithinAt.Ioo_of_Ioi
+#align has_deriv_within_at.Ioi_of_Ioo HasDerivWithinAt.Ioi_of_Ioo
+#align has_deriv_within_at.Ioo_of_Ioi HasDerivWithinAt.Ioo_of_Ioi
 
-theorem hasDerivAt_iff_isO_nhds_zero :
+theorem hasDerivAt_iff_isOCat_nhds_zero :
     HasDerivAt f f' x ↔ (fun h => f (x + h) - f x - h • f') =o[𝓝 0] fun h => h :=
-  hasFderivAt_iff_isO_nhds_zero
-#align has_deriv_at_iff_is_o_nhds_zero hasDerivAt_iff_isO_nhds_zero
+  hasFderivAt_iff_isOCat_nhds_zero
+#align has_deriv_at_iff_is_o_nhds_zero hasDerivAt_iff_isOCat_nhds_zero
 
 theorem HasDerivAtFilter.mono (h : HasDerivAtFilter f f' x L₂) (hst : L₁ ≤ L₂) :
     HasDerivAtFilter f f' x L₁ :=
@@ -553,23 +553,23 @@ theorem derivWithin_mem_iff {f : 𝕜 → F} {t : Set 𝕜} {s : Set F} {x : �
     simp [derivWithin_zero_of_not_differentiableWithinAt, *]
 #align deriv_within_mem_iff derivWithin_mem_iff
 
-theorem differentiableWithinAt_ioi_iff_ici [PartialOrder 𝕜] :
+theorem differentiableWithinAt_Ioi_iff_Ici [PartialOrder 𝕜] :
     DifferentiableWithinAt 𝕜 f (Ioi x) x ↔ DifferentiableWithinAt 𝕜 f (Ici x) x :=
   ⟨fun h => h.HasDerivWithinAt.Ici_of_Ioi.DifferentiableWithinAt, fun h =>
     h.HasDerivWithinAt.Ioi_of_Ici.DifferentiableWithinAt⟩
-#align differentiable_within_at_Ioi_iff_Ici differentiableWithinAt_ioi_iff_ici
+#align differentiable_within_at_Ioi_iff_Ici differentiableWithinAt_Ioi_iff_Ici
 
-theorem derivWithin_ioi_eq_ici {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : ℝ → E)
+theorem derivWithin_Ioi_eq_Ici {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : ℝ → E)
     (x : ℝ) : derivWithin f (Ioi x) x = derivWithin f (Ici x) x :=
   by
   by_cases H : DifferentiableWithinAt ℝ f (Ioi x) x
   · have A := H.has_deriv_within_at.Ici_of_Ioi
-    have B := (differentiableWithinAt_ioi_iff_ici.1 H).HasDerivWithinAt
-    simpa using (uniqueDiffOn_ici x).Eq le_rfl A B
+    have B := (differentiableWithinAt_Ioi_iff_Ici.1 H).HasDerivWithinAt
+    simpa using (uniqueDiffOn_Ici x).Eq le_rfl A B
   · rw [derivWithin_zero_of_not_differentiableWithinAt H,
       derivWithin_zero_of_not_differentiableWithinAt]
-    rwa [differentiableWithinAt_ioi_iff_ici] at H
-#align deriv_within_Ioi_eq_Ici derivWithin_ioi_eq_ici
+    rwa [differentiableWithinAt_Ioi_iff_Ici] at H
+#align deriv_within_Ioi_eq_Ici derivWithin_Ioi_eq_Ici
 
 section congr
 
@@ -2478,12 +2478,12 @@ variable {f : ℝ → ℝ} {f' : ℝ} {s : Set ℝ} {x : ℝ} {r : ℝ}
 
 theorem HasDerivWithinAt.limsup_slope_le (hf : HasDerivWithinAt f f' s x) (hr : f' < r) :
     ∀ᶠ z in 𝓝[s \ {x}] x, slope f x z < r :=
-  hasDerivWithinAt_iff_tendsto_slope.1 hf (IsOpen.mem_nhds isOpen_iio hr)
+  hasDerivWithinAt_iff_tendsto_slope.1 hf (IsOpen.mem_nhds isOpen_Iio hr)
 #align has_deriv_within_at.limsup_slope_le HasDerivWithinAt.limsup_slope_le
 
 theorem HasDerivWithinAt.limsup_slope_le' (hf : HasDerivWithinAt f f' s x) (hs : x ∉ s)
     (hr : f' < r) : ∀ᶠ z in 𝓝[s] x, slope f x z < r :=
-  (hasDerivWithinAt_iff_tendsto_slope' hs).1 hf (IsOpen.mem_nhds isOpen_iio hr)
+  (hasDerivWithinAt_iff_tendsto_slope' hs).1 hf (IsOpen.mem_nhds isOpen_Iio hr)
 #align has_deriv_within_at.limsup_slope_le' HasDerivWithinAt.limsup_slope_le'
 
 theorem HasDerivWithinAt.liminf_right_slope_le (hf : HasDerivWithinAt f f' (Ici x) x)
@@ -2509,7 +2509,7 @@ theorem HasDerivWithinAt.limsup_norm_slope_le (hf : HasDerivWithinAt f f' s x) (
   by
   have hr₀ : 0 < r := lt_of_le_of_lt (norm_nonneg f') hr
   have A : ∀ᶠ z in 𝓝[s \ {x}] x, ‖(z - x)⁻¹ • (f z - f x)‖ ∈ Iio r :=
-    (hasDerivWithinAt_iff_tendsto_slope.1 hf).norm (IsOpen.mem_nhds isOpen_iio hr)
+    (hasDerivWithinAt_iff_tendsto_slope.1 hf).norm (IsOpen.mem_nhds isOpen_Iio hr)
   have B : ∀ᶠ z in 𝓝[{x}] x, ‖(z - x)⁻¹ • (f z - f x)‖ ∈ Iio r :=
     mem_of_superset self_mem_nhdsWithin (singleton_subset_iff.2 <| by simp [hr₀])
   have C := mem_sup.2 ⟨A, B⟩

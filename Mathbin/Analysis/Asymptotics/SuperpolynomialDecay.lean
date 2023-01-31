@@ -355,10 +355,7 @@ theorem superpolynomialDecay_iff_isO (hk : Tendsto k l atTop) :
       mul_inv_cancel (zpow_ne_zero z ha0), zpow_one]
 #align asymptotics.superpolynomial_decay_iff_is_O Asymptotics.superpolynomialDecay_iff_isO
 
-/- warning: asymptotics.superpolynomial_decay_iff_is_o clashes with asymptotics.superpolynomial_decay_iff_is_O -> Asymptotics.superpolynomialDecay_iff_isO
-Case conversion may be inaccurate. Consider using '#align asymptotics.superpolynomial_decay_iff_is_o Asymptotics.superpolynomialDecay_iff_isOₓ'. -/
-#print Asymptotics.superpolynomialDecay_iff_isO /-
-theorem superpolynomialDecay_iff_isO (hk : Tendsto k l atTop) :
+theorem superpolynomialDecay_iff_isOCat (hk : Tendsto k l atTop) :
     SuperpolynomialDecay l k f ↔ ∀ z : ℤ, f =o[l] fun a : α => k a ^ z :=
   by
   refine' ⟨fun h z => _, fun h => (superpolynomial_decay_iff_is_O f hk).2 fun z => (h z).IsO⟩
@@ -370,8 +367,7 @@ theorem superpolynomialDecay_iff_isO (hk : Tendsto k l atTop) :
     simpa using this.mul_is_O ((superpolynomial_decay_iff_is_O f hk).1 h <| z - 1)
   refine' this.trans_is_O (is_O.of_bound 1 (hk0.mono fun x hkx => le_of_eq _))
   rw [one_mul, zpow_sub_one₀ hkx, mul_comm (k x), mul_assoc, inv_mul_cancel hkx, mul_one]
-#align asymptotics.superpolynomial_decay_iff_is_o Asymptotics.superpolynomialDecay_iff_isO
--/
+#align asymptotics.superpolynomial_decay_iff_is_o Asymptotics.superpolynomialDecay_iff_isOCat
 
 end NormedLinearOrderedField
 

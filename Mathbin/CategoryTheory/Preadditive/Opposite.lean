@@ -32,7 +32,7 @@ instance : Preadditive Cᵒᵖ
   comp_add' X Y Z f g g' :=
     congr_arg Quiver.Hom.op (Preadditive.add_comp _ _ _ g.unop g'.unop f.unop)
 
-instance moduleEndLeft {X : Cᵒᵖ} {Y : C} : Module (EndCat X) (unop X ⟶ Y)
+instance moduleEndLeft {X : Cᵒᵖ} {Y : C} : Module (End X) (unop X ⟶ Y)
     where
   smul_add r f g := Preadditive.comp_add _ _ _ _ _ _
   smul_zero r := Limits.comp_zero

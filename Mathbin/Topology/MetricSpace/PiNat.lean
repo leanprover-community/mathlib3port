@@ -393,10 +393,10 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
     dist_comm := PiNat.dist_comm
     dist_self := PiNat.dist_self
     eq_of_dist_eq_zero := PiNat.eq_of_dist_eq_zero
-    toUniformSpace := PiCat.uniformSpace _
+    toUniformSpace := Pi.uniformSpace _
     uniformity_dist :=
       by
-      simp [PiCat.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
+      simp [Pi.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
         PseudoMetricSpace.uniformity_dist, h, idRel]
       apply le_antisymm
       · simp only [le_infᵢ_iff, le_principal_iff]
@@ -919,11 +919,11 @@ protected def metricSpace : MetricSpace (∀ i, F i)
     apply dist_le_dist_pi_of_dist_lt
     rw [hxy]
     simp
-  toUniformSpace := PiCat.uniformSpace _
+  toUniformSpace := Pi.uniformSpace _
   uniformity_dist := by
     have I0 : (0 : ℝ) ≤ 1 / 2 := by norm_num
     have I1 : (1 / 2 : ℝ) < 1 := by norm_num
-    simp only [PiCat.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
+    simp only [Pi.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
       PseudoMetricSpace.uniformity_dist]
     apply le_antisymm
     · simp only [le_infᵢ_iff, le_principal_iff]

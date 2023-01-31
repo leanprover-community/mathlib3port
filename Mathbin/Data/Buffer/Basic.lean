@@ -39,7 +39,7 @@ theorem ext_iff {b₁ b₂ : Buffer α} : b₁ = b₂ ↔ toList b₁ = toList b
 theorem size_eq_zero_iff {b : Buffer α} : b.size = 0 ↔ b = nil :=
   by
   rcases b with ⟨_ | n, ⟨a⟩⟩
-  · simp only [size, nil, mkBuffer, true_and_iff, true_iff_iff, eq_self_iff_true, hEq_iff_eq,
+  · simp only [size, nil, mkBuffer, true_and_iff, true_iff_iff, eq_self_iff_true, heq_iff_eq,
       Sigma.mk.inj_iff]
     ext i
     exact Fin.elim0 i

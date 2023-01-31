@@ -740,7 +740,7 @@ theorem tsum_eq_add_tsum_ite' {f : β → α} (b : β) (hf : Summable (f.update 
       congr
       exact tsum_eq_single b fun b' hb' => if_neg hb'
     _ = f b + ∑' x, ite (x = b) 0 (f x) := by
-      simp only [Function.update, eq_self_iff_true, if_true, eq_ndrec_constant, dite_eq_ite]
+      simp only [Function.update, eq_self_iff_true, if_true, eq_rec_constant, dite_eq_ite]
     
 #align tsum_eq_add_tsum_ite' tsum_eq_add_tsum_ite'
 
@@ -1884,7 +1884,7 @@ theorem cauchySeq_of_edist_le_of_summable [PseudoEmetricSpace α] {f : ℕ → �
   replace hsum := lt_of_le_of_lt (le_max_left _ _) hsum
   rw [edist_comm]
   -- Then use `hf` to simplify the goal to the same form
-  apply lt_of_le_of_lt (edist_le_ico_sum_of_edist_le hn fun k _ _ => hf k)
+  apply lt_of_le_of_lt (edist_le_Ico_sum_of_edist_le hn fun k _ _ => hf k)
   assumption_mod_cast
 #align cauchy_seq_of_edist_le_of_summable cauchySeq_of_edist_le_of_summable
 
@@ -1902,7 +1902,7 @@ theorem cauchySeq_of_dist_le_of_summable [PseudoMetricSpace α] {f : ℕ → α}
   rw [Real.dist_eq, ← sum_Ico_eq_sub _ hn] at hsum
   calc
     dist (f n) (f N) = dist (f N) (f n) := dist_comm _ _
-    _ ≤ ∑ x in Ico N n, d x := dist_le_ico_sum_of_dist_le hn fun k _ _ => hf k
+    _ ≤ ∑ x in Ico N n, d x := dist_le_Ico_sum_of_dist_le hn fun k _ _ => hf k
     _ ≤ |∑ x in Ico N n, d x| := le_abs_self _
     _ < ε := hsum
     
@@ -1918,7 +1918,7 @@ theorem dist_le_tsum_of_dist_le_of_tendsto [PseudoMetricSpace α] {f : ℕ → �
     (n : ℕ) : dist (f n) a ≤ ∑' m, d (n + m) :=
   by
   refine' le_of_tendsto (tendsto_const_nhds.dist ha) (eventually_at_top.2 ⟨n, fun m hnm => _⟩)
-  refine' le_trans (dist_le_ico_sum_of_dist_le hnm fun k _ _ => hf k) _
+  refine' le_trans (dist_le_Ico_sum_of_dist_le hnm fun k _ _ => hf k) _
   rw [sum_Ico_eq_sum_range]
   refine' sum_le_tsum (range _) (fun _ _ => le_trans dist_nonneg (hf _)) _
   exact hd.comp_injective (add_right_injective n)

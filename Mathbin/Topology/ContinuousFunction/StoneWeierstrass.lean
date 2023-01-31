@@ -272,7 +272,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a
       by
       intros
-      simp only [← Metric.mem_ball, Real.ball_eq_ioo, Set.mem_Ioo, and_comm']]
+      simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm']]
   fconstructor
   · dsimp [k]
     simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]

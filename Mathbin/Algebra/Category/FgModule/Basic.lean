@@ -11,7 +11,7 @@ Authors: Jakob von Raumer
 import Mathbin.CategoryTheory.Monoidal.Rigid.Basic
 import Mathbin.CategoryTheory.Monoidal.Subcategory
 import Mathbin.LinearAlgebra.Coevaluation
-import Mathbin.Algebra.Category.ModuleCat.Monoidal
+import Mathbin.Algebra.Category.Module.Monoidal
 
 /-!
 # The category of finitely generated modules over a ring
@@ -153,7 +153,7 @@ instance forget₂MonoidalLinear : (forget₂Monoidal R).toFunctor.Linear R :=
   infer_instance
 #align fgModule.forget₂_monoidal_linear FgModule.forget₂MonoidalLinear
 
-theorem Iso.conj_eq_conj {V W : FgModule R} (i : V ≅ W) (f : EndCat V) :
+theorem Iso.conj_eq_conj {V W : FgModule R} (i : V ≅ W) (f : End V) :
     Iso.conj i f = LinearEquiv.conj (isoToLinearEquiv i) f :=
   rfl
 #align fgModule.iso.conj_eq_conj FgModule.Iso.conj_eq_conj

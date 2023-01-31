@@ -79,9 +79,9 @@ def IsPrecongr {α : TypeVec n} (r : q.p.M α → q.p.M α → Prop) : Prop :=
 #align mvqpf.is_precongr Mvqpf.IsPrecongr
 
 /-- Equivalence relation on M-types representing a value of type `cofix F` -/
-def McongrCat {α : TypeVec n} (x y : q.p.M α) : Prop :=
+def Mcongr {α : TypeVec n} (x y : q.p.M α) : Prop :=
   ∃ r, IsPrecongr r ∧ r x y
-#align mvqpf.Mcongr Mvqpf.McongrCat
+#align mvqpf.Mcongr Mvqpf.Mcongr
 
 /-- Greatest fixed point of functor F. The result is a functor with one fewer parameters
 than the input. For `F a b c` a ternary functor, fix F is a binary functor such that
@@ -91,7 +91,7 @@ cofix F a b = F a b (cofix F a b)
 ```
 -/
 def Cofix (F : TypeVec (n + 1) → Type u) [MvFunctor F] [q : Mvqpf F] (α : TypeVec n) :=
-  Quot (@McongrCat _ F _ q α)
+  Quot (@Mcongr _ F _ q α)
 #align mvqpf.cofix Mvqpf.Cofix
 
 instance {α : TypeVec n} [Inhabited q.p.A] [∀ i : Fin2 n, Inhabited (α i)] :
@@ -105,7 +105,7 @@ def mrepr {α : TypeVec n} : q.p.M α → q.p.M α :=
 
 /-- the map function for the functor `cofix F` -/
 def Cofix.map {α β : TypeVec n} (g : α ⟹ β) : Cofix F α → Cofix F β :=
-  Quot.lift (fun x : q.p.M α => Quot.mk McongrCat (g <$$> x))
+  Quot.lift (fun x : q.p.M α => Quot.mk Mcongr (g <$$> x))
     (by
       rintro aa₁ aa₂ ⟨r, pr, ra₁a₂⟩; apply Quot.sound
       let r' b₁ b₂ := ∃ a₁ a₂ : q.P.M α, r a₁ a₂ ∧ b₁ = g <$$> a₁ ∧ b₂ = g <$$> a₂
@@ -138,7 +138,7 @@ def Cofix.corec {α : TypeVec n} {β : Type u} (g : β → F (α.append1 β)) : 
 
 /-- Destructor for `cofix F` -/
 def Cofix.dest {α : TypeVec n} : Cofix F α → F (α.append1 (Cofix F α)) :=
-  Quot.lift (fun x => appendFun id (Quot.mk McongrCat) <$$> abs (M.dest q.p x))
+  Quot.lift (fun x => appendFun id (Quot.mk Mcongr) <$$> abs (M.dest q.p x))
     (by
       rintro x y ⟨r, pr, rxy⟩
       dsimp
@@ -562,7 +562,7 @@ theorem Cofix.dest_corec₁ {α : TypeVec n} {β : Type u}
 
 instance mvqpfCofix : Mvqpf (Cofix F) where
   p := q.p.mp
-  abs α := Quot.mk McongrCat
+  abs α := Quot.mk Mcongr
   repr α := Cofix.repr
   abs_repr α := Cofix.abs_repr
   abs_map α β g x := rfl

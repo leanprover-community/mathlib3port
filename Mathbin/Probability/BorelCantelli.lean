@@ -43,7 +43,7 @@ variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAdd
 
 theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
     (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
-    Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
+    IndepCat (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
   by
   suffices
     indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
@@ -55,7 +55,7 @@ theorem IndepFun.indepComapNaturalOfLt (hf : ∀ i, StronglyMeasurable (f i))
 theorem IndepFun.condexp_natrual_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
     [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
-  condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _)
+  condexp_indepCat_eq (hf j).Measurable.comap_le (Filtration.le _ _)
     (comap_measurable <| f j).StronglyMeasurable (hfi.indepComapNaturalOfLt hf hij)
 #align probability_theory.Indep_fun.condexp_natrual_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natrual_ae_eq_of_lt
 

@@ -431,7 +431,7 @@ theorem insert_insert_of_ne {a a'} {b : β a} {b' : β a'} (s : AList β) (h : a
 theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b') = singleton a b :=
   ext <| by
     simp only [AList.insert_entries, List.kerase_cons_eq, and_self_iff, AList.singleton_entries,
-      hEq_iff_eq, eq_self_iff_true]
+      heq_iff_eq, eq_self_iff_true]
 #align alist.insert_singleton_eq AList.insert_singleton_eq
 -/
 

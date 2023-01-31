@@ -186,10 +186,10 @@ theorem constFormalMultilinearSeries_radius {v : F} :
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` tends to zero exponentially:
 for some `0 < a < 1`, `‖p n‖ rⁿ = o(aⁿ)`. -/
-theorem isO_of_lt_radius (h : ↑r < p.radius) :
+theorem isOCat_of_lt_radius (h : ↑r < p.radius) :
     ∃ a ∈ Ioo (0 : ℝ) 1, (fun n => ‖p n‖ * r ^ n) =o[at_top] pow a :=
   by
-  rw [(tFAE_exists_lt_isO_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 4]
+  rw [(tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 4]
   simp only [radius, lt_supᵢ_iff] at h
   rcases h with ⟨t, C, hC, rt⟩
   rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at rt
@@ -201,21 +201,21 @@ theorem isO_of_lt_radius (h : ↑r < p.radius) :
       field_simp [mul_right_comm, abs_mul, this.ne']
     _ ≤ C * (r / t) ^ n := mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
     
-#align formal_multilinear_series.is_o_of_lt_radius FormalMultilinearSeries.isO_of_lt_radius
+#align formal_multilinear_series.is_o_of_lt_radius FormalMultilinearSeries.isOCat_of_lt_radius
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ = o(1)`. -/
-theorem isO_one_of_lt_radius (h : ↑r < p.radius) :
+theorem isOCat_one_of_lt_radius (h : ↑r < p.radius) :
     (fun n => ‖p n‖ * r ^ n) =o[at_top] (fun _ => 1 : ℕ → ℝ) :=
   let ⟨a, ha, hp⟩ := p.is_o_of_lt_radius h
-  hp.trans <| (isO_pow_pow_of_lt_left ha.1.le ha.2).congr (fun n => rfl) one_pow
-#align formal_multilinear_series.is_o_one_of_lt_radius FormalMultilinearSeries.isO_one_of_lt_radius
+  hp.trans <| (isOCat_pow_pow_of_lt_left ha.1.le ha.2).congr (fun n => rfl) one_pow
+#align formal_multilinear_series.is_o_one_of_lt_radius FormalMultilinearSeries.isOCat_one_of_lt_radius
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ` tends to zero exponentially:
 for some `0 < a < 1` and `C > 0`,  `‖p n‖ * r ^ n ≤ C * a ^ n`. -/
 theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
     ∃ a ∈ Ioo (0 : ℝ) 1, ∃ C > 0, ∀ n, ‖p n‖ * r ^ n ≤ C * a ^ n :=
   by
-  rcases((tFAE_exists_lt_isO_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 5).mp
+  rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 5).mp
       (p.is_o_of_lt_radius h) with
     ⟨a, ha, C, hC, H⟩
   exact ⟨a, ha, C, hC, fun n => (le_abs_self _).trans (H n)⟩
@@ -225,7 +225,7 @@ theorem norm_mul_pow_le_mul_pow_of_lt_radius (h : ↑r < p.radius) :
 theorem lt_radius_of_isO (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ) 1)
     (hp : (fun n => ‖p n‖ * r ^ n) =O[at_top] pow a) : ↑r < p.radius :=
   by
-  rcases((tFAE_exists_lt_isO_pow (fun n => ‖p n‖ * r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with
+  rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 2 5).mp ⟨a, ha, hp⟩ with
     ⟨a, ha, C, hC, hp⟩
   rw [← pos_iff_ne_zero, ← Nnreal.coe_pos] at h₀
   lift a to ℝ≥0 using ha.1.le
@@ -481,7 +481,7 @@ theorem HasFpowerSeriesAt.congr (hf : HasFpowerSeriesAt f p x) (hg : f =ᶠ[𝓝
 protected theorem HasFpowerSeriesAt.eventually (hf : HasFpowerSeriesAt f p x) :
     ∀ᶠ r : ℝ≥0∞ in 𝓝[>] 0, HasFpowerSeriesOnBall f p x r :=
   let ⟨r, hr⟩ := hf
-  mem_of_superset (ioo_mem_nhdsWithin_ioi (left_mem_Ico.2 hr.r_pos)) fun r' hr' =>
+  mem_of_superset (Ioo_mem_nhdsWithin_Ioi (left_mem_Ico.2 hr.r_pos)) fun r' hr' =>
     hr.mono hr'.1 hr'.2.le
 #align has_fpower_series_at.eventually HasFpowerSeriesAt.eventually
 
@@ -1226,7 +1226,7 @@ def changeOriginIndexEquiv :
       by apply this <;> simp only [hs, add_tsub_cancel_right]
     rintro _ _ rfl rfl hkl hs'
     simp only [Equiv.refl_toEmbedding, Fin.cast_refl, Finset.map_refl, eq_self_iff_true,
-      OrderIso.refl_toEquiv, and_self_iff, hEq_iff_eq]
+      OrderIso.refl_toEquiv, and_self_iff, heq_iff_eq]
   right_inv := by
     rintro ⟨n, s⟩
     simp [tsub_add_cancel_of_le (card_finset_fin_le s), Fin.cast_to_equiv]

@@ -8,9 +8,9 @@ Authors: Shing Tak Lam
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.CategoryTheory.Category.GroupoidCat
+import Mathbin.CategoryTheory.Category.Groupoid
 import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Topology.Category.TopCat.Basic
+import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.Homotopy.Path
 
 /-!

@@ -131,7 +131,7 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
     where
   carrier := parallelepiped b
   is_compact' :=
-    isCompact_icc.image
+    isCompact_Icc.image
       (continuous_finset_sum Finset.univ fun (i : ι) (H : i ∈ Finset.univ) =>
         (continuous_apply i).smul continuous_const)
   interior_nonempty' :=
@@ -144,7 +144,7 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
     have A : Set.Nonempty (interior (Icc (0 : ι → ℝ) 1)) :=
       by
       rw [← pi_univ_Icc, interior_pi_set (@finite_univ ι _)]
-      simp only [univ_pi_nonempty_iff, Pi.zero_apply, Pi.one_apply, interior_icc, nonempty_Ioo,
+      simp only [univ_pi_nonempty_iff, Pi.zero_apply, Pi.one_apply, interior_Icc, nonempty_Ioo,
         zero_lt_one, imp_true_iff]
     rwa [← Homeomorph.image_interior, nonempty_image_iff]
 #align basis.parallelepiped Basis.parallelepiped

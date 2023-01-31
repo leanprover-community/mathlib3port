@@ -325,7 +325,7 @@ theorem dist_triangle4_right (x₁ y₁ x₂ y₂ : α) :
 #align dist_triangle4_right dist_triangle4_right
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.Ico` version. -/
-theorem dist_le_ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
+theorem dist_le_Ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
     dist (f m) (f n) ≤ ∑ i in Finset.Ico m n, dist (f i) (f (i + 1)) :=
   by
   revert n
@@ -338,29 +338,29 @@ theorem dist_le_ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
       
-#align dist_le_Ico_sum_dist dist_le_ico_sum_dist
+#align dist_le_Ico_sum_dist dist_le_Ico_sum_dist
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
 theorem dist_le_range_sum_dist (f : ℕ → α) (n : ℕ) :
     dist (f 0) (f n) ≤ ∑ i in Finset.range n, dist (f i) (f (i + 1)) :=
-  Nat.Ico_zero_eq_range ▸ dist_le_ico_sum_dist f (Nat.zero_le n)
+  Nat.Ico_zero_eq_range ▸ dist_le_Ico_sum_dist f (Nat.zero_le n)
 #align dist_le_range_sum_dist dist_le_range_sum_dist
 
 /-- A version of `dist_le_Ico_sum_dist` with each intermediate distance replaced
 with an upper estimate. -/
-theorem dist_le_ico_sum_of_dist_le {f : ℕ → α} {m n} (hmn : m ≤ n) {d : ℕ → ℝ}
+theorem dist_le_Ico_sum_of_dist_le {f : ℕ → α} {m n} (hmn : m ≤ n) {d : ℕ → ℝ}
     (hd : ∀ {k}, m ≤ k → k < n → dist (f k) (f (k + 1)) ≤ d k) :
     dist (f m) (f n) ≤ ∑ i in Finset.Ico m n, d i :=
-  le_trans (dist_le_ico_sum_dist f hmn) <|
+  le_trans (dist_le_Ico_sum_dist f hmn) <|
     Finset.sum_le_sum fun k hk => hd (Finset.mem_Ico.1 hk).1 (Finset.mem_Ico.1 hk).2
-#align dist_le_Ico_sum_of_dist_le dist_le_ico_sum_of_dist_le
+#align dist_le_Ico_sum_of_dist_le dist_le_Ico_sum_of_dist_le
 
 /-- A version of `dist_le_range_sum_dist` with each intermediate distance replaced
 with an upper estimate. -/
 theorem dist_le_range_sum_of_dist_le {f : ℕ → α} (n : ℕ) {d : ℕ → ℝ}
     (hd : ∀ {k}, k < n → dist (f k) (f (k + 1)) ≤ d k) :
     dist (f 0) (f n) ≤ ∑ i in Finset.range n, d i :=
-  Nat.Ico_zero_eq_range ▸ dist_le_ico_sum_of_dist_le (zero_le n) fun _ _ => hd
+  Nat.Ico_zero_eq_range ▸ dist_le_Ico_sum_of_dist_le (zero_le n) fun _ _ => hd
 #align dist_le_range_sum_of_dist_le dist_le_range_sum_of_dist_le
 
 theorem swap_dist : Function.swap (@dist α _) = dist := by funext x y <;> exact dist_comm _ _
@@ -1535,61 +1535,61 @@ theorem Real.dist_le_of_mem_uIcc {x y x' y' : ℝ} (hx : x ∈ uIcc x' y') (hy :
   abs_sub_le_of_uIcc_subset_uIcc <| uIcc_subset_uIcc (by rwa [uIcc_comm]) (by rwa [uIcc_comm])
 #align real.dist_le_of_mem_uIcc Real.dist_le_of_mem_uIcc
 
-theorem Real.dist_le_of_mem_icc {x y x' y' : ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
+theorem Real.dist_le_of_mem_Icc {x y x' y' : ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ y' - x' := by
   simpa only [Real.dist_eq, abs_of_nonpos (sub_nonpos.2 <| hx.1.trans hx.2), neg_sub] using
     Real.dist_le_of_mem_uIcc (Icc_subset_uIcc hx) (Icc_subset_uIcc hy)
-#align real.dist_le_of_mem_Icc Real.dist_le_of_mem_icc
+#align real.dist_le_of_mem_Icc Real.dist_le_of_mem_Icc
 
-theorem Real.dist_le_of_mem_icc_01 {x y : ℝ} (hx : x ∈ Icc (0 : ℝ) 1) (hy : y ∈ Icc (0 : ℝ) 1) :
-    dist x y ≤ 1 := by simpa only [sub_zero] using Real.dist_le_of_mem_icc hx hy
-#align real.dist_le_of_mem_Icc_01 Real.dist_le_of_mem_icc_01
+theorem Real.dist_le_of_mem_Icc_01 {x y : ℝ} (hx : x ∈ Icc (0 : ℝ) 1) (hy : y ∈ Icc (0 : ℝ) 1) :
+    dist x y ≤ 1 := by simpa only [sub_zero] using Real.dist_le_of_mem_Icc hx hy
+#align real.dist_le_of_mem_Icc_01 Real.dist_le_of_mem_Icc_01
 
 instance : OrderTopology ℝ :=
   orderTopology_of_nhds_abs fun x => by
     simp only [nhds_basis_ball.eq_binfi, ball, Real.dist_eq, abs_sub_comm]
 
-theorem Real.ball_eq_ioo (x r : ℝ) : ball x r = Ioo (x - r) (x + r) :=
+theorem Real.ball_eq_Ioo (x r : ℝ) : ball x r = Ioo (x - r) (x + r) :=
   Set.ext fun y => by
     rw [mem_ball, dist_comm, Real.dist_eq, abs_sub_lt_iff, mem_Ioo, ← sub_lt_iff_lt_add',
       sub_lt_comm]
-#align real.ball_eq_Ioo Real.ball_eq_ioo
+#align real.ball_eq_Ioo Real.ball_eq_Ioo
 
-theorem Real.closedBall_eq_icc {x r : ℝ} : closedBall x r = Icc (x - r) (x + r) := by
+theorem Real.closedBall_eq_Icc {x r : ℝ} : closedBall x r = Icc (x - r) (x + r) := by
   ext y <;>
     rw [mem_closed_ball, dist_comm, Real.dist_eq, abs_sub_le_iff, mem_Icc, ← sub_le_iff_le_add',
       sub_le_comm]
-#align real.closed_ball_eq_Icc Real.closedBall_eq_icc
+#align real.closed_ball_eq_Icc Real.closedBall_eq_Icc
 
-theorem Real.ioo_eq_ball (x y : ℝ) : Ioo x y = ball ((x + y) / 2) ((y - x) / 2) := by
-  rw [Real.ball_eq_ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
+theorem Real.Ioo_eq_ball (x y : ℝ) : Ioo x y = ball ((x + y) / 2) ((y - x) / 2) := by
+  rw [Real.ball_eq_Ioo, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
     add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
-#align real.Ioo_eq_ball Real.ioo_eq_ball
+#align real.Ioo_eq_ball Real.Ioo_eq_ball
 
-theorem Real.icc_eq_closedBall (x y : ℝ) : Icc x y = closedBall ((x + y) / 2) ((y - x) / 2) := by
-  rw [Real.closedBall_eq_icc, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
+theorem Real.Icc_eq_closedBall (x y : ℝ) : Icc x y = closedBall ((x + y) / 2) ((y - x) / 2) := by
+  rw [Real.closedBall_eq_Icc, ← sub_div, add_comm, ← sub_add, add_sub_cancel', add_self_div_two, ←
     add_div, add_assoc, add_sub_cancel'_right, add_self_div_two]
-#align real.Icc_eq_closed_ball Real.icc_eq_closedBall
+#align real.Icc_eq_closed_ball Real.Icc_eq_closedBall
 
 section MetricOrdered
 
 variable [Preorder α] [CompactIccSpace α]
 
-theorem totallyBounded_icc (a b : α) : TotallyBounded (Icc a b) :=
-  isCompact_icc.TotallyBounded
-#align totally_bounded_Icc totallyBounded_icc
+theorem totallyBounded_Icc (a b : α) : TotallyBounded (Icc a b) :=
+  isCompact_Icc.TotallyBounded
+#align totally_bounded_Icc totallyBounded_Icc
 
-theorem totallyBounded_ico (a b : α) : TotallyBounded (Ico a b) :=
-  totallyBounded_subset Ico_subset_Icc_self (totallyBounded_icc a b)
-#align totally_bounded_Ico totallyBounded_ico
+theorem totallyBounded_Ico (a b : α) : TotallyBounded (Ico a b) :=
+  totallyBounded_subset Ico_subset_Icc_self (totallyBounded_Icc a b)
+#align totally_bounded_Ico totallyBounded_Ico
 
-theorem totallyBounded_ioc (a b : α) : TotallyBounded (Ioc a b) :=
-  totallyBounded_subset Ioc_subset_Icc_self (totallyBounded_icc a b)
-#align totally_bounded_Ioc totallyBounded_ioc
+theorem totallyBounded_Ioc (a b : α) : TotallyBounded (Ioc a b) :=
+  totallyBounded_subset Ioc_subset_Icc_self (totallyBounded_Icc a b)
+#align totally_bounded_Ioc totallyBounded_Ioc
 
-theorem totallyBounded_ioo (a b : α) : TotallyBounded (Ioo a b) :=
-  totallyBounded_subset Ioo_subset_Icc_self (totallyBounded_icc a b)
-#align totally_bounded_Ioo totallyBounded_ioo
+theorem totallyBounded_Ioo (a b : α) : TotallyBounded (Ioo a b) :=
+  totallyBounded_subset Ioo_subset_Icc_self (totallyBounded_Icc a b)
+#align totally_bounded_Ioo totallyBounded_Ioo
 
 end MetricOrdered
 
@@ -1645,7 +1645,7 @@ theorem eventually_closedBall_subset {x : α} {u : Set α} (hu : u ∈ 𝓝 x) :
   by
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u :=
     nhds_basis_closed_ball.mem_iff.1 hu
-  have : Iic ε ∈ 𝓝 (0 : ℝ) := iic_mem_nhds εpos
+  have : Iic ε ∈ 𝓝 (0 : ℝ) := Iic_mem_nhds εpos
   filter_upwards [this]with _ hr using subset.trans (closed_ball_subset_closed_ball hr) hε
 #align eventually_closed_ball_subset eventually_closedBall_subset
 
@@ -2342,7 +2342,7 @@ theorem Fin.dist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
   simp only [dist_nndist, Fin.nndist_insertNth_insertNth, Nnreal.coe_max]
 #align fin.dist_insert_nth_insert_nth Fin.dist_insertNth_insertNth
 
-theorem Real.dist_le_of_mem_pi_icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
+theorem Real.dist_le_of_mem_pi_Icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
     dist x y ≤ dist x' y' :=
   by
   refine'
@@ -2350,7 +2350,7 @@ theorem Real.dist_le_of_mem_pi_icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y
         (Real.dist_le_of_mem_uIcc _ _).trans (dist_le_pi_dist _ _ b) <;>
     refine' Icc_subset_uIcc _
   exacts[⟨hx.1 _, hx.2 _⟩, ⟨hy.1 _, hy.2 _⟩]
-#align real.dist_le_of_mem_pi_Icc Real.dist_le_of_mem_pi_icc
+#align real.dist_le_of_mem_pi_Icc Real.dist_le_of_mem_pi_Icc
 
 end Pi
 
@@ -2850,21 +2850,21 @@ section ConditionallyCompleteLinearOrder
 
 variable [Preorder α] [CompactIccSpace α]
 
-theorem bounded_icc (a b : α) : Bounded (Icc a b) :=
-  (totallyBounded_icc a b).Bounded
-#align metric.bounded_Icc Metric.bounded_icc
+theorem bounded_Icc (a b : α) : Bounded (Icc a b) :=
+  (totallyBounded_Icc a b).Bounded
+#align metric.bounded_Icc Metric.bounded_Icc
 
-theorem bounded_ico (a b : α) : Bounded (Ico a b) :=
-  (totallyBounded_ico a b).Bounded
-#align metric.bounded_Ico Metric.bounded_ico
+theorem bounded_Ico (a b : α) : Bounded (Ico a b) :=
+  (totallyBounded_Ico a b).Bounded
+#align metric.bounded_Ico Metric.bounded_Ico
 
-theorem bounded_ioc (a b : α) : Bounded (Ioc a b) :=
-  (totallyBounded_ioc a b).Bounded
-#align metric.bounded_Ioc Metric.bounded_ioc
+theorem bounded_Ioc (a b : α) : Bounded (Ioc a b) :=
+  (totallyBounded_Ioc a b).Bounded
+#align metric.bounded_Ioc Metric.bounded_Ioc
 
-theorem bounded_ioo (a b : α) : Bounded (Ioo a b) :=
-  (totallyBounded_ioo a b).Bounded
-#align metric.bounded_Ioo Metric.bounded_ioo
+theorem bounded_Ioo (a b : α) : Bounded (Ioo a b) :=
+  (totallyBounded_Ioo a b).Bounded
+#align metric.bounded_Ioo Metric.bounded_Ioo
 
 /-- In a pseudo metric space with a conditionally complete linear order such that the order and the
     metric structure give the same topology, any order-bounded set is metric-bounded. -/
@@ -2872,7 +2872,7 @@ theorem bounded_of_bddAbove_of_bddBelow {s : Set α} (h₁ : BddAbove s) (h₂ :
     Bounded s :=
   let ⟨u, hu⟩ := h₁
   let ⟨l, hl⟩ := h₂
-  Bounded.mono (fun x hx => mem_Icc.mpr ⟨hl hx, hu hx⟩) (bounded_icc l u)
+  Bounded.mono (fun x hx => mem_Icc.mpr ⟨hl hx, hu hx⟩) (bounded_Icc l u)
 #align metric.bounded_of_bdd_above_of_bdd_below Metric.bounded_of_bddAbove_of_bddBelow
 
 end ConditionallyCompleteLinearOrder

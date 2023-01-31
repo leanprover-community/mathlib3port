@@ -102,7 +102,7 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
   have h₁ : ε < T / 2 → Metric.closedBall (0 : ℝ) ε ∩ I = Metric.closedBall (0 : ℝ) ε :=
     by
     intro hε
-    rw [inter_eq_left_iff_subset, Real.closedBall_eq_icc, zero_sub, zero_add]
+    rw [inter_eq_left_iff_subset, Real.closedBall_eq_Icc, zero_sub, zero_add]
     rintro y ⟨hy₁, hy₂⟩
     constructor <;> linarith
   have h₂ :
@@ -111,9 +111,9 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
     by
     conv_rhs => rw [← if_ctx_congr (Iff.rfl : ε < T / 2 ↔ ε < T / 2) h₁ fun _ => rfl, ← hT']
     apply coe_real_preimage_closed_ball_inter_eq
-    simpa only [hT', Real.closedBall_eq_icc, zero_add, zero_sub] using Ioc_subset_Icc_self
+    simpa only [hT', Real.closedBall_eq_Icc, zero_add, zero_sub] using Ioc_subset_Icc_self
   rw [add_haar_closed_ball_center]
-  simp only [restrict_apply' measurableSet_ioc, (by linarith : -(T / 2) + T = T / 2), h₂, ←
+  simp only [restrict_apply' measurableSet_Ioc, (by linarith : -(T / 2) + T = T / 2), h₂, ←
     (AddCircle.measurePreservingMk T (-(T / 2))).measure_preimage measurableSet_closedBall]
   by_cases hε : ε < T / 2
   · simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
@@ -160,7 +160,7 @@ interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) :
     (∫⁻ a in Ioc t (t + T), f a) = ∫⁻ b : AddCircle T, f b :=
   by
-  have m : MeasurableSet (Ioc t (t + T)) := measurableSet_ioc
+  have m : MeasurableSet (Ioc t (t + T)) := measurableSet_Ioc
   have := lintegral_map_equiv f (measurable_equiv_Ioc T t).symm
   swap; exact volume
   simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
@@ -187,7 +187,7 @@ to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
     (∫ a in Ioc t (t + T), f a) = ∫ b : AddCircle T, f b :=
   by
-  have m : MeasurableSet (Ioc t (t + T)) := measurableSet_ioc
+  have m : MeasurableSet (Ioc t (t + T)) := measurableSet_Ioc
   have := integral_map_equiv (measurable_equiv_Ioc T t).symm f
   simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk, coe_coe] at this

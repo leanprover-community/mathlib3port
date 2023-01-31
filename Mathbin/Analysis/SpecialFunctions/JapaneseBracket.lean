@@ -109,7 +109,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
     exact hr.le
   refine' lt_of_le_of_lt (set_lintegral_mono (by measurability) (by measurability) h_int) _
   refine' integrable_on.set_lintegral_lt_top _
-  rw [← intervalIntegrable_iff_integrable_ioc_of_le zero_le_one]
+  rw [← intervalIntegrable_iff_integrable_Ioc_of_le zero_le_one]
   apply intervalIntegral.intervalIntegrableRpow'
   rwa [neg_lt_neg_iff, inv_mul_lt_iff' hr, one_mul]
 #align finite_integral_rpow_sub_one_pow_aux finite_integral_rpow_sub_one_pow_aux
@@ -138,10 +138,10 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     ext x
     simp only [mem_set_of_eq, mem_closedBall_zero_iff]
     exact le_rpow_one_add_norm_iff_norm_le hr (mem_Ioi.mp ht) x
-  rw [set_lintegral_congr_fun measurableSet_ioi (ae_of_all volume <| h_int)]
+  rw [set_lintegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int)]
   have hIoi_eq : Ioi (0 : ℝ) = Ioc (0 : ℝ) 1 ∪ Ioi 1 := (Set.Ioc_union_Ioi_eq_Ioi zero_le_one).symm
   have hdisjoint : Disjoint (Ioc (0 : ℝ) 1) (Ioi 1) := by simp [disjoint_iff]
-  rw [hIoi_eq, lintegral_union measurableSet_ioi hdisjoint, Ennreal.add_lt_top]
+  rw [hIoi_eq, lintegral_union measurableSet_Ioi hdisjoint, Ennreal.add_lt_top]
   have h_int' :
     ∀ (t : ℝ) (ht : t ∈ Ioc (0 : ℝ) 1),
       (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
@@ -156,7 +156,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     measurability
   constructor
   -- The integral from 0 to 1:
-  · rw [set_lintegral_congr_fun measurableSet_ioc (ae_of_all volume <| h_int'),
+  · rw [set_lintegral_congr_fun measurableSet_Ioc (ae_of_all volume <| h_int'),
       lintegral_mul_const _ h_meas', Ennreal.mul_lt_top_iff]
     left
     -- We calculate the integral
@@ -167,7 +167,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
       (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 :=
     fun t ht => by rw [closedBall_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
-  rw [set_lintegral_congr_fun measurableSet_ioi (ae_of_all volume <| h_int''), lintegral_const 0,
+  rw [set_lintegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int''), lintegral_const 0,
     zero_mul]
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm

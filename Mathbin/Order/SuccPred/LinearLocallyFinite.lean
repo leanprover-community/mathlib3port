@@ -79,7 +79,7 @@ theorem le_succFn (i : ι) : i ≤ succFn i :=
   exact fun x hx => le_of_lt hx
 #align linear_locally_finite_order.le_succ_fn LinearLocallyFiniteOrder.le_succFn
 
-theorem isGLB_ioc_of_isGLB_ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.Ioi i) k) :
+theorem isGLB_Ioc_of_isGLB_Ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.Ioi i) k) :
     IsGLB (Set.Ioc i j) k :=
   by
   simp_rw [IsGLB, IsGreatest, mem_upperBounds, mem_lowerBounds] at h⊢
@@ -88,7 +88,7 @@ theorem isGLB_ioc_of_isGLB_ioi {i j k : ι} (hij_lt : i < j) (h : IsGLB (Set.Ioi
   cases' le_or_lt y j with h_le h_lt
   · exact hx y ⟨hy, h_le⟩
   · exact le_trans (hx j ⟨hij_lt, le_rfl⟩) h_lt.le
-#align linear_locally_finite_order.is_glb_Ioc_of_is_glb_Ioi LinearLocallyFiniteOrder.isGLB_ioc_of_isGLB_ioi
+#align linear_locally_finite_order.is_glb_Ioc_of_is_glb_Ioi LinearLocallyFiniteOrder.isGLB_Ioc_of_isGLB_Ioi
 
 theorem isMax_of_succFn_le [LocallyFiniteOrder ι] (i : ι) (hi : succFn i ≤ i) : IsMax i :=
   by

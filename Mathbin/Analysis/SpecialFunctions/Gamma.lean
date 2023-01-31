@@ -62,17 +62,17 @@ open Filter intervalIntegral Set Real MeasureTheory Asymptotics
 
 open Nat Topology Ennreal BigOperators ComplexConjugate
 
-theorem integral_exp_neg_ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 :=
+theorem integral_exp_neg_Ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 :=
   by
   refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi _ _ tendsto_id) _
   · simpa only [neg_mul, one_mul] using expNegIntegrableOnIoi 0 zero_lt_one
   · simpa using tendsto_exp_neg_at_top_nhds_0.const_sub 1
-#align integral_exp_neg_Ioi integral_exp_neg_ioi
+#align integral_exp_neg_Ioi integral_exp_neg_Ioi
 
 namespace Real
 
 /-- Asymptotic bound for the `Γ` function integrand. -/
-theorem Gamma_integrand_isO (s : ℝ) :
+theorem Gamma_integrand_isOCat (s : ℝ) :
     (fun x : ℝ => exp (-x) * x ^ s) =o[at_top] fun x : ℝ => exp (-(1 / 2) * x) :=
   by
   refine' is_o_of_tendsto (fun x hx => _) _
@@ -88,7 +88,7 @@ theorem Gamma_integrand_isO (s : ℝ) :
     ring
   rw [this]
   exact (tendsto_exp_mul_div_rpow_atTop s (1 / 2) one_half_pos).inv_tendsto_at_top
-#align real.Gamma_integrand_is_o Real.Gamma_integrand_isO
+#align real.Gamma_integrand_is_o Real.Gamma_integrand_isOCat
 
 /-- The Euler integral for the `Γ` function converges for positive real `s`. -/
 theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) :
@@ -96,9 +96,9 @@ theorem gammaIntegralConvergent {s : ℝ} (h : 0 < s) :
   by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
   constructor
-  · rw [← integrableOn_icc_iff_integrableOn_ioc]
+  · rw [← integrableOn_Icc_iff_integrableOn_Ioc]
     refine' integrable_on.continuous_on_mul continuous_on_id.neg.exp _ is_compact_Icc
-    refine' (intervalIntegrable_iff_integrable_icc_of_le zero_le_one).mp _
+    refine' (intervalIntegrable_iff_integrable_Icc_of_le zero_le_one).mp _
     exact interval_integrable_rpow' (by linarith)
   · refine' integrableOfIsOExpNeg one_half_pos _ (Gamma_integrand_is_o _).IsO
     refine' continuous_on_id.neg.exp.mul (continuous_on_id.rpow_const _)
@@ -120,7 +120,7 @@ theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
     IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) :=
   by
   constructor
-  · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_ioi
+  · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
     apply ContinuousAt.continuousOn
     intro x hx
@@ -132,7 +132,7 @@ theorem gammaIntegralConvergent {s : ℂ} (hs : 0 < s.re) :
     exact ContinuousAt.comp this continuous_of_real.continuous_at
   · rw [← has_finite_integral_norm_iff]
     refine' has_finite_integral.congr (Real.gammaIntegralConvergent hs).2 _
-    refine' (ae_restrict_iff' measurableSet_ioi).mpr (ae_of_all _ fun x hx => _)
+    refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
     dsimp only
     rw [norm_eq_abs, map_mul, abs_of_nonneg <| le_of_lt <| exp_pos <| -x,
       abs_cpow_eq_rpow_re_of_pos hx _]
@@ -151,7 +151,7 @@ def gammaIntegral (s : ℂ) : ℂ :=
 theorem gammaIntegral_conj (s : ℂ) : gammaIntegral (conj s) = conj (gammaIntegral s) :=
   by
   rw [Gamma_integral, Gamma_integral, ← integral_conj]
-  refine' set_integral_congr measurableSet_ioi fun x hx => _
+  refine' set_integral_congr measurableSet_Ioi fun x hx => _
   dsimp only
   rw [RingHom.map_mul, conj_of_real, cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)),
     cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)), ← exp_conj, RingHom.map_mul, ←
@@ -162,7 +162,7 @@ theorem gammaIntegral_of_real (s : ℝ) :
     gammaIntegral ↑s = ↑(∫ x : ℝ in Ioi 0, Real.exp (-x) * x ^ (s - 1)) :=
   by
   rw [Gamma_integral, ← _root_.integral_of_real]
-  refine' set_integral_congr measurableSet_ioi _
+  refine' set_integral_congr measurableSet_Ioi _
   intro x hx; dsimp only
   rw [of_real_mul, of_real_cpow (mem_Ioi.mp hx).le]
   simp
@@ -170,7 +170,7 @@ theorem gammaIntegral_of_real (s : ℝ) :
 
 theorem gammaIntegral_one : gammaIntegral 1 = 1 := by
   simpa only [← of_real_one, Gamma_integral_of_real, of_real_inj, sub_self, rpow_zero,
-    mul_one] using integral_exp_neg_ioi
+    mul_one] using integral_exp_neg_Ioi
 #align complex.Gamma_integral_one Complex.gammaIntegral_one
 
 end Complex
@@ -189,13 +189,13 @@ def partialGamma (s : ℂ) (X : ℝ) : ℂ :=
 
 theorem tendsto_partialGamma {s : ℂ} (hs : 0 < s.re) :
     Tendsto (fun X : ℝ => partialGamma s X) atTop (𝓝 <| gammaIntegral s) :=
-  intervalIntegral_tendsto_integral_ioi 0 (gammaIntegralConvergent hs) tendsto_id
+  intervalIntegral_tendsto_integral_Ioi 0 (gammaIntegralConvergent hs) tendsto_id
 #align complex.tendsto_partial_Gamma Complex.tendsto_partialGamma
 
 private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 < s.re) (hX : 0 ≤ X) :
     IntervalIntegrable (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) volume 0 X :=
   by
-  rw [intervalIntegrable_iff_integrable_ioc_of_le hX]
+  rw [intervalIntegrable_iff_integrable_Ioc_of_le hX]
   exact integrable_on.mono_set (Gamma_integral_convergent hs) Ioc_subset_Ioi_self
 #align complex.Gamma_integrand_interval_integrable complex.Gamma_integrand_interval_integrable
 
@@ -218,9 +218,9 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
     by
     ext1
     ring
-  rw [this, intervalIntegrable_iff_integrable_ioc_of_le hY]
+  rw [this, intervalIntegrable_iff_integrable_Ioc_of_le hY]
   constructor
-  · refine' (continuous_on_const.mul _).AeStronglyMeasurable measurableSet_ioc
+  · refine' (continuous_on_const.mul _).AeStronglyMeasurable measurableSet_Ioc
     apply (continuous_of_real.comp continuous_neg.exp).ContinuousOn.mul
     apply ContinuousAt.continuousOn
     intro x hx
@@ -239,7 +239,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
     intro x hx
     rw [abs_of_nonneg (exp_pos _).le, abs_cpow_eq_rpow_re_of_pos hx.1]
     simp
-  · exact measurableSet_ioc
+  · exact measurableSet_Ioc
 #align complex.Gamma_integrand_deriv_integrable_B complex.Gamma_integrand_deriv_integrable_B
 
 /-- The recurrence relation for the indefinite version of the `Γ` function. -/
@@ -477,7 +477,7 @@ def dGammaIntegrandReal (s x : ℝ) : ℝ :=
   |exp (-x) * log x * x ^ (s - 1)|
 #align dGamma_integrand_real dGammaIntegrandReal
 
-theorem dGamma_integrand_isO_atTop (s : ℝ) :
+theorem dGamma_integrand_isOCat_atTop (s : ℝ) :
     (fun x : ℝ => exp (-x) * log x * x ^ (s - 1)) =o[at_top] fun x => exp (-(1 / 2) * x) :=
   by
   refine' is_o_of_tendsto (fun x hx => _) _
@@ -502,7 +502,7 @@ theorem dGamma_integrand_isO_atTop (s : ℝ) :
   apply eventually_eq_of_mem (Ioi_mem_at_top (0 : ℝ))
   intro x hx
   simp [exp_log hx]
-#align dGamma_integrand_is_o_at_top dGamma_integrand_isO_atTop
+#align dGamma_integrand_is_o_at_top dGamma_integrand_isOCat_atTop
 
 /-- Absolute convergence of the integral which will give the derivative of the `Γ` function on
 `1 < re s`. -/
@@ -511,7 +511,7 @@ theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
   by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
   refine' ⟨⟨_, _⟩, _⟩
-  · refine' ContinuousOn.aeStronglyMeasurable (ContinuousOn.mul _ _).norm measurableSet_ioc
+  · refine' ContinuousOn.aeStronglyMeasurable (ContinuousOn.mul _ _).norm measurableSet_Ioc
     · refine' (continuous_exp.comp continuous_neg).ContinuousOn.mul (continuous_on_log.mono _)
       simp
     · apply continuous_on_id.rpow_const
@@ -521,13 +521,13 @@ theorem dGammaIntegralAbsConvergent (s : ℝ) (hs : 1 < s) :
   · apply has_finite_integral_of_bounded
     swap
     · exact 1 / (s - 1)
-    refine' (ae_restrict_iff' measurableSet_ioc).mpr (ae_of_all _ fun x hx => _)
+    refine' (ae_restrict_iff' measurableSet_Ioc).mpr (ae_of_all _ fun x hx => _)
     rw [norm_norm, norm_eq_abs, mul_assoc, abs_mul, ← one_mul (1 / (s - 1))]
     refine' mul_le_mul _ _ (abs_nonneg _) zero_le_one
     · rw [abs_of_pos (exp_pos (-x)), exp_le_one_iff, neg_le, neg_zero]
       exact hx.1.le
     · exact (abs_log_mul_self_rpow_lt x (s - 1) hx.1 hx.2 (sub_pos.mpr hs)).le
-  · have := (dGamma_integrand_isO_atTop s).IsO.norm_left
+  · have := (dGamma_integrand_isOCat_atTop s).IsO.norm_left
     refine' integrableOfIsOExpNeg one_half_pos (ContinuousOn.mul _ _).norm this
     · refine' (continuous_exp.comp continuous_neg).ContinuousOn.mul (continuous_on_log.mono _)
       simp
@@ -589,10 +589,10 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 1 < s.re) :
     by
     apply eventually_of_forall
     intro t
-    exact (cont t).AeStronglyMeasurable measurableSet_ioi
+    exact (cont t).AeStronglyMeasurable measurableSet_Ioi
   have hF'_meas : ae_strongly_measurable (dGammaIntegrand s) μ :=
     by
-    refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_ioi
+    refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
     have : dGammaIntegrand s = (fun x => Real.exp (-x) * x ^ (s - 1) * Real.log x : ℝ → ℂ) :=
       by
       ext1
@@ -603,7 +603,7 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 1 < s.re) :
     exact fun x hx => continuous_of_real.continuous_at.comp (continuous_at_log (mem_Ioi.mp hx).ne')
   have h_bound : ∀ᵐ x : ℝ ∂μ, ∀ t : ℂ, t ∈ Metric.ball s ε → ‖dGammaIntegrand t x‖ ≤ bound x :=
     by
-    refine' (ae_restrict_iff' measurableSet_ioi).mpr (ae_of_all _ fun x hx => _)
+    refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
     intro t ht
     rw [Metric.mem_ball, Complex.dist_eq] at ht
     replace ht := lt_of_le_of_lt (Complex.abs_re_le_abs <| t - s) ht
@@ -626,7 +626,7 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 1 < s.re) :
         t ∈ Metric.ball s ε →
           HasDerivAt (fun u => Real.exp (-x) * x ^ (u - 1) : ℂ → ℂ) (dGammaIntegrand t x) t :=
     by
-    refine' (ae_restrict_iff' measurableSet_ioi).mpr (ae_of_all _ fun x hx => _)
+    refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
     intro t ht
     rw [mem_Ioi] at hx
     simp only [dGammaIntegrand]
@@ -678,7 +678,7 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s + m ≠ 0) : Diffe
       rw [preimage, Ioi, mem_set_of_eq, mem_set_of_eq, mem_set_of_eq]
       exact sub_lt_comm
     rw [this]
-    refine' Continuous.isOpen_preimage continuous_re _ isOpen_ioi
+    refine' Continuous.isOpen_preimage continuous_re _ isOpen_Ioi
   apply eventually_eq_of_mem this
   intro t ht
   rw [mem_set_of_eq] at ht
@@ -707,7 +707,7 @@ theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp
     (∫ x : ℝ in Ioi 0, ↑(exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ)) =
       ∫ x : ℝ in Ioi 0, ((exp (-x) * x ^ (s - 1) : ℝ) : ℂ)
     by rw [this, _root_.integral_of_real, Complex.of_real_re]
-  refine' set_integral_congr measurableSet_ioi fun x hx => _
+  refine' set_integral_congr measurableSet_Ioi fun x hx => _
   push_cast
   rw [Complex.of_real_cpow (le_of_lt hx)]
   push_cast
@@ -745,7 +745,7 @@ theorem gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < gamma s :=
   rw [set_integral_pos_iff_support_of_nonneg_ae]
   · rw [this, volume_Ioi, ← Ennreal.ofReal_zero]
     exact Ennreal.ofReal_lt_top
-  · refine' eventually_of_mem (self_mem_ae_restrict measurableSet_ioi) _
+  · refine' eventually_of_mem (self_mem_ae_restrict measurableSet_Ioi) _
     exact fun x hx => (mul_pos (exp_pos _) (rpow_pos_of_pos hx _)).le
   · exact Gamma_integral_convergent hs
 #align real.Gamma_pos_of_pos Real.gamma_pos_of_pos
@@ -804,7 +804,7 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
   have posf : ∀ c u x : ℝ, x ∈ Ioi (0 : ℝ) → 0 ≤ f c u x := fun c u x hx =>
     mul_nonneg (exp_pos _).le (rpow_pos_of_pos hx _).le
   have posf' : ∀ c u : ℝ, ∀ᵐ x : ℝ ∂volume.restrict (Ioi 0), 0 ≤ f c u x := fun c u =>
-    (ae_restrict_iff' measurableSet_ioi).mpr (ae_of_all _ (posf c u))
+    (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ (posf c u))
   have fpow :
     ∀ {c x : ℝ} (hc : 0 < c) (u : ℝ) (hx : 0 < x), exp (-x) * x ^ (u - 1) = f c u x ^ (1 / c) :=
     by
@@ -826,12 +826,12 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     rw [← mem_ℒp_norm_rpow_iff _ A B, Ennreal.toReal_ofReal (one_div_nonneg.mpr hc.le),
       Ennreal.div_self A B, mem_ℒp_one_iff_integrable]
     · apply integrable.congr (Gamma_integral_convergent hu)
-      refine' eventually_eq_of_mem (self_mem_ae_restrict measurableSet_ioi) fun x hx => _
+      refine' eventually_eq_of_mem (self_mem_ae_restrict measurableSet_Ioi) fun x hx => _
       dsimp only
       rw [fpow hc u hx]
       congr 1
       exact (norm_of_nonneg (posf _ _ x hx)).symm
-    · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_ioi
+    · refine' ContinuousOn.aeStronglyMeasurable _ measurableSet_Ioi
       refine' (Continuous.continuousOn _).mul (ContinuousAt.continuousOn fun x hx => _)
       · exact continuous_exp.comp (continuous_const.mul continuous_id')
       · exact continuous_at_rpow_const _ _ (Or.inl (ne_of_lt hx).symm)
@@ -841,7 +841,7 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     MeasureTheory.integral_mul_le_Lp_mul_Lq_of_nonneg e (posf' a s) (posf' b t) (f_mem_Lp ha hs)
       (f_mem_Lp hb ht) using
     1
-  · refine' set_integral_congr measurableSet_ioi fun x hx => _
+  · refine' set_integral_congr measurableSet_Ioi fun x hx => _
     dsimp only [f]
     have A : exp (-x) = exp (-a * x) * exp (-b * x) := by
       rw [← exp_add, ← add_mul, ← neg_add, hab, neg_one_mul]
@@ -853,12 +853,12 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     rw [A, B]
     ring
   · rw [one_div_one_div, one_div_one_div]
-    congr 2 <;> exact set_integral_congr measurableSet_ioi fun x hx => fpow (by assumption) _ hx
+    congr 2 <;> exact set_integral_congr measurableSet_Ioi fun x hx => fpow (by assumption) _ hx
 #align real.Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma Real.gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma
 
 theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ Gamma) :=
   by
-  refine' convex_on_iff_forall_pos.mpr ⟨convex_ioi _, fun x hx y hy a b ha hb hab => _⟩
+  refine' convex_on_iff_forall_pos.mpr ⟨convex_Ioi _, fun x hx y hy a b ha hb hab => _⟩
   have : b = 1 - a := by linarith; subst this
   simp_rw [Function.comp_apply, smul_eq_mul]
   rw [← log_rpow (Gamma_pos_of_pos hy), ← log_rpow (Gamma_pos_of_pos hx), ←
@@ -871,7 +871,7 @@ theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ Gamma) :=
 
 theorem convexOn_gamma : ConvexOn ℝ (Ioi 0) gamma :=
   by
-  refine' ⟨convex_ioi 0, fun x hx y hy a b ha hb hab => _⟩
+  refine' ⟨convex_Ioi 0, fun x hx y hy a b ha hb hab => _⟩
   have :=
     ConvexOn.comp (convex_on_exp.subset (subset_univ _) _) convex_on_log_Gamma fun u hu v hv huv =>
       exp_le_exp.mpr huv
@@ -1162,7 +1162,7 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
     norm_num
 #align real.Gamma_three_div_two_lt_one Real.gamma_three_div_two_lt_one
 
-theorem gamma_strictMonoOn_ici : StrictMonoOn gamma (Ici 2) :=
+theorem gamma_strictMonoOn_Ici : StrictMonoOn gamma (Ici 2) :=
   by
   convert
     convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
@@ -1170,7 +1170,7 @@ theorem gamma_strictMonoOn_ici : StrictMonoOn gamma (Ici 2) :=
   symm
   rw [inter_eq_right_iff_subset]
   exact fun x hx => two_pos.trans_le hx
-#align real.Gamma_strict_mono_on_Ici Real.gamma_strictMonoOn_ici
+#align real.Gamma_strict_mono_on_Ici Real.gamma_strictMonoOn_Ici
 
 end StrictMono
 

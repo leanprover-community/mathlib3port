@@ -10,7 +10,7 @@ Authors: Scott Morrison
 -/
 import Mathbin.CategoryTheory.Yoneda
 import Mathbin.Topology.Sheaves.Presheaf
-import Mathbin.Topology.Category.TopCommRingCat
+import Mathbin.Topology.Category.TopCommRing
 import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
@@ -114,14 +114,14 @@ theorem presheafToTop_obj (T : TopCat.{v}) (U : (Opens X)ᵒᵖ) :
 -- TODO upgrade the result to TopCommRing?
 /-- The (bundled) commutative ring of continuous functions from a topological space
 to a topological commutative ring, with pointwise multiplication. -/
-def continuousFunctions (X : TopCat.{v}ᵒᵖ) (R : TopCommRingCat.{v}) : CommRingCat.{v} :=
-  CommRingCat.of (unop X ⟶ (forget₂ TopCommRingCat TopCat).obj R)
+def continuousFunctions (X : TopCat.{v}ᵒᵖ) (R : TopCommRing.{v}) : CommRingCat.{v} :=
+  CommRingCat.of (unop X ⟶ (forget₂ TopCommRing TopCat).obj R)
 #align Top.continuous_functions TopCat.continuousFunctions
 
 namespace ContinuousFunctions
 
 /-- Pulling back functions into a topological ring along a continuous map is a ring homomorphism. -/
-def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRingCat) :
+def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRing) :
     continuousFunctions X R ⟶ continuousFunctions Y R
     where
   toFun g := f.unop ≫ g
@@ -133,10 +133,10 @@ def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRingCat) :
 
 /-- A homomorphism of topological rings can be postcomposed with functions from a source space `X`;
 this is a ring homomorphism (with respect to the pointwise ring operations on functions). -/
-def map (X : TopCat.{u}ᵒᵖ) {R S : TopCommRingCat.{u}} (φ : R ⟶ S) :
+def map (X : TopCat.{u}ᵒᵖ) {R S : TopCommRing.{u}} (φ : R ⟶ S) :
     continuousFunctions X R ⟶ continuousFunctions X S
     where
-  toFun g := g ≫ (forget₂ TopCommRingCat TopCat).map φ
+  toFun g := g ≫ (forget₂ TopCommRing TopCat).map φ
   map_one' := by ext <;> exact φ.1.map_one
   map_zero' := by ext <;> exact φ.1.map_zero
   map_add' := by intros <;> ext <;> apply φ.1.map_add
@@ -147,7 +147,7 @@ end ContinuousFunctions
 
 /-- An upgraded version of the Yoneda embedding, observing that the continuous maps
 from `X : Top` to `R : TopCommRing` form a commutative ring, functorial in both `X` and `R`. -/
-def commRingYoneda : TopCommRingCat.{u} ⥤ TopCat.{u}ᵒᵖ ⥤ CommRingCat.{u}
+def commRingYoneda : TopCommRing.{u} ⥤ TopCat.{u}ᵒᵖ ⥤ CommRingCat.{u}
     where
   obj R :=
     { obj := fun X => continuousFunctions X R
@@ -174,7 +174,7 @@ presheaf_to_TopCommRing X (TopCommRing.of ℂ)
 ```
 (this requires `import topology.instances.complex`).
 -/
-def presheafToTopCommRing (T : TopCommRingCat.{v}) : X.Presheaf CommRingCat.{v} :=
+def presheafToTopCommRing (T : TopCommRing.{v}) : X.Presheaf CommRingCat.{v} :=
   (Opens.toTop X).op ⋙ commRingYoneda.obj T
 #align Top.presheaf_to_TopCommRing TopCat.presheafToTopCommRing
 

@@ -30,7 +30,7 @@ would result in less delta-reduced statements.
 -/
 
 
-alias hEq_iff_eq ↔ HEq.eq Eq.heq
+alias heq_iff_eq ↔ HEq.eq Eq.heq
 #align heq.eq HEq.eq
 #align eq.heq Eq.heq
 

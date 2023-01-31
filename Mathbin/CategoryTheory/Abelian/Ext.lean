@@ -8,7 +8,7 @@ Authors: Scott Morrison, Adam Topaz
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.ModuleCat.Abelian
+import Mathbin.Algebra.Category.Module.Abelian
 import Mathbin.CategoryTheory.Functor.LeftDerived
 import Mathbin.CategoryTheory.Linear.Yoneda
 import Mathbin.CategoryTheory.Abelian.Opposite

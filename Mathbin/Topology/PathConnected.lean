@@ -741,7 +741,7 @@ theorem range_reparam (γ : Path x y) {f : I → I} (hfcont : Continuous f) (hf�
     rw [range_iff_surjective]
     intro t
     have h₁ : Continuous (Icc_extend (zero_le_one' ℝ) f) := by continuity
-    have := intermediate_value_icc (zero_le_one' ℝ) h₁.continuous_on
+    have := intermediate_value_Icc (zero_le_one' ℝ) h₁.continuous_on
     · rw [Icc_extend_left, Icc_extend_right] at this
       change Icc (f 0) (f 1) ⊆ _ at this
       rw [hf₀, hf₁] at this

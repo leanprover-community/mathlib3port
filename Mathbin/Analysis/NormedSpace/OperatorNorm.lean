@@ -515,7 +515,7 @@ theorem lipschitz_apply (x : E) : LipschitzWith ‖x‖₊ fun f : E →SL[σ₁
 
 end
 
-section SupCat
+section Sup
 
 variable [RingHomIsometric σ₁₂]
 
@@ -606,7 +606,7 @@ theorem supₛ_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCo
     Nnreal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_closed_unit_ball_eq_norm ContinuousLinearMap.supₛ_closed_unit_ball_eq_norm
 
-end SupCat
+end Sup
 
 section
 

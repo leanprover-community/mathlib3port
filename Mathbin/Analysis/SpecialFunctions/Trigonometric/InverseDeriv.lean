@@ -70,7 +70,7 @@ theorem contDiffAt_arcsin {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ�
   (deriv_arcsin_aux h₁ h₂).2.of_le le_top
 #align real.cont_diff_at_arcsin Real.contDiffAt_arcsin
 
-theorem hasDerivWithinAt_arcsin_ici {x : ℝ} (h : x ≠ -1) :
+theorem hasDerivWithinAt_arcsin_Ici {x : ℝ} (h : x ≠ -1) :
     HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Ici x) x :=
   by
   rcases em (x = 1) with (rfl | h')
@@ -78,9 +78,9 @@ theorem hasDerivWithinAt_arcsin_ici {x : ℝ} (h : x ≠ -1) :
     convert (hasDerivWithinAt_const _ _ (π / 2)).congr _ _ <;>
       simp (config := { contextual := true }) [arcsin_of_one_le]
   · exact (has_deriv_at_arcsin h h').HasDerivWithinAt
-#align real.has_deriv_within_at_arcsin_Ici Real.hasDerivWithinAt_arcsin_ici
+#align real.has_deriv_within_at_arcsin_Ici Real.hasDerivWithinAt_arcsin_Ici
 
-theorem hasDerivWithinAt_arcsin_iic {x : ℝ} (h : x ≠ 1) :
+theorem hasDerivWithinAt_arcsin_Iic {x : ℝ} (h : x ≠ 1) :
     HasDerivWithinAt arcsin (1 / sqrt (1 - x ^ 2)) (Iic x) x :=
   by
   rcases em (x = -1) with (rfl | h')
@@ -88,33 +88,33 @@ theorem hasDerivWithinAt_arcsin_iic {x : ℝ} (h : x ≠ 1) :
     convert (hasDerivWithinAt_const _ _ (-(π / 2))).congr _ _ <;>
       simp (config := { contextual := true }) [arcsin_of_le_neg_one]
   · exact (has_deriv_at_arcsin h' h).HasDerivWithinAt
-#align real.has_deriv_within_at_arcsin_Iic Real.hasDerivWithinAt_arcsin_iic
+#align real.has_deriv_within_at_arcsin_Iic Real.hasDerivWithinAt_arcsin_Iic
 
-theorem differentiableWithinAt_arcsin_ici {x : ℝ} :
+theorem differentiableWithinAt_arcsin_Ici {x : ℝ} :
     DifferentiableWithinAt ℝ arcsin (Ici x) x ↔ x ≠ -1 :=
   by
   refine' ⟨_, fun h => (has_deriv_within_at_arcsin_Ici h).DifferentiableWithinAt⟩
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
-    filter_upwards [icc_mem_nhdsWithin_ici
+    filter_upwards [Icc_mem_nhdsWithin_Ici
         ⟨le_rfl, neg_lt_self (zero_lt_one' ℝ)⟩]with x using sin_arcsin'
   have := h.has_deriv_within_at.sin.congr_of_eventually_eq this.symm (by simp)
-  simpa using (uniqueDiffOn_ici _ _ left_mem_Ici).eq_deriv _ this (hasDerivWithinAt_id _ _)
-#align real.differentiable_within_at_arcsin_Ici Real.differentiableWithinAt_arcsin_ici
+  simpa using (uniqueDiffOn_Ici _ _ left_mem_Ici).eq_deriv _ this (hasDerivWithinAt_id _ _)
+#align real.differentiable_within_at_arcsin_Ici Real.differentiableWithinAt_arcsin_Ici
 
-theorem differentiableWithinAt_arcsin_iic {x : ℝ} :
+theorem differentiableWithinAt_arcsin_Iic {x : ℝ} :
     DifferentiableWithinAt ℝ arcsin (Iic x) x ↔ x ≠ 1 :=
   by
   refine' ⟨fun h => _, fun h => (has_deriv_within_at_arcsin_Iic h).DifferentiableWithinAt⟩
   rw [← neg_neg x, ← image_neg_Ici] at h
   have := (h.comp (-x) differentiable_within_at_id.neg (maps_to_image _ _)).neg
   simpa [(· ∘ ·), differentiable_within_at_arcsin_Ici] using this
-#align real.differentiable_within_at_arcsin_Iic Real.differentiableWithinAt_arcsin_iic
+#align real.differentiable_within_at_arcsin_Iic Real.differentiableWithinAt_arcsin_Iic
 
 theorem differentiableAt_arcsin {x : ℝ} : DifferentiableAt ℝ arcsin x ↔ x ≠ -1 ∧ x ≠ 1 :=
   ⟨fun h =>
-    ⟨differentiableWithinAt_arcsin_ici.1 h.DifferentiableWithinAt,
-      differentiableWithinAt_arcsin_iic.1 h.DifferentiableWithinAt⟩,
+    ⟨differentiableWithinAt_arcsin_Ici.1 h.DifferentiableWithinAt,
+      differentiableWithinAt_arcsin_Iic.1 h.DifferentiableWithinAt⟩,
     fun h => (hasDerivAt_arcsin h.1 h.2).DifferentiableAt⟩
 #align real.differentiable_at_arcsin Real.differentiableAt_arcsin
 
@@ -165,25 +165,25 @@ theorem contDiffAt_arccos {x : ℝ} (h₁ : x ≠ -1) (h₂ : x ≠ 1) {n : ℕ�
   contDiffAt_const.sub (contDiffAt_arcsin h₁ h₂)
 #align real.cont_diff_at_arccos Real.contDiffAt_arccos
 
-theorem hasDerivWithinAt_arccos_ici {x : ℝ} (h : x ≠ -1) :
+theorem hasDerivWithinAt_arccos_Ici {x : ℝ} (h : x ≠ -1) :
     HasDerivWithinAt arccos (-(1 / sqrt (1 - x ^ 2))) (Ici x) x :=
-  (hasDerivWithinAt_arcsin_ici h).const_sub _
-#align real.has_deriv_within_at_arccos_Ici Real.hasDerivWithinAt_arccos_ici
+  (hasDerivWithinAt_arcsin_Ici h).const_sub _
+#align real.has_deriv_within_at_arccos_Ici Real.hasDerivWithinAt_arccos_Ici
 
-theorem hasDerivWithinAt_arccos_iic {x : ℝ} (h : x ≠ 1) :
+theorem hasDerivWithinAt_arccos_Iic {x : ℝ} (h : x ≠ 1) :
     HasDerivWithinAt arccos (-(1 / sqrt (1 - x ^ 2))) (Iic x) x :=
-  (hasDerivWithinAt_arcsin_iic h).const_sub _
-#align real.has_deriv_within_at_arccos_Iic Real.hasDerivWithinAt_arccos_iic
+  (hasDerivWithinAt_arcsin_Iic h).const_sub _
+#align real.has_deriv_within_at_arccos_Iic Real.hasDerivWithinAt_arccos_Iic
 
-theorem differentiableWithinAt_arccos_ici {x : ℝ} :
+theorem differentiableWithinAt_arccos_Ici {x : ℝ} :
     DifferentiableWithinAt ℝ arccos (Ici x) x ↔ x ≠ -1 :=
-  (differentiableWithinAt_const_sub_iff _).trans differentiableWithinAt_arcsin_ici
-#align real.differentiable_within_at_arccos_Ici Real.differentiableWithinAt_arccos_ici
+  (differentiableWithinAt_const_sub_iff _).trans differentiableWithinAt_arcsin_Ici
+#align real.differentiable_within_at_arccos_Ici Real.differentiableWithinAt_arccos_Ici
 
-theorem differentiableWithinAt_arccos_iic {x : ℝ} :
+theorem differentiableWithinAt_arccos_Iic {x : ℝ} :
     DifferentiableWithinAt ℝ arccos (Iic x) x ↔ x ≠ 1 :=
-  (differentiableWithinAt_const_sub_iff _).trans differentiableWithinAt_arcsin_iic
-#align real.differentiable_within_at_arccos_Iic Real.differentiableWithinAt_arccos_iic
+  (differentiableWithinAt_const_sub_iff _).trans differentiableWithinAt_arcsin_Iic
+#align real.differentiable_within_at_arccos_Iic Real.differentiableWithinAt_arccos_Iic
 
 theorem differentiableAt_arccos {x : ℝ} : DifferentiableAt ℝ arccos x ↔ x ≠ -1 ∧ x ≠ 1 :=
   (differentiableAt_const_sub_iff _).trans differentiableAt_arcsin

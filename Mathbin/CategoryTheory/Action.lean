@@ -113,7 +113,7 @@ variable {X} (x : X)
 
 /-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
-def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* EndCat (↑x : ActionCategory M X) :=
+def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* End (↑x : ActionCategory M X) :=
   MulEquiv.refl _
 #align category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
 
@@ -124,7 +124,7 @@ theorem stabilizerIsoEnd_apply (f : Stabilizer.submonoid M x) :
 #align category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizerIsoEnd_apply
 
 @[simp]
-theorem stabilizerIsoEnd_symm_apply (f : EndCat _) : (stabilizerIsoEnd M x).invFun f = f :=
+theorem stabilizerIsoEnd_symm_apply (f : End _) : (stabilizerIsoEnd M x).invFun f = f :=
   rfl
 #align category_theory.action_category.stabilizer_iso_End_symm_apply CategoryTheory.ActionCategory.stabilizerIsoEnd_symm_apply
 
@@ -154,7 +154,7 @@ noncomputable instance : Groupoid (ActionCategory G X) :=
   CategoryTheory.groupoidOfElements _
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
-def endMulEquivSubgroup (H : Subgroup G) : EndCat (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
+def endMulEquivSubgroup (H : Subgroup G) : End (objEquiv G (G ⧸ H) ↑(1 : G)) ≃* H :=
   MulEquiv.trans (stabilizerIsoEnd G ((1 : G) : G ⧸ H)).symm
     (MulEquiv.subgroupCongr <| stabilizer_quotient H)
 #align category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup

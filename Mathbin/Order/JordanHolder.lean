@@ -239,7 +239,7 @@ theorem toList_injective : Function.Injective (@CompositionSeries.toList X _ _) 
   cases s₂
   dsimp at *
   subst h₁
-  simp only [hEq_iff_eq, eq_self_iff_true, true_and_iff]
+  simp only [heq_iff_eq, eq_self_iff_true, true_and_iff]
   simp only [Fin.cast_refl] at h₂
   exact funext h₂
 #align composition_series.to_list_injective CompositionSeries.toList_injective

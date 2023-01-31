@@ -67,19 +67,19 @@ theorem embedding_coe : Embedding (coe : ℝ≥0 → ℝ≥0∞) :=
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0 _]
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
-        exact ⟨Ioi a, isOpen_ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, isOpen_iio, by simp [Iio]⟩⟩, fun a b => coe_eq_coe.1⟩
+        exact ⟨Ioi a, isOpen_Ioi, by simp [Ioi]⟩
+        exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => coe_eq_coe.1⟩
 #align ennreal.embedding_coe Ennreal.embedding_coe
 
 theorem isOpen_ne_top : IsOpen { a : ℝ≥0∞ | a ≠ ⊤ } :=
   isOpen_ne
 #align ennreal.is_open_ne_top Ennreal.isOpen_ne_top
 
-theorem isOpen_ico_zero : IsOpen (Ico 0 b) :=
+theorem isOpen_Ico_zero : IsOpen (Ico 0 b) :=
   by
-  rw [Ennreal.ico_eq_iio]
-  exact isOpen_iio
-#align ennreal.is_open_Ico_zero Ennreal.isOpen_ico_zero
+  rw [Ennreal.Ico_eq_Iio]
+  exact isOpen_Iio
+#align ennreal.is_open_Ico_zero Ennreal.isOpen_Ico_zero
 
 theorem openEmbedding_coe : OpenEmbedding (coe : ℝ≥0 → ℝ≥0∞) :=
   ⟨embedding_coe, by
@@ -227,24 +227,24 @@ theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ =
   nhds_bot_basis
 #align ennreal.nhds_zero_basis Ennreal.nhds_zero_basis
 
-theorem nhds_zero_basis_iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) Iic :=
-  nhds_bot_basis_iic
-#align ennreal.nhds_zero_basis_Iic Ennreal.nhds_zero_basis_iic
+theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) Iic :=
+  nhds_bot_basis_Iic
+#align ennreal.nhds_zero_basis_Iic Ennreal.nhds_zero_basis_Iic
 
 @[instance]
-theorem nhdsWithin_ioi_coe_neBot {r : ℝ≥0} : (𝓝[>] (r : ℝ≥0∞)).ne_bot :=
-  nhdsWithin_ioi_self_ne_bot' ⟨⊤, Ennreal.coe_lt_top⟩
-#align ennreal.nhds_within_Ioi_coe_ne_bot Ennreal.nhdsWithin_ioi_coe_neBot
+theorem nhdsWithin_Ioi_coe_neBot {r : ℝ≥0} : (𝓝[>] (r : ℝ≥0∞)).ne_bot :=
+  nhdsWithin_Ioi_self_ne_bot' ⟨⊤, Ennreal.coe_lt_top⟩
+#align ennreal.nhds_within_Ioi_coe_ne_bot Ennreal.nhdsWithin_Ioi_coe_neBot
 
 @[instance]
-theorem nhdsWithin_ioi_zero_neBot : (𝓝[>] (0 : ℝ≥0∞)).ne_bot :=
+theorem nhdsWithin_Ioi_zero_neBot : (𝓝[>] (0 : ℝ≥0∞)).ne_bot :=
   nhds_within_Ioi_coe_ne_bot
-#align ennreal.nhds_within_Ioi_zero_ne_bot Ennreal.nhdsWithin_ioi_zero_neBot
+#align ennreal.nhds_within_Ioi_zero_ne_bot Ennreal.nhdsWithin_Ioi_zero_neBot
 
 -- using Icc because
 -- • don't have 'Ioo (x - ε) (x + ε) ∈ 𝓝 x' unless x > 0
 -- • (x - y ≤ ε ↔ x ≤ ε + y) is true, while (x - y < ε ↔ x < ε + y) is not
-theorem icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : Icc (x - ε) (x + ε) ∈ 𝓝 x :=
+theorem Icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : Icc (x - ε) (x + ε) ∈ 𝓝 x :=
   by
   rw [_root_.mem_nhds_iff]
   by_cases x0 : x = 0
@@ -254,18 +254,18 @@ theorem icc_mem_nhds (xt : x ≠ ⊤) (ε0 : ε ≠ 0) : Icc (x - ε) (x + ε) �
     rw [x0]
     simpa using le_of_lt
     use this
-    exact ⟨isOpen_iio, mem_Iio_self_add xt ε0⟩
+    exact ⟨isOpen_Iio, mem_Iio_self_add xt ε0⟩
   · use Ioo (x - ε) (x + ε)
     use Ioo_subset_Icc_self
-    exact ⟨isOpen_ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩
-#align ennreal.Icc_mem_nhds Ennreal.icc_mem_nhds
+    exact ⟨isOpen_Ioo, mem_Ioo_self_sub_add xt x0 ε0 ε0⟩
+#align ennreal.Icc_mem_nhds Ennreal.Icc_mem_nhds
 
 theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (Icc (x - ε) (x + ε)) :=
   by
   refine' le_antisymm _ _
   -- first direction
   simp only [le_infᵢ_iff, le_principal_iff];
-  intro ε ε0; exact icc_mem_nhds xt ε0.lt.ne'
+  intro ε ε0; exact Icc_mem_nhds xt ε0.lt.ne'
   -- second direction
   rw [nhds_generate_from];
   refine' le_infᵢ fun s => le_infᵢ fun hs => _
@@ -344,8 +344,8 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
     rw [nhds_prod_eq, eventually_prod_iff]
     refine'
       ⟨fun z => (n + (b + 1) : ℝ≥0∞) < z,
-        ioi_mem_nhds (by simp only [one_lt_top, add_lt_top, coe_lt_top, and_self_iff]), fun z =>
-        z < b + 1, iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun x hx y hy => _⟩
+        Ioi_mem_nhds (by simp only [one_lt_top, add_lt_top, coe_lt_top, and_self_iff]), fun z =>
+        z < b + 1, Iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun x hx y hy => _⟩
     dsimp
     rw [lt_tsub_iff_right]
     have : (n : ℝ≥0∞) + y + (b + 1) < x + (b + 1) :=
@@ -359,9 +359,9 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
     exact tendsto_const_nhds.congr' H
     rw [nhds_prod_eq, eventually_prod_iff]
     refine'
-      ⟨fun z => z < a + 1, iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun z =>
+      ⟨fun z => z < a + 1, Iio_mem_nhds (Ennreal.lt_add_right coe_ne_top one_ne_zero), fun z =>
         (a : ℝ≥0∞) + 1 < z,
-        ioi_mem_nhds (by simp only [one_lt_top, add_lt_top, coe_lt_top, and_self_iff]),
+        Ioi_mem_nhds (by simp only [one_lt_top, add_lt_top, coe_lt_top, and_self_iff]),
         fun x hx y hy => _⟩
     rw [eq_comm]
     simp only [tsub_eq_zero_iff_le, (LT.lt.trans hx hy).le]
@@ -538,7 +538,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0∞} (h : ∀ a < 1, a * x ≤ 
   have : tendsto (· * x) (𝓝[<] 1) (𝓝 (1 * x)) :=
     (Ennreal.continuousAt_mul_const (Or.inr one_ne_zero)).mono_left inf_le_left
   rw [one_mul] at this
-  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_iio_self_ne_bot' ⟨0, Ennreal.zero_lt_one⟩
+  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_Iio_self_ne_bot' ⟨0, Ennreal.zero_lt_one⟩
   exact le_of_tendsto this (eventually_nhdsWithin_iff.2 <| eventually_of_forall h)
 #align ennreal.le_of_forall_lt_one_mul_le Ennreal.le_of_forall_lt_one_mul_le
 
@@ -766,8 +766,8 @@ theorem exists_countable_dense_no_zero_top :
 theorem exists_lt_add_of_lt_add {x y z : ℝ≥0∞} (h : x < y + z) (hy : y ≠ 0) (hz : z ≠ 0) :
     ∃ y' z', y' < y ∧ z' < z ∧ x < y' + z' :=
   by
-  haveI : ne_bot (𝓝[<] y) := nhdsWithin_iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hy⟩
-  haveI : ne_bot (𝓝[<] z) := nhdsWithin_iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hz⟩
+  haveI : ne_bot (𝓝[<] y) := nhdsWithin_Iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hy⟩
+  haveI : ne_bot (𝓝[<] z) := nhdsWithin_Iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hz⟩
   have A : tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 + p.2) ((𝓝[<] y).Prod (𝓝[<] z)) (𝓝 (y + z)) :=
     by
     apply tendsto.mono_left _ (Filter.prod_mono nhdsWithin_le_nhds nhdsWithin_le_nhds)
@@ -1202,7 +1202,7 @@ theorem finite_const_le_of_tsum_ne_top {ι : Type _} {a : ι → ℝ≥0∞} (ts
     exact tsum_ne_top (le_antisymm le_top (le_trans hj (le_tsum' (@Ennreal.summable _ a) j)))
   have key :=
     (nnreal.summable_coe.mpr (summable_to_nnreal_of_tsum_ne_top tsum_ne_top)).tendsto_cofinite_zero
-      (iio_mem_nhds (to_real_pos ε_ne_zero ε_infty))
+      (Iio_mem_nhds (to_real_pos ε_ne_zero ε_infty))
   simp only [Filter.mem_map, Filter.mem_cofinite, preimage] at key
   have obs : { i : ι | ↑(a i).toNnreal ∈ Iio ε.to_real }ᶜ = { i : ι | ε ≤ a i } :=
     by
@@ -1744,7 +1744,7 @@ theorem Emetric.diam_closure (s : Set α) : diam (closure s) = diam s :=
   refine' le_antisymm (diam_le fun x hx y hy => _) (diam_mono subset_closure)
   have : edist x y ∈ closure (Iic (diam s)) :=
     map_mem_closure₂ continuous_edist hx hy fun x hx y hy => edist_le_diam_of_mem hx hy
-  rwa [closure_iic] at this
+  rwa [closure_Iic] at this
 #align emetric.diam_closure Emetric.diam_closure
 
 @[simp]
@@ -1773,8 +1773,8 @@ theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal
   by
   rcases eq_empty_or_nonempty s with (rfl | hne); · simp
   refine' le_antisymm (Metric.ediam_le_of_forall_dist_le fun x hx y hy => _) _
-  · have := Real.subset_icc_infₛ_supₛ_of_bounded h
-    exact Real.dist_le_of_mem_icc (this hx) (this hy)
+  · have := Real.subset_Icc_infₛ_supₛ_of_bounded h
+    exact Real.dist_le_of_mem_Icc (this hx) (this hy)
   · apply Ennreal.ofReal_le_of_le_toReal
     rw [← Metric.diam, ← Metric.diam_closure]
     have h' := Real.bounded_iff_bddBelow_bddAbove.1 h
@@ -1794,48 +1794,48 @@ theorem diam_eq {s : Set ℝ} (h : Bounded s) : Metric.diam s = supₛ s - inf�
 #align real.diam_eq Real.diam_eq
 
 @[simp]
-theorem ediam_ioo (a b : ℝ) : Emetric.diam (Ioo a b) = Ennreal.ofReal (b - a) :=
+theorem ediam_Ioo (a b : ℝ) : Emetric.diam (Ioo a b) = Ennreal.ofReal (b - a) :=
   by
   rcases le_or_lt b a with (h | h)
   · simp [h]
   · rw [Real.ediam_eq (bounded_Ioo _ _), csupₛ_Ioo h, cinfₛ_Ioo h]
-#align real.ediam_Ioo Real.ediam_ioo
+#align real.ediam_Ioo Real.ediam_Ioo
 
 @[simp]
-theorem ediam_icc (a b : ℝ) : Emetric.diam (Icc a b) = Ennreal.ofReal (b - a) :=
+theorem ediam_Icc (a b : ℝ) : Emetric.diam (Icc a b) = Ennreal.ofReal (b - a) :=
   by
   rcases le_or_lt a b with (h | h)
   · rw [Real.ediam_eq (bounded_Icc _ _), csupₛ_Icc h, cinfₛ_Icc h]
   · simp [h, h.le]
-#align real.ediam_Icc Real.ediam_icc
+#align real.ediam_Icc Real.ediam_Icc
 
 @[simp]
-theorem ediam_ico (a b : ℝ) : Emetric.diam (Ico a b) = Ennreal.ofReal (b - a) :=
-  le_antisymm (ediam_icc a b ▸ diam_mono Ico_subset_Icc_self)
-    (ediam_ioo a b ▸ diam_mono Ioo_subset_Ico_self)
-#align real.ediam_Ico Real.ediam_ico
+theorem ediam_Ico (a b : ℝ) : Emetric.diam (Ico a b) = Ennreal.ofReal (b - a) :=
+  le_antisymm (ediam_Icc a b ▸ diam_mono Ico_subset_Icc_self)
+    (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ico_self)
+#align real.ediam_Ico Real.ediam_Ico
 
 @[simp]
-theorem ediam_ioc (a b : ℝ) : Emetric.diam (Ioc a b) = Ennreal.ofReal (b - a) :=
-  le_antisymm (ediam_icc a b ▸ diam_mono Ioc_subset_Icc_self)
-    (ediam_ioo a b ▸ diam_mono Ioo_subset_Ioc_self)
-#align real.ediam_Ioc Real.ediam_ioc
+theorem ediam_Ioc (a b : ℝ) : Emetric.diam (Ioc a b) = Ennreal.ofReal (b - a) :=
+  le_antisymm (ediam_Icc a b ▸ diam_mono Ioc_subset_Icc_self)
+    (ediam_Ioo a b ▸ diam_mono Ioo_subset_Ioc_self)
+#align real.ediam_Ioc Real.ediam_Ioc
 
-theorem diam_icc {a b : ℝ} (h : a ≤ b) : Metric.diam (Icc a b) = b - a := by
+theorem diam_Icc {a b : ℝ} (h : a ≤ b) : Metric.diam (Icc a b) = b - a := by
   simp [Metric.diam, Ennreal.toReal_ofReal, sub_nonneg.2 h]
-#align real.diam_Icc Real.diam_icc
+#align real.diam_Icc Real.diam_Icc
 
-theorem diam_ico {a b : ℝ} (h : a ≤ b) : Metric.diam (Ico a b) = b - a := by
+theorem diam_Ico {a b : ℝ} (h : a ≤ b) : Metric.diam (Ico a b) = b - a := by
   simp [Metric.diam, Ennreal.toReal_ofReal, sub_nonneg.2 h]
-#align real.diam_Ico Real.diam_ico
+#align real.diam_Ico Real.diam_Ico
 
-theorem diam_ioc {a b : ℝ} (h : a ≤ b) : Metric.diam (Ioc a b) = b - a := by
+theorem diam_Ioc {a b : ℝ} (h : a ≤ b) : Metric.diam (Ioc a b) = b - a := by
   simp [Metric.diam, Ennreal.toReal_ofReal, sub_nonneg.2 h]
-#align real.diam_Ioc Real.diam_ioc
+#align real.diam_Ioc Real.diam_Ioc
 
-theorem diam_ioo {a b : ℝ} (h : a ≤ b) : Metric.diam (Ioo a b) = b - a := by
+theorem diam_Ioo {a b : ℝ} (h : a ≤ b) : Metric.diam (Ioo a b) = b - a := by
   simp [Metric.diam, Ennreal.toReal_ofReal, sub_nonneg.2 h]
-#align real.diam_Ioo Real.diam_ioo
+#align real.diam_Ioo Real.diam_Ioo
 
 end Real
 
@@ -1846,7 +1846,7 @@ theorem edist_le_tsum_of_edist_le_of_tendsto {f : ℕ → α} (d : ℕ → ℝ�
     edist (f n) a ≤ ∑' m, d (n + m) :=
   by
   refine' le_of_tendsto (tendsto_const_nhds.edist ha) (mem_at_top_sets.2 ⟨n, fun m hnm => _⟩)
-  refine' le_trans (edist_le_ico_sum_of_edist_le hnm fun k _ _ => hf k) _
+  refine' le_trans (edist_le_Ico_sum_of_edist_le hnm fun k _ _ => hf k) _
   rw [Finset.sum_ico_eq_sum_range]
   exact sum_le_tsum _ (fun _ _ => zero_le _) Ennreal.summable
 #align edist_le_tsum_of_edist_le_of_tendsto edist_le_tsum_of_edist_le_of_tendsto

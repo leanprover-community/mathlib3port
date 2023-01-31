@@ -163,7 +163,7 @@ theorem rightLim_le_leftLim (h : x < y) : rightLim f x ≤ leftLim f y :=
     exact right_lim_le hf h
   obtain ⟨a, ⟨xa, ay⟩⟩ : (Ioo x y).Nonempty :=
     forall_mem_nonempty_iff_ne_bot.2 (ne_bot_iff.2 h') (Ioo x y)
-      (ioo_mem_nhdsWithin_iio ⟨h, le_refl _⟩)
+      (Ioo_mem_nhdsWithin_Iio ⟨h, le_refl _⟩)
   calc
     right_lim f x ≤ f a := hf.right_lim_le xa
     _ ≤ left_lim f y := hf.le_left_lim ay
@@ -196,7 +196,7 @@ theorem tendsto_rightLim_within (x : α) : Tendsto f (𝓝[>] x) (𝓝[≥] righ
 
 /-- A monotone function is continuous to the left at a point if and only if its left limit
 coincides with the value of the function. -/
-theorem continuousWithinAt_iio_iff_leftLim_eq :
+theorem continuousWithinAt_Iio_iff_leftLim_eq :
     ContinuousWithinAt f (Iio x) x ↔ leftLim f x = f x :=
   by
   rcases eq_or_ne (𝓝[<] x) ⊥ with (h' | h')
@@ -205,14 +205,14 @@ theorem continuousWithinAt_iio_iff_leftLim_eq :
   refine' ⟨fun h => tendsto_nhds_unique (hf.tendsto_left_lim x) h.Tendsto, fun h => _⟩
   have := hf.tendsto_left_lim x
   rwa [h] at this
-#align monotone.continuous_within_at_Iio_iff_left_lim_eq Monotone.continuousWithinAt_iio_iff_leftLim_eq
+#align monotone.continuous_within_at_Iio_iff_left_lim_eq Monotone.continuousWithinAt_Iio_iff_leftLim_eq
 
 /-- A monotone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
-theorem continuousWithinAt_ioi_iff_rightLim_eq :
+theorem continuousWithinAt_Ioi_iff_rightLim_eq :
     ContinuousWithinAt f (Ioi x) x ↔ rightLim f x = f x :=
   hf.dual.continuous_within_at_Iio_iff_left_lim_eq
-#align monotone.continuous_within_at_Ioi_iff_right_lim_eq Monotone.continuousWithinAt_ioi_iff_rightLim_eq
+#align monotone.continuous_within_at_Ioi_iff_right_lim_eq Monotone.continuousWithinAt_Ioi_iff_rightLim_eq
 
 /-- A monotone function is continuous at a point if and only if its left and right limits
 coincide. -/
@@ -238,7 +238,7 @@ theorem continuousAt_iff_leftLim_eq_rightLim : ContinuousAt f x ↔ leftLim f x 
 /-- In a second countable space, the set of points where a monotone function is not right-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
-theorem countable_not_continuousWithinAt_ioi [TopologicalSpace.SecondCountableTopology β] :
+theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTopology β] :
     Set.Countable { x | ¬ContinuousWithinAt f (Ioi x) x } :=
   by
   /- If `f` is not continuous on the right at `x`, there is an interval `(f x, z x)` which is not
@@ -253,7 +253,7 @@ theorem countable_not_continuousWithinAt_ioi [TopologicalSpace.SecondCountableTo
     refine' tendsto_order.2 ⟨fun m hm => _, fun u hu => _⟩
     · filter_upwards [self_mem_nhdsWithin]with y hy using hm.trans_le (hf (le_of_lt hy))
     rcases hx u hu with ⟨v, xv, fvu⟩
-    have : Ioo x v ∈ 𝓝[>] x := ioo_mem_nhdsWithin_ioi ⟨le_refl _, xv⟩
+    have : Ioo x v ∈ 𝓝[>] x := Ioo_mem_nhdsWithin_Ioi ⟨le_refl _, xv⟩
     filter_upwards [this]with y hy
     apply (hf hy.2.le).trans_lt fvu
   -- choose `z x` such that `f` does not take the values in `(f x, z x)`.
@@ -281,19 +281,19 @@ theorem countable_not_continuousWithinAt_ioi [TopologicalSpace.SecondCountableTo
         exact lt_irrefl _ ((ha.2.trans_le ((hz u us).2 v h''uv)).trans hb.1)
       · intro hu hv h'uv
         exact (this hv hu h'uv.symm).symm
-    apply Set.PairwiseDisjoint.countable_of_ioo A
+    apply Set.PairwiseDisjoint.countable_of_Ioo A
     rintro _ ⟨y, ys, rfl⟩
     simpa only [I.left_inv_on_inv_fun_on ys] using (hz y ys).1
   exact maps_to.countable_of_inj_on (maps_to_image f s) I fs_count
-#align monotone.countable_not_continuous_within_at_Ioi Monotone.countable_not_continuousWithinAt_ioi
+#align monotone.countable_not_continuous_within_at_Ioi Monotone.countable_not_continuousWithinAt_Ioi
 
 /-- In a second countable space, the set of points where a monotone function is not left-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
-theorem countable_not_continuousWithinAt_iio [TopologicalSpace.SecondCountableTopology β] :
+theorem countable_not_continuousWithinAt_Iio [TopologicalSpace.SecondCountableTopology β] :
     Set.Countable { x | ¬ContinuousWithinAt f (Iio x) x } :=
   hf.dual.countable_not_continuous_within_at_Ioi
-#align monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuousWithinAt_iio
+#align monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuousWithinAt_Iio
 
 /-- In a second countable space, the set of points where a monotone function is not continuous
 is at most countable. -/
@@ -373,17 +373,17 @@ theorem tendsto_rightLim_within (x : α) : Tendsto f (𝓝[>] x) (𝓝[≤] righ
 
 /-- An antitone function is continuous to the left at a point if and only if its left limit
 coincides with the value of the function. -/
-theorem continuousWithinAt_iio_iff_leftLim_eq :
+theorem continuousWithinAt_Iio_iff_leftLim_eq :
     ContinuousWithinAt f (Iio x) x ↔ leftLim f x = f x :=
   hf.dual_right.continuous_within_at_Iio_iff_left_lim_eq
-#align antitone.continuous_within_at_Iio_iff_left_lim_eq Antitone.continuousWithinAt_iio_iff_leftLim_eq
+#align antitone.continuous_within_at_Iio_iff_left_lim_eq Antitone.continuousWithinAt_Iio_iff_leftLim_eq
 
 /-- An antitone function is continuous to the right at a point if and only if its right limit
 coincides with the value of the function. -/
-theorem continuousWithinAt_ioi_iff_rightLim_eq :
+theorem continuousWithinAt_Ioi_iff_rightLim_eq :
     ContinuousWithinAt f (Ioi x) x ↔ rightLim f x = f x :=
   hf.dual_right.continuous_within_at_Ioi_iff_right_lim_eq
-#align antitone.continuous_within_at_Ioi_iff_right_lim_eq Antitone.continuousWithinAt_ioi_iff_rightLim_eq
+#align antitone.continuous_within_at_Ioi_iff_right_lim_eq Antitone.continuousWithinAt_Ioi_iff_rightLim_eq
 
 /-- An antitone function is continuous at a point if and only if its left and right limits
 coincide. -/

@@ -1472,7 +1472,7 @@ theorem map_injective_of_injective {f : G →g G'} (hinj : Function.Injective f)
     · simpa using h
     · simp only [map_cons] at h
       cases hinj h.1
-      simp only [eq_self_iff_true, hEq_iff_eq, true_and_iff]
+      simp only [eq_self_iff_true, heq_iff_eq, true_and_iff]
       apply ih
       simpa using h.2
 #align simple_graph.walk.map_injective_of_injective SimpleGraph.Walk.map_injective_of_injective
@@ -1568,14 +1568,14 @@ variable {u v w : V} (p : G.Walk u v) (q : G.Walk v w) {H : SimpleGraph V}
   (hp : ∀ e, e ∈ p.edges → e ∈ H.edgeSet) (hq : ∀ e, e ∈ q.edges → e ∈ H.edgeSet)
 
 theorem transfer_self : p.transfer G p.edges_subset_edge_set = p := by
-  induction p <;> simp only [*, transfer, eq_self_iff_true, hEq_iff_eq, and_self_iff]
+  induction p <;> simp only [*, transfer, eq_self_iff_true, heq_iff_eq, and_self_iff]
 #align simple_graph.walk.transfer_self SimpleGraph.Walk.transfer_self
 
 theorem transfer_eq_map_of_le (GH : G ≤ H) :
     p.transfer H hp = p.map (SimpleGraph.Hom.mapSpanningSubgraphs GH) := by
   induction p <;>
     simp only [*, transfer, map_cons, hom.map_spanning_subgraphs_apply, eq_self_iff_true,
-      hEq_iff_eq, and_self_iff, map_nil]
+      heq_iff_eq, and_self_iff, map_nil]
 #align simple_graph.walk.transfer_eq_map_of_le SimpleGraph.Walk.transfer_eq_map_of_le
 
 @[simp]
@@ -1619,7 +1619,7 @@ theorem transfer_transfer {K : SimpleGraph V} (hp' : ∀ e, e ∈ p.edges → e 
           exact hp') =
       p.transfer K hp' :=
   by
-  induction p <;> simp only [transfer, eq_self_iff_true, hEq_iff_eq, true_and_iff]
+  induction p <;> simp only [transfer, eq_self_iff_true, heq_iff_eq, true_and_iff]
   apply p_ih
 #align simple_graph.walk.transfer_transfer SimpleGraph.Walk.transfer_transfer
 
@@ -1634,7 +1634,7 @@ theorem transfer_append (hpq) :
           simp [he]) :=
   by
   induction p <;>
-    simp only [transfer, nil_append, cons_append, eq_self_iff_true, hEq_iff_eq, true_and_iff]
+    simp only [transfer, nil_append, cons_append, eq_self_iff_true, heq_iff_eq, true_and_iff]
   apply p_ih
 #align simple_graph.walk.transfer_append SimpleGraph.Walk.transfer_append
 

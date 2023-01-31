@@ -97,8 +97,8 @@ private theorem ext_aux (I J : HasZeroMorphisms C)
   congr
   · ext (X Y)
     exact w X Y
-  · apply proof_irrel_hEq
-  · apply proof_irrel_hEq
+  · apply proof_irrel_heq
+  · apply proof_irrel_heq
 #align category_theory.limits.has_zero_morphisms.ext_aux category_theory.limits.has_zero_morphisms.ext_aux
 
 /-- If you're tempted to use this lemma "in the wild", you should probably

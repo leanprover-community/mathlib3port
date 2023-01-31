@@ -40,7 +40,7 @@ def ico (n m : ℕ) : List ℕ :=
   range' n (m - n)
 #align list.Ico List.ico
 
-namespace IcoCat
+namespace Ico
 
 theorem zero_bot (n : ℕ) : ico 0 n = range n := by rw [Ico, tsub_zero, range_eq_range']
 #align list.Ico.zero_bot List.ico.zero_bot
@@ -247,7 +247,7 @@ theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ ico a b :=
       exact h₂ h₁
 #align list.Ico.trichotomy List.ico.trichotomy
 
-end IcoCat
+end Ico
 
 end List
 

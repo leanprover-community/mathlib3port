@@ -288,17 +288,17 @@ variable (L) (M : Type w)
   (modeled as `(fin n → M)`) to `M`, and a relation of arity `n` is a function from tuples of length
   `n` to `Prop`. -/
 @[ext]
-class StructureCat where
+class Structure where
   funMap : ∀ {n}, L.Functions n → (Fin n → M) → M
   rel_map : ∀ {n}, L.Relations n → (Fin n → M) → Prop
-#align first_order.language.Structure FirstOrder.Language.StructureCat
+#align first_order.language.Structure FirstOrder.Language.Structure
 
-variable (N : Type w') [L.StructureCat M] [L.StructureCat N]
+variable (N : Type w') [L.Structure M] [L.Structure N]
 
-open StructureCat
+open Structure
 
 /-- Used for defining `first_order.language.Theory.Model.inhabited`. -/
-def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.StructureCat α :=
+def inhabited.trivialStructure {α : Type _} [Inhabited α] : L.Structure α :=
   ⟨default, default⟩
 #align first_order.language.inhabited.trivial_structure FirstOrder.Language.inhabited.trivialStructure
 
@@ -340,7 +340,7 @@ structure Equiv extends M ≃ N where
 -- mathport name: language.equiv
 scoped[FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
 
-variable {L M N} {P : Type _} [L.StructureCat P] {Q : Type _} [L.StructureCat Q]
+variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]
 
 instance : CoeTC L.Constants M :=
   ⟨fun c => funMap c default⟩
@@ -374,13 +374,13 @@ def RelMap₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (r₁' : r₁ → Set 
 #align first_order.language.rel_map₂ FirstOrder.Language.RelMap₂
 
 /-- A structure constructor to match `first_order.language₂`. -/
-protected def StructureCat.mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M)
+protected def Structure.mk₂ {c f₁ f₂ : Type u} {r₁ r₂ : Type v} (c' : c → M) (f₁' : f₁ → M → M)
     (f₂' : f₂ → M → M → M) (r₁' : r₁ → Set M) (r₂' : r₂ → M → M → Prop) :
-    (Language.mk₂ c f₁ f₂ r₁ r₂).StructureCat M :=
+    (Language.mk₂ c f₁ f₂ r₁ r₂).Structure M :=
   ⟨fun _ => funMap₂ c' f₁' f₂', fun _ => RelMap₂ r₁' r₂'⟩
-#align first_order.language.Structure.mk₂ FirstOrder.Language.StructureCat.mk₂
+#align first_order.language.Structure.mk₂ FirstOrder.Language.Structure.mk₂
 
-namespace StructureCat
+namespace Structure
 
 variable {c f₁ f₂ : Type u} {r₁ r₂ : Type v}
 
@@ -390,40 +390,40 @@ variable {r₁' : r₁ → Set M} {r₂' : r₂ → M → M → Prop}
 
 @[simp]
 theorem funMap_apply₀ (c₀ : c) {x : Fin 0 → M} :
-    @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 0 c₀ x = c' c₀ :=
+    @Structure.funMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 0 c₀ x = c' c₀ :=
   rfl
-#align first_order.language.Structure.fun_map_apply₀ FirstOrder.Language.StructureCat.funMap_apply₀
+#align first_order.language.Structure.fun_map_apply₀ FirstOrder.Language.Structure.funMap_apply₀
 
 @[simp]
 theorem funMap_apply₁ (f : f₁) (x : M) :
-    @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 1 f ![x] = f₁' f x :=
+    @Structure.funMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 1 f ![x] = f₁' f x :=
   rfl
-#align first_order.language.Structure.fun_map_apply₁ FirstOrder.Language.StructureCat.funMap_apply₁
+#align first_order.language.Structure.fun_map_apply₁ FirstOrder.Language.Structure.funMap_apply₁
 
 @[simp]
 theorem funMap_apply₂ (f : f₂) (x y : M) :
-    @StructureCat.funMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 2 f ![x, y] = f₂' f x y :=
+    @Structure.funMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 2 f ![x, y] = f₂' f x y :=
   rfl
-#align first_order.language.Structure.fun_map_apply₂ FirstOrder.Language.StructureCat.funMap_apply₂
+#align first_order.language.Structure.fun_map_apply₂ FirstOrder.Language.Structure.funMap_apply₂
 
 @[simp]
 theorem relMap_apply₁ (r : r₁) (x : M) :
-    @StructureCat.RelMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 1 r ![x] = (x ∈ r₁' r) :=
+    @Structure.RelMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 1 r ![x] = (x ∈ r₁' r) :=
   rfl
-#align first_order.language.Structure.rel_map_apply₁ FirstOrder.Language.StructureCat.relMap_apply₁
+#align first_order.language.Structure.rel_map_apply₁ FirstOrder.Language.Structure.relMap_apply₁
 
 @[simp]
 theorem relMap_apply₂ (r : r₂) (x y : M) :
-    @StructureCat.RelMap _ M (StructureCat.mk₂ c' f₁' f₂' r₁' r₂') 2 r ![x, y] = r₂' r x y :=
+    @Structure.RelMap _ M (Structure.mk₂ c' f₁' f₂' r₁' r₂') 2 r ![x, y] = r₂' r x y :=
   rfl
-#align first_order.language.Structure.rel_map_apply₂ FirstOrder.Language.StructureCat.relMap_apply₂
+#align first_order.language.Structure.rel_map_apply₂ FirstOrder.Language.Structure.relMap_apply₂
 
-end StructureCat
+end Structure
 
 /-- `hom_class L F M N` states that `F` is a type of `L`-homomorphisms. You should extend this
   typeclass when you extend `first_order.language.hom`. -/
 class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
-  [FunLike F M fun _ => N] [L.StructureCat M] [L.StructureCat N] where
+  [FunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
 #align first_order.language.hom_class FirstOrder.Language.HomClass
@@ -431,12 +431,12 @@ class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
 class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
-  [FunLike F M fun _ => N] [L.StructureCat M] [L.StructureCat N] where
+  [FunLike F M fun _ => N] [L.Structure M] [L.Structure N] where
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
 #align first_order.language.strong_hom_class FirstOrder.Language.StrongHomClass
 
-instance (priority := 100) StrongHomClass.homClass {F M N} [L.StructureCat M] [L.StructureCat N]
+instance (priority := 100) StrongHomClass.homClass {F M N} [L.Structure M] [L.Structure N]
     [FunLike F M fun _ => N] [StrongHomClass L F M N] : HomClass L F M N
     where
   map_fun := StrongHomClass.map_fun
@@ -444,15 +444,15 @@ instance (priority := 100) StrongHomClass.homClass {F M N} [L.StructureCat M] [L
 #align first_order.language.strong_hom_class.hom_class FirstOrder.Language.StrongHomClass.homClass
 
 /-- Not an instance to avoid a loop. -/
-def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.StructureCat M]
-    [L.StructureCat N] [FunLike F M fun _ => N] [HomClass L F M N] : StrongHomClass L F M N
+def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.Structure M] [L.Structure N]
+    [FunLike F M fun _ => N] [HomClass L F M N] : StrongHomClass L F M N
     where
   map_fun := HomClass.map_fun
   map_rel φ n R x := (IsAlgebraic.empty_relations n).elim R
 #align first_order.language.hom_class.strong_hom_class_of_is_algebraic FirstOrder.Language.HomClass.strongHomClassOfIsAlgebraic
 
-theorem HomClass.map_constants {F M N} [L.StructureCat M] [L.StructureCat N]
-    [FunLike F M fun _ => N] [HomClass L F M N] (φ : F) (c : L.Constants) : φ c = c :=
+theorem HomClass.map_constants {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N]
+    [HomClass L F M N] (φ : F) (c : L.Constants) : φ c = c :=
   (HomClass.map_fun φ c default).trans (congr rfl (funext default))
 #align first_order.language.hom_class.map_constants FirstOrder.Language.HomClass.map_constants
 
@@ -551,7 +551,7 @@ theorem comp_assoc (f : M →[L] N) (g : N →[L] P) (h : P →[L] Q) :
 end Hom
 
 /-- Any element of a `hom_class` can be realized as a first_order homomorphism. -/
-def HomClass.toHom {F M N} [L.StructureCat M] [L.StructureCat N] [FunLike F M fun _ => N]
+def HomClass.toHom {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N]
     [HomClass L F M N] : F → M →[L] N := fun φ =>
   ⟨φ, fun _ => HomClass.map_fun φ, fun _ => HomClass.map_rel φ⟩
 #align first_order.language.hom_class.to_hom FirstOrder.Language.HomClass.toHom
@@ -697,7 +697,7 @@ theorem comp_toHom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
 end Embedding
 
 /-- Any element of an injective `strong_hom_class` can be realized as a first_order embedding. -/
-def StrongHomClass.toEmbedding {F M N} [L.StructureCat M] [L.StructureCat N] [EmbeddingLike F M N]
+def StrongHomClass.toEmbedding {F M N} [L.Structure M] [L.Structure N] [EmbeddingLike F M N]
     [StrongHomClass L F M N] : F → M ↪[L] N := fun φ =>
   ⟨⟨φ, EmbeddingLike.injective φ⟩, fun _ => StrongHomClass.map_fun φ, fun _ =>
     StrongHomClass.map_rel φ⟩
@@ -856,7 +856,7 @@ theorem comp_assoc (f : M ≃[L] N) (g : N ≃[L] P) (h : P ≃[L] Q) :
 end Equiv
 
 /-- Any element of a bijective `strong_hom_class` can be realized as a first_order isomorphism. -/
-def StrongHomClass.toEquiv {F M N} [L.StructureCat M] [L.StructureCat N] [EquivLike F M N]
+def StrongHomClass.toEquiv {F M N} [L.Structure M] [L.Structure N] [EquivLike F M N]
     [StrongHomClass L F M N] : F → M ≃[L] N := fun φ =>
   ⟨⟨φ, EquivLike.inv φ, EquivLike.left_inv φ, EquivLike.right_inv φ⟩, fun _ => HomClass.map_fun φ,
     fun _ => StrongHomClass.map_rel φ⟩
@@ -864,9 +864,9 @@ def StrongHomClass.toEquiv {F M N} [L.StructureCat M] [L.StructureCat N] [EquivL
 
 section SumStructure
 
-variable (L₁ L₂ : Language) (S : Type _) [L₁.StructureCat S] [L₂.StructureCat S]
+variable (L₁ L₂ : Language) (S : Type _) [L₁.Structure S] [L₂.Structure S]
 
-instance sumStructure : (L₁.Sum L₂).StructureCat S
+instance sumStructure : (L₁.Sum L₂).Structure S
     where
   funMap n := Sum.elim funMap funMap
   rel_map n := Sum.elim RelMap RelMap
@@ -904,7 +904,7 @@ section Empty
 
 section
 
-variable [Language.empty.StructureCat M] [Language.empty.StructureCat N]
+variable [Language.empty.Structure M] [Language.empty.Structure N]
 
 @[simp]
 theorem empty.nonempty_embedding_iff :
@@ -922,11 +922,11 @@ theorem empty.nonempty_equiv_iff :
 
 end
 
-instance emptyStructure : Language.empty.StructureCat M :=
+instance emptyStructure : Language.empty.Structure M :=
   ⟨fun _ => Empty.elim, fun _ => Empty.elim⟩
 #align first_order.language.empty_Structure FirstOrder.Language.emptyStructure
 
-instance : Unique (Language.empty.StructureCat M) :=
+instance : Unique (Language.empty.Structure M) :=
   ⟨⟨Language.emptyStructure⟩, fun a => by
     ext (n f)
     · exact Empty.elim f
@@ -960,15 +960,15 @@ end FirstOrder
 
 namespace Equiv
 
-open FirstOrder FirstOrder.Language FirstOrder.Language.StructureCat
+open FirstOrder FirstOrder.Language FirstOrder.Language.Structure
 
 open FirstOrder
 
-variable {L : Language} {M : Type _} {N : Type _} [L.StructureCat M]
+variable {L : Language} {M : Type _} {N : Type _} [L.Structure M]
 
 /-- A structure induced by a bijection. -/
 @[simps]
-def inducedStructure (e : M ≃ N) : L.StructureCat N :=
+def inducedStructure (e : M ≃ N) : L.Structure N :=
   ⟨fun n f x => e (funMap f (e.symm ∘ x)), fun n r x => RelMap r (e.symm ∘ x)⟩
 #align equiv.induced_Structure Equiv.inducedStructure
 

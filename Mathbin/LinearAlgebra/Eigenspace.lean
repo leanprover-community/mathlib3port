@@ -47,7 +47,7 @@ universe u v w
 
 namespace Module
 
-namespace EndCat
+namespace End
 
 open Module PrincipalIdealRing Polynomial FiniteDimensional
 
@@ -663,7 +663,7 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
       apply sup_le hER hES
 #align module.End.supr_generalized_eigenspace_eq_top Module.End.supᵢ_generalizedEigenspace_eq_top
 
-end EndCat
+end End
 
 end Module
 

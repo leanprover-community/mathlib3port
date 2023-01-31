@@ -11,7 +11,7 @@ Authors: Johan Commelin, Scott Morrison, Adam Topaz
 import Mathbin.Tactic.Linarith.Default
 import Mathbin.CategoryTheory.Skeletal
 import Mathbin.Data.Fintype.Sort
-import Mathbin.Order.Category.NonemptyFinLinOrdCat
+import Mathbin.Order.Category.NonemptyFinLinOrd
 import Mathbin.CategoryTheory.Functor.ReflectsIsomorphisms
 
 /-! # The simplex category

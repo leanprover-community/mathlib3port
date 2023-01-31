@@ -556,52 +556,52 @@ section OrderedCommGroup
 variable [TopologicalSpace H] [OrderedCommGroup H] [TopologicalGroup H]
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_ioi {a : H} : Tendsto Inv.inv (𝓝[>] a) (𝓝[<] a⁻¹) :=
+theorem tendsto_inv_nhdsWithin_Ioi {a : H} : Tendsto Inv.inv (𝓝[>] a) (𝓝[<] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
-#align tendsto_inv_nhds_within_Ioi tendsto_inv_nhdsWithin_ioi
-#align tendsto_neg_nhds_within_Ioi tendsto_neg_nhdsWithin_ioi
+#align tendsto_inv_nhds_within_Ioi tendsto_inv_nhdsWithin_Ioi
+#align tendsto_neg_nhds_within_Ioi tendsto_neg_nhdsWithin_Ioi
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_iio {a : H} : Tendsto Inv.inv (𝓝[<] a) (𝓝[>] a⁻¹) :=
+theorem tendsto_inv_nhdsWithin_Iio {a : H} : Tendsto Inv.inv (𝓝[<] a) (𝓝[>] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
-#align tendsto_inv_nhds_within_Iio tendsto_inv_nhdsWithin_iio
-#align tendsto_neg_nhds_within_Iio tendsto_neg_nhdsWithin_iio
+#align tendsto_inv_nhds_within_Iio tendsto_inv_nhdsWithin_Iio
+#align tendsto_neg_nhds_within_Iio tendsto_neg_nhdsWithin_Iio
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_ioi_inv {a : H} : Tendsto Inv.inv (𝓝[>] a⁻¹) (𝓝[<] a) := by
-  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_ioi _ _ _ _ a⁻¹
-#align tendsto_inv_nhds_within_Ioi_inv tendsto_inv_nhdsWithin_ioi_inv
-#align tendsto_neg_nhds_within_Ioi_neg tendsto_neg_nhdsWithin_ioi_neg
+theorem tendsto_inv_nhdsWithin_Ioi_inv {a : H} : Tendsto Inv.inv (𝓝[>] a⁻¹) (𝓝[<] a) := by
+  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Ioi _ _ _ _ a⁻¹
+#align tendsto_inv_nhds_within_Ioi_inv tendsto_inv_nhdsWithin_Ioi_inv
+#align tendsto_neg_nhds_within_Ioi_neg tendsto_neg_nhdsWithin_Ioi_neg
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_iio_inv {a : H} : Tendsto Inv.inv (𝓝[<] a⁻¹) (𝓝[>] a) := by
-  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_iio _ _ _ _ a⁻¹
-#align tendsto_inv_nhds_within_Iio_inv tendsto_inv_nhdsWithin_iio_inv
-#align tendsto_neg_nhds_within_Iio_neg tendsto_neg_nhdsWithin_iio_neg
+theorem tendsto_inv_nhdsWithin_Iio_inv {a : H} : Tendsto Inv.inv (𝓝[<] a⁻¹) (𝓝[>] a) := by
+  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Iio _ _ _ _ a⁻¹
+#align tendsto_inv_nhds_within_Iio_inv tendsto_inv_nhdsWithin_Iio_inv
+#align tendsto_neg_nhds_within_Iio_neg tendsto_neg_nhdsWithin_Iio_neg
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_ici {a : H} : Tendsto Inv.inv (𝓝[≥] a) (𝓝[≤] a⁻¹) :=
+theorem tendsto_inv_nhdsWithin_Ici {a : H} : Tendsto Inv.inv (𝓝[≥] a) (𝓝[≤] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
-#align tendsto_inv_nhds_within_Ici tendsto_inv_nhdsWithin_ici
-#align tendsto_neg_nhds_within_Ici tendsto_neg_nhdsWithin_ici
+#align tendsto_inv_nhds_within_Ici tendsto_inv_nhdsWithin_Ici
+#align tendsto_neg_nhds_within_Ici tendsto_neg_nhdsWithin_Ici
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_iic {a : H} : Tendsto Inv.inv (𝓝[≤] a) (𝓝[≥] a⁻¹) :=
+theorem tendsto_inv_nhdsWithin_Iic {a : H} : Tendsto Inv.inv (𝓝[≤] a) (𝓝[≥] a⁻¹) :=
   (continuous_inv.Tendsto a).inf <| by simp [tendsto_principal_principal]
-#align tendsto_inv_nhds_within_Iic tendsto_inv_nhdsWithin_iic
-#align tendsto_neg_nhds_within_Iic tendsto_neg_nhdsWithin_iic
+#align tendsto_inv_nhds_within_Iic tendsto_inv_nhdsWithin_Iic
+#align tendsto_neg_nhds_within_Iic tendsto_neg_nhdsWithin_Iic
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_ici_inv {a : H} : Tendsto Inv.inv (𝓝[≥] a⁻¹) (𝓝[≤] a) := by
-  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_ici _ _ _ _ a⁻¹
-#align tendsto_inv_nhds_within_Ici_inv tendsto_inv_nhdsWithin_ici_inv
-#align tendsto_neg_nhds_within_Ici_neg tendsto_neg_nhdsWithin_ici_neg
+theorem tendsto_inv_nhdsWithin_Ici_inv {a : H} : Tendsto Inv.inv (𝓝[≥] a⁻¹) (𝓝[≤] a) := by
+  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Ici _ _ _ _ a⁻¹
+#align tendsto_inv_nhds_within_Ici_inv tendsto_inv_nhdsWithin_Ici_inv
+#align tendsto_neg_nhds_within_Ici_neg tendsto_neg_nhdsWithin_Ici_neg
 
 @[to_additive]
-theorem tendsto_inv_nhdsWithin_iic_inv {a : H} : Tendsto Inv.inv (𝓝[≤] a⁻¹) (𝓝[≥] a) := by
-  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_iic _ _ _ _ a⁻¹
-#align tendsto_inv_nhds_within_Iic_inv tendsto_inv_nhdsWithin_iic_inv
-#align tendsto_neg_nhds_within_Iic_neg tendsto_neg_nhdsWithin_iic_neg
+theorem tendsto_inv_nhdsWithin_Iic_inv {a : H} : Tendsto Inv.inv (𝓝[≤] a⁻¹) (𝓝[≥] a) := by
+  simpa only [inv_inv] using @tendsto_inv_nhdsWithin_Iic _ _ _ _ a⁻¹
+#align tendsto_inv_nhds_within_Iic_inv tendsto_inv_nhdsWithin_Iic_inv
+#align tendsto_neg_nhds_within_Iic_neg tendsto_neg_nhdsWithin_Iic_neg
 
 end OrderedCommGroup
 

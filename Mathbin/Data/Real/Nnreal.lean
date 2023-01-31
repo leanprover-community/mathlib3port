@@ -732,23 +732,23 @@ theorem exists_pow_lt_of_lt_one {a b : ℝ≥0} (ha : 0 < a) (hb : b < 1) : ∃ 
     exists_pow_lt_of_lt_one (Nnreal.coe_pos.2 ha) (Nnreal.coe_lt_coe.2 hb)
 #align nnreal.exists_pow_lt_of_lt_one Nnreal.exists_pow_lt_of_lt_one
 
-theorem exists_mem_ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
+theorem exists_mem_Ico_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
     ∃ n : ℤ, x ∈ Set.Ico (y ^ n) (y ^ (n + 1)) :=
   by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n ≤ x ∧ (x : ℝ) < y ^ (n + 1) :=
     exists_mem_Ico_zpow (bot_lt_iff_ne_bot.mpr hx) hy
   rw [← Nnreal.coe_zpow] at hn h'n
   exact ⟨n, hn, h'n⟩
-#align nnreal.exists_mem_Ico_zpow Nnreal.exists_mem_ico_zpow
+#align nnreal.exists_mem_Ico_zpow Nnreal.exists_mem_Ico_zpow
 
-theorem exists_mem_ioc_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
+theorem exists_mem_Ioc_zpow {x : ℝ≥0} {y : ℝ≥0} (hx : x ≠ 0) (hy : 1 < y) :
     ∃ n : ℤ, x ∈ Set.Ioc (y ^ n) (y ^ (n + 1)) :=
   by
   obtain ⟨n, hn, h'n⟩ : ∃ n : ℤ, (y : ℝ) ^ n < x ∧ (x : ℝ) ≤ y ^ (n + 1) :=
     exists_mem_Ioc_zpow (bot_lt_iff_ne_bot.mpr hx) hy
   rw [← Nnreal.coe_zpow] at hn h'n
   exact ⟨n, hn, h'n⟩
-#align nnreal.exists_mem_Ioc_zpow Nnreal.exists_mem_ioc_zpow
+#align nnreal.exists_mem_Ioc_zpow Nnreal.exists_mem_Ioc_zpow
 
 end Pow
 

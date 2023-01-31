@@ -95,25 +95,25 @@ theorem continuousAt_inv {𝕜 : Type _} [NontriviallyNormedField 𝕜] {x : �
 
 end NormedField
 
-theorem isO_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
+theorem isOCat_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
     (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
   have H : 0 < r₂ := h₁.trans_lt h₂
-  (isO_of_tendsto fun n hn => False.elim <| H.ne' <| pow_eq_zero hn) <|
+  (isOCat_of_tendsto fun n hn => False.elim <| H.ne' <| pow_eq_zero hn) <|
     (tendsto_pow_atTop_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr
       fun n => div_pow _ _ _
-#align is_o_pow_pow_of_lt_left isO_pow_pow_of_lt_left
+#align is_o_pow_pow_of_lt_left isOCat_pow_pow_of_lt_left
 
 theorem isO_pow_pow_of_le_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ ≤ r₂) :
     (fun n : ℕ => r₁ ^ n) =O[at_top] fun n => r₂ ^ n :=
-  h₂.eq_or_lt.elim (fun h => h ▸ isO_refl _ _) fun h => (isO_pow_pow_of_lt_left h₁ h).IsO
+  h₂.eq_or_lt.elim (fun h => h ▸ isO_refl _ _) fun h => (isOCat_pow_pow_of_lt_left h₁ h).IsO
 #align is_O_pow_pow_of_le_left isO_pow_pow_of_le_left
 
-theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
+theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
     (fun n : ℕ => r₁ ^ n) =o[at_top] fun n => r₂ ^ n :=
   by
   refine' (is_o.of_norm_left _).of_norm_right
-  exact (isO_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
-#align is_o_pow_pow_of_abs_lt_left isO_pow_pow_of_abs_lt_left
+  exact (isOCat_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
+#align is_o_pow_pow_of_abs_lt_left isOCat_pow_pow_of_abs_lt_left
 
 /- failed to parenthesize: parenthesize: uncaught backtrack exception
 [PrettyPrinter.parenthesize.input] (Command.declaration
@@ -128,7 +128,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
       [])
      (Command.theorem
       "theorem"
-      (Command.declId `tFAE_exists_lt_isO_pow [])
+      (Command.declId `tFAE_exists_lt_isOCat_pow [])
       (Command.declSig
        [(Term.explicitBinder
          "("
@@ -412,7 +412,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                 (Term.app
                  `H.trans_is_o
                  [(Term.app
-                   `isO_pow_pow_of_abs_lt_left
+                   `isOCat_pow_pow_of_abs_lt_left
                    [(Term.app `hab.trans_le [(Term.app `le_abs_self [`b])])])])]
                "⟩"))])
            []
@@ -979,7 +979,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                (Term.app
                 `H.trans_is_o
                 [(Term.app
-                  `isO_pow_pow_of_abs_lt_left
+                  `isOCat_pow_pow_of_abs_lt_left
                   [(Term.app `hab.trans_le [(Term.app `le_abs_self [`b])])])])]
               "⟩"))])
           []
@@ -1751,7 +1751,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
     NB: For backwards compatibility, if you add more items to the list, please append them at the end of
     the list. -/
   theorem
-    tFAE_exists_lt_isO_pow
+    tFAE_exists_lt_isOCat_pow
     ( f : ℕ → ℝ ) ( R : ℝ )
       :
         TFAE
@@ -1794,7 +1794,7 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
                     ,
                     ⟨ abs_nonneg a . trans_lt hab , hbR ⟩
                     ,
-                    H.trans_is_o isO_pow_pow_of_abs_lt_left hab.trans_le le_abs_self b
+                    H.trans_is_o isOCat_pow_pow_of_abs_lt_left hab.trans_le le_abs_self b
                   ⟩
           tfae_have 2 → 4
           exact fun ⟨ a , ha , H ⟩ => ⟨ a , ha , H . IsO ⟩
@@ -1846,11 +1846,11 @@ theorem isO_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
               refine' ⟨ a , A ⟨ this , ha ⟩ , is_O.of_bound 1 _ ⟩
               simpa only [ Real.norm_eq_abs , one_mul , abs_pow , abs_of_nonneg this ]
           tfae_finish
-#align tfae_exists_lt_is_o_pow tFAE_exists_lt_isO_pow
+#align tfae_exists_lt_is_o_pow tFAE_exists_lt_isOCat_pow
 
 /-- For any natural `k` and a real `r > 1` we have `n ^ k = o(r ^ n)` as `n → ∞`. -/
-theorem isO_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ} (hr : 1 < r) :
-    (fun n => n ^ k : ℕ → R) =o[at_top] fun n => r ^ n :=
+theorem isOCat_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ}
+    (hr : 1 < r) : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => r ^ n :=
   by
   have : tendsto (fun x : ℝ => x ^ k) (𝓝[>] 1) (𝓝 1) :=
     ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).mono_left inf_le_left
@@ -1858,7 +1858,7 @@ theorem isO_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) 
     ((this.eventually (gt_mem_nhds hr)).And self_mem_nhdsWithin).exists
   have h0 : 0 ≤ r' := zero_le_one.trans h1.le
   suffices : (fun n => n ^ k : ℕ → R) =O[at_top] fun n : ℕ => (r' ^ k) ^ n
-  exact this.trans_is_o (isO_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
+  exact this.trans_is_o (isOCat_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
   conv in (r' ^ _) ^ _ => rw [← pow_mul, mul_comm, pow_mul]
   suffices : ∀ n : ℕ, ‖(n : R)‖ ≤ (r' - 1)⁻¹ * ‖(1 : R)‖ * ‖r' ^ n‖
   exact (is_O_of_le' _ this).pow _
@@ -1866,16 +1866,16 @@ theorem isO_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) 
   rw [mul_right_comm]
   refine' n.norm_cast_le.trans (mul_le_mul_of_nonneg_right _ (norm_nonneg _))
   simpa [div_eq_inv_mul, Real.norm_eq_abs, abs_of_nonneg h0] using n.cast_le_pow_div_sub h1
-#align is_o_pow_const_const_pow_of_one_lt isO_pow_const_const_pow_of_one_lt
+#align is_o_pow_const_const_pow_of_one_lt isOCat_pow_const_const_pow_of_one_lt
 
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
-theorem isO_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
+theorem isOCat_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
     (coe : ℕ → R) =o[at_top] fun n => r ^ n := by
-  simpa only [pow_one] using @isO_pow_const_const_pow_of_one_lt R _ 1 _ hr
-#align is_o_coe_const_pow_of_one_lt isO_coe_const_pow_of_one_lt
+  simpa only [pow_one] using @isOCat_pow_const_const_pow_of_one_lt R _ 1 _ hr
+#align is_o_coe_const_pow_of_one_lt isOCat_coe_const_pow_of_one_lt
 
 /-- If `‖r₁‖ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
-theorem isO_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ)
+theorem isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRing R] (k : ℕ)
     {r₁ : R} {r₂ : ℝ} (h : ‖r₁‖ < r₂) :
     (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[at_top] fun n => r₂ ^ n :=
   by
@@ -1884,15 +1884,15 @@ theorem isO_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [NormedRin
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
   rw [← Ne.def, ← norm_pos_iff] at h0
   have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ‖r₁‖) ^ n :=
-    isO_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
+    isOCat_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
   suffices (fun n => r₁ ^ n) =O[at_top] fun n => ‖r₁‖ ^ n by
     simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this
   exact is_O.of_bound 1 (by simpa using eventually_norm_pow_le r₁)
-#align is_o_pow_const_mul_const_pow_const_pow_of_norm_lt isO_pow_const_mul_const_pow_const_pow_of_norm_lt
+#align is_o_pow_const_mul_const_pow_const_pow_of_norm_lt isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt
 
 theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < r) :
     Tendsto (fun n => n ^ k / r ^ n : ℕ → ℝ) atTop (𝓝 0) :=
-  (isO_pow_const_const_pow_of_one_lt k hr).tendsto_div_nhds_zero
+  (isOCat_pow_const_const_pow_of_one_lt k hr).tendsto_div_nhds_zero
 #align tendsto_pow_const_div_const_pow_of_one_lt tendsto_pow_const_div_const_pow_of_one_lt
 
 /-- If `|r| < 1`, then `n ^ k r ^ n` tends to zero for any natural `k`. -/
@@ -2006,7 +2006,7 @@ theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R]
   rcases exists_between hr with ⟨r', hrr', h⟩
   exact
     summable_of_isO_nat (summable_geometric_of_lt_1 ((norm_nonneg _).trans hrr'.le) h)
-      (isO_pow_const_mul_const_pow_const_pow_of_norm_lt _ hrr').IsO.norm_left
+      (isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt _ hrr').IsO.norm_left
 #align summable_norm_pow_mul_geometric_of_norm_lt_1 summable_norm_pow_mul_geometric_of_norm_lt_1
 
 theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [CompleteSpace R]

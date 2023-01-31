@@ -50,7 +50,7 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
       refine'
         absurd (sub_nonneg.1 <| nonneg_of_mul_nonneg_right _ (sub_pos.2 hab')) (not_le_of_lt hma)
       have : b - a ∈ posTangentConeAt (Icc a b) a :=
-        mem_posTangentConeAt_of_segment_subset (segment_eq_icc hab ▸ subset.refl _)
+        mem_posTangentConeAt_of_segment_subset (segment_eq_Icc hab ▸ subset.refl _)
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
         hc.localize.has_fderiv_within_at_nonneg (hg a (left_mem_Icc.2 hab)) this
     cases' eq_or_lt_of_le cmem.2 with hbc hbc
@@ -60,13 +60,13 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
         absurd (sub_nonpos.1 <| nonpos_of_mul_nonneg_right _ (sub_lt_zero.2 hab'))
           (not_le_of_lt hmb)
       have : a - b ∈ posTangentConeAt (Icc a b) b :=
-        mem_posTangentConeAt_of_segment_subset (by rw [segment_symm, segment_eq_icc hab])
+        mem_posTangentConeAt_of_segment_subset (by rw [segment_symm, segment_eq_Icc hab])
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
         hc.localize.has_fderiv_within_at_nonneg (hg b (right_mem_Icc.2 hab)) this
     exact ⟨hac, hbc⟩
   use c, cmem
   rw [← sub_eq_zero]
-  have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_icc]
+  have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_Icc]
   exact (hc.is_local_min this).has_deriv_at_eq_zero ((hg c cmem).HasDerivAt this)
 #align exists_has_deriv_within_at_eq_of_gt_of_lt exists_hasDerivWithinAt_eq_of_gt_of_lt
 

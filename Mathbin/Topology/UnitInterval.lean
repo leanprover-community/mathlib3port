@@ -132,7 +132,7 @@ theorem continuous_symm : Continuous σ := by continuity!
 #align unit_interval.continuous_symm unitInterval.continuous_symm
 
 instance : ConnectedSpace I :=
-  Subtype.connectedSpace ⟨nonempty_Icc.mpr zero_le_one, isPreconnected_icc⟩
+  Subtype.connectedSpace ⟨nonempty_Icc.mpr zero_le_one, isPreconnected_Icc⟩
 
 /-- Verify there is an instance for `compact_space I`. -/
 example : CompactSpace I := by infer_instance

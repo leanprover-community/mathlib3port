@@ -505,18 +505,18 @@ theorem rel_filter {p : α → Prop} {q : β → Prop} [DecidablePred p] [Decida
 
 /- warning: list.rel_filter_map -> List.rel_filterMap is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {R : α -> β -> Prop} {P : γ -> δ -> Prop}, Relator.LiftFun.{max (succ u1) (succ u3), max (succ u2) (succ u4), max (succ u1) (succ u3), max (succ u2) (succ u4)} (α -> (Option.{u3} γ)) (β -> (Option.{u4} δ)) ((List.{u1} α) -> (List.{u3} γ)) ((List.{u2} β) -> (List.{u4} δ)) (Relator.LiftFun.{succ u1, succ u2, succ u3, succ u4} α β (Option.{u3} γ) (Option.{u4} δ) R (Option.rel.{u3, u4} γ δ P)) (Relator.LiftFun.{succ u1, succ u2, succ u3, succ u4} (List.{u1} α) (List.{u2} β) (List.{u3} γ) (List.{u4} δ) (List.Forall₂.{u1, u2} α β R) (List.Forall₂.{u3, u4} γ δ P)) (List.filterMap.{u1, u3} α γ) (List.filterMap.{u2, u4} β δ)
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u4}} {R : α -> β -> Prop} {P : γ -> δ -> Prop}, Relator.LiftFun.{max (succ u1) (succ u3), max (succ u2) (succ u4), max (succ u1) (succ u3), max (succ u2) (succ u4)} (α -> (Option.{u3} γ)) (β -> (Option.{u4} δ)) ((List.{u1} α) -> (List.{u3} γ)) ((List.{u2} β) -> (List.{u4} δ)) (Relator.LiftFun.{succ u1, succ u2, succ u3, succ u4} α β (Option.{u3} γ) (Option.{u4} δ) R (Option.Rel.{u3, u4} γ δ P)) (Relator.LiftFun.{succ u1, succ u2, succ u3, succ u4} (List.{u1} α) (List.{u2} β) (List.{u3} γ) (List.{u4} δ) (List.Forall₂.{u1, u2} α β R) (List.Forall₂.{u3, u4} γ δ P)) (List.filterMap.{u1, u3} α γ) (List.filterMap.{u2, u4} β δ)
 but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u1}} {R : α -> β -> Prop} {P : γ -> δ -> Prop}, Relator.LiftFun.{max (succ u4) (succ u3), max (succ u2) (succ u1), max (succ u4) (succ u3), max (succ u2) (succ u1)} (α -> (Option.{u3} γ)) (β -> (Option.{u1} δ)) ((List.{u4} α) -> (List.{u3} γ)) ((List.{u2} β) -> (List.{u1} δ)) (Relator.LiftFun.{succ u4, succ u2, succ u3, succ u1} α β (Option.{u3} γ) (Option.{u1} δ) R (Option.Rel.{u3, u1} γ δ P)) (Relator.LiftFun.{succ u4, succ u2, succ u3, succ u1} (List.{u4} α) (List.{u2} β) (List.{u3} γ) (List.{u1} δ) (List.Forall₂.{u4, u2} α β R) (List.Forall₂.{u3, u1} γ δ P)) (List.filterMap.{u4, u3} α γ) (List.filterMap.{u2, u1} β δ)
 Case conversion may be inaccurate. Consider using '#align list.rel_filter_map List.rel_filterMapₓ'. -/
-theorem rel_filterMap : ((R ⇒ Option.rel P) ⇒ Forall₂ R ⇒ Forall₂ P) filterMap filterMap
+theorem rel_filterMap : ((R ⇒ Option.Rel P) ⇒ Forall₂ R ⇒ Forall₂ P) filterMap filterMap
   | f, g, hfg, _, _, forall₂.nil => Forall₂.nil
   | f, g, hfg, a :: as, b :: bs, forall₂.cons h₁ h₂ => by
     rw [filter_map_cons, filter_map_cons] <;>
       exact
         match f a, g b, hfg h₁ with
-        | _, _, Option.rel.none => rel_filter_map (@hfg) h₂
-        | _, _, Option.rel.some h => forall₂.cons h (rel_filter_map (@hfg) h₂)
+        | _, _, Option.Rel.none => rel_filter_map (@hfg) h₂
+        | _, _, Option.Rel.some h => forall₂.cons h (rel_filter_map (@hfg) h₂)
 #align list.rel_filter_map List.rel_filterMap
 
 /- warning: list.rel_prod -> List.rel_prod is a dubious translation:

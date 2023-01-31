@@ -32,10 +32,10 @@ universe u
 
 namespace AlgebraicGeometry
 
-variable {X Y Z : SchemeCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
+variable {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
 
 theorem isOpenImmersion_iff_stalk {f : X ⟶ Y} :
-    IsOpenImmersion f ↔ OpenEmbedding f.1.base ∧ ∀ x, IsIso (PresheafedSpaceCat.stalkMap f.1 x) :=
+    IsOpenImmersion f ↔ OpenEmbedding f.1.base ∧ ∀ x, IsIso (PresheafedSpace.stalkMap f.1 x) :=
   by
   constructor
   · intro h
@@ -84,23 +84,22 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
       infer_instance
 #align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget
 
-theorem IsOpenImmersion.openCover_tFAE {X Y : SchemeCat.{u}} (f : X ⟶ Y) :
+theorem IsOpenImmersion.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
     TFAE
       [IsOpenImmersion f,
-        ∃ 𝒰 : SchemeCat.OpenCover.{u} Y,
+        ∃ 𝒰 : Scheme.OpenCover.{u} Y,
           ∀ i : 𝒰.J, IsOpenImmersion (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),
-        ∀ (𝒰 : SchemeCat.OpenCover.{u} Y) (i : 𝒰.J),
+        ∀ (𝒰 : Scheme.OpenCover.{u} Y) (i : 𝒰.J),
           IsOpenImmersion (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),
         ∀ U : Opens Y.carrier, IsOpenImmersion (f ∣_ U),
-        ∀ {U : SchemeCat} (g : U ⟶ Y) [IsOpenImmersion g],
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
           IsOpenImmersion (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u)(U : ι → Opens Y.carrier)(hU : supᵢ U = ⊤),
           ∀ i, IsOpenImmersion (f ∣_ U i)] :=
   isOpenImmersionIsLocalAtTarget.open_cover_tfae f
 #align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersion.openCover_tFAE
 
-theorem IsOpenImmersion.openCover_iff {X Y : SchemeCat.{u}} (𝒰 : SchemeCat.OpenCover.{u} Y)
-    (f : X ⟶ Y) :
+theorem IsOpenImmersion.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
     IsOpenImmersion f ↔ ∀ i, IsOpenImmersion (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   isOpenImmersionIsLocalAtTarget.open_cover_iff f 𝒰
 #align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersion.openCover_iff

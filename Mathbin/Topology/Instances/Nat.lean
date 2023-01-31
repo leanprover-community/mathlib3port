@@ -66,10 +66,10 @@ theorem preimage_closedBall (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ
   rfl
 #align nat.preimage_closed_ball Nat.preimage_closedBall
 
-theorem closedBall_eq_icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ :=
+theorem closedBall_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ :=
   by
   rcases le_or_lt 0 r with (hr | hr)
-  · rw [← preimage_closed_ball, Real.closedBall_eq_icc, preimage_Icc]
+  · rw [← preimage_closed_ball, Real.closedBall_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
   · rw [closed_ball_eq_empty.2 hr]
     apply (Icc_eq_empty _).symm
@@ -82,7 +82,7 @@ theorem closedBall_eq_icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r
         rw [floor_coe, Nat.lt_ceil]
         linarith
       
-#align nat.closed_ball_eq_Icc Nat.closedBall_eq_icc
+#align nat.closed_ball_eq_Icc Nat.closedBall_eq_Icc
 
 instance : ProperSpace ℕ :=
   ⟨by

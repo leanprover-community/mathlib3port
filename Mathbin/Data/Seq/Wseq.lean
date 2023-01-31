@@ -33,7 +33,7 @@ coinductive wseq (α : Type u) : Type u
   under most interesting computation patterns on infinite lists,
   but conversely it is difficult to extract elements from it. -/
 def Wseq (α) :=
-  Seq (Option α)
+  SeqCat (Option α)
 #align wseq Wseq
 
 namespace Wseq
@@ -41,7 +41,7 @@ namespace Wseq
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- Turn a sequence into a weak sequence -/
-def ofSeq : Seq α → Wseq α :=
+def ofSeq : SeqCat α → Wseq α :=
   (· <$> ·) some
 #align wseq.of_seq Wseq.ofSeq
 
@@ -55,7 +55,7 @@ def ofStream (l : Stream' α) : Wseq α :=
   ofSeq l
 #align wseq.of_stream Wseq.ofStream
 
-instance coeSeq : Coe (Seq α) (Wseq α) :=
+instance coeSeq : Coe (SeqCat α) (Wseq α) :=
   ⟨ofSeq⟩
 #align wseq.coe_seq Wseq.coeSeq
 
@@ -69,7 +69,7 @@ instance coeStream : Coe (Stream' α) (Wseq α) :=
 
 /-- The empty weak sequence -/
 def nil : Wseq α :=
-  Seq.nil
+  SeqCat.nil
 #align wseq.nil Wseq.nil
 
 instance : Inhabited (Wseq α) :=
@@ -77,19 +77,19 @@ instance : Inhabited (Wseq α) :=
 
 /-- Prepend an element to a weak sequence -/
 def cons (a : α) : Wseq α → Wseq α :=
-  Seq.cons (some a)
+  SeqCat.cons (some a)
 #align wseq.cons Wseq.cons
 
 /-- Compute for one tick, without producing any elements -/
 def think : Wseq α → Wseq α :=
-  Seq.cons none
+  SeqCat.cons none
 #align wseq.think Wseq.think
 
 /-- Destruct a weak sequence, to (eventually possibly) produce either
   `none` for `nil` or `some (a, s)` if an element is produced. -/
 def destruct : Wseq α → Computation (Option (α × Wseq α)) :=
   Computation.corec fun s =>
-    match Seq.destruct s with
+    match SeqCat.destruct s with
     | none => Sum.inl none
     | some (none, s') => Sum.inr s'
     | some (some a, s') => Sum.inl (some (a, s'))
@@ -98,18 +98,18 @@ def destruct : Wseq α → Computation (Option (α × Wseq α)) :=
 /-- Recursion principle for weak sequences, compare with `list.rec_on`. -/
 def recOn {C : Wseq α → Sort v} (s : Wseq α) (h1 : C nil) (h2 : ∀ x s, C (cons x s))
     (h3 : ∀ s, C (think s)) : C s :=
-  Seq.recOn s h1 fun o => Option.recOn o h3 h2
+  SeqCat.recOn s h1 fun o => Option.recOn o h3 h2
 #align wseq.rec_on Wseq.recOn
 
 protected def Mem (a : α) (s : Wseq α) :=
-  Seq.Mem (some a) s
+  SeqCat.Mem (some a) s
 #align wseq.mem Wseq.Mem
 
 instance : Membership α (Wseq α) :=
   ⟨Wseq.Mem⟩
 
 theorem not_mem_nil (a : α) : a ∉ @nil α :=
-  Seq.not_mem_nil a
+  SeqCat.not_mem_nil a
 #align wseq.not_mem_nil Wseq.not_mem_nil
 
 /-- Get the head of a weak sequence. This involves a possibly
@@ -121,9 +121,9 @@ def head (s : Wseq α) : Computation (Option α) :=
 /-- Encode a computation yielding a weak sequence into additional
   `think` constructors in a weak sequence -/
 def flatten : Computation (Wseq α) → Wseq α :=
-  Seq.corec fun c =>
+  SeqCat.corec fun c =>
     match Computation.destruct c with
-    | Sum.inl s => Seq.omap return (Seq.destruct s)
+    | Sum.inl s => SeqCat.omap return (SeqCat.destruct s)
     | Sum.inr c' => some (none, c')
 #align wseq.flatten Wseq.flatten
 
@@ -152,7 +152,7 @@ def nth (s : Wseq α) (n : ℕ) : Computation (Option α) :=
 def toList (s : Wseq α) : Computation (List α) :=
   @Computation.corec (List α) (List α × Wseq α)
     (fun ⟨l, s⟩ =>
-      match Seq.destruct s with
+      match SeqCat.destruct s with
       | none => Sum.inl l.reverse
       | some (none, s') => Sum.inr (l, s')
       | some (some a, s') => Sum.inr (a::l, s'))
@@ -163,7 +163,7 @@ def toList (s : Wseq α) : Computation (List α) :=
 def length (s : Wseq α) : Computation ℕ :=
   @Computation.corec ℕ (ℕ × Wseq α)
     (fun ⟨n, s⟩ =>
-      match Seq.destruct s with
+      match SeqCat.destruct s with
       | none => Sum.inl n
       | some (none, s') => Sum.inr (n, s')
       | some (some a, s') => Sum.inr (n + 1, s'))
@@ -206,9 +206,9 @@ instance head_terminates (s : Wseq α) [Productive s] : (head s).Terminates :=
 
 /-- Replace the `n`th element of `s` with `a`. -/
 def updateNth (s : Wseq α) (n : ℕ) (a : α) : Wseq α :=
-  @Seq.corec (Option α) (ℕ × Wseq α)
+  @SeqCat.corec (Option α) (ℕ × Wseq α)
     (fun ⟨n, s⟩ =>
-      match Seq.destruct s, n with
+      match SeqCat.destruct s, n with
       | none, n => none
       | some (none, s'), n => some (none, n, s')
       | some (some a', s'), 0 => some (some a', 0, s')
@@ -219,9 +219,9 @@ def updateNth (s : Wseq α) (n : ℕ) (a : α) : Wseq α :=
 
 /-- Remove the `n`th element of `s`. -/
 def removeNth (s : Wseq α) (n : ℕ) : Wseq α :=
-  @Seq.corec (Option α) (ℕ × Wseq α)
+  @SeqCat.corec (Option α) (ℕ × Wseq α)
     (fun ⟨n, s⟩ =>
-      match Seq.destruct s, n with
+      match SeqCat.destruct s, n with
       | none, n => none
       | some (none, s'), n => some (none, n, s')
       | some (some a', s'), 0 => some (some a', 0, s')
@@ -232,8 +232,8 @@ def removeNth (s : Wseq α) (n : ℕ) : Wseq α :=
 
 /-- Map the elements of `s` over `f`, removing any values that yield `none`. -/
 def filterMap (f : α → Option β) : Wseq α → Wseq β :=
-  Seq.corec fun s =>
-    match Seq.destruct s with
+  SeqCat.corec fun s =>
+    match SeqCat.destruct s with
     | none => none
     | some (none, s') => some (none, s')
     | some (some a, s') => some (f a, s')
@@ -252,9 +252,9 @@ def find (p : α → Prop) [DecidablePred p] (s : Wseq α) : Computation (Option
 
 /-- Zip a function over two weak sequences -/
 def zipWith (f : α → β → γ) (s1 : Wseq α) (s2 : Wseq β) : Wseq γ :=
-  @Seq.corec (Option γ) (Wseq α × Wseq β)
+  @SeqCat.corec (Option γ) (Wseq α × Wseq β)
     (fun ⟨s1, s2⟩ =>
-      match Seq.destruct s1, Seq.destruct s2 with
+      match SeqCat.destruct s1, SeqCat.destruct s2 with
       | some (none, s1'), some (none, s2') => some (none, s1', s2')
       | some (some a1, s1'), some (none, s2') => some (none, s1, s2')
       | some (none, s1'), some (some a2, s2') => some (none, s1', s2)
@@ -291,9 +291,9 @@ def indexesOf [DecidableEq α] (a : α) : Wseq α → Wseq ℕ :=
 /-- `union s1 s2` is a weak sequence which interleaves `s1` and `s2` in
   some order (nondeterministically). -/
 def union (s1 s2 : Wseq α) : Wseq α :=
-  @Seq.corec (Option α) (Wseq α × Wseq α)
+  @SeqCat.corec (Option α) (Wseq α × Wseq α)
     (fun ⟨s1, s2⟩ =>
-      match Seq.destruct s1, Seq.destruct s2 with
+      match SeqCat.destruct s1, SeqCat.destruct s2 with
       | none, none => none
       | some (a1, s1'), none => some (a1, s1', nil)
       | none, some (a2, s2') => some (a2, nil, s2')
@@ -311,16 +311,16 @@ def isEmpty (s : Wseq α) : Computation Bool :=
 
 /-- Calculate one step of computation -/
 def compute (s : Wseq α) : Wseq α :=
-  match Seq.destruct s with
+  match SeqCat.destruct s with
   | some (none, s') => s'
   | _ => s
 #align wseq.compute Wseq.compute
 
 /-- Get the first `n` elements of a weak sequence -/
 def take (s : Wseq α) (n : ℕ) : Wseq α :=
-  @Seq.corec (Option α) (ℕ × Wseq α)
+  @SeqCat.corec (Option α) (ℕ × Wseq α)
     (fun ⟨n, s⟩ =>
-      match n, Seq.destruct s with
+      match n, SeqCat.destruct s with
       | 0, _ => none
       | m + 1, none => none
       | m + 1, some (none, s') => some (none, m + 1, s')
@@ -334,7 +334,7 @@ def take (s : Wseq α) (n : ℕ) : Wseq α :=
 def splitAt (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
   @Computation.corec (List α × Wseq α) (ℕ × List α × Wseq α)
     (fun ⟨n, l, s⟩ =>
-      match n, Seq.destruct s with
+      match n, SeqCat.destruct s with
       | 0, _ => Sum.inl (l.reverse, s)
       | m + 1, none => Sum.inl (l.reverse, s)
       | m + 1, some (none, s') => Sum.inr (n, l, s')
@@ -346,7 +346,7 @@ def splitAt (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
 def any (s : Wseq α) (p : α → Bool) : Computation Bool :=
   Computation.corec
     (fun s : Wseq α =>
-      match Seq.destruct s with
+      match SeqCat.destruct s with
       | none => Sum.inl false
       | some (none, s') => Sum.inr s'
       | some (some a, s') => if p a then Sum.inl true else Sum.inr s')
@@ -357,7 +357,7 @@ def any (s : Wseq α) (p : α → Bool) : Computation Bool :=
 def all (s : Wseq α) (p : α → Bool) : Computation Bool :=
   Computation.corec
     (fun s : Wseq α =>
-      match Seq.destruct s with
+      match SeqCat.destruct s with
       | none => Sum.inl true
       | some (none, s') => Sum.inr s'
       | some (some a, s') => if p a then Sum.inr s' else Sum.inl false)
@@ -369,9 +369,9 @@ def all (s : Wseq α) (p : α → Bool) : Computation Bool :=
   working from the end of the sequence, which may not exist.) -/
 def scanl (f : α → β → α) (a : α) (s : Wseq β) : Wseq α :=
   cons a <|
-    @Seq.corec (Option α) (α × Wseq β)
+    @SeqCat.corec (Option α) (α × Wseq β)
       (fun ⟨a, s⟩ =>
-        match Seq.destruct s with
+        match SeqCat.destruct s with
         | none => none
         | some (none, s') => some (none, a, s')
         | some (some b, s') =>
@@ -383,9 +383,9 @@ def scanl (f : α → β → α) (a : α) (s : Wseq β) : Wseq α :=
 /-- Get the weak sequence of initial segments of the input sequence -/
 def inits (s : Wseq α) : Wseq (List α) :=
   cons [] <|
-    @Seq.corec (Option (List α)) (Dlist α × Wseq α)
+    @SeqCat.corec (Option (List α)) (Dlist α × Wseq α)
       (fun ⟨l, s⟩ =>
-        match Seq.destruct s with
+        match SeqCat.destruct s with
         | none => none
         | some (none, s') => some (none, l, s')
         | some (some a, s') =>
@@ -397,24 +397,24 @@ def inits (s : Wseq α) : Wseq (List α) :=
 /-- Like take, but does not wait for a result. Calculates `n` steps of
   computation and returns the sequence computed so far -/
 def collect (s : Wseq α) (n : ℕ) : List α :=
-  (Seq.take n s).filterMap id
+  (SeqCat.take n s).filterMap id
 #align wseq.collect Wseq.collect
 
 /-- Append two weak sequences. As with `seq.append`, this may not use
   the second sequence if the first one takes forever to compute -/
 def append : Wseq α → Wseq α → Wseq α :=
-  Seq.append
+  SeqCat.append
 #align wseq.append Wseq.append
 
 /-- Map a function over a weak sequence -/
 def map (f : α → β) : Wseq α → Wseq β :=
-  Seq.map (Option.map f)
+  SeqCat.map (Option.map f)
 #align wseq.map Wseq.map
 
 /-- Flatten a sequence of weak sequences. (Note that this allows
   empty sequences, unlike `seq.join`.) -/
 def join (S : Wseq (Wseq α)) : Wseq α :=
-  Seq.join
+  SeqCat.join
     ((fun o : Option (Wseq α) =>
         match o with
         | none => Seq1.ret none
@@ -631,19 +631,19 @@ theorem destruct_think (s : Wseq α) : destruct (think s) = (destruct s).think :
 #align wseq.destruct_think Wseq.destruct_think
 
 @[simp]
-theorem seq_destruct_nil : Seq.destruct (nil : Wseq α) = none :=
-  Seq.destruct_nil
+theorem seq_destruct_nil : SeqCat.destruct (nil : Wseq α) = none :=
+  SeqCat.destruct_nil
 #align wseq.seq_destruct_nil Wseq.seq_destruct_nil
 
 @[simp]
-theorem seq_destruct_cons (a : α) (s) : Seq.destruct (cons a s) = some (some a, s) :=
-  Seq.destruct_cons _ _
-#align wseq.seq_destruct_cons Wseq.seq_destruct_cons
+theorem seqCat_destruct_cons (a : α) (s) : SeqCat.destruct (cons a s) = some (some a, s) :=
+  SeqCat.destruct_cons _ _
+#align wseq.seq_destruct_cons Wseq.seqCat_destruct_cons
 
 @[simp]
-theorem seq_destruct_think (s : Wseq α) : Seq.destruct (think s) = some (none, s) :=
-  Seq.destruct_cons _ _
-#align wseq.seq_destruct_think Wseq.seq_destruct_think
+theorem seqCat_destruct_think (s : Wseq α) : SeqCat.destruct (think s) = some (none, s) :=
+  SeqCat.destruct_cons _ _
+#align wseq.seq_destruct_think Wseq.seqCat_destruct_think
 
 @[simp]
 theorem head_nil : head (nil : Wseq α) = return none := by simp [head] <;> rfl
@@ -660,16 +660,16 @@ theorem head_think (s : Wseq α) : head (think s) = (head s).think := by simp [h
 @[simp]
 theorem flatten_ret (s : Wseq α) : flatten (return s) = s :=
   by
-  refine' Seq.eq_of_bisim (fun s1 s2 => flatten (return s2) = s1) _ rfl
+  refine' SeqCat.eq_of_bisim (fun s1 s2 => flatten (return s2) = s1) _ rfl
   intro s' s h; rw [← h]; simp [flatten]
-  cases Seq.destruct s; · simp
+  cases SeqCat.destruct s; · simp
   · cases' val with o s'
     simp
 #align wseq.flatten_ret Wseq.flatten_ret
 
 @[simp]
 theorem flatten_think (c : Computation (Wseq α)) : flatten c.think = think (flatten c) :=
-  Seq.destruct_eq_cons <| by simp [flatten, think]
+  SeqCat.destruct_eq_cons <| by simp [flatten, think]
 #align wseq.flatten_think Wseq.flatten_think
 
 @[simp]
@@ -739,7 +739,7 @@ theorem nth_tail (s : Wseq α) (n) : nth (tail s) n = nth s (n + 1) :=
 
 @[simp]
 theorem join_nil : join nil = (nil : Wseq α) :=
-  Seq.join_nil
+  SeqCat.join_nil
 #align wseq.join_nil Wseq.join_nil
 
 @[simp]
@@ -760,27 +760,27 @@ theorem join_cons (s : Wseq α) (S) : join (cons s S) = think (append s (join S)
 
 @[simp]
 theorem nil_append (s : Wseq α) : append nil s = s :=
-  Seq.nil_append _
+  SeqCat.nil_append _
 #align wseq.nil_append Wseq.nil_append
 
 @[simp]
 theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :=
-  Seq.cons_append _ _ _
+  SeqCat.cons_append _ _ _
 #align wseq.cons_append Wseq.cons_append
 
 @[simp]
 theorem think_append (s t : Wseq α) : append (think s) t = think (append s t) :=
-  Seq.cons_append _ _ _
+  SeqCat.cons_append _ _ _
 #align wseq.think_append Wseq.think_append
 
 @[simp]
 theorem append_nil (s : Wseq α) : append s nil = s :=
-  Seq.append_nil _
+  SeqCat.append_nil _
 #align wseq.append_nil Wseq.append_nil
 
 @[simp]
 theorem append_assoc (s t u : Wseq α) : append (append s t) u = append s (append t u) :=
-  Seq.append_assoc _ _ _
+  SeqCat.append_assoc _ _ _
 #align wseq.append_assoc Wseq.append_assoc
 
 @[simp]
@@ -864,7 +864,7 @@ instance productive_dropn (s : Wseq α) [Productive s] (n) : Productive (drop s 
 
 /-- Given a productive weak sequence, we can collapse all the `think`s to
   produce a sequence. -/
-def toSeq (s : Wseq α) [Productive s] : Seq α :=
+def toSeq (s : Wseq α) [Productive s] : SeqCat α :=
   ⟨fun n => (nth s n).get, fun n h =>
     by
     cases e : Computation.get (nth s (n + 1)); · assumption
@@ -893,7 +893,7 @@ theorem destruct_terminates_of_nth_terminates {s : Wseq α} {n} (T : Terminates 
 theorem mem_rec_on {C : Wseq α → Prop} {a s} (M : a ∈ s) (h1 : ∀ b s', a = b ∨ C s' → C (cons b s'))
     (h2 : ∀ s, C s → C (think s)) : C s :=
   by
-  apply Seq.memRecOn M
+  apply SeqCat.mem_rec_on M
   intro o s' h; cases' o with b
   · apply h2
     cases h
@@ -931,7 +931,7 @@ theorem eq_or_mem_iff_mem {s : Wseq α} {a a' s'} :
     cases' this with i1 i2
   · rw [i1, i2]
     cases' s' with f al
-    unfold cons Membership.Mem Wseq.Mem Seq.Mem Seq.cons
+    unfold cons Membership.Mem Wseq.Mem SeqCat.Mem SeqCat.cons
     simp
     have h_a_eq_a' : a = a' ↔ some (some a) = some (some a') := by simp
     rw [h_a_eq_a']
@@ -1051,16 +1051,16 @@ theorem head_terminates_of_mem {s : Wseq α} {a} (h : a ∈ s) : Terminates (hea
 #align wseq.head_terminates_of_mem Wseq.head_terminates_of_mem
 
 theorem of_mem_append {s₁ s₂ : Wseq α} {a : α} : a ∈ append s₁ s₂ → a ∈ s₁ ∨ a ∈ s₂ :=
-  Seq.of_mem_append
+  SeqCat.of_mem_append
 #align wseq.of_mem_append Wseq.of_mem_append
 
 theorem mem_append_left {s₁ s₂ : Wseq α} {a : α} : a ∈ s₁ → a ∈ append s₁ s₂ :=
-  Seq.mem_append_left
+  SeqCat.mem_append_left
 #align wseq.mem_append_left Wseq.mem_append_left
 
 theorem exists_of_mem_map {f} {b : β} : ∀ {s : Wseq α}, b ∈ map f s → ∃ a, a ∈ s ∧ f a = b
   | ⟨g, al⟩, h => by
-    let ⟨o, om, oe⟩ := Seq.exists_of_mem_map h
+    let ⟨o, om, oe⟩ := SeqCat.exists_of_mem_map h
     cases' o with a <;> injection oe with h' <;> exact ⟨a, om, h'⟩
 #align wseq.exists_of_mem_map Wseq.exists_of_mem_map
 
@@ -1247,7 +1247,10 @@ theorem ofList_nil : ofList [] = (nil : Wseq α) :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem ofList_cons (a : α) (l) : ofList (a::l) = cons a (ofList l) :=
-  show Seq.map some (Seq.ofList (a::l)) = Seq.cons (some a) (Seq.map some (Seq.ofList l)) by simp
+  show
+    SeqCat.map some (SeqCat.ofList (a::l)) =
+      SeqCat.cons (some a) (SeqCat.map some (SeqCat.ofList l))
+    by simp
 #align wseq.of_list_cons Wseq.ofList_cons
 
 @[simp]
@@ -1300,43 +1303,43 @@ theorem toList_ofList (l : List α) : l ∈ toList (ofList l) := by
 #align wseq.to_list_of_list Wseq.toList_ofList
 
 @[simp]
-theorem destruct_ofSeq (s : Seq α) :
+theorem destruct_ofSeq (s : SeqCat α) :
     destruct (ofSeq s) = return (s.head.map fun a => (a, ofSeq s.tail)) :=
   destruct_eq_ret <| by
-    simp [of_seq, head, destruct, Seq.destruct, Seq.head]
-    rw [show Seq.nth (some <$> s) 0 = some <$> Seq.nth s 0 by apply Seq.map_nth]
-    cases' Seq.nth s 0 with a; · rfl
+    simp [of_seq, head, destruct, SeqCat.destruct, SeqCat.head]
+    rw [show SeqCat.nth (some <$> s) 0 = some <$> SeqCat.nth s 0 by apply SeqCat.map_nth]
+    cases' SeqCat.nth s 0 with a; · rfl
     unfold Functor.map
     simp [destruct]
 #align wseq.destruct_of_seq Wseq.destruct_ofSeq
 
 @[simp]
-theorem head_ofSeq (s : Seq α) : head (ofSeq s) = return s.head := by
-  simp [head] <;> cases Seq.head s <;> rfl
+theorem head_ofSeq (s : SeqCat α) : head (ofSeq s) = return s.head := by
+  simp [head] <;> cases SeqCat.head s <;> rfl
 #align wseq.head_of_seq Wseq.head_ofSeq
 
 @[simp]
-theorem tail_ofSeq (s : Seq α) : tail (ofSeq s) = ofSeq s.tail :=
+theorem tail_ofSeq (s : SeqCat α) : tail (ofSeq s) = ofSeq s.tail :=
   by
   simp [tail]; apply s.rec_on _ fun x s => _ <;> simp [of_seq]; · rfl
-  rw [Seq.head_cons, Seq.tail_cons]; rfl
+  rw [SeqCat.head_cons, SeqCat.tail_cons]; rfl
 #align wseq.tail_of_seq Wseq.tail_ofSeq
 
 @[simp]
-theorem dropn_ofSeq (s : Seq α) : ∀ n, drop (ofSeq s) n = ofSeq (s.drop n)
+theorem dropn_ofSeq (s : SeqCat α) : ∀ n, drop (ofSeq s) n = ofSeq (s.drop n)
   | 0 => rfl
   | n + 1 => by dsimp [drop] <;> rw [dropn_of_seq, tail_of_seq]
 #align wseq.dropn_of_seq Wseq.dropn_ofSeq
 
-theorem nth_ofSeq (s : Seq α) (n) : nth (ofSeq s) n = return (Seq.nth s n) := by
-  dsimp [nth] <;> rw [dropn_of_seq, head_of_seq, Seq.head_dropn]
+theorem nth_ofSeq (s : SeqCat α) (n) : nth (ofSeq s) n = return (SeqCat.nth s n) := by
+  dsimp [nth] <;> rw [dropn_of_seq, head_of_seq, SeqCat.head_dropn]
 #align wseq.nth_of_seq Wseq.nth_ofSeq
 
-instance productive_ofSeq (s : Seq α) : Productive (ofSeq s) :=
+instance productive_ofSeq (s : SeqCat α) : Productive (ofSeq s) :=
   ⟨fun n => by rw [nth_of_seq] <;> infer_instance⟩
 #align wseq.productive_of_seq Wseq.productive_ofSeq
 
-theorem toSeq_ofSeq (s : Seq α) : toSeq (ofSeq s) = s :=
+theorem toSeq_ofSeq (s : SeqCat α) : toSeq (ofSeq s) = s :=
   by
   apply Subtype.eq; funext n
   dsimp [to_seq]; apply get_eq_of_mem
@@ -1355,12 +1358,12 @@ theorem map_nil (f : α → β) : map f nil = nil :=
 
 @[simp]
 theorem map_cons (f : α → β) (a s) : map f (cons a s) = cons (f a) (map f s) :=
-  Seq.map_cons _ _ _
+  SeqCat.map_cons _ _ _
 #align wseq.map_cons Wseq.map_cons
 
 @[simp]
 theorem map_think (f : α → β) (s) : map f (think s) = think (map f s) :=
-  Seq.map_cons _ _ _
+  SeqCat.map_cons _ _ _
 #align wseq.map_think Wseq.map_think
 
 @[simp]
@@ -1373,18 +1376,18 @@ theorem map_ret (f : α → β) (a) : map f (ret a) = ret (f a) := by simp [ret]
 
 @[simp]
 theorem map_append (f : α → β) (s t) : map f (append s t) = append (map f s) (map f t) :=
-  Seq.map_append _ _ _
+  SeqCat.map_append _ _ _
 #align wseq.map_append Wseq.map_append
 
 theorem map_comp (f : α → β) (g : β → γ) (s : Wseq α) : map (g ∘ f) s = map g (map f s) :=
   by
-  dsimp [map]; rw [← Seq.map_comp]
+  dsimp [map]; rw [← SeqCat.map_comp]
   apply congr_fun; apply congr_arg
   ext ⟨⟩ <;> rfl
 #align wseq.map_comp Wseq.map_comp
 
 theorem mem_map (f : α → β) {a : α} {s : Wseq α} : a ∈ s → f a ∈ map f s :=
-  Seq.mem_map (Option.map f)
+  SeqCat.mem_map (Option.map f)
 #align wseq.mem_map Wseq.mem_map
 
 -- The converse is not true without additional assumptions
@@ -1396,8 +1399,8 @@ theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S →
     from fun S h => (this _ h nil S (by simp) (by simp [h])).resolve_left (not_mem_nil _)
   intro ss h; apply mem_rec_on h (fun b ss o => _) fun ss IH => _ <;> intro s S
   · refine' s.rec_on (S.rec_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
-                intro ej m <;> simp at ej <;> have := congr_arg Seq.destruct ej <;> simp at this <;>
-        try cases this <;> try contradiction
+                intro ej m <;> simp at ej <;> have := congr_arg SeqCat.destruct ej <;>
+          simp at this <;> try cases this <;> try contradiction
     substs b' ss
     simp at m⊢
     cases' o with e IH
@@ -1406,8 +1409,8 @@ theorem exists_of_mem_join {a : α} : ∀ {S : Wseq (Wseq α)}, a ∈ join S →
     · simp [e]
     exact Or.imp_left Or.inr (IH _ _ rfl m)
   · refine' s.rec_on (S.rec_on _ (fun s S => _) fun S => _) (fun b' s => _) fun s => _ <;>
-                intro ej m <;> simp at ej <;> have := congr_arg Seq.destruct ej <;> simp at this <;>
-        try try have := this.1; contradiction <;> subst ss
+                intro ej m <;> simp at ej <;> have := congr_arg SeqCat.destruct ej <;>
+          simp at this <;> try try have := this.1; contradiction <;> subst ss
     · apply Or.inr
       simp at m⊢
       cases' IH s S rfl m with as ex
@@ -1721,7 +1724,7 @@ theorem ret_bind (a : α) (f : α → Wseq β) : bind (ret a) f ~ f a := by simp
 theorem map_join (f : α → β) (S) : map f (join S) = join (map (map f) S) :=
   by
   apply
-    Seq.eq_of_bisim fun s1 s2 =>
+    SeqCat.eq_of_bisim fun s1 s2 =>
       ∃ s S, s1 = append s (map f (join S)) ∧ s2 = append s (join (map (map f) S))
   · intro s1 s2 h
     exact

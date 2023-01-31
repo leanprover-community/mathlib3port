@@ -67,10 +67,10 @@ instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : Topological
 instance {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (Sigma β) :=
   ⨆ a, coinduced (Sigma.mk a) (t₂ a)
 
-instance PiCat.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] :
+instance Pi.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] :
     TopologicalSpace (∀ a, β a) :=
   ⨅ a, induced (fun f => f a) (t₂ a)
-#align Pi.topological_space PiCat.topologicalSpace
+#align Pi.topological_space Pi.topologicalSpace
 
 instance ULift.topologicalSpace [t : TopologicalSpace α] : TopologicalSpace (ULift.{v, u} α) :=
   t.induced ULift.down
@@ -1426,7 +1426,7 @@ theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] {s : Set (∀ a
 #align exists_finset_piecewise_mem_of_mem_nhds exists_finset_piecewise_mem_of_mem_nhds
 
 theorem pi_eq_generateFrom :
-    PiCat.topologicalSpace =
+    Pi.topologicalSpace =
       generateFrom
         { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm
@@ -1437,7 +1437,7 @@ theorem pi_eq_generateFrom :
 #align pi_eq_generate_from pi_eq_generateFrom
 
 theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
-    (@PiCat.topologicalSpace ι π fun a => generateFrom (g a)) =
+    (@Pi.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom
         { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s } :=
   by
@@ -1456,7 +1456,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
 
 theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π a))} [Finite ι]
     (hg : ∀ a, ⋃₀ g a = univ) :
-    (@PiCat.topologicalSpace ι π fun a => generateFrom (g a)) =
+    (@Pi.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi univ s } :=
   by
   cases nonempty_fintype ι
@@ -1500,13 +1500,13 @@ theorem inducing_infᵢ_to_pi {X : Type _} (f : ∀ i, X → π i) :
 variable [Finite ι] [∀ i, DiscreteTopology (π i)]
 
 /-- A finite product of discrete spaces is discrete. -/
-instance PiCat.discreteTopology : DiscreteTopology (∀ i, π i) :=
+instance Pi.discreteTopology : DiscreteTopology (∀ i, π i) :=
   singletons_open_iff_discrete.mp fun x =>
     by
     rw [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i } by ext;
         simp only [funext_iff, Set.mem_singleton_iff, Set.mem_interᵢ, Set.mem_setOf_eq]]
     exact isOpen_interᵢ fun i => (continuous_apply i).is_open_preimage {x i} (isOpen_discrete {x i})
-#align Pi.discrete_topology PiCat.discreteTopology
+#align Pi.discrete_topology Pi.discreteTopology
 
 end Pi
 

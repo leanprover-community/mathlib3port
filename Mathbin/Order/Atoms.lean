@@ -197,7 +197,7 @@ variable [OrderTop α] {a x : α}
 
 #print IsCoatom.Ici /-
 theorem IsCoatom.Ici (ha : IsCoatom a) (hax : x ≤ a) : IsCoatom (⟨a, hax⟩ : Set.Ici x) :=
-  ha.dual.IicCat hax
+  ha.dual.Iic hax
 #align is_coatom.Ici IsCoatom.Ici
 -/
 
@@ -407,7 +407,7 @@ instance isCoatomic_dual : IsCoatomic αᵒᵈ :=
 instance {x : α} : IsAtomic (Set.Iic x) :=
   ⟨fun ⟨y, hy⟩ =>
     (eq_bot_or_exists_atom_le y).imp Subtype.mk_eq_mk.2 fun ⟨a, ha, hay⟩ =>
-      ⟨⟨a, hay.trans hy⟩, ha.IicCat (hay.trans hy), hay⟩⟩
+      ⟨⟨a, hay.trans hy⟩, ha.Iic (hay.trans hy), hay⟩⟩
 
 end IsAtomic
 
@@ -424,7 +424,7 @@ instance isCoatomic : IsAtomic αᵒᵈ :=
 instance {x : α} : IsCoatomic (Set.Ici x) :=
   ⟨fun ⟨y, hy⟩ =>
     (eq_top_or_exists_le_coatom y).imp Subtype.mk_eq_mk.2 fun ⟨a, ha, hay⟩ =>
-      ⟨⟨a, le_trans hy hay⟩, ha.IciCat (le_trans hy hay), hay⟩⟩
+      ⟨⟨a, le_trans hy hay⟩, ha.Ici (le_trans hy hay), hay⟩⟩
 
 end IsCoatomic
 

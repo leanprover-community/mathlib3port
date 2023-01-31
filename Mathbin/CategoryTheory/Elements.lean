@@ -275,7 +275,7 @@ theorem to_fromCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     simp only [Quiver.Hom.unop_op, CategoryTheory.yoneda_obj_map]
     erw [category.comp_id]
   simp
-  exact proof_irrel_hEq _ _
+  exact proof_irrel_heq _ _
 #align category_theory.category_of_elements.to_from_costructured_arrow_eq CategoryTheory.categoryOfElements.to_fromCostructuredArrow_eq
 
 /-- The equivalence `F.elementsᵒᵖ ≅ (yoneda, F)` given by yoneda lemma. -/

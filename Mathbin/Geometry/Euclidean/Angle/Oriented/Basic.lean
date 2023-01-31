@@ -904,7 +904,7 @@ theorem oangle_sign_neg_right (x y : V) : (o.oangle x (-y)).sign = -(o.oangle x 
 the sign of the real. -/
 @[simp]
 theorem oangle_sign_smul_left (x y : V) (r : ℝ) :
-    (o.oangle (r • x) y).sign = sign r * (o.oangle x y).sign := by
+    (o.oangle (r • x) y).sign = SignType.sign r * (o.oangle x y).sign := by
   rcases lt_trichotomy r 0 with (h | h | h) <;> simp [h]
 #align orientation.oangle_sign_smul_left Orientation.oangle_sign_smul_left
 
@@ -912,7 +912,7 @@ theorem oangle_sign_smul_left (x y : V) (r : ℝ) :
 the sign of the real. -/
 @[simp]
 theorem oangle_sign_smul_right (x y : V) (r : ℝ) :
-    (o.oangle x (r • y)).sign = sign r * (o.oangle x y).sign := by
+    (o.oangle x (r • y)).sign = SignType.sign r * (o.oangle x y).sign := by
   rcases lt_trichotomy r 0 with (h | h | h) <;> simp [h]
 #align orientation.oangle_sign_smul_right Orientation.oangle_sign_smul_right
 
@@ -1088,7 +1088,7 @@ vector, is the sign of the factor by which the second vector is multiplied in th
 multiplied by the sign of the angle between the two vectors. -/
 @[simp]
 theorem oangle_sign_smul_add_smul_right (x y : V) (r₁ r₂ : ℝ) :
-    (o.oangle x (r₁ • x + r₂ • y)).sign = sign r₂ * (o.oangle x y).sign :=
+    (o.oangle x (r₁ • x + r₂ • y)).sign = SignType.sign r₂ * (o.oangle x y).sign :=
   by
   rw [← o.oangle_sign_smul_add_right x (r₁ • x + r₂ • y) (-r₁)]
   simp
@@ -1099,7 +1099,7 @@ the sign of the factor by which the first vector is multiplied in that combinati
 the sign of the angle between the two vectors. -/
 @[simp]
 theorem oangle_sign_smul_add_smul_left (x y : V) (r₁ r₂ : ℝ) :
-    (o.oangle (r₁ • x + r₂ • y) y).sign = sign r₁ * (o.oangle x y).sign := by
+    (o.oangle (r₁ • x + r₂ • y) y).sign = SignType.sign r₁ * (o.oangle x y).sign := by
   simp_rw [o.oangle_rev y, Real.Angle.sign_neg, add_comm (r₁ • x), oangle_sign_smul_add_smul_right,
     mul_neg]
 #align orientation.oangle_sign_smul_add_smul_left Orientation.oangle_sign_smul_add_smul_left
@@ -1109,7 +1109,7 @@ determinant of the factors in those combinations multiplied by the sign of the a
 two vectors. -/
 theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ : ℝ) :
     (o.oangle (r₁ • x + r₂ • y) (r₃ • x + r₄ • y)).sign =
-      sign (r₁ * r₄ - r₂ * r₃) * (o.oangle x y).sign :=
+      SignType.sign (r₁ * r₄ - r₂ * r₃) * (o.oangle x y).sign :=
   by
   by_cases hr₁ : r₁ = 0
   ·

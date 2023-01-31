@@ -313,8 +313,8 @@ theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measure Ω)] {X : Ω 
 #align probability_theory.meas_ge_le_variance_div_sq ProbabilityTheory.meas_ge_le_variance_div_sq
 
 /-- The variance of the sum of two independent random variables is the sum of the variances. -/
-theorem IndepFun.variance_add [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : Ω → ℝ} (hX : Memℒp X 2)
-    (hY : Memℒp Y 2) (h : IndepFun X Y) : Var[X + Y] = Var[X] + Var[Y] :=
+theorem IndepFunCat.variance_add [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : Ω → ℝ}
+    (hX : Memℒp X 2) (hY : Memℒp Y 2) (h : IndepFunCat X Y) : Var[X + Y] = Var[X] + Var[Y] :=
   calc
     Var[X + Y] = 𝔼[fun a => X a ^ 2 + Y a ^ 2 + 2 * X a * Y a] - 𝔼[X + Y] ^ 2 := by
       simp [variance_def' (hX.add hY), add_sq']
@@ -337,13 +337,13 @@ theorem IndepFun.variance_add [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : �
       simp only [variance_def', hX, hY, Pi.pow_apply]
       ring
     
-#align probability_theory.indep_fun.variance_add ProbabilityTheory.IndepFun.variance_add
+#align probability_theory.indep_fun.variance_add ProbabilityTheory.IndepFunCat.variance_add
 
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
-theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Type _} {X : ι → Ω → ℝ}
+theorem IndepFunCat.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Type _} {X : ι → Ω → ℝ}
     {s : Finset ι} (hs : ∀ i ∈ s, Memℒp (X i) 2)
-    (h : Set.Pairwise ↑s fun i j => IndepFun (X i) (X j)) :
+    (h : Set.Pairwise ↑s fun i j => IndepFunCat (X i) (X j)) :
     Var[∑ i in s, X i] = ∑ i in s, Var[X i] := by
   classical
     induction' s using Finset.induction_on with k s ks IH
@@ -406,7 +406,7 @@ theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Ty
         rw [IH (fun i hi => hs i (mem_insert_of_mem hi))
             (h.mono (by simp only [coe_insert, Set.subset_insert]))]
       
-#align probability_theory.indep_fun.variance_sum ProbabilityTheory.IndepFun.variance_sum
+#align probability_theory.indep_fun.variance_sum ProbabilityTheory.IndepFunCat.variance_sum
 
 end ProbabilityTheory
 

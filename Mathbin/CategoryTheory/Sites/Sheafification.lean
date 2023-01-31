@@ -643,12 +643,12 @@ variable (D)
 
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps]
-def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ SheafCat J D
+def presheafToSheaf : (Cᵒᵖ ⥤ D) ⥤ Sheaf J D
     where
   obj P := ⟨J.sheafify P, J.sheafify_is_sheaf P⟩
   map P Q η := ⟨J.sheafifyMap η⟩
-  map_id' P := SheafCat.Hom.ext _ _ <| J.sheafify_map_id _
-  map_comp' P Q R f g := SheafCat.Hom.ext _ _ <| J.sheafify_map_comp _ _
+  map_id' P := Sheaf.Hom.ext _ _ <| J.sheafify_map_id _
+  map_comp' P Q R f g := Sheaf.Hom.ext _ _ <| J.sheafify_map_comp _ _
 #align category_theory.presheaf_to_Sheaf CategoryTheory.presheafToSheaf
 
 instance presheafToSheaf_preservesZeroMorphisms [Preadditive D] :
@@ -665,7 +665,7 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
     { homEquiv := fun P Q =>
         { toFun := fun e => J.toSheafify P ≫ e.val
           invFun := fun e => ⟨J.sheafifyLift e Q.2⟩
-          left_inv := fun e => SheafCat.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm
+          left_inv := fun e => Sheaf.Hom.ext _ _ <| (J.sheafify_lift_unique _ _ _ rfl).symm
           right_inv := fun e => J.to_sheafify_sheafify_lift _ _ }
       hom_equiv_naturality_left_symm' := by
         intro P Q R η γ; ext1; dsimp; symm
@@ -680,23 +680,23 @@ instance sheafToPresheafIsRightAdjoint : IsRightAdjoint (sheafToPresheaf J D) :=
   ⟨_, sheafificationAdjunction J D⟩
 #align category_theory.Sheaf_to_presheaf_is_right_adjoint CategoryTheory.sheafToPresheafIsRightAdjoint
 
-instance presheaf_mono_of_mono {F G : SheafCat J D} (f : F ⟶ G) [Mono f] : Mono f.1 :=
+instance presheaf_mono_of_mono {F G : Sheaf J D} (f : F ⟶ G) [Mono f] : Mono f.1 :=
   (sheafToPresheaf J D).map_mono _
 #align category_theory.presheaf_mono_of_mono CategoryTheory.presheaf_mono_of_mono
 
-theorem SheafCat.Hom.mono_iff_presheaf_mono {F G : SheafCat J D} (f : F ⟶ G) : Mono f ↔ Mono f.1 :=
+theorem Sheaf.Hom.mono_iff_presheaf_mono {F G : Sheaf J D} (f : F ⟶ G) : Mono f ↔ Mono f.1 :=
   ⟨fun m => by
     skip
     infer_instance, fun m => by
     skip
     exact Sheaf.hom.mono_of_presheaf_mono J D f⟩
-#align category_theory.Sheaf.hom.mono_iff_presheaf_mono CategoryTheory.SheafCat.Hom.mono_iff_presheaf_mono
+#align category_theory.Sheaf.hom.mono_iff_presheaf_mono CategoryTheory.Sheaf.Hom.mono_iff_presheaf_mono
 
 variable {J D}
 
 /-- A sheaf `P` is isomorphic to its own sheafification. -/
 @[simps]
-def sheafificationIso (P : SheafCat J D) : P ≅ (presheafToSheaf J D).obj P.val
+def sheafificationIso (P : Sheaf J D) : P ≅ (presheafToSheaf J D).obj P.val
     where
   Hom := ⟨(J.isoSheafify P.2).Hom⟩
   inv := ⟨(J.isoSheafify P.2).inv⟩
@@ -708,7 +708,7 @@ def sheafificationIso (P : SheafCat J D) : P ≅ (presheafToSheaf J D).obj P.val
     apply (J.iso_sheafify P.2).inv_hom_id
 #align category_theory.sheafification_iso CategoryTheory.sheafificationIso
 
-instance isIso_sheafificationAdjunction_counit (P : SheafCat J D) :
+instance isIso_sheafificationAdjunction_counit (P : Sheaf J D) :
     IsIso ((sheafificationAdjunction J D).counit.app P) :=
   isIso_of_fully_faithful (sheafToPresheaf J D) _
 #align category_theory.is_iso_sheafification_adjunction_counit CategoryTheory.isIso_sheafificationAdjunction_counit

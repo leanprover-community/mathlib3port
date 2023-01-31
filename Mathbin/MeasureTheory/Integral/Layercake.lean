@@ -98,12 +98,12 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     intro ω
     have g_ae_nn : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g := by
       filter_upwards [self_mem_ae_restrict
-          (measurableSet_ioc : MeasurableSet (Ioc 0 (f ω)))]with x hx using g_nn x hx.1
+          (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))]with x hx using g_nn x hx.1
     rw [← of_real_integral_eq_lintegral_of_real (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
     congr
     exact intervalIntegral.integral_of_le (f_nn ω)
-  simp_rw [integrand_eq, ← lintegral_indicator (fun t => Ennreal.ofReal (g t)) measurableSet_ioc, ←
-    lintegral_indicator _ measurableSet_ioi]
+  simp_rw [integrand_eq, ← lintegral_indicator (fun t => Ennreal.ofReal (g t)) measurableSet_Ioc, ←
+    lintegral_indicator _ measurableSet_Ioi]
   rw [lintegral_lintegral_swap]
   · apply congr_arg
     funext s
@@ -137,7 +137,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
         by_cases s ≤ f a <;> simp [h]]
     rw [lintegral_indicator]
     swap
-    · exact f_mble measurableSet_ici
+    · exact f_mble measurableSet_Ici
     rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
       mul_assoc,
       show
@@ -207,7 +207,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     refine' fun ω => intervalIntegral.integral_congr_ae _
     have fω_nn : 0 ≤ f ω := f_nn ω
     rw [uIoc_of_le fω_nn, ←
-      ae_restrict_iff' (measurableSet_ioc : MeasurableSet (Ioc (0 : ℝ) (f ω)))]
+      ae_restrict_iff' (measurableSet_Ioc : MeasurableSet (Ioc (0 : ℝ) (f ω)))]
     exact g_eq_G_on (f ω)
   simp_rw [eq₁, eq₂]
   exact
@@ -258,7 +258,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   set g := fun t : ℝ => t ^ (p - 1) with g_def
   have g_nn : ∀ᵐ t ∂volume.restrict (Ioi (0 : ℝ)), 0 ≤ g t :=
     by
-    filter_upwards [self_mem_ae_restrict (measurableSet_ioi : MeasurableSet (Ioi (0 : ℝ)))]
+    filter_upwards [self_mem_ae_restrict (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))]
     intro t t_pos
     rw [g_def]
     exact Real.rpow_nonneg_of_nonneg (mem_Ioi.mp t_pos).le (p - 1)

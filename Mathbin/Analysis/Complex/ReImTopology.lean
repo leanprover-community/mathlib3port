@@ -95,82 +95,82 @@ theorem frontier_preimage_im (s : Set ℝ) : frontier (im ⁻¹' s) = im ⁻¹' 
 
 @[simp]
 theorem interior_setOf_re_le (a : ℝ) : interior { z : ℂ | z.re ≤ a } = { z | z.re < a } := by
-  simpa only [interior_iic] using interior_preimage_re (Iic a)
+  simpa only [interior_Iic] using interior_preimage_re (Iic a)
 #align complex.interior_set_of_re_le Complex.interior_setOf_re_le
 
 @[simp]
 theorem interior_setOf_im_le (a : ℝ) : interior { z : ℂ | z.im ≤ a } = { z | z.im < a } := by
-  simpa only [interior_iic] using interior_preimage_im (Iic a)
+  simpa only [interior_Iic] using interior_preimage_im (Iic a)
 #align complex.interior_set_of_im_le Complex.interior_setOf_im_le
 
 @[simp]
 theorem interior_setOf_le_re (a : ℝ) : interior { z : ℂ | a ≤ z.re } = { z | a < z.re } := by
-  simpa only [interior_ici] using interior_preimage_re (Ici a)
+  simpa only [interior_Ici] using interior_preimage_re (Ici a)
 #align complex.interior_set_of_le_re Complex.interior_setOf_le_re
 
 @[simp]
 theorem interior_setOf_le_im (a : ℝ) : interior { z : ℂ | a ≤ z.im } = { z | a < z.im } := by
-  simpa only [interior_ici] using interior_preimage_im (Ici a)
+  simpa only [interior_Ici] using interior_preimage_im (Ici a)
 #align complex.interior_set_of_le_im Complex.interior_setOf_le_im
 
 @[simp]
 theorem closure_setOf_re_lt (a : ℝ) : closure { z : ℂ | z.re < a } = { z | z.re ≤ a } := by
-  simpa only [closure_iio] using closure_preimage_re (Iio a)
+  simpa only [closure_Iio] using closure_preimage_re (Iio a)
 #align complex.closure_set_of_re_lt Complex.closure_setOf_re_lt
 
 @[simp]
 theorem closure_setOf_im_lt (a : ℝ) : closure { z : ℂ | z.im < a } = { z | z.im ≤ a } := by
-  simpa only [closure_iio] using closure_preimage_im (Iio a)
+  simpa only [closure_Iio] using closure_preimage_im (Iio a)
 #align complex.closure_set_of_im_lt Complex.closure_setOf_im_lt
 
 @[simp]
 theorem closure_setOf_lt_re (a : ℝ) : closure { z : ℂ | a < z.re } = { z | a ≤ z.re } := by
-  simpa only [closure_ioi] using closure_preimage_re (Ioi a)
+  simpa only [closure_Ioi] using closure_preimage_re (Ioi a)
 #align complex.closure_set_of_lt_re Complex.closure_setOf_lt_re
 
 @[simp]
 theorem closure_setOf_lt_im (a : ℝ) : closure { z : ℂ | a < z.im } = { z | a ≤ z.im } := by
-  simpa only [closure_ioi] using closure_preimage_im (Ioi a)
+  simpa only [closure_Ioi] using closure_preimage_im (Ioi a)
 #align complex.closure_set_of_lt_im Complex.closure_setOf_lt_im
 
 @[simp]
 theorem frontier_setOf_re_le (a : ℝ) : frontier { z : ℂ | z.re ≤ a } = { z | z.re = a } := by
-  simpa only [frontier_iic] using frontier_preimage_re (Iic a)
+  simpa only [frontier_Iic] using frontier_preimage_re (Iic a)
 #align complex.frontier_set_of_re_le Complex.frontier_setOf_re_le
 
 @[simp]
 theorem frontier_setOf_im_le (a : ℝ) : frontier { z : ℂ | z.im ≤ a } = { z | z.im = a } := by
-  simpa only [frontier_iic] using frontier_preimage_im (Iic a)
+  simpa only [frontier_Iic] using frontier_preimage_im (Iic a)
 #align complex.frontier_set_of_im_le Complex.frontier_setOf_im_le
 
 @[simp]
 theorem frontier_setOf_le_re (a : ℝ) : frontier { z : ℂ | a ≤ z.re } = { z | z.re = a } := by
-  simpa only [frontier_ici] using frontier_preimage_re (Ici a)
+  simpa only [frontier_Ici] using frontier_preimage_re (Ici a)
 #align complex.frontier_set_of_le_re Complex.frontier_setOf_le_re
 
 @[simp]
 theorem frontier_setOf_le_im (a : ℝ) : frontier { z : ℂ | a ≤ z.im } = { z | z.im = a } := by
-  simpa only [frontier_ici] using frontier_preimage_im (Ici a)
+  simpa only [frontier_Ici] using frontier_preimage_im (Ici a)
 #align complex.frontier_set_of_le_im Complex.frontier_setOf_le_im
 
 @[simp]
 theorem frontier_setOf_re_lt (a : ℝ) : frontier { z : ℂ | z.re < a } = { z | z.re = a } := by
-  simpa only [frontier_iio] using frontier_preimage_re (Iio a)
+  simpa only [frontier_Iio] using frontier_preimage_re (Iio a)
 #align complex.frontier_set_of_re_lt Complex.frontier_setOf_re_lt
 
 @[simp]
 theorem frontier_setOf_im_lt (a : ℝ) : frontier { z : ℂ | z.im < a } = { z | z.im = a } := by
-  simpa only [frontier_iio] using frontier_preimage_im (Iio a)
+  simpa only [frontier_Iio] using frontier_preimage_im (Iio a)
 #align complex.frontier_set_of_im_lt Complex.frontier_setOf_im_lt
 
 @[simp]
 theorem frontier_setOf_lt_re (a : ℝ) : frontier { z : ℂ | a < z.re } = { z | z.re = a } := by
-  simpa only [frontier_ioi] using frontier_preimage_re (Ioi a)
+  simpa only [frontier_Ioi] using frontier_preimage_re (Ioi a)
 #align complex.frontier_set_of_lt_re Complex.frontier_setOf_lt_re
 
 @[simp]
 theorem frontier_setOf_lt_im (a : ℝ) : frontier { z : ℂ | a < z.im } = { z | z.im = a } := by
-  simpa only [frontier_ioi] using frontier_preimage_im (Ioi a)
+  simpa only [frontier_Ioi] using frontier_preimage_im (Ioi a)
 #align complex.frontier_set_of_lt_im Complex.frontier_setOf_lt_im
 
 theorem closure_reProdIm (s t : Set ℝ) : closure (s ×ℂ t) = closure s ×ℂ closure t := by
@@ -190,12 +190,12 @@ theorem frontier_reProdIm (s t : Set ℝ) :
 
 theorem frontier_setOf_le_re_and_le_im (a b : ℝ) :
     frontier { z | a ≤ re z ∧ b ≤ im z } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ b ≤ im z } := by
-  simpa only [closure_ici, frontier_ici] using frontier_re_prod_im (Ici a) (Ici b)
+  simpa only [closure_Ici, frontier_Ici] using frontier_re_prod_im (Ici a) (Ici b)
 #align complex.frontier_set_of_le_re_and_le_im Complex.frontier_setOf_le_re_and_le_im
 
 theorem frontier_setOf_le_re_and_im_le (a b : ℝ) :
     frontier { z | a ≤ re z ∧ im z ≤ b } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b } := by
-  simpa only [closure_ici, closure_iic, frontier_ici, frontier_iic] using
+  simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using
     frontier_re_prod_im (Ici a) (Iic b)
 #align complex.frontier_set_of_le_re_and_im_le Complex.frontier_setOf_le_re_and_im_le
 

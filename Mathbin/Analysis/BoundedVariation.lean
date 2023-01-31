@@ -110,7 +110,7 @@ theorem sum_le (f : α → E) {s : Set α} (n : ℕ) {u : ℕ → α} (hu : Mono
   le_supᵢ_of_le ⟨n, u, hu, us⟩ le_rfl
 #align evariation_on.sum_le evariationOn.sum_le
 
-theorem sum_le_of_monotoneOn_iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ → α}
+theorem sum_le_of_monotoneOn_Iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ → α}
     (hu : MonotoneOn u (Iic n)) (us : ∀ i ≤ n, u i ∈ s) :
     (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) ≤ evariationOn f s :=
   by
@@ -138,9 +138,9 @@ theorem sum_le_of_monotoneOn_iic (f : α → E) {s : Set α} {n : ℕ} {u : ℕ 
   have : i + 1 ≤ n := by linarith
   simp only [v]
   simp [this, hi.le]
-#align evariation_on.sum_le_of_monotone_on_Iic evariationOn.sum_le_of_monotoneOn_iic
+#align evariation_on.sum_le_of_monotone_on_Iic evariationOn.sum_le_of_monotoneOn_Iic
 
-theorem sum_le_of_monotoneOn_icc (f : α → E) {s : Set α} {m n : ℕ} {u : ℕ → α}
+theorem sum_le_of_monotoneOn_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : ℕ → α}
     (hu : MonotoneOn u (Icc m n)) (us : ∀ i ∈ Icc m n, u i ∈ s) :
     (∑ i in Finset.Ico m n, edist (f (u (i + 1))) (f (u i))) ≤ evariationOn f s :=
   by
@@ -170,7 +170,7 @@ theorem sum_le_of_monotoneOn_icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
       simp only [v, add_assoc]
     _ ≤ evariationOn f s := sum_le_of_monotone_on_Iic f hv vs
     
-#align evariation_on.sum_le_of_monotone_on_Icc evariationOn.sum_le_of_monotoneOn_icc
+#align evariation_on.sum_le_of_monotone_on_Icc evariationOn.sum_le_of_monotoneOn_Icc
 
 theorem mono (f : α → E) {s t : Set α} (hst : t ⊆ s) : evariationOn f t ≤ evariationOn f s :=
   by
@@ -624,7 +624,7 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
       
 #align evariation_on.union evariationOn.union
 
-theorem icc_add_icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) (hb : b ∈ s) :
+theorem Icc_add_Icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) (hb : b ∈ s) :
     evariationOn f (s ∩ Icc a b) + evariationOn f (s ∩ Icc b c) = evariationOn f (s ∩ Icc a c) :=
   by
   have A : IsGreatest (s ∩ Icc a b) b :=
@@ -632,7 +632,7 @@ theorem icc_add_icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hb
   have B : IsLeast (s ∩ Icc b c) b :=
     ⟨⟨hb, le_rfl, hbc⟩, (inter_subset_right _ _).trans Icc_subset_Ici_self⟩
   rw [← evariationOn.union f A B, ← inter_union_distrib_left, Icc_union_Icc_eq_Icc hab hbc]
-#align evariation_on.Icc_add_Icc evariationOn.icc_add_icc
+#align evariation_on.Icc_add_Icc evariationOn.Icc_add_Icc
 
 theorem comp_le_of_monotoneOn (f : α → E) {s : Set α} {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
     (φst : MapsTo φ t s) : evariationOn (f ∘ φ) t ≤ evariationOn f s :=
@@ -677,15 +677,15 @@ theorem comp_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ 
 -- porting note: move to file `data.set.intervals.basic` once the port is over,
 -- and use it in theorem `polynomial_functions_closure_eq_top`
 -- in the file `topology/continuous_function/weierstrass.lean`
-theorem Set.subsingleton_icc_of_ge {α : Type _} [PartialOrder α] {a b : α} (h : b ≤ a) :
+theorem Set.subsingleton_Icc_of_ge {α : Type _} [PartialOrder α] {a b : α} (h : b ≤ a) :
     Set.Subsingleton (Icc a b) := by
   rintro c ⟨ac, cb⟩ d ⟨ad, db⟩
   cases le_antisymm (cb.trans h) ac
   cases le_antisymm (db.trans h) ad
   rfl
-#align set.subsingleton_Icc_of_ge Set.subsingleton_icc_of_ge
+#align set.subsingleton_Icc_of_ge Set.subsingleton_Icc_of_ge
 
-theorem comp_inter_icc_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
+theorem comp_inter_Icc_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : MonotoneOn φ t)
     {x y : β} (hx : x ∈ t) (hy : y ∈ t) :
     evariationOn (f ∘ φ) (t ∩ Icc x y) = evariationOn f (φ '' t ∩ Icc (φ x) (φ y)) :=
   by
@@ -703,9 +703,9 @@ theorem comp_inter_icc_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β →
     · rintro _ ⟨u, ⟨⟨hu, xu, uy⟩, rfl⟩⟩
       refine' ⟨⟨u, hu, rfl⟩, ⟨hφ hx hu xu, hφ hu hy uy⟩⟩
   · rw [evariationOn.subsingleton, evariationOn.subsingleton]
-    exacts[(Set.subsingleton_icc_of_ge (hφ hy hx h)).anti (Set.inter_subset_right _ _),
-      (Set.subsingleton_icc_of_ge h).anti (Set.inter_subset_right _ _)]
-#align evariation_on.comp_inter_Icc_eq_of_monotone_on evariationOn.comp_inter_icc_eq_of_monotoneOn
+    exacts[(Set.subsingleton_Icc_of_ge (hφ hy hx h)).anti (Set.inter_subset_right _ _),
+      (Set.subsingleton_Icc_of_ge h).anti (Set.inter_subset_right _ _)]
+#align evariation_on.comp_inter_Icc_eq_of_monotone_on evariationOn.comp_inter_Icc_eq_of_monotoneOn
 
 theorem comp_eq_of_antitoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ : AntitoneOn φ t) :
     evariationOn (f ∘ φ) t = evariationOn f (φ '' t) :=
@@ -832,7 +832,7 @@ theorem add {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) 
     simp only [eq_neg_swap f s y x, Subtype.coe_mk, add_right_neg, forall_true_left]
   · rintro x y z xy yz xs ys zs
     rw [eq_of_le f s xy, eq_of_le f s yz, eq_of_le f s (xy.trans yz), ←
-      Ennreal.toReal_add (hf x y xs ys) (hf y z ys zs), evariationOn.icc_add_icc f xy yz ys]
+      Ennreal.toReal_add (hf x y xs ys) (hf y z ys zs), evariationOn.Icc_add_Icc f xy yz ys]
 #align variation_on_from_to.add variationOnFromTo.add
 
 @[protected]
@@ -940,10 +940,10 @@ theorem comp_eq_of_monotoneOn (f : α → E) {t : Set β} (φ : β → α) (hφ 
   rcases le_total x y with (h | h)
   ·
     rw [eq_of_le _ _ h, eq_of_le _ _ (hφ hx hy h),
-      evariationOn.comp_inter_icc_eq_of_monotoneOn f φ hφ hx hy]
+      evariationOn.comp_inter_Icc_eq_of_monotoneOn f φ hφ hx hy]
   ·
     rw [eq_of_ge _ _ h, eq_of_ge _ _ (hφ hy hx h),
-      evariationOn.comp_inter_icc_eq_of_monotoneOn f φ hφ hy hx]
+      evariationOn.comp_inter_Icc_eq_of_monotoneOn f φ hφ hy hx]
 #align variation_on_from_to.comp_eq_of_monotone_on variationOnFromTo.comp_eq_of_monotoneOn
 
 end variationOnFromTo

@@ -55,7 +55,7 @@ theorem stdSimplex_subset_closedBall : stdSimplex ℝ ι ⊆ Metric.closedBall 0
   rw [Metric.mem_closedBall, dist_pi_le_iff zero_le_one]
   intro x
   rw [Pi.zero_apply, Real.dist_0_eq_abs, abs_of_nonneg <| hf.1 x]
-  exact (mem_icc_of_mem_stdSimplex hf x).2
+  exact (mem_Icc_of_mem_stdSimplex hf x).2
 #align std_simplex_subset_closed_ball stdSimplex_subset_closedBall
 
 variable (ι)

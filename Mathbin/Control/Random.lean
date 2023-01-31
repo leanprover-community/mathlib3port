@@ -318,14 +318,14 @@ def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Random (Fin n)
   | 0, h => False.elim (Nat.not_lt_zero _ h)
 #align random_fin_of_pos randomFinOfPos
 
-theorem bool_ofNat_mem_icc_of_mem_icc_toNat (x y : Bool) (n : ℕ) :
+theorem bool_ofNat_mem_Icc_of_mem_Icc_toNat (x y : Bool) (n : ℕ) :
     n ∈ (x.toNat .. y.toNat) → Bool.ofNat n ∈ (x .. y) :=
   by
   simp only [and_imp, Set.mem_Icc]; intro h₀ h₁
   constructor <;> [have h₂ := Bool.ofNat_le_ofNat h₀, have h₂ := Bool.ofNat_le_ofNat h₁] <;>
       rw [Bool.ofNat_toNat] at h₂ <;>
     exact h₂
-#align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_ofNat_mem_icc_of_mem_icc_toNat
+#align bool_of_nat_mem_Icc_of_mem_Icc_to_nat bool_ofNat_mem_Icc_of_mem_Icc_toNat
 
 instance : Random Bool
     where Random g inst :=
@@ -333,7 +333,7 @@ instance : Random Bool
 
 instance : BoundedRandom Bool
     where randomR g _inst x y p :=
-    Subtype.map Bool.ofNat (bool_ofNat_mem_icc_of_mem_icc_toNat x y) <$>
+    Subtype.map Bool.ofNat (bool_ofNat_mem_Icc_of_mem_Icc_toNat x y) <$>
       @BoundedRandom.randomR ℕ _ _ g _inst x.toNat y.toNat (Bool.toNat_le_toNat p)
 
 /-- generate a random bit vector of length `n` -/

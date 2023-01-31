@@ -80,7 +80,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_add, ← Complex.of_real_mul, ←
       mul_assoc] at Z
     simpa [A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
-  open_target := isOpen_ioi.Prod isOpen_ioo
+  open_target := isOpen_Ioi.Prod isOpen_Ioo
   open_source :=
     (isOpen_lt continuous_const continuous_fst).union
       (isOpen_ne_fun continuous_snd continuous_const)

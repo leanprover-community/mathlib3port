@@ -107,9 +107,9 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
         (Or.inl
           (by
             simp only [true_and_iff, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true,
-              Finset.mem_image, hEq_iff_eq]
+              Finset.mem_image, heq_iff_eq]
             refine' ⟨j, rfl, _⟩
-            simp only [hEq_iff_eq]
+            simp only [heq_iff_eq]
             exact ⟨rfl, rfl, rfl⟩))
     have gH : ∀ j, (⟨ky, k j, kyO, kjO j, g j⟩ : Σ'(X Y : K)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H :=
       fun j =>
@@ -117,9 +117,9 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
         (Or.inr
           (by
             simp only [true_and_iff, Finset.mem_univ, eq_self_iff_true, exists_prop_of_true,
-              Finset.mem_image, hEq_iff_eq]
+              Finset.mem_image, heq_iff_eq]
             refine' ⟨j, rfl, _⟩
-            simp only [hEq_iff_eq]
+            simp only [heq_iff_eq]
             exact ⟨rfl, rfl, rfl⟩))
     -- Our goal is now an equation between equivalence classes of representatives of a colimit,
     -- and so it suffices to show those representative become equal somewhere, in particular at `S`.
@@ -247,7 +247,7 @@ theorem colimitLimitToLimitColimit_surjective :
         refine' ⟨j₂, Finset.mem_univ _, _⟩
         rw [Finset.mem_bunionᵢ]
         refine' ⟨f, Finset.mem_univ _, _⟩
-        simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, hEq_iff_eq]
+        simp only [true_or_iff, eq_self_iff_true, and_self_iff, Finset.mem_insert, heq_iff_eq]
       · rw [Finset.mem_bunionᵢ]
         refine' ⟨j₃, Finset.mem_univ _, _⟩
         rw [Finset.mem_bunionᵢ]
@@ -255,7 +255,7 @@ theorem colimitLimitToLimitColimit_surjective :
         rw [Finset.mem_bunionᵢ]
         refine' ⟨f', Finset.mem_univ _, _⟩
         simp only [eq_self_iff_true, or_true_iff, and_self_iff, Finset.mem_insert,
-          Finset.mem_singleton, hEq_iff_eq]
+          Finset.mem_singleton, heq_iff_eq]
     clear_value i
     clear s' i' H kfO k'O O
     -- We're finally ready to construct the pre-image, and verify it really maps to `x`.

@@ -371,16 +371,16 @@ theorem tendsto_pow_log_div_mul_add_atTop (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
     (by filter_upwards [eventually_gt_at_top (0 : ℝ)]with x hx using by simp [exp_log hx])
 #align real.tendsto_pow_log_div_mul_add_at_top Real.tendsto_pow_log_div_mul_add_atTop
 
-theorem isO_pow_log_id_atTop {n : ℕ} : (fun x => log x ^ n) =o[at_top] id :=
+theorem isOCat_pow_log_id_atTop {n : ℕ} : (fun x => log x ^ n) =o[at_top] id :=
   by
-  rw [Asymptotics.isO_iff_tendsto']
+  rw [Asymptotics.isOCat_iff_tendsto']
   · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
   filter_upwards [eventually_ne_at_top (0 : ℝ)]with x h₁ h₂ using(h₁ h₂).elim
-#align real.is_o_pow_log_id_at_top Real.isO_pow_log_id_atTop
+#align real.is_o_pow_log_id_at_top Real.isOCat_pow_log_id_atTop
 
-theorem isO_log_id_atTop : log =o[at_top] id :=
-  isO_pow_log_id_atTop.congr_left fun x => pow_one _
-#align real.is_o_log_id_at_top Real.isO_log_id_atTop
+theorem isOCat_log_id_atTop : log =o[at_top] id :=
+  isOCat_pow_log_id_atTop.congr_left fun x => pow_one _
+#align real.is_o_log_id_at_top Real.isOCat_log_id_atTop
 
 end Real
 

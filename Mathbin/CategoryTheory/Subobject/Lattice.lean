@@ -581,7 +581,7 @@ instance {B : C} : Lattice (Subobject B) :=
 
 end Lattice
 
-section InfCat
+section Inf
 
 variable [WellPowered C]
 
@@ -699,9 +699,9 @@ instance {B : C} : CompleteSemilatticeInf (Subobject B) :=
     Inf_le := inf_le
     le_Inf := le_inf }
 
-end InfCat
+end Inf
 
-section SupCat
+section Sup
 
 variable [WellPowered C] [HasCoproducts.{v₁} C]
 
@@ -773,7 +773,7 @@ instance {B : C} : CompleteSemilatticeSup (Subobject B) :=
     le_Sup := le_sup
     Sup_le := sup_le }
 
-end SupCat
+end Sup
 
 section CompleteLattice
 

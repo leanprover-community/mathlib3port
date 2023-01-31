@@ -132,7 +132,7 @@ Case conversion may be inaccurate. Consider using '#align list.mem_sigma List.me
 theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ a} :
     Sigma.mk a b ∈ l₁.Sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
   simp only [List.sigma, mem_bind, mem_map, exists_prop, exists_and_left, and_left_comm,
-    exists_eq_left, hEq_iff_eq, exists_eq_right]
+    exists_eq_left, heq_iff_eq, exists_eq_right]
 #align list.mem_sigma List.mem_sigma
 
 /- warning: list.length_sigma -> List.length_sigma is a dubious translation:

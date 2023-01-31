@@ -38,11 +38,11 @@ namespace FirstOrder
 
 namespace Language
 
-open StructureCat
+open Structure
 
 variable (L : Language) (M : Type _) (N : Type _) {P : Type _} {Q : Type _}
 
-variable [L.StructureCat M] [L.StructureCat N] [L.StructureCat P] [L.StructureCat Q]
+variable [L.Structure M] [L.Structure N] [L.Structure P] [L.Structure Q]
 
 /-- An elementary embedding of first-order structures is an embedding that commutes with the
   realizations of formulas. -/
@@ -109,9 +109,9 @@ theorem map_sentence (f : M ↪ₑ[L] N) (φ : L.Sentence) : M ⊨ φ ↔ N ⊨ 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem theoryCat_model_iff (f : M ↪ₑ[L] N) (T : L.TheoryCat) : M ⊨ T ↔ N ⊨ T := by
+theorem theory_model_iff (f : M ↪ₑ[L] N) (T : L.Theory) : M ⊨ T ↔ N ⊨ T := by
   simp only [Theory.model_iff, f.map_sentence]
-#align first_order.language.elementary_embedding.Theory_model_iff FirstOrder.Language.ElementaryEmbedding.theoryCat_model_iff
+#align first_order.language.elementary_embedding.Theory_model_iff FirstOrder.Language.ElementaryEmbedding.theory_model_iff
 
 theorem elementarilyEquivalent (f : M ↪ₑ[L] N) : M ≅[L] N :=
   elementarilyEquivalent_iff.2 f.map_sentence
@@ -238,7 +238,7 @@ variable (L) (M)
 
 /-- The elementary diagram of an `L`-structure is the set of all sentences with parameters it
   satisfies. -/
-abbrev elementaryDiagram : L[[M]].TheoryCat :=
+abbrev elementaryDiagram : L[[M]].Theory :=
   L[[M]].completeTheory M
 #align first_order.language.elementary_diagram FirstOrder.Language.elementaryDiagram
 
@@ -246,9 +246,8 @@ abbrev elementaryDiagram : L[[M]].TheoryCat :=
 /-- The canonical elementary embedding of an `L`-structure into any model of its elementary diagram
 -/
 @[simps]
-def ElementaryEmbedding.ofModelsElementaryDiagram (N : Type _) [L.StructureCat N]
-    [L[[M]].StructureCat N] [(lhomWithConstants L M).IsExpansionOn N] [N ⊨ L.elementaryDiagram M] :
-    M ↪ₑ[L] N :=
+def ElementaryEmbedding.ofModelsElementaryDiagram (N : Type _) [L.Structure N] [L[[M]].Structure N]
+    [(lhomWithConstants L M).IsExpansionOn N] [N ⊨ L.elementaryDiagram M] : M ↪ₑ[L] N :=
   ⟨(coe : L[[M]].Constants → N) ∘ Sum.inr, fun n φ x =>
     by
     refine'
@@ -392,7 +391,7 @@ instance : SetLike (L.ElementarySubstructure M) M :=
     congr
     exact h⟩
 
-instance inducedStructure (S : L.ElementarySubstructure M) : L.StructureCat S :=
+instance inducedStructure (S : L.ElementarySubstructure M) : L.Structure S :=
   substructure.induced_Structure
 #align first_order.language.elementary_substructure.induced_Structure FirstOrder.Language.ElementarySubstructure.inducedStructure
 
@@ -440,15 +439,15 @@ theorem realize_sentence (S : L.ElementarySubstructure M) (φ : L.Sentence) : S 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem theoryCat_model_iff (S : L.ElementarySubstructure M) (T : L.TheoryCat) : S ⊨ T ↔ M ⊨ T := by
+theorem theory_model_iff (S : L.ElementarySubstructure M) (T : L.Theory) : S ⊨ T ↔ M ⊨ T := by
   simp only [Theory.model_iff, realize_sentence]
-#align first_order.language.elementary_substructure.Theory_model_iff FirstOrder.Language.ElementarySubstructure.theoryCat_model_iff
+#align first_order.language.elementary_substructure.Theory_model_iff FirstOrder.Language.ElementarySubstructure.theory_model_iff
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-instance theoryCat_model {T : L.TheoryCat} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
-  (theoryCat_model_iff S T).2 h
-#align first_order.language.elementary_substructure.Theory_model FirstOrder.Language.ElementarySubstructure.theoryCat_model
+instance theory_model {T : L.Theory} [h : M ⊨ T] {S : L.ElementarySubstructure M} : S ⊨ T :=
+  (theory_model_iff S T).2 h
+#align first_order.language.elementary_substructure.Theory_model FirstOrder.Language.ElementarySubstructure.theory_model
 
 instance [h : Nonempty M] {S : L.ElementarySubstructure M} : Nonempty S :=
   (model_nonemptyTheory_iff L).1 inferInstance

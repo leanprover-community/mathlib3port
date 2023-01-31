@@ -48,7 +48,7 @@ theorem radius_eq_liminf : p.radius = liminf (fun n => 1 / (‖p n‖₊ ^ (1 / 
         Nnreal.one_rpow n⁻¹, Nnreal.rpow_le_rpow_iff (inv_pos.2 this), mul_comm,
         Nnreal.rpow_nat_cast]
   apply le_antisymm <;> refine' Ennreal.le_of_forall_nnreal_lt fun r hr => _
-  · rcases((tFAE_exists_lt_isO_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 7).1
+  · rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 7).1
         (p.is_o_of_lt_radius hr) with ⟨a, ha, H⟩
     refine' le_Liminf_of_le (by infer_param) (eventually_map.2 <| _)
     refine'

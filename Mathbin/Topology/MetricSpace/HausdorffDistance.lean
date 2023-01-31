@@ -217,7 +217,7 @@ theorem IsOpen.exists_unionᵢ_isClosed {U : Set α} (hU : IsOpen U) :
     have : inf_edist x (Uᶜ) ≠ 0 := ((Ennreal.pow_pos a_pos _).trans_le hx).ne'
     contrapose! this
     exact inf_edist_zero_of_mem this
-  refine' ⟨F, fun n => IsClosed.preimage continuous_inf_edist isClosed_ici, F_subset, _, _⟩
+  refine' ⟨F, fun n => IsClosed.preimage continuous_inf_edist isClosed_Ici, F_subset, _, _⟩
   show Monotone F
   · intro m n hmn x hx
     simp only [mem_Ici, mem_preimage] at hx⊢
@@ -1007,7 +1007,7 @@ theorem thickening_eq_preimage_infEdist (δ : ℝ) (E : Set α) :
 
 /-- The (open) thickening is an open set. -/
 theorem isOpen_thickening {δ : ℝ} {E : Set α} : IsOpen (thickening δ E) :=
-  Continuous.isOpen_preimage continuous_infEdist _ isOpen_iio
+  Continuous.isOpen_preimage continuous_infEdist _ isOpen_Iio
 #align metric.is_open_thickening Metric.isOpen_thickening
 
 /-- The (open) thickening of the empty set is empty. -/
@@ -1149,7 +1149,7 @@ theorem cthickening_eq_preimage_infEdist (δ : ℝ) (E : Set α) :
 
 /-- The closed thickening is a closed set. -/
 theorem isClosed_cthickening {δ : ℝ} {E : Set α} : IsClosed (cthickening δ E) :=
-  IsClosed.preimage continuous_infEdist isClosed_iic
+  IsClosed.preimage continuous_infEdist isClosed_Iic
 #align metric.is_closed_cthickening Metric.isClosed_cthickening
 
 /-- The closed thickening of the empty set is empty. -/

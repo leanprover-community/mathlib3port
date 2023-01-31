@@ -351,7 +351,7 @@ theorem signBijAux_inj {n : ℕ} {f : Perm (Fin n)} :
   rw [mem_fin_pairs_lt] at *
   have : ¬b₁ < b₂ := hb.le.not_lt
   split_ifs  at h <;>
-    simp_all only [(Equiv.injective f).eq_iff, eq_self_iff_true, and_self_iff, hEq_iff_eq]
+    simp_all only [(Equiv.injective f).eq_iff, eq_self_iff_true, and_self_iff, heq_iff_eq]
 #align equiv.perm.sign_bij_aux_inj Equiv.Perm.signBijAux_inj
 
 theorem signBijAux_surj {n : ℕ} {f : Perm (Fin n)} :
@@ -439,7 +439,7 @@ private theorem sign_aux_swap_zero_one' (n : ℕ) : signAux (swap (0 : Fin (n + 
     rcases a₁.zero_le.eq_or_lt with (rfl | H)
     · exact absurd a₂.zero_le ha₁.not_le
     rcases a₂.zero_le.eq_or_lt with (rfl | H')
-    · simp only [and_true_iff, eq_self_iff_true, hEq_iff_eq, mem_singleton] at ha₂
+    · simp only [and_true_iff, eq_self_iff_true, heq_iff_eq, mem_singleton] at ha₂
       have : 1 < a₁ := lt_of_le_of_ne (Nat.succ_le_of_lt ha₁) (Ne.symm ha₂)
       have h01 : Equiv.swap (0 : Fin (n + 2)) 1 0 = 1 := by simp
       -- TODO : fix properly
@@ -548,7 +548,7 @@ def sign [Fintype α] : Perm α →* ℤˣ :=
   MonoidHom.mk' (fun f => signAux3 f mem_univ) fun f g => (signAux3_mul_and_swap f g _ mem_univ).1
 #align equiv.perm.sign Equiv.Perm.sign
 
-section Sign
+section SignType.sign
 
 variable [Fintype α]
 
@@ -574,7 +574,7 @@ theorem sign_refl : sign (Equiv.refl α) = 1 :=
 
 @[simp]
 theorem sign_inv (f : Perm α) : sign f⁻¹ = sign f := by
-  rw [MonoidHom.map_inv sign f, Int.units_inv_eq_self]
+  rw [MonoidHom.map_inv SignType.sign f, Int.units_inv_eq_self]
 #align equiv.perm.sign_inv Equiv.Perm.sign_inv
 
 @[simp]
@@ -631,7 +631,7 @@ theorem sign_prod_list_swap {l : List (Perm α)} (hl : ∀ g ∈ l, IsSwap g) :
       ⟨by simp, fun u hu =>
         let ⟨g, hg⟩ := List.mem_map'.1 hu
         hg.2 ▸ (hl _ hg.1).sign_eq⟩
-  rw [← List.prod_replicate, ← h₁, List.prod_hom _ (@sign α _ _)]
+  rw [← List.prod_replicate, ← h₁, List.prod_hom _ (@SignType.sign α _ _)]
 #align equiv.perm.sign_prod_list_swap Equiv.Perm.sign_prod_list_swap
 
 variable (α)
@@ -644,7 +644,7 @@ theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : Perm α �
 
 variable {α}
 
-theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) : s = sign :=
+theorem eq_sign_of_surjective_hom {s : Perm α →* ℤˣ} (hs : Surjective s) : s = SignType.sign :=
   have : ∀ {f}, IsSwap f → s f = -1 := fun f ⟨x, y, hxy, hxy'⟩ =>
     hxy'.symm ▸
       by_contradiction fun h =>
@@ -826,7 +826,7 @@ theorem sign_ofSubtype {p : α → Prop} [DecidablePred p] (f : Equiv.Perm (Subt
 
 end congr
 
-end Sign
+end SignType.sign
 
 end Equiv.Perm
 

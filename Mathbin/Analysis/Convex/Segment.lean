@@ -428,7 +428,7 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSMul 𝕜 E] {x y : E}
 
-theorem segment_subset_icc (h : x ≤ y) : [x -[𝕜] y] ⊆ Icc x y :=
+theorem segment_subset_Icc (h : x ≤ y) : [x -[𝕜] y] ⊆ Icc x y :=
   by
   rintro z ⟨a, b, ha, hb, hab, rfl⟩
   constructor
@@ -440,7 +440,7 @@ theorem segment_subset_icc (h : x ≤ y) : [x -[𝕜] y] ⊆ Icc x y :=
     a • x + b • y ≤ a • y + b • y := add_le_add_right (smul_le_smul_of_nonneg h ha) _
     _ = y := Convex.combo_self hab _
     
-#align segment_subset_Icc segment_subset_icc
+#align segment_subset_Icc segment_subset_Icc
 
 end OrderedAddCommMonoid
 
@@ -448,7 +448,7 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid E] [Module 𝕜 E] [OrderedSMul 𝕜 E] {x y : E}
 
-theorem openSegment_subset_ioo (h : x < y) : openSegment 𝕜 x y ⊆ Ioo x y :=
+theorem openSegment_subset_Ioo (h : x < y) : openSegment 𝕜 x y ⊆ Ioo x y :=
   by
   rintro z ⟨a, b, ha, hb, hab, rfl⟩
   constructor
@@ -460,7 +460,7 @@ theorem openSegment_subset_ioo (h : x < y) : openSegment 𝕜 x y ⊆ Ioo x y :=
     a • x + b • y < a • y + b • y := add_lt_add_right (smul_lt_smul_of_pos h ha) _
     _ = y := Convex.combo_self hab _
     
-#align open_segment_subset_Ioo openSegment_subset_ioo
+#align open_segment_subset_Ioo openSegment_subset_Ioo
 
 end OrderedCancelAddCommMonoid
 
@@ -472,9 +472,9 @@ theorem segment_subset_uIcc (x y : E) : [x -[𝕜] y] ⊆ uIcc x y :=
   by
   cases le_total x y
   · rw [uIcc_of_le h]
-    exact segment_subset_icc h
+    exact segment_subset_Icc h
   · rw [uIcc_of_ge h, segment_symm]
-    exact segment_subset_icc h
+    exact segment_subset_Icc h
 #align segment_subset_uIcc segment_subset_uIcc
 
 theorem Convex.min_le_combo (x y : E) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
@@ -495,7 +495,7 @@ section LinearOrderedField
 
 variable [LinearOrderedField 𝕜] {x y z : 𝕜}
 
-theorem icc_subset_segment : Icc x y ⊆ [x -[𝕜] y] :=
+theorem Icc_subset_segment : Icc x y ⊆ [x -[𝕜] y] :=
   by
   rintro z ⟨hxz, hyz⟩
   obtain rfl | h := (hxz.trans hyz).eq_or_lt
@@ -508,34 +508,34 @@ theorem icc_subset_segment : Icc x y ⊆ [x -[𝕜] y] :=
   ·
     rw [smul_eq_mul, smul_eq_mul, ← mul_div_right_comm, ← mul_div_right_comm, ← add_div,
       div_eq_iff h.ne', add_comm, sub_mul, sub_mul, mul_comm x, sub_add_sub_cancel, mul_sub]
-#align Icc_subset_segment icc_subset_segment
+#align Icc_subset_segment Icc_subset_segment
 
 @[simp]
-theorem segment_eq_icc (h : x ≤ y) : [x -[𝕜] y] = Icc x y :=
-  (segment_subset_icc h).antisymm icc_subset_segment
-#align segment_eq_Icc segment_eq_icc
+theorem segment_eq_Icc (h : x ≤ y) : [x -[𝕜] y] = Icc x y :=
+  (segment_subset_Icc h).antisymm Icc_subset_segment
+#align segment_eq_Icc segment_eq_Icc
 
-theorem ioo_subset_openSegment : Ioo x y ⊆ openSegment 𝕜 x y := fun z hz =>
-  mem_openSegment_of_ne_left_right hz.1.Ne hz.2.ne' <| icc_subset_segment <| Ioo_subset_Icc_self hz
-#align Ioo_subset_open_segment ioo_subset_openSegment
+theorem Ioo_subset_openSegment : Ioo x y ⊆ openSegment 𝕜 x y := fun z hz =>
+  mem_openSegment_of_ne_left_right hz.1.Ne hz.2.ne' <| Icc_subset_segment <| Ioo_subset_Icc_self hz
+#align Ioo_subset_open_segment Ioo_subset_openSegment
 
 @[simp]
-theorem openSegment_eq_ioo (h : x < y) : openSegment 𝕜 x y = Ioo x y :=
-  (openSegment_subset_ioo h).antisymm ioo_subset_openSegment
-#align open_segment_eq_Ioo openSegment_eq_ioo
+theorem openSegment_eq_Ioo (h : x < y) : openSegment 𝕜 x y = Ioo x y :=
+  (openSegment_subset_Ioo h).antisymm Ioo_subset_openSegment
+#align open_segment_eq_Ioo openSegment_eq_Ioo
 
 theorem segment_eq_Icc' (x y : 𝕜) : [x -[𝕜] y] = Icc (min x y) (max x y) :=
   by
   cases le_total x y
-  · rw [segment_eq_icc h, max_eq_right h, min_eq_left h]
-  · rw [segment_symm, segment_eq_icc h, max_eq_left h, min_eq_right h]
+  · rw [segment_eq_Icc h, max_eq_right h, min_eq_left h]
+  · rw [segment_symm, segment_eq_Icc h, max_eq_left h, min_eq_right h]
 #align segment_eq_Icc' segment_eq_Icc'
 
 theorem openSegment_eq_Ioo' (hxy : x ≠ y) : openSegment 𝕜 x y = Ioo (min x y) (max x y) :=
   by
   cases hxy.lt_or_lt
-  · rw [openSegment_eq_ioo h, max_eq_right h.le, min_eq_left h.le]
-  · rw [openSegment_symm, openSegment_eq_ioo h, max_eq_left h.le, min_eq_right h.le]
+  · rw [openSegment_eq_Ioo h, max_eq_right h.le, min_eq_left h.le]
+  · rw [openSegment_symm, openSegment_eq_Ioo h, max_eq_left h.le, min_eq_right h.le]
 #align open_segment_eq_Ioo' openSegment_eq_Ioo'
 
 theorem segment_eq_uIcc (x y : 𝕜) : [x -[𝕜] y] = uIcc x y :=
@@ -543,31 +543,31 @@ theorem segment_eq_uIcc (x y : 𝕜) : [x -[𝕜] y] = uIcc x y :=
 #align segment_eq_uIcc segment_eq_uIcc
 
 /-- A point is in an `Icc` iff it can be expressed as a convex combination of the endpoints. -/
-theorem Convex.mem_icc (h : x ≤ y) :
+theorem Convex.mem_Icc (h : x ≤ y) :
     z ∈ Icc x y ↔ ∃ a b, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z :=
   by
-  rw [← segment_eq_icc h]
+  rw [← segment_eq_Icc h]
   simp_rw [← exists_prop]
   rfl
-#align convex.mem_Icc Convex.mem_icc
+#align convex.mem_Icc Convex.mem_Icc
 
 /-- A point is in an `Ioo` iff it can be expressed as a strict convex combination of the endpoints.
 -/
-theorem Convex.mem_ioo (h : x < y) :
+theorem Convex.mem_Ioo (h : x < y) :
     z ∈ Ioo x y ↔ ∃ a b, 0 < a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z :=
   by
-  rw [← openSegment_eq_ioo h]
+  rw [← openSegment_eq_Ioo h]
   simp_rw [← exists_prop]
   rfl
-#align convex.mem_Ioo Convex.mem_ioo
+#align convex.mem_Ioo Convex.mem_Ioo
 
 /-- A point is in an `Ioc` iff it can be expressed as a semistrict convex combination of the
 endpoints. -/
-theorem Convex.mem_ioc (h : x < y) :
+theorem Convex.mem_Ioc (h : x < y) :
     z ∈ Ioc x y ↔ ∃ a b, 0 ≤ a ∧ 0 < b ∧ a + b = 1 ∧ a * x + b * y = z :=
   by
   refine' ⟨fun hz => _, _⟩
-  · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_icc h.le).1 (Ioc_subset_Icc_self hz)
+  · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_Icc h.le).1 (Ioc_subset_Icc_self hz)
     obtain rfl | hb' := hb.eq_or_lt
     · rw [add_zero] at hab
       rw [hab, one_mul, zero_mul, add_zero] at hz
@@ -577,16 +577,16 @@ theorem Convex.mem_ioc (h : x < y) :
     obtain rfl | ha' := ha.eq_or_lt
     · rw [zero_add] at hab
       rwa [hab, one_mul, zero_mul, zero_add, right_mem_Ioc]
-    · exact Ioo_subset_Ioc_self ((Convex.mem_ioo h).2 ⟨a, b, ha', hb, hab, rfl⟩)
-#align convex.mem_Ioc Convex.mem_ioc
+    · exact Ioo_subset_Ioc_self ((Convex.mem_Ioo h).2 ⟨a, b, ha', hb, hab, rfl⟩)
+#align convex.mem_Ioc Convex.mem_Ioc
 
 /-- A point is in an `Ico` iff it can be expressed as a semistrict convex combination of the
 endpoints. -/
-theorem Convex.mem_ico (h : x < y) :
+theorem Convex.mem_Ico (h : x < y) :
     z ∈ Ico x y ↔ ∃ a b, 0 < a ∧ 0 ≤ b ∧ a + b = 1 ∧ a * x + b * y = z :=
   by
   refine' ⟨fun hz => _, _⟩
-  · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_icc h.le).1 (Ico_subset_Icc_self hz)
+  · obtain ⟨a, b, ha, hb, hab, rfl⟩ := (Convex.mem_Icc h.le).1 (Ico_subset_Icc_self hz)
     obtain rfl | ha' := ha.eq_or_lt
     · rw [zero_add] at hab
       rw [hab, one_mul, zero_mul, zero_add] at hz
@@ -596,8 +596,8 @@ theorem Convex.mem_ico (h : x < y) :
     obtain rfl | hb' := hb.eq_or_lt
     · rw [add_zero] at hab
       rwa [hab, one_mul, zero_mul, add_zero, left_mem_Ico]
-    · exact Ioo_subset_Ico_self ((Convex.mem_ioo h).2 ⟨a, b, ha, hb', hab, rfl⟩)
-#align convex.mem_Ico Convex.mem_ico
+    · exact Ioo_subset_Ico_self ((Convex.mem_Ioo h).2 ⟨a, b, ha, hb', hab, rfl⟩)
+#align convex.mem_Ico Convex.mem_Ico
 
 end LinearOrderedField
 

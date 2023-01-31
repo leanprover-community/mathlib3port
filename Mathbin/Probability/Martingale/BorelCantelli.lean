@@ -56,7 +56,7 @@ noncomputable def leastGe (f : ℕ → Ω → ℝ) (r : ℝ) (n : ℕ) :=
 
 theorem Adapted.isStoppingTime_leastGe (r : ℝ) (n : ℕ) (hf : Adapted ℱ f) :
     IsStoppingTime ℱ (leastGe f r n) :=
-  hitting_isStoppingTime hf measurableSet_ici
+  hitting_isStoppingTime hf measurableSet_Ici
 #align measure_theory.adapted.is_stopping_time_least_ge MeasureTheory.Adapted.isStoppingTime_leastGe
 
 theorem leastGe_le {i : ℕ} {r : ℝ} (ω : Ω) : leastGe f r i ω ≤ i :=

@@ -328,8 +328,8 @@ theorem isIntegral_isLocalization_polynomial_quotient (P : Ideal R[X]) (pX : R[X
     Submonoid.powers (pX.map (Quotient.mk' (P.comap (C : R →+* R[X])))).leadingCoeff
   let M' : Submonoid (R[X] ⧸ P) :=
     (Submonoid.powers (pX.map (Quotient.mk' (P.comap (C : R →+* R[X])))).leadingCoeff).map
-      (quotient_map P C le_rfl)
-  let φ : R ⧸ P' →+* R[X] ⧸ P := quotient_map P C le_rfl
+      (QuotientMap P C le_rfl)
+  let φ : R ⧸ P' →+* R[X] ⧸ P := QuotientMap P C le_rfl
   let φ' : Rₘ →+* Sₘ := IsLocalization.map Sₘ φ M.le_comap_map
   have hφ' : φ.comp (Quotient.mk' P') = (Quotient.mk' P).comp C := rfl
   intro p
@@ -401,8 +401,8 @@ theorem jacobson_bot_of_integral_localization {R : Type _} [CommRing R] [IsDomai
   haveI : (I.comap φ').IsPrime := comap_is_prime φ' I
   haveI : (⊥ : Ideal (S ⧸ I.comap (algebraMap S Sₘ))).IsPrime := bot_prime
   have hcomm : φ'.comp (algebraMap R Rₘ) = (algebraMap S Sₘ).comp φ := IsLocalization.map_comp _
-  let f := quotient_map (I.comap (algebraMap S Sₘ)) φ le_rfl
-  let g := quotient_map I (algebraMap S Sₘ) le_rfl
+  let f := QuotientMap (I.comap (algebraMap S Sₘ)) φ le_rfl
+  let g := QuotientMap I (algebraMap S Sₘ) le_rfl
   have := is_maximal_comap_of_is_integral_of_is_maximal' φ' hφ' I hI
   have := ((is_maximal_iff_is_maximal_disjoint Rₘ x _).1 this).left
   have : ((I.comap (algebraMap S Sₘ)).comap φ).IsMaximal := by
@@ -438,7 +438,7 @@ private theorem is_jacobson_polynomial_of_domain (R : Type _) [CommRing R] [IsDo
     refine'
       jacobson_bot_of_integral_localization (Localization.Away x)
         (Localization ((Submonoid.powers x).map (P.quotient_map C le_rfl) : Submonoid (R[X] ⧸ P)))
-        (quotient_map P C le_rfl) quotient_map_injective x hx _
+        (QuotientMap P C le_rfl) quotient_map_injective x hx _
     -- `convert` is noticeably faster than `exact` here:
     convert is_integral_is_localization_polynomial_quotient P p pP
 #align ideal.polynomial.is_jacobson_polynomial_of_domain ideal.polynomial.is_jacobson_polynomial_of_domain
@@ -505,7 +505,7 @@ theorem isMaximal_comap_c_of_isMaximal [Nontrivial R] (hP' : ∀ x : R, c x ∈ 
   obtain ⟨m, hm⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_of_maximal P polynomial_not_is_field)
   have : (m : R[X]) ≠ 0
   rwa [Ne.def, Submodule.coe_eq_zero]
-  let φ : R ⧸ P.comap (C : R →+* R[X]) →+* R[X] ⧸ P := quotient_map P (C : R →+* R[X]) le_rfl
+  let φ : R ⧸ P.comap (C : R →+* R[X]) →+* R[X] ⧸ P := QuotientMap P (C : R →+* R[X]) le_rfl
   let M : Submonoid (R ⧸ P.comap C) :=
     Submonoid.powers
       ((m : R[X]).map (Quotient.mk' (P.comap (C : R →+* R[X]) : Ideal R))).leadingCoeff
@@ -557,13 +557,13 @@ private theorem quotient_mk_comp_C_is_integral_of_jacobson' [Nontrivial R] (hR :
   obtain ⟨pX, hpX, hp0⟩ :=
     exists_nonzero_mem_of_ne_bot (ne_of_lt (bot_lt_of_maximal P polynomial_not_is_field)).symm hP'
   let M : Submonoid (R ⧸ P') := Submonoid.powers (pX.map (Quotient.mk' P')).leadingCoeff
-  let φ : R ⧸ P' →+* R[X] ⧸ P := quotient_map P C le_rfl
+  let φ : R ⧸ P' →+* R[X] ⧸ P := QuotientMap P C le_rfl
   haveI hp'_prime : P'.is_prime := comap_is_prime C P
   have hM : (0 : R ⧸ P') ∉ M := fun ⟨n, hn⟩ => hp0 <| leading_coeff_eq_zero.mp (pow_eq_zero hn)
-  let M' : Submonoid (R[X] ⧸ P) := M.map (quotient_map P C le_rfl)
+  let M' : Submonoid (R[X] ⧸ P) := M.map (QuotientMap P C le_rfl)
   refine'
-    (quotient_map P C le_rfl).is_integral_tower_bot_of_is_integral (algebraMap _ (Localization M'))
-      _ _
+    (QuotientMap P C le_rfl).is_integral_tower_bot_of_is_integral (algebraMap _ (Localization M')) _
+      _
   · refine'
       IsLocalization.injective (Localization M')
         (show M' ≤ _ from le_nonZeroDivisors_of_noZeroDivisors fun hM' => hM _)

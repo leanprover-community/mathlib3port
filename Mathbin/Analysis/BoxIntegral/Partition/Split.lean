@@ -212,7 +212,7 @@ theorem sum_split_boxes {M : Type _} [AddCommMonoid M] (I : Box ι) (i : ι) (x 
 #align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxes
 
 /-- If `x ∉ (I.lower i, I.upper i)`, then the hyperplane `{y | y i = x}` does not split `I`. -/
-theorem split_of_not_mem_ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i x = ⊤ :=
+theorem split_of_not_mem_Ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i x = ⊤ :=
   by
   refine' ((is_partition_top I).eq_of_boxes_subset fun J hJ => _).symm
   rcases mem_top.1 hJ with rfl; clear hJ
@@ -221,7 +221,7 @@ theorem split_of_not_mem_ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i
   cases h <;> [right, left]
   · rwa [eq_comm, box.split_upper_eq_self]
   · rwa [eq_comm, box.split_lower_eq_self]
-#align box_integral.prepartition.split_of_not_mem_Ioo BoxIntegral.Prepartition.split_of_not_mem_ioo
+#align box_integral.prepartition.split_of_not_mem_Ioo BoxIntegral.Prepartition.split_of_not_mem_Ioo
 
 theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
     (h₃ : y i ≤ x) : (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=

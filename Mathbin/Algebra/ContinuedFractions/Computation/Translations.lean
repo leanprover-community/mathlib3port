@@ -174,7 +174,7 @@ theorem of_terminatedAt_iff_intFractPair_seq1_terminatedAt :
 
 theorem of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none :
     (of v).TerminatedAt n ↔ IntFractPair.stream v (n + 1) = none := by
-  rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, Seq.TerminatedAt,
+  rw [of_terminated_at_iff_int_fract_pair_seq1_terminated_at, SeqCat.TerminatedAt,
     int_fract_pair.nth_seq1_eq_succ_nth_stream]
 #align generalized_continued_fraction.of_terminated_at_n_iff_succ_nth_int_fract_pair_stream_eq_none GeneralizedContinuedFraction.of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none
 
@@ -197,7 +197,7 @@ theorem IntFractPair.exists_succ_nth_stream_of_gcf_of_nth_eq_some {gp_n : Pair K
     ∃ ifp, int_fract_pair.stream v (n + 1) = some ifp ∧ pair.mk 1 (ifp.b : K) = gp_n :=
     by
     unfold of int_fract_pair.seq1 at s_nth_eq
-    rwa [Seq.map_tail, Seq.nth_tail, Seq.map_nth, Option.map_eq_some'] at s_nth_eq
+    rwa [SeqCat.map_tail, SeqCat.nth_tail, SeqCat.map_nth, Option.map_eq_some'] at s_nth_eq
   cases gp_n_eq
   injection gp_n_eq with _ ifp_b_eq_gp_n_b
   exists ifp
@@ -212,8 +212,8 @@ theorem nth_of_eq_some_of_succ_nth_intFractPair_stream {ifp_succ_n : IntFractPai
     (of v).s.nth n = some ⟨1, ifp_succ_n.b⟩ :=
   by
   unfold of int_fract_pair.seq1
-  rw [Seq.map_tail, Seq.nth_tail, Seq.map_nth]
-  simp [Seq.nth, stream_succ_nth_eq]
+  rw [SeqCat.map_tail, SeqCat.nth_tail, SeqCat.map_nth]
+  simp [SeqCat.nth, stream_succ_nth_eq]
 #align generalized_continued_fraction.nth_of_eq_some_of_succ_nth_int_fract_pair_stream GeneralizedContinuedFraction.nth_of_eq_some_of_succ_nth_intFractPair_stream
 
 /-- Shows how the entries of the sequence of the computed continued fraction can be obtained by the

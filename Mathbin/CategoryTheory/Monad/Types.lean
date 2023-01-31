@@ -10,7 +10,7 @@ Authors: Johannes Hölzl, Bhavik Mehta
 -/
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monad.Kleisli
-import Mathbin.CategoryTheory.Category.KleisliCat
+import Mathbin.CategoryTheory.Category.Kleisli
 import Mathbin.CategoryTheory.Types
 
 /-!

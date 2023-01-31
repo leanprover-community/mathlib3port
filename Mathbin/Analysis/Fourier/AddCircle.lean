@@ -394,7 +394,7 @@ theorem fourierCoeffOn_eq_integral {a b : ℝ} (f : ℝ → E) (n : ℤ) (hab : 
   congr 1
   rw [add_sub, add_sub_cancel']
   simp_rw [intervalIntegral.integral_of_le hab.le]
-  refine' set_integral_congr measurableSet_ioc fun x hx => _
+  refine' set_integral_congr measurableSet_Ioc fun x hx => _
   dsimp only
   rwa [lift_Ioc_coe_apply]
   rwa [add_sub, add_sub_cancel']
@@ -428,7 +428,7 @@ theorem fourierCoeff_liftIco_eq {a : ℝ} (f : ℝ → ℂ) (n : ℤ) :
   congr 1
   simp_rw [intervalIntegral.integral_of_le (lt_add_of_pos_right a hT.out).le,
     integral_Ioc_eq_integral_Ioo]
-  refine' set_integral_congr measurableSet_ioo fun x hx => _
+  refine' set_integral_congr measurableSet_Ioo fun x hx => _
   dsimp only
   rw [lift_Ico_coe_apply (Ioo_subset_Ico_self hx)]
 #align fourier_coeff_lift_Ico_eq fourierCoeff_liftIco_eq
@@ -457,7 +457,7 @@ theorem fourierBasis_repr (f : lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
     fourierBasis.repr f i = fourierCoeff f i :=
   by
   trans ∫ t : AddCircle T, conj ((@fourierLp T hT 2 _ i : AddCircle T → ℂ) t) * f t ∂haar_add_circle
-  · simp [fourier_basis.repr_apply_apply f i, MeasureTheory.L2Cat.inner_def]
+  · simp [fourier_basis.repr_apply_apply f i, MeasureTheory.L2.inner_def]
   · apply integral_congr_ae
     filter_upwards [coeFn_fourierLp 2 i]with _ ht
     rw [ht, ← fourier_neg, smul_eq_mul]

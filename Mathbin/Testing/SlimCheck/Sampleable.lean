@@ -598,13 +598,15 @@ instance List.sampleable : SampleableFunctor List.{u}
   pRepr := @List.hasRepr
 #align slim_check.list.sampleable SlimCheck.List.sampleable
 
-instance PropCat.sampleableExt : SampleableExt Prop
+#print SlimCheck.Prop.sampleableExt /-
+instance Prop.sampleableExt : SampleableExt Prop
     where
   ProxyRepr := Bool
   interp := coe
   sample := chooseAny Bool
   shrink _ := LazyList.nil
-#align slim_check.Prop.sampleable_ext SlimCheck.PropCat.sampleableExt
+#align slim_check.Prop.sampleable_ext SlimCheck.Prop.sampleableExt
+-/
 
 #print SlimCheck.NoShrink /-
 /-- `no_shrink` is a type annotation to signal that

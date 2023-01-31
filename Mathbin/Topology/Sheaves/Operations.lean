@@ -8,8 +8,8 @@ Authors: Andrew Yang
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.RingCat.Instances
-import Mathbin.Algebra.Category.RingCat.FilteredColimits
+import Mathbin.Algebra.Category.Ring.Instances
+import Mathbin.Algebra.Category.Ring.FilteredColimits
 import Mathbin.RingTheory.Localization.Basic
 import Mathbin.Topology.Sheaves.Stalks
 

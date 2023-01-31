@@ -13,7 +13,7 @@ import Mathbin.CategoryTheory.Limits.Final
 import Mathbin.CategoryTheory.Limits.Preserves.Basic
 import Mathbin.CategoryTheory.Category.Pairwise
 import Mathbin.CategoryTheory.Limits.Constructions.BinaryProducts
-import Mathbin.Algebra.Category.RingCat.Constructions
+import Mathbin.Algebra.Category.Ring.Constructions
 
 /-!
 # Equivalent formulations of the sheaf condition

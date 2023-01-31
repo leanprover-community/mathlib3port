@@ -367,7 +367,7 @@ theorem Adapted.isStoppingTime_crossing (hf : Adapted ℱ f) :
   by
   induction' n with k ih
   · refine' ⟨is_stopping_time_const _ 0, _⟩
-    simp [hitting_is_stopping_time hf measurableSet_iic]
+    simp [hitting_is_stopping_time hf measurableSet_Iic]
   · obtain ⟨ih₁, ih₂⟩ := ih
     have : is_stopping_time ℱ (upper_crossing_time a b f N (k + 1)) :=
       by
@@ -375,12 +375,12 @@ theorem Adapted.isStoppingTime_crossing (hf : Adapted ℱ f) :
       simp_rw [upper_crossing_time_succ_eq]
       exact
         is_stopping_time_hitting_is_stopping_time ih₂ (fun _ => lower_crossing_time_le)
-          measurableSet_ici hf _
+          measurableSet_Ici hf _
     refine' ⟨this, _⟩
     · intro n
       exact
         is_stopping_time_hitting_is_stopping_time this (fun _ => upper_crossing_time_le)
-          measurableSet_iic hf _
+          measurableSet_Iic hf _
 #align measure_theory.adapted.is_stopping_time_crossing MeasureTheory.Adapted.isStoppingTime_crossing
 
 theorem Adapted.isStoppingTime_upperCrossingTime (hf : Adapted ℱ f) :
@@ -698,7 +698,7 @@ theorem mul_upcrossingsBefore_le (hf : a ≤ f N ω) (hab : a < b) :
                   Set.Ico (lower_crossing_time a b f N k ω) (upper_crossing_time a b f N (k + 1) ω))
               (Finset.range N) =
             Finset.Ico (lower_crossing_time a b f N k ω) (upper_crossing_time a b f N (k + 1) ω)),
-        Finset.sum_ico_eq_add_neg _ lower_crossing_time_le_upper_crossing_time_succ,
+        Finset.sum_Ico_eq_add_neg _ lower_crossing_time_le_upper_crossing_time_succ,
         Finset.sum_range_sub fun n => f n ω, Finset.sum_range_sub fun n => f n ω, neg_sub,
         sub_add_sub_cancel]
       · rfl

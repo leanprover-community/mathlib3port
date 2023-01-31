@@ -89,13 +89,12 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on'` for a versi
 theorem subbox_induction_on {p : Box ι → Prop} (I : Box ι)
     (H_ind : ∀ J ≤ I, (∀ J' ∈ splitCenter J, p J') → p J)
     (H_nhds :
-      ∀ z ∈ I.IccCat,
-        ∃ U ∈ 𝓝[I.IccCat] z,
+      ∀ z ∈ I.Icc,
+        ∃ U ∈ 𝓝[I.Icc] z,
           ∀ J ≤ I,
             ∀ (m : ℕ),
-              z ∈ J.IccCat →
-                J.IccCat ⊆ U →
-                  (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+              z ∈ J.Icc →
+                J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I :=
   by
   refine' subbox_induction_on' I (fun J hle hs => H_ind J hle fun J' h' => _) H_nhds

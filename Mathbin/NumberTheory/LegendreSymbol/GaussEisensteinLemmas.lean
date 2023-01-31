@@ -69,11 +69,11 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
 
 @[simp]
-theorem prod_ico_one_prime : (∏ x in Ico 1 p, (x : ZMod p)) = -1 :=
+theorem prod_Ico_one_prime : (∏ x in Ico 1 p, (x : ZMod p)) = -1 :=
   by
   conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
   rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
-#align zmod.prod_Ico_one_prime ZMod.prod_ico_one_prime
+#align zmod.prod_Ico_one_prime ZMod.prod_Ico_one_prime
 
 end Wilson
 
@@ -86,7 +86,7 @@ namespace ZMod
 /-- The image of the map sending a non zero natural number `x ≤ p / 2` to the absolute value
   of the element of interger in the interval `(-p/2, p/2]` congruent to `a * x` mod p is the set
   of non zero natural numbers `x` such that `x ≤ p / 2` -/
-theorem ico_map_valMinAbs_natAbs_eq_ico_map_id (p : ℕ) [hp : Fact p.Prime] (a : ZMod p)
+theorem Ico_map_valMinAbs_natAbs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] (a : ZMod p)
     (hap : a ≠ 0) :
     ((Ico 1 (p / 2).succ).1.map fun x => (a * x).valMinAbs.natAbs) =
       (Ico 1 (p / 2).succ).1.map fun a => a :=
@@ -127,7 +127,7 @@ theorem ico_map_valMinAbs_natAbs_eq_ico_map_id (p : ℕ) [hp : Fact p.Prime] (a 
     Multiset.map_eq_map_of_bij_of_nodup _ _ (Finset.nodup _) (Finset.nodup _)
       (fun x _ => (a * x : ZMod p).valMinAbs.natAbs) hmem (fun _ _ => rfl)
       (inj_on_of_surj_on_of_card_le _ hmem hsurj le_rfl) hsurj
-#align zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id ZMod.ico_map_valMinAbs_natAbs_eq_ico_map_id
+#align zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id ZMod.Ico_map_valMinAbs_natAbs_eq_Ico_map_id
 
 private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
@@ -289,7 +289,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
                   forall_true_iff, mem_product])
               (fun ⟨_, _⟩ ⟨_, _⟩ => by
                 simp (config := { contextual := true }) only [Prod.mk.inj_iff, eq_self_iff_true,
-                  and_self_iff, hEq_iff_eq, forall_true_iff])
+                  and_self_iff, heq_iff_eq, forall_true_iff])
               fun ⟨b₁, b₂⟩ h =>
               ⟨⟨b₁, b₂⟩, by
                 revert h <;>

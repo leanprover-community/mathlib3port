@@ -9,8 +9,8 @@ Authors: Yury Kudryashov
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.CategoryTheory.Category.CatCat
-import Mathbin.Algebra.Category.MonCat.Basic
+import Mathbin.CategoryTheory.Category.Cat
+import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.Combinatorics.Quiver.SingleObj
 
 /-!
@@ -105,7 +105,7 @@ abbrev star : SingleObj α :=
 
 /-- The endomorphisms monoid of the only object in `single_obj α` is equivalent to the original
      monoid α. -/
-def toEnd [Monoid α] : α ≃* EndCat (SingleObj.star α) :=
+def toEnd [Monoid α] : α ≃* End (SingleObj.star α) :=
   { Equiv.refl α with map_mul' := fun x y => rfl }
 #align category_theory.single_obj.to_End CategoryTheory.SingleObj.toEnd
 
@@ -194,8 +194,8 @@ variable (α : Type u) [Monoid α]
 
 /-- The units in a monoid are (multiplicatively) equivalent to
 the automorphisms of `star` when we think of the monoid as a single-object category. -/
-def toAut : αˣ ≃* AutCat (SingleObj.star α) :=
-  (Units.mapEquiv (SingleObj.toEnd α)).trans <| AutCat.unitsEndEquivAut _
+def toAut : αˣ ≃* Aut (SingleObj.star α) :=
+  (Units.mapEquiv (SingleObj.toEnd α)).trans <| Aut.unitsEndEquivAut _
 #align units.to_Aut Units.toAut
 
 @[simp]
@@ -210,24 +210,24 @@ theorem toAut_inv (x : αˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : �
 
 end Units
 
-namespace MonCat
+namespace Mon
 
 open CategoryTheory
 
 /-- The fully faithful functor from `Mon` to `Cat`. -/
-def toCat : MonCat ⥤ Cat where
-  obj x := CatCat.of (SingleObj x)
+def toCat : Mon ⥤ Cat where
+  obj x := Cat.of (SingleObj x)
   map x y f := SingleObj.mapHom x y f
-#align Mon.to_Cat MonCat.toCat
+#align Mon.to_Cat Mon.toCat
 
 instance toCatFull : Full toCat
     where
   preimage x y := (SingleObj.mapHom x y).invFun
   witness' x y := by apply Equiv.right_inv
-#align Mon.to_Cat_full MonCat.toCatFull
+#align Mon.to_Cat_full Mon.toCatFull
 
 instance toCat_faithful : Faithful toCat where map_injective' x y := by apply Equiv.injective
-#align Mon.to_Cat_faithful MonCat.toCat_faithful
+#align Mon.to_Cat_faithful Mon.toCat_faithful
 
-end MonCat
+end Mon
 

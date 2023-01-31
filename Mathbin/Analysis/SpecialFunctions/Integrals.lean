@@ -96,7 +96,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
   · rw [IntervalIntegrable.iff_comp_neg, neg_zero]
     have m := (this (-c) (by linarith)).smul (cos (r * π))
     rw [intervalIntegrable_iff] at m⊢
-    refine' m.congr_fun _ measurableSet_ioc
+    refine' m.congr_fun _ measurableSet_Ioc
     intro x hx
     rw [uIoc_of_le (by linarith : 0 ≤ -c)] at hx
     simp only [Pi.smul_apply, Algebra.id.smul_eq_mul, log_neg_eq_log, mul_comm,
@@ -666,7 +666,7 @@ theorem integral_sin_pow_pos : 0 < ∫ x in 0 ..π, sin x ^ n := by
 
 theorem integral_sin_pow_succ_le : (∫ x in 0 ..π, sin x ^ (n + 1)) ≤ ∫ x in 0 ..π, sin x ^ n :=
   by
-  let H x h := pow_le_pow_of_le_one (sin_nonneg_of_mem_icc h) (sin_le_one x) (n.le_add_right 1)
+  let H x h := pow_le_pow_of_le_one (sin_nonneg_of_mem_Icc h) (sin_le_one x) (n.le_add_right 1)
   refine' integral_mono_on pi_pos.le _ _ H <;> exact (continuous_sin.pow _).IntervalIntegrable 0 π
 #align integral_sin_pow_succ_le integral_sin_pow_succ_le
 

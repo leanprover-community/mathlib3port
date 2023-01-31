@@ -47,7 +47,7 @@ theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
   by
   refine' ⟨fun h ha => _, fun ha => _⟩
   · obtain ⟨b, c, hbc, hbc'⟩ :=
-      (mem_nhds_iff_exists_ioo_subset' ⟨0, Ordinal.pos_iff_ne_zero.2 ha.1⟩ ⟨_, lt_succ a⟩).1
+      (mem_nhds_iff_exists_Ioo_subset' ⟨0, Ordinal.pos_iff_ne_zero.2 ha.1⟩ ⟨_, lt_succ a⟩).1
         (h.mem_nhds rfl)
     have hba := ha.2 b hbc.1
     exact hba.ne (hbc' ⟨lt_succ b, hba.trans hbc.2⟩)
@@ -55,7 +55,7 @@ theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
     · convert isOpen_gt' (1 : Ordinal)
       ext
       exact ordinal.lt_one_iff_zero.symm
-    · convert @isOpen_ioo _ _ _ _ b (a + 1)
+    · convert @isOpen_Ioo _ _ _ _ b (a + 1)
       ext c
       refine' ⟨fun hc => _, _⟩
       · rw [Set.mem_singleton_iff.1 hc]
@@ -96,7 +96,7 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
         by
         change IsOpen (dite _ _ _)
         split_ifs
-        · exact isOpen_ioo
+        · exact isOpen_Ioo
         · rwa [is_open_singleton_iff]
       convert isOpen_unionᵢ this
       ext o
@@ -123,7 +123,7 @@ theorem mem_closure_iff_sup :
   refine' mem_closure_iff.trans ⟨fun h => _, _⟩
   · by_cases has : a ∈ s
     · exact ⟨PUnit, by infer_instance, fun _ => a, fun _ => has, sup_const a⟩
-    · have H := fun b (hba : b < a) => h _ (@isOpen_ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
+    · have H := fun b (hba : b < a) => h _ (@isOpen_Ioo _ _ _ _ b (a + 1)) ⟨hba, lt_succ a⟩
       let f : a.out.α → Ordinal := fun i =>
         Classical.choose (H (typein (· < ·) i) (typein_lt_self i))
       have hf : ∀ i, f i ∈ Set.Ioo (typein (· < ·) i) (a + 1) ∩ s := fun i =>
@@ -151,7 +151,7 @@ theorem mem_closure_iff_sup :
       use 0, hat
       convert hf i
       exact (sup_eq_zero_iff.1 ha₀ i).symm
-    rcases(mem_nhds_iff_exists_ioo_subset' ⟨0, ha₀⟩ ⟨_, lt_succ _⟩).1 (ht.mem_nhds hat) with
+    rcases(mem_nhds_iff_exists_Ioo_subset' ⟨0, ha₀⟩ ⟨_, lt_succ _⟩).1 (ht.mem_nhds hat) with
       ⟨b, c, ⟨hab, hac⟩, hbct⟩
     cases' lt_sup.1 hab with i hi
     exact ⟨_, hbct ⟨hi, (le_sup.{u, u} f i).trans_lt hac⟩, hf i⟩
@@ -237,7 +237,7 @@ theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u})
     refine' ⟨h, fun o ho a h => _⟩
     suffices : o ∈ f ⁻¹' Set.Iic a
     exact Set.mem_preimage.1 this
-    rw [mem_closed_iff_sup (IsClosed.preimage h' (@isClosed_iic _ _ _ _ a))]
+    rw [mem_closed_iff_sup (IsClosed.preimage h' (@isClosed_Iic _ _ _ _ a))]
     exact
       ⟨_, out_nonempty_iff_ne_zero.2 ho.1, typein (· < ·), fun i => h _ (typein_lt_self i),
         sup_typein_limit ho.2⟩

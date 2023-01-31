@@ -71,7 +71,7 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
   -- show integrable on `(a, v]` from continuity
   have int_left : integrable_on f (Ioc a v) :=
     by
-    rw [← intervalIntegrable_iff_integrable_ioc_of_le (le_max_left a r)]
+    rw [← intervalIntegrable_iff_integrable_Ioc_of_le (le_max_left a r)]
     have u : Icc a v ⊆ Ici a := Icc_subset_Ici_self
     exact (h1.mono u).intervalIntegrableOfIcc (le_max_left a r)
   suffices integrable_on f (Ioi v)
@@ -80,11 +80,11 @@ theorem integrableOfIsOExpNeg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b) (h1 : C
     simpa only [Ioc_union_Ioi_eq_Ioi, le_max_iff, le_refl, true_or_iff] using t
   -- now show integrable on `(v, ∞)` from asymptotic
   constructor
-  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSet_ioi
+  · exact (h1.mono <| Ioi_subset_Ici <| le_max_left a r).AeStronglyMeasurable measurableSet_Ioi
   have : has_finite_integral (fun x : ℝ => c * exp (-b * x)) (volume.restrict (Ioi v)) :=
     (expNegIntegrableOnIoi v h0).HasFiniteIntegral.const_mul c
   apply this.mono
-  refine' (ae_restrict_iff' measurableSet_ioi).mpr _
+  refine' (ae_restrict_iff' measurableSet_Ioi).mpr _
   refine' ae_of_all _ fun x h1x => _
   rw [norm_mul, norm_eq_abs]
   rw [mem_Ioi] at h1x

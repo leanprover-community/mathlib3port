@@ -41,7 +41,7 @@ namespace Language
 
 open FirstOrder
 
-open StructureCat
+open Structure
 
 variable {L : Language.{u, v}} {α : Type w} {M : Type w'} {n : ℕ}
 
@@ -52,8 +52,8 @@ protected def order : Language :=
 
 namespace Order
 
-instance structure [LE M] : Language.order.StructureCat M :=
-  StructureCat.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => (· ≤ ·)
+instance structure [LE M] : Language.order.Structure M :=
+  Structure.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => (· ≤ ·)
 #align first_order.language.order.Structure FirstOrder.Language.order.structure
 
 instance : IsRelational Language.order :=
@@ -90,7 +90,7 @@ variable (L)
 /-- The language homomorphism sending the unique symbol `≤` of `language.order` to `≤` in an ordered
  language. -/
 def orderLhom : language.order →ᴸ L :=
-  LhomCat.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => leSymb
+  Lhom.mk₂ Empty.elim Empty.elim Empty.elim Empty.elim fun _ => leSymb
 #align first_order.language.order_Lhom FirstOrder.Language.orderLhom
 
 end IsOrdered
@@ -105,27 +105,27 @@ theorem orderLhom_leSymb [L.IsOrdered] :
 #align first_order.language.order_Lhom_le_symb FirstOrder.Language.orderLhom_leSymb
 
 @[simp]
-theorem orderLhom_order : orderLhom Language.order = LhomCat.id Language.order :=
-  LhomCat.funext (Subsingleton.elim _ _) (Subsingleton.elim _ _)
+theorem orderLhom_order : orderLhom Language.order = Lhom.id Language.order :=
+  Lhom.funext (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align first_order.language.order_Lhom_order FirstOrder.Language.orderLhom_order
 
 instance : IsOrdered (L.Sum Language.order) :=
   ⟨Sum.inr IsOrdered.leSymb⟩
 
 /-- The theory of preorders. -/
-protected def TheoryCat.preorder : Language.order.TheoryCat :=
+protected def Theory.preorder : Language.order.Theory :=
   {leSymb.Reflexive, leSymb.Transitive}
-#align first_order.language.Theory.preorder FirstOrder.Language.TheoryCat.preorder
+#align first_order.language.Theory.preorder FirstOrder.Language.Theory.preorder
 
 /-- The theory of partial orders. -/
-protected def TheoryCat.partialOrder : Language.order.TheoryCat :=
+protected def Theory.partialOrder : Language.order.Theory :=
   {leSymb.Reflexive, leSymb.antisymmetric, leSymb.Transitive}
-#align first_order.language.Theory.partial_order FirstOrder.Language.TheoryCat.partialOrder
+#align first_order.language.Theory.partial_order FirstOrder.Language.Theory.partialOrder
 
 /-- The theory of linear orders. -/
-protected def TheoryCat.linearOrder : Language.order.TheoryCat :=
+protected def Theory.linearOrder : Language.order.Theory :=
   {leSymb.Reflexive, leSymb.antisymmetric, leSymb.Transitive, leSymb.Total}
-#align first_order.language.Theory.linear_order FirstOrder.Language.TheoryCat.linearOrder
+#align first_order.language.Theory.linear_order FirstOrder.Language.Theory.linearOrder
 
 /-- A sentence indicating that an order has no top element:
 $\forall x, \exists y, \neg y \le x$.   -/
@@ -146,22 +146,22 @@ protected def Sentence.denselyOrdered : Language.order.Sentence :=
 #align first_order.language.sentence.densely_ordered FirstOrder.Language.Sentence.denselyOrdered
 
 /-- The theory of dense linear orders without endpoints. -/
-protected def TheoryCat.dLO : Language.order.TheoryCat :=
+protected def Theory.dLO : Language.order.Theory :=
   Theory.linear_order ∪ {Sentence.noTopOrder, Sentence.noBotOrder, Sentence.denselyOrdered}
-#align first_order.language.Theory.DLO FirstOrder.Language.TheoryCat.dLO
+#align first_order.language.Theory.DLO FirstOrder.Language.Theory.dLO
 
 variable (L M)
 
 /-- A structure is ordered if its language has a `≤` symbol whose interpretation is -/
-abbrev IsOrderedStructure [IsOrdered L] [LE M] [L.StructureCat M] : Prop :=
-  LhomCat.IsExpansionOn (orderLhom L) M
+abbrev IsOrderedStructure [IsOrdered L] [LE M] [L.Structure M] : Prop :=
+  Lhom.IsExpansionOn (orderLhom L) M
 #align first_order.language.is_ordered_structure FirstOrder.Language.IsOrderedStructure
 
 variable {L M}
 
 @[simp]
-theorem isOrderedStructure_iff [IsOrdered L] [LE M] [L.StructureCat M] :
-    L.IsOrderedStructure M ↔ LhomCat.IsExpansionOn (orderLhom L) M :=
+theorem isOrderedStructure_iff [IsOrdered L] [LE M] [L.Structure M] :
+    L.IsOrderedStructure M ↔ Lhom.IsExpansionOn (orderLhom L) M :=
   Iff.rfl
 #align first_order.language.is_ordered_structure_iff FirstOrder.Language.isOrderedStructure_iff
 
@@ -200,7 +200,7 @@ instance model_linearOrder [LinearOrder M] : M ⊨ Theory.linear_order :=
 
 section IsOrderedStructure
 
-variable [IsOrdered L] [L.StructureCat M]
+variable [IsOrdered L] [L.Structure M]
 
 @[simp]
 theorem relMap_leSymb [LE M] [L.IsOrderedStructure M] {a b : M} :

@@ -782,8 +782,8 @@ noncomputable def piecewiseLeOfEq [LinearOrder B] [OrderTopology B] (e e' : Triv
   e.piecewise e' (Iic a)
     (Set.ext fun x =>
       and_congr_left_iff.2 fun hx => by
-        simp [He, He', mem_singleton_iff.1 (frontier_iic_subset _ hx)])
-    fun p hp => Heq p <| frontier_iic_subset _ hp.2
+        simp [He, He', mem_singleton_iff.1 (frontier_Iic_subset _ hx)])
+    fun p hp => Heq p <| frontier_Iic_subset _ hp.2
 #align trivialization.piecewise_le_of_eq Trivialization.piecewiseLeOfEq
 
 /-- Given two bundle trivializations `e`, `e'` of a topological fiber bundle `proj : Z → B` over a

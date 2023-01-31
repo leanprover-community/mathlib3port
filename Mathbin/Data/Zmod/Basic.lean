@@ -967,7 +967,7 @@ theorem valMinAbs_mul_two_eq_iff {n : ℕ} (a : ZMod n) : a.valMinAbs * 2 = n �
     exact fun h => (Nat.le_div_iff_mul_le zero_lt_two).2 h.le
 #align zmod.val_min_abs_mul_two_eq_iff ZMod.valMinAbs_mul_two_eq_iff
 
-theorem valMinAbs_mem_ioc {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs * 2 ∈ Set.Ioc (-n : ℤ) n :=
+theorem valMinAbs_mem_Ioc {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs * 2 ∈ Set.Ioc (-n : ℤ) n :=
   by
   simp_rw [val_min_abs_def_pos, Nat.le_div_two_iff_mul_two_le]; split_ifs
   · refine' ⟨(neg_lt_zero.2 <| by exact_mod_cast NeZero.pos n).trans_le (mul_nonneg _ _), h⟩
@@ -976,7 +976,7 @@ theorem valMinAbs_mem_ioc {n : ℕ} [NeZero n] (x : ZMod n) : x.valMinAbs * 2 �
     · linarith only [h]
     · rw [sub_nonpos, Int.ofNat_le]
       exact x.val_lt.le
-#align zmod.val_min_abs_mem_Ioc ZMod.valMinAbs_mem_ioc
+#align zmod.val_min_abs_mem_Ioc ZMod.valMinAbs_mem_Ioc
 
 theorem valMinAbs_spec {n : ℕ} [NeZero n] (x : ZMod n) (y : ℤ) :
     x.valMinAbs = y ↔ x = y ∧ y * 2 ∈ Set.Ioc (-n : ℤ) n :=

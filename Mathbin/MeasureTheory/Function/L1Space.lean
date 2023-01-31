@@ -1223,49 +1223,49 @@ end
 
 end AeEqFun
 
-namespace L1Cat
+namespace L1
 
 theorem integrableCoeFn (f : α →₁[μ] β) : Integrable f μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
   exact Lp.mem_ℒp f
-#align measure_theory.L1.integrable_coe_fn MeasureTheory.L1Cat.integrableCoeFn
+#align measure_theory.L1.integrable_coe_fn MeasureTheory.L1.integrableCoeFn
 
 theorem hasFiniteIntegralCoeFn (f : α →₁[μ] β) : HasFiniteIntegral f μ :=
   (integrableCoeFn f).HasFiniteIntegral
-#align measure_theory.L1.has_finite_integral_coe_fn MeasureTheory.L1Cat.hasFiniteIntegralCoeFn
+#align measure_theory.L1.has_finite_integral_coe_fn MeasureTheory.L1.hasFiniteIntegralCoeFn
 
 theorem stronglyMeasurable_coeFn (f : α →₁[μ] β) : StronglyMeasurable f :=
   lp.stronglyMeasurable f
-#align measure_theory.L1.strongly_measurable_coe_fn MeasureTheory.L1Cat.stronglyMeasurable_coeFn
+#align measure_theory.L1.strongly_measurable_coe_fn MeasureTheory.L1.stronglyMeasurable_coeFn
 
 theorem measurable_coeFn [MeasurableSpace β] [BorelSpace β] (f : α →₁[μ] β) : Measurable f :=
   (lp.stronglyMeasurable f).Measurable
-#align measure_theory.L1.measurable_coe_fn MeasureTheory.L1Cat.measurable_coeFn
+#align measure_theory.L1.measurable_coe_fn MeasureTheory.L1.measurable_coeFn
 
 theorem aeStronglyMeasurableCoeFn (f : α →₁[μ] β) : AeStronglyMeasurable f μ :=
   lp.aeStronglyMeasurable f
-#align measure_theory.L1.ae_strongly_measurable_coe_fn MeasureTheory.L1Cat.aeStronglyMeasurableCoeFn
+#align measure_theory.L1.ae_strongly_measurable_coe_fn MeasureTheory.L1.aeStronglyMeasurableCoeFn
 
 theorem aeMeasurableCoeFn [MeasurableSpace β] [BorelSpace β] (f : α →₁[μ] β) : AeMeasurable f μ :=
   (lp.stronglyMeasurable f).Measurable.AeMeasurable
-#align measure_theory.L1.ae_measurable_coe_fn MeasureTheory.L1Cat.aeMeasurableCoeFn
+#align measure_theory.L1.ae_measurable_coe_fn MeasureTheory.L1.aeMeasurableCoeFn
 
 theorem edist_def (f g : α →₁[μ] β) : edist f g = ∫⁻ a, edist (f a) (g a) ∂μ :=
   by
   simp [Lp.edist_def, snorm, snorm']
   simp [edist_eq_coe_nnnorm_sub]
-#align measure_theory.L1.edist_def MeasureTheory.L1Cat.edist_def
+#align measure_theory.L1.edist_def MeasureTheory.L1.edist_def
 
 theorem dist_def (f g : α →₁[μ] β) : dist f g = (∫⁻ a, edist (f a) (g a) ∂μ).toReal :=
   by
   simp [Lp.dist_def, snorm, snorm']
   simp [edist_eq_coe_nnnorm_sub]
-#align measure_theory.L1.dist_def MeasureTheory.L1Cat.dist_def
+#align measure_theory.L1.dist_def MeasureTheory.L1.dist_def
 
 theorem norm_def (f : α →₁[μ] β) : ‖f‖ = (∫⁻ a, ‖f a‖₊ ∂μ).toReal := by
   simp [Lp.norm_def, snorm, snorm']
-#align measure_theory.L1.norm_def MeasureTheory.L1Cat.norm_def
+#align measure_theory.L1.norm_def MeasureTheory.L1.norm_def
 
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `norm_def` since `(f - g) x` and `f x - g x` are not equal
@@ -1278,13 +1278,13 @@ theorem norm_sub_eq_lintegral (f g : α →₁[μ] β) :
   rw [lintegral_congr_ae]
   filter_upwards [Lp.coe_fn_sub f g]with _ ha
   simp only [ha, Pi.sub_apply]
-#align measure_theory.L1.norm_sub_eq_lintegral MeasureTheory.L1Cat.norm_sub_eq_lintegral
+#align measure_theory.L1.norm_sub_eq_lintegral MeasureTheory.L1.norm_sub_eq_lintegral
 
 theorem ofReal_norm_eq_lintegral (f : α →₁[μ] β) : Ennreal.ofReal ‖f‖ = ∫⁻ x, (‖f x‖₊ : ℝ≥0∞) ∂μ :=
   by
   rw [norm_def, Ennreal.ofReal_toReal]
   exact ne_of_lt (has_finite_integral_coe_fn f)
-#align measure_theory.L1.of_real_norm_eq_lintegral MeasureTheory.L1Cat.ofReal_norm_eq_lintegral
+#align measure_theory.L1.of_real_norm_eq_lintegral MeasureTheory.L1.ofReal_norm_eq_lintegral
 
 /-- Computing the norm of a difference between two L¹-functions. Note that this is not a
   special case of `of_real_norm_eq_lintegral` since `(f - g) x` and `f x - g x` are not equal
@@ -1296,9 +1296,9 @@ theorem ofReal_norm_sub_eq_lintegral (f g : α →₁[μ] β) :
   apply lintegral_congr_ae
   filter_upwards [Lp.coe_fn_sub f g]with _ ha
   simp only [ha, Pi.sub_apply]
-#align measure_theory.L1.of_real_norm_sub_eq_lintegral MeasureTheory.L1Cat.ofReal_norm_sub_eq_lintegral
+#align measure_theory.L1.of_real_norm_sub_eq_lintegral MeasureTheory.L1.ofReal_norm_sub_eq_lintegral
 
-end L1Cat
+end L1
 
 namespace Integrable
 

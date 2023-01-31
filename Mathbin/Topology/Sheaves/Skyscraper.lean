@@ -259,8 +259,8 @@ def skyscraperSheafFunctor : C ⥤ Sheaf C X
     where
   obj c := skyscraperSheaf p₀ c
   map a b f := Sheaf.hom.mk <| (skyscraperPresheafFunctor p₀).map f
-  map_id' c := SheafCat.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_id _
-  map_comp' _ _ _ f g := SheafCat.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_comp _ _
+  map_id' c := Sheaf.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_id _
+  map_comp' _ _ _ f g := Sheaf.Hom.ext _ _ <| (skyscraperPresheafFunctor p₀).map_comp _ _
 #align skyscraper_sheaf_functor skyscraperSheafFunctor
 
 namespace StalkSkyscraperPresheafAdjunctionAuxs

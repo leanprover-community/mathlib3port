@@ -1022,7 +1022,7 @@ theorem sigma_pi_composition_eq_iff
       this
     simpa [Composition.blocks_sum, Composition.ofFn_blocksFun] using this
   induction h
-  simp only [true_and_iff, eq_self_iff_true, hEq_iff_eq]
+  simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
   ext i : 2
   have :
     nth_le (of_fn fun i : Fin (Composition.length a) => (b i).blocks) i (by simp [i.is_lt]) =

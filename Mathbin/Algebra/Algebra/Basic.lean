@@ -310,8 +310,8 @@ theorem algebra_ext {R : Type _} [CommSemiring R] {A : Type _} [Semiring A] (P Q
     apply w
   · ext r
     exact w r
-  · apply proof_irrel_hEq
-  · apply proof_irrel_hEq
+  · apply proof_irrel_heq
+  · apply proof_irrel_heq
 #align algebra.algebra_ext Algebra.algebra_ext
 
 -- see Note [lower instance priority]

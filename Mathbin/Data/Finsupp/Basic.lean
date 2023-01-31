@@ -1789,7 +1789,7 @@ a finitely supported function from `as i` to `M`.
 This is the `finsupp` version of `sigma.curry`.
 -/
 def split (i : ι) : αs i →₀ M :=
-  l.comapDomain (Sigma.mk i) fun x1 x2 _ _ hx => hEq_iff_eq.1 (Sigma.mk.inj hx).2
+  l.comapDomain (Sigma.mk i) fun x1 x2 _ _ hx => heq_iff_eq.1 (Sigma.mk.inj hx).2
 #align finsupp.split Finsupp.split
 
 theorem split_apply (i : ι) (x : αs i) : split l i x = l ⟨i, x⟩ :=

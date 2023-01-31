@@ -174,20 +174,20 @@ def withLowerTopologyHomeomorph : WithLowerTopology α ≃ₜ α :=
       apply topology_eq_lower_topology }
 #align lower_topology.with_lower_topology_homeomorph LowerTopology.withLowerTopologyHomeomorph
 
-theorem isOpen_iff_generate_ici_compl : IsOpen s ↔ GenerateOpen { t | ∃ a, Ici aᶜ = t } s := by
+theorem isOpen_iff_generate_Ici_compl : IsOpen s ↔ GenerateOpen { t | ∃ a, Ici aᶜ = t } s := by
   rw [topology_eq_lower_topology α] <;> rfl
-#align lower_topology.is_open_iff_generate_Ici_compl LowerTopology.isOpen_iff_generate_ici_compl
+#align lower_topology.is_open_iff_generate_Ici_compl LowerTopology.isOpen_iff_generate_Ici_compl
 
 /-- Left-closed right-infinite intervals [a, ∞) are closed in the lower topology. -/
-theorem isClosed_ici (a : α) : IsClosed (Ici a) :=
-  isOpen_compl_iff.1 <| isOpen_iff_generate_ici_compl.2 <| GenerateOpen.basic _ ⟨a, rfl⟩
-#align lower_topology.is_closed_Ici LowerTopology.isClosed_ici
+theorem isClosed_Ici (a : α) : IsClosed (Ici a) :=
+  isOpen_compl_iff.1 <| isOpen_iff_generate_Ici_compl.2 <| GenerateOpen.basic _ ⟨a, rfl⟩
+#align lower_topology.is_closed_Ici LowerTopology.isClosed_Ici
 
 /-- The upper closure of a finite set is closed in the lower topology. -/
 theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α) :=
   by
   simp only [← UpperSet.infᵢ_ici, UpperSet.coe_infᵢ]
-  exact isClosed_bunionᵢ h fun a h₁ => isClosed_ici a
+  exact isClosed_bunionᵢ h fun a h₁ => isClosed_Ici a
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
 
 /-- Every set open in the lower topology is a lower set. -/
@@ -195,7 +195,7 @@ theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   by
   rw [is_open_iff_generate_Ici_compl] at h
   induction h
-  case basic u h => obtain ⟨a, rfl⟩ := h; exact (isUpperSet_ici a).compl
+  case basic u h => obtain ⟨a, rfl⟩ := h; exact (isUpperSet_Ici a).compl
   case univ => exact isLowerSet_univ
   case inter u v hu1 hv1 hu2 hv2 => exact hu2.inter hv2
   case sUnion _ _ ih => exact isLowerSet_unionₛ ih
@@ -211,7 +211,7 @@ The closure of a singleton `{a}` in the lower topology is the left-closed right-
 -/
 @[simp]
 theorem closure_singleton (a : α) : closure {a} = Ici a :=
-  subset_antisymm ((closure_minimal fun b h => h.ge) <| isClosed_ici a) <|
+  subset_antisymm ((closure_minimal fun b h => h.ge) <| isClosed_Ici a) <|
     (isUpperSet_of_isClosed isClosed_closure).Ici_subset <| subset_closure rfl
 #align lower_topology.closure_singleton LowerTopology.closure_singleton
 
@@ -254,7 +254,7 @@ instance [Preorder α] [TopologicalSpace α] [LowerTopology α] [OrderBot α] [P
     by
     refine' le_antisymm (le_generateFrom _) _
     · rintro _ ⟨x, rfl⟩
-      exact ((LowerTopology.isClosed_ici _).Prod <| LowerTopology.isClosed_ici _).is_open_compl
+      exact ((LowerTopology.isClosed_Ici _).Prod <| LowerTopology.isClosed_Ici _).is_open_compl
     rw [(lower_topology.is_topological_basis.prod
           LowerTopology.isTopologicalBasis).eq_generate_from,
       le_generate_from_iff_subset_is_open, image2_subset_iff]
@@ -272,20 +272,20 @@ section CompleteLattice
 variable [CompleteLattice α] [CompleteLattice β] [TopologicalSpace α] [LowerTopology α]
   [TopologicalSpace β] [LowerTopology β]
 
-theorem InfHom.continuous (f : InfHom α β) : Continuous f :=
+theorem InfHomCat.continuous (f : InfHomCat α β) : Continuous f :=
   by
   convert continuous_generateFrom _
   · exact LowerTopology.topology_eq_lowerTopology β
   rintro _ ⟨b, rfl⟩
   rw [preimage_compl, isOpen_compl_iff]
-  convert LowerTopology.isClosed_ici (Inf <| f ⁻¹' Ici b)
+  convert LowerTopology.isClosed_Ici (Inf <| f ⁻¹' Ici b)
   refine' subset_antisymm (fun a => infₛ_le) fun a ha => le_trans _ <| OrderHomClass.mono f ha
   simp [map_Inf]
-#align Inf_hom.continuous InfHom.continuous
+#align Inf_hom.continuous InfHomCat.continuous
 
 -- see Note [lower instance priority]
 instance (priority := 90) LowerTopology.to_hasContinuousInf : HasContinuousInf α :=
-  ⟨(infInfHom : InfHom (α × α) α).Continuous⟩
+  ⟨(infInfHom : InfHomCat (α × α) α).Continuous⟩
 #align lower_topology.to_has_continuous_inf LowerTopology.to_hasContinuousInf
 
 end CompleteLattice

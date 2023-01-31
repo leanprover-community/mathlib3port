@@ -251,7 +251,7 @@ theorem isSuccLimitRecOn_succ' (hs : ∀ a, ¬IsMax a → C (succ a)) (hl : ∀ 
   simp only [cast_eq_iff_heq, hb', not_false_iff, eq_mpr_eq_cast, dif_neg]
   congr
   · exact (succ_eq_succ_iff_of_not_is_max H.1 hb).1 H.2
-  · apply proof_irrel_hEq
+  · apply proof_irrel_heq
 #align order.is_succ_limit_rec_on_succ' Order.isSuccLimitRecOn_succ'
 
 section NoMaxOrder

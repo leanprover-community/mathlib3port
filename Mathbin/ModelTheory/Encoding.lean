@@ -42,13 +42,13 @@ namespace Language
 
 variable {L : Language.{u, v}}
 
-variable {M : Type w} {N P : Type _} [L.StructureCat M] [L.StructureCat N] [L.StructureCat P]
+variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structure P]
 
 variable {α : Type u'} {β : Type v'}
 
 open FirstOrder Cardinal
 
-open Computability List StructureCat Cardinal Fin
+open Computability List Structure Cardinal Fin
 
 namespace Term
 
@@ -174,13 +174,13 @@ theorem card_sigma : (#Σn, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σi,
         ⟨⟨Sum.elim (fun i => ⟨0, var (Sum.inl i)⟩) fun F => ⟨1, func F.2 fun _ => var (Sum.inr 0)⟩,
             _⟩⟩
       · rintro (a | a) (b | b) h
-        · simp only [Sum.elim_inl, eq_self_iff_true, hEq_iff_eq, true_and_iff] at h
+        · simp only [Sum.elim_inl, eq_self_iff_true, heq_iff_eq, true_and_iff] at h
           rw [h]
         · simp only [Sum.elim_inl, Sum.elim_inr, Nat.zero_ne_one, false_and_iff] at h
           exact h.elim
         · simp only [Sum.elim_inr, Sum.elim_inl, Nat.one_ne_zero, false_and_iff] at h
           exact h.elim
-        · simp only [Sum.elim_inr, eq_self_iff_true, hEq_iff_eq, true_and_iff] at h
+        · simp only [Sum.elim_inr, eq_self_iff_true, heq_iff_eq, true_and_iff] at h
           rw [Sigma.ext_iff.2 ⟨h.1, h.2.1⟩]
 #align first_order.language.term.card_sigma FirstOrder.Language.Term.card_sigma
 
@@ -318,10 +318,10 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
   · rintro ⟨n, φ⟩
     induction' φ with _ _ _ _ _ _ _ ts _ _ _ ih1 ih2 _ _ ih <;> intro l
     · rw [list_encode, singleton_append, list_decode]
-      simp only [eq_self_iff_true, hEq_iff_eq, and_self_iff]
+      simp only [eq_self_iff_true, heq_iff_eq, and_self_iff]
     · rw [list_encode, cons_append, cons_append, list_decode, dif_pos]
-      · simp only [eq_mp_eq_cast, cast_eq, eq_self_iff_true, hEq_iff_eq, and_self_iff, nil_append]
-      · simp only [eq_self_iff_true, hEq_iff_eq, and_self_iff]
+      · simp only [eq_mp_eq_cast, cast_eq, eq_self_iff_true, heq_iff_eq, and_self_iff, nil_append]
+      · simp only [eq_self_iff_true, heq_iff_eq, and_self_iff]
     · rw [list_encode, cons_append, cons_append, singleton_append, cons_append, list_decode]
       · have h :
           ∀ i : Fin φ_l,
@@ -343,7 +343,7 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
           rw [nth_le_append, nth_le_map]
           ·
             simp only [Sum.getLeft, nth_le_fin_range, Fin.eta, Function.comp_apply,
-              eq_self_iff_true, hEq_iff_eq, and_self_iff]
+              eq_self_iff_true, heq_iff_eq, and_self_iff]
           · exact lt_of_lt_of_le i.is_lt (ge_of_eq (length_fin_range _))
           · rw [length_map, length_fin_range]
             exact i.2
@@ -355,7 +355,7 @@ theorem listDecode_encode_list (l : List (Σn, L.BoundedFormula α n)) :
         · intro i
           obtain ⟨h1, h2⟩ := Option.eq_some_iff_get_eq.1 (h i)
           rw [h2]
-        simp only [eq_self_iff_true, hEq_iff_eq, true_and_iff]
+        simp only [eq_self_iff_true, heq_iff_eq, true_and_iff]
         refine' ⟨funext fun i => _, _⟩
         · obtain ⟨h1, h2⟩ := Option.eq_some_iff_get_eq.1 (h i)
           rw [eq_mp_eq_cast, cast_eq_iff_heq]

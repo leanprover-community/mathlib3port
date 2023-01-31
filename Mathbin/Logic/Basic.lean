@@ -214,9 +214,11 @@ instance subsingleton_pEmpty : Subsingleton PEmpty :=
   ⟨fun a => a.elim⟩
 #align subsingleton_pempty subsingleton_pEmpty
 
+#print not_nonempty_pempty /-
 @[simp]
-theorem not_nonempty_pEmpty : ¬Nonempty PEmpty := fun ⟨h⟩ => h.elim
-#align not_nonempty_pempty not_nonempty_pEmpty
+theorem not_nonempty_pempty : ¬Nonempty PEmpty := fun ⟨h⟩ => h.elim
+#align not_nonempty_pempty not_nonempty_pempty
+-/
 
 /- warning: congr_heq -> congr_heq is a dubious translation:
 lean 3 declaration is
@@ -1749,16 +1751,20 @@ section Equality
 
 variable {α : Sort _} {a b : α}
 
+#print heq_iff_eq /-
 @[simp]
-theorem hEq_iff_eq : HEq a b ↔ a = b :=
+theorem heq_iff_eq : HEq a b ↔ a = b :=
   ⟨eq_of_hEq, hEq_of_eq⟩
-#align heq_iff_eq hEq_iff_eq
+#align heq_iff_eq heq_iff_eq
+-/
 
-theorem proof_irrel_hEq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
+#print proof_irrel_heq /-
+theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
   by
   have : p = q := propext ⟨fun _ => hq, fun _ => hp⟩
   subst q <;> rfl
-#align proof_irrel_heq proof_irrel_hEq
+#align proof_irrel_heq proof_irrel_heq
+-/
 
 #print ball_cond_comm /-
 -- todo: change name
@@ -1796,13 +1802,19 @@ theorem eq_equivalence : Equivalence (@Eq α) :=
 #align eq_equivalence eq_equivalence
 -/
 
+/- warning: eq_rec_constant -> eq_rec_constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Sort.{u1}} {a : α} {a' : α} {β : Sort.{u2}} (y : β) (h : Eq.{u1} α a a'), Eq.{u2} ((fun (a : α) => β) a') (Eq.ndrec.{u2, u1} α a (fun (a : α) => β) y a' h) y
+but is expected to have type
+  forall {α : Sort.{u2}} {a : α} {a' : α} {β : Sort.{u1}} (y : β) (h : Eq.{u2} α a a'), Eq.{u1} β (Eq.rec.{u1, u2} α a (fun (a_1 : α) (x._@.Std.Logic._hyg.12200 : Eq.{u2} α a a_1) => β) y a' h) y
+Case conversion may be inaccurate. Consider using '#align eq_rec_constant eq_rec_constantₓ'. -/
 /-- Transport through trivial families is the identity. -/
 @[simp]
-theorem eq_ndrec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
+theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
     @Eq.ndrec α a (fun a => β) y a' h = y := by
   cases h
   rfl
-#align eq_rec_constant eq_ndrec_constant
+#align eq_rec_constant eq_rec_constant
 
 #print eq_mp_eq_cast /-
 @[simp]

@@ -51,7 +51,7 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
         exp_log <| by
           rintro rfl
           simpa [lt_irrefl] using hx }
-    continuous_exp.ContinuousOn isOpenMap_exp (isOpen_ioo.Preimage continuous_im)
+    continuous_exp.ContinuousOn isOpenMap_exp (isOpen_Ioo.Preimage continuous_im)
 #align complex.exp_local_homeomorph Complex.expLocalHomeomorph
 
 theorem hasStrictDerivAt_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=

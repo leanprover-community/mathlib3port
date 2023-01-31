@@ -92,13 +92,13 @@ theorem hasFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     HasFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
   by
   have hpos : 0 < (expSeries 𝕂 𝔸).radius := (zero_le _).trans_lt hx
-  rw [hasFderivAt_iff_isO_nhds_zero]
+  rw [hasFderivAt_iff_isOCat_nhds_zero]
   suffices
     (fun h => exp 𝕂 x * (exp 𝕂 (0 + h) - exp 𝕂 0 - ContinuousLinearMap.id 𝕂 𝔸 h)) =ᶠ[𝓝 0] fun h =>
       exp 𝕂 (x + h) - exp 𝕂 x - exp 𝕂 x • ContinuousLinearMap.id 𝕂 𝔸 h
     by
     refine' (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)
-    rw [← hasFderivAt_iff_isO_nhds_zero]
+    rw [← hasFderivAt_iff_isOCat_nhds_zero]
     exact hasFderivAt_exp_zero_of_radius_pos hpos
   have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
     Emetric.ball_mem_nhds _ hpos

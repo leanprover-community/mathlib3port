@@ -117,16 +117,14 @@ instance fullSubcategory (Z : C → Prop) : Preadditive.{v} (FullSubcategory Z)
   comp_add' P Q R f g g' := comp_add' _ _ _ _ _ _
 #align category_theory.preadditive.full_subcategory CategoryTheory.Preadditive.fullSubcategory
 
-instance (X : C) : AddCommGroup (EndCat X) :=
-  by
+instance (X : C) : AddCommGroup (End X) := by
   dsimp [End]
   infer_instance
 
-instance (X : C) : Ring (EndCat X) :=
-  { (inferInstance : AddCommGroup (EndCat X)),
+instance (X : C) : Ring (End X) :=
+  { (inferInstance : AddCommGroup (End X)),
     (inferInstance :
-      Monoid
-        (EndCat
+      Monoid (End
           X)) with
     left_distrib := fun f g h => Preadditive.add_comp X X X g h f
     right_distrib := fun f g h => Preadditive.comp_add X X X h f g }
@@ -216,7 +214,7 @@ instance (priority := 100) preadditiveHasZeroMorphisms : HasZeroMorphisms C
   zero_comp' P Q R f := show rightComp P f 0 = 0 from map_zero _
 #align category_theory.preadditive.preadditive_has_zero_morphisms CategoryTheory.Preadditive.preadditiveHasZeroMorphisms
 
-instance moduleEndRight {X Y : C} : Module (EndCat Y) (X ⟶ Y)
+instance moduleEndRight {X Y : C} : Module (End Y) (X ⟶ Y)
     where
   smul_add r f g := add_comp _ _ _ _ _ _
   smul_zero r := zero_comp

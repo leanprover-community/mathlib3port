@@ -69,16 +69,16 @@ theorem mem_some_iff {α : Type _} {a b : α} : a ∈ some b ↔ b = a := by sim
 #align option.mem_some_iff Option.mem_some_iff
 -/
 
-#print Option.decidableEqNone /-
+#print Option.decidable_eq_none /-
 /-- `o = none` is decidable even if the wrapped type does not have decidable equality.
 
 This is not an instance because it is not definitionally equal to `option.decidable_eq`.
 Try to use `o.is_none` or `o.is_some` instead.
 -/
 @[inline]
-def decidableEqNone {o : Option α} : Decidable (o = none) :=
+def decidable_eq_none {o : Option α} : Decidable (o = none) :=
   decidable_of_decidable_of_iff (Bool.decidableEq _ _) isNone_iff_eq_none
-#align option.decidable_eq_none Option.decidableEqNone
+#align option.decidable_eq_none Option.decidable_eq_none
 -/
 
 #print Option.decidableForallMem /-
@@ -202,16 +202,16 @@ instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (lif
 #align option.lift_or_get_is_right_id Option.liftOrGet_isRightId
 -/
 
-#print Option.rel /-
+#print Option.Rel /-
 /-- Lifts a relation `α → β → Prop` to a relation `option α → option β → Prop` by just adding
 `none ~ none`. -/
-inductive rel (r : α → β → Prop) : Option α → Option β → Prop/--
+inductive Rel (r : α → β → Prop) : Option α → Option β → Prop/--
 If `a ~ b`, then `some a ~ some b` -/
 
   | some {a b} : r a b → Rel (some a) (some b)/-- `none ~ none` -/
 
   | none : Rel none none
-#align option.rel Option.rel
+#align option.rel Option.Rel
 -/
 
 #print Option.pbind /-

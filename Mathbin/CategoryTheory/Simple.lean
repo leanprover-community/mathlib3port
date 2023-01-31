@@ -118,7 +118,7 @@ theorem id_nonzero (X : C) [Simple.{v} X] : 𝟙 X ≠ 0 :=
   (Simple.mono_isIso_iff_nonzero (𝟙 X)).mp (by infer_instance)
 #align category_theory.id_nonzero CategoryTheory.id_nonzero
 
-instance (X : C) [Simple.{v} X] : Nontrivial (EndCat X) :=
+instance (X : C) [Simple.{v} X] : Nontrivial (End X) :=
   nontrivial_of_ne 1 0 (id_nonzero X)
 
 section

@@ -10,7 +10,7 @@ Authors: Praneeth Kolichala
 -/
 import Mathbin.CategoryTheory.Groupoid
 import Mathbin.AlgebraicTopology.FundamentalGroupoid.Basic
-import Mathbin.Topology.Category.TopCat.Limits
+import Mathbin.Topology.Category.Top.Limits
 import Mathbin.Topology.Homotopy.Product
 
 /-!

@@ -9,9 +9,9 @@ Authors: Scott Morrison
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Category.FgModule.Basic
-import Mathbin.Algebra.Category.ModuleCat.Limits
-import Mathbin.Algebra.Category.ModuleCat.Products
-import Mathbin.Algebra.Category.ModuleCat.EpiMono
+import Mathbin.Algebra.Category.Module.Limits
+import Mathbin.Algebra.Category.Module.Products
+import Mathbin.Algebra.Category.Module.EpiMono
 import Mathbin.CategoryTheory.Limits.Creates
 import Mathbin.CategoryTheory.Limits.Shapes.FiniteLimits
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers

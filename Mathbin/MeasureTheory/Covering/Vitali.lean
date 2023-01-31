@@ -449,7 +449,7 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
     by
     obtain ⟨r, μr, rpos, rε⟩ :
       ∃ r, μ (closed_ball x (3 * r)) ≤ C * μ (closed_ball x r) ∧ r ∈ Ioc (0 : ℝ) ε :=
-      ((h x).and_eventually (ioc_mem_nhdsWithin_ioi ⟨le_rfl, εpos⟩)).exists
+      ((h x).and_eventually (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, εpos⟩)).exists
     refine'
       ⟨closed_ball x r, ⟨is_closed_ball, _, ⟨r, subset.rfl, μr⟩⟩, closed_ball_subset_closed_ball rε⟩
     exact (nonempty_ball.2 rpos).mono ball_subset_interior_closed_ball

@@ -352,7 +352,7 @@ end
 def funUnique (ι α : Type _) [Unique ι] [UniformSpace α] : (ι → α) ≃ᵤ α
     where
   toEquiv := Equiv.funUnique ι α
-  uniform_continuous_to_fun := PiCat.uniformContinuous_proj _ _
+  uniform_continuous_to_fun := Pi.uniformContinuous_proj _ _
   uniform_continuous_inv_fun := uniformContinuous_pi.mpr fun _ => uniformContinuous_id
 #align uniform_equiv.fun_unique UniformEquiv.funUnique
 
@@ -362,7 +362,7 @@ def piFinTwo (α : Fin 2 → Type u) [∀ i, UniformSpace (α i)] : (∀ i, α i
     where
   toEquiv := piFinTwoEquiv α
   uniform_continuous_to_fun :=
-    (PiCat.uniformContinuous_proj _ 0).prod_mk (PiCat.uniformContinuous_proj _ 1)
+    (Pi.uniformContinuous_proj _ 0).prod_mk (Pi.uniformContinuous_proj _ 1)
   uniform_continuous_inv_fun :=
     uniformContinuous_pi.mpr <| Fin.forall_fin_two.2 ⟨uniformContinuous_fst, uniformContinuous_snd⟩
 #align uniform_equiv.pi_fin_two UniformEquiv.piFinTwo

@@ -647,7 +647,7 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     by
     intro n
     let I := Ico ((t : ℝ≥0∞) ^ n) (t ^ (n + 1))
-    have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurableSet_ico)
+    have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurableSet_Ico)
     simp only [f, M, with_density_apply, coe_nnreal_smul_apply]
     calc
       (∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ) ≤ ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ :=
@@ -676,13 +676,13 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
   calc
     ν s =
         ν (s ∩ f ⁻¹' {0}) + ν (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ν (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      measure_eq_measure_preimage_add_measure_tsum_ico_zpow ν f_meas hs ht
+      measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ν f_meas hs ht
     _ ≤
         ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' {0}) + ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' {∞}) +
           ∑' n : ℤ, ((t : ℝ≥0∞) ^ 2 • ρ) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
       add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)
     _ = ((t : ℝ≥0∞) ^ 2 • ρ) s :=
-      (measure_eq_measure_preimage_add_measure_tsum_ico_zpow ((t : ℝ≥0∞) ^ 2 • ρ) f_meas hs ht).symm
+      (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ((t : ℝ≥0∞) ^ 2 • ρ) f_meas hs ht).symm
     
 #align vitali_family.with_density_le_mul VitaliFamily.withDensity_le_mul
 
@@ -717,7 +717,7 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     by
     intro n
     let I := Ico ((t : ℝ≥0∞) ^ n) (t ^ (n + 1))
-    have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurableSet_ico)
+    have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurableSet_Ico)
     simp only [f, M, with_density_apply, coe_nnreal_smul_apply]
     calc
       ρ (s ∩ f ⁻¹' I) ≤ t ^ (n + 1) * μ (s ∩ f ⁻¹' I) :=
@@ -739,13 +739,13 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
   calc
     ρ s =
         ρ (s ∩ f ⁻¹' {0}) + ρ (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ρ (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
-      measure_eq_measure_preimage_add_measure_tsum_ico_zpow ρ f_meas hs ht
+      measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ρ f_meas hs ht
     _ ≤
         (t • ν) (s ∩ f ⁻¹' {0}) + (t • ν) (s ∩ f ⁻¹' {∞}) +
           ∑' n : ℤ, (t • ν) (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
       add_le_add (add_le_add A B) (Ennreal.tsum_le_tsum C)
     _ = (t • ν) s :=
-      (measure_eq_measure_preimage_add_measure_tsum_ico_zpow (t • ν) f_meas hs ht).symm
+      (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
     
 #align vitali_family.le_mul_with_density VitaliFamily.le_mul_withDensity
 

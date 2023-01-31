@@ -109,11 +109,11 @@ instance : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
 
 /-- Real numbers constructed as in Bourbaki. -/
-def BourbakiℝCat : Type :=
+def Bourbakiℝ : Type :=
   Completion Q deriving Inhabited
-#align compare_reals.Bourbakiℝ CompareReals.BourbakiℝCat
+#align compare_reals.Bourbakiℝ CompareReals.Bourbakiℝ
 
-instance Bourbaki.uniformSpace : UniformSpace BourbakiℝCat :=
+instance Bourbaki.uniformSpace : UniformSpace Bourbakiℝ :=
   Completion.uniformSpace Q
 #align compare_reals.bourbaki.uniform_space CompareReals.Bourbaki.uniformSpace
 

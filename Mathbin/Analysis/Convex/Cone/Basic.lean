@@ -1021,7 +1021,7 @@ theorem ConvexCone.pointed_of_nonempty_of_isClosed (K : ConvexCone ℝ H) (ne : 
   have fc : ContinuousWithinAt f (Set.Ioi (0 : ℝ)) 0 :=
     (continuous_id.smul continuous_const).ContinuousWithinAt
   -- 0 belongs to the closure of the f (0, ∞)
-  have mem₀ := fc.mem_closure_image (by rw [closure_ioi (0 : ℝ), mem_Ici])
+  have mem₀ := fc.mem_closure_image (by rw [closure_Ioi (0 : ℝ), mem_Ici])
   -- as 0 ∈ closure f (0, ∞) and closure f (0, ∞) ⊆ K, 0 ∈ K.
   have f₀ : f 0 = 0 := zero_smul ℝ x
   simpa only [f₀, ConvexCone.Pointed, ← SetLike.mem_coe] using mem_of_subset_of_mem clf mem₀

@@ -230,7 +230,7 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
       simp [-zsmul_eq_mul, ← quotientAddGroup.coe_zero, coe_real_preimage_closed_ball_eq_Union,
         Union_inter, Union_ite, this, hε]
     intro z
-    simp only [Real.closedBall_eq_icc, zero_sub, zero_add] at hs⊢
+    simp only [Real.closedBall_eq_Icc, zero_sub, zero_add] at hs⊢
     rcases eq_or_ne z 0 with (rfl | hz)
     · simp
     simp only [hz, zsmul_eq_mul, if_false, eq_empty_iff_forall_not_mem]

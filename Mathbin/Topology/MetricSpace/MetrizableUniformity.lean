@@ -176,7 +176,7 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
     refine' (ihn _ hMl _ _ _ hMl').trans _
     convert hMs.1.out
     rw [zip_with_distrib_take, take, take_succ, nth_append hMl, nth_le_nth hMl, ← Option.coe_def,
-      Option.toList_some, take_append_of_le_length hMl.le]
+      Option.to_list_some, take_append_of_le_length hMl.le]
     rfl
   · refine' single_le_sum (fun x hx => zero_le x) _ (mem_iff_nth_le.2 ⟨M, hM_lt, _⟩)
     apply nth_le_zip_with

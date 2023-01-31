@@ -8,7 +8,7 @@ Authors: Scott Morrison
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.MonCat.Basic
+import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.CategoryTheory.Monoidal.CommMon_
 import Mathbin.CategoryTheory.Monoidal.Types
 
@@ -39,8 +39,7 @@ instance monMonoid (A : Mon_ (Type u)) : Monoid A.x
 
 /-- Converting a monoid object in `Type` to a bundled monoid.
 -/
-def functor : Mon_ (Type u) ⥤ MonCat.{u}
-    where
+def functor : Mon_ (Type u) ⥤ Mon.{u} where
   obj A := ⟨A.x⟩
   map A B f :=
     { toFun := f.Hom
@@ -50,7 +49,7 @@ def functor : Mon_ (Type u) ⥤ MonCat.{u}
 
 /-- Converting a bundled monoid to a monoid object in `Type`.
 -/
-def inverse : MonCat.{u} ⥤ Mon_ (Type u)
+def inverse : Mon.{u} ⥤ Mon_ (Type u)
     where
   obj A :=
     { x := A
@@ -77,7 +76,7 @@ open monTypeEquivalenceMon
 /-- The category of internal monoid objects in `Type`
 is equivalent to the category of "native" bundled monoids.
 -/
-def monTypeEquivalenceMon : Mon_ (Type u) ≌ MonCat.{u}
+def monTypeEquivalenceMon : Mon_ (Type u) ≌ Mon.{u}
     where
   Functor := Functor
   inverse := inverse
@@ -105,12 +104,12 @@ def monTypeEquivalenceMon : Mon_ (Type u) ≌ MonCat.{u}
 is naturally compatible with the forgetful functors to `Type u`.
 -/
 def monTypeEquivalenceMonForget :
-    MonTypeEquivalenceMon.functor ⋙ forget MonCat ≅ Mon_.forget (Type u) :=
+    MonTypeEquivalenceMon.functor ⋙ forget Mon ≅ Mon_.forget (Type u) :=
   NatIso.ofComponents (fun A => Iso.refl _) (by tidy)
 #align Mon_Type_equivalence_Mon_forget monTypeEquivalenceMonForget
 
 instance monTypeInhabited : Inhabited (Mon_ (Type u)) :=
-  ⟨MonTypeEquivalenceMon.inverse.obj (MonCat.of PUnit)⟩
+  ⟨MonTypeEquivalenceMon.inverse.obj (Mon.of PUnit)⟩
 #align Mon_Type_inhabited monTypeInhabited
 
 namespace commMonTypeEquivalenceCommMon
@@ -122,7 +121,7 @@ instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.x :=
 
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/
-def functor : CommMon_ (Type u) ⥤ CommMonCat.{u}
+def functor : CommMon_ (Type u) ⥤ CommMon.{u}
     where
   obj A := ⟨A.x⟩
   map A B f := MonTypeEquivalenceMon.functor.map f
@@ -130,10 +129,10 @@ def functor : CommMon_ (Type u) ⥤ CommMonCat.{u}
 
 /-- Converting a bundled commutative monoid to a commutative monoid object in `Type`.
 -/
-def inverse : CommMonCat.{u} ⥤ CommMon_ (Type u)
+def inverse : CommMon.{u} ⥤ CommMon_ (Type u)
     where
   obj A :=
-    { MonTypeEquivalenceMon.inverse.obj ((forget₂ CommMonCat MonCat).obj A) with
+    { MonTypeEquivalenceMon.inverse.obj ((forget₂ CommMon Mon).obj A) with
       mul_comm' := by
         ext ⟨x, y⟩
         exact CommMonoid.mul_comm y x }
@@ -147,7 +146,7 @@ open commMonTypeEquivalenceCommMon
 /-- The category of internal commutative monoid objects in `Type`
 is equivalent to the category of "native" bundled commutative monoids.
 -/
-def commMonTypeEquivalenceCommMon : CommMon_ (Type u) ≌ CommMonCat.{u}
+def commMonTypeEquivalenceCommMon : CommMon_ (Type u) ≌ CommMon.{u}
     where
   Functor := Functor
   inverse := inverse
@@ -175,12 +174,12 @@ def commMonTypeEquivalenceCommMon : CommMon_ (Type u) ≌ CommMonCat.{u}
 are naturally compatible with the forgetful functors to `Mon` and `Mon_ (Type u)`.
 -/
 def commMonTypeEquivalenceCommMonForget :
-    CommMonTypeEquivalenceCommMon.functor ⋙ forget₂ CommMonCat MonCat ≅
+    CommMonTypeEquivalenceCommMon.functor ⋙ forget₂ CommMon Mon ≅
       CommMon_.forget₂Mon_ (Type u) ⋙ MonTypeEquivalenceMon.functor :=
   NatIso.ofComponents (fun A => Iso.refl _) (by tidy)
 #align CommMon_Type_equivalence_CommMon_forget commMonTypeEquivalenceCommMonForget
 
 instance commMonTypeInhabited : Inhabited (CommMon_ (Type u)) :=
-  ⟨CommMonTypeEquivalenceCommMon.inverse.obj (CommMonCat.of PUnit)⟩
+  ⟨CommMonTypeEquivalenceCommMon.inverse.obj (CommMon.of PUnit)⟩
 #align CommMon_Type_inhabited commMonTypeInhabited
 

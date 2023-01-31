@@ -66,13 +66,13 @@ theorem part_denom_eq_s_b {gp : Pair α} (s_nth_eq : g.s.nth n = some gp) :
 
 theorem exists_s_a_of_part_num {a : α} (nth_part_num_eq : g.partialNumerators.nth n = some a) :
     ∃ gp, g.s.nth n = some gp ∧ gp.a = a := by
-  simpa [partial_numerators, Seq.map_nth] using nth_part_num_eq
+  simpa [partial_numerators, SeqCat.map_nth] using nth_part_num_eq
 #align generalized_continued_fraction.exists_s_a_of_part_num GeneralizedContinuedFraction.exists_s_a_of_part_num
 
 theorem exists_s_b_of_part_denom {b : α}
     (nth_part_denom_eq : g.partialDenominators.nth n = some b) :
     ∃ gp, g.s.nth n = some gp ∧ gp.b = b := by
-  simpa [partial_denominators, Seq.map_nth] using nth_part_denom_eq
+  simpa [partial_denominators, SeqCat.map_nth] using nth_part_denom_eq
 #align generalized_continued_fraction.exists_s_b_of_part_denom GeneralizedContinuedFraction.exists_s_b_of_part_denom
 
 end General
@@ -167,7 +167,7 @@ theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.nth 0 = some gp) :
 #align generalized_continued_fraction.first_denominator_eq GeneralizedContinuedFraction.first_denominator_eq
 
 @[simp]
-theorem zeroth_convergent'_aux_eq_zero {s : Seq <| Pair K} : convergents'Aux s 0 = 0 :=
+theorem zeroth_convergent'_aux_eq_zero {s : SeqCat <| Pair K} : convergents'Aux s 0 = 0 :=
   rfl
 #align generalized_continued_fraction.zeroth_convergent'_aux_eq_zero GeneralizedContinuedFraction.zeroth_convergent'_aux_eq_zero
 

@@ -8,8 +8,8 @@ Authors: Andrew Yang
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.RingCat.Constructions
-import Mathbin.Algebra.Category.RingCat.Colimits
+import Mathbin.Algebra.Category.Ring.Constructions
+import Mathbin.Algebra.Category.Ring.Colimits
 import Mathbin.CategoryTheory.Isomorphism
 import Mathbin.RingTheory.Localization.Away
 import Mathbin.RingTheory.IsTensorProduct

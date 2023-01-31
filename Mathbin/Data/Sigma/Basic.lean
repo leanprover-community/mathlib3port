@@ -187,7 +187,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.injective.of_sigma_map Function.Injective.of_sigma_mapₓ'. -/
 theorem Function.Injective.of_sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h : Function.Injective (Sigma.map f₁ f₂)) (a : α₁) : Function.Injective (f₂ a) :=
-  fun x y hxy => sigma_mk_injective <| @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (hEq_iff_eq.2 hxy))
+  fun x y hxy => sigma_mk_injective <| @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (heq_iff_eq.2 hxy))
 #align function.injective.of_sigma_map Function.Injective.of_sigma_map
 
 /- warning: function.injective.sigma_map_iff -> Function.Injective.sigma_map_iff is a dubious translation:

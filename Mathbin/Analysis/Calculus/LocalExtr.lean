@@ -290,13 +290,13 @@ theorem IsLocalExtr.deriv_eq_zero (h : IsLocalExtr f a) : deriv f a = 0 :=
 
 end Real
 
-section RolleCat
+section Rolle
 
 variable (f f' : ℝ → ℝ) {a b : ℝ}
 
 /-- A continuous function on a closed interval with `f a = f b` takes either its maximum
 or its minimum value at a point in the interior of the interval. -/
-theorem exists_ioo_extr_on_icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+theorem exists_Ioo_extr_on_Icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, IsExtrOn f (Icc a b) c :=
   by
   have ne : (Icc a b).Nonempty := nonempty_Icc.2 (le_of_lt hab)
@@ -318,27 +318,27 @@ theorem exists_ioo_extr_on_icc (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (h
       exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
   · refine' ⟨c, ⟨lt_of_le_of_ne cmem.1 <| mt _ hc, lt_of_le_of_ne cmem.2 <| mt _ hc⟩, Or.inl cle⟩
     exacts[fun h => by rw [h], fun h => by rw [h, hfI]]
-#align exists_Ioo_extr_on_Icc exists_ioo_extr_on_icc
+#align exists_Ioo_extr_on_Icc exists_Ioo_extr_on_Icc
 
 /-- A continuous function on a closed interval with `f a = f b` has a local extremum at some
 point of the corresponding open interval. -/
-theorem exists_local_extr_ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
+theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, IsLocalExtr f c :=
-  let ⟨c, cmem, hc⟩ := exists_ioo_extr_on_icc f hab hfc hfI
-  ⟨c, cmem, hc.IsLocalExtr <| icc_mem_nhds cmem.1 cmem.2⟩
-#align exists_local_extr_Ioo exists_local_extr_ioo
+  let ⟨c, cmem, hc⟩ := exists_Ioo_extr_on_Icc f hab hfc hfI
+  ⟨c, cmem, hc.IsLocalExtr <| Icc_mem_nhds cmem.1 cmem.2⟩
+#align exists_local_extr_Ioo exists_local_extr_Ioo
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_hasDerivAt_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
     (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ c ∈ Ioo a b, f' c = 0 :=
-  let ⟨c, cmem, hc⟩ := exists_local_extr_ioo f hab hfc hfI
+  let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.has_deriv_at_eq_zero <| hff' c cmem⟩
 #align exists_has_deriv_at_eq_zero exists_hasDerivAt_eq_zero
 
 /-- **Rolle's Theorem** `deriv` version -/
 theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b) :
     ∃ c ∈ Ioo a b, deriv f c = 0 :=
-  let ⟨c, cmem, hc⟩ := exists_local_extr_ioo f hab hfc hfI
+  let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.deriv_eq_zero⟩
 #align exists_deriv_eq_zero exists_deriv_eq_zero
 
@@ -352,16 +352,16 @@ theorem exists_hasDerivAt_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (�
     ∃ c ∈ Ioo a b, f' c = 0 :=
   by
   have : ContinuousOn f (Ioo a b) := fun x hx => (hff' x hx).ContinuousAt.ContinuousWithinAt
-  have hcont := continuousOn_icc_extendFrom_ioo hab.ne this hfa hfb
+  have hcont := continuousOn_Icc_extendFrom_Ioo hab.ne this hfa hfb
   obtain ⟨c, hc, hcextr⟩ : ∃ c ∈ Ioo a b, IsLocalExtr (extendFrom (Ioo a b) f) c :=
     by
-    apply exists_local_extr_ioo _ hab hcont
-    rw [eq_lim_at_right_extendFrom_ioo hab hfb]
-    exact eq_lim_at_left_extendFrom_ioo hab hfa
+    apply exists_local_extr_Ioo _ hab hcont
+    rw [eq_lim_at_right_extendFrom_Ioo hab hfb]
+    exact eq_lim_at_left_extendFrom_Ioo hab hfa
   use c, hc
   apply (hcextr.congr _).has_deriv_at_eq_zero (hff' c hc)
   rw [eventually_eq_iff_exists_mem]
-  exact ⟨Ioo a b, ioo_mem_nhds hc.1 hc.2, extendFrom_extends this⟩
+  exact ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extendFrom_extends this⟩
 #align exists_has_deriv_at_eq_zero' exists_hasDerivAt_eq_zero'
 
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has the same limit
@@ -383,7 +383,7 @@ theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l
     ⟨c, hc, deriv_zero_of_not_differentiableAt hcdiff⟩
 #align exists_deriv_eq_zero' exists_deriv_eq_zero'
 
-end RolleCat
+end Rolle
 
 namespace Polynomial
 

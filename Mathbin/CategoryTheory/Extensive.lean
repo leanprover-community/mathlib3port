@@ -11,7 +11,7 @@ Authors: Andrew Yang
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.CategoryTheory.Limits.Shapes.StrictInitial
 import Mathbin.CategoryTheory.Limits.Shapes.Types
-import Mathbin.Topology.Category.TopCat.Limits
+import Mathbin.Topology.Category.Top.Limits
 import Mathbin.CategoryTheory.Limits.FunctorCategory
 
 /-!

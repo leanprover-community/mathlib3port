@@ -295,8 +295,7 @@ def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
 @[simp]
 theorem List.applyId_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
     List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
-  simp only [list.apply_id, List.dlookup, eq_ndrec_constant, Prod.toSigma, List.map] <;>
-      split_ifs <;>
+  simp only [list.apply_id, List.dlookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
     rfl
 #align slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.applyId_cons
 
@@ -359,7 +358,7 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
         suffices : val ∈ ys
         tauto
         erw [← Option.mem_def, mem_lookup_iff] at h₃
-        simp only [to_sigma, mem_map, hEq_iff_eq, Prod.exists] at h₃
+        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
         subst a
         subst b

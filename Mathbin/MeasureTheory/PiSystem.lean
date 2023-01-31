@@ -138,23 +138,23 @@ section Order
 
 variable {α : Type _} {ι ι' : Sort _} [LinearOrder α]
 
-theorem isPiSystem_image_iio (s : Set α) : IsPiSystem (Iio '' s) :=
+theorem isPiSystem_image_Iio (s : Set α) : IsPiSystem (Iio '' s) :=
   by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ -
   exact ⟨a ⊓ b, inf_ind a b ha hb, Iio_inter_Iio.symm⟩
-#align is_pi_system_image_Iio isPiSystem_image_iio
+#align is_pi_system_image_Iio isPiSystem_image_Iio
 
-theorem isPiSystem_iio : IsPiSystem (range Iio : Set (Set α)) :=
-  @image_univ α _ Iio ▸ isPiSystem_image_iio univ
-#align is_pi_system_Iio isPiSystem_iio
+theorem isPiSystem_Iio : IsPiSystem (range Iio : Set (Set α)) :=
+  @image_univ α _ Iio ▸ isPiSystem_image_Iio univ
+#align is_pi_system_Iio isPiSystem_Iio
 
-theorem isPiSystem_image_ioi (s : Set α) : IsPiSystem (Ioi '' s) :=
-  @isPiSystem_image_iio αᵒᵈ _ s
-#align is_pi_system_image_Ioi isPiSystem_image_ioi
+theorem isPiSystem_image_Ioi (s : Set α) : IsPiSystem (Ioi '' s) :=
+  @isPiSystem_image_Iio αᵒᵈ _ s
+#align is_pi_system_image_Ioi isPiSystem_image_Ioi
 
-theorem isPiSystem_ioi : IsPiSystem (range Ioi : Set (Set α)) :=
-  @image_univ α _ Ioi ▸ isPiSystem_image_ioi univ
-#align is_pi_system_Ioi isPiSystem_ioi
+theorem isPiSystem_Ioi : IsPiSystem (range Ioi : Set (Set α)) :=
+  @image_univ α _ Ioi ▸ isPiSystem_image_Ioi univ
+#align is_pi_system_Ioi isPiSystem_Ioi
 
 theorem isPiSystem_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop}
     (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
@@ -173,45 +173,45 @@ theorem isPiSystem_Ixx {Ixx : α → α → Set α} {p : α → α → Prop}
   simpa only [exists_range_iff] using isPiSystem_Ixx_mem (@Hne) (@Hi) (range f) (range g)
 #align is_pi_system_Ixx isPiSystem_Ixx
 
-theorem isPiSystem_ioo_mem (s t : Set α) :
+theorem isPiSystem_Ioo_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioo l u = S } :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) s t
-#align is_pi_system_Ioo_mem isPiSystem_ioo_mem
+#align is_pi_system_Ioo_mem isPiSystem_Ioo_mem
 
-theorem isPiSystem_ioo (f : ι → α) (g : ι' → α) :
+theorem isPiSystem_Ioo (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (l u : _)(h : f l < g u), Ioo (f l) (g u) = S } :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) f g
-#align is_pi_system_Ioo isPiSystem_ioo
+#align is_pi_system_Ioo isPiSystem_Ioo
 
-theorem isPiSystem_ioc_mem (s t : Set α) :
+theorem isPiSystem_Ioc_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioc l u = S } :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) s t
-#align is_pi_system_Ioc_mem isPiSystem_ioc_mem
+#align is_pi_system_Ioc_mem isPiSystem_Ioc_mem
 
-theorem isPiSystem_ioc (f : ι → α) (g : ι' → α) :
+theorem isPiSystem_Ioc (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ioc (f i) (g j) = S } :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) f g
-#align is_pi_system_Ioc isPiSystem_ioc
+#align is_pi_system_Ioc isPiSystem_Ioc
 
-theorem isPiSystem_ico_mem (s t : Set α) :
+theorem isPiSystem_Ico_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) s t
-#align is_pi_system_Ico_mem isPiSystem_ico_mem
+#align is_pi_system_Ico_mem isPiSystem_Ico_mem
 
-theorem isPiSystem_ico (f : ι → α) (g : ι' → α) :
+theorem isPiSystem_Ico (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ico (f i) (g j) = S } :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) f g
-#align is_pi_system_Ico isPiSystem_ico
+#align is_pi_system_Ico isPiSystem_Ico
 
-theorem isPiSystem_icc_mem (s t : Set α) :
+theorem isPiSystem_Icc_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l ≤ u, Icc l u = S } :=
   isPiSystem_Ixx_mem (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) s t
-#align is_pi_system_Icc_mem isPiSystem_icc_mem
+#align is_pi_system_Icc_mem isPiSystem_Icc_mem
 
-theorem isPiSystem_icc (f : ι → α) (g : ι' → α) :
+theorem isPiSystem_Icc (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (i j : _)(h : f i ≤ g j), Icc (f i) (g j) = S } :=
   isPiSystem_Ixx (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) f g
-#align is_pi_system_Icc isPiSystem_icc
+#align is_pi_system_Icc isPiSystem_Icc
 
 end Order
 

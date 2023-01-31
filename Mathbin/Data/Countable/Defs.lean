@@ -126,12 +126,14 @@ instance (priority := 100) Finite.to_countable [Finite α] : Countable α :=
 instance : Countable PUnit.{u} :=
   Subsingleton.to_countable
 
+#print Prop.countable /-
 -- Since this always succeeds, there is no reason not to have this at normal priority.
 -- Perhaps the `instance_priority` linter could be clever enough to notice this itself.
 @[nolint instance_priority]
-instance PropCat.countable (p : Prop) : Countable p :=
+instance Prop.countable (p : Prop) : Countable p :=
   Subsingleton.to_countable
-#align Prop.countable PropCat.countable
+#align Prop.countable Prop.countable
+-/
 
 #print Bool.countable /-
 instance Bool.countable : Countable Bool :=
@@ -139,9 +141,11 @@ instance Bool.countable : Countable Bool :=
 #align bool.countable Bool.countable
 -/
 
-instance PropCat.countable' : Countable Prop :=
+#print Prop.countable' /-
+instance Prop.countable' : Countable Prop :=
   Countable.of_equiv Bool Equiv.propEquivBool.symm
-#align Prop.countable' PropCat.countable'
+#align Prop.countable' Prop.countable'
+-/
 
 instance (priority := 500) [Countable α] {r : α → α → Prop} : Countable (Quot r) :=
   (surjective_quot_mk r).Countable

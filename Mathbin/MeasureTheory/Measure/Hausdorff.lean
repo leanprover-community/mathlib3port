@@ -305,7 +305,7 @@ theorem mono_pre_nat (m : Set X → ℝ≥0∞) : Monotone fun k : ℕ => pre m 
 theorem tendsto_pre (m : Set X → ℝ≥0∞) (s : Set X) :
     Tendsto (fun r => pre m r s) (𝓝[>] 0) (𝓝 <| mkMetric' m s) :=
   by
-  rw [← map_coe_ioi_atBot, tendsto_map'_iff]
+  rw [← map_coe_Ioi_atBot, tendsto_map'_iff]
   simp only [mk_metric', outer_measure.supr_apply, supᵢ_subtype']
   exact tendsto_atBot_supᵢ fun r r' hr => mono_pre _ hr _
 #align measure_theory.outer_measure.mk_metric'.tendsto_pre MeasureTheory.OuterMeasure.mkMetric'.tendsto_pre
@@ -351,7 +351,7 @@ theorem mkMetric'_isMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :
     tendsto_nhds_unique_of_eventuallyEq (mk_metric'.tendsto_pre _ _)
       ((mk_metric'.tendsto_pre _ _).add (mk_metric'.tendsto_pre _ _)) _
   rw [← pos_iff_ne_zero] at r0
-  filter_upwards [ioo_mem_nhdsWithin_ioi ⟨le_rfl, r0⟩]
+  filter_upwards [Ioo_mem_nhdsWithin_Ioi ⟨le_rfl, r0⟩]
   rintro ε ⟨ε0, εr⟩
   refine' bounded_by_union_of_top_of_nonempty_inter _
   rintro u ⟨x, hxs, hxu⟩ ⟨y, hyt, hyu⟩
@@ -364,11 +364,11 @@ theorem mkMetric'_isMetric (m : Set X → ℝ≥0∞) : (mkMetric' m).IsMetric :
 theorem mkMetric_mono_smul {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} {c : ℝ≥0∞} (hc : c ≠ ∞) (h0 : c ≠ 0)
     (hle : m₁ ≤ᶠ[𝓝[≥] 0] c • m₂) : (mkMetric m₁ : OuterMeasure X) ≤ c • mkMetric m₂ := by
   classical
-    rcases(mem_nhdsWithin_ici_iff_exists_ico_subset' Ennreal.zero_lt_one).1 hle with ⟨r, hr0, hr⟩
+    rcases(mem_nhdsWithin_Ici_iff_exists_Ico_subset' Ennreal.zero_lt_one).1 hle with ⟨r, hr0, hr⟩
     refine' fun s =>
       le_of_tendsto_of_tendsto (mk_metric'.tendsto_pre _ s)
         (Ennreal.Tendsto.const_mul (mk_metric'.tendsto_pre _ s) (Or.inr hc))
-        (mem_of_superset (ioo_mem_nhdsWithin_ioi ⟨le_rfl, hr0⟩) fun r' hr' => _)
+        (mem_of_superset (Ioo_mem_nhdsWithin_Ioi ⟨le_rfl, hr0⟩) fun r' hr' => _)
     simp only [mem_set_of_eq, mk_metric'.pre, RingHom.id_apply]
     rw [← smul_eq_mul, ← smul_apply, smul_bounded_by hc]
     refine' le_bounded_by.2 (fun t => (bounded_by_le _).trans _) _
@@ -640,7 +640,7 @@ theorem hausdorffMeasure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Se
     rw [Ennreal.coe_rpow_of_ne_zero hc, pos_iff_ne_zero, Ne.def, Ennreal.coe_eq_zero,
       Nnreal.rpow_eq_zero_iff]
     exact mt And.left hc
-  filter_upwards [ico_mem_nhdsWithin_ici ⟨le_rfl, this⟩]
+  filter_upwards [Ico_mem_nhdsWithin_Ici ⟨le_rfl, this⟩]
   rintro r ⟨hr₀, hrc⟩
   lift r to ℝ≥0 using ne_top_of_lt hrc
   rw [Pi.smul_apply, smul_eq_mul, ←
@@ -755,7 +755,7 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
     -- it suffices to check that the two measures coincide on products of rational intervals
     refine'
       (pi_eq_generateFrom (fun i => real.borel_eq_generate_from_Ioo_rat.symm)
-          (fun i => Real.isPiSystem_ioo_rat) (fun i => Real.finiteSpanningSetsInIooRat _) _).symm
+          (fun i => Real.isPiSystem_Ioo_rat) (fun i => Real.finiteSpanningSetsInIooRat _) _).symm
     simp only [mem_Union, mem_singleton_iff]
     -- fix such a product `s` of rational intervals, of the form `Π (a i, b i)`.
     intro s hs
@@ -787,7 +787,7 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
       apply eventually_at_top.2 ⟨1, fun n hn => _⟩
       intro f
       apply diam_pi_le_of_le fun b => _
-      simp only [Real.ediam_icc, add_div, Ennreal.ofReal_div_of_pos (nat.cast_pos.mpr hn), le_refl,
+      simp only [Real.ediam_Icc, add_div, Ennreal.ofReal_div_of_pos (nat.cast_pos.mpr hn), le_refl,
         add_sub_add_left_eq_sub, add_sub_cancel', Ennreal.ofReal_one, Ennreal.ofReal_coe_nat]
     have C : ∀ᶠ n in at_top, (Set.pi univ fun i : ι => Ioo (a i : ℝ) (b i)) ⊆ ⋃ i : γ n, t n i :=
       by
@@ -839,7 +839,7 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
           nsmul_eq_mul, Fintype.card_pi, div_eq_mul_inv, Finset.prod_mul_distrib, Finset.prod_const]
       _ = ∏ i : ι, volume (Ioo (a i : ℝ) (b i)) :=
         by
-        simp only [Real.volume_ioo]
+        simp only [Real.volume_Ioo]
         apply tendsto.liminf_eq
         refine' Ennreal.tendsto_finset_prod_of_ne_top _ (fun i hi => _) fun i hi => _
         · apply

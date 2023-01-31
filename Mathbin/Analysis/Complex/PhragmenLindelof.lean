@@ -196,10 +196,10 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     refine'
       ⟨ε * Real.cos (d * b),
         mul_neg_of_neg_of_pos ε₀
-          (Real.cos_pos_of_mem_ioo <| abs_lt.1 <| (abs_of_pos (mul_pos hd₀ hb)).symm ▸ hb'),
+          (Real.cos_pos_of_mem_Ioo <| abs_lt.1 <| (abs_of_pos (mul_pos hd₀ hb)).symm ▸ hb'),
         fun w hw => _⟩
     replace hw : |im (aff w)| ≤ d * b
-    · rw [← Real.closedBall_eq_icc] at hw
+    · rw [← Real.closedBall_eq_Icc] at hw
       rwa [of_real_mul_im, sub_im, mul_I_im, of_real_re, _root_.abs_mul, abs_of_pos hd₀,
         mul_le_mul_left hd₀]
     simpa only [of_real_mul_re, _root_.abs_mul, abs_of_pos hd₀, sub_re, mul_I_re, of_real_im,
@@ -257,10 +257,10 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     norm_le_of_forall_mem_frontier_norm_le ((bounded_Ioo _ _).reProdIm (bounded_Ioo _ _)) hd
       (fun w hw => _) _
   · have hwc := frontier_subset_closure hw
-    rw [frontier_re_prod_im, closure_ioo (neg_lt_self hR₀).Ne, frontier_ioo hab, closure_ioo hab.ne,
-      frontier_ioo (neg_lt_self hR₀)] at hw
+    rw [frontier_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne, frontier_Ioo hab, closure_Ioo hab.ne,
+      frontier_Ioo (neg_lt_self hR₀)] at hw
     by_cases him : w.im = a - b ∨ w.im = a + b
-    · rw [closure_re_prod_im, closure_ioo (neg_lt_self hR₀).Ne] at hwc
+    · rw [closure_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne] at hwc
       rw [norm_smul, ← one_mul C]
       exact mul_le_mul (hg₁ _ him) (him.by_cases (hle_a _) (hle_b _)) (norm_nonneg _) zero_le_one
     · replace hw : w ∈ {-R, R} ×ℂ Icc (a - b) (a + b)
@@ -268,7 +268,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       have hw' := eq_endpoints_or_mem_Ioo_of_mem_Icc hw.2
       rw [← or_assoc] at hw'
       exact hR _ ((abs_eq hR₀.le).2 hw.1.symm) (hw'.resolve_left him)
-  · rw [closure_re_prod_im, closure_ioo hab.ne, closure_ioo (neg_lt_self hR₀).Ne]
+  · rw [closure_re_prod_im, closure_Ioo hab.ne, closure_Ioo (neg_lt_self hR₀).Ne]
     exact ⟨abs_le.1 hzR.le, ⟨hza.le, hzb.le⟩⟩
 #align phragmen_lindelof.horizontal_strip PhragmenLindelof.horizontal_strip
 
@@ -456,10 +456,10 @@ theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     rw [mem_re_prod_im, exp_re, exp_im, mem_Ioi, mem_Ioi]
     refine'
       ⟨mul_pos (Real.exp_pos _)
-          (Real.cos_pos_of_mem_ioo
+          (Real.cos_pos_of_mem_Ioo
             ⟨(neg_lt_zero.2 <| div_pos Real.pi_pos two_pos).trans hz.1, hz.2⟩),
         mul_pos (Real.exp_pos _)
-          (Real.sin_pos_of_mem_ioo ⟨hz.1, hz.2.trans (half_lt_self Real.pi_pos)⟩)⟩
+          (Real.sin_pos_of_mem_Ioo ⟨hz.1, hz.2.trans (half_lt_self Real.pi_pos)⟩)⟩
   refine' horizontal_strip (hd.comp differentiable_exp.diff_cont_on_cl H) _ _ _ hζ.1 hζ.2 <;>
     clear hζ ζ
   · -- The estimate `hB` on `f` implies the required estimate on
@@ -828,7 +828,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
     rcases h₀ with ⟨x₀, hx₀, hne⟩
     have hlt : ‖(0 : E)‖ < ‖f x₀‖ := by rwa [norm_zero, norm_pos_iff]
     suffices ∀ᶠ x : ℝ in cocompact ℝ ⊓ 𝓟 (Ici 0), ‖f x‖ ≤ ‖f x₀‖ by
-      simpa only [exists_prop] using hfc.norm.exists_forall_ge' isClosed_ici hx₀ this
+      simpa only [exists_prop] using hfc.norm.exists_forall_ge' isClosed_Ici hx₀ this
     rw [Real.cocompact_eq, inf_sup_right, (disjoint_at_bot_principal_Ici (0 : ℝ)).eq_bot,
       bot_sup_eq]
     exact (hre.norm.eventually <| ge_mem_nhds hlt).filter_mono inf_le_left

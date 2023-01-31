@@ -169,48 +169,48 @@ protected theorem Set.OrdConnected.strictConvex {s : Set β} (hs : OrdConnected 
   refine' strictConvex_iff_openSegment_subset.2 fun x hx y hy hxy => _
   cases' hxy.lt_or_lt with hlt hlt <;> [skip, rw [openSegment_symm]] <;>
     exact
-      (openSegment_subset_ioo hlt).trans
+      (openSegment_subset_Ioo hlt).trans
         (is_open_Ioo.subset_interior_iff.2 <| Ioo_subset_Icc_self.trans <| hs.out ‹_› ‹_›)
 #align set.ord_connected.strict_convex Set.OrdConnected.strictConvex
 
-theorem strictConvex_iic (r : β) : StrictConvex 𝕜 (Iic r) :=
+theorem strictConvex_Iic (r : β) : StrictConvex 𝕜 (Iic r) :=
   ordConnected_Iic.StrictConvex
-#align strict_convex_Iic strictConvex_iic
+#align strict_convex_Iic strictConvex_Iic
 
-theorem strictConvex_ici (r : β) : StrictConvex 𝕜 (Ici r) :=
+theorem strictConvex_Ici (r : β) : StrictConvex 𝕜 (Ici r) :=
   ordConnected_Ici.StrictConvex
-#align strict_convex_Ici strictConvex_ici
+#align strict_convex_Ici strictConvex_Ici
 
-theorem strictConvex_iio (r : β) : StrictConvex 𝕜 (Iio r) :=
+theorem strictConvex_Iio (r : β) : StrictConvex 𝕜 (Iio r) :=
   ordConnected_Iio.StrictConvex
-#align strict_convex_Iio strictConvex_iio
+#align strict_convex_Iio strictConvex_Iio
 
-theorem strictConvex_ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=
+theorem strictConvex_Ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=
   ordConnected_Ioi.StrictConvex
-#align strict_convex_Ioi strictConvex_ioi
+#align strict_convex_Ioi strictConvex_Ioi
 
-theorem strictConvex_icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
+theorem strictConvex_Icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
   ordConnected_Icc.StrictConvex
-#align strict_convex_Icc strictConvex_icc
+#align strict_convex_Icc strictConvex_Icc
 
-theorem strictConvex_ioo (r s : β) : StrictConvex 𝕜 (Ioo r s) :=
+theorem strictConvex_Ioo (r s : β) : StrictConvex 𝕜 (Ioo r s) :=
   ordConnected_Ioo.StrictConvex
-#align strict_convex_Ioo strictConvex_ioo
+#align strict_convex_Ioo strictConvex_Ioo
 
-theorem strictConvex_ico (r s : β) : StrictConvex 𝕜 (Ico r s) :=
+theorem strictConvex_Ico (r s : β) : StrictConvex 𝕜 (Ico r s) :=
   ordConnected_Ico.StrictConvex
-#align strict_convex_Ico strictConvex_ico
+#align strict_convex_Ico strictConvex_Ico
 
-theorem strictConvex_ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
+theorem strictConvex_Ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
   ordConnected_Ioc.StrictConvex
-#align strict_convex_Ioc strictConvex_ioc
+#align strict_convex_Ioc strictConvex_Ioc
 
 theorem strictConvex_uIcc (r s : β) : StrictConvex 𝕜 (uIcc r s) :=
-  strictConvex_icc _ _
+  strictConvex_Icc _ _
 #align strict_convex_uIcc strictConvex_uIcc
 
 theorem strictConvex_uIoc (r s : β) : StrictConvex 𝕜 (uIoc r s) :=
-  strictConvex_ioc _ _
+  strictConvex_Ioc _ _
 #align strict_convex_uIoc strictConvex_uIoc
 
 end LinearOrderedCancelAddCommMonoid

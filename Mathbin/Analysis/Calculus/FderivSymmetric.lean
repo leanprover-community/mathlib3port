@@ -102,7 +102,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     apply (tendsto_order.1 this).2 δ
     simpa only [zero_mul] using δpos
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
-    mem_nhdsWithin_ioi_iff_exists_ioo_subset.2
+    mem_nhdsWithin_Ioi_iff_exists_Ioo_subset.2
       ⟨(1 : ℝ), by simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
   filter_upwards [E1, E2, self_mem_nhdsWithin]with h hδ h_lt_1 hpos
   -- we consider `h` small enough that all points under consideration belong to this ball,
@@ -217,7 +217,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
 along the vertices of a quadrilateral with sides `h v` and `h w` based at `x`.
 In a setting where `f` is not guaranteed to be continuous at `f`, we can still
 get this if we use a quadrilateral based at `h v + h w`. -/
-theorem Convex.isO_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ interior s)
+theorem Convex.isOCat_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈ interior s)
     (h4w : x + (4 : ℝ) • w ∈ interior s) :
     (fun h : ℝ =>
         f (x + h • (2 • v + 2 • w)) + f (x + h • (v + w)) - f (x + h • (2 • v + w)) -
@@ -277,7 +277,7 @@ theorem Convex.isO_alternate_sum_square {v w : E} (h4v : x + (4 : ℝ) • v ∈
     ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul',
     ContinuousLinearMap.map_smul]
   abel
-#align convex.is_o_alternate_sum_square Convex.isO_alternate_sum_square
+#align convex.is_o_alternate_sum_square Convex.isOCat_alternate_sum_square
 
 /-- Assume that `f` is differentiable inside a convex set `s`, and that its derivative `f'` is
 differentiable at a point `x`. Then, given two vectors `v` and `w` pointing inside `s`, one

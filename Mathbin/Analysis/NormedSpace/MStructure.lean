@@ -75,7 +75,7 @@ Note that we write `P • x` instead of `P x` for reasons described in the modul
 -/
 structure IsLprojection (P : M) : Prop where
   proj : IsIdempotentElem P
-  LnormCat : ∀ x : X, ‖x‖ = ‖P • x‖ + ‖(1 - P) • x‖
+  Lnorm : ∀ x : X, ‖x‖ = ‖P • x‖ + ‖(1 - P) • x‖
 #align is_Lprojection IsLprojection
 
 /-- A projection on a normed space `X` is said to be an M-projection if, for all `x` in `X`,
@@ -85,7 +85,7 @@ Note that we write `P • x` instead of `P x` for reasons described in the modul
 -/
 structure IsMprojection (P : M) : Prop where
   proj : IsIdempotentElem P
-  MnormCat : ∀ x : X, ‖x‖ = max ‖P • x‖ ‖(1 - P) • x‖
+  Mnorm : ∀ x : X, ‖x‖ = max ‖P • x‖ ‖(1 - P) • x‖
 #align is_Mprojection IsMprojection
 
 variable {X}

@@ -8,11 +8,11 @@ Authors: Justus Springer, Andrew Yang
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Algebra.Category.RingCat.FilteredColimits
+import Mathbin.Algebra.Category.Ring.FilteredColimits
 import Mathbin.AlgebraicGeometry.SheafedSpace
 import Mathbin.Topology.Sheaves.Stalks
-import Mathbin.Algebra.Category.RingCat.Colimits
-import Mathbin.Algebra.Category.RingCat.Limits
+import Mathbin.Algebra.Category.Ring.Colimits
+import Mathbin.Algebra.Category.Ring.Limits
 
 /-!
 # Ringed spaces
@@ -40,15 +40,15 @@ open TopCat.Presheaf
 namespace AlgebraicGeometry
 
 /-- The type of Ringed spaces, as an abbreviation for `SheafedSpace CommRing`. -/
-abbrev RingedSpaceCat : Type _ :=
-  SheafedSpaceCat CommRingCat
-#align algebraic_geometry.RingedSpace AlgebraicGeometry.RingedSpaceCat
+abbrev RingedSpace : Type _ :=
+  SheafedSpace CommRingCat
+#align algebraic_geometry.RingedSpace AlgebraicGeometry.RingedSpace
 
-namespace RingedSpaceCat
+namespace RingedSpace
 
-open SheafedSpaceCat
+open SheafedSpace
 
-variable (X : RingedSpaceCat.{v})
+variable (X : RingedSpace.{v})
 
 /--
 If the germ of a section `f` is a unit in the stalk at `x`, then `f` must be a unit on some small
@@ -69,7 +69,7 @@ theorem isUnit_res_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U)) (x :
   use W', i₁ ≫ opens.inf_le_left U V, hxW'
   rw [RingHom.map_one, RingHom.map_mul, ← comp_apply, ← X.presheaf.map_comp, ← op_comp] at heq'
   exact isUnit_of_mul_eq_one _ _ heq'
-#align algebraic_geometry.RingedSpace.is_unit_res_of_is_unit_germ AlgebraicGeometry.RingedSpaceCat.isUnit_res_of_isUnit_germ
+#align algebraic_geometry.RingedSpace.is_unit_res_of_is_unit_germ AlgebraicGeometry.RingedSpace.isUnit_res_of_isUnit_germ
 
 /-- If a section `f` is a unit in each stalk, `f` must be a unit. -/
 theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
@@ -100,7 +100,7 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
   intro i
   rw [RingHom.map_one, RingHom.map_mul, gl_spec]
   exact hg i
-#align algebraic_geometry.RingedSpace.is_unit_of_is_unit_germ AlgebraicGeometry.RingedSpaceCat.isUnit_of_isUnit_germ
+#align algebraic_geometry.RingedSpace.is_unit_of_is_unit_germ AlgebraicGeometry.RingedSpace.isUnit_of_isUnit_germ
 
 /-- The basic open of a section `f` is the set of all points `x`, such that the germ of `f` at
 `x` is a unit.
@@ -121,7 +121,7 @@ def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X
     · convert RingHom.isUnit_map (X.presheaf.germ ⟨y, hy⟩) hf
       exact (X.presheaf.germ_res_apply i ⟨y, hy⟩ f).symm
     · rfl
-#align algebraic_geometry.RingedSpace.basic_open AlgebraicGeometry.RingedSpaceCat.basicOpen
+#align algebraic_geometry.RingedSpace.basic_open AlgebraicGeometry.RingedSpace.basicOpen
 
 @[simp]
 theorem mem_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
@@ -133,19 +133,19 @@ theorem mem_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
     exact hx
   · intro h
     exact ⟨x, h, rfl⟩
-#align algebraic_geometry.RingedSpace.mem_basic_open AlgebraicGeometry.RingedSpaceCat.mem_basicOpen
+#align algebraic_geometry.RingedSpace.mem_basic_open AlgebraicGeometry.RingedSpace.mem_basicOpen
 
 @[simp]
 theorem mem_top_basicOpen (f : X.Presheaf.obj (op ⊤)) (x : X) :
     x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ ⟨x, show x ∈ (⊤ : Opens X) by trivial⟩ f) :=
   mem_basicOpen X f ⟨x, _⟩
-#align algebraic_geometry.RingedSpace.mem_top_basic_open AlgebraicGeometry.RingedSpaceCat.mem_top_basicOpen
+#align algebraic_geometry.RingedSpace.mem_top_basic_open AlgebraicGeometry.RingedSpace.mem_top_basicOpen
 
 theorem basicOpen_le {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ≤ U :=
   by
   rintro _ ⟨x, hx, rfl⟩
   exact x.2
-#align algebraic_geometry.RingedSpace.basic_open_le AlgebraicGeometry.RingedSpaceCat.basicOpen_le
+#align algebraic_geometry.RingedSpace.basic_open_le AlgebraicGeometry.RingedSpace.basicOpen_le
 
 /-- The restriction of a section `f` to the basic open of `f` is a unit. -/
 theorem isUnit_res_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
@@ -156,7 +156,7 @@ theorem isUnit_res_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) :
   convert hx
   rw [germ_res_apply]
   rfl
-#align algebraic_geometry.RingedSpace.is_unit_res_basic_open AlgebraicGeometry.RingedSpaceCat.isUnit_res_basicOpen
+#align algebraic_geometry.RingedSpace.is_unit_res_basic_open AlgebraicGeometry.RingedSpace.isUnit_res_basicOpen
 
 @[simp]
 theorem basicOpen_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj U) :
@@ -172,12 +172,12 @@ theorem basicOpen_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.Presheaf.obj 
   · rintro ⟨hxV, x, hx, rfl⟩
     refine' ⟨⟨x, hxV⟩, (_ : IsUnit _), rfl⟩
     rwa [germ_res_apply]
-#align algebraic_geometry.RingedSpace.basic_open_res AlgebraicGeometry.RingedSpaceCat.basicOpen_res
+#align algebraic_geometry.RingedSpace.basic_open_res AlgebraicGeometry.RingedSpace.basicOpen_res
 
 -- This should fire before `basic_open_res`.
 @[simp]
 theorem basicOpen_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.Presheaf.obj U) :
-    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpaceCat.basicOpen X (unop U) f :=
+    @basicOpen X (unop V) (X.Presheaf.map i f) = @RingedSpace.basicOpen X (unop U) f :=
   by
   apply le_antisymm
   · rw [X.basic_open_res i f]
@@ -186,7 +186,7 @@ theorem basicOpen_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.
     rw [← comp_apply, ← X.presheaf.map_comp, is_iso.hom_inv_id, X.presheaf.map_id] at this
     erw [this]
     exact inf_le_right
-#align algebraic_geometry.RingedSpace.basic_open_res_eq AlgebraicGeometry.RingedSpaceCat.basicOpen_res_eq
+#align algebraic_geometry.RingedSpace.basic_open_res_eq AlgebraicGeometry.RingedSpace.basicOpen_res_eq
 
 @[simp]
 theorem basicOpen_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
@@ -199,7 +199,7 @@ theorem basicOpen_mul {U : Opens X} (f g : X.Presheaf.obj (op U)) :
   ext
   simp_rw [map_mul]
   exact IsUnit.mul_iff
-#align algebraic_geometry.RingedSpace.basic_open_mul AlgebraicGeometry.RingedSpaceCat.basicOpen_mul
+#align algebraic_geometry.RingedSpace.basic_open_mul AlgebraicGeometry.RingedSpace.basicOpen_mul
 
 theorem basicOpen_of_isUnit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUnit f) :
     X.basicOpen f = U := by
@@ -208,9 +208,9 @@ theorem basicOpen_of_isUnit {U : Opens X} {f : X.Presheaf.obj (op U)} (hf : IsUn
   intro x hx
   erw [X.mem_basic_open f (⟨x, hx⟩ : U)]
   exact RingHom.isUnit_map _ hf
-#align algebraic_geometry.RingedSpace.basic_open_of_is_unit AlgebraicGeometry.RingedSpaceCat.basicOpen_of_isUnit
+#align algebraic_geometry.RingedSpace.basic_open_of_is_unit AlgebraicGeometry.RingedSpace.basicOpen_of_isUnit
 
-end RingedSpaceCat
+end RingedSpace
 
 end AlgebraicGeometry
 

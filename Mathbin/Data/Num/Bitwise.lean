@@ -279,7 +279,7 @@ notation a "::" b => bit a b
 /-- Sign of a `nzsnum`. -/
 def sign : NzsNum → Bool
   | msb b => not b
-  | b::p => sign p
+  | b::p => SignType.sign p
 #align nzsnum.sign NzsNum.sign
 -/
 

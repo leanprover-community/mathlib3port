@@ -115,7 +115,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
     by
     have this : UniqueDiffOn ℝ _ :=
       UniqueDiffOn.pi (Fin n) (fun _ => ℝ) _ _ fun i (_ : i ∈ ({0} : Set (Fin n))) =>
-        uniqueDiffOn_ici 0
+        uniqueDiffOn_Ici 0
     simpa only [singleton_pi] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
@@ -144,7 +144,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   unique_diff' :=
     by
     have this : UniqueDiffOn ℝ _ :=
-      UniqueDiffOn.univ_pi (Fin n) (fun _ => ℝ) _ fun i => uniqueDiffOn_ici 0
+      UniqueDiffOn.univ_pi (Fin n) (fun _ => ℝ) _ fun i => uniqueDiffOn_Ici 0
     simpa only [pi_univ_Ici] using this
   continuous_to_fun := continuous_subtype_val
   continuous_inv_fun :=
@@ -193,10 +193,10 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     rw [Subsingleton.elim i 0]
     simp only [A, add_comm, add_sub_cancel', min_eq_left]
   open_source :=
-    haveI : IsOpen { z : ℝ | z < y } := isOpen_iio
+    haveI : IsOpen { z : ℝ | z < y } := isOpen_Iio
     this.preimage continuous_subtype_val
   open_target := by
-    have : IsOpen { z : ℝ | z < y - x } := isOpen_iio
+    have : IsOpen { z : ℝ | z < y - x } := isOpen_Iio
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
@@ -245,10 +245,10 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     rw [Subsingleton.elim i 0]
     simp only [A, sub_sub_cancel, max_eq_left]
   open_source :=
-    haveI : IsOpen { z : ℝ | x < z } := isOpen_ioi
+    haveI : IsOpen { z : ℝ | x < z } := isOpen_Ioi
     this.preimage continuous_subtype_val
   open_target := by
-    have : IsOpen { z : ℝ | z < y - x } := isOpen_iio
+    have : IsOpen { z : ℝ | z < y - x } := isOpen_Iio
     have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
@@ -286,7 +286,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
-instance icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
+instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     SmoothManifoldWithCorners (𝓡∂ 1) (Icc x y) :=
   by
   have M : ContDiffOn ℝ ∞ (fun z : EuclideanSpace ℝ (Fin 1) => -z + fun i => y - x) univ :=
@@ -327,7 +327,7 @@ instance icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
     abel
   ·-- `e = right chart`, `e' = right chart`
     exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
-#align Icc_smooth_manifold icc_smooth_manifold
+#align Icc_smooth_manifold Icc_smooth_manifold
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/
 

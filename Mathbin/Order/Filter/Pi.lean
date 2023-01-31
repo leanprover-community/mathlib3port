@@ -303,7 +303,7 @@ end Pi
 /-! ### `n`-ary coproducts of filters -/
 
 
-section CoprodCat
+section Coprod
 
 #print Filter.coprodᵢ /-
 /-- Coproduct of filters. -/
@@ -439,7 +439,7 @@ theorem Tendsto.pi_map_coprodᵢ {g : ∀ i, Filter (β i)} (h : ∀ i, Tendsto 
 #align filter.tendsto.pi_map_Coprod Filter.Tendsto.pi_map_coprodᵢ
 -/
 
-end CoprodCat
+end Coprod
 
 end Filter
 

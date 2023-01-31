@@ -327,7 +327,7 @@ theorem vecAppend_eq_ite {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m →
   ext i
   rw [vec_append, Fin.append, Function.comp_apply, Fin.addCases]
   congr with hi
-  simp only [eq_ndrec_constant]
+  simp only [eq_rec_constant]
   rfl
 #align matrix.vec_append_eq_ite Matrix.vecAppend_eq_ite
 

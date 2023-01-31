@@ -89,25 +89,25 @@ theorem embedding_coe : Embedding (coe : ℝ → Ereal) :=
         · induction a using Ereal.rec
           · simp only [isOpen_univ, bot_lt_coe, set_of_true]
           · simp only [Ereal.coe_lt_coe_iff]
-            exact isOpen_ioi
+            exact isOpen_Ioi
           · simp only [set_of_false, isOpen_empty, not_top_lt]
         show IsOpen { b : ℝ | ↑b < a }
         · induction a using Ereal.rec
           · simp only [not_lt_bot, set_of_false, isOpen_empty]
           · simp only [Ereal.coe_lt_coe_iff]
-            exact isOpen_iio
+            exact isOpen_Iio
           · simp only [isOpen_univ, coe_lt_top, set_of_true]
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ _]
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
-        exact ⟨Ioi a, isOpen_ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, isOpen_iio, by simp [Iio]⟩⟩, fun a b => by
+        exact ⟨Ioi a, isOpen_Ioi, by simp [Ioi]⟩
+        exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => by
     simp only [imp_self, Ereal.coe_eq_coe_iff]⟩
 #align ereal.embedding_coe Ereal.embedding_coe
 
 theorem openEmbedding_coe : OpenEmbedding (coe : ℝ → Ereal) :=
   ⟨embedding_coe, by
-    convert @isOpen_ioo Ereal _ _ _ ⊥ ⊤
+    convert @isOpen_Ioo Ereal _ _ _ ⊥ ⊤
     ext x
     induction x using Ereal.rec
     · simp only [left_mem_Ioo, mem_range, coe_ne_bot, exists_false, not_false_iff]
@@ -181,7 +181,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
             · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0) : ℝ≥0∞) := rfl
               rw [this]
               simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
-              exact isOpen_ioi
+              exact isOpen_Ioi
             · have : ∀ y : ℝ≥0∞, (x : Ereal) < y := fun y =>
                 (Ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg _)
               simp only [this, isOpen_univ, set_of_true]
@@ -193,17 +193,17 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
             · have : (x : Ereal) = ((id ⟨x, h⟩ : ℝ≥0) : ℝ≥0∞) := rfl
               rw [this]
               simp only [id.def, coe_ennreal_lt_coe_ennreal_iff]
-              exact isOpen_iio
+              exact isOpen_Iio
             · convert isOpen_empty
               apply eq_empty_iff_forall_not_mem.2 fun y hy => lt_irrefl (x : Ereal) _
               exact ((Ereal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg y)).trans hy
           · simp only [← coe_ennreal_top, coe_ennreal_lt_coe_ennreal_iff]
-            exact isOpen_iio
+            exact isOpen_Iio
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _]
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
-        exact ⟨Ioi a, isOpen_ioi, by simp [Ioi]⟩
-        exact ⟨Iio a, isOpen_iio, by simp [Iio]⟩⟩, fun a b => by
+        exact ⟨Ioi a, isOpen_Ioi, by simp [Ioi]⟩
+        exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => by
     simp only [imp_self, coe_ennreal_eq_coe_ennreal_iff]⟩
 #align ereal.embedding_coe_ennreal Ereal.embedding_coe_ennreal
 
@@ -299,8 +299,8 @@ theorem continuousAt_add_top_coe (a : ℝ) :
   intro r
   rw [eventually_prod_iff]
   refine'
-    ⟨fun z => ((r - (a - 1) : ℝ) : Ereal) < z, ioi_mem_nhds (coe_lt_top _), fun z =>
-      ((a - 1 : ℝ) : Ereal) < z, ioi_mem_nhds (by simp [-Ereal.coe_sub]), fun x hx y hy => _⟩
+    ⟨fun z => ((r - (a - 1) : ℝ) : Ereal) < z, Ioi_mem_nhds (coe_lt_top _), fun z =>
+      ((a - 1 : ℝ) : Ereal) < z, Ioi_mem_nhds (by simp [-Ereal.coe_sub]), fun x hx y hy => _⟩
   dsimp
   convert add_lt_add hx hy
   simp
@@ -321,8 +321,8 @@ theorem continuousAt_add_top_top : ContinuousAt (fun p : Ereal × Ereal => p.1 +
   intro r
   rw [eventually_prod_iff]
   refine'
-    ⟨fun z => (r : Ereal) < z, ioi_mem_nhds (coe_lt_top _), fun z => ((0 : ℝ) : Ereal) < z,
-      ioi_mem_nhds (by simp [zero_lt_one]), fun x hx y hy => _⟩
+    ⟨fun z => (r : Ereal) < z, Ioi_mem_nhds (coe_lt_top _), fun z => ((0 : ℝ) : Ereal) < z,
+      Ioi_mem_nhds (by simp [zero_lt_one]), fun x hx y hy => _⟩
   dsimp
   convert add_lt_add hx hy
   simp
@@ -335,8 +335,8 @@ theorem continuousAt_add_bot_coe (a : ℝ) :
   intro r
   rw [eventually_prod_iff]
   refine'
-    ⟨fun z => z < ((r - (a + 1) : ℝ) : Ereal), iio_mem_nhds (bot_lt_coe _), fun z =>
-      z < ((a + 1 : ℝ) : Ereal), iio_mem_nhds (by simp [-coe_add, zero_lt_one]), fun x hx y hy => _⟩
+    ⟨fun z => z < ((r - (a + 1) : ℝ) : Ereal), Iio_mem_nhds (bot_lt_coe _), fun z =>
+      z < ((a + 1 : ℝ) : Ereal), Iio_mem_nhds (by simp [-coe_add, zero_lt_one]), fun x hx y hy => _⟩
   convert add_lt_add hx hy
   rw [sub_add_cancel]
 #align ereal.continuous_at_add_bot_coe Ereal.continuousAt_add_bot_coe
@@ -356,7 +356,7 @@ theorem continuousAt_add_bot_bot : ContinuousAt (fun p : Ereal × Ereal => p.1 +
   intro r
   rw [eventually_prod_iff]
   refine'
-    ⟨fun z => z < r, iio_mem_nhds (bot_lt_coe _), fun z => z < 0, iio_mem_nhds (bot_lt_coe _),
+    ⟨fun z => z < r, Iio_mem_nhds (bot_lt_coe _), fun z => z < 0, Iio_mem_nhds (bot_lt_coe _),
       fun x hx y hy => _⟩
   dsimp
   convert add_lt_add hx hy

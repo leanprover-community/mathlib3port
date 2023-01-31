@@ -92,7 +92,7 @@ theorem isLocallySurjective_iff_imagePresheaf_sheafify_eq_top' {F G : Cᵒᵖ �
   exact ⟨fun H U => H (unop U), fun H U => H (op U)⟩
 #align category_theory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top' CategoryTheory.isLocallySurjective_iff_imagePresheaf_sheafify_eq_top'
 
-theorem isLocallySurjective_iff_isIso {F G : SheafCat J (Type w)} (f : F ⟶ G) :
+theorem isLocallySurjective_iff_isIso {F G : Sheaf J (Type w)} (f : F ⟶ G) :
     IsLocallySurjective J f.1 ↔ IsIso (imageSheafι f) :=
   by
   rw [image_sheaf_ι, is_locally_surjective_iff_image_presheaf_sheafify_eq_top',

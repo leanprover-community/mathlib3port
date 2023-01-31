@@ -10,8 +10,8 @@ Authors: Andrew Yang
 -/
 import Mathbin.CategoryTheory.GlueData
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
-import Mathbin.Topology.Category.TopCat.Limits
-import Mathbin.Topology.Category.TopCat.Opens
+import Mathbin.Topology.Category.Top.Limits
+import Mathbin.Topology.Category.Top.Opens
 
 /-!
 # Gluing Topological spaces

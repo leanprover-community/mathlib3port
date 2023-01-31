@@ -347,7 +347,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
     exact (H.and self_mem_nhdsWithin).exists
   have : Iio (⟨ε, εpos.le⟩ : ℝ≥0) ∈ 𝓝 (0 : ℝ≥0) :=
     by
-    apply iio_mem_nhds
+    apply Iio_mem_nhds
     exact εpos
   filter_upwards [this]
   -- fix a function `f` which is close enough to `A`.
@@ -480,7 +480,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
     by_cases Subsingleton E
     · simp only [h, true_or_iff, eventually_const]
     simp only [h, false_or_iff]
-    apply iio_mem_nhds
+    apply Iio_mem_nhds
     simpa only [h, false_or_iff, Nnreal.inv_pos] using B.subsingleton_or_nnnorm_symm_pos
   have L2 :
     ∀ᶠ δ in 𝓝 (0 : ℝ≥0), ‖(B.symm : E →L[ℝ] E)‖₊ * (‖(B.symm : E →L[ℝ] E)‖₊⁻¹ - δ)⁻¹ * δ < δ₀ :=

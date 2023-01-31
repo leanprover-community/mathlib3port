@@ -156,7 +156,7 @@ theorem smul_le_stoppedValue_hitting [IsFiniteMeasure μ] (hsub : Submartingale 
           (hsub.strongly_measurable n).Measurable.le (𝒢.le n)))
       (measure_ne_top _ _) this
       (integrable.integrable_on
-        (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_ici)
+        (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
           hitting_le))
   rw [Ennreal.le_ofReal_iff_toReal_le, Ennreal.toReal_smul]
   · exact h
@@ -227,7 +227,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
             (set_integral_mono_on (hsub.integrable n).IntegrableOn
               (integrable.integrable_on
                 (hsub.integrable_stopped_value
-                  (hitting_is_stopping_time hsub.adapted measurableSet_ici) hitting_le))
+                  (hitting_is_stopping_time hsub.adapted measurableSet_Ici) hitting_le))
               (measurableSet_lt
                 (Finset.measurable_range_sup'' fun n _ =>
                   (hsub.strongly_measurable n).Measurable.le (𝒢.le n))
@@ -264,12 +264,12 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
       ·
         exact
           integrable.integrable_on
-            (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_ici)
+            (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
               hitting_le)
       ·
         exact
           integrable.integrable_on
-            (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_ici)
+            (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
               hitting_le)
       exacts[integral_nonneg fun x => hnonneg _ _, integral_nonneg fun x => hnonneg _ _]
     _ ≤ Ennreal.ofReal (μ[f n]) :=
@@ -277,7 +277,7 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
       refine' Ennreal.ofReal_le_ofReal _
       rw [← stopped_value_const f n]
       exact
-        hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurableSet_ici)
+        hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
           (is_stopping_time_const _ _) (fun ω => hitting_le ω) (fun ω => le_rfl : ∀ ω, n ≤ n)
     
 #align measure_theory.maximal_ineq MeasureTheory.maximal_ineq

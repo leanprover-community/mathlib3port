@@ -526,9 +526,9 @@ theorem Set.Finite.convexHull_eq_image {s : Set E} (hs : s.Finite) :
 #align set.finite.convex_hull_eq_image Set.Finite.convexHull_eq_image
 
 /-- All values of a function `f ∈ std_simplex 𝕜 ι` belong to `[0, 1]`. -/
-theorem mem_icc_of_mem_stdSimplex (hf : f ∈ stdSimplex R ι) (x) : f x ∈ Icc (0 : R) 1 :=
+theorem mem_Icc_of_mem_stdSimplex (hf : f ∈ stdSimplex R ι) (x) : f x ∈ Icc (0 : R) 1 :=
   ⟨hf.1 x, hf.2 ▸ Finset.single_le_sum (fun y hy => hf.1 y) (Finset.mem_univ x)⟩
-#align mem_Icc_of_mem_std_simplex mem_icc_of_mem_stdSimplex
+#align mem_Icc_of_mem_std_simplex mem_Icc_of_mem_stdSimplex
 
 /-- The convex hull of an affine basis is the intersection of the half-spaces defined by the
 corresponding barycentric coordinates. -/

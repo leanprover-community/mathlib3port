@@ -76,15 +76,15 @@ theorem contDiffAt_tan {n x} : ContDiffAt ℝ n tan x ↔ cos x ≠ 0 :=
     (Complex.contDiffAt_tan.2 <| by exact_mod_cast h).real_of_complex⟩
 #align real.cont_diff_at_tan Real.contDiffAt_tan
 
-theorem hasDerivAt_tan_of_mem_ioo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) :
+theorem hasDerivAt_tan_of_mem_Ioo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) :
     HasDerivAt tan (1 / cos x ^ 2) x :=
-  hasDerivAt_tan (cos_pos_of_mem_ioo h).ne'
-#align real.has_deriv_at_tan_of_mem_Ioo Real.hasDerivAt_tan_of_mem_ioo
+  hasDerivAt_tan (cos_pos_of_mem_Ioo h).ne'
+#align real.has_deriv_at_tan_of_mem_Ioo Real.hasDerivAt_tan_of_mem_Ioo
 
-theorem differentiableAt_tan_of_mem_ioo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) :
+theorem differentiableAt_tan_of_mem_Ioo {x : ℝ} (h : x ∈ Ioo (-(π / 2) : ℝ) (π / 2)) :
     DifferentiableAt ℝ tan x :=
-  (hasDerivAt_tan_of_mem_ioo h).DifferentiableAt
-#align real.differentiable_at_tan_of_mem_Ioo Real.differentiableAt_tan_of_mem_ioo
+  (hasDerivAt_tan_of_mem_Ioo h).DifferentiableAt
+#align real.differentiable_at_tan_of_mem_Ioo Real.differentiableAt_tan_of_mem_Ioo
 
 theorem hasStrictDerivAt_arctan (x : ℝ) : HasStrictDerivAt arctan (1 / (1 + x ^ 2)) x :=
   by

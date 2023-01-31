@@ -325,13 +325,13 @@ theorem tendsto_comp_exp_atTop {f : ℝ → α} :
 
 @[simp]
 theorem map_exp_atBot : map exp atBot = 𝓝[>] 0 := by
-  rw [← coe_comp_exp_order_iso, ← Filter.map_map, exp_order_iso.map_at_bot, ← map_coe_ioi_atBot]
+  rw [← coe_comp_exp_order_iso, ← Filter.map_map, exp_order_iso.map_at_bot, ← map_coe_Ioi_atBot]
 #align real.map_exp_at_bot Real.map_exp_atBot
 
 @[simp]
-theorem comap_exp_nhdsWithin_ioi_zero : comap exp (𝓝[>] 0) = at_bot := by
+theorem comap_exp_nhdsWithin_Ioi_zero : comap exp (𝓝[>] 0) = at_bot := by
   rw [← map_exp_at_bot, comap_map exp_injective]
-#align real.comap_exp_nhds_within_Ioi_zero Real.comap_exp_nhdsWithin_ioi_zero
+#align real.comap_exp_nhds_within_Ioi_zero Real.comap_exp_nhdsWithin_Ioi_zero
 
 theorem tendsto_comp_exp_atBot {f : ℝ → α} :
     Tendsto (fun x => f (exp x)) atBot l ↔ Tendsto f (𝓝[>] 0) l := by
@@ -349,10 +349,10 @@ theorem tendsto_exp_comp_nhds_zero {f : α → ℝ} :
   rw [← tendsto_comap_iff, comap_exp_nhds_zero]
 #align real.tendsto_exp_comp_nhds_zero Real.tendsto_exp_comp_nhds_zero
 
-theorem isO_pow_exp_atTop {n : ℕ} : (fun x => x ^ n) =o[at_top] Real.exp := by
+theorem isOCat_pow_exp_atTop {n : ℕ} : (fun x => x ^ n) =o[at_top] Real.exp := by
   simpa [is_o_iff_tendsto fun x hx => ((exp_pos x).ne' hx).elim] using
     tendsto_div_pow_mul_exp_add_at_top 1 0 n zero_ne_one
-#align real.is_o_pow_exp_at_top Real.isO_pow_exp_atTop
+#align real.is_o_pow_exp_at_top Real.isOCat_pow_exp_atTop
 
 @[simp]
 theorem isO_exp_comp_exp_comp {f g : α → ℝ} :
@@ -370,33 +370,19 @@ theorem isTheta_exp_comp_exp_comp {f g : α → ℝ} :
     is_O_exp_comp_exp_comp, Pi.sub_def]
 #align real.is_Theta_exp_comp_exp_comp Real.isTheta_exp_comp_exp_comp
 
-/- warning: real.is_o_exp_comp_exp_comp clashes with real.is_O_exp_comp_exp_comp -> Real.isO_exp_comp_exp_comp
-warning: real.is_o_exp_comp_exp_comp -> Real.isO_exp_comp_exp_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {f : α -> Real} {g : α -> Real}, Iff (Asymptotics.IsO.{u1, 0, 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => Real.exp (f x)) (fun (x : α) => Real.exp (g x))) (Filter.Tendsto.{u1, 0} α Real (fun (x : α) => HSub.hSub.{0, 0, 0} Real Real Real (instHSub.{0} Real Real.hasSub) (g x) (f x)) l (Filter.atTop.{0} Real Real.preorder))
-but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {f : α -> Real} {g : α -> Real}, Iff (Asymptotics.IsO.{u1, 0, 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => Real.exp (f x)) (fun (x : α) => Real.exp (g x))) (Filter.IsBoundedUnder.{0, u1} Real α (LE.le.{0} Real Real.hasLe) l (HSub.hSub.{u1, u1, u1} (α -> Real) (α -> Real) (α -> Real) (instHSub.{u1} (α -> Real) (Pi.instSub.{u1, 0} α (fun (ᾰ : α) => Real) (fun (i : α) => Real.hasSub))) f g))
-Case conversion may be inaccurate. Consider using '#align real.is_o_exp_comp_exp_comp Real.isO_exp_comp_exp_compₓ'. -/
 @[simp]
-theorem isO_exp_comp_exp_comp {f g : α → ℝ} :
+theorem isOCat_exp_comp_exp_comp {f g : α → ℝ} :
     ((fun x => exp (f x)) =o[l] fun x => exp (g x)) ↔ Tendsto (fun x => g x - f x) l atTop := by
   simp only [is_o_iff_tendsto, exp_ne_zero, ← exp_sub, ← tendsto_neg_at_top_iff, false_imp_iff,
     imp_true_iff, tendsto_exp_comp_nhds_zero, neg_sub]
-#align real.is_o_exp_comp_exp_comp Real.isO_exp_comp_exp_comp
+#align real.is_o_exp_comp_exp_comp Real.isOCat_exp_comp_exp_comp
 
 @[simp]
-theorem isO_one_exp_comp {f : α → ℝ} :
+theorem isOCat_one_exp_comp {f : α → ℝ} :
     ((fun x => 1 : α → ℝ) =o[l] fun x => exp (f x)) ↔ Tendsto f l atTop := by
   simp only [← exp_zero, is_o_exp_comp_exp_comp, sub_zero]
-#align real.is_o_one_exp_comp Real.isO_one_exp_comp
+#align real.is_o_one_exp_comp Real.isOCat_one_exp_comp
 
-/- warning: real.is_O_one_exp_comp clashes with real.is_o_one_exp_comp -> Real.isO_one_exp_comp
-warning: real.is_O_one_exp_comp -> Real.isO_one_exp_comp is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {f : α -> Real}, Iff (Asymptotics.IsO.{u1, 0, 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (fun (x : α) => Real.exp (f x))) (Filter.IsBoundedUnder.{0, u1} Real α (GE.ge.{0} Real Real.hasLe) l f)
-but is expected to have type
-  forall {α : Type.{u1}} {l : Filter.{u1} α} {f : α -> Real}, Iff (Asymptotics.IsO.{u1, 0, 0} α Real Real Real.hasNorm Real.hasNorm l (fun (x : α) => OfNat.ofNat.{0} Real 1 (OfNat.mk.{0} Real 1 (One.one.{0} Real Real.hasOne))) (fun (x : α) => Real.exp (f x))) (Filter.Tendsto.{u1, 0} α Real f l (Filter.atTop.{0} Real Real.preorder))
-Case conversion may be inaccurate. Consider using '#align real.is_O_one_exp_comp Real.isO_one_exp_compₓ'. -/
 /-- `real.exp (f x)` is bounded away from zero along a filter if and only if this filter is bounded
 from below under `f`. -/
 @[simp]

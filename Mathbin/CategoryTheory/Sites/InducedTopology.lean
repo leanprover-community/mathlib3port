@@ -165,7 +165,7 @@ This is known as the comparison lemma. It requires that the sites are small and 
 is complete.
 -/
 noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
-    SheafCat H.inducedTopology A ≌ SheafCat K A :=
+    Sheaf H.inducedTopology A ≌ Sheaf K A :=
   H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.induced_topology_cover_preserving
     H.LocallyCoverDense.induced_topology_cover_lifting
 #align category_theory.cover_dense.Sheaf_equiv CategoryTheory.CoverDense.sheafEquiv

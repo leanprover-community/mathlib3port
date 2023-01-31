@@ -136,12 +136,12 @@ variable (J)
 /-- Composing a sheaf with a functor preserving the appropriate limits yields a functor
 between sheaf categories. -/
 @[simps]
-def sheafCompose : SheafCat J A ⥤ SheafCat J B
+def sheafCompose : Sheaf J A ⥤ Sheaf J B
     where
   obj G := ⟨G.val ⋙ F, Presheaf.IsSheaf.comp _ G.2⟩
   map G H η := ⟨whiskerRight η.val _⟩
-  map_id' G := SheafCat.Hom.ext _ _ <| whiskerRight_id _
-  map_comp' G H W f g := SheafCat.Hom.ext _ _ <| whiskerRight_comp _ _ _
+  map_id' G := Sheaf.Hom.ext _ _ <| whiskerRight_id _
+  map_comp' G H W f g := Sheaf.Hom.ext _ _ <| whiskerRight_comp _ _ _
 #align category_theory.Sheaf_compose CategoryTheory.sheafCompose
 
 end CategoryTheory

@@ -101,9 +101,9 @@ theorem tMin_le_tMax : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2
 #align picard_lindelof.t_min_le_t_max PicardLindelof.tMin_le_tMax
 
-protected theorem nonempty_icc : (Icc v.tMin v.tMax).Nonempty :=
+protected theorem nonempty_Icc : (Icc v.tMin v.tMax).Nonempty :=
   nonempty_Icc.2 v.t_min_le_t_max
-#align picard_lindelof.nonempty_Icc PicardLindelof.nonempty_icc
+#align picard_lindelof.nonempty_Icc PicardLindelof.nonempty_Icc
 
 protected theorem lipschitzOnWith {t} (ht : t ∈ Icc v.tMin v.tMax) :
     LipschitzOnWith v.l (v t) (closedBall v.x₀ v.r) :=
@@ -333,7 +333,7 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
       by
       refine' norm_integral_le_of_norm_le (Continuous.integrableOnUIoc _) _
       · continuity
-      · refine' (ae_restrict_mem measurableSet_ioc).mono fun τ hτ => _
+      · refine' (ae_restrict_mem measurableSet_Ioc).mono fun τ hτ => _
         refine'
           (v.lipschitz_on_with (v.proj τ).2).norm_sub_le_of_le (f₁.mem_closed_ball _)
             (f₂.mem_closed_ball _) ((h _).trans_eq _)
@@ -414,7 +414,7 @@ theorem IsPicardLindelof.norm_le₀ {E : Type _} [NormedAddCommGroup E] {v : ℝ
 #align is_picard_lindelof.norm_le₀ IsPicardLindelof.norm_le₀
 
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
-theorem exists_forall_deriv_within_icc_eq_of_isPicardLindelof [CompleteSpace E] {v : ℝ → E → E}
+theorem exists_forall_deriv_within_Icc_eq_of_isPicardLindelof [CompleteSpace E] {v : ℝ → E → E}
     {t_min t₀ t_max : ℝ} (x₀ : E) {C R : ℝ} {L : ℝ≥0}
     (hpl : IsPicardLindelof v t_min t₀ t_max x₀ L R C) :
     ∃ f : ℝ → E,
@@ -425,7 +425,7 @@ theorem exists_forall_deriv_within_icc_eq_of_isPicardLindelof [CompleteSpace E] 
   exact
     PicardLindelof.exists_solution
       ⟨v, t_min, t_max, t₀, x₀, C, ⟨R, hpl.hR⟩, L, { hpl with ht₀ := t₀.property }⟩
-#align exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof exists_forall_deriv_within_icc_eq_of_isPicardLindelof
+#align exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof exists_forall_deriv_within_Icc_eq_of_isPicardLindelof
 
 variable [ProperSpace E] {v : E → E} (t₀ : ℝ) (x₀ : E)
 
@@ -459,7 +459,7 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
   refine' ⟨ε, hε0, L, r / 2, C, _⟩
   exact
     { ht₀ := by
-        rw [← Real.closedBall_eq_icc]
+        rw [← Real.closedBall_eq_Icc]
         exact mem_closed_ball_self hε0.le
       hR := (half_pos hr).le
       lipschitz := fun t ht =>
@@ -476,15 +476,15 @@ theorem exists_isPicardLindelof_const_of_contDiffOn_nhds {s : Set E} (hv : ContD
 
 /-- A time-independent, locally continuously differentiable ODE admits a solution in some open
 interval. -/
-theorem exists_forall_deriv_at_ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s)
+theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContDiffOn ℝ 1 v s)
     (hs : s ∈ 𝓝 x₀) :
     ∃ ε > (0 : ℝ),
       ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), f t ∈ s ∧ HasDerivAt f (v (f t)) t :=
   by
   obtain ⟨ε, hε, L, R, C, hpl⟩ := exists_isPicardLindelof_const_of_contDiffOn_nhds t₀ x₀ hv hs
-  obtain ⟨f, hf1, hf2⟩ := exists_forall_deriv_within_icc_eq_of_isPicardLindelof x₀ hpl
+  obtain ⟨f, hf1, hf2⟩ := exists_forall_deriv_within_Icc_eq_of_isPicardLindelof x₀ hpl
   have hf2' : ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t := fun t ht =>
-    (hf2 t (Ioo_subset_Icc_self ht)).HasDerivAt (icc_mem_nhds ht.1 ht.2)
+    (hf2 t (Ioo_subset_Icc_self ht)).HasDerivAt (Icc_mem_nhds ht.1 ht.2)
   have h : f ⁻¹' s ∈ 𝓝 t₀ :=
     by
     have := hf2' t₀ (mem_Ioo.mpr ⟨sub_lt_self _ hε, lt_add_of_pos_right _ hε⟩)
@@ -503,16 +503,16 @@ theorem exists_forall_deriv_at_ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContD
   rw [← Set.mem_preimage]
   apply Set.mem_of_mem_of_subset _ hr2
   apply Set.mem_of_mem_of_subset ht
-  rw [← Real.ball_eq_ioo]
+  rw [← Real.ball_eq_Ioo]
   exact Metric.ball_subset_ball (min_le_left _ _)
-#align exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_deriv_at_ioo_eq_of_contDiffOn_nhds
+#align exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds
 
 /-- A time-independent, continuously differentiable ODE admits a solution in some open interval. -/
-theorem exists_forall_deriv_at_ioo_eq_of_contDiff (hv : ContDiff ℝ 1 v) :
+theorem exists_forall_deriv_at_Ioo_eq_of_contDiff (hv : ContDiff ℝ 1 v) :
     ∃ ε > (0 : ℝ), ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t :=
   let ⟨ε, hε, f, hf1, hf2⟩ :=
-    exists_forall_deriv_at_ioo_eq_of_contDiffOn_nhds t₀ x₀ hv.ContDiffOn
+    exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds t₀ x₀ hv.ContDiffOn
       (IsOpen.mem_nhds isOpen_univ (mem_univ _))
   ⟨ε, hε, f, hf1, fun t ht => (hf2 t ht).2⟩
-#align exists_forall_deriv_at_Ioo_eq_of_cont_diff exists_forall_deriv_at_ioo_eq_of_contDiff
+#align exists_forall_deriv_at_Ioo_eq_of_cont_diff exists_forall_deriv_at_Ioo_eq_of_contDiff
 

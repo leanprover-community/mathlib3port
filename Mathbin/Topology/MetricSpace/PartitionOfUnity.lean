@@ -85,7 +85,7 @@ theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU 
 theorem exists_forall_closedBall_subset_aux₂ (y : X) :
     Convex ℝ
       (Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
-  (convex_ioi _).inter <|
+  (convex_Ioi _).inter <|
     ord_connected.convex <|
       ord_connected.preimage_ennreal_of_real <|
         ord_connected_Inter fun i =>

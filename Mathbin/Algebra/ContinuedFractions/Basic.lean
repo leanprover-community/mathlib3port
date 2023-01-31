@@ -118,7 +118,7 @@ For convenience, one often writes `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),
 -/
 structure GeneralizedContinuedFraction where
   h : α
-  s : Seq <| Pair α
+  s : SeqCat <| Pair α
 #align generalized_continued_fraction GeneralizedContinuedFraction
 
 variable {α}
@@ -127,19 +127,19 @@ namespace GeneralizedContinuedFraction
 
 /-- Constructs a generalized continued fraction without fractional part. -/
 def ofInteger (a : α) : GeneralizedContinuedFraction α :=
-  ⟨a, Seq.nil⟩
+  ⟨a, SeqCat.nil⟩
 #align generalized_continued_fraction.of_integer GeneralizedContinuedFraction.ofInteger
 
 instance [Inhabited α] : Inhabited (GeneralizedContinuedFraction α) :=
   ⟨ofInteger default⟩
 
 /-- Returns the sequence of partial numerators `aᵢ` of `g`. -/
-def partialNumerators (g : GeneralizedContinuedFraction α) : Seq α :=
+def partialNumerators (g : GeneralizedContinuedFraction α) : SeqCat α :=
   g.s.map Pair.a
 #align generalized_continued_fraction.partial_numerators GeneralizedContinuedFraction.partialNumerators
 
 /-- Returns the sequence of partial denominators `bᵢ` of `g`. -/
-def partialDenominators (g : GeneralizedContinuedFraction α) : Seq α :=
+def partialDenominators (g : GeneralizedContinuedFraction α) : SeqCat α :=
   g.s.map Pair.b
 #align generalized_continued_fraction.partial_denominators GeneralizedContinuedFraction.partialDenominators
 
@@ -171,13 +171,13 @@ variable {β : Type _} [Coe α β]
 /-- Coerce a gcf by elementwise coercion. -/
 instance hasCoeToGeneralizedContinuedFraction :
     Coe (GeneralizedContinuedFraction α) (GeneralizedContinuedFraction β) :=
-  ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩⟩
+  ⟨fun g => ⟨(g.h : β), (g.s.map coe : SeqCat <| Pair β)⟩⟩
 #align generalized_continued_fraction.has_coe_to_generalized_continued_fraction GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
 @[simp, norm_cast]
 theorem coe_to_generalizedContinuedFraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
-      ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩ :=
+      ⟨(g.h : β), (g.s.map coe : SeqCat <| Pair β)⟩ :=
   rfl
 #align generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_to_generalizedContinuedFraction
 
@@ -401,7 +401,7 @@ Returns the approximation of the fraction described by the given sequence up to 
 For example, `convergents'_aux [(1, 2), (3, 4), (5, 6)] 2 = 1 / (2 + 3 / 4)` and
 `convergents'_aux [(1, 2), (3, 4), (5, 6)] 0 = 0`.
 -/
-def convergents'Aux : Seq (Pair K) → ℕ → K
+def convergents'Aux : SeqCat (Pair K) → ℕ → K
   | s, 0 => 0
   | s, n + 1 =>
     match s.head with

@@ -65,13 +65,13 @@ namespace Language
 
 variable (L : Language.{u, v}) {L' : Language}
 
-variable {M : Type w} {N P : Type _} [L.StructureCat M] [L.StructureCat N] [L.StructureCat P]
+variable {M : Type w} {N P : Type _} [L.Structure M] [L.Structure N] [L.Structure P]
 
 variable {α : Type u'} {β : Type v'} {γ : Type _}
 
 open FirstOrder
 
-open StructureCat Fin
+open Structure Fin
 
 /- ./././Mathport/Syntax/Translate/Command.lean:364:30: infer kinds are unsupported in Lean 4: var {} -/
 /- ./././Mathport/Syntax/Translate/Command.lean:364:30: infer kinds are unsupported in Lean 4: func {} -/
@@ -309,30 +309,30 @@ end Term
 -- mathport name: language.term.var
 scoped[FirstOrder] prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
 
-namespace LhomCat
+namespace Lhom
 
-/- warning: first_order.language.Lhom.on_term -> FirstOrder.Language.LhomCat.onTerm is a dubious translation:
+/- warning: first_order.language.Lhom.on_term -> FirstOrder.Language.Lhom.onTerm is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {α : Type.{u3}}, (FirstOrder.Language.LhomCat.{u1, u2, u4, u5} L L') -> (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (FirstOrder.Language.Term.{u4, u5, u3} L' α)
+  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {α : Type.{u3}}, (FirstOrder.Language.Lhom.{u1, u2, u4, u5} L L') -> (FirstOrder.Language.Term.{u1, u2, u3} L α) -> (FirstOrder.Language.Term.{u4, u5, u3} L' α)
 but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}}, (FirstOrder.Language.LhomCat.{u1, u5, u3, u4} L L') -> (FirstOrder.Language.Term.{u1, u5, u2} L α) -> (FirstOrder.Language.Term.{u3, u4, u2} L' α)
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_term FirstOrder.Language.LhomCat.onTermₓ'. -/
+  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}}, (FirstOrder.Language.Lhom.{u1, u5, u3, u4} L L') -> (FirstOrder.Language.Term.{u1, u5, u2} L α) -> (FirstOrder.Language.Term.{u3, u4, u2} L' α)
+Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_term FirstOrder.Language.Lhom.onTermₓ'. -/
 /-- Maps a term's symbols along a language map. -/
 @[simp]
 def onTerm (φ : L →ᴸ L') : L.term α → L'.term α
   | var i => var i
   | func f ts => func (φ.onFunction f) fun i => on_term (ts i)
-#align first_order.language.Lhom.on_term FirstOrder.Language.LhomCat.onTerm
+#align first_order.language.Lhom.on_term FirstOrder.Language.Lhom.onTerm
 
 @[simp]
-theorem id_onTerm : ((LhomCat.id L).onTerm : L.term α → L.term α) = id :=
+theorem id_onTerm : ((Lhom.id L).onTerm : L.term α → L.term α) = id :=
   by
   ext t
   induction' t with _ _ _ _ ih
   · rfl
   · simp_rw [on_term, ih]
     rfl
-#align first_order.language.Lhom.id_on_term FirstOrder.Language.LhomCat.id_onTerm
+#align first_order.language.Lhom.id_on_term FirstOrder.Language.Lhom.id_onTerm
 
 @[simp]
 theorem comp_onTerm {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
@@ -343,13 +343,13 @@ theorem comp_onTerm {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
   · rfl
   · simp_rw [on_term, ih]
     rfl
-#align first_order.language.Lhom.comp_on_term FirstOrder.Language.LhomCat.comp_onTerm
+#align first_order.language.Lhom.comp_on_term FirstOrder.Language.Lhom.comp_onTerm
 
-end LhomCat
+end Lhom
 
 /-- Maps a term's symbols along a language equivalence. -/
 @[simps]
-def LequivCat.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
+def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
     where
   toFun := φ.toLhom.onTerm
   invFun := φ.invLhom.onTerm
@@ -357,7 +357,7 @@ def LequivCat.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
     rw [Function.leftInverse_iff_comp, ← Lhom.comp_on_term, φ.left_inv, Lhom.id_on_term]
   right_inv := by
     rw [Function.rightInverse_iff_comp, ← Lhom.comp_on_term, φ.right_inv, Lhom.id_on_term]
-#align first_order.language.Lequiv.on_term FirstOrder.Language.LequivCat.onTerm
+#align first_order.language.Lequiv.on_term FirstOrder.Language.Lequiv.onTerm
 
 variable (L) (α)
 
@@ -386,9 +386,9 @@ def Sentence :=
 
 /-- A theory is a set of sentences. -/
 @[reducible]
-def TheoryCat :=
+def Theory :=
   Set L.Sentence
-#align first_order.language.Theory FirstOrder.Language.TheoryCat
+#align first_order.language.Theory FirstOrder.Language.Theory
 
 variable {L} {α} {n : ℕ}
 
@@ -523,7 +523,7 @@ theorem castLe_castLe {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFormu
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 <;> intro m n km mn
   · rfl
   · simp
-  · simp only [cast_le, eq_self_iff_true, hEq_iff_eq, true_and_iff]
+  · simp only [cast_le, eq_self_iff_true, heq_iff_eq, true_and_iff]
     rw [← Function.comp.assoc, relabel_comp_relabel]
     simp
   · simp [ih1, ih2]
@@ -976,16 +976,16 @@ theorem toPrenex_isPrenex (φ : L.BoundedFormula α n) : φ.toPrenex.IsPrenex :=
 
 end BoundedFormula
 
-namespace LhomCat
+namespace Lhom
 
 open BoundedFormula
 
-/- warning: first_order.language.Lhom.on_bounded_formula -> FirstOrder.Language.LhomCat.onBoundedFormula is a dubious translation:
+/- warning: first_order.language.Lhom.on_bounded_formula -> FirstOrder.Language.Lhom.onBoundedFormula is a dubious translation:
 lean 3 declaration is
-  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {α : Type.{u3}}, (FirstOrder.Language.LhomCat.{u1, u2, u4, u5} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α k) -> (FirstOrder.Language.BoundedFormula.{u4, u5, u3} L' α k))
+  forall {L : FirstOrder.Language.{u1, u2}} {L' : FirstOrder.Language.{u4, u5}} {α : Type.{u3}}, (FirstOrder.Language.Lhom.{u1, u2, u4, u5} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u2, u3} L α k) -> (FirstOrder.Language.BoundedFormula.{u4, u5, u3} L' α k))
 but is expected to have type
-  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}}, (FirstOrder.Language.LhomCat.{u1, u5, u3, u4} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u5, u2} L α k) -> (FirstOrder.Language.BoundedFormula.{u3, u4, u2} L' α k))
-Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_bounded_formula FirstOrder.Language.LhomCat.onBoundedFormulaₓ'. -/
+  forall {L : FirstOrder.Language.{u1, u5}} {L' : FirstOrder.Language.{u3, u4}} {α : Type.{u2}}, (FirstOrder.Language.Lhom.{u1, u5, u3, u4} L L') -> (forall {k : Nat}, (FirstOrder.Language.BoundedFormula.{u1, u5, u2} L α k) -> (FirstOrder.Language.BoundedFormula.{u3, u4, u2} L' α k))
+Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.on_bounded_formula FirstOrder.Language.Lhom.onBoundedFormulaₓ'. -/
 /-- Maps a bounded formula's symbols along a language map. -/
 @[simp]
 def onBoundedFormula (g : L →ᴸ L') : ∀ {k : ℕ}, L.BoundedFormula α k → L'.BoundedFormula α k
@@ -994,11 +994,11 @@ def onBoundedFormula (g : L →ᴸ L') : ∀ {k : ℕ}, L.BoundedFormula α k �
   | k, Rel R ts => (g.onRelation R).BoundedFormula (g.onTerm ∘ ts)
   | k, imp f₁ f₂ => (on_bounded_formula f₁).imp (on_bounded_formula f₂)
   | k, all f => (on_bounded_formula f).all
-#align first_order.language.Lhom.on_bounded_formula FirstOrder.Language.LhomCat.onBoundedFormula
+#align first_order.language.Lhom.on_bounded_formula FirstOrder.Language.Lhom.onBoundedFormula
 
 @[simp]
 theorem id_onBoundedFormula :
-    ((LhomCat.id L).onBoundedFormula : L.BoundedFormula α n → L.BoundedFormula α n) = id :=
+    ((Lhom.id L).onBoundedFormula : L.BoundedFormula α n → L.BoundedFormula α n) = id :=
   by
   ext f
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
@@ -1008,7 +1008,7 @@ theorem id_onBoundedFormula :
     rfl
   · rw [on_bounded_formula, ih1, ih2, id.def, id.def, id.def]
   · rw [on_bounded_formula, ih3, id.def, id.def]
-#align first_order.language.Lhom.id_on_bounded_formula FirstOrder.Language.LhomCat.id_onBoundedFormula
+#align first_order.language.Lhom.id_on_bounded_formula FirstOrder.Language.Lhom.id_onBoundedFormula
 
 @[simp]
 theorem comp_onBoundedFormula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
@@ -1024,32 +1024,32 @@ theorem comp_onBoundedFormula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →�
     rfl
   · simp only [on_bounded_formula, Function.comp_apply, ih1, ih2, eq_self_iff_true, and_self_iff]
   · simp only [ih3, on_bounded_formula, Function.comp_apply]
-#align first_order.language.Lhom.comp_on_bounded_formula FirstOrder.Language.LhomCat.comp_onBoundedFormula
+#align first_order.language.Lhom.comp_on_bounded_formula FirstOrder.Language.Lhom.comp_onBoundedFormula
 
 /-- Maps a formula's symbols along a language map. -/
 def onFormula (g : L →ᴸ L') : L.Formula α → L'.Formula α :=
   g.onBoundedFormula
-#align first_order.language.Lhom.on_formula FirstOrder.Language.LhomCat.onFormula
+#align first_order.language.Lhom.on_formula FirstOrder.Language.Lhom.onFormula
 
 /-- Maps a sentence's symbols along a language map. -/
 def onSentence (g : L →ᴸ L') : L.Sentence → L'.Sentence :=
   g.onFormula
-#align first_order.language.Lhom.on_sentence FirstOrder.Language.LhomCat.onSentence
+#align first_order.language.Lhom.on_sentence FirstOrder.Language.Lhom.onSentence
 
 /-- Maps a theory's symbols along a language map. -/
-def onTheory (g : L →ᴸ L') (T : L.TheoryCat) : L'.TheoryCat :=
+def onTheory (g : L →ᴸ L') (T : L.Theory) : L'.Theory :=
   g.onSentence '' T
-#align first_order.language.Lhom.on_Theory FirstOrder.Language.LhomCat.onTheory
+#align first_order.language.Lhom.on_Theory FirstOrder.Language.Lhom.onTheory
 
 @[simp]
-theorem mem_onTheory {g : L →ᴸ L'} {T : L.TheoryCat} {φ : L'.Sentence} :
+theorem mem_onTheory {g : L →ᴸ L'} {T : L.Theory} {φ : L'.Sentence} :
     φ ∈ g.onTheory T ↔ ∃ φ₀, φ₀ ∈ T ∧ g.onSentence φ₀ = φ :=
   Set.mem_image _ _ _
-#align first_order.language.Lhom.mem_on_Theory FirstOrder.Language.LhomCat.mem_onTheory
+#align first_order.language.Lhom.mem_on_Theory FirstOrder.Language.Lhom.mem_onTheory
 
-end LhomCat
+end Lhom
 
-namespace LequivCat
+namespace Lequiv
 
 /-- Maps a bounded formula's symbols along a language equivalence. -/
 @[simps]
@@ -1063,38 +1063,38 @@ def onBoundedFormula (φ : L ≃ᴸ L') : L.BoundedFormula α n ≃ L'.BoundedFo
   right_inv := by
     rw [Function.rightInverse_iff_comp, ← Lhom.comp_on_bounded_formula, φ.right_inv,
       Lhom.id_on_bounded_formula]
-#align first_order.language.Lequiv.on_bounded_formula FirstOrder.Language.LequivCat.onBoundedFormula
+#align first_order.language.Lequiv.on_bounded_formula FirstOrder.Language.Lequiv.onBoundedFormula
 
 theorem onBoundedFormula_symm (φ : L ≃ᴸ L') :
     (φ.onBoundedFormula.symm : L'.BoundedFormula α n ≃ L.BoundedFormula α n) =
       φ.symm.onBoundedFormula :=
   rfl
-#align first_order.language.Lequiv.on_bounded_formula_symm FirstOrder.Language.LequivCat.onBoundedFormula_symm
+#align first_order.language.Lequiv.on_bounded_formula_symm FirstOrder.Language.Lequiv.onBoundedFormula_symm
 
 /-- Maps a formula's symbols along a language equivalence. -/
 def onFormula (φ : L ≃ᴸ L') : L.Formula α ≃ L'.Formula α :=
   φ.onBoundedFormula
-#align first_order.language.Lequiv.on_formula FirstOrder.Language.LequivCat.onFormula
+#align first_order.language.Lequiv.on_formula FirstOrder.Language.Lequiv.onFormula
 
 @[simp]
 theorem onFormula_apply (φ : L ≃ᴸ L') :
     (φ.onFormula : L.Formula α → L'.Formula α) = φ.toLhom.onFormula :=
   rfl
-#align first_order.language.Lequiv.on_formula_apply FirstOrder.Language.LequivCat.onFormula_apply
+#align first_order.language.Lequiv.on_formula_apply FirstOrder.Language.Lequiv.onFormula_apply
 
 @[simp]
 theorem onFormula_symm (φ : L ≃ᴸ L') :
     (φ.onFormula.symm : L'.Formula α ≃ L.Formula α) = φ.symm.onFormula :=
   rfl
-#align first_order.language.Lequiv.on_formula_symm FirstOrder.Language.LequivCat.onFormula_symm
+#align first_order.language.Lequiv.on_formula_symm FirstOrder.Language.Lequiv.onFormula_symm
 
 /-- Maps a sentence's symbols along a language equivalence. -/
 @[simps]
 def onSentence (φ : L ≃ᴸ L') : L.Sentence ≃ L'.Sentence :=
   φ.onFormula
-#align first_order.language.Lequiv.on_sentence FirstOrder.Language.LequivCat.onSentence
+#align first_order.language.Lequiv.on_sentence FirstOrder.Language.Lequiv.onSentence
 
-end LequivCat
+end Lequiv
 
 -- mathport name: term.bd_equal
 scoped[FirstOrder] infixl:88 " =' " => FirstOrder.Language.Term.bdEqual
@@ -1214,18 +1214,18 @@ protected def Sentence.cardGe (n) : L.Sentence :=
 #align first_order.language.sentence.card_ge FirstOrder.Language.Sentence.cardGe
 
 /-- A theory indicating that a structure is infinite. -/
-def infiniteTheory : L.TheoryCat :=
+def infiniteTheory : L.Theory :=
   Set.range (Sentence.cardGe L)
 #align first_order.language.infinite_theory FirstOrder.Language.infiniteTheory
 
 /-- A theory that indicates a structure is nonempty. -/
-def nonemptyTheory : L.TheoryCat :=
+def nonemptyTheory : L.Theory :=
   {Sentence.cardGe L 1}
 #align first_order.language.nonempty_theory FirstOrder.Language.nonemptyTheory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A theory indicating that each of a set of constants is distinct. -/
-def distinctConstantsTheory (s : Set α) : L[[α]].TheoryCat :=
+def distinctConstantsTheory (s : Set α) : L[[α]].Theory :=
   (fun ab : α × α => ((L.con ab.1).term.equal (L.con ab.2).term).Not) '' (s ×ˢ s ∩ Set.diagonal αᶜ)
 #align first_order.language.distinct_constants_theory FirstOrder.Language.distinctConstantsTheory
 
@@ -1234,12 +1234,12 @@ variable {L} {α}
 open Set
 
 theorem monotone_distinctConstantsTheory :
-    Monotone (L.distinctConstantsTheory : Set α → L[[α]].TheoryCat) := fun s t st =>
+    Monotone (L.distinctConstantsTheory : Set α → L[[α]].Theory) := fun s t st =>
   image_subset _ (inter_subset_inter_left _ (prod_mono st st))
 #align first_order.language.monotone_distinct_constants_theory FirstOrder.Language.monotone_distinctConstantsTheory
 
 theorem directed_distinctConstantsTheory :
-    Directed (· ⊆ ·) (L.distinctConstantsTheory : Set α → L[[α]].TheoryCat) :=
+    Directed (· ⊆ ·) (L.distinctConstantsTheory : Set α → L[[α]].Theory) :=
   Monotone.directed_le monotone_distinctConstantsTheory
 #align first_order.language.directed_distinct_constants_theory FirstOrder.Language.directed_distinctConstantsTheory
 

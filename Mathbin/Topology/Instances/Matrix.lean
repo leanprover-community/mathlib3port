@@ -43,10 +43,10 @@ open Matrix
 variable {X α l m n p S R : Type _} {m' n' : l → Type _}
 
 instance [TopologicalSpace R] : TopologicalSpace (Matrix m n R) :=
-  PiCat.topologicalSpace
+  Pi.topologicalSpace
 
 instance [TopologicalSpace R] [T2Space R] : T2Space (Matrix m n R) :=
-  PiCat.t2Space
+  Pi.t2Space
 
 /-! ### Lemmas about continuity of operations -/
 

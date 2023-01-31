@@ -283,7 +283,7 @@ open Finset
 
 variable {α : Type _} [LinearOrderedField α]
 
-theorem sum_ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
+theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
     (∑ i in Ioc k n, ((i ^ 2)⁻¹ : α)) ≤ k⁻¹ - n⁻¹ :=
   by
   refine' Nat.le_induction _ _ n h
@@ -300,9 +300,9 @@ theorem sum_ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
   · ring_nf
     exact B.le
   · nlinarith
-#align sum_Ioc_inv_sq_le_sub sum_ioc_inv_sq_le_sub
+#align sum_Ioc_inv_sq_le_sub sum_Ioc_inv_sq_le_sub
 
-theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
+theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) ≤ 2 / (k + 1) :=
   calc
     (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) ≤ ∑ i in Ioc k (max (k + 1) n), (i ^ 2)⁻¹ :=
       by
@@ -319,7 +319,7 @@ theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) 
       rw [Nat.Ico_succ_right, Nat.Icc_succ_left, Nat.cast_succ]
     _ ≤ ((k + 1) ^ 2)⁻¹ + (k + 1)⁻¹ :=
       by
-      refine' add_le_add le_rfl ((sum_ioc_inv_sq_le_sub _ (le_max_left _ _)).trans _)
+      refine' add_le_add le_rfl ((sum_Ioc_inv_sq_le_sub _ (le_max_left _ _)).trans _)
       · simp only [Ne.def, Nat.succ_ne_zero, not_false_iff]
       · simp only [Nat.cast_succ, one_div, sub_le_self_iff, inv_nonneg, Nat.cast_nonneg]
     _ ≤ 1 / (k + 1) + 1 / (k + 1) :=
@@ -331,7 +331,7 @@ theorem sum_ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) 
       simpa using pow_le_pow A one_le_two
     _ = 2 / (k + 1) := by ring
     
-#align sum_Ioo_inv_sq_le sum_ioo_inv_sq_le
+#align sum_Ioo_inv_sq_le sum_Ioo_inv_sq_le
 
 end
 

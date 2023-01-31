@@ -77,14 +77,14 @@ theorem totient_pos : ∀ {n : ℕ}, 0 < n → 0 < φ n
   | n + 2 => fun h => card_pos.2 ⟨1, mem_filter.2 ⟨mem_range.2 (by decide), coprime_one_right _⟩⟩
 #align nat.totient_pos Nat.totient_pos
 
-theorem filter_coprime_ico_eq_totient (a n : ℕ) :
+theorem filter_coprime_Ico_eq_totient (a n : ℕ) :
     ((Ico n (n + a)).filter (coprime a)).card = totient a :=
   by
   rw [totient, filter_Ico_card_eq_of_periodic, count_eq_card_filter_range]
   exact periodic_coprime a
-#align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_ico_eq_totient
+#align nat.filter_coprime_Ico_eq_totient Nat.filter_coprime_Ico_eq_totient
 
-theorem ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
+theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
     ((Ico k (k + n)).filter (coprime a)).card ≤ totient a * (n / a + 1) :=
   by
   conv_lhs => rw [← Nat.mod_add_div n a]
@@ -113,7 +113,7 @@ theorem ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
       apply card_union_le
     _ ≤ a.totient * i + a.totient + a.totient := add_le_add_right ih (totient a)
     
-#align nat.Ico_filter_coprime_le Nat.ico_filter_coprime_le
+#align nat.Ico_filter_coprime_le Nat.Ico_filter_coprime_le
 
 open ZMod
 

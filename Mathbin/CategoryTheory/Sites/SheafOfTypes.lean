@@ -1009,23 +1009,23 @@ variable {C : Type u₁} [Category.{v₁} C]
 variable (J : GrothendieckTopology C)
 
 /-- The category of sheaves on a grothendieck topology. -/
-structure SheafOfTypesCat (J : GrothendieckTopology C) : Type max u₁ v₁ (w + 1) where
+structure SheafOfTypes (J : GrothendieckTopology C) : Type max u₁ v₁ (w + 1) where
   val : Cᵒᵖ ⥤ Type w
   cond : Presieve.IsSheaf J val
-#align category_theory.SheafOfTypes CategoryTheory.SheafOfTypesCat
+#align category_theory.SheafOfTypes CategoryTheory.SheafOfTypes
 
-namespace SheafOfTypesCat
+namespace SheafOfTypes
 
 variable {J}
 
 /-- Morphisms between sheaves of types are just morphisms between the underlying presheaves. -/
 @[ext]
-structure Hom (X Y : SheafOfTypesCat J) where
+structure Hom (X Y : SheafOfTypes J) where
   val : X.val ⟶ Y.val
-#align category_theory.SheafOfTypes.hom CategoryTheory.SheafOfTypesCat.Hom
+#align category_theory.SheafOfTypes.hom CategoryTheory.SheafOfTypes.Hom
 
 @[simps]
-instance : Category (SheafOfTypesCat J) where
+instance : Category (SheafOfTypes J) where
   Hom := Hom
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.val ≫ g.val⟩
@@ -1034,16 +1034,16 @@ instance : Category (SheafOfTypesCat J) where
   assoc' X Y Z W f g h := Hom.ext _ _ <| assoc _ _ _
 
 -- Let's make the inhabited linter happy...
-instance (X : SheafOfTypesCat J) : Inhabited (Hom X X) :=
+instance (X : SheafOfTypes J) : Inhabited (Hom X X) :=
   ⟨𝟙 X⟩
 
-end SheafOfTypesCat
+end SheafOfTypes
 
 /-- The inclusion functor from sheaves to presheaves. -/
 @[simps]
-def sheafOfTypesToPresheaf : SheafOfTypesCat J ⥤ Cᵒᵖ ⥤ Type w
+def sheafOfTypesToPresheaf : SheafOfTypes J ⥤ Cᵒᵖ ⥤ Type w
     where
-  obj := SheafOfTypesCat.val
+  obj := SheafOfTypes.val
   map X Y f := f.val
   map_id' X := rfl
   map_comp' X Y Z f g := rfl
@@ -1058,7 +1058,7 @@ The category of sheaves on the bottom (trivial) grothendieck topology is equival
 of presheaves.
 -/
 @[simps]
-def sheafOfTypesBotEquiv : SheafOfTypesCat (⊥ : GrothendieckTopology C) ≌ Cᵒᵖ ⥤ Type w
+def sheafOfTypesBotEquiv : SheafOfTypes (⊥ : GrothendieckTopology C) ≌ Cᵒᵖ ⥤ Type w
     where
   Functor := sheafOfTypesToPresheaf _
   inverse :=
@@ -1070,7 +1070,7 @@ def sheafOfTypesBotEquiv : SheafOfTypesCat (⊥ : GrothendieckTopology C) ≌ C�
   counitIso := Iso.refl _
 #align category_theory.SheafOfTypes_bot_equiv CategoryTheory.sheafOfTypesBotEquiv
 
-instance : Inhabited (SheafOfTypesCat (⊥ : GrothendieckTopology C)) :=
+instance : Inhabited (SheafOfTypes (⊥ : GrothendieckTopology C)) :=
   ⟨sheafOfTypesBotEquiv.inverse.obj ((Functor.const _).obj PUnit)⟩
 
 end CategoryTheory

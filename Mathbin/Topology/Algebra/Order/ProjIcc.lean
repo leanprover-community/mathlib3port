@@ -61,9 +61,9 @@ theorem Continuous.iccExtend {f : γ → Icc a b → β} {g : γ → α} (hf : C
 
 /-- A useful special case of `continuous.Icc_extend`. -/
 @[continuity]
-theorem Continuous.icc_extend' {f : Icc a b → β} (hf : Continuous f) : Continuous (IccExtend h f) :=
+theorem Continuous.Icc_extend' {f : Icc a b → β} (hf : Continuous f) : Continuous (IccExtend h f) :=
   hf.comp continuous_projIcc
-#align continuous.Icc_extend' Continuous.icc_extend'
+#align continuous.Icc_extend' Continuous.Icc_extend'
 
 theorem ContinuousAt.iccExtend {x : γ} (f : γ → Icc a b → β) {g : γ → α}
     (hf : ContinuousAt (↿f) (x, projIcc a b h (g x))) (hg : ContinuousAt g x) :

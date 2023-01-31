@@ -157,7 +157,7 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
     rw [this, hft zt yt zy]
 #align has_constant_speed_on_with.union HasConstantSpeedOnWith.union
 
-theorem HasConstantSpeedOnWith.icc_icc {x y z : ℝ} (hfs : HasConstantSpeedOnWith f (Icc x y) l)
+theorem HasConstantSpeedOnWith.Icc_Icc {x y z : ℝ} (hfs : HasConstantSpeedOnWith f (Icc x y) l)
     (hft : HasConstantSpeedOnWith f (Icc y z) l) : HasConstantSpeedOnWith f (Icc x z) l :=
   by
   rcases le_total x y with (xy | yx)
@@ -172,7 +172,7 @@ theorem HasConstantSpeedOnWith.icc_icc {x y z : ℝ} (hfs : HasConstantSpeedOnWi
     rw [Icc_inter_Icc, sup_of_le_right xu, inf_of_le_right vz, ←
       hft ⟨yx.trans xu, uz⟩ ⟨yx.trans xv, vz⟩, Icc_inter_Icc, sup_of_le_right (yx.trans xu),
       inf_of_le_right vz]
-#align has_constant_speed_on_with.Icc_Icc HasConstantSpeedOnWith.icc_icc
+#align has_constant_speed_on_with.Icc_Icc HasConstantSpeedOnWith.Icc_Icc
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem hasConstantSpeedOnWith_zero_iff :
@@ -226,10 +226,10 @@ theorem HasUnitSpeedOn.union {t : Set ℝ} {x : ℝ} (hfs : HasUnitSpeedOn f s)
   HasConstantSpeedOnWith.union hfs hft hs ht
 #align has_unit_speed_on.union HasUnitSpeedOn.union
 
-theorem HasUnitSpeedOn.icc_icc {x y z : ℝ} (hfs : HasUnitSpeedOn f (Icc x y))
+theorem HasUnitSpeedOn.Icc_Icc {x y z : ℝ} (hfs : HasUnitSpeedOn f (Icc x y))
     (hft : HasUnitSpeedOn f (Icc y z)) : HasUnitSpeedOn f (Icc x z) :=
-  HasConstantSpeedOnWith.icc_icc hfs hft
-#align has_unit_speed_on.Icc_Icc HasUnitSpeedOn.icc_icc
+  HasConstantSpeedOnWith.Icc_Icc hfs hft
+#align has_unit_speed_on.Icc_Icc HasUnitSpeedOn.Icc_Icc
 
 /-- If both `f` and `f ∘ φ` have unit speed (on `t` and `s` respectively) and `φ`
 monotonically maps `s` onto `t`, then `φ` is just a translation (on `s`).
@@ -245,7 +245,7 @@ theorem unique_unit_speed {φ : ℝ → ℝ} (φm : MonotoneOn φ s) (hfφ : Has
 /-- If both `f` and `f ∘ φ` have unit speed (on `Icc 0 t` and `Icc 0 s` respectively)
 and `φ` monotonically maps `Icc 0 s` onto `Icc 0 t`, then `φ` is the identity on `Icc 0 s`
 -/
-theorem unique_unit_speed_on_icc_zero {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) {φ : ℝ → ℝ}
+theorem unique_unit_speed_on_Icc_zero {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) {φ : ℝ → ℝ}
     (φm : MonotoneOn φ <| Icc 0 s) (φst : φ '' Icc 0 s = Icc 0 t)
     (hfφ : HasUnitSpeedOn (f ∘ φ) (Icc 0 s)) (hf : HasUnitSpeedOn f (Icc 0 t)) :
     EqOn φ id (Icc 0 s) := by
@@ -259,7 +259,7 @@ theorem unique_unit_speed_on_icc_zero {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) 
         (φst.rec_on (maps_to_image φ (Icc 0 s)) ⟨le_rfl, hs⟩).1
   simp only [tsub_zero, this, add_zero]
   rfl
-#align unique_unit_speed_on_Icc_zero unique_unit_speed_on_icc_zero
+#align unique_unit_speed_on_Icc_zero unique_unit_speed_on_Icc_zero
 
 /-- The natural parameterization of `f` on `s`, which, if `f` has locally bounded variation on `s`,
 * has unit speed on `s`
@@ -299,7 +299,7 @@ theorem has_unit_speed_naturalParameterization (f : α → E) {s : Set α}
   · rw [Nnreal.coe_one, one_mul, sub_eq_add_neg, variationOnFromTo.eq_neg_swap, neg_neg, add_comm,
       variationOnFromTo.add hf bs as cs, ← variationOnFromTo.eq_neg_swap f]
     rw [←
-      evariationOn.comp_inter_icc_eq_of_monotoneOn (naturalParameterization f s a) _
+      evariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _
         (variationOnFromTo.monotoneOn hf as) bs cs]
     rw [@evariationOn.eq_of_edist_zero_on _ _ _ _ _ f]
     · rw [variationOnFromTo.eq_of_le _ _ bc, Ennreal.ofReal_toReal (hf b c bs cs)]

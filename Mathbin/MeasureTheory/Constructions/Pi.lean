@@ -523,70 +523,70 @@ section Intervals
 
 variable {μ} [∀ i, PartialOrder (α i)] [∀ i, HasNoAtoms (μ i)]
 
-theorem pi_iio_ae_eq_pi_iic {s : Set ι} {f : ∀ i, α i} :
+theorem pi_Iio_ae_eq_pi_Iic {s : Set ι} {f : ∀ i, α i} :
     (pi s fun i => Iio (f i)) =ᵐ[Measure.pi μ] pi s fun i => Iic (f i) :=
-  ae_eq_set_pi fun i hi => iio_ae_eq_iic
-#align measure_theory.measure.pi_Iio_ae_eq_pi_Iic MeasureTheory.Measure.pi_iio_ae_eq_pi_iic
+  ae_eq_set_pi fun i hi => Iio_ae_eq_Iic
+#align measure_theory.measure.pi_Iio_ae_eq_pi_Iic MeasureTheory.Measure.pi_Iio_ae_eq_pi_Iic
 
-theorem pi_ioi_ae_eq_pi_ici {s : Set ι} {f : ∀ i, α i} :
+theorem pi_Ioi_ae_eq_pi_Ici {s : Set ι} {f : ∀ i, α i} :
     (pi s fun i => Ioi (f i)) =ᵐ[Measure.pi μ] pi s fun i => Ici (f i) :=
-  ae_eq_set_pi fun i hi => ioi_ae_eq_ici
-#align measure_theory.measure.pi_Ioi_ae_eq_pi_Ici MeasureTheory.Measure.pi_ioi_ae_eq_pi_ici
+  ae_eq_set_pi fun i hi => Ioi_ae_eq_Ici
+#align measure_theory.measure.pi_Ioi_ae_eq_pi_Ici MeasureTheory.Measure.pi_Ioi_ae_eq_pi_Ici
 
-theorem univ_pi_iio_ae_eq_iic {f : ∀ i, α i} :
+theorem univ_pi_Iio_ae_eq_Iic {f : ∀ i, α i} :
     (pi univ fun i => Iio (f i)) =ᵐ[Measure.pi μ] Iic f :=
   by
   rw [← pi_univ_Iic]
   exact pi_Iio_ae_eq_pi_Iic
-#align measure_theory.measure.univ_pi_Iio_ae_eq_Iic MeasureTheory.Measure.univ_pi_iio_ae_eq_iic
+#align measure_theory.measure.univ_pi_Iio_ae_eq_Iic MeasureTheory.Measure.univ_pi_Iio_ae_eq_Iic
 
-theorem univ_pi_ioi_ae_eq_ici {f : ∀ i, α i} :
+theorem univ_pi_Ioi_ae_eq_Ici {f : ∀ i, α i} :
     (pi univ fun i => Ioi (f i)) =ᵐ[Measure.pi μ] Ici f :=
   by
   rw [← pi_univ_Ici]
   exact pi_Ioi_ae_eq_pi_Ici
-#align measure_theory.measure.univ_pi_Ioi_ae_eq_Ici MeasureTheory.Measure.univ_pi_ioi_ae_eq_ici
+#align measure_theory.measure.univ_pi_Ioi_ae_eq_Ici MeasureTheory.Measure.univ_pi_Ioi_ae_eq_Ici
 
-theorem pi_ioo_ae_eq_pi_icc {s : Set ι} {f g : ∀ i, α i} :
+theorem pi_Ioo_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ioo (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Icc (f i) (g i) :=
-  ae_eq_set_pi fun i hi => ioo_ae_eq_icc
-#align measure_theory.measure.pi_Ioo_ae_eq_pi_Icc MeasureTheory.Measure.pi_ioo_ae_eq_pi_icc
+  ae_eq_set_pi fun i hi => Ioo_ae_eq_Icc
+#align measure_theory.measure.pi_Ioo_ae_eq_pi_Icc MeasureTheory.Measure.pi_Ioo_ae_eq_pi_Icc
 
-theorem pi_ioo_ae_eq_pi_ioc {s : Set ι} {f g : ∀ i, α i} :
+theorem pi_Ioo_ae_eq_pi_Ioc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ioo (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Ioc (f i) (g i) :=
-  ae_eq_set_pi fun i hi => ioo_ae_eq_ioc
-#align measure_theory.measure.pi_Ioo_ae_eq_pi_Ioc MeasureTheory.Measure.pi_ioo_ae_eq_pi_ioc
+  ae_eq_set_pi fun i hi => Ioo_ae_eq_Ioc
+#align measure_theory.measure.pi_Ioo_ae_eq_pi_Ioc MeasureTheory.Measure.pi_Ioo_ae_eq_pi_Ioc
 
-theorem univ_pi_ioo_ae_eq_icc {f g : ∀ i, α i} :
+theorem univ_pi_Ioo_ae_eq_Icc {f g : ∀ i, α i} :
     (pi univ fun i => Ioo (f i) (g i)) =ᵐ[Measure.pi μ] Icc f g :=
   by
   rw [← pi_univ_Icc]
   exact pi_Ioo_ae_eq_pi_Icc
-#align measure_theory.measure.univ_pi_Ioo_ae_eq_Icc MeasureTheory.Measure.univ_pi_ioo_ae_eq_icc
+#align measure_theory.measure.univ_pi_Ioo_ae_eq_Icc MeasureTheory.Measure.univ_pi_Ioo_ae_eq_Icc
 
-theorem pi_ioc_ae_eq_pi_icc {s : Set ι} {f g : ∀ i, α i} :
+theorem pi_Ioc_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ioc (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Icc (f i) (g i) :=
-  ae_eq_set_pi fun i hi => ioc_ae_eq_icc
-#align measure_theory.measure.pi_Ioc_ae_eq_pi_Icc MeasureTheory.Measure.pi_ioc_ae_eq_pi_icc
+  ae_eq_set_pi fun i hi => Ioc_ae_eq_Icc
+#align measure_theory.measure.pi_Ioc_ae_eq_pi_Icc MeasureTheory.Measure.pi_Ioc_ae_eq_pi_Icc
 
-theorem univ_pi_ioc_ae_eq_icc {f g : ∀ i, α i} :
+theorem univ_pi_Ioc_ae_eq_Icc {f g : ∀ i, α i} :
     (pi univ fun i => Ioc (f i) (g i)) =ᵐ[Measure.pi μ] Icc f g :=
   by
   rw [← pi_univ_Icc]
   exact pi_Ioc_ae_eq_pi_Icc
-#align measure_theory.measure.univ_pi_Ioc_ae_eq_Icc MeasureTheory.Measure.univ_pi_ioc_ae_eq_icc
+#align measure_theory.measure.univ_pi_Ioc_ae_eq_Icc MeasureTheory.Measure.univ_pi_Ioc_ae_eq_Icc
 
-theorem pi_ico_ae_eq_pi_icc {s : Set ι} {f g : ∀ i, α i} :
+theorem pi_Ico_ae_eq_pi_Icc {s : Set ι} {f g : ∀ i, α i} :
     (pi s fun i => Ico (f i) (g i)) =ᵐ[Measure.pi μ] pi s fun i => Icc (f i) (g i) :=
-  ae_eq_set_pi fun i hi => ico_ae_eq_icc
-#align measure_theory.measure.pi_Ico_ae_eq_pi_Icc MeasureTheory.Measure.pi_ico_ae_eq_pi_icc
+  ae_eq_set_pi fun i hi => Ico_ae_eq_Icc
+#align measure_theory.measure.pi_Ico_ae_eq_pi_Icc MeasureTheory.Measure.pi_Ico_ae_eq_pi_Icc
 
-theorem univ_pi_ico_ae_eq_icc {f g : ∀ i, α i} :
+theorem univ_pi_Ico_ae_eq_Icc {f g : ∀ i, α i} :
     (pi univ fun i => Ico (f i) (g i)) =ᵐ[Measure.pi μ] Icc f g :=
   by
   rw [← pi_univ_Icc]
   exact pi_Ico_ae_eq_pi_Icc
-#align measure_theory.measure.univ_pi_Ico_ae_eq_Icc MeasureTheory.Measure.univ_pi_ico_ae_eq_icc
+#align measure_theory.measure.univ_pi_Ico_ae_eq_Icc MeasureTheory.Measure.univ_pi_Ico_ae_eq_Icc
 
 end Intervals
 

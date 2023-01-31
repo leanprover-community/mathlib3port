@@ -233,7 +233,7 @@ theorem not_countable_real : ¬(Set.univ : Set ℝ).Countable :=
 #align cardinal.not_countable_real Cardinal.not_countable_real
 
 /-- The cardinality of the interval (a, ∞). -/
-theorem mk_ioi_real (a : ℝ) : (#Ioi a) = 𝔠 :=
+theorem mk_Ioi_real (a : ℝ) : (#Ioi a) = 𝔠 :=
   by
   refine' le_antisymm (mk_real ▸ mk_set_le _) _
   rw [← not_lt]
@@ -255,15 +255,15 @@ theorem mk_ioi_real (a : ℝ) : (#Ioi a) = 𝔠 :=
   refine' add_lt_of_lt (cantor _).le (mk_image_le.trans_lt h) _
   rw [mk_singleton]
   exact one_lt_aleph_0.trans (cantor _)
-#align cardinal.mk_Ioi_real Cardinal.mk_ioi_real
+#align cardinal.mk_Ioi_real Cardinal.mk_Ioi_real
 
 /-- The cardinality of the interval [a, ∞). -/
-theorem mk_ici_real (a : ℝ) : (#Ici a) = 𝔠 :=
-  le_antisymm (mk_real ▸ mk_set_le _) (mk_ioi_real a ▸ mk_le_mk_of_subset Ioi_subset_Ici_self)
-#align cardinal.mk_Ici_real Cardinal.mk_ici_real
+theorem mk_Ici_real (a : ℝ) : (#Ici a) = 𝔠 :=
+  le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioi_real a ▸ mk_le_mk_of_subset Ioi_subset_Ici_self)
+#align cardinal.mk_Ici_real Cardinal.mk_Ici_real
 
 /-- The cardinality of the interval (-∞, a). -/
-theorem mk_iio_real (a : ℝ) : (#Iio a) = 𝔠 :=
+theorem mk_Iio_real (a : ℝ) : (#Iio a) = 𝔠 :=
   by
   refine' le_antisymm (mk_real ▸ mk_set_le _) _
   have h2 : (fun x => a + a - x) '' Iio a = Ioi a :=
@@ -271,15 +271,15 @@ theorem mk_iio_real (a : ℝ) : (#Iio a) = 𝔠 :=
     convert image_const_sub_Iio _ _
     simp
   exact mk_Ioi_real a ▸ h2 ▸ mk_image_le
-#align cardinal.mk_Iio_real Cardinal.mk_iio_real
+#align cardinal.mk_Iio_real Cardinal.mk_Iio_real
 
 /-- The cardinality of the interval (-∞, a]. -/
-theorem mk_iic_real (a : ℝ) : (#Iic a) = 𝔠 :=
-  le_antisymm (mk_real ▸ mk_set_le _) (mk_iio_real a ▸ mk_le_mk_of_subset Iio_subset_Iic_self)
-#align cardinal.mk_Iic_real Cardinal.mk_iic_real
+theorem mk_Iic_real (a : ℝ) : (#Iic a) = 𝔠 :=
+  le_antisymm (mk_real ▸ mk_set_le _) (mk_Iio_real a ▸ mk_le_mk_of_subset Iio_subset_Iic_self)
+#align cardinal.mk_Iic_real Cardinal.mk_Iic_real
 
 /-- The cardinality of the interval (a, b). -/
-theorem mk_ioo_real {a b : ℝ} (h : a < b) : (#Ioo a b) = 𝔠 :=
+theorem mk_Ioo_real {a b : ℝ} (h : a < b) : (#Ioo a b) = 𝔠 :=
   by
   refine' le_antisymm (mk_real ▸ mk_set_le _) _
   have h1 : (#(fun x => x - a) '' Ioo a b) ≤ (#Ioo a b) := mk_image_le
@@ -289,22 +289,22 @@ theorem mk_ioo_real {a b : ℝ} (h : a < b) : (#Ioo a b) = 𝔠 :=
   have h2 : (#Inv.inv '' Ioo 0 (b - a)) ≤ (#Ioo 0 (b - a)) := mk_image_le
   refine' le_trans _ h2
   rw [image_inv, inv_Ioo_0_left h, mk_Ioi_real]
-#align cardinal.mk_Ioo_real Cardinal.mk_ioo_real
+#align cardinal.mk_Ioo_real Cardinal.mk_Ioo_real
 
 /-- The cardinality of the interval [a, b). -/
-theorem mk_ico_real {a b : ℝ} (h : a < b) : (#Ico a b) = 𝔠 :=
-  le_antisymm (mk_real ▸ mk_set_le _) (mk_ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ico_self)
-#align cardinal.mk_Ico_real Cardinal.mk_ico_real
+theorem mk_Ico_real {a b : ℝ} (h : a < b) : (#Ico a b) = 𝔠 :=
+  le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ico_self)
+#align cardinal.mk_Ico_real Cardinal.mk_Ico_real
 
 /-- The cardinality of the interval [a, b]. -/
-theorem mk_icc_real {a b : ℝ} (h : a < b) : (#Icc a b) = 𝔠 :=
-  le_antisymm (mk_real ▸ mk_set_le _) (mk_ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Icc_self)
-#align cardinal.mk_Icc_real Cardinal.mk_icc_real
+theorem mk_Icc_real {a b : ℝ} (h : a < b) : (#Icc a b) = 𝔠 :=
+  le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Icc_self)
+#align cardinal.mk_Icc_real Cardinal.mk_Icc_real
 
 /-- The cardinality of the interval (a, b]. -/
-theorem mk_ioc_real {a b : ℝ} (h : a < b) : (#Ioc a b) = 𝔠 :=
-  le_antisymm (mk_real ▸ mk_set_le _) (mk_ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ioc_self)
-#align cardinal.mk_Ioc_real Cardinal.mk_ioc_real
+theorem mk_Ioc_real {a b : ℝ} (h : a < b) : (#Ioc a b) = 𝔠 :=
+  le_antisymm (mk_real ▸ mk_set_le _) (mk_Ioo_real h ▸ mk_le_mk_of_subset Ioo_subset_Ioc_self)
+#align cardinal.mk_Ioc_real Cardinal.mk_Ioc_real
 
 end Cardinal
 

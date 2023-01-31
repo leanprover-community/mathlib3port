@@ -34,11 +34,11 @@ namespace FirstOrder
 
 namespace Language
 
-open StructureCat Cardinal
+open Structure Cardinal
 
 open Cardinal
 
-variable (L : Language.{u, v}) {M : Type w} [Nonempty M] [L.StructureCat M]
+variable (L : Language.{u, v}) {M : Type w} [Nonempty M] [L.Structure M]
 
 /-- A language consisting of Skolem functions for another language.
 Called `skolem₁` because it is the first step in building a Skolemization of a language. -/
@@ -77,7 +77,7 @@ theorem card_functions_sum_skolem₁_le : (#Σn, (L.Sum L.skolem₁).Functions n
 
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
 choice. -/
-noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
+noncomputable instance skolem₁Structure : L.skolem₁.Structure M :=
   ⟨fun n φ x => Classical.epsilon fun a => φ.realize default (Fin.snoc x a : _ → M), fun _ r =>
     Empty.elim r⟩
 #align first_order.language.skolem₁_Structure FirstOrder.Language.skolem₁Structure
@@ -85,7 +85,7 @@ noncomputable instance skolem₁Structure : L.skolem₁.StructureCat M :=
 namespace Substructure
 
 theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
-    (LhomCat.sumInl.substructureReduct S).IsElementary :=
+    (Lhom.sumInl.substructureReduct S).IsElementary :=
   by
   apply (Lhom.sum_inl.substructure_reduct S).is_elementary_of_exists
   intro n φ x a h
@@ -98,7 +98,7 @@ theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/
 noncomputable def elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :
     L.ElementarySubstructure M :=
-  ⟨LhomCat.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
+  ⟨Lhom.sumInl.substructureReduct S, S.skolem₁_reduct_is_elementary⟩
 #align first_order.language.substructure.elementary_skolem₁_reduct FirstOrder.Language.Substructure.elementarySkolem₁Reduct
 
 theorem coeSort_elementarySkolem₁Reduct (S : (L.Sum L.skolem₁).Substructure M) :

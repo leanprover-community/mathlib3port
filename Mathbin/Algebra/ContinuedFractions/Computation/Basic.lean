@@ -171,7 +171,7 @@ it. The setup of rewriting/simplification lemmas that make the definitions easy 
 -/
 protected def seq1 (v : K) : Seq1 <| IntFractPair K :=
   ⟨IntFractPair.of v,--the head
-      Seq.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
+      SeqCat.tail-- take the tail of `int_fract_pair.stream` since the first element is already in the
       -- head create a sequence from `int_fract_pair.stream`
       ⟨IntFractPair.stream v,-- the underlying stream
           @stream_isSeq

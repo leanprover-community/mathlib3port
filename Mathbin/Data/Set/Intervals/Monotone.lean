@@ -24,7 +24,7 @@ about functions monotone on intervals in `succ_order`s.
 
 open Set
 
-section IxxCat
+section Ixx
 
 variable {α β : Type _} [Preorder α] [Preorder β] {f g : α → β} {s : Set α}
 
@@ -232,7 +232,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone.Icc Monotone.Iccₓ'. -/
 protected theorem Monotone.Icc (hf : Monotone f) (hg : Antitone g) :
     Antitone fun x => Icc (f x) (g x) :=
-  hf.IciCat.inter hg.IicCat
+  hf.Ici.inter hg.Iic
 #align monotone.Icc Monotone.Icc
 
 /- warning: monotone_on.Icc -> MonotoneOn.Icc is a dubious translation:
@@ -243,7 +243,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.Icc MonotoneOn.Iccₓ'. -/
 protected theorem MonotoneOn.Icc (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => Icc (f x) (g x)) s :=
-  hf.IciCat.inter hg.IicCat
+  hf.Ici.inter hg.Iic
 #align monotone_on.Icc MonotoneOn.Icc
 
 /- warning: antitone.Icc -> Antitone.Icc is a dubious translation:
@@ -254,7 +254,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone.Icc Antitone.Iccₓ'. -/
 protected theorem Antitone.Icc (hf : Antitone f) (hg : Monotone g) :
     Monotone fun x => Icc (f x) (g x) :=
-  hf.IciCat.inter hg.IicCat
+  hf.Ici.inter hg.Iic
 #align antitone.Icc Antitone.Icc
 
 /- warning: antitone_on.Icc -> AntitoneOn.Icc is a dubious translation:
@@ -265,7 +265,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.Icc AntitoneOn.Iccₓ'. -/
 protected theorem AntitoneOn.Icc (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => Icc (f x) (g x)) s :=
-  hf.IciCat.inter hg.IicCat
+  hf.Ici.inter hg.Iic
 #align antitone_on.Icc AntitoneOn.Icc
 
 /- warning: monotone.Ico -> Monotone.Ico is a dubious translation:
@@ -276,7 +276,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone.Ico Monotone.Icoₓ'. -/
 protected theorem Monotone.Ico (hf : Monotone f) (hg : Antitone g) :
     Antitone fun x => Ico (f x) (g x) :=
-  hf.IciCat.inter hg.IioCat
+  hf.Ici.inter hg.Iio
 #align monotone.Ico Monotone.Ico
 
 /- warning: monotone_on.Ico -> MonotoneOn.Ico is a dubious translation:
@@ -287,7 +287,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.Ico MonotoneOn.Icoₓ'. -/
 protected theorem MonotoneOn.Ico (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => Ico (f x) (g x)) s :=
-  hf.IciCat.inter hg.IioCat
+  hf.Ici.inter hg.Iio
 #align monotone_on.Ico MonotoneOn.Ico
 
 /- warning: antitone.Ico -> Antitone.Ico is a dubious translation:
@@ -298,7 +298,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone.Ico Antitone.Icoₓ'. -/
 protected theorem Antitone.Ico (hf : Antitone f) (hg : Monotone g) :
     Monotone fun x => Ico (f x) (g x) :=
-  hf.IciCat.inter hg.IioCat
+  hf.Ici.inter hg.Iio
 #align antitone.Ico Antitone.Ico
 
 /- warning: antitone_on.Ico -> AntitoneOn.Ico is a dubious translation:
@@ -309,7 +309,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.Ico AntitoneOn.Icoₓ'. -/
 protected theorem AntitoneOn.Ico (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => Ico (f x) (g x)) s :=
-  hf.IciCat.inter hg.IioCat
+  hf.Ici.inter hg.Iio
 #align antitone_on.Ico AntitoneOn.Ico
 
 /- warning: monotone.Ioc -> Monotone.Ioc is a dubious translation:
@@ -320,7 +320,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone.Ioc Monotone.Iocₓ'. -/
 protected theorem Monotone.Ioc (hf : Monotone f) (hg : Antitone g) :
     Antitone fun x => Ioc (f x) (g x) :=
-  hf.IoiCat.inter hg.IicCat
+  hf.Ioi.inter hg.Iic
 #align monotone.Ioc Monotone.Ioc
 
 /- warning: monotone_on.Ioc -> MonotoneOn.Ioc is a dubious translation:
@@ -331,7 +331,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.Ioc MonotoneOn.Iocₓ'. -/
 protected theorem MonotoneOn.Ioc (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => Ioc (f x) (g x)) s :=
-  hf.IoiCat.inter hg.IicCat
+  hf.Ioi.inter hg.Iic
 #align monotone_on.Ioc MonotoneOn.Ioc
 
 /- warning: antitone.Ioc -> Antitone.Ioc is a dubious translation:
@@ -342,7 +342,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone.Ioc Antitone.Iocₓ'. -/
 protected theorem Antitone.Ioc (hf : Antitone f) (hg : Monotone g) :
     Monotone fun x => Ioc (f x) (g x) :=
-  hf.IoiCat.inter hg.IicCat
+  hf.Ioi.inter hg.Iic
 #align antitone.Ioc Antitone.Ioc
 
 /- warning: antitone_on.Ioc -> AntitoneOn.Ioc is a dubious translation:
@@ -353,7 +353,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.Ioc AntitoneOn.Iocₓ'. -/
 protected theorem AntitoneOn.Ioc (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => Ioc (f x) (g x)) s :=
-  hf.IoiCat.inter hg.IicCat
+  hf.Ioi.inter hg.Iic
 #align antitone_on.Ioc AntitoneOn.Ioc
 
 /- warning: monotone.Ioo -> Monotone.Ioo is a dubious translation:
@@ -364,7 +364,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone.Ioo Monotone.Iooₓ'. -/
 protected theorem Monotone.Ioo (hf : Monotone f) (hg : Antitone g) :
     Antitone fun x => Ioo (f x) (g x) :=
-  hf.IoiCat.inter hg.IioCat
+  hf.Ioi.inter hg.Iio
 #align monotone.Ioo Monotone.Ioo
 
 /- warning: monotone_on.Ioo -> MonotoneOn.Ioo is a dubious translation:
@@ -375,7 +375,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.Ioo MonotoneOn.Iooₓ'. -/
 protected theorem MonotoneOn.Ioo (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntitoneOn (fun x => Ioo (f x) (g x)) s :=
-  hf.IoiCat.inter hg.IioCat
+  hf.Ioi.inter hg.Iio
 #align monotone_on.Ioo MonotoneOn.Ioo
 
 /- warning: antitone.Ioo -> Antitone.Ioo is a dubious translation:
@@ -386,7 +386,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone.Ioo Antitone.Iooₓ'. -/
 protected theorem Antitone.Ioo (hf : Antitone f) (hg : Monotone g) :
     Monotone fun x => Ioo (f x) (g x) :=
-  hf.IoiCat.inter hg.IioCat
+  hf.Ioi.inter hg.Iio
 #align antitone.Ioo Antitone.Ioo
 
 /- warning: antitone_on.Ioo -> AntitoneOn.Ioo is a dubious translation:
@@ -397,12 +397,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.Ioo AntitoneOn.Iooₓ'. -/
 protected theorem AntitoneOn.Ioo (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     MonotoneOn (fun x => Ioo (f x) (g x)) s :=
-  hf.IoiCat.inter hg.IioCat
+  hf.Ioi.inter hg.Iio
 #align antitone_on.Ioo AntitoneOn.Ioo
 
-end IxxCat
+end Ixx
 
-section UnionCat
+section Union
 
 variable {α β : Type _} [SemilatticeSup α] [LinearOrder β] {f g : α → β} {a b : β}
 
@@ -416,12 +416,12 @@ theorem unionᵢ_Ioo_of_mono_of_isGLB_of_isLUB (hf : Antitone f) (hg : Monotone 
     (ha : IsGLB (range f) a) (hb : IsLUB (range g) b) : (⋃ x, Ioo (f x) (g x)) = Ioo a b :=
   calc
     (⋃ x, Ioo (f x) (g x)) = (⋃ x, Ioi (f x)) ∩ ⋃ x, Iio (g x) :=
-      unionᵢ_inter_of_monotone hf.IoiCat hg.IioCat
+      unionᵢ_inter_of_monotone hf.Ioi hg.Iio
     _ = Ioi a ∩ Iio b := congr_arg₂ (· ∩ ·) ha.Union_Ioi_eq hb.Union_Iio_eq
     
 #align Union_Ioo_of_mono_of_is_glb_of_is_lub unionᵢ_Ioo_of_mono_of_isGLB_of_isLUB
 
-end UnionCat
+end Union
 
 section SuccOrder
 

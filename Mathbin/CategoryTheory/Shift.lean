@@ -9,7 +9,7 @@ Authors: Scott Morrison, Johan Commelin, Andrew Yang
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.Preserves.Shapes.Zero
-import Mathbin.CategoryTheory.Monoidal.EndCat
+import Mathbin.CategoryTheory.Monoidal.End
 import Mathbin.CategoryTheory.Monoidal.Discrete
 
 /-!

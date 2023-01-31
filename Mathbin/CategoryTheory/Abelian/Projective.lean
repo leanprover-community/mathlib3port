@@ -60,7 +60,7 @@ theorem projective_of_preservesFiniteColimits_preadditiveCoyonedaObj (P : C)
   infer_instance
 #align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObj
 
-namespace ProjectiveResolutionCat
+namespace ProjectiveResolution
 
 /-!
 Our goal is to define `ProjectiveResolution.of Z : ProjectiveResolution Z`.
@@ -80,12 +80,12 @@ def ofComplex (Z : C) : ChainComplex C ℕ :=
   ChainComplex.mk' (Projective.over Z) (Projective.syzygies (Projective.π Z))
     (Projective.d (Projective.π Z)) fun ⟨X, Y, f⟩ =>
     ⟨Projective.syzygies f, Projective.d f, (exact_d_f f).w⟩
-#align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolutionCat.ofComplex
+#align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolution.ofComplex
 
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
 -/
-irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
+irreducible_def of (Z : C) : ProjectiveResolution Z :=
   { complex := ofComplex Z
     π :=
       ChainComplex.mkHom _ _ (Projective.π Z) 0
@@ -100,13 +100,13 @@ irreducible_def of (Z : C) : ProjectiveResolutionCat Z :=
         · simp
           apply exact_d_f
     Epi := Projective.π_epi Z }
-#align category_theory.ProjectiveResolution.of CategoryTheory.ProjectiveResolutionCat.of
+#align category_theory.ProjectiveResolution.of CategoryTheory.ProjectiveResolution.of
 
 instance (priority := 100) (Z : C) : HasProjectiveResolution Z where out := ⟨of Z⟩
 
 instance (priority := 100) : HasProjectiveResolutions C where out Z := by infer_instance
 
-end ProjectiveResolutionCat
+end ProjectiveResolution
 
 end CategoryTheory
 
@@ -118,7 +118,7 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 then `X` is a projective resolution of `Y.` -/
 def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
     (f : X ⟶ (ChainComplex.single₀ C).obj Y) [QuasiIso f] (H : ∀ n, Projective (X.x n)) :
-    ProjectiveResolutionCat Y where
+    ProjectiveResolution Y where
   complex := X
   π := f
   Projective := H

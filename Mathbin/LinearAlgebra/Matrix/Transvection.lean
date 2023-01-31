@@ -458,7 +458,7 @@ theorem mul_listTransvecRow_last_col_take (i : Sum (Fin r) Unit) {k : ℕ} (hk :
       simp only [list_transvec_row, List.ofFnNthVal, hkr, dif_pos, List.get?_ofFn]
       rfl
     simp only [List.take_succ, ← Matrix.mul_assoc, this, List.prod_append, Matrix.mul_one,
-      Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.toList_some]
+      Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.to_list_some]
     rw [mul_transvection_apply_of_ne, IH hkr.le]
     simp only [Ne.def, not_false_iff]
 #align matrix.pivot.mul_list_transvec_row_last_col_take Matrix.Pivot.mul_listTransvecRow_last_col_take
@@ -499,7 +499,7 @@ theorem mul_listTransvecRow_last_row (hM : M (inr unit) (inr unit) ≠ 0) (i : F
       simp only [list_transvec_row, List.ofFnNthVal, hnr, dif_pos, List.get?_ofFn]
       rfl
     simp only [List.take_succ, A, ← Matrix.mul_assoc, List.prod_append, Matrix.mul_one,
-      Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.toList_some]
+      Matrix.mul_eq_mul, List.prod_cons, List.prod_nil, Option.to_list_some]
     by_cases h : n' = i
     · have hni : n = i := by
         cases i

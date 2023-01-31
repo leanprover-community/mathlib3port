@@ -323,9 +323,9 @@ instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ :=
     refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nnreal_ennreal
     exact
       MeasurableSet.inter (measurable_fst (measurable_set_singleton 0))
-        (measurable_snd measurableSet_iio)
+        (measurable_snd measurableSet_Iio)
   · simp_rw [Ennreal.top_rpow_def]
-    refine' Measurable.ite measurableSet_ioi measurable_const _
+    refine' Measurable.ite measurableSet_Ioi measurable_const _
     exact Measurable.ite (measurable_set_singleton 0) measurable_const measurable_const
 #align ennreal.has_measurable_pow Ennreal.hasMeasurablePow
 

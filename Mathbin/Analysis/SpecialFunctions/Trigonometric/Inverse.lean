@@ -38,9 +38,9 @@ noncomputable def arcsin : ℝ → ℝ :=
   coe ∘ IccExtend (neg_le_self zero_le_one) sinOrderIso.symm
 #align real.arcsin Real.arcsin
 
-theorem arcsin_mem_icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
+theorem arcsin_mem_Icc (x : ℝ) : arcsin x ∈ Icc (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
-#align real.arcsin_mem_Icc Real.arcsin_mem_icc
+#align real.arcsin_mem_Icc Real.arcsin_mem_Icc
 
 @[simp]
 theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) :=
@@ -50,11 +50,11 @@ theorem range_arcsin : range arcsin = Icc (-(π / 2)) (π / 2) :=
 #align real.range_arcsin Real.range_arcsin
 
 theorem arcsin_le_pi_div_two (x : ℝ) : arcsin x ≤ π / 2 :=
-  (arcsin_mem_icc x).2
+  (arcsin_mem_Icc x).2
 #align real.arcsin_le_pi_div_two Real.arcsin_le_pi_div_two
 
 theorem neg_pi_div_two_le_arcsin (x : ℝ) : -(π / 2) ≤ arcsin x :=
-  (arcsin_mem_icc x).1
+  (arcsin_mem_Icc x).1
 #align real.neg_pi_div_two_le_arcsin Real.neg_pi_div_two_le_arcsin
 
 theorem arcsin_projIcc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self zero_le_one) x) = arcsin x :=
@@ -71,7 +71,7 @@ theorem sin_arcsin {x : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) : sin (arcsin 
 #align real.sin_arcsin Real.sin_arcsin
 
 theorem arcsin_sin' {x : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) : arcsin (sin x) = x :=
-  injOn_sin (arcsin_mem_icc _) hx <| by rw [sin_arcsin (neg_one_le_sin _) (sin_le_one _)]
+  injOn_sin (arcsin_mem_Icc _) hx <| by rw [sin_arcsin (neg_one_le_sin _) (sin_le_one _)]
 #align real.arcsin_sin' Real.arcsin_sin'
 
 theorem arcsin_sin {x : ℝ} (hx₁ : -(π / 2) ≤ x) (hx₂ : x ≤ π / 2) : arcsin (sin x) = x :=
@@ -279,9 +279,9 @@ theorem pi_div_four_le_arcsin {x} : π / 4 ≤ arcsin x ↔ sqrt 2 / 2 ≤ x :=
   constructor <;> linarith
 #align real.pi_div_four_le_arcsin Real.pi_div_four_le_arcsin
 
-theorem mapsTo_sin_ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := fun x h => by
+theorem mapsTo_sin_Ioo : MapsTo sin (Ioo (-(π / 2)) (π / 2)) (Ioo (-1) 1) := fun x h => by
   rwa [mem_Ioo, ← arcsin_lt_pi_div_two, ← neg_pi_div_two_lt_arcsin, arcsin_sin h.1.le h.2.le]
-#align real.maps_to_sin_Ioo Real.mapsTo_sin_ioo
+#align real.maps_to_sin_Ioo Real.mapsTo_sin_Ioo
 
 /-- `real.sin` as a `local_homeomorph` between `(-π / 2, π / 2)` and `(-1, 1)`. -/
 @[simp]
@@ -291,18 +291,18 @@ def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
   invFun := arcsin
   source := Ioo (-(π / 2)) (π / 2)
   target := Ioo (-1) 1
-  map_source' := mapsTo_sin_ioo
+  map_source' := mapsTo_sin_Ioo
   map_target' y hy := ⟨neg_pi_div_two_lt_arcsin.2 hy.1, arcsin_lt_pi_div_two.2 hy.2⟩
   left_inv' x hx := arcsin_sin hx.1.le hx.2.le
   right_inv' y hy := sin_arcsin hy.1.le hy.2.le
-  open_source := isOpen_ioo
-  open_target := isOpen_ioo
+  open_source := isOpen_Ioo
+  open_target := isOpen_Ioo
   continuous_to_fun := continuous_sin.ContinuousOn
   continuous_inv_fun := continuous_arcsin.ContinuousOn
 #align real.sin_local_homeomorph Real.sinLocalHomeomorph
 
 theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
-  cos_nonneg_of_mem_icc ⟨neg_pi_div_two_le_arcsin _, arcsin_le_pi_div_two _⟩
+  cos_nonneg_of_mem_Icc ⟨neg_pi_div_two_le_arcsin _, arcsin_le_pi_div_two _⟩
 #align real.cos_arcsin_nonneg Real.cos_arcsin_nonneg
 
 -- The junk values for `arcsin` and `sqrt` make this true even outside `[-1, 1]`.

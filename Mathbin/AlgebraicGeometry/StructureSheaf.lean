@@ -9,8 +9,8 @@ Authors: Johan Commelin, Scott Morrison
 ! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
-import Mathbin.Algebra.Category.RingCat.Colimits
-import Mathbin.Algebra.Category.RingCat.Limits
+import Mathbin.Algebra.Category.Ring.Colimits
+import Mathbin.Algebra.Category.Ring.Limits
 import Mathbin.Topology.Sheaves.LocalPredicate
 import Mathbin.RingTheory.Localization.AtPrime
 import Mathbin.RingTheory.Subring.Basic
@@ -266,15 +266,15 @@ open TopCat.Presheaf
 
 This is provided as a bundled `SheafedSpace` as `Spec.SheafedSpace R` later.
 -/
-def SpecCat.structureSheaf : Sheaf CommRingCat (PrimeSpectrum.top R) :=
+def Spec.structureSheaf : Sheaf CommRingCat (PrimeSpectrum.top R) :=
   ⟨structurePresheafInCommRing R,
     (-- We check the sheaf condition under `forget CommRing`.
           isSheaf_iff_isSheaf_comp
           _ _).mpr
       (isSheaf_of_iso (structurePresheafCompForget R).symm (structureSheafInType R).cond)⟩
-#align algebraic_geometry.Spec.structure_sheaf AlgebraicGeometry.SpecCat.structureSheaf
+#align algebraic_geometry.Spec.structure_sheaf AlgebraicGeometry.Spec.structureSheaf
 
-open SpecCat (structureSheaf)
+open Spec (structureSheaf)
 
 namespace StructureSheaf
 

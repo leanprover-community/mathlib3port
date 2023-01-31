@@ -710,7 +710,7 @@ instance modelPiInhabited [∀ i, Inhabited (Hi i)] : Inhabited (ModelPi Hi) :=
 #align model_pi_inhabited modelPiInhabited
 
 instance [∀ i, TopologicalSpace (Hi i)] : TopologicalSpace (ModelPi Hi) :=
-  PiCat.topologicalSpace
+  Pi.topologicalSpace
 
 end
 

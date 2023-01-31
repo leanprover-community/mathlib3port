@@ -110,7 +110,7 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
     simp only [f.map_add, f.map_sub, hf₁] at this
     linarith
   refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
-  · rw [← interior_iic]
+  · rw [← interior_Iic]
     refine' interior_maximal (image_subset_iff.2 fun a ha => _) (f.is_open_map_of_ne_zero _ _ hs₂)
     · exact le_cinfₛ (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
     · rintro rfl
@@ -145,7 +145,7 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
     rintro rfl
     exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
   refine' ⟨f, s, hf₁, image_subset_iff.1 (_ : f '' t ⊆ Ioi s)⟩
-  rw [← interior_ici]
+  rw [← interior_Ici]
   refine' interior_maximal (image_subset_iff.2 hf₂) (f.is_open_map_of_ne_zero _ _ ht₃)
   rintro rfl
   exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)

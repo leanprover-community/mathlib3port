@@ -541,14 +541,14 @@ protected def uniformEquivPiComm : UniformEquiv (α →ᵤ ∀ i, δ i) (∀ i, 
     -- `uniform_convergence.infi_eq` and `uniform_convergence.comap_eq`, which leaves us to check
     -- that some square commutes.
     @Equiv.toUniformEquivOfUniformInducing
-    _ _ 𝒰(α, ∀ i, δ i, PiCat.uniformSpace δ)
-    (@PiCat.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _)) (Equiv.piComm _)
+    _ _ 𝒰(α, ∀ i, δ i, Pi.uniformSpace δ)
+    (@Pi.uniformSpace ι (fun i => α → δ i) fun i => 𝒰(α, δ i, _)) (Equiv.piComm _)
     (by
       constructor
       change comap (Prod.map Function.swap Function.swap) _ = _
       rw [← uniformity_comap]
       congr
-      rw [PiCat.uniformSpace, UniformSpace.ofCoreEq_toCore, PiCat.uniformSpace,
+      rw [Pi.uniformSpace, UniformSpace.ofCoreEq_toCore, Pi.uniformSpace,
         UniformSpace.ofCoreEq_toCore, UniformSpace.comap_infᵢ, UniformFun.infᵢ_eq]
       refine' infᵢ_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformFun.comap_eq])
@@ -941,7 +941,7 @@ protected def uniformEquivPiComm : (α →ᵤ[𝔖] ∀ i, δ i) ≃ᵤ ∀ i, �
       change comap (Prod.map Function.swap Function.swap) _ = _
       rw [← uniformity_comap]
       congr
-      rw [PiCat.uniformSpace, UniformSpace.ofCoreEq_toCore, PiCat.uniformSpace,
+      rw [Pi.uniformSpace, UniformSpace.ofCoreEq_toCore, Pi.uniformSpace,
         UniformSpace.ofCoreEq_toCore, UniformSpace.comap_infᵢ, UniformOnFun.infᵢ_eq]
       refine' infᵢ_congr fun i => _
       rw [← UniformSpace.comap_comap, UniformOnFun.comap_eq])

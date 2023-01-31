@@ -266,7 +266,7 @@ variable (F E)
 
 /-- If `E` is a fiber bundle over a conditionally complete linear order,
 then it is trivial over any closed interval. -/
-theorem FiberBundle.exists_trivialization_icc_subset [ConditionallyCompleteLinearOrder B]
+theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinearOrder B]
     [OrderTopology B] [FiberBundle F E] (a b : B) :
     ∃ e : Trivialization F (π E), Icc a b ⊆ e.baseSet := by
   classical
@@ -295,7 +295,7 @@ theorem FiberBundle.exists_trivialization_icc_subset [ConditionallyCompleteLinea
       obtain ⟨ec, hc⟩ : ∃ ec : Trivialization F (π E), c ∈ ec.baseSet :=
         ⟨trivialization_at F E c, mem_base_set_trivialization_at F E c⟩
       obtain ⟨c', hc', hc'e⟩ : ∃ c' ∈ Ico a c, Ioc c' c ⊆ ec.base_set :=
-        (mem_nhdsWithin_iic_iff_exists_mem_ico_ioc_subset hlt).1
+        (mem_nhdsWithin_Iic_iff_exists_mem_Ico_Ioc_subset hlt).1
           (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set hc)
       /- Since `c' < c = Sup s`, there exists `d ∈ s ∩ (c', c]`. Let `ead` be a trivialization of
           `proj` over `[a, d]`. Then we can glue `ead` and `ec` into a trivialization over `[a, c]`. -/
@@ -313,7 +313,7 @@ theorem FiberBundle.exists_trivialization_icc_subset [ConditionallyCompleteLinea
     /- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some
       `d ∈ (c, b]`. -/
     obtain ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, Ico c d ⊆ ec.base_set :=
-      (mem_nhdsWithin_ici_iff_exists_mem_ioc_ico_subset hlt).1
+      (mem_nhdsWithin_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
         (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_base_set (hec ⟨hc.1, le_rfl⟩))
     have had : Ico a d ⊆ ec.base_set := Ico_subset_Icc_union_Ico.trans (union_subset hec hd)
     by_cases he : Disjoint (Iio d) (Ioi c)
@@ -324,7 +324,7 @@ theorem FiberBundle.exists_trivialization_icc_subset [ConditionallyCompleteLinea
         ⟨trivialization_at F E d, mem_base_set_trivialization_at F E d⟩
       refine'
         ⟨d, hdcb,
-          (ec.restr_open (Iio d) isOpen_iio).disjointUnion (ed.restr_open (Ioi c) isOpen_ioi)
+          (ec.restr_open (Iio d) isOpen_Iio).disjointUnion (ed.restr_open (Ioi c) isOpen_Ioi)
             (he.mono (inter_subset_right _ _) (inter_subset_right _ _)),
           fun x hx => _⟩
       rcases hx.2.eq_or_lt with (rfl | hxd)
@@ -335,7 +335,7 @@ theorem FiberBundle.exists_trivialization_icc_subset [ConditionallyCompleteLinea
       push_neg  at he
       rcases he with ⟨d', hdd' : d' < d, hd'c⟩
       exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
-#align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_icc_subset
+#align fiber_bundle.exists_trivialization_Icc_subset FiberBundle.exists_trivialization_Icc_subset
 
 end FiberBundle
 

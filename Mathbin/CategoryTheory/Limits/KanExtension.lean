@@ -48,14 +48,14 @@ variable [Category.{v₁} S] [Category.{v₂} L] [Category.{v₃} D]
 
 variable (ι : S ⥤ L)
 
-namespace RanCat
+namespace Ran
 
 attribute [local simp] structured_arrow.proj
 
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
 abbrev diagram (F : S ⥤ D) (x : L) : StructuredArrow x ι ⥤ D :=
   StructuredArrow.proj x ι ⋙ F
-#align category_theory.Ran.diagram CategoryTheory.RanCat.diagram
+#align category_theory.Ran.diagram CategoryTheory.Ran.diagram
 
 variable {ι}
 
@@ -73,7 +73,7 @@ def cone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : ι ⋙ G ⟶ F) : Cone (diagra
         rw [ff]
         have := f.naturality
         tidy }
-#align category_theory.Ran.cone CategoryTheory.RanCat.cone
+#align category_theory.Ran.cone CategoryTheory.Ran.cone
 
 variable (ι)
 
@@ -95,7 +95,7 @@ def loc (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] : L ⥤ D
     erw [limit.pre_pre, limit.pre_π, limit.pre_π]
     congr 1
     tidy
-#align category_theory.Ran.loc CategoryTheory.RanCat.loc
+#align category_theory.Ran.loc CategoryTheory.Ran.loc
 
 /-- An auxiliary definition used to define `Ran` and `Ran.adjunction`. -/
 @[simps]
@@ -131,17 +131,17 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
     rcases j with ⟨⟨⟩, _, _⟩
     tidy
   right_inv := by tidy
-#align category_theory.Ran.equiv CategoryTheory.RanCat.equiv
+#align category_theory.Ran.equiv CategoryTheory.Ran.equiv
 
-end RanCat
+end Ran
 
 /-- The right Kan extension of a functor. -/
 @[simps]
 def ran [∀ X, HasLimitsOfShape (StructuredArrow X ι) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  Adjunction.rightAdjointOfEquiv (fun F G => (RanCat.equiv ι G F).symm) (by tidy)
+  Adjunction.rightAdjointOfEquiv (fun F G => (Ran.equiv ι G F).symm) (by tidy)
 #align category_theory.Ran CategoryTheory.ran
 
-namespace RanCat
+namespace Ran
 
 variable (D)
 
@@ -166,16 +166,16 @@ theorem reflective [Full ι] [Faithful ι] [∀ X, HasLimitsOfShape (StructuredA
         (limit_of_diagram_initial structured_arrow.mk_id_initial _))
 #align category_theory.Ran.reflective CategoryTheory.ran.reflective
 
-end RanCat
+end Ran
 
-namespace LanCat
+namespace Lan
 
 attribute [local simp] costructured_arrow.proj
 
 /-- The diagram indexed by `Ran.index ι x` used to define `Ran`. -/
 abbrev diagram (F : S ⥤ D) (x : L) : CostructuredArrow ι x ⥤ D :=
   CostructuredArrow.proj ι x ⋙ F
-#align category_theory.Lan.diagram CategoryTheory.LanCat.diagram
+#align category_theory.Lan.diagram CategoryTheory.Lan.diagram
 
 variable {ι}
 
@@ -192,7 +192,7 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : Cocone (di
         simp only [functor.comp_map, category.comp_id, nat_trans.naturality_assoc]
         rw [← G.map_comp, ff]
         tidy }
-#align category_theory.Lan.cocone CategoryTheory.LanCat.cocone
+#align category_theory.Lan.cocone CategoryTheory.Lan.cocone
 
 variable (ι)
 
@@ -222,7 +222,7 @@ def loc (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] : L ⥤ D
     erw [colimit.pre_pre dd gg ff, colimit.ι_pre, colimit.ι_pre]
     congr 1
     simp
-#align category_theory.Lan.loc CategoryTheory.LanCat.loc
+#align category_theory.Lan.loc CategoryTheory.Lan.loc
 
 /-- An auxiliary definition used to define `Lan` and `Lan.adjunction`. -/
 @[simps]
@@ -272,17 +272,17 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
     rcases j with ⟨_, ⟨⟩, _⟩
     tidy
   right_inv := by tidy
-#align category_theory.Lan.equiv CategoryTheory.LanCat.equiv
+#align category_theory.Lan.equiv CategoryTheory.Lan.equiv
 
-end LanCat
+end Lan
 
 /-- The left Kan extension of a functor. -/
 @[simps]
 def lan [∀ X, HasColimitsOfShape (CostructuredArrow ι X) D] : (S ⥤ D) ⥤ L ⥤ D :=
-  Adjunction.leftAdjointOfEquiv (fun F G => LanCat.equiv ι F G) (by tidy)
+  Adjunction.leftAdjointOfEquiv (fun F G => Lan.equiv ι F G) (by tidy)
 #align category_theory.Lan CategoryTheory.lan
 
-namespace LanCat
+namespace Lan
 
 variable (D)
 
@@ -307,7 +307,7 @@ theorem coreflective [Full ι] [Faithful ι] [∀ X, HasColimitsOfShape (Costruc
           (colimit_of_diagram_terminal costructured_arrow.mk_id_terminal _)).symm
 #align category_theory.Lan.coreflective CategoryTheory.lan.coreflective
 
-end LanCat
+end Lan
 
 end CategoryTheory
 

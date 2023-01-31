@@ -72,12 +72,12 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
     mul_one_div, ← log_nonpos_iff (hf' x h5), ← hf x h5]
   have h : ConcaveOn ℝ (Set.Ioi 0.5) f := by
     refine'
-        ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_ioi 0.5)).add
+        ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map
                     ((2 : ℝ) • LinearMap.id)).Subset
                 (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha))
-                (convex_ioi 0.5))).sub
-          ((convexOn_id (convex_ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
+                (convex_Ioi 0.5))).sub
+          ((convexOn_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
       norm_num1
   suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0
     by

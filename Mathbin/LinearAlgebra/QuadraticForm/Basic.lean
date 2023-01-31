@@ -1202,7 +1202,7 @@ theorem weightedSumSquares_apply [Monoid S] [DistribMulAction S R₁] [SMulCommC
 #align quadratic_form.weighted_sum_squares_apply QuadraticForm.weightedSumSquares_apply
 
 /-- On an orthogonal basis, the basis representation of `Q` is just a sum of squares. -/
-theorem basisRepr_eq_of_isOrtho {R₁ M} [CommRing R₁] [AddCommGroup M] [Module R₁ M]
+theorem basisRepr_eq_of_isOrthoCat {R₁ M} [CommRing R₁] [AddCommGroup M] [Module R₁ M]
     [Invertible (2 : R₁)] (Q : QuadraticForm R₁ M) (v : Basis ι R₁ M)
     (hv₂ : (associated Q).IsOrtho v) : Q.basis_repr v = weightedSumSquares _ fun i => Q (v i) :=
   by
@@ -1215,7 +1215,7 @@ theorem basisRepr_eq_of_isOrtho {R₁ M} [CommRing R₁] [AddCommGroup M] [Modul
   · intro i _ hij
     rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ hij.symm, mul_zero,
       mul_zero]
-#align quadratic_form.basis_repr_eq_of_is_Ortho QuadraticForm.basisRepr_eq_of_isOrtho
+#align quadratic_form.basis_repr_eq_of_is_Ortho QuadraticForm.basisRepr_eq_of_isOrthoCat
 
 end QuadraticForm
 

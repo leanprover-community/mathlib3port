@@ -10,8 +10,8 @@ Authors: Markus Himmel
 -/
 import Mathbin.CategoryTheory.Limits.Yoneda
 import Mathbin.CategoryTheory.Preadditive.Opposite
-import Mathbin.Algebra.Category.ModuleCat.Abelian
-import Mathbin.Algebra.Category.GroupCat.Preadditive
+import Mathbin.Algebra.Category.Module.Abelian
+import Mathbin.Algebra.Category.Group.Preadditive
 
 /-!
 # The Yoneda embedding for preadditive categories
@@ -43,7 +43,7 @@ variable {C : Type u} [Category.{v} C] [Preadditive C]
 object `X` to the `End Y`-module of morphisms `X ⟶ Y`.
 -/
 @[simps]
-def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (EndCat Y)
+def preadditiveYonedaObj (Y : C) : Cᵒᵖ ⥤ ModuleCat.{v} (End Y)
     where
   obj X := ModuleCat.of _ (X.unop ⟶ Y)
   map X X' f :=
@@ -78,7 +78,7 @@ def preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat.{v}
 object `Y` to the `End X`-module of morphisms `X ⟶ Y`.
 -/
 @[simps]
-def preadditiveCoyonedaObj (X : Cᵒᵖ) : C ⥤ ModuleCat.{v} (EndCat X)
+def preadditiveCoyonedaObj (X : Cᵒᵖ) : C ⥤ ModuleCat.{v} (End X)
     where
   obj Y := ModuleCat.of _ (unop X ⟶ Y)
   map Y Y' f :=

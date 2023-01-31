@@ -93,28 +93,17 @@ theorem IsTheta.trans_isO {f : α → E} {g : α → F'} {k : α → G} (h₁ : 
   h₁.1.trans h₂
 #align asymptotics.is_Theta.trans_is_O Asymptotics.IsTheta.trans_isO
 
-/- warning: asymptotics.is_o.trans_is_Theta clashes with asymptotics.is_O.trans_is_Theta -> Asymptotics.IsO.trans_isTheta
-warning: asymptotics.is_o.trans_is_Theta -> Asymptotics.IsO.trans_isTheta is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G' : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {l : Filter.{u1} α} {f : α -> E} {g : α -> F} {k : α -> G'}, (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f g) -> (Asymptotics.IsTheta.{u1, u3, u4} α F G' _inst_2 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l g k) -> (Asymptotics.IsO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f k)
-but is expected to have type
-  forall {α : Type.{u1}} {E : Type.{u2}} {F : Type.{u3}} {G' : Type.{u4}} [_inst_1 : HasNorm.{u2} E] [_inst_2 : HasNorm.{u3} F] [_inst_6 : SeminormedAddCommGroup.{u4} G'] {l : Filter.{u1} α} {f : α -> E} {g : α -> G'} {k : α -> F}, (Asymptotics.IsO.{u1, u2, u4} α E G' _inst_1 (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) l f g) -> (Asymptotics.IsTheta.{u1, u4, u3} α G' F (SeminormedAddCommGroup.toHasNorm.{u4} G' _inst_6) _inst_2 l g k) -> (Asymptotics.IsO.{u1, u2, u3} α E F _inst_1 _inst_2 l f k)
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_isThetaₓ'. -/
 @[trans]
-theorem IsO.trans_isTheta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g) (h₂ : g =Θ[l] k) :
-    f =o[l] k :=
+theorem IsOCat.trans_isTheta {f : α → E} {g : α → F} {k : α → G'} (h₁ : f =o[l] g)
+    (h₂ : g =Θ[l] k) : f =o[l] k :=
   h₁.trans_is_O h₂.1
-#align asymptotics.is_o.trans_is_Theta Asymptotics.IsO.trans_isTheta
+#align asymptotics.is_o.trans_is_Theta Asymptotics.IsOCat.trans_isTheta
 
-/- warning: asymptotics.is_Theta.trans_is_o clashes with asymptotics.is_Theta.trans_is_O -> Asymptotics.IsTheta.trans_isO
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.trans_is_o Asymptotics.IsTheta.trans_isOₓ'. -/
-#print Asymptotics.IsTheta.trans_isO /-
 @[trans]
-theorem IsTheta.trans_isO {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g) (h₂ : g =o[l] k) :
-    f =o[l] k :=
+theorem IsTheta.trans_isOCat {f : α → E} {g : α → F'} {k : α → G} (h₁ : f =Θ[l] g)
+    (h₂ : g =o[l] k) : f =o[l] k :=
   h₁.1.trans_is_o h₂
-#align asymptotics.is_Theta.trans_is_o Asymptotics.IsTheta.trans_isO
--/
+#align asymptotics.is_Theta.trans_is_o Asymptotics.IsTheta.trans_isOCat
 
 @[trans]
 theorem IsTheta.trans_eventuallyEq {f : α → E} {g₁ g₂ : α → F} (h : f =Θ[l] g₁) (hg : g₁ =ᶠ[l] g₂) :
@@ -153,29 +142,21 @@ theorem isTheta_of_norm_eventually_eq' {g : α → ℝ} (h : (fun x => ‖f' x�
   is_Theta_of_norm_eventually_eq <| h.mono fun x hx => by simp only [← hx, norm_norm]
 #align asymptotics.is_Theta_of_norm_eventually_eq' Asymptotics.isTheta_of_norm_eventually_eq'
 
-theorem IsTheta.isO_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
+theorem IsTheta.isOCat_congr_left (h : f' =Θ[l] g') : f' =o[l] k ↔ g' =o[l] k :=
   ⟨h.symm.trans_is_o, h.trans_is_o⟩
-#align asymptotics.is_Theta.is_o_congr_left Asymptotics.IsTheta.isO_congr_left
+#align asymptotics.is_Theta.is_o_congr_left Asymptotics.IsTheta.isOCat_congr_left
 
-theorem IsTheta.isO_congr_right (h : g' =Θ[l] k') : f =o[l] g' ↔ f =o[l] k' :=
+theorem IsTheta.isOCat_congr_right (h : g' =Θ[l] k') : f =o[l] g' ↔ f =o[l] k' :=
   ⟨fun H => H.trans_is_Theta h, fun H => H.trans_is_Theta h.symm⟩
-#align asymptotics.is_Theta.is_o_congr_right Asymptotics.IsTheta.isO_congr_right
+#align asymptotics.is_Theta.is_o_congr_right Asymptotics.IsTheta.isOCat_congr_right
 
-/- warning: asymptotics.is_Theta.is_O_congr_left clashes with asymptotics.is_Theta.is_o_congr_left -> Asymptotics.IsTheta.isO_congr_left
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_O_congr_left Asymptotics.IsTheta.isO_congr_leftₓ'. -/
-#print Asymptotics.IsTheta.isO_congr_left /-
 theorem IsTheta.isO_congr_left (h : f' =Θ[l] g') : f' =O[l] k ↔ g' =O[l] k :=
   ⟨h.symm.trans_is_O, h.trans_is_O⟩
 #align asymptotics.is_Theta.is_O_congr_left Asymptotics.IsTheta.isO_congr_left
--/
 
-/- warning: asymptotics.is_Theta.is_O_congr_right clashes with asymptotics.is_Theta.is_o_congr_right -> Asymptotics.IsTheta.isO_congr_right
-Case conversion may be inaccurate. Consider using '#align asymptotics.is_Theta.is_O_congr_right Asymptotics.IsTheta.isO_congr_rightₓ'. -/
-#print Asymptotics.IsTheta.isO_congr_right /-
 theorem IsTheta.isO_congr_right (h : g' =Θ[l] k') : f =O[l] g' ↔ f =O[l] k' :=
   ⟨fun H => H.trans_is_Theta h, fun H => H.trans_is_Theta h.symm⟩
 #align asymptotics.is_Theta.is_O_congr_right Asymptotics.IsTheta.isO_congr_right
--/
 
 theorem IsTheta.mono (h : f =Θ[l] g) (hl : l' ≤ l) : f =Θ[l'] g :=
   ⟨h.1.mono hl, h.2.mono hl⟩

@@ -111,14 +111,14 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       simp only [H, piecewise_eq_of_mem]
       contrapose! hx
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
-        dense_iff_inter_open.1 s_dense (Ioo i (f x)) isOpen_ioo (nonempty_Ioo.2 hx)
+        dense_iff_inter_open.1 s_dense (Ioo i (f x)) isOpen_Ioo (nonempty_Ioo.2 hx)
       have A : x ∈ v i r := (huv i r).2.2.2.1 rq
       apply mem_Union.2 ⟨i, _⟩
       refine' mem_Union.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩
       exact ⟨H, A⟩
     · intro q hq
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
-        dense_iff_inter_open.1 s_dense (Ioo (f x) q) isOpen_ioo (nonempty_Ioo.2 hq)
+        dense_iff_inter_open.1 s_dense (Ioo (f x) q) isOpen_Ioo (nonempty_Ioo.2 hq)
       refine' ⟨⟨r, rs⟩, _⟩
       have A : x ∈ u' r := mem_bInter fun i hi => (huv r i).2.2.1 xr
       simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]

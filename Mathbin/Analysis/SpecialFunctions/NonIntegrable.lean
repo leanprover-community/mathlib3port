@@ -123,10 +123,10 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_within_diff_si
     cases' (min_lt_max.2 hne).lt_or_lt c with hlt hlt
     · refine' ⟨𝓝[<] c, inferInstance, inferInstance, inf_le_left, _⟩
       rw [← Iic_diff_right]
-      exact diff_mem_nhdsWithin_diff (icc_mem_nhdsWithin_iic ⟨hlt, hc.2⟩) _
+      exact diff_mem_nhdsWithin_diff (Icc_mem_nhdsWithin_Iic ⟨hlt, hc.2⟩) _
     · refine' ⟨𝓝[>] c, inferInstance, inferInstance, inf_le_left, _⟩
       rw [← Ici_diff_left]
-      exact diff_mem_nhdsWithin_diff (icc_mem_nhdsWithin_ici ⟨hc.1, hlt⟩) _
+      exact diff_mem_nhdsWithin_diff (Icc_mem_nhdsWithin_Ici ⟨hc.1, hlt⟩) _
   skip
   have : l ≤ 𝓝[[a, b] \ {c}] c := le_inf hle (le_principal_iff.2 hmem)
   exact

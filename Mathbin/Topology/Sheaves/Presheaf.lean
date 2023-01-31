@@ -9,7 +9,7 @@ Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Limits.KanExtension
-import Mathbin.Topology.Category.TopCat.Opens
+import Mathbin.Topology.Category.Top.Opens
 import Mathbin.CategoryTheory.Adjunction.Opposites
 
 /-!
@@ -348,7 +348,7 @@ def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
 
 theorem id_inv_app (U : Opens Y) :
     (id ℱ).inv.app (op U) =
-      colimit.ι (LanCat.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
+      colimit.ι (Lan.diagram (Opens.map (𝟙 Y)).op ℱ (op U))
         (@CostructuredArrow.mk _ _ _ _ _ (op U) _ (eqToHom (by simp))) :=
   by
   rw [← category.id_comp ((id ℱ).inv.app (op U)), ← nat_iso.app_inv, iso.comp_inv_eq]

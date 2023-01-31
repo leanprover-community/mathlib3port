@@ -40,9 +40,9 @@ namespace FirstOrder
 
 namespace Language
 
-open StructureCat
+open Structure
 
-variable {L : Language.{u, v}} [∀ a, L.StructureCat (M a)]
+variable {L : Language.{u, v}} [∀ a, L.Structure (M a)]
 
 namespace Ultraproduct
 
@@ -75,7 +75,7 @@ instance setoidPrestructure : L.Prestructure ((u : Filter α).productSetoid M) :
 
 variable {M} {u}
 
-instance structure : L.StructureCat ((u : Filter α).product M) :=
+instance structure : L.Structure ((u : Filter α).product M) :=
   language.quotient_structure
 #align first_order.language.ultraproduct.Structure FirstOrder.Language.Ultraproduct.structure
 

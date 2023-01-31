@@ -295,7 +295,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       exact
         blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∤n) (fun n => { y | addOrderOf y = n })
           (nat.cast_pos.mpr hp.pos) _ hδ
-    refine' (SupHom.setImage f).apply_blimsup_le.trans (mono_blimsup fun n hn => _)
+    refine' (SupHomCat.setImage f).apply_blimsup_le.trans (mono_blimsup fun n hn => _)
     replace hn := nat.coprime_comm.mp (hp.coprime_iff_not_dvd.2 hn.2)
     exact approxAddOrderOf.image_nsmul_subset_of_coprime (δ n) hp.pos hn
   have hB : ∀ p : Nat.Primes, B p =ᵐ[μ] (∅ : Set 𝕊) ∨ B p =ᵐ[μ] univ :=
@@ -311,7 +311,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       exact
         blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∣∣n) (fun n => { y | addOrderOf y = n })
           (nat.cast_pos.mpr hp.pos) _ hδ
-    refine' (SupHom.setImage f).apply_blimsup_le.trans (mono_blimsup _)
+    refine' (SupHomCat.setImage f).apply_blimsup_le.trans (mono_blimsup _)
     rintro n ⟨hn, h_div, h_ndiv⟩
     have h_cop : (addOrderOf x).coprime (n / p) :=
       by
@@ -324,7 +324,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       ext
       simp [add_comm x]
     simp_rw [comp_app]
-    rw [le_eq_subset, SupHom.setImage_to_fun, hf, image_comp]
+    rw [le_eq_subset, SupHomCat.setImage_to_fun, hf, image_comp]
     have := @monotone_image 𝕊 𝕊 fun y => x + y
     specialize this (approxAddOrderOf.image_nsmul_subset (δ n) (n / p) hp.pos)
     simp only [h_div] at this⊢

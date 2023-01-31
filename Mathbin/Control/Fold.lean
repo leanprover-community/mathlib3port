@@ -14,7 +14,7 @@ import Mathbin.Control.Traversable.Instances
 import Mathbin.Control.Traversable.Lemmas
 import Mathbin.CategoryTheory.Endomorphism
 import Mathbin.CategoryTheory.Types
-import Mathbin.CategoryTheory.Category.KleisliCat
+import Mathbin.CategoryTheory.Category.Kleisli
 
 /-!
 
@@ -111,7 +111,7 @@ how the monoid of endofunctions define `foldl`.
 -/
 @[reducible]
 def Foldl (α : Type u) : Type u :=
-  (EndCat α)ᵐᵒᵖ
+  (End α)ᵐᵒᵖ
 #align monoid.foldl Monoid.Foldl
 
 def Foldl.mk (f : α → α) : Foldl α :=
@@ -133,7 +133,7 @@ def Foldl.ofFreeMonoid (f : β → α → β) : FreeMonoid α →* Monoid.Foldl 
 
 @[reducible]
 def Foldr (α : Type u) : Type u :=
-  EndCat α
+  End α
 #align monoid.foldr Monoid.Foldr
 
 def Foldr.mk (f : α → α) : Foldr α :=

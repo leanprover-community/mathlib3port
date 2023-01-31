@@ -325,12 +325,12 @@ theorem hasFderivAt_iff_tendsto :
   hasFderivAtFilter_iff_tendsto
 #align has_fderiv_at_iff_tendsto hasFderivAt_iff_tendsto
 
-theorem hasFderivAt_iff_isO_nhds_zero :
+theorem hasFderivAt_iff_isOCat_nhds_zero :
     HasFderivAt f f' x ↔ (fun h : E => f (x + h) - f x - f' h) =o[𝓝 0] fun h => h :=
   by
   rw [HasFderivAt, HasFderivAtFilter, ← map_add_left_nhds_zero x, is_o_map]
   simp [(· ∘ ·)]
-#align has_fderiv_at_iff_is_o_nhds_zero hasFderivAt_iff_isO_nhds_zero
+#align has_fderiv_at_iff_is_o_nhds_zero hasFderivAt_iff_isOCat_nhds_zero
 
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
 on a neighborhood of `x₀` then it its derivative at `x₀` has norm bounded by `C`. This version
@@ -341,7 +341,7 @@ theorem HasFderivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
   refine' le_of_forall_pos_le_add fun ε ε0 => op_norm_le_of_nhds_zero _ _
   exact add_nonneg hC₀ ε0.le
   rw [← map_add_left_nhds_zero x₀, eventually_map] at hlip
-  filter_upwards [is_o_iff.1 (hasFderivAt_iff_isO_nhds_zero.1 hf) ε0, hlip]with y hy hyC
+  filter_upwards [is_o_iff.1 (hasFderivAt_iff_isOCat_nhds_zero.1 hf) ε0, hlip]with y hy hyC
   rw [add_sub_cancel'] at hyC
   calc
     ‖f' y‖ ≤ ‖f (x₀ + y) - f x₀‖ + ‖f (x₀ + y) - f x₀ - f' y‖ := norm_le_insert _ _
@@ -407,7 +407,7 @@ theorem hasFderivWithinAt_insert {y : E} {g' : E →L[𝕜] F} :
   by
   rcases eq_or_ne x y with (rfl | h)
   · simp_rw [HasFderivWithinAt, HasFderivAtFilter]
-    apply Asymptotics.isO_insert
+    apply Asymptotics.isOCat_insert
     simp only [sub_self, g'.map_zero]
   refine' ⟨fun h => h.mono <| subset_insert y s, fun hg => hg.mono_of_mem _⟩
   simp_rw [nhdsWithin_insert_of_ne h, self_mem_nhdsWithin]
@@ -832,7 +832,7 @@ theorem HasStrictFderivAt.congr_of_eventuallyEq (h : HasStrictFderivAt f f' x) (
 
 theorem Filter.EventuallyEq.hasFderivAtFilter_iff (h₀ : f₀ =ᶠ[L] f₁) (hx : f₀ x = f₁ x)
     (h₁ : ∀ x, f₀' x = f₁' x) : HasFderivAtFilter f₀ f₀' x L ↔ HasFderivAtFilter f₁ f₁' x L :=
-  isO_congr (h₀.mono fun y hy => by simp only [hy, h₁, hx]) (eventually_of_forall fun _ => rfl)
+  isOCat_congr (h₀.mono fun y hy => by simp only [hy, h₁, hx]) (eventually_of_forall fun _ => rfl)
 #align filter.eventually_eq.has_fderiv_at_filter_iff Filter.EventuallyEq.hasFderivAtFilter_iff
 
 theorem HasFderivAtFilter.congr_of_eventuallyEq (h : HasFderivAtFilter f f' x L) (hL : f₁ =ᶠ[L] f)
@@ -980,11 +980,11 @@ section id
 
 
 theorem hasStrictFderivAt_id (x : E) : HasStrictFderivAt id (id 𝕜 E) x :=
-  (isO_zero _ _).congr_left <| by simp
+  (isOCat_zero _ _).congr_left <| by simp
 #align has_strict_fderiv_at_id hasStrictFderivAt_id
 
 theorem hasFderivAtFilter_id (x : E) (L : Filter E) : HasFderivAtFilter id (id 𝕜 E) x L :=
-  (isO_zero _ _).congr_left <| by simp
+  (isOCat_zero _ _).congr_left <| by simp
 #align has_fderiv_at_filter_id hasFderivAtFilter_id
 
 theorem hasFderivWithinAt_id (x : E) (s : Set E) : HasFderivWithinAt id (id 𝕜 E) s x :=
@@ -1050,12 +1050,12 @@ section Const
 
 theorem hasStrictFderivAt_const (c : F) (x : E) :
     HasStrictFderivAt (fun _ => c) (0 : E →L[𝕜] F) x :=
-  (isO_zero _ _).congr_left fun _ => by simp only [zero_apply, sub_self]
+  (isOCat_zero _ _).congr_left fun _ => by simp only [zero_apply, sub_self]
 #align has_strict_fderiv_at_const hasStrictFderivAt_const
 
 theorem hasFderivAtFilter_const (c : F) (x : E) (L : Filter E) :
     HasFderivAtFilter (fun x => c) (0 : E →L[𝕜] F) x L :=
-  (isO_zero _ _).congr_left fun _ => by simp only [zero_apply, sub_self]
+  (isOCat_zero _ _).congr_left fun _ => by simp only [zero_apply, sub_self]
 #align has_fderiv_at_filter_const hasFderivAtFilter_const
 
 theorem hasFderivWithinAt_const (c : F) (x : E) (s : Set E) :
@@ -1146,11 +1146,11 @@ predicate `is_bounded_linear_map`). We give statements for both versions. -/
 
 
 protected theorem ContinuousLinearMap.hasStrictFderivAt {x : E} : HasStrictFderivAt e e x :=
-  (isO_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
+  (isOCat_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
 #align continuous_linear_map.has_strict_fderiv_at ContinuousLinearMap.hasStrictFderivAt
 
 protected theorem ContinuousLinearMap.hasFderivAtFilter : HasFderivAtFilter e e x L :=
-  (isO_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
+  (isOCat_zero _ _).congr_left fun x => by simp only [e.map_sub, sub_self]
 #align continuous_linear_map.has_fderiv_at_filter ContinuousLinearMap.hasFderivAtFilter
 
 protected theorem ContinuousLinearMap.hasFderivWithinAt : HasFderivWithinAt e e s x :=
@@ -3031,7 +3031,7 @@ theorem hasFderivAt_ring_inverse (x : Rˣ) :
     refine' (inverse_add_norm_diff_second_order x).trans_is_o (is_o_norm_norm.mp _)
     simp only [norm_pow, norm_norm]
     have h12 : 1 < 2 := by norm_num
-    convert (Asymptotics.isO_pow_pow h12).comp_tendsto tendsto_norm_zero
+    convert (Asymptotics.isOCat_pow_pow h12).comp_tendsto tendsto_norm_zero
     ext
     simp
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) :=

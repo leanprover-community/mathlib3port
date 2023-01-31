@@ -9,7 +9,7 @@ Authors: Mark Lavrentyev
 ! if you have ported upstream changes.
 -/
 import Mathbin.CategoryTheory.Groupoid
-import Mathbin.Topology.Category.TopCat.Basic
+import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.PathConnected
 import Mathbin.Topology.Homotopy.Path
 import Mathbin.AlgebraicTopology.FundamentalGroupoid.Basic
@@ -35,7 +35,7 @@ open CategoryTheory
 /-- The fundamental group is the automorphism group (vertex group) of the basepoint
 in the fundamental groupoid. -/
 def FundamentalGroup (X : Type u) [TopologicalSpace X] (x : X) :=
-  @AutCat (FundamentalGroupoid X) _ x deriving Group, Inhabited
+  @Aut (FundamentalGroupoid X) _ x deriving Group, Inhabited
 #align fundamental_group FundamentalGroup
 
 namespace FundamentalGroup
@@ -47,7 +47,7 @@ attribute [local reducible] FundamentalGroupoid
 /-- Get an isomorphism between the fundamental groups at two points given a path -/
 def fundamentalGroupMulEquivOfPath (p : Path x₀ x₁) :
     FundamentalGroup X x₀ ≃* FundamentalGroup X x₁ :=
-  AutCat.autMulEquivOfIso (asIso ⟦p⟧)
+  Aut.autMulEquivOfIso (asIso ⟦p⟧)
 #align fundamental_group.fundamental_group_mul_equiv_of_path FundamentalGroup.fundamentalGroupMulEquivOfPath
 
 variable (x₀ x₁)

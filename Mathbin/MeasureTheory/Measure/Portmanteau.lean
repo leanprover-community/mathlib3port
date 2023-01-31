@@ -478,7 +478,7 @@ theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : 
   have key := @measure.countable_meas_pos_of_disjoint_Union Ω _ _ μ _ _ mbles disjs
   have aux := @measure_diff_null ℝ _ volume (Ioo a b) _ (Set.Countable.measure_zero key volume)
   have len_pos : 0 < Ennreal.ofReal (b - a) := by simp only [hab, Ennreal.ofReal_pos, sub_pos]
-  rw [← Real.volume_ioo, ← aux] at len_pos
+  rw [← Real.volume_Ioo, ← aux] at len_pos
   rcases nonempty_of_measure_ne_zero len_pos.ne.symm with ⟨r, ⟨r_in_Ioo, hr⟩⟩
   refine' ⟨r, r_in_Ioo, _⟩
   simpa only [mem_set_of_eq, not_lt, le_zero_iff] using hr

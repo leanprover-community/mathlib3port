@@ -78,7 +78,7 @@ theorem image_sigmaMk_preimage_sigmaMap {β : ι' → Type _} {f : ι → ι'} (
   refine' (image_sigma_mk_preimage_sigma_map_subset f g i s).antisymm _
   rintro ⟨j, x⟩ ⟨y, hys, hxy⟩
   simp only [hf.eq_iff, Sigma.map] at hxy
-  rcases hxy with ⟨rfl, hxy⟩; rw [hEq_iff_eq] at hxy; subst y
+  rcases hxy with ⟨rfl, hxy⟩; rw [heq_iff_eq] at hxy; subst y
   exact ⟨x, hys, rfl⟩
 #align set.image_sigma_mk_preimage_sigma_map Set.image_sigmaMk_preimage_sigmaMap
 

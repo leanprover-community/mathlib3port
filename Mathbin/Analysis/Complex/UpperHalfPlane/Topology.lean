@@ -73,7 +73,7 @@ instance : NoncompactSpace ℍ := by
   refine' ⟨fun h => _⟩
   have : IsCompact (Complex.im ⁻¹' Ioi 0) := isCompact_iff_isCompact_univ.2 h
   replace := this.is_closed.closure_eq
-  rw [closure_preimage_im, closure_ioi, Set.ext_iff] at this
+  rw [closure_preimage_im, closure_Ioi, Set.ext_iff] at this
   exact absurd ((this 0).1 left_mem_Ici) (lt_irrefl _)
 
 instance : LocallyCompactSpace ℍ :=

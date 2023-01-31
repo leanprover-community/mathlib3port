@@ -418,7 +418,7 @@ then `f` is defined on the whole `localization S`. -/
       "Non-dependent recursion principle for `add_localizations`: given elements `f a b : p`\nfor all `a b`, such that `r S (a, b) (c, d)` implies `f a b = f c d`,\nthen `f` is defined on the whole `localization S`."]
 def liftOn {p : Sort u} (x : Localization S) (f : M → S → p)
     (H : ∀ {a c : M} {b d : S} (h : r S (a, b) (c, d)), f a b = f c d) : p :=
-  rec f (fun a c b d h => by rw [eq_ndrec_constant, H h]) x
+  rec f (fun a c b d h => by rw [eq_rec_constant, H h]) x
 #align localization.lift_on Localization.liftOn
 #align add_localization.lift_on addLocalization.liftOn
 

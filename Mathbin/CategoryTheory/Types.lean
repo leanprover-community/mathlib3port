@@ -92,7 +92,7 @@ abbrev asHom {α β : Type u} (f : α → β) : α ⟶ β :=
 
 -- mathport name: category_theory.as_hom
 -- If you don't mind some notation you can use fewer keystrokes:
-scoped[CategoryTheory.TypeCat] notation "↾" f:200 => CategoryTheory.asHom f
+scoped[CategoryTheory.Type] notation "↾" f:200 => CategoryTheory.asHom f
 
 -- type as \upr in VScode
 section

@@ -224,7 +224,7 @@ This follows from `category_theory.category_of_elements.costructured_arrow_yoned
 def extendAlongYonedaIsoKanApp (X) :
     (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
   let eq := categoryOfElements.costructuredArrowYonedaEquivalence X
-  { Hom := colimit.pre (LanCat.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor
+  { Hom := colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor
     inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse
     hom_inv_id' :=
       by

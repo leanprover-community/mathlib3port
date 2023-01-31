@@ -65,45 +65,45 @@ section
 
 variable (a b : Σi, α i)
 
-theorem card_icc : (Icc a b).card = if h : a.1 = b.1 then (Icc (h.rec a.2) b.2).card else 0 :=
+theorem card_Icc : (Icc a b).card = if h : a.1 = b.1 then (Icc (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
-#align sigma.card_Icc Sigma.card_icc
+#align sigma.card_Icc Sigma.card_Icc
 
-theorem card_ico : (Ico a b).card = if h : a.1 = b.1 then (Ico (h.rec a.2) b.2).card else 0 :=
+theorem card_Ico : (Ico a b).card = if h : a.1 = b.1 then (Ico (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
-#align sigma.card_Ico Sigma.card_ico
+#align sigma.card_Ico Sigma.card_Ico
 
-theorem card_ioc : (Ioc a b).card = if h : a.1 = b.1 then (Ioc (h.rec a.2) b.2).card else 0 :=
+theorem card_Ioc : (Ioc a b).card = if h : a.1 = b.1 then (Ioc (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
-#align sigma.card_Ioc Sigma.card_ioc
+#align sigma.card_Ioc Sigma.card_Ioc
 
-theorem card_ioo : (Ioo a b).card = if h : a.1 = b.1 then (Ioo (h.rec a.2) b.2).card else 0 :=
+theorem card_Ioo : (Ioo a b).card = if h : a.1 = b.1 then (Ioo (h.rec a.2) b.2).card else 0 :=
   card_sigmaLift _ _ _
-#align sigma.card_Ioo Sigma.card_ioo
+#align sigma.card_Ioo Sigma.card_Ioo
 
 end
 
 variable (i : ι) (a b : α i)
 
 @[simp]
-theorem icc_mk_mk : Icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Icc a b).map (Embedding.sigmaMk i) :=
+theorem Icc_mk_mk : Icc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Icc a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
-#align sigma.Icc_mk_mk Sigma.icc_mk_mk
+#align sigma.Icc_mk_mk Sigma.Icc_mk_mk
 
 @[simp]
-theorem ico_mk_mk : Ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ico a b).map (Embedding.sigmaMk i) :=
+theorem Ico_mk_mk : Ico (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ico a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
-#align sigma.Ico_mk_mk Sigma.ico_mk_mk
+#align sigma.Ico_mk_mk Sigma.Ico_mk_mk
 
 @[simp]
-theorem ioc_mk_mk : Ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioc a b).map (Embedding.sigmaMk i) :=
+theorem Ioc_mk_mk : Ioc (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioc a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
-#align sigma.Ioc_mk_mk Sigma.ioc_mk_mk
+#align sigma.Ioc_mk_mk Sigma.Ioc_mk_mk
 
 @[simp]
-theorem ioo_mk_mk : Ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioo a b).map (Embedding.sigmaMk i) :=
+theorem Ioo_mk_mk : Ioo (⟨i, a⟩ : Sigma α) ⟨i, b⟩ = (Ioo a b).map (Embedding.sigmaMk i) :=
   dif_pos rfl
-#align sigma.Ioo_mk_mk Sigma.ioo_mk_mk
+#align sigma.Ioo_mk_mk Sigma.Ioo_mk_mk
 
 end Disjoint
 

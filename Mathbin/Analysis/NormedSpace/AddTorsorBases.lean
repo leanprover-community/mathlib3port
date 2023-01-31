@@ -85,7 +85,7 @@ theorem AffineBasis.interior_convexHull {ι E : Type _} [Finite ι] [NormedAddCo
     simp only [this, interior_interᵢ, ←
       IsOpenMap.preimage_interior_eq_interior_preimage (isOpenMap_barycentric_coord b _)
         (continuous_barycentric_coord b _),
-      interior_ici, mem_Inter, mem_set_of_eq, mem_Ioi, mem_preimage]
+      interior_Ici, mem_Inter, mem_set_of_eq, mem_Ioi, mem_preimage]
 #align affine_basis.interior_convex_hull AffineBasis.interior_convexHull
 
 variable {V P : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P]

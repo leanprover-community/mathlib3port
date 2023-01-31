@@ -623,7 +623,7 @@ theorem compactly_generated_of_wellFounded (h : WellFounded ((· > ·) : α → 
 
 /-- A compact element `k` has the property that any `b < k` lies below a "maximal element below
 `k`", which is to say `[⊥, k]` is coatomic. -/
-theorem iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCoatomic (Set.Iic k) :=
+theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCoatomic (Set.Iic k) :=
   ⟨fun ⟨b, hbk⟩ => by
     by_cases htriv : b = k
     · left
@@ -641,10 +641,10 @@ theorem iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) : IsCo
         ⟨b, lt_of_le_of_ne hbk htriv, by
           simp only [set.not_nonempty_iff_eq_empty.mp hS, Set.mem_empty_iff_false, forall_const,
             forall_prop_of_false, not_false_iff]⟩⟩
-#align complete_lattice.Iic_coatomic_of_compact_element CompleteLattice.iic_coatomic_of_compact_element
+#align complete_lattice.Iic_coatomic_of_compact_element CompleteLattice.Iic_coatomic_of_compact_element
 
 theorem coatomic_of_top_compact (h : IsCompactElement (⊤ : α)) : IsCoatomic α :=
-  (@OrderIso.IicTop α _ _).is_coatomic_iff.mp (iic_coatomic_of_compact_element h)
+  (@OrderIso.IicTop α _ _).is_coatomic_iff.mp (Iic_coatomic_of_compact_element h)
 #align complete_lattice.coatomic_of_top_compact CompleteLattice.coatomic_of_top_compact
 
 end CompleteLattice
@@ -661,7 +661,7 @@ instance (priority := 100) isAtomic_of_complementedLattice [ComplementedLattice 
       exact h
     · rcases Set.not_subset.1 h with ⟨c, ⟨hc, hcb⟩, hcbot⟩
       right
-      have hc' := CompleteLattice.iic_coatomic_of_compact_element hc
+      have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc
       rw [← isAtomic_iff_isCoatomic] at hc'
       haveI := hc'
       obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : Set.Iic c)

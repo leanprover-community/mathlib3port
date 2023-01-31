@@ -529,7 +529,7 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
-    exact isClosed_ici
+    exact isClosed_Ici
 #align measure_theory.measure.haar.chaar_mono MeasureTheory.Measure.Haar.chaar_mono
 #align measure_theory.measure.haar.add_chaar_mono MeasureTheory.Measure.Haar.add_chaar_mono
 
@@ -550,7 +550,7 @@ theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) :
     rw [h2U.interior_eq]
     exact ⟨1, h3U⟩
   · apply continuous_iff_is_closed.mp this
-    exact isClosed_ici
+    exact isClosed_Ici
 #align measure_theory.measure.haar.chaar_sup_le MeasureTheory.Measure.Haar.chaar_sup_le
 #align measure_theory.measure.haar.add_chaar_sup_le MeasureTheory.Measure.Haar.add_chaar_sup_le
 

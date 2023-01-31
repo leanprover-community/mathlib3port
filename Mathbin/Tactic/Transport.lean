@@ -42,7 +42,7 @@ open Tactic.Interactive
   transport_simps
 
 attribute [transport_simps]
-  eq_ndrec_constant eq_mp_eq_cast cast_eq Equiv.toFun_as_coe Equiv.arrowCongr'_apply Equiv.symm_apply_apply Equiv.apply_eq_iff_eq_symm_apply
+  eq_rec_constant eq_mp_eq_cast cast_eq Equiv.toFun_as_coe Equiv.arrowCongr'_apply Equiv.symm_apply_apply Equiv.apply_eq_iff_eq_symm_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/

@@ -204,7 +204,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   -- The embedding is given by `F x UV = f UV x`.
   set F : X → s →ᵇ ℝ := fun x =>
     ⟨⟨fun UV => f UV x, continuous_of_discreteTopology⟩, 1, fun UV₁ UV₂ =>
-      Real.dist_le_of_mem_icc_01 (hf01 _ _) (hf01 _ _)⟩
+      Real.dist_le_of_mem_Icc_01 (hf01 _ _) (hf01 _ _)⟩
   have hF : ∀ x UV, F x UV = f UV x := fun _ _ => rfl
   refine' ⟨F, Embedding.mk' _ (fun x y hxy => _) fun x => le_antisymm _ _⟩
   · /- First we prove that `F` is injective. Indeed, if `F x = F y` and `x ≠ y`, then we can find
@@ -247,7 +247,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
       exact (f UV).Continuous.Tendsto x (closed_ball_mem_nhds _ δ0)
     refine' this.mono fun y hy => (BoundedContinuousFunction.dist_le δ0.le).2 fun UV => _
     cases' le_total δ (ε UV) with hle hle
-    exacts[hy _ hle, (Real.dist_le_of_mem_icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
+    exacts[hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
 #align topological_space.exists_embedding_l_infty TopologicalSpace.exists_embedding_l_infty
 
 /-- *Urysohn's metrization theorem* (Tychonoff's version): a T₃ topological space with second

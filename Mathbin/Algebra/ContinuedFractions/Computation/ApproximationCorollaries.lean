@@ -50,14 +50,14 @@ open GeneralizedContinuedFraction (of)
 
 open GeneralizedContinuedFraction
 
-theorem GeneralizedContinuedFraction.ofIsSimpleContinuedFraction :
+theorem GeneralizedContinuedFraction.of_isSimpleContinuedFraction :
     (of v).IsSimpleContinuedFraction := fun _ _ nth_part_num_eq =>
   of_part_num_eq_one nth_part_num_eq
-#align generalized_continued_fraction.of_is_simple_continued_fraction GeneralizedContinuedFraction.ofIsSimpleContinuedFraction
+#align generalized_continued_fraction.of_is_simple_continued_fraction GeneralizedContinuedFraction.of_isSimpleContinuedFraction
 
 /-- Creates the simple continued fraction of a value. -/
 def SimpleContinuedFraction.of : SimpleContinuedFraction K :=
-  ⟨of v, GeneralizedContinuedFraction.ofIsSimpleContinuedFraction v⟩
+  ⟨of v, GeneralizedContinuedFraction.of_isSimpleContinuedFraction v⟩
 #align simple_continued_fraction.of SimpleContinuedFraction.of
 
 theorem SimpleContinuedFraction.of_isContinuedFraction :

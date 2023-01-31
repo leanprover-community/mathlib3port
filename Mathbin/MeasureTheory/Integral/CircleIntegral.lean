@@ -150,9 +150,9 @@ theorem range_circleMap (c : ℂ) (R : ℝ) : range (circleMap c R) = sphere c (
 
 /-- The image of `(0, 2π]` under `circle_map c R` is the circle with center `c` and radius `|R|`. -/
 @[simp]
-theorem image_circleMap_ioc (c : ℂ) (R : ℝ) : circleMap c R '' Ioc 0 (2 * π) = sphere c (|R|) := by
+theorem image_circleMap_Ioc (c : ℂ) (R : ℝ) : circleMap c R '' Ioc 0 (2 * π) = sphere c (|R|) := by
   rw [← range_circleMap, ← (periodic_circleMap c R).image_Ioc Real.two_pi_pos 0, zero_add]
-#align image_circle_map_Ioc image_circleMap_ioc
+#align image_circle_map_Ioc image_circleMap_Ioc
 
 @[simp]
 theorem circleMap_eq_center_iff {c : ℂ} {R : ℝ} {θ : ℝ} : circleMap c R θ = c ↔ R = 0 := by
@@ -312,7 +312,7 @@ theorem circleIntegrable_sub_zpow_iff {c w : ℂ} {R : ℝ} {n : ℤ} :
     contrapose! h
     rcases h with ⟨hR, hn, hw⟩
     simp only [circleIntegrable_iff R, deriv_circleMap]
-    rw [← image_circleMap_ioc] at hw
+    rw [← image_circleMap_Ioc] at hw
     rcases hw with ⟨θ, hθ, rfl⟩
     replace hθ : θ ∈ [0, 2 * π]
     exact Icc_subset_uIcc (Ioc_subset_Icc_self hθ)
@@ -367,12 +367,12 @@ def circleIntegral (f : ℂ → E) (c : ℂ) (R : ℝ) : E :=
 -- mathport name: «expr∮ inC( , ), »
 notation3"∮ "(...)" in ""C("c", "R")"", "r:(scoped f => circleIntegral f c R) => r
 
-theorem circleIntegral_def_icc (f : ℂ → E) (c : ℂ) (R : ℝ) :
+theorem circleIntegral_def_Icc (f : ℂ → E) (c : ℂ) (R : ℝ) :
     (∮ z in C(c, R), f z) = ∫ θ in Icc 0 (2 * π), deriv (circleMap c R) θ • f (circleMap c R θ) :=
   by
   simp only [circleIntegral, intervalIntegral.integral_of_le real.two_pi_pos.le,
     measure.restrict_congr_set Ioc_ae_eq_Icc]
-#align circle_integral_def_Icc circleIntegral_def_icc
+#align circle_integral_def_Icc circleIntegral_def_Icc
 
 namespace circleIntegral
 
@@ -450,7 +450,7 @@ theorem norm_integral_lt_of_norm_le_const_of_lt {f : ℂ → E} {c : ℂ} {R C :
     (hc : ContinuousOn f (sphere c R)) (hf : ∀ z ∈ sphere c R, ‖f z‖ ≤ C)
     (hlt : ∃ z ∈ sphere c R, ‖f z‖ < C) : ‖∮ z in C(c, R), f z‖ < 2 * π * R * C :=
   by
-  rw [← _root_.abs_of_pos hR, ← image_circleMap_ioc] at hlt
+  rw [← _root_.abs_of_pos hR, ← image_circleMap_Ioc] at hlt
   rcases hlt with ⟨_, ⟨θ₀, hmem, rfl⟩, hlt⟩
   calc
     ‖∮ z in C(c, R), f z‖ ≤ ∫ θ in 0 ..2 * π, ‖deriv (circleMap c R) θ • f (circleMap c R θ)‖ :=

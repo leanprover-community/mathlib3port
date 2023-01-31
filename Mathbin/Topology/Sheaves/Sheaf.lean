@@ -120,7 +120,7 @@ variable (C X)
 satisfying the sheaf condition.
 -/
 def Sheaf : Type max u v w :=
-  SheafCat (Opens.grothendieckTopology X) C deriving Category
+  Sheaf (Opens.grothendieckTopology X) C deriving Category
 #align Top.sheaf TopCat.Sheaf
 
 variable {C X}

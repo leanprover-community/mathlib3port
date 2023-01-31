@@ -104,8 +104,8 @@ theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
 theorem mul_tendsto_nhds_one_nhds_one :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 :=
   by
-  rw [((nhds_basis_ioo_pos (1 : α)).Prod <| nhds_basis_ioo_pos (1 : α)).tendsto_iff
-      (nhds_basis_ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
+  rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iff
+      (nhds_basis_Ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
   intro ε hε
   have hε' : 0 ≤ 1 - ε / 4 := by linarith
   have ε_pos : 0 < ε / 4 := by linarith
@@ -245,7 +245,7 @@ theorem tendsto_inv_zero_atTop : Tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α
   by
   refine' (at_top_basis' 1).tendsto_right_iff.2 fun b hb => _
   have hb' : 0 < b := by positivity
-  filter_upwards [ioc_mem_nhdsWithin_ioi
+  filter_upwards [Ioc_mem_nhdsWithin_Ioi
       ⟨le_rfl, inv_pos.2 hb'⟩]with x hx using(le_inv hx.1 hb').1 hx.2
 #align tendsto_inv_zero_at_top tendsto_inv_zero_atTop
 
@@ -253,7 +253,7 @@ theorem tendsto_inv_zero_atTop : Tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α
 theorem tendsto_inv_atTop_zero' : Tendsto (fun r : α => r⁻¹) atTop (𝓝[>] (0 : α)) :=
   by
   refine'
-    (has_basis.tendsto_iff at_top_basis ⟨fun s => mem_nhdsWithin_ioi_iff_exists_ioc_subset⟩).2 _
+    (has_basis.tendsto_iff at_top_basis ⟨fun s => mem_nhdsWithin_Ioi_iff_exists_Ioc_subset⟩).2 _
   refine' fun b hb => ⟨b⁻¹, trivial, fun x hx => _⟩
   have : 0 < x := lt_of_lt_of_le (inv_pos.2 hb) hx
   exact ⟨inv_pos.2 this, (inv_le this hb).2 hx⟩
@@ -349,7 +349,7 @@ instance (priority := 100) LinearOrderedField.to_topologicalDivisionRing : Topol
       simp [neg_inv]
     intro t ht
     rw [ContinuousAt,
-      (nhds_basis_ioo_pos t).tendsto_iff <| nhds_basis_ioo_pos_of_pos <| inv_pos.2 ht]
+      (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by

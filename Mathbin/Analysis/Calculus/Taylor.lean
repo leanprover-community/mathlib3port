@@ -228,28 +228,28 @@ theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} 
 /-- Calculate the derivative of the Taylor polynomial with respect to `x₀`.
 
 Version for open intervals -/
-theorem taylorWithinEval_hasDerivAt_ioo {f : ℝ → E} {a b t : ℝ} (x : ℝ) {n : ℕ} (hx : a < b)
+theorem taylorWithinEval_hasDerivAt_Ioo {f : ℝ → E} {a b t : ℝ} (x : ℝ) {n : ℕ} (hx : a < b)
     (ht : t ∈ Ioo a b) (hf : ContDiffOn ℝ n f (Icc a b))
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (Icc a b)) (Ioo a b)) :
     HasDerivAt (fun y => taylorWithinEval f n (Icc a b) y x)
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) t :=
-  haveI h_nhds := IsOpen.mem_nhds isOpen_ioo ht
-  (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAt_ioo ht) (uniqueDiffOn_icc hx)
+  haveI h_nhds := IsOpen.mem_nhds isOpen_Ioo ht
+  (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAt_Ioo ht) (uniqueDiffOn_Icc hx)
         (nhdsWithin_le_nhds h_nhds) ht Ioo_subset_Icc_self hf hf').HasDerivAt
     h_nhds
-#align taylor_within_eval_has_deriv_at_Ioo taylorWithinEval_hasDerivAt_ioo
+#align taylor_within_eval_has_deriv_at_Ioo taylorWithinEval_hasDerivAt_Ioo
 
 /-- Calculate the derivative of the Taylor polynomial with respect to `x₀`.
 
 Version for closed intervals -/
-theorem has_deriv_within_taylorWithinEval_at_icc {f : ℝ → E} {a b t : ℝ} (x : ℝ) {n : ℕ}
+theorem has_deriv_within_taylorWithinEval_at_Icc {f : ℝ → E} {a b t : ℝ} (x : ℝ) {n : ℕ}
     (hx : a < b) (ht : t ∈ Icc a b) (hf : ContDiffOn ℝ n f (Icc a b))
     (hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (Icc a b)) (Icc a b)) :
     HasDerivWithinAt (fun y => taylorWithinEval f n (Icc a b) y x)
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) (Icc a b) t :=
-  hasDerivWithinAt_taylorWithinEval (uniqueDiffOn_icc hx t ht) (uniqueDiffOn_icc hx)
+  hasDerivWithinAt_taylorWithinEval (uniqueDiffOn_Icc hx t ht) (uniqueDiffOn_Icc hx)
     self_mem_nhdsWithin ht rfl.Subset hf hf'
-#align has_deriv_within_taylor_within_eval_at_Icc has_deriv_within_taylorWithinEval_at_icc
+#align has_deriv_within_taylor_within_eval_at_Icc has_deriv_within_taylorWithinEval_at_Icc
 
 /-! ### Taylor's theorem with mean value type remainder estimate -/
 
@@ -274,8 +274,8 @@ theorem taylor_mean_remainder {f : ℝ → ℝ} {g g' : ℝ → ℝ} {x x₀ : �
   -- We apply the mean value theorem
   rcases exists_ratio_hasDerivAt_eq_ratio_slope (fun t => taylorWithinEval f n (Icc x₀ x) t x)
       (fun t => ((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc x₀ x) t) hx
-      (continuousOn_taylorWithinEval (uniqueDiffOn_icc hx) hf)
-      (fun _ hy => taylorWithinEval_hasDerivAt_ioo x hx hy hf hf') g g' gcont gdiff with
+      (continuousOn_taylorWithinEval (uniqueDiffOn_Icc hx) hf)
+      (fun _ hy => taylorWithinEval_hasDerivAt_Ioo x hx hy hf hf') g g' gcont gdiff with
     ⟨y, hy, h⟩
   use y, hy
   -- The rest is simplifications and trivial calculations
@@ -364,7 +364,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
   -- The nth iterated derivative is differentiable
   have hf' : DifferentiableOn ℝ (iteratedDerivWithin n f (Icc a b)) (Icc a b) :=
     hf.differentiable_on_iterated_deriv_within (with_top.coe_lt_coe.mpr n.lt_succ_self)
-      (uniqueDiffOn_icc h)
+      (uniqueDiffOn_Icc h)
   -- We can uniformly bound the derivative of the Taylor polynomial
   have h' :
     ∀ (y : ℝ) (hy : y ∈ Ico a x),
@@ -388,7 +388,7 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
     by
     intro t ht
     have I : Icc a x ⊆ Icc a b := Icc_subset_Icc_right hx.2
-    exact (has_deriv_within_taylorWithinEval_at_icc x h (I ht) hf.of_succ hf').mono I
+    exact (has_deriv_within_taylorWithinEval_at_Icc x h (I ht) hf.of_succ hf').mono I
   have := norm_image_sub_le_of_norm_deriv_le_segment' A h' x (right_mem_Icc.2 hx.1)
   simp only [taylorWithinEval_self] at this
   refine' this.trans_eq _
@@ -416,6 +416,6 @@ theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ}
   intro x hx
   rw [div_mul_eq_mul_div₀]
   refine' taylor_mean_remainder_bound hab hf hx fun y => _
-  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_icc h).norm.le_Sup_image_Icc
+  exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_Icc h).norm.le_Sup_image_Icc
 #align exists_taylor_mean_remainder_bound exists_taylor_mean_remainder_bound
 

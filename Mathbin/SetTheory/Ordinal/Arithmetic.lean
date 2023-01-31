@@ -1343,7 +1343,7 @@ theorem le_sup_shrink_equiv {s : Set Ordinal.{u}} (hs : Small.{u} s) (a) (ha : a
   rw [symm_apply_apply]
 #align ordinal.le_sup_shrink_equiv Ordinal.le_sup_shrink_equiv
 
-instance small_iio (o : Ordinal.{u}) : Small.{u} (Set.Iio o) :=
+instance small_Iio (o : Ordinal.{u}) : Small.{u} (Set.Iio o) :=
   let f : o.out.α → Set.Iio o := fun x => ⟨typein (· < ·) x, typein_lt_self x⟩
   let hf : Surjective f := fun b =>
     ⟨enum (· < ·) b.val
@@ -1352,13 +1352,13 @@ instance small_iio (o : Ordinal.{u}) : Small.{u} (Set.Iio o) :=
           exact b.prop),
       Subtype.ext (typein_enum _ _)⟩
   small_of_surjective hf
-#align ordinal.small_Iio Ordinal.small_iio
+#align ordinal.small_Iio Ordinal.small_Iio
 
-instance small_iic (o : Ordinal.{u}) : Small.{u} (Set.Iic o) :=
+instance small_Iic (o : Ordinal.{u}) : Small.{u} (Set.Iic o) :=
   by
   rw [← Iio_succ]
   infer_instance
-#align ordinal.small_Iic Ordinal.small_iic
+#align ordinal.small_Iic Ordinal.small_Iic
 
 theorem bddAbove_iff_small {s : Set Ordinal.{u}} : BddAbove s ↔ Small.{u} s :=
   ⟨fun ⟨a, h⟩ => small_subset <| show s ⊆ Iic a from fun x hx => h hx, fun h =>

@@ -9,7 +9,7 @@ Authors: Jujian Zhang, Johan Commelin
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.GradedAlgebra.HomogeneousIdeal
-import Mathbin.Topology.Category.TopCat.Basic
+import Mathbin.Topology.Category.Top.Basic
 import Mathbin.Topology.Sets.Opens
 
 /-!

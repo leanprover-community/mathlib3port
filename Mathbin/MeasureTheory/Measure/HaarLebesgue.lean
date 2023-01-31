@@ -55,8 +55,8 @@ open Ennreal Pointwise Topology Nnreal
 def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ
     where
   carrier := Icc 0 1
-  is_compact' := isCompact_icc
-  interior_nonempty' := by simp_rw [interior_icc, nonempty_Ioo, zero_lt_one]
+  is_compact' := isCompact_Icc
+  interior_nonempty' := by simp_rw [interior_Icc, nonempty_Ioo, zero_lt_one]
 #align topological_space.positive_compacts.Icc01 TopologicalSpace.PositiveCompacts.icc01
 
 universe u
@@ -65,9 +65,9 @@ universe u
 def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : PositiveCompacts (ι → ℝ)
     where
   carrier := pi univ fun i => Icc 0 1
-  is_compact' := isCompact_univ_pi fun i => isCompact_icc
+  is_compact' := isCompact_univ_pi fun i => isCompact_Icc
   interior_nonempty' := by
-    simp only [interior_pi_set, Set.toFinite, interior_icc, univ_pi_nonempty_iff, nonempty_Ioo,
+    simp only [interior_pi_set, Set.toFinite, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo,
       imp_true_iff, zero_lt_one]
 #align topological_space.positive_compacts.pi_Icc01 TopologicalSpace.PositiveCompacts.piIcc01
 
@@ -93,7 +93,7 @@ theorem add_haar_measure_eq_volume_pi (ι : Type _) [Fintype ι] :
   by
   convert (add_haar_measure_unique volume (pi_Icc01 ι)).symm
   simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, positive_compacts.coe_mk,
-    compacts.coe_mk, Finset.prod_const_one, Ennreal.ofReal_one, Real.volume_icc, one_smul, sub_zero]
+    compacts.coe_mk, Finset.prod_const_one, Ennreal.ofReal_one, Real.volume_Icc, one_smul, sub_zero]
 #align measure_theory.add_haar_measure_eq_volume_pi MeasureTheory.add_haar_measure_eq_volume_pi
 
 instance isAddHaarMeasureVolumePi (ι : Type _) [Fintype ι] :
@@ -538,7 +538,7 @@ theorem add_haar_closed_unit_ball_eq_add_haar_unit_ball : μ (closedBall (0 : E)
     exact Ennreal.tendsto_ofReal ((tendsto_id'.2 nhdsWithin_le_nhds).pow _)
   simp only [one_pow, one_mul, Ennreal.ofReal_one] at A
   refine' le_of_tendsto A _
-  refine' mem_nhdsWithin_iio_iff_exists_ioo_subset.2 ⟨(0 : ℝ), by simp, fun r hr => _⟩
+  refine' mem_nhdsWithin_Iio_iff_exists_Ioo_subset.2 ⟨(0 : ℝ), by simp, fun r hr => _⟩
   dsimp
   rw [← add_haar_closed_ball' μ (0 : E) hr.1.le]
   exact measure_mono (closed_ball_subset_ball hr.2)

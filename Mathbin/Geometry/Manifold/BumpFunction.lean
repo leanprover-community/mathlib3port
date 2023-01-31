@@ -156,12 +156,12 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
     rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
 #align smooth_bump_function.image_eq_inter_preimage_of_subset_support SmoothBumpFunction.image_eq_inter_preimage_of_subset_support
 
-theorem mem_icc : f x ∈ Icc (0 : ℝ) 1 :=
+theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 :=
   by
   have : f x = 0 ∨ f x = _ := indicator_eq_zero_or_self _ _ _
   cases this <;> rw [this]
   exacts[left_mem_Icc.2 zero_le_one, ⟨f.to_cont_diff_bump.nonneg, f.to_cont_diff_bump.le_one⟩]
-#align smooth_bump_function.mem_Icc SmoothBumpFunction.mem_icc
+#align smooth_bump_function.mem_Icc SmoothBumpFunction.mem_Icc
 
 theorem nonneg : 0 ≤ f x :=
   f.mem_Icc.1

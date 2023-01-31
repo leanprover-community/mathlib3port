@@ -24,9 +24,10 @@ namespace GeneralizedContinuedFraction
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n m : ℕ}
 
 /-- If a gcf terminated at position `n`, it also terminated at `m ≥ n`.-/
-theorem terminatedStable (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) : g.TerminatedAt m :=
-  g.s.terminatedStable n_le_m terminated_at_n
-#align generalized_continued_fraction.terminated_stable GeneralizedContinuedFraction.terminatedStable
+theorem terminated_stable (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) :
+    g.TerminatedAt m :=
+  g.s.terminated_stable n_le_m terminated_at_n
+#align generalized_continued_fraction.terminated_stable GeneralizedContinuedFraction.terminated_stable
 
 variable [DivisionRing K]
 
@@ -46,22 +47,23 @@ theorem continuantsAux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : 
   exact terminated_stable (Nat.le_add_right _ _) terminated_at_n
 #align generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_of_terminated
 
-theorem convergents'Aux_stable_step_of_terminated {s : Seq <| Pair K}
+theorem convergents'Aux_stable_step_of_terminated {s : SeqCat <| Pair K}
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s (n + 1) = convergents'Aux s n :=
   by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
-  case zero => simp only [convergents'_aux, terminated_at_n, Seq.head]
+  case zero => simp only [convergents'_aux, terminated_at_n, SeqCat.head]
   case succ =>
     cases' s_head_eq : s.head with gp_head
     case none => simp only [convergents'_aux, s_head_eq]
     case
       some =>
-      have : s.tail.terminated_at n := by simp only [Seq.TerminatedAt, s.nth_tail, terminated_at_n]
+      have : s.tail.terminated_at n := by
+        simp only [SeqCat.TerminatedAt, s.nth_tail, terminated_at_n]
       simp only [convergents'_aux, s_head_eq, IH this]
 #align generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'Aux_stable_step_of_terminated
 
-theorem convergents'Aux_stable_of_terminated {s : Seq <| Pair K} (n_le_m : n ≤ m)
+theorem convergents'Aux_stable_of_terminated {s : SeqCat <| Pair K} (n_le_m : n ≤ m)
     (terminated_at_n : s.TerminatedAt n) : convergents'Aux s m = convergents'Aux s n :=
   by
   induction' n_le_m with m n_le_m IH

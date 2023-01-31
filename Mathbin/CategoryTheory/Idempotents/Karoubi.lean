@@ -69,7 +69,7 @@ theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqT
   cases Q
   dsimp at h_X h_p
   subst h_X
-  simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, hEq_iff_eq, comp_id] using
+  simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using
     h_p
 #align category_theory.idempotents.karoubi.ext CategoryTheory.Idempotents.Karoubi.ext
 

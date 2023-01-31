@@ -481,7 +481,7 @@ theorem sigma_eq_iff_blocks_eq {c : Σn, Composition n} {c' : Σn, Composition n
   rcases c' with ⟨n', c'⟩
   have : n = n' := by rw [← c.blocks_sum, ← c'.blocks_sum, H]
   induction this
-  simp only [true_and_iff, eq_self_iff_true, hEq_iff_eq]
+  simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
   ext1
   exact H
 #align composition.sigma_eq_iff_blocks_eq Composition.sigma_eq_iff_blocks_eq

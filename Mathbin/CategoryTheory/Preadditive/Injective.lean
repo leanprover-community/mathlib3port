@@ -118,7 +118,7 @@ instance (X : Type u₁) [Nonempty X] : Injective X
         rw [mono (Classical.choose_spec h)]
       · exact False.elim (h ⟨y, rfl⟩)⟩
 
-instance TypeCat.enoughInjectives : EnoughInjectives (Type u₁)
+instance Type.enoughInjectives : EnoughInjectives (Type u₁)
     where presentation X :=
     Nonempty.intro
       { j := WithBot X
@@ -127,7 +127,7 @@ instance TypeCat.enoughInjectives : EnoughInjectives (Type u₁)
         Mono := by
           rw [mono_iff_injective]
           exact Option.some_injective X }
-#align category_theory.injective.Type.enough_injectives CategoryTheory.Injective.TypeCat.enoughInjectives
+#align category_theory.injective.Type.enough_injectives CategoryTheory.Injective.Type.enoughInjectives
 
 instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] : Injective (P ⨯ Q)
     where Factors X Y g f mono := by

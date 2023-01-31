@@ -9,7 +9,7 @@ Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 ! if you have ported upstream changes.
 -/
 import Mathbin.Combinatorics.Hall.Finite
-import Mathbin.Topology.Category.TopCat.Limits
+import Mathbin.Topology.Category.Top.Limits
 import Mathbin.Data.Rel
 
 /-!

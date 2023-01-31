@@ -259,10 +259,10 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
   by_contra' hlt
   obtain ⟨a, ⟨⟨la, au⟩, as⟩⟩ : ∃ a, (f.liminf u < a ∧ a < f.limsup u) ∧ a ∈ s :=
-    dense_iff_inter_open.1 hs (Set.Ioo (f.liminf u) (f.limsup u)) isOpen_ioo
+    dense_iff_inter_open.1 hs (Set.Ioo (f.liminf u) (f.limsup u)) isOpen_Ioo
       (Set.nonempty_Ioo.2 hlt)
   obtain ⟨b, ⟨⟨ab, bu⟩, bs⟩⟩ : ∃ b, (a < b ∧ b < f.limsup u) ∧ b ∈ s :=
-    dense_iff_inter_open.1 hs (Set.Ioo a (f.limsup u)) isOpen_ioo (Set.nonempty_Ioo.2 au)
+    dense_iff_inter_open.1 hs (Set.Ioo a (f.limsup u)) isOpen_Ioo (Set.nonempty_Ioo.2 au)
   have A : ∃ᶠ n in f, u n < a := frequently_lt_of_liminf_lt (is_bounded.is_cobounded_ge h) la
   have B : ∃ᶠ n in f, b < u n := frequently_lt_of_lt_limsup (is_bounded.is_cobounded_le h') bu
   exact H a as b bs ab ⟨A, B⟩
@@ -318,7 +318,7 @@ theorem Antitone.map_limsup_of_continuousAt {F : Filter R} [NeBot F] {f : R → 
       exact B.mono fun x hx => f_decr hx
     by_contra' H
     obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.Ioc l F.Limsup ⊆ { x : R | f x < F.liminf f }
-    exact exists_ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
+    exact exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
     obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.Limsup).Nonempty :=
       by
       contrapose! h'
@@ -437,7 +437,7 @@ theorem supᵢ_eq_of_forall_le_of_tendsto {x : R} {as : ι → R} (le_x : ∀ i,
   @infᵢ_eq_of_forall_le_of_tendsto ι (OrderDual R) _ _ _ x as le_x F _ as_lim
 #align supr_eq_of_forall_le_of_tendsto supᵢ_eq_of_forall_le_of_tendsto
 
-theorem unionᵢ_ici_eq_ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
+theorem unionᵢ_Ici_eq_Ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (x_lt : ∀ i, x < as i)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     (⋃ i : ι, Ici (as i)) = Ioi x :=
   by
@@ -447,13 +447,13 @@ theorem unionᵢ_ici_eq_ioi_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → 
     simpa only [hi, lt_self_iff_false] using x_lt i
   rw [← infᵢ_eq_of_forall_le_of_tendsto (fun i => (x_lt i).le) as_lim] at *
   exact unionᵢ_Ici_eq_Ioi_infᵢ obs
-#align Union_Ici_eq_Ioi_of_lt_of_tendsto unionᵢ_ici_eq_ioi_of_lt_of_tendsto
+#align Union_Ici_eq_Ioi_of_lt_of_tendsto unionᵢ_Ici_eq_Ioi_of_lt_of_tendsto
 
-theorem unionᵢ_iic_eq_iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
+theorem unionᵢ_Iic_eq_Iio_of_lt_of_tendsto {ι : Type _} (x : R) {as : ι → R} (lt_x : ∀ i, as i < x)
     {F : Filter ι} [Filter.NeBot F] (as_lim : Filter.Tendsto as F (𝓝 x)) :
     (⋃ i : ι, Iic (as i)) = Iio x :=
-  @unionᵢ_ici_eq_ioi_of_lt_of_tendsto (OrderDual R) _ _ _ ι x as lt_x F _ as_lim
-#align Union_Iic_eq_Iio_of_lt_of_tendsto unionᵢ_iic_eq_iio_of_lt_of_tendsto
+  @unionᵢ_Ici_eq_Ioi_of_lt_of_tendsto (OrderDual R) _ _ _ ι x as lt_x F _ as_lim
+#align Union_Iic_eq_Iio_of_lt_of_tendsto unionᵢ_Iic_eq_Iio_of_lt_of_tendsto
 
 end InfiAndSupr
 

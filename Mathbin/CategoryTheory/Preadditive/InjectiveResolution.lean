@@ -58,21 +58,21 @@ you will not typically need to use this bundled object, and will instead use
   and when the category is `abelian` we will show `ι` is a quasi-iso).
 -/
 @[nolint has_nonempty_instance]
-structure InjectiveResolutionCat (Z : C) where
+structure InjectiveResolution (Z : C) where
   cocomplex : CochainComplex C ℕ
   ι : (CochainComplex.single₀ C).obj Z ⟶ cocomplex
   Injective : ∀ n, Injective (cocomplex.x n) := by infer_instance
   exact₀ : Exact (ι.f 0) (cocomplex.d 0 1) := by infer_instance
   exact : ∀ n, Exact (cocomplex.d n (n + 1)) (cocomplex.d (n + 1) (n + 2)) := by infer_instance
   Mono : Mono (ι.f 0) := by infer_instance
-#align category_theory.InjectiveResolution CategoryTheory.InjectiveResolutionCat
+#align category_theory.InjectiveResolution CategoryTheory.InjectiveResolution
 
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
-  out : Nonempty (InjectiveResolutionCat Z)
+  out : Nonempty (InjectiveResolution Z)
 #align category_theory.has_injective_resolution CategoryTheory.HasInjectiveResolution
 
 section
@@ -89,32 +89,32 @@ attribute [instance] has_injective_resolutions.out
 
 end
 
-namespace InjectiveResolutionCat
+namespace InjectiveResolution
 
 @[simp]
-theorem ι_f_succ {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : I.ι.f (n + 1) = 0 :=
+theorem ι_f_succ {Z : C} (I : InjectiveResolution Z) (n : ℕ) : I.ι.f (n + 1) = 0 :=
   by
   apply zero_of_source_iso_zero
   dsimp; rfl
-#align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolutionCat.ι_f_succ
+#align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolution.ι_f_succ
 
 @[simp]
-theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolutionCat Z) :
+theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolution Z) :
     I.ι.f 0 ≫ I.cocomplex.d 0 1 = 0 :=
   I.exact₀.w
-#align category_theory.InjectiveResolution.ι_f_zero_comp_complex_d CategoryTheory.InjectiveResolutionCat.ι_f_zero_comp_complex_d
+#align category_theory.InjectiveResolution.ι_f_zero_comp_complex_d CategoryTheory.InjectiveResolution.ι_f_zero_comp_complex_d
 
 @[simp]
-theorem complex_d_comp {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) :
+theorem complex_d_comp {Z : C} (I : InjectiveResolution Z) (n : ℕ) :
     I.cocomplex.d n (n + 1) ≫ I.cocomplex.d (n + 1) (n + 2) = 0 :=
   (I.exact _).w
-#align category_theory.InjectiveResolution.complex_d_comp CategoryTheory.InjectiveResolutionCat.complex_d_comp
+#align category_theory.InjectiveResolution.complex_d_comp CategoryTheory.InjectiveResolution.complex_d_comp
 
-instance {Z : C} (I : InjectiveResolutionCat Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by
+instance {Z : C} (I : InjectiveResolution Z) (n : ℕ) : CategoryTheory.Mono (I.ι.f n) := by
   cases n <;> infer_instance
 
 /-- An injective object admits a trivial injective resolution: itself in degree 0. -/
-def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolutionCat Z
+def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolution Z
     where
   cocomplex := (CochainComplex.single₀ C).obj Z
   ι := 𝟙 ((CochainComplex.single₀ C).obj Z)
@@ -131,9 +131,9 @@ def self (Z : C) [CategoryTheory.Injective Z] : InjectiveResolutionCat Z
   Mono := by
     dsimp
     infer_instance
-#align category_theory.InjectiveResolution.self CategoryTheory.InjectiveResolutionCat.self
+#align category_theory.InjectiveResolution.self CategoryTheory.InjectiveResolution.self
 
-end InjectiveResolutionCat
+end InjectiveResolution
 
 end CategoryTheory
 

@@ -884,15 +884,15 @@ inductive Γ'
 mode and the output value in `Λ'.ret` mode, while `stack` is used to keep all the data for the
 continuations. `rev` is used to store reversed lists when transferring values between stacks, and
 `aux` is only used once in `cons₁`. See the section documentation. -/
-inductive K'Cat
+inductive K'
   | main
   | rev
   | aux
   | stack
   deriving DecidableEq, Inhabited
-#align turing.partrec_to_TM2.K' Turing.PartrecToTM2.K'Cat
+#align turing.partrec_to_TM2.K' Turing.PartrecToTM2.K'
 
-open K'Cat
+open K'
 
 /-- Continuations as in `to_partrec.cont` but with the data removed. This is done because we want
 the set of all continuations in the program to be finite (so that it can ultimately be encoded into
@@ -913,10 +913,10 @@ inductive Cont'
 accessible states, we are careful to be non-recursive (although loops are okay). See the section
 documentation for a description of all the programs. -/
 inductive Λ'
-  | move (p : Γ' → Bool) (k₁ k₂ : K'Cat) (q : Λ')
-  | clear (p : Γ' → Bool) (k : K'Cat) (q : Λ')
+  | move (p : Γ' → Bool) (k₁ k₂ : K') (q : Λ')
+  | clear (p : Γ' → Bool) (k : K') (q : Λ')
   | copy (q : Λ')
-  | push (k : K'Cat) (s : Option Γ' → Option Γ') (q : Λ')
+  | push (k : K') (s : Option Γ' → Option Γ') (q : Λ')
   | read (f : Option Γ' → Λ')
   | succ (q : Λ')
   | pred (q₁ q₂ : Λ')
@@ -933,15 +933,15 @@ instance : DecidableEq Λ' := fun a b =>
 
 /-- The type of TM2 statements used by this machine. -/
 def Stmt' :=
-  TM2Cat.Stmt (fun _ : K'Cat => Γ') Λ' (Option Γ')deriving Inhabited
+  TM2.Stmt (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
 #align turing.partrec_to_TM2.stmt' Turing.PartrecToTM2.Stmt'
 
 /-- The type of TM2 configurations used by this machine. -/
 def Cfg' :=
-  TM2Cat.Cfg (fun _ : K'Cat => Γ') Λ' (Option Γ')deriving Inhabited
+  TM2.Cfg (fun _ : K' => Γ') Λ' (Option Γ')deriving Inhabited
 #align turing.partrec_to_TM2.cfg' Turing.PartrecToTM2.Cfg'
 
-open TM2Cat.Stmt
+open TM2.Stmt
 
 /-- A predicate that detects the end of a natural number, either `Γ'.cons` or `Γ'.Cons` (or
 implicitly the end of the list), for use in predicate-taking functions like `move` and `clear`. -/
@@ -954,19 +954,19 @@ def natEnd : Γ' → Bool
 
 /-- Pop a value from the stack and place the result in local store. -/
 @[simp]
-def pop' (k : K'Cat) : Stmt' → Stmt' :=
+def pop' (k : K') : Stmt' → Stmt' :=
   pop k fun x v => v
 #align turing.partrec_to_TM2.pop' Turing.PartrecToTM2.pop'
 
 /-- Peek a value from the stack and place the result in local store. -/
 @[simp]
-def peek' (k : K'Cat) : Stmt' → Stmt' :=
+def peek' (k : K') : Stmt' → Stmt' :=
   peek k fun x v => v
 #align turing.partrec_to_TM2.peek' Turing.PartrecToTM2.peek'
 
 /-- Push the value in the local store to the given stack. -/
 @[simp]
-def push' (k : K'Cat) : Stmt' → Stmt' :=
+def push' (k : K') : Stmt' → Stmt' :=
   push k fun x => x.iget
 #align turing.partrec_to_TM2.push' Turing.PartrecToTM2.push'
 
@@ -988,7 +988,7 @@ def move₂ (p k₁ k₂ q) :=
 
 /-- Assuming `tr_list v` is on the front of stack `k`, remove it, and push `v.head` onto `main`.
 See the section documentation. -/
-def head (k : K'Cat) (q : Λ') : Λ' :=
+def head (k : K') (q : Λ') : Λ' :=
   Λ'.move natEnd k rev <|
     (Λ'.push rev fun _ => some Γ'.cons) <|
       Λ'.read fun s =>
@@ -1170,36 +1170,36 @@ represent the stack data as four lists rather than as a function `K' → list Γ
 rewrites easier. The theorems `K'.elim_update_main` et. al. show how such a function is updated
 after an `update` to one of the components. -/
 @[simp]
-def K'Cat.elim (a b c d : List Γ') : K'Cat → List Γ'
+def K'.elim (a b c d : List Γ') : K' → List Γ'
   | K'.main => a
   | K'.rev => b
   | K'.aux => c
   | K'.stack => d
-#align turing.partrec_to_TM2.K'.elim Turing.PartrecToTM2.K'Cat.elim
+#align turing.partrec_to_TM2.K'.elim Turing.PartrecToTM2.K'.elim
 
 @[simp]
-theorem K'Cat.elim_update_main {a b c d a'} :
-    update (K'Cat.elim a b c d) main a' = K'Cat.elim a' b c d := by funext x <;> cases x <;> rfl
-#align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'Cat.elim_update_main
+theorem K'.elim_update_main {a b c d a'} : update (K'.elim a b c d) main a' = K'.elim a' b c d := by
+  funext x <;> cases x <;> rfl
+#align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'.elim_update_main
 
 @[simp]
-theorem K'Cat.elim_update_rev {a b c d b'} :
-    update (K'Cat.elim a b c d) rev b' = K'Cat.elim a b' c d := by funext x <;> cases x <;> rfl
-#align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'Cat.elim_update_rev
+theorem K'.elim_update_rev {a b c d b'} : update (K'.elim a b c d) rev b' = K'.elim a b' c d := by
+  funext x <;> cases x <;> rfl
+#align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'.elim_update_rev
 
 @[simp]
-theorem K'Cat.elim_update_aux {a b c d c'} :
-    update (K'Cat.elim a b c d) aux c' = K'Cat.elim a b c' d := by funext x <;> cases x <;> rfl
-#align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'Cat.elim_update_aux
+theorem K'.elim_update_aux {a b c d c'} : update (K'.elim a b c d) aux c' = K'.elim a b c' d := by
+  funext x <;> cases x <;> rfl
+#align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'.elim_update_aux
 
 @[simp]
-theorem K'Cat.elim_update_stack {a b c d d'} :
-    update (K'Cat.elim a b c d) stack d' = K'Cat.elim a b c d' := by funext x <;> cases x <;> rfl
-#align turing.partrec_to_TM2.K'.elim_update_stack Turing.PartrecToTM2.K'Cat.elim_update_stack
+theorem K'.elim_update_stack {a b c d d'} : update (K'.elim a b c d) stack d' = K'.elim a b c d' :=
+  by funext x <;> cases x <;> rfl
+#align turing.partrec_to_TM2.K'.elim_update_stack Turing.PartrecToTM2.K'.elim_update_stack
 
 /-- The halting state corresponding to a `list ℕ` output value. -/
 def halt (v : List ℕ) : Cfg' :=
-  ⟨none, none, K'Cat.elim (trList v) [] [] []⟩
+  ⟨none, none, K'.elim (trList v) [] [] []⟩
 #align turing.partrec_to_TM2.halt Turing.PartrecToTM2.halt
 
 /-- The `cfg` states map to `cfg'` states almost one to one, except that in normal operation the
@@ -1208,7 +1208,7 @@ clear it in the halt state so that there is exactly one configuration correspond
 -/
 def TrCfg : Cfg → Cfg' → Prop
   | cfg.ret k v, c' =>
-    ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'Cat.elim (trList v) [] [] (trContStack k)⟩
+    ∃ s, c' = ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩
   | cfg.halt v, c' => c' = halt v
 #align turing.partrec_to_TM2.tr_cfg Turing.PartrecToTM2.TrCfg
 
@@ -1254,9 +1254,9 @@ theorem splitAtPred_false {α} (L : List α) : splitAtPred (fun _ => false) L = 
 #align turing.partrec_to_TM2.split_at_pred_ff Turing.PartrecToTM2.splitAtPred_false
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ : k₁ ≠ k₂)
+theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ k₂)
     (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
-    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.move p k₁ k₂ q), s, S⟩
+    Reaches₁ (TM2.step tr) ⟨some (Λ'.move p k₁ k₂ q), s, S⟩
       ⟨some q, o, update (update S k₁ L₂) k₂ (L₁.reverseCore (S k₂))⟩ :=
   by
   induction' L₁ with a L₁ IH generalizing S s
@@ -1291,15 +1291,15 @@ theorem move_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ : k
     simp [Function.update_comm h₁.symm]
 #align turing.partrec_to_TM2.move_ok Turing.PartrecToTM2.move_ok
 
-theorem unrev_ok {q s} {S : K'Cat → List Γ'} :
-    Reaches₁ (TM2Cat.step tr) ⟨some (unrev q), s, S⟩
+theorem unrev_ok {q s} {S : K' → List Γ'} :
+    Reaches₁ (TM2.step tr) ⟨some (unrev q), s, S⟩
       ⟨some q, none, update (update S rev []) main (List.reverseAux (S rev) (S main))⟩ :=
   move_ok (by decide) <| splitAtPred_false _
 #align turing.partrec_to_TM2.unrev_ok Turing.PartrecToTM2.unrev_ok
 
-theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ : k₁ ≠ rev ∧ k₂ ≠ rev ∧ k₁ ≠ k₂)
+theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K' → List Γ'} (h₁ : k₁ ≠ rev ∧ k₂ ≠ rev ∧ k₁ ≠ k₂)
     (h₂ : S rev = []) (e : splitAtPred p (S k₁) = (L₁, o, L₂)) :
-    Reaches₁ (TM2Cat.step tr) ⟨some (move₂ p k₁ k₂ q), s, S⟩
+    Reaches₁ (TM2.step tr) ⟨some (move₂ p k₁ k₂ q), s, S⟩
       ⟨some q, none, update (update S k₁ (o.elim id List.cons L₂)) k₂ (L₁ ++ S k₂)⟩ :=
   by
   refine' (move_ok h₁.1 e).trans (trans_gen.head rfl _)
@@ -1318,8 +1318,8 @@ theorem move₂_ok {p k₁ k₂ q s L₁ o L₂} {S : K'Cat → List Γ'} (h₁ 
       Function.update_noteq h₁.2.1, Function.update_same, List.reverse_reverse]
 #align turing.partrec_to_TM2.move₂_ok Turing.PartrecToTM2.move₂_ok
 
-theorem clear_ok {p k q s L₁ o L₂} {S : K'Cat → List Γ'} (e : splitAtPred p (S k) = (L₁, o, L₂)) :
-    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.clear p k q), s, S⟩ ⟨some q, o, update S k L₂⟩ :=
+theorem clear_ok {p k q s L₁ o L₂} {S : K' → List Γ'} (e : splitAtPred p (S k) = (L₁, o, L₂)) :
+    Reaches₁ (TM2.step tr) ⟨some (Λ'.clear p k q), s, S⟩ ⟨some q, o, update S k L₂⟩ :=
   by
   induction' L₁ with a L₁ IH generalizing S s
   · refine' trans_gen.head' rfl _
@@ -1348,8 +1348,8 @@ theorem clear_ok {p k q s L₁ o L₂} {S : K'Cat → List Γ'} (e : splitAtPred
 #align turing.partrec_to_TM2.clear_ok Turing.PartrecToTM2.clear_ok
 
 theorem copy_ok (q s a b c d) :
-    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.copy q), s, K'Cat.elim a b c d⟩
-      ⟨some q, none, K'Cat.elim (List.reverseAux b a) [] c (List.reverseAux b d)⟩ :=
+    Reaches₁ (TM2.step tr) ⟨some (Λ'.copy q), s, K'.elim a b c d⟩
+      ⟨some q, none, K'.elim (List.reverseAux b a) [] c (List.reverseAux b d)⟩ :=
   by
   induction' b with x b IH generalizing a d s
   · refine' trans_gen.single _
@@ -1386,8 +1386,8 @@ theorem trList_ne_cons : ∀ (l), ∀ x ∈ trList l, x ≠ Γ'.Cons
 #align turing.partrec_to_TM2.tr_list_ne_Cons Turing.PartrecToTM2.trList_ne_cons
 
 theorem head_main_ok {q s L} {c d : List Γ'} :
-    Reaches₁ (TM2Cat.step tr) ⟨some (head main q), s, K'Cat.elim (trList L) [] c d⟩
-      ⟨some q, none, K'Cat.elim (trList [L.head]) [] c d⟩ :=
+    Reaches₁ (TM2.step tr) ⟨some (head main q), s, K'.elim (trList L) [] c d⟩
+      ⟨some q, none, K'.elim (trList [L.head]) [] c d⟩ :=
   by
   let o : Option Γ' := List.casesOn L none fun _ _ => some Γ'.cons
   refine'
@@ -1406,9 +1406,9 @@ theorem head_main_ok {q s L} {c d : List Γ'} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem head_stack_ok {q s L₁ L₂ L₃} :
-    Reaches₁ (TM2Cat.step tr)
-      ⟨some (head stack q), s, K'Cat.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons::L₃)⟩
-      ⟨some q, none, K'Cat.elim (trList (L₂.head::L₁)) [] [] L₃⟩ :=
+    Reaches₁ (TM2.step tr)
+      ⟨some (head stack q), s, K'.elim (trList L₁) [] [] (trList L₂ ++ Γ'.Cons::L₃)⟩
+      ⟨some q, none, K'.elim (trList (L₂.head::L₁)) [] [] L₃⟩ :=
   by
   cases' L₂ with a L₂
   · refine'
@@ -1439,8 +1439,8 @@ theorem head_stack_ok {q s L₁ L₂ L₃} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem succ_ok {q s n} {c d : List Γ'} :
-    Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.succ q), s, K'Cat.elim (trList [n]) [] c d⟩
-      ⟨some q, none, K'Cat.elim (trList [n.succ]) [] c d⟩ :=
+    Reaches₁ (TM2.step tr) ⟨some (Λ'.succ q), s, K'.elim (trList [n]) [] c d⟩
+      ⟨some q, none, K'.elim (trList [n.succ]) [] c d⟩ :=
   by
   simp [tr_nat, Num.add_one]
   cases' (n : Num) with a
@@ -1489,9 +1489,9 @@ theorem succ_ok {q s n} {c d : List Γ'} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
     ∃ s',
-      Reaches₁ (TM2Cat.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'Cat.elim (trList v) [] c d⟩
-        (v.head.elim ⟨some q₁, s', K'Cat.elim (trList v.tail) [] c d⟩ fun n _ =>
-          ⟨some q₂, s', K'Cat.elim (trList (n::v.tail)) [] c d⟩) :=
+      Reaches₁ (TM2.step tr) ⟨some (Λ'.pred q₁ q₂), s, K'.elim (trList v) [] c d⟩
+        (v.head.elim ⟨some q₁, s', K'.elim (trList v.tail) [] c d⟩ fun n _ =>
+          ⟨some q₂, s', K'.elim (trList (n::v.tail)) [] c d⟩) :=
   by
   rcases v with (_ | ⟨_ | n, v⟩)
   · refine' ⟨none, trans_gen.single _⟩
@@ -1537,8 +1537,8 @@ theorem pred_ok (q₁ q₂ s v) (c d : List Γ') :
 theorem trNormal_respects (c k v s) :
     ∃ b₂,
       TrCfg (stepNormal c k v) b₂ ∧
-        Reaches₁ (TM2Cat.step tr)
-          ⟨some (trNormal c (trCont k)), s, K'Cat.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
+        Reaches₁ (TM2.step tr)
+          ⟨some (trNormal c (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
   by
   induction c generalizing k v s
   case zero' => refine' ⟨_, ⟨s, rfl⟩, trans_gen.single _⟩; simp
@@ -1573,8 +1573,8 @@ theorem trNormal_respects (c k v s) :
 theorem tr_ret_respects (k v s) :
     ∃ b₂,
       TrCfg (stepRet k v) b₂ ∧
-        Reaches₁ (TM2Cat.step tr)
-          ⟨some (Λ'.ret (trCont k)), s, K'Cat.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
+        Reaches₁ (TM2.step tr)
+          ⟨some (Λ'.ret (trCont k)), s, K'.elim (trList v) [] [] (trContStack k)⟩ b₂ :=
   by
   induction k generalizing v s
   case halt => exact ⟨_, rfl, trans_gen.single rfl⟩
@@ -1626,22 +1626,22 @@ theorem tr_ret_respects (k v s) :
       · exact ⟨rfl, this.2⟩
 #align turing.partrec_to_TM2.tr_ret_respects Turing.PartrecToTM2.tr_ret_respects
 
-theorem tr_respects : Respects step (TM2Cat.step tr) TrCfg
+theorem tr_respects : Respects step (TM2.step tr) TrCfg
   | cfg.ret k v, _, ⟨s, rfl⟩ => tr_ret_respects _ _ _
   | cfg.halt v, _, rfl => rfl
 #align turing.partrec_to_TM2.tr_respects Turing.PartrecToTM2.tr_respects
 
 /-- The initial state, evaluating function `c` on input `v`. -/
 def init (c : Code) (v : List ℕ) : Cfg' :=
-  ⟨some (trNormal c Cont'.halt), none, K'Cat.elim (trList v) [] [] []⟩
+  ⟨some (trNormal c Cont'.halt), none, K'.elim (trList v) [] [] []⟩
 #align turing.partrec_to_TM2.init Turing.PartrecToTM2.init
 
 theorem tr_init (c v) :
-    ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2Cat.step tr) (init c v) b :=
+    ∃ b, TrCfg (stepNormal c Cont.halt v) b ∧ Reaches₁ (TM2.step tr) (init c v) b :=
   trNormal_respects _ _ _ _
 #align turing.partrec_to_TM2.tr_init Turing.PartrecToTM2.tr_init
 
-theorem tr_eval (c v) : eval (TM2Cat.step tr) (init c v) = halt <$> Code.eval c v :=
+theorem tr_eval (c v) : eval (TM2.step tr) (init c v) = halt <$> Code.eval c v :=
   by
   obtain ⟨i, h₁, h₂⟩ := tr_init c v
   refine' Part.ext fun x => _
@@ -1853,15 +1853,14 @@ currently proving a property about. The predicate asserts that every state in `K
 under forward simulation, i.e. stepping forward through evaluation starting from any state in `K`
 stays entirely within `S`. -/
 def Supports (K S : Finset Λ') :=
-  ∀ q ∈ K, TM2Cat.SupportsStmt S (tr q)
+  ∀ q ∈ K, TM2.SupportsStmt S (tr q)
 #align turing.partrec_to_TM2.supports Turing.PartrecToTM2.Supports
 
 theorem supports_insert {K S q} :
-    Supports (insert q K) S ↔ TM2Cat.SupportsStmt S (tr q) ∧ Supports K S := by simp [supports]
+    Supports (insert q K) S ↔ TM2.SupportsStmt S (tr q) ∧ Supports K S := by simp [supports]
 #align turing.partrec_to_TM2.supports_insert Turing.PartrecToTM2.supports_insert
 
-theorem supports_singleton {S q} : Supports {q} S ↔ TM2Cat.SupportsStmt S (tr q) := by
-  simp [supports]
+theorem supports_singleton {S q} : Supports {q} S ↔ TM2.SupportsStmt S (tr q) := by simp [supports]
 #align turing.partrec_to_TM2.supports_singleton Turing.PartrecToTM2.supports_singleton
 
 theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K₁ S ∧ Supports K₂ S := by
@@ -1877,7 +1876,7 @@ theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S
   dsimp only <;> split_ifs <;> exact H
 #align turing.partrec_to_TM2.head_supports Turing.PartrecToTM2.head_supports
 
-theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2Cat.SupportsStmt S (tr (Λ'.ret k)) :=
+theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) :=
   by
   have W := fun {q} => tr_stmts₁_self q
   cases k
@@ -2019,7 +2018,7 @@ Turing machine. Starting from the initial state `tr_normal c k`, forward simulat
 states in `code_supp c k`, so this is a finite state machine. Even though the underlying type of
 state labels `Λ'` is infinite, for a given partial recursive function `c` and continuation `k`,
 only finitely many states are accessed, corresponding roughly to subterms of `c`. -/
-theorem tr_supports (c k) : @TM2Cat.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
+theorem tr_supports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
   ⟨codeSupp_self _ _ (trStmts₁_self _), fun l' => codeSupp_supports (Finset.Subset.refl _) _⟩
 #align turing.partrec_to_TM2.tr_supports Turing.PartrecToTM2.tr_supports
 

@@ -12,8 +12,8 @@ import Mathbin.Algebra.Homology.Exact
 import Mathbin.CategoryTheory.Types
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Preadditive.Yoneda
-import Mathbin.Algebra.Category.GroupCat.EpiMono
-import Mathbin.Algebra.Category.ModuleCat.EpiMono
+import Mathbin.Algebra.Category.Group.EpiMono
+import Mathbin.Algebra.Category.Module.EpiMono
 
 /-!
 # Projective objects and categories with enough projectives
@@ -124,11 +124,11 @@ instance (X : Type u) : Projective X
       ext x
       exact ((epi_iff_surjective _).mp epi (f x)).some_spec⟩
 
-instance TypeCat.enoughProjectives : EnoughProjectives (Type u)
+instance Type.enoughProjectives : EnoughProjectives (Type u)
     where presentation X :=
     ⟨{  P := X
         f := 𝟙 X }⟩
-#align category_theory.projective.Type.enough_projectives CategoryTheory.Projective.TypeCat.enoughProjectives
+#align category_theory.projective.Type.enough_projectives CategoryTheory.Projective.Type.enoughProjectives
 
 instance {P Q : C} [HasBinaryCoproduct P Q] [Projective P] [Projective Q] : Projective (P ⨿ Q)
     where Factors E X' f e epi :=

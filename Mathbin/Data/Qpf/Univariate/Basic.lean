@@ -183,52 +183,51 @@ theorem recF_eq' {α : Type _} (g : F α → α) (a : q.p.A) (f : q.p.B a → q.
 #align qpf.recF_eq' Qpf.recF_eq'
 
 /-- two trees are equivalent if their F-abstractions are -/
-inductive WequivCat : q.p.W → q.p.W → Prop
+inductive Wequiv : q.p.W → q.p.W → Prop
   | ind (a : q.p.A) (f f' : q.p.B a → q.p.W) : (∀ x, Wequiv (f x) (f' x)) → Wequiv ⟨a, f⟩ ⟨a, f'⟩
   |
   abs (a : q.p.A) (f : q.p.B a → q.p.W) (a' : q.p.A) (f' : q.p.B a' → q.p.W) :
     abs ⟨a, f⟩ = abs ⟨a', f'⟩ → Wequiv ⟨a, f⟩ ⟨a', f'⟩
   | trans (u v w : q.p.W) : Wequiv u v → Wequiv v w → Wequiv u w
-#align qpf.Wequiv Qpf.WequivCat
+#align qpf.Wequiv Qpf.Wequiv
 
 /-- recF is insensitive to the representation -/
-theorem recF_eq_of_wequivCat {α : Type u} (u : F α → α) (x y : q.p.W) :
-    WequivCat x y → recF u x = recF u y :=
-  by
+theorem recF_eq_of_wequiv {α : Type u} (u : F α → α) (x y : q.p.W) :
+    Wequiv x y → recF u x = recF u y := by
   cases' x with a f; cases' y with b g
   intro h; induction h
   case ind a f f' h ih => simp only [recF_eq', PFunctor.map_eq, Function.comp, ih]
   case abs a f a' f' h => simp only [recF_eq', abs_map, h]
   case trans x y z e₁ e₂ ih₁ ih₂ => exact Eq.trans ih₁ ih₂
-#align qpf.recF_eq_of_Wequiv Qpf.recF_eq_of_wequivCat
+#align qpf.recF_eq_of_Wequiv Qpf.recF_eq_of_wequiv
 
-theorem WequivCat.abs' (x y : q.p.W) (h : abs x.dest = abs y.dest) : WequivCat x y :=
+theorem Wequiv.abs' (x y : q.p.W) (h : abs x.dest = abs y.dest) : Wequiv x y :=
   by
   cases x
   cases y
   apply Wequiv.abs
   apply h
-#align qpf.Wequiv.abs' Qpf.WequivCat.abs'
+#align qpf.Wequiv.abs' Qpf.Wequiv.abs'
 
-theorem WequivCat.refl (x : q.p.W) : WequivCat x x := by
+theorem Wequiv.refl (x : q.p.W) : Wequiv x x := by
   cases' x with a f <;> exact Wequiv.abs a f a f rfl
-#align qpf.Wequiv.refl Qpf.WequivCat.refl
+#align qpf.Wequiv.refl Qpf.Wequiv.refl
 
-theorem WequivCat.symm (x y : q.p.W) : WequivCat x y → WequivCat y x :=
+theorem Wequiv.symm (x y : q.p.W) : Wequiv x y → Wequiv y x :=
   by
   cases' x with a f; cases' y with b g
   intro h; induction h
   case ind a f f' h ih => exact Wequiv.ind _ _ _ ih
   case abs a f a' f' h => exact Wequiv.abs _ _ _ _ h.symm
-  case trans x y z e₁ e₂ ih₁ ih₂ => exact Qpf.WequivCat.trans _ _ _ ih₂ ih₁
-#align qpf.Wequiv.symm Qpf.WequivCat.symm
+  case trans x y z e₁ e₂ ih₁ ih₂ => exact Qpf.Wequiv.trans _ _ _ ih₂ ih₁
+#align qpf.Wequiv.symm Qpf.Wequiv.symm
 
 /-- maps every element of the W type to a canonical representative -/
 def wrepr : q.p.W → q.p.W :=
   recF (PFunctor.W.mk ∘ repr)
 #align qpf.Wrepr Qpf.wrepr
 
-theorem wrepr_equiv (x : q.p.W) : WequivCat (wrepr x) x :=
+theorem wrepr_equiv (x : q.p.W) : Wequiv (wrepr x) x :=
   by
   induction' x with a f ih
   apply Wequiv.trans
@@ -243,7 +242,7 @@ theorem wrepr_equiv (x : q.p.W) : WequivCat (wrepr x) x :=
 /-- Define the fixed point as the quotient of trees under the equivalence relation `Wequiv`.
 -/
 def wSetoid : Setoid q.p.W :=
-  ⟨WequivCat, @WequivCat.refl _ _ _, @WequivCat.symm _ _ _, @WequivCat.trans _ _ _⟩
+  ⟨Wequiv, @Wequiv.refl _ _ _, @Wequiv.symm _ _ _, @Wequiv.trans _ _ _⟩
 #align qpf.W_setoid Qpf.wSetoid
 
 attribute [local instance] W_setoid
@@ -256,12 +255,12 @@ def Fix (F : Type u → Type u) [Functor F] [q : Qpf F] :=
 
 /-- recursor of a type defined by a qpf -/
 def Fix.rec {α : Type _} (g : F α → α) : Fix F → α :=
-  Quot.lift (recF g) (recF_eq_of_wequivCat g)
+  Quot.lift (recF g) (recF_eq_of_wequiv g)
 #align qpf.fix.rec Qpf.Fix.rec
 
 /-- access the underlying W-type of a fixpoint data type -/
 def fixToW : Fix F → q.p.W :=
-  Quotient.lift wrepr (recF_eq_of_wequivCat fun x => @PFunctor.W.mk q.p (repr x))
+  Quotient.lift wrepr (recF_eq_of_wequiv fun x => @PFunctor.W.mk q.p (repr x))
 #align qpf.fix_to_W Qpf.fixToW
 
 /-- constructor of a type defined by a qpf -/
@@ -391,12 +390,12 @@ def IsPrecongr (r : q.p.M → q.p.M → Prop) : Prop :=
 #align qpf.is_precongr Qpf.IsPrecongr
 
 /-- The maximal congruence on q.P.M -/
-def McongrCat : q.p.M → q.p.M → Prop := fun x y => ∃ r, IsPrecongr r ∧ r x y
-#align qpf.Mcongr Qpf.McongrCat
+def Mcongr : q.p.M → q.p.M → Prop := fun x y => ∃ r, IsPrecongr r ∧ r x y
+#align qpf.Mcongr Qpf.Mcongr
 
 /-- coinductive type defined as the final coalgebra of a qpf -/
 def Cofix (F : Type u → Type u) [Functor F] [q : Qpf F] :=
-  Quot (@McongrCat F _ q)
+  Quot (@Mcongr F _ q)
 #align qpf.cofix Qpf.Cofix
 
 instance [Inhabited q.p.A] : Inhabited (Cofix F) :=
@@ -409,7 +408,7 @@ def Cofix.corec {α : Type _} (g : α → F α) (x : α) : Cofix F :=
 
 /-- destructor for type defined by `cofix` -/
 def Cofix.dest : Cofix F → F (Cofix F) :=
-  Quot.lift (fun x => Quot.mk McongrCat <$> abs (PFunctor.M.dest x))
+  Quot.lift (fun x => Quot.mk Mcongr <$> abs (PFunctor.M.dest x))
     (by
       rintro x y ⟨r, pr, rxy⟩
       dsimp

@@ -61,7 +61,7 @@ structure FinTm2 where
   -- type of states of the machine
   [σFin : Fintype σ]
   [Γk₀Fin : Fintype (Γ k₀)]
-  m : Λ → Turing.TM2Cat.Stmt Γ Λ σ
+  m : Λ → Turing.TM2.Stmt Γ Λ σ
 #align turing.fin_tm2 Turing.FinTm2
 
 -- the program itself, i.e. one function for every function label
@@ -79,22 +79,22 @@ instance : Inhabited tm.σ :=
 
 /-- The type of statements (functions) corresponding to this TM. -/
 def Stmt : Type :=
-  Turing.TM2Cat.Stmt tm.Γ tm.Λ tm.σ deriving Inhabited
+  Turing.TM2.Stmt tm.Γ tm.Λ tm.σ deriving Inhabited
 #align turing.fin_tm2.stmt Turing.FinTm2.Stmt
 
 /-- The type of configurations (functions) corresponding to this TM. -/
 def Cfg : Type :=
-  Turing.TM2Cat.Cfg tm.Γ tm.Λ tm.σ
+  Turing.TM2.Cfg tm.Γ tm.Λ tm.σ
 #align turing.fin_tm2.cfg Turing.FinTm2.Cfg
 
 instance inhabitedCfg : Inhabited (Cfg tm) :=
-  Turing.TM2Cat.Cfg.inhabited _ _ _
+  Turing.TM2.Cfg.inhabited _ _ _
 #align turing.fin_tm2.inhabited_cfg Turing.FinTm2.inhabitedCfg
 
 /-- The step function corresponding to this TM. -/
 @[simp]
 def step : tm.Cfg → Option tm.Cfg :=
-  Turing.TM2Cat.step tm.m
+  Turing.TM2.step tm.m
 #align turing.fin_tm2.step Turing.FinTm2.step
 
 end
@@ -235,7 +235,7 @@ def Tm2ComputableInPolyTime.toTm2ComputableInTime {α β : Type} {ea : FinEncodi
   ⟨h.toTm2ComputableAux, fun n => h.time.eval n, h.outputsFun⟩
 #align turing.tm2_computable_in_poly_time.to_tm2_computable_in_time Turing.Tm2ComputableInPolyTime.toTm2ComputableInTime
 
-open Turing.TM2Cat.Stmt
+open Turing.TM2.Stmt
 
 /-- A Turing machine computing the identity on α. -/
 def idComputer {α : Type} (ea : FinEncoding α) : FinTm2

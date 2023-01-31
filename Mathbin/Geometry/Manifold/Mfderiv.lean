@@ -844,7 +844,7 @@ theorem tangentMapWithin_congr (h : ∀ x ∈ s, f x = f₁ x) (p : TangentBundl
     (hs : UniqueMdiffWithinAt I s p.1) :
     tangentMapWithin I I' f s p = tangentMapWithin I I' f₁ s p :=
   by
-  simp only [tangentMapWithin, h p.fst hp, true_and_iff, eq_self_iff_true, hEq_iff_eq,
+  simp only [tangentMapWithin, h p.fst hp, true_and_iff, eq_self_iff_true, heq_iff_eq,
     Sigma.mk.inj_iff]
   congr 1
   exact mfderivWithin_congr hs h (h _ hp)

@@ -131,13 +131,12 @@ a coefficient of the form `2⁻ᵐ` but we do not need this generalization yet. 
 theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     (H_ind : ∀ J ≤ I, (∀ s, p (splitCenterBox J s)) → p J)
     (H_nhds :
-      ∀ z ∈ I.IccCat,
-        ∃ U ∈ 𝓝[I.IccCat] z,
+      ∀ z ∈ I.Icc,
+        ∃ U ∈ 𝓝[I.Icc] z,
           ∀ J ≤ I,
             ∀ (m : ℕ),
-              z ∈ J.IccCat →
-                J.IccCat ⊆ U →
-                  (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+              z ∈ J.Icc →
+                J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   by_contra hpI
   -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
@@ -166,7 +165,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   -- Let `z` be the unique common point of all `(J m).Icc`. Then `H_nhds` proves `p (J m)` for
   -- sufficiently large `m`. This contradicts `hJp`.
   set z : ι → ℝ := ⨆ m, (J m).lower
-  have hzJ : ∀ m, z ∈ (J m).IccCat :=
+  have hzJ : ∀ m, z ∈ (J m).Icc :=
     mem_Inter.1
       (csupᵢ_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
         (J m).lower_le_upper)

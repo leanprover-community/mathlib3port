@@ -102,8 +102,8 @@ def candidates : Set (ProdSpaceFun X Y) :=
 
 /-- Version of the set of candidates in bounded_continuous_functions, to apply
 Arzela-Ascoli -/
-private def candidates_b : Set (CbCat X Y) :=
-  { f : CbCat X Y | (f : _ → ℝ) ∈ candidates X Y }
+private def candidates_b : Set (Cb X Y) :=
+  { f : Cb X Y | (f : _ → ℝ) ∈ candidates X Y }
 #align Gromov_Hausdorff.candidates_b Gromov_Hausdorff.candidates_b
 
 end Definitions
@@ -259,7 +259,7 @@ private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith
 #align Gromov_Hausdorff.candidates_lipschitz Gromov_Hausdorff.candidates_lipschitz
 
 /-- candidates give rise to elements of bounded_continuous_functions -/
-def candidatesBOfCandidates (f : ProdSpaceFun X Y) (fA : f ∈ candidates X Y) : CbCat X Y :=
+def candidatesBOfCandidates (f : ProdSpaceFun X Y) (fA : f ∈ candidates X Y) : Cb X Y :=
   BoundedContinuousFunction.mkOfCompact ⟨f, (candidates_lipschitz fA).Continuous⟩
 #align Gromov_Hausdorff.candidates_b_of_candidates GromovHausdorff.candidatesBOfCandidates
 
@@ -282,7 +282,7 @@ private theorem dist_mem_candidates :
 
 /-- The distance on `X ⊕ Y` as a candidate -/
 def candidatesBDist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Inhabited X]
-    [MetricSpace Y] [CompactSpace Y] [Inhabited Y] : CbCat X Y :=
+    [MetricSpace Y] [CompactSpace Y] [Inhabited Y] : Cb X Y :=
   candidatesBOfCandidates _ dist_mem_candidates
 #align Gromov_Hausdorff.candidates_b_dist GromovHausdorff.candidatesBDist
 
@@ -355,7 +355,7 @@ private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) :=
 /-- We will then choose the candidate minimizing the Hausdorff distance. Except that we are not
 in a metric space setting, so we need to define our custom version of Hausdorff distance,
 called HD, and prove its basic properties. -/
-def hD (f : CbCat X Y) :=
+def hD (f : Cb X Y) :=
   max (⨆ x, ⨅ y, f (inl x, inr y)) (⨆ y, ⨅ x, f (inl x, inr y))
 #align Gromov_Hausdorff.HD GromovHausdorff.hD
 
@@ -364,13 +364,13 @@ minimum on the compact set candidates_b is attained. Since it is defined in term
 infimum and supremum on `ℝ`, which is only conditionnally complete, we will need all the time
 to check that the defining sets are bounded below or above. This is done in the next few
 technical lemmas -/
-theorem HD_below_aux1 {f : CbCat X Y} (C : ℝ) {x : X} :
+theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} :
     BddBelow (range fun y : Y => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.bounded_iff_bddBelow_bddAbove.1 f.bounded_range).1
   ⟨cf + C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
 #align Gromov_Hausdorff.HD_below_aux1 GromovHausdorff.HD_below_aux1
 
-private theorem HD_bound_aux1 (f : CbCat X Y) (C : ℝ) :
+private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) :
     BddAbove (range fun x : X => ⨅ y, f (inl x, inr y) + C) :=
   by
   rcases(Real.bounded_iff_bddBelow_bddAbove.1 f.bounded_range).2 with ⟨Cf, hCf⟩
@@ -381,13 +381,13 @@ private theorem HD_bound_aux1 (f : CbCat X Y) (C : ℝ) :
     
 #align Gromov_Hausdorff.HD_bound_aux1 Gromov_Hausdorff.HD_bound_aux1
 
-theorem HD_below_aux2 {f : CbCat X Y} (C : ℝ) {y : Y} :
+theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} :
     BddBelow (range fun x : X => f (inl x, inr y) + C) :=
   let ⟨cf, hcf⟩ := (Real.bounded_iff_bddBelow_bddAbove.1 f.bounded_range).1
   ⟨cf + C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
 #align Gromov_Hausdorff.HD_below_aux2 GromovHausdorff.HD_below_aux2
 
-private theorem HD_bound_aux2 (f : CbCat X Y) (C : ℝ) :
+private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) :
     BddAbove (range fun y : Y => ⨅ x, f (inl x, inr y) + C) :=
   by
   rcases(Real.bounded_iff_bddBelow_bddAbove.1 f.bounded_range).2 with ⟨Cf, hCf⟩
@@ -438,7 +438,7 @@ theorem hD_candidatesBDist_le :
 
 /- To check that HD is continuous, we check that it is Lipschitz. As HD is a max, we
 prove separately inequalities controlling the two terms (relying too heavily on copy-paste...) -/
-private theorem HD_lipschitz_aux1 (f g : CbCat X Y) :
+private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
     (⨆ x, ⨅ y, f (inl x, inr y)) ≤ (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g :=
   by
   rcases(Real.bounded_iff_bddBelow_bddAbove.1 g.bounded_range).1 with ⟨cg, hcg⟩
@@ -470,7 +470,7 @@ private theorem HD_lipschitz_aux1 (f g : CbCat X Y) :
   simpa [E2, E1, Function.comp]
 #align Gromov_Hausdorff.HD_lipschitz_aux1 Gromov_Hausdorff.HD_lipschitz_aux1
 
-private theorem HD_lipschitz_aux2 (f g : CbCat X Y) :
+private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
     (⨆ y, ⨅ x, f (inl x, inr y)) ≤ (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g :=
   by
   rcases(Real.bounded_iff_bddBelow_bddAbove.1 g.bounded_range).1 with ⟨cg, hcg⟩
@@ -502,13 +502,13 @@ private theorem HD_lipschitz_aux2 (f g : CbCat X Y) :
   simpa [E2, E1]
 #align Gromov_Hausdorff.HD_lipschitz_aux2 Gromov_Hausdorff.HD_lipschitz_aux2
 
-private theorem HD_lipschitz_aux3 (f g : CbCat X Y) : hD f ≤ hD g + dist f g :=
+private theorem HD_lipschitz_aux3 (f g : Cb X Y) : hD f ≤ hD g + dist f g :=
   max_le (le_trans (HD_lipschitz_aux1 f g) (add_le_add_right (le_max_left _ _) _))
     (le_trans (HD_lipschitz_aux2 f g) (add_le_add_right (le_max_right _ _) _))
 #align Gromov_Hausdorff.HD_lipschitz_aux3 Gromov_Hausdorff.HD_lipschitz_aux3
 
 /-- Conclude that HD, being Lipschitz, is continuous -/
-private theorem HD_continuous : Continuous (hD : CbCat X Y → ℝ) :=
+private theorem HD_continuous : Continuous (hD : Cb X Y → ℝ) :=
   LipschitzWith.continuous (LipschitzWith.of_le_add hD_lipschitz_aux3)
 #align Gromov_Hausdorff.HD_continuous Gromov_Hausdorff.HD_continuous
 
@@ -527,7 +527,7 @@ private theorem exists_minimizer : ∃ f ∈ candidatesB X Y, ∀ g ∈ candidat
   isCompact_candidatesB.exists_forall_le candidatesB_nonempty hD_continuous.ContinuousOn
 #align Gromov_Hausdorff.exists_minimizer Gromov_Hausdorff.exists_minimizer
 
-private def optimal_GH_dist : CbCat X Y :=
+private def optimal_GH_dist : Cb X Y :=
   Classical.choose (exists_minimizer X Y)
 #align Gromov_Hausdorff.optimal_GH_dist Gromov_Hausdorff.optimal_GH_dist
 
@@ -535,7 +535,7 @@ private theorem optimal_GH_dist_mem_candidates_b : optimalGHDist X Y ∈ candida
   cases Classical.choose_spec (exists_minimizer X Y) <;> assumption
 #align Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b Gromov_Hausdorff.optimal_GH_dist_mem_candidates_b
 
-private theorem HD_optimal_GH_dist_le (g : CbCat X Y) (hg : g ∈ candidatesB X Y) :
+private theorem HD_optimal_GH_dist_le (g : Cb X Y) (hg : g ∈ candidatesB X Y) :
     hD (optimalGHDist X Y) ≤ hD g :=
   let ⟨Z1, Z2⟩ := Classical.choose_spec (exists_minimizer X Y)
   Z2 g hg

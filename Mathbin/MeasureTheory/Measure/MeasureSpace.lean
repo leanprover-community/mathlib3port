@@ -595,7 +595,7 @@ theorem tendsto_measure_bInter_gt {ι : Type _} [LinearOrder ι] [TopologicalSpa
       exact u_pos n
   rw [B] at A
   obtain ⟨n, hn⟩ : ∃ n, μ (s (u n)) < L := ((tendsto_order.1 A).2 _ hL).exists
-  have : Ioc a (u n) ∈ 𝓝[>] a := ioc_mem_nhdsWithin_ioi ⟨le_rfl, u_pos n⟩
+  have : Ioc a (u n) ∈ 𝓝[>] a := Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, u_pos n⟩
   filter_upwards [this]with r hr using lt_of_le_of_lt (measure_mono (hm _ _ hr.1 hr.2)) hn
 #align measure_theory.tendsto_measure_bInter_gt MeasureTheory.tendsto_measure_bInter_gt
 
@@ -1007,7 +1007,7 @@ protected theorem le_add_left (h : μ ≤ ν) : μ ≤ ν' + ν := fun s hs => l
 protected theorem le_add_right (h : μ ≤ ν) : μ ≤ ν + ν' := fun s hs => le_add_right (h s hs)
 #align measure_theory.measure.le_add_right MeasureTheory.Measure.le_add_right
 
-section InfCat
+section Inf
 
 variable {m : Set (Measure α)}
 
@@ -1068,7 +1068,7 @@ instance [MeasurableSpace α] : CompleteLattice (Measure α) :=
     bot := 0
     bot_le := fun a s hs => bot_le }
 
-end InfCat
+end Inf
 
 @[simp]
 theorem top_add : ⊤ + μ = ⊤ :=
@@ -2957,48 +2957,48 @@ theorem ae_eventually_not_mem {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠ 
 
 section Intervals
 
-theorem bsupr_measure_iic [Preorder α] {s : Set α} (hsc : s.Countable)
+theorem bsupr_measure_Iic [Preorder α] {s : Set α} (hsc : s.Countable)
     (hst : ∀ x : α, ∃ y ∈ s, x ≤ y) (hdir : DirectedOn (· ≤ ·) s) : (⨆ x ∈ s, μ (Iic x)) = μ univ :=
   by
   rw [← measure_bUnion_eq_supr hsc]
   · congr
     exact Union₂_eq_univ_iff.2 hst
   · exact directedOn_iff_directed.2 (hdir.directed_coe.mono_comp _ fun x y => Iic_subset_Iic.2)
-#align measure_theory.bsupr_measure_Iic MeasureTheory.bsupr_measure_iic
+#align measure_theory.bsupr_measure_Iic MeasureTheory.bsupr_measure_Iic
 
 variable [PartialOrder α] {a b : α}
 
-theorem iio_ae_eq_Iic' (ha : μ {a} = 0) : Iio a =ᵐ[μ] Iic a := by
+theorem Iio_ae_eq_Iic' (ha : μ {a} = 0) : Iio a =ᵐ[μ] Iic a := by
   rw [← Iic_diff_right, diff_ae_eq_self, measure_mono_null (Set.inter_subset_right _ _) ha]
-#align measure_theory.Iio_ae_eq_Iic' MeasureTheory.iio_ae_eq_Iic'
+#align measure_theory.Iio_ae_eq_Iic' MeasureTheory.Iio_ae_eq_Iic'
 
-theorem ioi_ae_eq_Ici' (ha : μ {a} = 0) : Ioi a =ᵐ[μ] Ici a :=
-  @iio_ae_eq_Iic' αᵒᵈ ‹_› ‹_› _ _ ha
-#align measure_theory.Ioi_ae_eq_Ici' MeasureTheory.ioi_ae_eq_Ici'
+theorem Ioi_ae_eq_Ici' (ha : μ {a} = 0) : Ioi a =ᵐ[μ] Ici a :=
+  @Iio_ae_eq_Iic' αᵒᵈ ‹_› ‹_› _ _ ha
+#align measure_theory.Ioi_ae_eq_Ici' MeasureTheory.Ioi_ae_eq_Ici'
 
-theorem ioo_ae_eq_Ioc' (hb : μ {b} = 0) : Ioo a b =ᵐ[μ] Ioc a b :=
-  (ae_eq_refl _).inter (iio_ae_eq_Iic' hb)
-#align measure_theory.Ioo_ae_eq_Ioc' MeasureTheory.ioo_ae_eq_Ioc'
+theorem Ioo_ae_eq_Ioc' (hb : μ {b} = 0) : Ioo a b =ᵐ[μ] Ioc a b :=
+  (ae_eq_refl _).inter (Iio_ae_eq_Iic' hb)
+#align measure_theory.Ioo_ae_eq_Ioc' MeasureTheory.Ioo_ae_eq_Ioc'
 
-theorem ioc_ae_eq_Icc' (ha : μ {a} = 0) : Ioc a b =ᵐ[μ] Icc a b :=
-  (ioi_ae_eq_Ici' ha).inter (ae_eq_refl _)
-#align measure_theory.Ioc_ae_eq_Icc' MeasureTheory.ioc_ae_eq_Icc'
+theorem Ioc_ae_eq_Icc' (ha : μ {a} = 0) : Ioc a b =ᵐ[μ] Icc a b :=
+  (Ioi_ae_eq_Ici' ha).inter (ae_eq_refl _)
+#align measure_theory.Ioc_ae_eq_Icc' MeasureTheory.Ioc_ae_eq_Icc'
 
-theorem ioo_ae_eq_Ico' (ha : μ {a} = 0) : Ioo a b =ᵐ[μ] Ico a b :=
-  (ioi_ae_eq_Ici' ha).inter (ae_eq_refl _)
-#align measure_theory.Ioo_ae_eq_Ico' MeasureTheory.ioo_ae_eq_Ico'
+theorem Ioo_ae_eq_Ico' (ha : μ {a} = 0) : Ioo a b =ᵐ[μ] Ico a b :=
+  (Ioi_ae_eq_Ici' ha).inter (ae_eq_refl _)
+#align measure_theory.Ioo_ae_eq_Ico' MeasureTheory.Ioo_ae_eq_Ico'
 
-theorem ioo_ae_eq_Icc' (ha : μ {a} = 0) (hb : μ {b} = 0) : Ioo a b =ᵐ[μ] Icc a b :=
-  (ioi_ae_eq_Ici' ha).inter (iio_ae_eq_Iic' hb)
-#align measure_theory.Ioo_ae_eq_Icc' MeasureTheory.ioo_ae_eq_Icc'
+theorem Ioo_ae_eq_Icc' (ha : μ {a} = 0) (hb : μ {b} = 0) : Ioo a b =ᵐ[μ] Icc a b :=
+  (Ioi_ae_eq_Ici' ha).inter (Iio_ae_eq_Iic' hb)
+#align measure_theory.Ioo_ae_eq_Icc' MeasureTheory.Ioo_ae_eq_Icc'
 
-theorem ico_ae_eq_Icc' (hb : μ {b} = 0) : Ico a b =ᵐ[μ] Icc a b :=
-  (ae_eq_refl _).inter (iio_ae_eq_Iic' hb)
-#align measure_theory.Ico_ae_eq_Icc' MeasureTheory.ico_ae_eq_Icc'
+theorem Ico_ae_eq_Icc' (hb : μ {b} = 0) : Ico a b =ᵐ[μ] Icc a b :=
+  (ae_eq_refl _).inter (Iio_ae_eq_Iic' hb)
+#align measure_theory.Ico_ae_eq_Icc' MeasureTheory.Ico_ae_eq_Icc'
 
-theorem ico_ae_eq_Ioc' (ha : μ {a} = 0) (hb : μ {b} = 0) : Ico a b =ᵐ[μ] Ioc a b :=
-  (ioo_ae_eq_Ico' ha).symm.trans (ioo_ae_eq_Ioc' hb)
-#align measure_theory.Ico_ae_eq_Ioc' MeasureTheory.ico_ae_eq_Ioc'
+theorem Ico_ae_eq_Ioc' (ha : μ {a} = 0) (hb : μ {b} = 0) : Ico a b =ᵐ[μ] Ioc a b :=
+  (Ioo_ae_eq_Ico' ha).symm.trans (Ioo_ae_eq_Ioc' hb)
+#align measure_theory.Ico_ae_eq_Ioc' MeasureTheory.Ico_ae_eq_Ioc'
 
 end Intervals
 
@@ -3348,37 +3348,37 @@ section
 
 variable [PartialOrder α] {a b : α}
 
-theorem iio_ae_eq_iic : Iio a =ᵐ[μ] Iic a :=
-  iio_ae_eq_Iic' (measure_singleton a)
-#align measure_theory.Iio_ae_eq_Iic MeasureTheory.iio_ae_eq_iic
+theorem Iio_ae_eq_Iic : Iio a =ᵐ[μ] Iic a :=
+  Iio_ae_eq_Iic' (measure_singleton a)
+#align measure_theory.Iio_ae_eq_Iic MeasureTheory.Iio_ae_eq_Iic
 
-theorem ioi_ae_eq_ici : Ioi a =ᵐ[μ] Ici a :=
-  ioi_ae_eq_Ici' (measure_singleton a)
-#align measure_theory.Ioi_ae_eq_Ici MeasureTheory.ioi_ae_eq_ici
+theorem Ioi_ae_eq_Ici : Ioi a =ᵐ[μ] Ici a :=
+  Ioi_ae_eq_Ici' (measure_singleton a)
+#align measure_theory.Ioi_ae_eq_Ici MeasureTheory.Ioi_ae_eq_Ici
 
-theorem ioo_ae_eq_ioc : Ioo a b =ᵐ[μ] Ioc a b :=
-  ioo_ae_eq_Ioc' (measure_singleton b)
-#align measure_theory.Ioo_ae_eq_Ioc MeasureTheory.ioo_ae_eq_ioc
+theorem Ioo_ae_eq_Ioc : Ioo a b =ᵐ[μ] Ioc a b :=
+  Ioo_ae_eq_Ioc' (measure_singleton b)
+#align measure_theory.Ioo_ae_eq_Ioc MeasureTheory.Ioo_ae_eq_Ioc
 
-theorem ioc_ae_eq_icc : Ioc a b =ᵐ[μ] Icc a b :=
-  ioc_ae_eq_Icc' (measure_singleton a)
-#align measure_theory.Ioc_ae_eq_Icc MeasureTheory.ioc_ae_eq_icc
+theorem Ioc_ae_eq_Icc : Ioc a b =ᵐ[μ] Icc a b :=
+  Ioc_ae_eq_Icc' (measure_singleton a)
+#align measure_theory.Ioc_ae_eq_Icc MeasureTheory.Ioc_ae_eq_Icc
 
-theorem ioo_ae_eq_ico : Ioo a b =ᵐ[μ] Ico a b :=
-  ioo_ae_eq_Ico' (measure_singleton a)
-#align measure_theory.Ioo_ae_eq_Ico MeasureTheory.ioo_ae_eq_ico
+theorem Ioo_ae_eq_Ico : Ioo a b =ᵐ[μ] Ico a b :=
+  Ioo_ae_eq_Ico' (measure_singleton a)
+#align measure_theory.Ioo_ae_eq_Ico MeasureTheory.Ioo_ae_eq_Ico
 
-theorem ioo_ae_eq_icc : Ioo a b =ᵐ[μ] Icc a b :=
-  ioo_ae_eq_Icc' (measure_singleton a) (measure_singleton b)
-#align measure_theory.Ioo_ae_eq_Icc MeasureTheory.ioo_ae_eq_icc
+theorem Ioo_ae_eq_Icc : Ioo a b =ᵐ[μ] Icc a b :=
+  Ioo_ae_eq_Icc' (measure_singleton a) (measure_singleton b)
+#align measure_theory.Ioo_ae_eq_Icc MeasureTheory.Ioo_ae_eq_Icc
 
-theorem ico_ae_eq_icc : Ico a b =ᵐ[μ] Icc a b :=
-  ico_ae_eq_Icc' (measure_singleton b)
-#align measure_theory.Ico_ae_eq_Icc MeasureTheory.ico_ae_eq_icc
+theorem Ico_ae_eq_Icc : Ico a b =ᵐ[μ] Icc a b :=
+  Ico_ae_eq_Icc' (measure_singleton b)
+#align measure_theory.Ico_ae_eq_Icc MeasureTheory.Ico_ae_eq_Icc
 
-theorem ico_ae_eq_ioc : Ico a b =ᵐ[μ] Ioc a b :=
-  ico_ae_eq_Ioc' (measure_singleton a) (measure_singleton b)
-#align measure_theory.Ico_ae_eq_Ioc MeasureTheory.ico_ae_eq_ioc
+theorem Ico_ae_eq_Ioc : Ico a b =ᵐ[μ] Ioc a b :=
+  Ico_ae_eq_Ioc' (measure_singleton a) (measure_singleton b)
+#align measure_theory.Ico_ae_eq_Ioc MeasureTheory.Ico_ae_eq_Ioc
 
 end
 
@@ -3621,7 +3621,7 @@ theorem countable_meas_pos_of_disjoint_of_meas_unionᵢ_ne_top {ι : Type _} [Me
     have fairmeas_eq : ∀ n, fairmeas n = (fun i => μ (As i)) ⁻¹' Ici (as n) := fun n => by
       simpa only [fairmeas_def]
     simpa only [fairmeas_eq, posmeas_def, ← preimage_Union,
-      unionᵢ_ici_eq_ioi_of_lt_of_tendsto (0 : ℝ≥0∞) (fun n => (as_mem n).1) as_lim]
+      unionᵢ_Ici_eq_Ioi_of_lt_of_tendsto (0 : ℝ≥0∞) (fun n => (as_mem n).1) as_lim]
   rw [countable_union]
   refine' countable_Union fun n => finite.countable _
   refine' finite_const_le_meas_of_disjoint_Union μ (as_mem n).1 As_mble As_disj Union_As_finite
@@ -4627,21 +4627,21 @@ section MeasureIxx
 variable [Preorder α] [TopologicalSpace α] [CompactIccSpace α] {m : MeasurableSpace α}
   {μ : Measure α} [IsLocallyFiniteMeasure μ] {a b : α}
 
-theorem measure_icc_lt_top : μ (Icc a b) < ∞ :=
-  isCompact_icc.measure_lt_top
-#align measure_Icc_lt_top measure_icc_lt_top
+theorem measure_Icc_lt_top : μ (Icc a b) < ∞ :=
+  isCompact_Icc.measure_lt_top
+#align measure_Icc_lt_top measure_Icc_lt_top
 
-theorem measure_ico_lt_top : μ (Ico a b) < ∞ :=
-  (measure_mono Ico_subset_Icc_self).trans_lt measure_icc_lt_top
-#align measure_Ico_lt_top measure_ico_lt_top
+theorem measure_Ico_lt_top : μ (Ico a b) < ∞ :=
+  (measure_mono Ico_subset_Icc_self).trans_lt measure_Icc_lt_top
+#align measure_Ico_lt_top measure_Ico_lt_top
 
-theorem measure_ioc_lt_top : μ (Ioc a b) < ∞ :=
-  (measure_mono Ioc_subset_Icc_self).trans_lt measure_icc_lt_top
-#align measure_Ioc_lt_top measure_ioc_lt_top
+theorem measure_Ioc_lt_top : μ (Ioc a b) < ∞ :=
+  (measure_mono Ioc_subset_Icc_self).trans_lt measure_Icc_lt_top
+#align measure_Ioc_lt_top measure_Ioc_lt_top
 
-theorem measure_ioo_lt_top : μ (Ioo a b) < ∞ :=
-  (measure_mono Ioo_subset_Icc_self).trans_lt measure_icc_lt_top
-#align measure_Ioo_lt_top measure_ioo_lt_top
+theorem measure_Ioo_lt_top : μ (Ioo a b) < ∞ :=
+  (measure_mono Ioo_subset_Icc_self).trans_lt measure_Icc_lt_top
+#align measure_Ioo_lt_top measure_Ioo_lt_top
 
 end MeasureIxx
 

@@ -170,7 +170,7 @@ def continuousLinearMap :
   map_target' := fun ⟨x, f⟩ h => h.1
   left_inv' := fun ⟨x, L⟩ ⟨h₁, h₂⟩ =>
     by
-    simp_rw [Sigma.mk.inj_iff, eq_self_iff_true, hEq_iff_eq, true_and_iff]
+    simp_rw [Sigma.mk.inj_iff, eq_self_iff_true, heq_iff_eq, true_and_iff]
     ext v
     simp only [comp_apply, Trivialization.symmL_continuousLinearMapAt, h₁, h₂]
   right_inv' := fun ⟨x, f⟩ ⟨⟨h₁, h₂⟩, _⟩ =>

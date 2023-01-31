@@ -11,7 +11,7 @@ Authors: Pierre-Alexandre Bazin
 import Mathbin.Algebra.Module.DedekindDomain
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.Algebra.Module.Projective
-import Mathbin.Algebra.Category.ModuleCat.Biproducts
+import Mathbin.Algebra.Category.Module.Biproducts
 
 /-!
 # Structure of finitely generated modules over a PID

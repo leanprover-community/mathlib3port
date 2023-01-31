@@ -1830,18 +1830,18 @@ variable {m m0 : MeasurableSpace α} {μ : Measure α} {hm : m ≤ m0} [SigmaFin
 /-- Conditional expectation of a function as a linear map from `α →₁[μ] F'` to itself. -/
 def condexpL1Clm (hm : m ≤ m0) (μ : Measure α) [SigmaFinite (μ.trim hm)] :
     (α →₁[μ] F') →L[ℝ] α →₁[μ] F' :=
-  L1Cat.setToL1 (dominatedFinMeasAdditiveCondexpInd F' hm μ)
+  L1.setToL1 (dominatedFinMeasAdditiveCondexpInd F' hm μ)
 #align measure_theory.condexp_L1_clm MeasureTheory.condexpL1Clm
 
 theorem condexpL1Clm_smul (c : 𝕜) (f : α →₁[μ] F') :
     condexpL1Clm hm μ (c • f) = c • condexpL1Clm hm μ f :=
-  L1Cat.setToL1_smul (dominatedFinMeasAdditiveCondexpInd F' hm μ)
-    (fun c s x => condexpInd_smul' c x) c f
+  L1.setToL1_smul (dominatedFinMeasAdditiveCondexpInd F' hm μ) (fun c s x => condexpInd_smul' c x) c
+    f
 #align measure_theory.condexp_L1_clm_smul MeasureTheory.condexpL1Clm_smul
 
 theorem condexpL1Clm_indicatorConstLp (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
     (condexpL1Clm hm μ) (indicatorConstLp 1 hs hμs x) = condexpInd hm μ s x :=
-  L1Cat.setToL1_indicatorConstLp (dominatedFinMeasAdditiveCondexpInd F' hm μ) hs hμs x
+  L1.setToL1_indicatorConstLp (dominatedFinMeasAdditiveCondexpInd F' hm μ) hs hμs x
 #align measure_theory.condexp_L1_clm_indicator_const_Lp MeasureTheory.condexpL1Clm_indicatorConstLp
 
 theorem condexpL1Clm_indicatorConst (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : F') :
@@ -2019,7 +2019,7 @@ theorem condexpL1_congr_ae (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (h : f =�
 #align measure_theory.condexp_L1_congr_ae MeasureTheory.condexpL1_congr_ae
 
 theorem integrableCondexpL1 (f : α → F') : Integrable (condexpL1 hm μ f) μ :=
-  L1Cat.integrableCoeFn _
+  L1.integrableCoeFn _
 #align measure_theory.integrable_condexp_L1 MeasureTheory.integrableCondexpL1
 
 /-- The integral of the conditional expectation `condexp_L1` over an `m`-measurable set is equal to

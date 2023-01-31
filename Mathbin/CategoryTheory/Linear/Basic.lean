@@ -85,19 +85,19 @@ instance preadditiveIntLinear : Linear ℤ C
   comp_smul' X Y Z f r g := (Preadditive.leftComp Z f).map_zsmul g r
 #align category_theory.linear.preadditive_int_linear CategoryTheory.Linear.preadditiveIntLinear
 
-section EndCat
+section End
 
 variable {R : Type w}
 
-instance [Semiring R] [Linear R C] (X : C) : Module R (EndCat X) :=
+instance [Semiring R] [Linear R C] (X : C) : Module R (End X) :=
   by
   dsimp [End]
   infer_instance
 
-instance [CommSemiring R] [Linear R C] (X : C) : Algebra R (EndCat X) :=
+instance [CommSemiring R] [Linear R C] (X : C) : Algebra R (End X) :=
   Algebra.ofModule (fun r f g => comp_smul _ _ _ _ _ _) fun r f g => smul_comp _ _ _ _ _ _
 
-end EndCat
+end End
 
 section
 
