@@ -724,7 +724,7 @@ noncomputable def fintypeOfKerLeRange (h : g.ker ≤ f.range) : Fintype G :=
   @Fintype.ofEquiv _ _
     (@Prod.fintype _ _ (Fintype.ofInjective _ <| kerLift_injective g) <|
       Fintype.ofInjective _ <| inclusion_injective h)
-    groupEquivQuotientTimesSubgroup.symm
+    groupEquivQuotientProdSubgroup.symm
 #align group.fintype_of_ker_le_range Group.fintypeOfKerLeRange
 #align add_group.fintype_of_ker_le_range AddGroup.fintypeOfKerLeRange
 

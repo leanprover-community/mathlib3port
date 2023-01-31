@@ -171,7 +171,7 @@ theorem mk_eq_zero {g : R[X]} : mk f g = 0 ↔ f ∣ g :=
 
 @[simp]
 theorem mk_self : mk f f = 0 :=
-  Quotient.sound' <| quotientAddGroup.leftRel_apply.mpr (mem_span_singleton.2 <| by simp)
+  Quotient.sound' <| QuotientAddGroup.leftRel_apply.mpr (mem_span_singleton.2 <| by simp)
 #align adjoin_root.mk_self AdjoinRoot.mk_self
 
 @[simp]

@@ -341,7 +341,7 @@ theorem Periodic.map_vadd_multiples [AddCommMonoid α] (hf : Periodic f c)
 def Periodic.lift [AddGroup α] (h : Periodic f c) (x : α ⧸ AddSubgroup.zmultiples c) : β :=
   Quotient.liftOn' x f fun a b h' =>
     by
-    rw [quotientAddGroup.leftRel_apply] at h'
+    rw [QuotientAddGroup.leftRel_apply] at h'
     obtain ⟨k, hk⟩ := h'
     exact (h.zsmul k _).symm.trans (congr_arg f (add_eq_of_eq_neg_add hk))
 #align function.periodic.lift Function.Periodic.lift

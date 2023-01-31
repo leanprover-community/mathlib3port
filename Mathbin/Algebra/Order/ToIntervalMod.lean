@@ -1275,11 +1275,11 @@ def quotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃ Set.Ico a (a + b)
     where
   toFun x :=
-    ⟨(toIcoMod_periodic a hb).lift x, quotientAddGroup.induction_on' x <| toIcoMod_mem_ico a hb⟩
+    ⟨(toIcoMod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| toIcoMod_mem_ico a hb⟩
   invFun := coe
   right_inv x := Subtype.ext <| (toIcoMod_eq_self hb).mpr x.Prop
   left_inv x := by
-    induction x using quotientAddGroup.induction_on'
+    induction x using QuotientAddGroup.induction_on'
     dsimp
     rw [quotientAddGroup.eq_iff_sub_mem, toIcoMod_sub_self]
     apply AddSubgroup.zsmul_mem_zmultiples
@@ -1297,11 +1297,11 @@ def quotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
     α ⧸ AddSubgroup.zmultiples b ≃ Set.Ioc a (a + b)
     where
   toFun x :=
-    ⟨(toIocMod_periodic a hb).lift x, quotientAddGroup.induction_on' x <| toIocMod_mem_ioc a hb⟩
+    ⟨(toIocMod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| toIocMod_mem_ioc a hb⟩
   invFun := coe
   right_inv x := Subtype.ext <| (toIocMod_eq_self hb).mpr x.Prop
   left_inv x := by
-    induction x using quotientAddGroup.induction_on'
+    induction x using QuotientAddGroup.induction_on'
     dsimp
     rw [quotientAddGroup.eq_iff_sub_mem, toIocMod_sub_self]
     apply AddSubgroup.zsmul_mem_zmultiples

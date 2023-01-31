@@ -96,8 +96,8 @@ def toCircle : AddCircle T → circle :=
 theorem toCircle_add (x : AddCircle T) (y : AddCircle T) :
     toCircle (x + y) = toCircle x * toCircle y :=
   by
-  induction x using quotientAddGroup.induction_on'
-  induction y using quotientAddGroup.induction_on'
+  induction x using QuotientAddGroup.induction_on'
+  induction y using QuotientAddGroup.induction_on'
   simp_rw [← quotientAddGroup.coe_add, to_circle, Function.Periodic.lift_coe, mul_add,
     expMapCircle_add]
 #align add_circle.to_circle_add AddCircle.toCircle_add
@@ -109,11 +109,11 @@ theorem continuous_toCircle : Continuous (@toCircle T) :=
 theorem injective_toCircle (hT : T ≠ 0) : Function.Injective (@toCircle T) :=
   by
   intro a b h
-  induction a using quotientAddGroup.induction_on'
-  induction b using quotientAddGroup.induction_on'
+  induction a using QuotientAddGroup.induction_on'
+  induction b using QuotientAddGroup.induction_on'
   simp_rw [to_circle, Function.Periodic.lift_coe] at h
   obtain ⟨m, hm⟩ := exp_map_circle_eq_exp_map_circle.mp h.symm
-  simp_rw [quotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff, zsmul_eq_mul]
+  simp_rw [QuotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff, zsmul_eq_mul]
   use m
   field_simp [real.two_pi_pos.ne']  at hm
   rw [← mul_right_inj' real.two_pi_pos.ne']
@@ -175,7 +175,7 @@ theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
 @[simp]
 theorem fourier_zero {x : AddCircle T} : fourier 0 x = 1 :=
   by
-  induction x using quotientAddGroup.induction_on'
+  induction x using QuotientAddGroup.induction_on'
   simp only [fourier_coe_apply, algebraMap.coe_zero, mul_zero, zero_mul, zero_div, Complex.exp_zero]
 #align fourier_zero fourier_zero
 
@@ -192,7 +192,7 @@ theorem fourier_one {x : AddCircle T} : fourier 1 x = toCircle x := by rw [fouri
 @[simp]
 theorem fourier_neg {n : ℤ} {x : AddCircle T} : fourier (-n) x = conj (fourier n x) :=
   by
-  induction x using quotientAddGroup.induction_on'
+  induction x using QuotientAddGroup.induction_on'
   simp_rw [fourier_apply, to_circle, ← quotientAddGroup.coe_zsmul, Function.Periodic.lift_coe, ←
     coe_inv_circle_eq_conj, ← expMapCircle_neg, neg_smul, mul_neg]
 #align fourier_neg fourier_neg

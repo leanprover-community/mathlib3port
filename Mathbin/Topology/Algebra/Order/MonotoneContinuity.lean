@@ -311,7 +311,7 @@ variable {α β : Type _} [PartialOrder α] [PartialOrder β] [TopologicalSpace 
 protected theorem continuous (e : α ≃o β) : Continuous e :=
   by
   rw [‹OrderTopology β›.topology_eq_generate_intervals]
-  refine' continuous_generated_from fun s hs => _
+  refine' continuous_generateFrom fun s hs => _
   rcases hs with ⟨a, rfl | rfl⟩
   · rw [e.preimage_Ioi]
     apply isOpen_lt'

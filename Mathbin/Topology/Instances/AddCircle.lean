@@ -269,14 +269,14 @@ include hx
 
 theorem continuousAt_equivIco : ContinuousAt (equivIco p a) x :=
   by
-  induction x using quotientAddGroup.induction_on'
+  induction x using QuotientAddGroup.induction_on'
   rw [ContinuousAt, Filter.Tendsto, quotientAddGroup.nhds_eq, Filter.map_map]
   apply ContinuousAt.codRestrict; exact continuousAt_toIcoMod a hp.out hx
 #align add_circle.continuous_at_equiv_Ico AddCircle.continuousAt_equivIco
 
 theorem continuousAt_equivIoc : ContinuousAt (equivIoc p a) x :=
   by
-  induction x using quotientAddGroup.induction_on'
+  induction x using QuotientAddGroup.induction_on'
   rw [ContinuousAt, Filter.Tendsto, quotientAddGroup.nhds_eq, Filter.map_map]
   apply ContinuousAt.codRestrict; exact continuousAt_toIocMod a hp.out hx
 #align add_circle.continuous_at_equiv_Ioc AddCircle.continuousAt_equivIoc
@@ -343,7 +343,7 @@ variable [FloorRing 𝕜]
 
 @[simp]
 theorem coe_equivIco_mk_apply (x : 𝕜) :
-    (equivIco p 0 <| quotientAddGroup.mk x : 𝕜) = Int.fract (x / p) * p :=
+    (equivIco p 0 <| QuotientAddGroup.mk x : 𝕜) = Int.fract (x / p) * p :=
   toIcoMod_eq_fract_mul _ x
 #align add_circle.coe_equiv_Ico_mk_apply AddCircle.coe_equivIco_mk_apply
 
@@ -422,7 +422,7 @@ theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) 
 theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
     addOrderOf u = n ↔ ∃ m < n, m.gcd n = 1 ∧ ↑(↑m / ↑n * p) = u :=
   by
-  refine' ⟨quotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
+  refine' ⟨QuotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
   · rintro ⟨m, h₀, h₁, rfl⟩
     exact add_order_of_div_of_gcd_eq_one h h₁
   have h0 := add_orderOf_nsmul_eq_zero (k : AddCircle p)

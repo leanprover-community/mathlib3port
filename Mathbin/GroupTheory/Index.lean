@@ -187,7 +187,7 @@ of `b * a` and `b` belong to `H`. -/
 theorem index_eq_two_iff : H.index = 2 ↔ ∃ a, ∀ b, Xor' (b * a ∈ H) (b ∈ H) :=
   by
   simp only [index, Nat.card_eq_two_iff' ((1 : G) : G ⧸ H), ExistsUnique, inv_mem_iff,
-    QuotientGroup.exists_coe, QuotientGroup.forall_coe, Ne.def, QuotientGroup.eq, mul_one,
+    QuotientGroup.exists_mk, QuotientGroup.forall_mk, Ne.def, QuotientGroup.eq, mul_one,
     xor_iff_iff_not]
   refine'
     exists_congr fun a => ⟨fun ha b => ⟨fun hba hb => _, fun hb => _⟩, fun ha => ⟨_, fun b hb => _⟩⟩
@@ -476,7 +476,7 @@ theorem relindex_infᵢ_ne_zero {ι : Type _} [hι : Finite ι] {f : ι → Subg
 theorem relindex_infᵢ_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
     (⨅ i, f i).relindex L ≤ ∏ i, (f i).relindex L :=
   le_of_le_of_eq
-    (Finite.card_le_of_embedding' (quotientInfiSubgroupOfEmbedding f L) fun h =>
+    (Finite.card_le_of_embedding' (quotientInfᵢSubgroupOfEmbedding f L) fun h =>
       let ⟨i, hi, h⟩ := Finset.prod_eq_zero_iff.mp (Nat.card_pi.symm.trans h)
       relindex_eq_zero_of_le_left (infᵢ_le f i) h)
     Nat.card_pi

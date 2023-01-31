@@ -238,7 +238,7 @@ theorem norm_mk_lt' (S : AddSubgroup M) (m : M) {ε : ℝ} (hε : 0 < ε) :
   by
   obtain ⟨n : M, hn : mk' S n = mk' S m, hn' : ‖n‖ < ‖mk' S m‖ + ε⟩ :=
     norm_mk_lt (quotientAddGroup.mk' S m) hε
-  erw [eq_comm, quotientAddGroup.eq] at hn
+  erw [eq_comm, QuotientAddGroup.eq] at hn
   use -m + n, hn
   rwa [add_neg_cancel_left]
 #align norm_mk_lt' norm_mk_lt'
@@ -298,7 +298,7 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
       clear h U this
       apply IsOpen.mem_nhds
       · change IsOpen (mk' S ⁻¹' _)
-        erw [quotientAddGroup.preimage_image_coe]
+        erw [QuotientAddGroup.preimage_image_mk]
         apply isOpen_unionᵢ
         rintro ⟨s, s_in⟩
         exact (continuous_add_right s).is_open_preimage _ is_open_ball

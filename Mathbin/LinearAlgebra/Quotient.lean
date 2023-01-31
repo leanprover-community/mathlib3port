@@ -36,7 +36,7 @@ open LinearMap quotientAddGroup
 Note this is equivalent to `y - x ∈ p`, but defined this way to be be defeq to the `add_subgroup`
 version, where commutativity can't be assumed. -/
 def quotientRel : Setoid M :=
-  quotientAddGroup.leftRel p.toAddSubgroup
+  QuotientAddGroup.leftRel p.toAddSubgroup
 #align submodule.quotient_rel Submodule.quotientRel
 
 theorem quotientRel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
@@ -76,7 +76,7 @@ theorem quot_mk_eq_mk {p : Submodule R M} (x : M) : (Quot.mk _ x : M ⧸ p) = mk
 #align submodule.quotient.quot_mk_eq_mk Submodule.Quotient.quot_mk_eq_mk
 
 protected theorem eq' {x y : M} : (mk x : M ⧸ p) = mk y ↔ -x + y ∈ p :=
-  quotientAddGroup.eq
+  QuotientAddGroup.eq
 #align submodule.quotient.eq' Submodule.Quotient.eq'
 
 protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
@@ -291,7 +291,7 @@ theorem card_eq_card_quotient_mul_card [Fintype M] (S : Submodule R M) [Decidabl
     Fintype.card M = Fintype.card S * Fintype.card (M ⧸ S) :=
   by
   rw [mul_comm, ← Fintype.card_prod]
-  exact Fintype.card_congr AddSubgroup.addGroupEquivQuotientTimesAddSubgroup
+  exact Fintype.card_congr AddSubgroup.addGroupEquivQuotientProdAddSubgroup
 #align submodule.card_eq_card_quotient_mul_card Submodule.card_eq_card_quotient_mul_card
 
 section

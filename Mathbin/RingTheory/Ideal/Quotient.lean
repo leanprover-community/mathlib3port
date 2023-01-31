@@ -354,7 +354,7 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
     where
   toFun x :=
     Quotient.liftOn' x (fun f i => Ideal.Quotient.mk I (f i)) fun a b hab =>
-      funext fun i => (Submodule.Quotient.eq' _).2 (quotientAddGroup.leftRel_apply.mp hab i)
+      funext fun i => (Submodule.Quotient.eq' _).2 (QuotientAddGroup.leftRel_apply.mp hab i)
   map_add' := by
     rintro ⟨_⟩ ⟨_⟩
     rfl

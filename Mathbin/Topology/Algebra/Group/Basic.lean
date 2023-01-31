@@ -1013,7 +1013,7 @@ theorem QuotientGroup.isOpenMap_coe : IsOpenMap (coe : G → G ⧸ N) :=
   by
   intro s s_op
   change IsOpen ((coe : G → G ⧸ N) ⁻¹' (coe '' s))
-  rw [QuotientGroup.preimage_image_coe N s]
+  rw [QuotientGroup.preimage_image_mk N s]
   exact isOpen_unionᵢ fun n => (continuous_mul_right _).is_open_preimage s s_op
 #align quotient_group.is_open_map_coe QuotientGroup.isOpenMap_coe
 #align quotient_add_group.is_open_map_coe quotientAddGroup.isOpenMap_coe

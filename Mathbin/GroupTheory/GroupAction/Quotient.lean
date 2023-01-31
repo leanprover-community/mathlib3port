@@ -199,7 +199,7 @@ noncomputable def orbitEquivQuotientStabilizer (b : β) : orbit α b ≃ α ⧸ 
 @[to_additive "Orbit-stabilizer theorem."]
 noncomputable def orbitProdStabilizerEquivGroup (b : β) : orbit α b × stabilizer α b ≃ α :=
   (Equiv.prodCongr (orbitEquivQuotientStabilizer α _) (Equiv.refl _)).trans
-    Subgroup.groupEquivQuotientTimesSubgroup.symm
+    Subgroup.groupEquivQuotientProdSubgroup.symm
 #align mul_action.orbit_prod_stabilizer_equiv_group MulAction.orbitProdStabilizerEquivGroup
 #align add_action.orbit_sum_stabilizer_equiv_add_group AddAction.orbitSumStabilizerEquivAddGroup
 
@@ -267,7 +267,7 @@ theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [F
           Fintype.card (α ⧸ stabilizer α (φ ω)) :=
       by
       intro ω
-      rw [Fintype.card_congr (@Subgroup.groupEquivQuotientTimesSubgroup α _ (stabilizer α <| φ ω)),
+      rw [Fintype.card_congr (@Subgroup.groupEquivQuotientProdSubgroup α _ (stabilizer α <| φ ω)),
         Fintype.card_prod, Nat.mul_div_cancel]
       exact fintype.card_pos_iff.mpr (by infer_instance)
     simp_rw [this, ← Fintype.card_sigma,
@@ -385,7 +385,7 @@ of commutators. -/
 noncomputable def quotientCenterEmbedding {S : Set G} (hS : closure S = ⊤) :
     G ⧸ center G ↪ S → commutatorSet G :=
   (quotientEquivOfEq (center_eq_infi' S hS)).toEmbedding.trans
-    ((quotientInfiEmbedding _).trans
+    ((quotientInfᵢEmbedding _).trans
       (Function.Embedding.piCongrRight fun g => quotientCentralizerEmbedding g))
 #align subgroup.quotient_center_embedding Subgroup.quotientCenterEmbedding
 

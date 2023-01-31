@@ -274,7 +274,7 @@ variable [CompleteLattice α] [CompleteLattice β] [TopologicalSpace α] [LowerT
 
 theorem InfHom.continuous (f : InfHom α β) : Continuous f :=
   by
-  convert continuous_generated_from _
+  convert continuous_generateFrom _
   · exact LowerTopology.topology_eq_lowerTopology β
   rintro _ ⟨b, rfl⟩
   rw [preimage_compl, isOpen_compl_iff]
