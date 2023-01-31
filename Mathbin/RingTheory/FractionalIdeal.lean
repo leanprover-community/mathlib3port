@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.fractional_ideal
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1109,9 +1109,8 @@ theorem fractional_div_of_nonzero {I J : FractionalIdeal R₁⁰ K} (h : J ≠ 0
     h <| coe_to_submodule_injective <| H.trans coe_zero.symm
 #align fractional_ideal.fractional_div_of_nonzero FractionalIdeal.fractional_div_of_nonzero
 
-noncomputable instance fractionalIdealHasDiv : Div (FractionalIdeal R₁⁰ K) :=
+noncomputable instance : Div (FractionalIdeal R₁⁰ K) :=
   ⟨fun I J => if h : J = 0 then 0 else ⟨I / J, fractional_div_of_nonzero h⟩⟩
-#align fractional_ideal.fractional_ideal_has_div FractionalIdeal.fractionalIdealHasDiv
 
 variable {I J : FractionalIdeal R₁⁰ K} [J ≠ 0]
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ noncomputable section
 
 open Classical Set Function Filter Finset Metric
 
-open Classical TopologicalSpace Nat BigOperators uniformity Nnreal Ennreal
+open Classical Topology Nat BigOperators uniformity Nnreal Ennreal
 
 variable {α : Type _} {β : Type _} {ι : Type _}
 

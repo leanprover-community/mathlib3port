@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.nhds_set
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.Basic
 
 /-!
 # Neighborhoods of a set
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the filter `𝓝ˢ s` or `nhds_set s` consisting of all neighborhoods of a set
 `s`.
@@ -32,7 +35,7 @@ Furthermore, we have the following results:
 
 open Set Filter
 
-open TopologicalSpace Filter
+open Topology Filter
 
 variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {s t s₁ s₂ t₁ t₂ : Set α} {x : α}
 
@@ -44,7 +47,7 @@ def nhdsSet (s : Set α) : Filter α :=
 -/
 
 -- mathport name: nhds_set
-scoped[TopologicalSpace] notation "𝓝ˢ" => nhdsSet
+scoped[Topology] notation "𝓝ˢ" => nhdsSet
 
 /- warning: nhds_set_diagonal -> nhdsSet_diagonal is a dubious translation:
 lean 3 declaration is

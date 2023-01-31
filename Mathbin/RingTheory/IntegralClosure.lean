@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.integral_closure
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ def IsIntegral (x : A) : Prop :=
 variable (A)
 
 /-- An algebra is integral if every element of the extension is integral over the base ring -/
-def Algebra.IsIntegral : Prop :=
+protected def Algebra.IsIntegral : Prop :=
   (algebraMap R A).IsIntegral
 #align algebra.is_integral Algebra.IsIntegral
 
@@ -999,8 +999,8 @@ variable [Algebra R A] [IsScalarTower R A B]
 
 /-- If A is an R-algebra all of whose elements are integral over R,
 and x is an element of an A-algebra that is integral over A, then x is integral over R.-/
-theorem isIntegral_trans (A_int : IsIntegral R A) (x : B) (hx : IsIntegral A x) : IsIntegral R x :=
-  by
+theorem isIntegral_trans (A_int : Algebra.IsIntegral R A) (x : B) (hx : IsIntegral A x) :
+    IsIntegral R x := by
   rcases hx with ⟨p, pmonic, hp⟩
   let S : Set B := ↑(p.map <| algebraMap A B).frange
   refine' isIntegral_of_mem_of_fg (adjoin R (S ∪ {x})) _ _ (subset_adjoin <| Or.inr rfl)
@@ -1016,8 +1016,8 @@ theorem isIntegral_trans (A_int : IsIntegral R A) (x : B) (hx : IsIntegral A x) 
 /-- If A is an R-algebra all of whose elements are integral over R,
 and B is an A-algebra all of whose elements are integral over A,
 then all elements of B are integral over R.-/
-theorem Algebra.isIntegral_trans (hA : IsIntegral R A) (hB : IsIntegral A B) : IsIntegral R B :=
-  fun x => isIntegral_trans hA x (hB x)
+theorem Algebra.isIntegral_trans (hA : Algebra.IsIntegral R A) (hB : Algebra.IsIntegral A B) :
+    Algebra.IsIntegral R B := fun x => isIntegral_trans hA x (hB x)
 #align algebra.is_integral_trans Algebra.isIntegral_trans
 
 theorem RingHom.isIntegral_trans (hf : f.IsIntegral) (hg : g.IsIntegral) : (g.comp f).IsIntegral :=
@@ -1031,7 +1031,8 @@ theorem RingHom.isIntegral_of_surjective (hf : Function.Surjective f) : f.IsInte
   (hf x).recOn fun y hy => (hy ▸ f.is_integral_map : f.IsIntegralElem x)
 #align ring_hom.is_integral_of_surjective RingHom.isIntegral_of_surjective
 
-theorem isIntegral_of_surjective (h : Function.Surjective (algebraMap R A)) : IsIntegral R A :=
+theorem isIntegral_of_surjective (h : Function.Surjective (algebraMap R A)) :
+    Algebra.IsIntegral R A :=
   (algebraMap R A).is_integral_of_surjective h
 #align is_integral_of_surjective isIntegral_of_surjective
 
@@ -1091,8 +1092,8 @@ theorem RingHom.isIntegral_quotient_of_isIntegral {I : Ideal S} (hf : f.IsIntegr
   simpa only [hom_eval₂, eval₂_map] using congr_arg (Ideal.Quotient.mk I) hpx
 #align ring_hom.is_integral_quotient_of_is_integral RingHom.isIntegral_quotient_of_isIntegral
 
-theorem isIntegral_quotient_of_isIntegral {I : Ideal A} (hRA : IsIntegral R A) :
-    IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=
+theorem isIntegral_quotient_of_isIntegral {I : Ideal A} (hRA : Algebra.IsIntegral R A) :
+    Algebra.IsIntegral (R ⧸ I.comap (algebraMap R A)) (A ⧸ I) :=
   (algebraMap R A).is_integral_quotient_of_is_integral hRA
 #align is_integral_quotient_of_is_integral isIntegral_quotient_of_isIntegral
 
@@ -1109,8 +1110,8 @@ theorem isIntegral_quotientMap_iff {I : Ideal S} :
 
 /-- If the integral extension `R → S` is injective, and `S` is a field, then `R` is also a field. -/
 theorem isField_of_isIntegral_of_isField {R S : Type _} [CommRing R] [Nontrivial R] [CommRing S]
-    [IsDomain S] [Algebra R S] (H : IsIntegral R S) (hRS : Function.Injective (algebraMap R S))
-    (hS : IsField S) : IsField R :=
+    [IsDomain S] [Algebra R S] (H : Algebra.IsIntegral R S)
+    (hRS : Function.Injective (algebraMap R S)) (hS : IsField S) : IsField R :=
   by
   refine' ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun a ha => _⟩
   -- Let `a_inv` be the inverse of `algebra_map R S a`,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ in terms of extended charts in `cont_mdiff_on_iff` and `cont_mdiff_iff`.
 
 open Set Function Filter ChartedSpace SmoothManifoldWithCorners
 
-open TopologicalSpace Manifold
+open Topology Manifold
 
 /-! ### Definition of smooth functions between manifolds -/
 

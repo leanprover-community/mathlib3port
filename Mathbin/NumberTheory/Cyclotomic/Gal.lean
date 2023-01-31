@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,10 +21,10 @@ it is always a subgroup, and if the `n`th cyclotomic polynomial is irreducible, 
 
 * `is_primitive_root.aut_to_pow_injective`: `is_primitive_root.aut_to_pow` is injective
   in the case that it's considered over a cyclotomic field extension.
-* `is_cyclotomic_extension.aut_equiv_pow`: If the `n`th cyclotomic polynomial is irreducible
-  in `K`, then `aut_to_pow` is a `mul_equiv` (for example, in `ℚ` and certain `𝔽ₚ`).
-* `gal_X_pow_equiv_units_zmod`, `gal_cyclotomic_equiv_units_zmod`: Repackage `aut_equiv_pow` in
-  terms of `polynomial.gal`.
+* `is_cyclotomic_extension.aut_equiv_pow`: If the `n`th cyclotomic polynomial is irreducible in `K`,
+  then `is_primitive_root.aut_to_pow` is a `mul_equiv` (for example, in `ℚ` and certain `𝔽ₚ`).
+* `gal_X_pow_equiv_units_zmod`, `gal_cyclotomic_equiv_units_zmod`: Repackage
+  `is_cyclotomic_extension.aut_equiv_pow` in terms of `polynomial.gal`.
 * `is_cyclotomic_extension.aut.comm_group`: Cyclotomic extensions are abelian.
 
 ## References
@@ -100,7 +100,7 @@ include h
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1, 5]) } -/
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
-  `f μ = μ ^ k`. A stronger version of `is_primitive_root.aut_to_pow`. -/
+  `f μ = μ ^ k` for any root of unity `μ`. A  strengthening of `is_primitive_root.aut_to_pow`. -/
 @[simps]
 noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
   let hζ := zeta_spec n K L
@@ -170,17 +170,17 @@ section Gal
 variable [Field L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExtension {n} K L]
   (h : Irreducible (cyclotomic n K)) {K}
 
-/-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
-Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ` if `cyclotomic n K` is irreducible in
-the base field. -/
+/-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`.
+Asserts that the Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ`
+if `cyclotomic n K` is irreducible in the base field. -/
 noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (ZMod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_cyclotomic_equiv_units_zmod galCyclotomicEquivUnitsZmod
 
-/-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`. Asserts that the
-Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ` if `cyclotomic n K` is irreducible in the
-base field. -/
+/-- `is_cyclotomic_extension.aut_equiv_pow` repackaged in terms of `gal`.
+Asserts that the Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ`
+if `cyclotomic n K` is irreducible in the base field. -/
 noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
   (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)

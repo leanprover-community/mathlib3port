@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.GroupTheory.Submonoid.Membership
 /-!
 
 # Submodules of a module
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define
 
@@ -39,8 +42,11 @@ universe u'' u' u v w
 variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 
 #print SubmoduleClass /-
-/-- `submodule_class S R M` says `S` is a type of submodules `s ≤ M`. -/
-class SubmoduleClass (S : Type _) (R M : outParam <| Type _) [AddZeroClass M] [SMul R M]
+/-- `submodule_class S R M` says `S` is a type of submodules `s ≤ M`.
+
+Note that only `R` is marked as `out_param` since `M` is already supplied by the `set_like` class.
+-/
+class SubmoduleClass (S : Type _) (R : outParam <| Type _) (M : Type _) [AddZeroClass M] [SMul R M]
   [SetLike S M] [AddSubmonoidClass S M] extends SMulMemClass S R M
 #align submodule_class SubmoduleClass
 -/

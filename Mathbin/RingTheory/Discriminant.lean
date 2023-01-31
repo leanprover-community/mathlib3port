@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.discriminant
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,13 +283,9 @@ section Integral
 
 variable {R : Type z} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L]
 
--- mathport name: expris_integral
-local notation "is_integral" => IsIntegral
-
 /-- If `K` and `L` are fields and `is_scalar_tower R K L`, and `b : ι → L` satisfies
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
-theorem discr_isIntegral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_integral R (discr K b) :=
-  by
+theorem discr_isIntegral {b : ι → L} (h : ∀ i, IsIntegral R (b i)) : IsIntegral R (discr K b) := by
   classical
     rw [discr_def]
     exact IsIntegral.det fun i j => is_integral_trace (isIntegral_mul (h i) (h j))
@@ -299,10 +295,10 @@ theorem discr_isIntegral {b : ι → L} (h : ∀ i, is_integral R (b i)) : is_in
 `∀ i j, is_integral ℤ (b.to_matrix b' i j)` and `∀ i j, is_integral ℤ (b'.to_matrix b i j)` then
 `discr ℚ b = discr ℚ b'`. -/
 theorem discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K] {b : Basis ι ℚ K}
-    {b' : Basis ι' ℚ K} (h : ∀ i j, is_integral ℤ (b.toMatrix b' i j))
-    (h' : ∀ i j, is_integral ℤ (b'.toMatrix b i j)) : discr ℚ b = discr ℚ b' :=
+    {b' : Basis ι' ℚ K} (h : ∀ i j, IsIntegral ℤ (b.toMatrix b' i j))
+    (h' : ∀ i j, IsIntegral ℤ (b'.toMatrix b i j)) : discr ℚ b = discr ℚ b' :=
   by
-  replace h' : ∀ i j, is_integral ℤ (b'.to_matrix (b.reindex (b.index_equiv b')) i j)
+  replace h' : ∀ i j, IsIntegral ℤ (b'.to_matrix (b.reindex (b.index_equiv b')) i j)
   · intro i j
     convert h' i ((b.index_equiv b').symm j)
     simpa
@@ -310,12 +306,12 @@ theorem discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K] {b : Basis �
     rw [← (b.reindex (b.index_equiv b')).to_matrix_map_vec_mul b', discr_of_matrix_vec_mul, ←
       one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
     congr
-    have hint : is_integral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det :=
+    have hint : IsIntegral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det :=
       IsIntegral.det fun i j => h _ _
     obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
     have hunit : IsUnit r :=
       by
-      have : is_integral ℤ (b'.to_matrix (b.reindex (b.index_equiv b'))).det :=
+      have : IsIntegral ℤ (b'.to_matrix (b.reindex (b.index_equiv b'))).det :=
         IsIntegral.det fun i j => h' _ _
       obtain ⟨r', hr'⟩ := IsIntegrallyClosed.isIntegral_iff.1 this
       refine' isUnit_iff_exists_inv.2 ⟨r', _⟩
@@ -335,8 +331,8 @@ separable extension of `K`. Let `B : power_basis K L` be such that `is_integral 
 Then for all, `z : L` that are integral over `R`, we have
 `(discr K B.basis) • z ∈ adjoin R ({B.gen} : set L)`. -/
 theorem discr_mul_isIntegral_mem_adjoin [IsDomain R] [IsSeparable K L] [IsIntegrallyClosed R]
-    [IsFractionRing R K] {B : PowerBasis K L} (hint : is_integral R B.gen) {z : L}
-    (hz : is_integral R z) : discr K B.Basis • z ∈ adjoin R ({B.gen} : Set L) :=
+    [IsFractionRing R K] {B : PowerBasis K L} (hint : IsIntegral R B.gen) {z : L}
+    (hz : IsIntegral R z) : discr K B.Basis • z ∈ adjoin R ({B.gen} : Set L) :=
   by
   have hinv : IsUnit (trace_matrix K B.basis).det := by
     simpa [← discr_def] using discr_is_unit_of_basis _ B.basis

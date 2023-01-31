@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,6 @@ variable [AddCommMonoid N] [Module R N]
 
 /-- If `module.free R M` then `choose_basis_index R M` is the `ι` which indexes the basis
   `ι → M`. -/
-@[nolint has_nonempty_instance]
 def ChooseBasisIndex :=
   (exists_basis R M).some.1
 #align module.free.choose_basis_index Module.Free.ChooseBasisIndex
@@ -113,6 +112,9 @@ instance (priority := 100) noZeroSMulDivisors [NoZeroDivisors R] : NoZeroSMulDiv
   let ⟨⟨_, b⟩⟩ := exists_basis R M
   b.NoZeroSmulDivisors
 #align module.free.no_zero_smul_divisors Module.Free.noZeroSMulDivisors
+
+instance [Nontrivial M] : Nonempty (Module.Free.ChooseBasisIndex R M) :=
+  (Module.Free.chooseBasis R M).index_nonempty
 
 variable {R M N}
 

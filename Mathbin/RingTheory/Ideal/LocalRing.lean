@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,6 +144,12 @@ theorem le_maximalIdeal {J : Ideal R} (hJ : J ≠ ⊤) : J ≤ maximalIdeal R :=
 theorem mem_maximalIdeal (x) : x ∈ maximalIdeal R ↔ x ∈ nonunits R :=
   Iff.rfl
 #align local_ring.mem_maximal_ideal LocalRing.mem_maximalIdeal
+
+theorem isField_iff_maximalIdeal_eq : IsField R ↔ maximalIdeal R = ⊥ :=
+  not_iff_not.mp
+    ⟨Ring.ne_bot_of_isMaximal_of_not_isField inferInstance, fun h =>
+      Ring.not_isField_iff_exists_prime.mpr ⟨_, h, Ideal.IsMaximal.is_prime' _⟩⟩
+#align local_ring.is_field_iff_maximal_ideal_eq LocalRing.isField_iff_maximalIdeal_eq
 
 end LocalRing
 
@@ -662,9 +668,30 @@ theorem ResidueField.algebraMap_eq : algebraMap R (ResidueField R) = residue R :
   rfl
 #align local_ring.residue_field.algebra_map_eq LocalRing.ResidueField.algebraMap_eq
 
+instance : IsLocalRingHom (LocalRing.residue R) :=
+  ⟨fun a ha => not_not.mp (Ideal.Quotient.eq_zero_iff_mem.Not.mp (isUnit_iff_ne_zero.mp ha))⟩
+
 variable {R}
 
 namespace ResidueField
+
+/-- A local ring homomorphism into a field can be descended onto the residue field. -/
+def lift {R S : Type _} [CommRing R] [LocalRing R] [Field S] (f : R →+* S) [IsLocalRingHom f] :
+    LocalRing.ResidueField R →+* S :=
+  Ideal.Quotient.lift _ f fun a ha =>
+    by_contradiction fun h => ha (isUnit_of_map_unit f a (isUnit_iff_ne_zero.mpr h))
+#align local_ring.residue_field.lift LocalRing.ResidueField.lift
+
+theorem lift_comp_residue {R S : Type _} [CommRing R] [LocalRing R] [Field S] (f : R →+* S)
+    [IsLocalRingHom f] : (lift f).comp (residue R) = f :=
+  RingHom.ext fun _ => rfl
+#align local_ring.residue_field.lift_comp_residue LocalRing.ResidueField.lift_comp_residue
+
+@[simp]
+theorem lift_residue_apply {R S : Type _} [CommRing R] [LocalRing R] [Field S] (f : R →+* S)
+    [IsLocalRingHom f] (x) : lift f (residue R x) = f x :=
+  rfl
+#align local_ring.residue_field.lift_residue_apply LocalRing.ResidueField.lift_residue_apply
 
 /-- The map on residue fields induced by a local homomorphism between local rings -/
 def map (f : R →+* S) [IsLocalRingHom f] : ResidueField R →+* ResidueField S :=
@@ -795,4 +822,8 @@ instance (priority := 100) : LocalRing K :=
     else Or.inl <| IsUnit.mk0 a h
 
 end Field
+
+theorem LocalRing.maximalIdeal_eq_bot {R : Type _} [Field R] : LocalRing.maximalIdeal R = ⊥ :=
+  LocalRing.isField_iff_maximalIdeal_eq.mp (Field.toIsField R)
+#align local_ring.maximal_ideal_eq_bot LocalRing.maximalIdeal_eq_bot
 

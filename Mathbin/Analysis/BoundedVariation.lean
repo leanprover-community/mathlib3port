@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ that the sets one uses are nonempty and bounded above as these are only conditio
 -/
 
 
-open BigOperators Nnreal Ennreal TopologicalSpace UniformConvergence
+open BigOperators Nnreal Ennreal Topology UniformConvergence
 
 open Set MeasureTheory Filter
 

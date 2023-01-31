@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ variable {X Y Z α : Type _} [TopologicalSpace X]
 
 open Set Filter
 
-open TopologicalSpace
+open Topology
 
 /-- A function between topological spaces is locally constant if the preimage of any set is open. -/
 def IsLocallyConstant (f : X → Y) : Prop :=
@@ -70,7 +70,7 @@ namespace IsLocallyConstant
               (Std.ExtendedBinder.extBinders
                (Std.ExtendedBinder.extBinder (Lean.binderIdent `x') []))
               " in "
-              (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`x])
+              (Term.app (Topology.Topology.Basic.nhds "𝓝") [`x])
               ", "
               («term_=_» (Term.app `f [`x']) "=" (Term.app `f [`x]))))
             ","

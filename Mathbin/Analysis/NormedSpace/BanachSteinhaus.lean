@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.banach_steinhaus
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ theorem banach_steinhaus_supᵢ_nnnorm {ι : Type _} [CompleteSpace E] {g : ι �
   exact coe_mono (Real.toNnreal_le_toNnreal <| hC' i)
 #align banach_steinhaus_supr_nnnorm banach_steinhaus_supᵢ_nnnorm
 
-open TopologicalSpace
+open Topology
 
 open Filter
 

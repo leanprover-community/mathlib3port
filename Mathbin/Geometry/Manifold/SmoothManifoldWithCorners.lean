@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.smooth_manifold_with_corners
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ universe u v w u' v' w'
 
 open Set Filter Function
 
-open Manifold Filter TopologicalSpace
+open Manifold Filter Topology
 
 -- mathport name: with_top.nat.top
 scoped[Manifold] notation "∞" => (⊤ : ℕ∞)
@@ -797,7 +797,7 @@ end TopologicalSpace.Opens
 
 section ExtendedCharts
 
-open TopologicalSpace
+open Topology
 
 variable {𝕜 E M H E' M' H' : Type _} [NontriviallyNormedField 𝕜] [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] [TopologicalSpace H] [TopologicalSpace M] (f f' : LocalHomeomorph M H)

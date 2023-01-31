@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module order.filter.zero_and_bounded_at_filter
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ namespace Filter
 
 variable {α β : Type _}
 
-open TopologicalSpace
+open Topology
 
 /-- If `l` is a filter on `α`, then a function `f : α → β` is `zero_at_filter l`
   if it tends to zero along `l`. -/

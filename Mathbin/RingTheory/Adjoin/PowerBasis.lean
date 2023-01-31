@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.power_basis
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,8 +37,7 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
   by
   have hST : Function.Injective (algebraMap (adjoin K ({x} : Set S)) S) := Subtype.coe_injective
   have hx' :
-    _root_.is_integral K
-      (show adjoin K ({x} : Set S) from ⟨x, subset_adjoin (Set.mem_singleton x)⟩) :=
+    IsIntegral K (show adjoin K ({x} : Set S) from ⟨x, subset_adjoin (Set.mem_singleton x)⟩) :=
     by
     apply (isIntegral_algebraMap_iff hST).mp
     convert hx

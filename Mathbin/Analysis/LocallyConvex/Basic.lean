@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ absorbent, balanced, locally convex, LCTVS
 
 open Set
 
-open Pointwise TopologicalSpace
+open Pointwise Topology
 
 variable {𝕜 𝕝 E : Type _} {ι : Sort _} {κ : ι → Sort _}
 

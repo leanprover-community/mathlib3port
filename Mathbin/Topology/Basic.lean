@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Filter.Lift
 
 /-!
 # Basic theory of topological spaces.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The main definition is the type class `topological_space α` which endows a type `α` with a topology.
 Then `set α` gets predicates `is_open`, `is_closed` and functions `interior`, `closure` and
@@ -1346,7 +1349,7 @@ irreducible_def nhds (a : α) : Filter α :=
 -/
 
 -- mathport name: nhds
-scoped[TopologicalSpace] notation "𝓝" => nhds
+scoped[Topology] notation "𝓝" => nhds
 
 #print nhdsWithin /-
 /-- The "neighborhood within" filter. Elements of `𝓝[s] a` are sets containing the
@@ -1357,22 +1360,22 @@ def nhdsWithin (a : α) (s : Set α) : Filter α :=
 -/
 
 -- mathport name: nhds_within
-scoped[TopologicalSpace] notation "𝓝[" s "] " x:100 => nhdsWithin x s
+scoped[Topology] notation "𝓝[" s "] " x:100 => nhdsWithin x s
 
 -- mathport name: nhds_within.ne
-scoped[TopologicalSpace] notation "𝓝[≠] " x:100 => nhdsWithin x ({x}ᶜ)
+scoped[Topology] notation "𝓝[≠] " x:100 => nhdsWithin x ({x}ᶜ)
 
 -- mathport name: nhds_within.ge
-scoped[TopologicalSpace] notation "𝓝[≥] " x:100 => nhdsWithin x (Set.Ici x)
+scoped[Topology] notation "𝓝[≥] " x:100 => nhdsWithin x (Set.Ici x)
 
 -- mathport name: nhds_within.le
-scoped[TopologicalSpace] notation "𝓝[≤] " x:100 => nhdsWithin x (Set.Iic x)
+scoped[Topology] notation "𝓝[≤] " x:100 => nhdsWithin x (Set.Iic x)
 
 -- mathport name: nhds_within.gt
-scoped[TopologicalSpace] notation "𝓝[>] " x:100 => nhdsWithin x (Set.Ioi x)
+scoped[Topology] notation "𝓝[>] " x:100 => nhdsWithin x (Set.Ioi x)
 
 -- mathport name: nhds_within.lt
-scoped[TopologicalSpace] notation "𝓝[<] " x:100 => nhdsWithin x (Set.Iio x)
+scoped[Topology] notation "𝓝[<] " x:100 => nhdsWithin x (Set.Iio x)
 
 /- warning: nhds_def -> nhds_def is a dubious translation:
 lean 3 declaration is
@@ -2540,7 +2543,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-open TopologicalSpace
+open Topology
 
 #print Continuous /-
 /-- A function between topological spaces is continuous if the preimage

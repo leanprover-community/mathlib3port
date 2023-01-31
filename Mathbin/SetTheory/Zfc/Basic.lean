@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -853,9 +853,16 @@ theorem nonempty_mk_iff {x : PSet} : (mk x).Nonempty ↔ x.Nonempty :=
 #align Set.nonempty_mk_iff SetCat.nonempty_mk_iff
 
 theorem eq_empty (x : SetCat.{u}) : x = ∅ ↔ ∀ y : SetCat.{u}, y ∉ x :=
-  ⟨fun h y => h.symm ▸ not_mem_empty y, fun h =>
-    ext fun y => ⟨fun yx => absurd yx (h y), fun y0 => absurd y0 (not_mem_empty _)⟩⟩
+  by
+  rw [ext_iff]
+  simp
 #align Set.eq_empty SetCat.eq_empty
+
+theorem eq_empty_or_nonempty (u : SetCat) : u = ∅ ∨ u.Nonempty :=
+  by
+  rw [eq_empty, ← not_exists]
+  apply em'
+#align Set.eq_empty_or_nonempty SetCat.eq_empty_or_nonempty
 
 /-- `insert x y` is the set `{x} ∪ y` -/
 protected def insert : SetCat → SetCat → SetCat :=
@@ -925,6 +932,14 @@ theorem toSet_singleton (x : SetCat) : ({x} : SetCat).toSet = {x} :=
   ext
   simp
 #align Set.to_set_singleton SetCat.toSet_singleton
+
+theorem insert_nonempty (u v : SetCat) : (insert u v).Nonempty :=
+  ⟨u, mem_insert u v⟩
+#align Set.insert_nonempty SetCat.insert_nonempty
+
+theorem singleton_nonempty (u : SetCat) : SetCat.Nonempty {u} :=
+  insert_nonempty u ∅
+#align Set.singleton_nonempty SetCat.singleton_nonempty
 
 @[simp]
 theorem mem_pair {x y z : SetCat.{u}} : x ∈ ({y, z} : SetCat) ↔ x = y ∨ x = z :=
@@ -1052,9 +1067,26 @@ theorem mem_sUnion_of_mem {x y z : SetCat} (hy : y ∈ z) (hz : z ∈ x) : y ∈
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
+theorem sUnion_empty : ⋃₀ (∅ : SetCat.{u}) = ∅ :=
+  by
+  ext
+  simp
+#align Set.sUnion_empty SetCat.sUnion_empty
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
 theorem sUnion_singleton {x : SetCat.{u}} : ⋃₀ ({x} : SetCat) = x :=
   ext fun y => by simp_rw [mem_sUnion, exists_prop, mem_singleton, exists_eq_left]
 #align Set.sUnion_singleton SetCat.sUnion_singleton
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
+theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.toSet) :=
+  by
+  ext
+  simp
+#align Set.to_set_sUnion SetCat.toSet_sUnion
 
 theorem singleton_injective : Function.Injective (@singleton SetCat SetCat _) := fun x y H =>
   by
@@ -1066,23 +1098,6 @@ theorem singleton_injective : Function.Injective (@singleton SetCat SetCat _) :=
 theorem singleton_inj {x y : SetCat} : ({x} : SetCat) = {y} ↔ x = y :=
   singleton_injective.eq_iff
 #align Set.singleton_inj SetCat.singleton_inj
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem toSet_sUnion (x : SetCat.{u}) : (⋃₀ x).toSet = ⋃₀ (to_set '' x.toSet) :=
-  by
-  ext
-  simp
-#align Set.to_set_sUnion SetCat.toSet_sUnion
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-@[simp]
-theorem sUnion_empty : ⋃₀ (∅ : SetCat.{u}) = ∅ :=
-  by
-  ext
-  simp
-#align Set.sUnion_empty SetCat.sUnion_empty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The binary union operation -/
@@ -1403,13 +1418,28 @@ protected def Mem (A B : ClassCat.{u}) : Prop :=
 instance : Membership ClassCat ClassCat :=
   ⟨ClassCat.Mem⟩
 
+theorem mem_def (A B : ClassCat.{u}) : A ∈ B ↔ ∃ x, ↑x = A ∧ B x :=
+  Iff.rfl
+#align Class.mem_def ClassCat.mem_def
+
 @[simp]
 theorem not_mem_empty (x : ClassCat.{u}) : x ∉ (∅ : ClassCat.{u}) := fun ⟨_, _, h⟩ => h
 #align Class.not_mem_empty ClassCat.not_mem_empty
 
+@[simp]
+theorem not_empty_hom (x : SetCat.{u}) : ¬(∅ : ClassCat.{u}) x :=
+  id
+#align Class.not_empty_hom ClassCat.not_empty_hom
+
+@[simp]
 theorem mem_univ {A : ClassCat.{u}} : A ∈ univ.{u} ↔ ∃ x : SetCat.{u}, ↑x = A :=
   exists_congr fun x => and_true_iff _
 #align Class.mem_univ ClassCat.mem_univ
+
+@[simp]
+theorem mem_univ_hom (x : SetCat.{u}) : univ.{u} x :=
+  trivial
+#align Class.mem_univ_hom ClassCat.mem_univ_hom
 
 theorem mem_wf : @WellFounded ClassCat.{u} (· ∈ ·) :=
   ⟨by
@@ -1450,10 +1480,24 @@ def congToClass (x : Set ClassCat.{u}) : ClassCat.{u} :=
   { y | ↑y ∈ x }
 #align Class.Cong_to_Class ClassCat.congToClass
 
+@[simp]
+theorem congToClass_empty : congToClass ∅ = ∅ :=
+  by
+  ext
+  simp [Cong_to_Class]
+#align Class.Cong_to_Class_empty ClassCat.congToClass_empty
+
 /-- Convert a class into a conglomerate (a collection of classes) -/
 def classToCong (x : ClassCat.{u}) : Set ClassCat.{u} :=
   { y | y ∈ x }
 #align Class.Class_to_Cong ClassCat.classToCong
+
+@[simp]
+theorem classToCong_empty : classToCong ∅ = ∅ :=
+  by
+  ext
+  simp [Class_to_Cong]
+#align Class.Class_to_Cong_empty ClassCat.classToCong_empty
 
 /-- The power class of a class is the class of all subclasses that are ZFC sets -/
 def powerset (x : ClassCat) : ClassCat :=

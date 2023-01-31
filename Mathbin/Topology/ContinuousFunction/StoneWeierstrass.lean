@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.stone_weierstrass
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,7 +172,7 @@ theorem sup_mem_closed_subalgebra (A : Subalgebra ℝ C(X, ℝ)) (h : IsClosed (
   exact h
 #align continuous_map.sup_mem_closed_subalgebra ContinuousMap.sup_mem_closed_subalgebra
 
-open TopologicalSpace
+open Topology
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (f g «expr ∈ » L) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (f g «expr ∈ » L) -/

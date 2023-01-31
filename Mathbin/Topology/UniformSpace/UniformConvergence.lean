@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ Uniform limit, uniform convergence, tends uniformly to
 
 noncomputable section
 
-open TopologicalSpace Classical uniformity Filter
+open Topology Classical uniformity Filter
 
 open Set Filter
 
@@ -864,7 +864,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
              (Std.ExtendedBinder.«term∃__,_»
               "∃"
               (Lean.binderIdent `v)
-              («binderTerm∈_» "∈" (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" `s "] " `x))
+              («binderTerm∈_» "∈" (Topology.Topology.Basic.nhds_within "𝓝[" `s "] " `x))
               ","
               (Term.app `TendstoUniformlyOn [`G `g `p `v])))]
            "]")])))

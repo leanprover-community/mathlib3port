@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compact_convergence
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ of the uniform space structure on `C(α, β)` definitionally equal to the compac
 
 universe u₁ u₂ u₃
 
-open Filter uniformity TopologicalSpace
+open Filter uniformity Topology
 
 open UniformSpace Set Filter
 

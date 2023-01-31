@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.trace
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -330,7 +330,7 @@ open Polynomial
 theorem Algebra.isIntegral_trace [FiniteDimensional L F] {x : F} (hx : IsIntegral R x) :
     IsIntegral R (Algebra.trace L F x) :=
   by
-  have hx' : _root_.is_integral L x := isIntegral_of_isScalarTower hx
+  have hx' : IsIntegral L x := isIntegral_of_isScalarTower hx
   rw [← isIntegral_algebraMap_iff (algebraMap L (AlgebraicClosure F)).Injective, trace_eq_sum_roots]
   · refine' (IsIntegral.multiset_sum _).nsmul _
     intro y hy

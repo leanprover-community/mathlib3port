@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module number_theory.well_approximable
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ An elementary (non-measure-theoretic) argument shows that if `¬ hδ` holds then
 
 open Set Filter Function Metric MeasureTheory
 
-open MeasureTheory TopologicalSpace Pointwise
+open MeasureTheory Topology Pointwise
 
 /-- In a seminormed group `A`, given `n : ℕ` and `δ : ℝ`, `approx_order_of A n δ` is the set of
 elements within a distance `δ` of a point of order `n`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.open_mapping
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ second step is implemented in `diff_cont_on_cl.ball_subset_image_closed_ball`.
 
 open Set Filter Metric Complex
 
-open TopologicalSpace
+open Topology
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {U : Set E} {f : ℂ → ℂ} {g : E → ℂ}
   {z₀ w : ℂ} {ε r m : ℝ}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.locally_finite
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.Filter.SmallSets
 
 /-!
 ### Locally finite families of sets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We say that a family of sets in a topological space is *locally finite* if at every point `x : X`,
 there is a neighborhood of `x` which meets only finitely many sets in the family.
@@ -24,7 +27,7 @@ In this file we give the definition and prove basic properties of locally finite
 -- locally finite family [General Topology (Bourbaki, 1995)]
 open Set Function Filter
 
-open TopologicalSpace Filter
+open Topology Filter
 
 universe u
 

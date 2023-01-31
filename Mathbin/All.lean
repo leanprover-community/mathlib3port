@@ -150,6 +150,7 @@ import Mathbin.Algebra.GcdMonoid.IntegrallyClosed
 import Mathbin.Algebra.GcdMonoid.Multiset
 import Mathbin.Algebra.GeomSum
 import Mathbin.Algebra.GradedMonoid
+import Mathbin.Algebra.GradedMulAction
 import Mathbin.Algebra.Group.Basic
 import Mathbin.Algebra.Group.Commutator
 import Mathbin.Algebra.Group.Commute
@@ -262,6 +263,7 @@ import Mathbin.Algebra.Module.Bimodule
 import Mathbin.Algebra.Module.DedekindDomain
 import Mathbin.Algebra.Module.Default
 import Mathbin.Algebra.Module.Equiv
+import Mathbin.Algebra.Module.GradedModule
 import Mathbin.Algebra.Module.Hom
 import Mathbin.Algebra.Module.Injective
 import Mathbin.Algebra.Module.LinearMap
@@ -735,6 +737,7 @@ import Mathbin.Analysis.SpecialFunctions.Trigonometric.Chebyshev
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Complex
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.ComplexDeriv
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathbin.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 import Mathbin.Analysis.SpecificLimits.Basic
@@ -2358,6 +2361,7 @@ import Mathbin.Order.FixedPoints
 import Mathbin.Order.GaloisConnection
 import Mathbin.Order.GameAdd
 import Mathbin.Order.Grade
+import Mathbin.Order.Height
 import Mathbin.Order.Heyting.Basic
 import Mathbin.Order.Heyting.Boundary
 import Mathbin.Order.Heyting.Hom
@@ -2529,6 +2533,7 @@ import Mathbin.RingTheory.Localization.Integral
 import Mathbin.RingTheory.Localization.InvSubmonoid
 import Mathbin.RingTheory.Localization.LocalizationLocalization
 import Mathbin.RingTheory.Localization.Module
+import Mathbin.RingTheory.Localization.Norm
 import Mathbin.RingTheory.Localization.NumDenom
 import Mathbin.RingTheory.Localization.Submodule
 import Mathbin.RingTheory.MatrixAlgebra

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.floor_pow
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,7 @@ We state several auxiliary results pertaining to sequences of the form `⌊c^n�
 
 open Filter Finset
 
-open TopologicalSpace BigOperators
+open Topology BigOperators
 
 /-- If a monotone sequence `u` is such that `u n / n` tends to a limit `l` along subsequences with
 exponential growth rate arbitrarily close to `1`, then `u n / n` tends to `l`. -/

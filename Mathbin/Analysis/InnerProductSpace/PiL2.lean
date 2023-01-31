@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 
 open Real Set Filter IsROrC Submodule Function
 
-open BigOperators uniformity TopologicalSpace Nnreal Ennreal ComplexConjugate DirectSum
+open BigOperators uniformity Topology Nnreal Ennreal ComplexConjugate DirectSum
 
 noncomputable section
 

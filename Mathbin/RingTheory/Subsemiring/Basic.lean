@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,8 +35,8 @@ section AddSubmonoidWithOneClass
 #print AddSubmonoidWithOneClass /-
 /-- `add_submonoid_with_one_class S R` says `S` is a type of subsets `s ≤ R` that contain `0`, `1`,
 and are closed under `(+)` -/
-class AddSubmonoidWithOneClass (S : Type _) (R : outParam <| Type _) [AddMonoidWithOne R]
-  [SetLike S R] extends AddSubmonoidClass S R, OneMemClass S R : Prop
+class AddSubmonoidWithOneClass (S : Type _) (R : Type _) [AddMonoidWithOne R] [SetLike S R] extends
+  AddSubmonoidClass S R, OneMemClass S R : Prop
 #align add_submonoid_with_one_class AddSubmonoidWithOneClass
 -/
 
@@ -72,16 +72,15 @@ section SubsemiringClass
 #print SubsemiringClass /-
 /-- `subsemiring_class S R` states that `S` is a type of subsets `s ⊆ R` that
 are both a multiplicative and an additive submonoid. -/
-class SubsemiringClass (S : Type _) (R : outParam <| Type u) [NonAssocSemiring R]
-  [SetLike S R] extends SubmonoidClass S R, AddSubmonoidClass S R : Prop
+class SubsemiringClass (S : Type _) (R : Type u) [NonAssocSemiring R] [SetLike S R] extends
+  SubmonoidClass S R, AddSubmonoidClass S R : Prop
 #align subsemiring_class SubsemiringClass
 -/
 
 #print SubsemiringClass.addSubmonoidWithOneClass /-
 -- See note [lower instance priority]
-instance (priority := 100) SubsemiringClass.addSubmonoidWithOneClass (S : Type _)
-    (R : outParam <| Type u) [NonAssocSemiring R] [SetLike S R] [h : SubsemiringClass S R] :
-    AddSubmonoidWithOneClass S R :=
+instance (priority := 100) SubsemiringClass.addSubmonoidWithOneClass (S : Type _) (R : Type u)
+    [NonAssocSemiring R] [SetLike S R] [h : SubsemiringClass S R] : AddSubmonoidWithOneClass S R :=
   { h with }
 #align subsemiring_class.add_submonoid_with_one_class SubsemiringClass.addSubmonoidWithOneClass
 -/

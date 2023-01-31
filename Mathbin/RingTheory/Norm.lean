@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,45 +154,58 @@ section EqZeroIff
 
 variable [Finite ι]
 
-theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {x : S} :
-    Algebra.norm R x = 0 ↔ x = 0 := by
-  cases nonempty_fintype ι
-  have hι : Nonempty ι := b.index_nonempty
-  letI := Classical.decEq ι
-  rw [Algebra.norm_eq_matrix_det b]
+@[simp]
+theorem norm_zero [Nontrivial S] [Module.Free R S] [Module.Finite R S] : norm R (0 : S) = 0 :=
+  by
+  nontriviality
+  rw [norm_apply, coe_lmul_eq_mul, map_zero, LinearMap.det_zero' (Module.Free.chooseBasis R S)]
+#align algebra.norm_zero Algebra.norm_zero
+
+@[simp]
+theorem norm_eq_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Finite R S] {x : S} :
+    norm R x = 0 ↔ x = 0 := by
   constructor
-  · rw [← Matrix.exists_mulVec_eq_zero_iff]
+  let b := Module.Free.chooseBasis R S
+  swap;
+  · rintro rfl
+    exact norm_zero
+  · letI := Classical.decEq (Module.Free.ChooseBasisIndex R S)
+    rw [norm_eq_matrix_det b, ← Matrix.exists_mulVec_eq_zero_iff]
     rintro ⟨v, v_ne, hv⟩
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
-      Algebra.leftMulMatrix_mulVec_repr] at hv
+      left_mul_matrix_mul_vec_repr] at hv
     refine'
       (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
     · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
     · contrapose! v_ne with sum_eq
       apply b.equiv_fun.symm.injective
       rw [b.equiv_fun_symm_apply, sum_eq, LinearEquiv.map_zero]
-  · rintro rfl
-    rw [AlgHom.map_zero, Matrix.det_zero hι]
+#align algebra.norm_eq_zero_iff Algebra.norm_eq_zero_iff
+
+theorem norm_ne_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Finite R S] {x : S} :
+    norm R x ≠ 0 ↔ x ≠ 0 :=
+  not_iff_not.mpr norm_eq_zero_iff
+#align algebra.norm_ne_zero_iff Algebra.norm_ne_zero_iff
+
+/-- This is `algebra.norm_eq_zero_iff` composed with `algebra.norm_apply`. -/
+@[simp]
+theorem norm_eq_zero_iff' [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Finite R S] {x : S} :
+    LinearMap.det (LinearMap.mul R S x) = 0 ↔ x = 0 :=
+  norm_eq_zero_iff
+#align algebra.norm_eq_zero_iff' Algebra.norm_eq_zero_iff'
+
+theorem norm_eq_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {x : S} :
+    Algebra.norm R x = 0 ↔ x = 0 :=
+  by
+  haveI : Module.Free R S := Module.Free.ofBasis b
+  haveI : Module.Finite R S := Module.Finite.of_basis b
+  exact norm_eq_zero_iff
 #align algebra.norm_eq_zero_iff_of_basis Algebra.norm_eq_zero_iff_of_basis
 
 theorem norm_ne_zero_iff_of_basis [IsDomain R] [IsDomain S] (b : Basis ι R S) {x : S} :
     Algebra.norm R x ≠ 0 ↔ x ≠ 0 :=
-  not_iff_not.mpr (Algebra.norm_eq_zero_iff_of_basis b)
+  not_iff_not.mpr (norm_eq_zero_iff_of_basis b)
 #align algebra.norm_ne_zero_iff_of_basis Algebra.norm_ne_zero_iff_of_basis
-
-/-- See also `algebra.norm_eq_zero_iff'` if you already have rewritten with `algebra.norm_apply`. -/
-@[simp]
-theorem norm_eq_zero_iff {K L : Type _} [Field K] [CommRing L] [Algebra K L] [IsDomain L]
-    [FiniteDimensional K L] {x : L} : Algebra.norm K x = 0 ↔ x = 0 :=
-  Algebra.norm_eq_zero_iff_of_basis (Basis.ofVectorSpace K L)
-#align algebra.norm_eq_zero_iff Algebra.norm_eq_zero_iff
-
-/-- This is `algebra.norm_eq_zero_iff` composed with `algebra.norm_apply`. -/
-@[simp]
-theorem norm_eq_zero_iff' {K L : Type _} [Field K] [CommRing L] [Algebra K L] [IsDomain L]
-    [FiniteDimensional K L] {x : L} : LinearMap.det (LinearMap.mul K L x) = 0 ↔ x = 0 :=
-  Algebra.norm_eq_zero_iff_of_basis (Basis.ofVectorSpace K L)
-#align algebra.norm_eq_zero_iff' Algebra.norm_eq_zero_iff'
 
 end EqZeroIff
 
@@ -239,10 +252,10 @@ theorem IntermediateField.AdjoinSimple.norm_gen_eq_prod_roots (x : L)
       ((minpoly K x).map (algebraMap K F)).roots.Prod :=
   by
   have injKxL := (algebraMap K⟮⟯ L).Injective
-  by_cases hx : _root_.is_integral K x
+  by_cases hx : IsIntegral K x
   swap
   · simp [minpoly.eq_zero hx, IntermediateField.AdjoinSimple.norm_gen_eq_one hx]
-  have hx' : _root_.is_integral K (adjoin_simple.gen K x) :=
+  have hx' : IsIntegral K (adjoin_simple.gen K x) :=
     by
     rwa [← isIntegral_algebraMap_iff injKxL, adjoin_simple.algebra_map_gen]
     infer_instance
@@ -337,7 +350,7 @@ theorem norm_eq_prod_automorphisms [FiniteDimensional K L] [IsGalois K L] (x : L
 theorem isIntegral_norm [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSeparable K L]
     [FiniteDimensional K L] {x : L} (hx : IsIntegral R x) : IsIntegral R (norm K x) :=
   by
-  have hx' : _root_.is_integral K x := isIntegral_of_isScalarTower hx
+  have hx' : IsIntegral K x := isIntegral_of_isScalarTower hx
   rw [← isIntegral_algebraMap_iff (algebraMap K (AlgebraicClosure L)).Injective, norm_eq_prod_roots]
   · refine' (IsIntegral.multiset_prod fun y hy => _).pow _
     rw [mem_roots_map (minpoly.ne_zero hx')] at hy

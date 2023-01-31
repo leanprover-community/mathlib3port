@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.GroupTheory.GroupAction.Basic
 /-!
 
 # Sets invariant to a `mul_action`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define `sub_mul_action R M`; a subset of a `mul_action R M` which is closed with
 respect to scalar multiplication.
@@ -43,16 +46,24 @@ variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 
 #print SMulMemClass /-
 /-- `smul_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
-scalar action of `R` on `M`. -/
-class SMulMemClass (S : Type _) (R M : outParam <| Type _) [SMul R M] [SetLike S M] where
+scalar action of `R` on `M`.
+
+Note that only `R` is marked as an `out_param` here, since `M` is supplied by the `set_like`
+class instead.
+-/
+class SMulMemClass (S : Type _) (R : outParam <| Type _) (M : Type _) [SMul R M] [SetLike S M] where
   smul_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r • m ∈ s
 #align smul_mem_class SMulMemClass
 -/
 
 #print VAddMemClass /-
 /-- `vadd_mem_class S R M` says `S` is a type of subsets `s ≤ M` that are closed under the
-additive action of `R` on `M`. -/
-class VAddMemClass (S : Type _) (R M : outParam <| Type _) [VAdd R M] [SetLike S M] where
+additive action of `R` on `M`.
+
+Note that only `R` is marked as an `out_param` here, since `M` is supplied by the `set_like`
+class instead.
+-/
+class VAddMemClass (S : Type _) (R : outParam <| Type _) (M : Type _) [VAdd R M] [SetLike S M] where
   vadd_mem : ∀ {s : S} (r : R) {m : M}, m ∈ s → r +ᵥ m ∈ s
 #align vadd_mem_class VAddMemClass
 -/

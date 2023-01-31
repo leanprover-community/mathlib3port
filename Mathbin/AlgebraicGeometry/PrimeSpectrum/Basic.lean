@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -537,7 +537,8 @@ theorem t1Space_iff_isField [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField
           (not_not.2 rfl))
   · refine' ⟨fun x => (is_closed_singleton_iff_is_maximal x).2 _⟩
     by_cases hx : x.as_ideal = ⊥
-    · exact hx.symm ▸ @Ideal.bot_isMaximal R (@Field.toDivisionRing _ h.to_field)
+    · letI := h.to_field
+      exact hx.symm ▸ Ideal.bot_isMaximal
     · exact absurd h (Ring.not_isField_iff_exists_prime.2 ⟨x.as_ideal, ⟨hx, x.2⟩⟩)
 #align prime_spectrum.t1_space_iff_is_field PrimeSpectrum.t1Space_iff_isField
 
@@ -973,6 +974,16 @@ def nhdsOrderEmbedding : PrimeSpectrum R ↪o Filter (PrimeSpectrum R) :=
 instance : T0Space (PrimeSpectrum R) :=
   ⟨nhdsOrderEmbedding.Injective⟩
 
+instance [IsDomain R] : OrderBot (PrimeSpectrum R)
+    where
+  bot := ⟨⊥, Ideal.bot_prime⟩
+  bot_le I := @bot_le _ _ _ I.asIdeal
+
+instance {R : Type _} [Field R] : Unique (PrimeSpectrum R)
+    where
+  default := ⊥
+  uniq x := ext _ _ ((IsSimpleOrder.eq_bot_or_eq_top _).resolve_right x.2.ne_top)
+
 end Order
 
 /-- If `x` specializes to `y`, then there is a natural map from the localization of `y` to the
@@ -1013,6 +1024,28 @@ theorem comap_closedPoint {S : Type v} [CommRing S] [LocalRing S] (f : R →+* S
     PrimeSpectrum.comap f (closedPoint S) = closedPoint R :=
   (isLocalRingHom_iff_comap_closedPoint f).mp inferInstance
 #align local_ring.comap_closed_point LocalRing.comap_closedPoint
+
+theorem specializes_closedPoint (x : PrimeSpectrum R) : x ⤳ closedPoint R :=
+  (PrimeSpectrum.le_iff_specializes _ _).mp (LocalRing.le_maximalIdeal x.2.1)
+#align local_ring.specializes_closed_point LocalRing.specializes_closedPoint
+
+theorem closedPoint_mem_iff (U : TopologicalSpace.Opens <| PrimeSpectrum R) :
+    closedPoint R ∈ U ↔ U = ⊤ := by
+  constructor
+  · rw [eq_top_iff]
+    exact fun h x _ => (specializes_closed_point x).mem_open U.2 h
+  · rintro rfl
+    trivial
+#align local_ring.closed_point_mem_iff LocalRing.closedPoint_mem_iff
+
+@[simp]
+theorem PrimeSpectrum.comap_residue (x : PrimeSpectrum (ResidueField R)) :
+    PrimeSpectrum.comap (residue R) x = closedPoint R :=
+  by
+  rw [Subsingleton.elim x ⊥]
+  ext1
+  exact Ideal.mk_ker
+#align prime_spectrum.comap_residue PrimeSpectrum.comap_residue
 
 end LocalRing
 

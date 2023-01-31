@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -912,9 +912,9 @@ theorem KaehlerDifferential.span_range_derivation :
     refine' ⟨KaehlerDifferential.one_smul_sub_smul_one_mem_ideal R x, _⟩
     apply Submodule.subset_span
     exact ⟨x, KaehlerDifferential.dLinearMap_apply R S x⟩
-  · exact ⟨zero_mem _, zero_mem _⟩
+  · exact ⟨zero_mem _, Submodule.zero_mem _⟩
   · rintro x y ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩
-    exact ⟨add_mem hx₁ hy₁, add_mem hx₂ hy₂⟩
+    exact ⟨add_mem hx₁ hy₁, Submodule.add_mem _ hx₂ hy₂⟩
   · rintro r x ⟨hx₁, hx₂⟩
     exact
       ⟨((KaehlerDifferential.ideal R S).restrictScalars S).smul_mem r hx₁,

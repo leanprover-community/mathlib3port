@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.discrete_valuation_ring
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem not_a_field : maximalIdeal R ≠ ⊥ :=
 
 /-- A discrete valuation ring `R` is not a field. -/
 theorem not_isField : ¬IsField R :=
-  Ring.not_isField_iff_exists_prime.mpr ⟨_, not_a_field R, IsMaximal.is_prime' (maximalIdeal R)⟩
+  LocalRing.isField_iff_maximalIdeal_eq.Not.mpr (not_a_field R)
 #align discrete_valuation_ring.not_is_field DiscreteValuationRing.not_isField
 
 variable {R}

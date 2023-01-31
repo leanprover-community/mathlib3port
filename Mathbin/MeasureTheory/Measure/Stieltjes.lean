@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.stieltjes
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ open Classical Set Filter Function
 
 open Ennreal (ofReal)
 
-open BigOperators Ennreal Nnreal TopologicalSpace MeasureTheory
+open BigOperators Ennreal Nnreal Topology MeasureTheory
 
 /-! ### Basic properties of Stieltjes functions -/
 

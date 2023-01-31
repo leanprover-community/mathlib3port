@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -696,13 +696,13 @@ end Ideal
 
 end Ring
 
-section DivisionRing
+section DivisionSemiring
 
-variable {K : Type u} [DivisionRing K] (I : Ideal K)
+variable {K : Type u} [DivisionSemiring K] (I : Ideal K)
 
 namespace Ideal
 
-/-- All ideals in a division ring are trivial. -/
+/-- All ideals in a division (semi)ring are trivial. -/
 theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ :=
   by
   rw [or_iff_not_imp_right]
@@ -715,8 +715,8 @@ theorem eq_bot_or_top : I = ⊥ ∨ I = ⊤ :=
   simpa [H, h1] using I.mul_mem_left r⁻¹ hr
 #align ideal.eq_bot_or_top Ideal.eq_bot_or_top
 
-/-- Ideals of a `division_ring` are a simple order. Thanks to the way abbreviations work, this
-automatically gives a `is_simple_module K` instance. -/
+/-- Ideals of a `division_semiring` are a simple order. Thanks to the way abbreviations work,
+this automatically gives a `is_simple_module K` instance. -/
 instance : IsSimpleOrder (Ideal K) :=
   ⟨eq_bot_or_top⟩
 
@@ -731,7 +731,7 @@ theorem bot_isMaximal : IsMaximal (⊥ : Ideal K) :=
 
 end Ideal
 
-end DivisionRing
+end DivisionSemiring
 
 section CommRing
 
@@ -751,13 +751,11 @@ end Ideal
 
 end CommRing
 
+-- TODO: consider moving the lemmas below out of the `ring` namespace since they are
+-- about `comm_semiring`s.
 namespace Ring
 
-variable {R : Type _} [CommRing R]
-
-theorem not_isField_of_subsingleton {R : Type _} [Ring R] [Subsingleton R] : ¬IsField R :=
-  fun ⟨⟨x, y, hxy⟩, _, _⟩ => hxy (Subsingleton.elim x y)
-#align ring.not_is_field_of_subsingleton Ring.not_isField_of_subsingleton
+variable {R : Type _} [CommSemiring R]
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
@@ -795,6 +793,23 @@ theorem not_isField_iff_exists_prime [Nontrivial R] :
       ⟨p, bot_lt_iff_ne_bot.mp (lt_of_lt_of_le bot_lt le_p), hp.IsPrime⟩,
       fun ⟨p, ne_bot, Prime⟩ => ⟨p, bot_lt_iff_ne_bot.mpr ne_bot, lt_top_iff_ne_top.mpr Prime.1⟩⟩
 #align ring.not_is_field_iff_exists_prime Ring.not_isField_iff_exists_prime
+
+/-- Also see `ideal.is_simple_order` for the forward direction as an instance when `R` is a
+division (semi)ring. 
+
+This result actually holds for all division semirings, but we lack the predicate to state it. -/
+theorem isField_iff_isSimpleOrder_ideal : IsField R ↔ IsSimpleOrder (Ideal R) :=
+  by
+  cases subsingleton_or_nontrivial R
+  ·
+    exact
+      ⟨fun h => (not_isField_of_subsingleton _ h).elim, fun h =>
+        (false_of_nontrivial_of_subsingleton <| Ideal R).elim⟩
+  rw [← not_iff_not, Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top, ← not_iff_not]
+  push_neg
+  simp_rw [lt_top_iff_ne_top, bot_lt_iff_ne_bot, ← or_iff_not_imp_left, not_ne_iff]
+  exact ⟨fun h => ⟨h⟩, fun h => h.2⟩
+#align ring.is_field_iff_is_simple_order_ideal Ring.isField_iff_isSimpleOrder_ideal
 
 /-- When a ring is not a field, the maximal ideals are nontrivial. -/
 theorem ne_bot_of_isMaximal_of_not_isField [Nontrivial R] {M : Ideal R} (max : M.IsMaximal)

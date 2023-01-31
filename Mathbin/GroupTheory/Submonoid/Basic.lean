@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ variable [AddZeroClass A] {t : Set A}
 
 #print OneMemClass /-
 /-- `one_mem_class S M` says `S` is a type of subsets `s ≤ M`, such that `1 ∈ s` for all `s`. -/
-class OneMemClass (S : Type _) (M : outParam <| Type _) [One M] [SetLike S M] : Prop where
+class OneMemClass (S M : Type _) [One M] [SetLike S M] : Prop where
   one_mem : ∀ s : S, (1 : M) ∈ s
 #align one_mem_class OneMemClass
 -/
@@ -84,7 +84,7 @@ export OneMemClass (one_mem)
 
 #print ZeroMemClass /-
 /-- `zero_mem_class S M` says `S` is a type of subsets `s ≤ M`, such that `0 ∈ s` for all `s`. -/
-class ZeroMemClass (S : Type _) (M : outParam <| Type _) [Zero M] [SetLike S M] : Prop where
+class ZeroMemClass (S M : Type _) [Zero M] [SetLike S M] : Prop where
   zero_mem : ∀ s : S, (0 : M) ∈ s
 #align zero_mem_class ZeroMemClass
 -/
@@ -110,8 +110,8 @@ add_decl_doc Submonoid.toSubsemigroup
 #print SubmonoidClass /-
 /-- `submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `1`
 and are closed under `(*)` -/
-class SubmonoidClass (S : Type _) (M : outParam <| Type _) [MulOneClass M] [SetLike S M] extends
-  MulMemClass S M, OneMemClass S M : Prop
+class SubmonoidClass (S M : Type _) [MulOneClass M] [SetLike S M] extends MulMemClass S M,
+  OneMemClass S M : Prop
 #align submonoid_class SubmonoidClass
 -/
 
@@ -134,8 +134,8 @@ add_decl_doc AddSubmonoid.toAddSubsemigroup
 #print AddSubmonoidClass /-
 /-- `add_submonoid_class S M` says `S` is a type of subsets `s ≤ M` that contain `0`
 and are closed under `(+)` -/
-class AddSubmonoidClass (S : Type _) (M : outParam <| Type _) [AddZeroClass M] [SetLike S M] extends
-  AddMemClass S M, ZeroMemClass S M : Prop
+class AddSubmonoidClass (S M : Type _) [AddZeroClass M] [SetLike S M] extends AddMemClass S M,
+  ZeroMemClass S M : Prop
 #align add_submonoid_class AddSubmonoidClass
 -/
 

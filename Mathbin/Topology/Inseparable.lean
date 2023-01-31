@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.inseparable
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ topological space, separation setoid
 
 open Set Filter Function
 
-open TopologicalSpace Filter
+open Topology Filter
 
 variable {X Y Z α ι : Type _} {π : ι → Type _} [TopologicalSpace X] [TopologicalSpace Y]
   [TopologicalSpace Z] [∀ i, TopologicalSpace (π i)] {x y z : X} {s : Set X} {f : X → Y}
@@ -96,10 +96,7 @@ infixl:300 " ⤳ " => Specializes
            "["
            [(Topology.Inseparable.«term_⤳_» `x " ⤳ " `y)
             ","
-            («term_≤_»
-             (Term.app `pure [`x])
-             "≤"
-             (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`y]))
+            («term_≤_» (Term.app `pure [`x]) "≤" (Term.app (Topology.Topology.Basic.nhds "𝓝") [`y]))
             ","
             (Term.forall
              "∀"

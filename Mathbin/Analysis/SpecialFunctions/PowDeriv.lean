@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow_deriv
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ We also prove differentiability and provide derivatives for the power functions 
 
 noncomputable section
 
-open Classical Real TopologicalSpace Nnreal Ennreal Filter
+open Classical Real Topology Nnreal Ennreal Filter
 
 open Filter
 

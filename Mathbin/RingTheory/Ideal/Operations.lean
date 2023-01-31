@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2389,7 +2389,10 @@ theorem bot_quotient_isMaximal_iff (I : Ideal R) : (⊥ : Ideal (R ⧸ I)).IsMax
   ⟨fun hI =>
     @mk_ker _ _ I ▸
       @comap_isMaximal_of_surjective _ _ _ _ _ _ (Quotient.mk I) Quotient.mk_surjective ⊥ hI,
-    fun hI => @bot_isMaximal _ (@Field.toDivisionRing _ (@Quotient.field _ _ I hI))⟩
+    fun hI => by
+    skip
+    letI := quotient.field I
+    exact bot_is_maximal⟩
 #align ideal.bot_quotient_is_maximal_iff Ideal.bot_quotient_isMaximal_iff
 
 /-- See also `ideal.mem_quotient_iff_mem` in case `I ≤ J`. -/

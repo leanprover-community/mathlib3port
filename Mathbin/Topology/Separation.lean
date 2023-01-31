@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ https://en.wikipedia.org/wiki/Separation_axiom
 
 open Function Set Filter TopologicalSpace
 
-open TopologicalSpace Filter Classical
+open Topology Filter Classical
 
 universe u v
 
@@ -495,7 +495,7 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
               («term_∈_»
                (Order.Basic.«term_ᶜ» («term{_}» "{" [`y] "}") "ᶜ")
                "∈"
-               (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`x]))))
+               (Term.app (Topology.Topology.Basic.nhds "𝓝") [`x]))))
             ","
             (Term.forall
              "∀"
@@ -508,7 +508,7 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
               (Std.ExtendedBinder.«term∃__,_»
                "∃"
                (Lean.binderIdent `s)
-               («binderTerm∈_» "∈" (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`x]))
+               («binderTerm∈_» "∈" (Term.app (Topology.Topology.Basic.nhds "𝓝") [`x]))
                ","
                («term_∉_» `y "∉" `s))))
             ","
@@ -548,7 +548,7 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
               "→"
               (Term.app
                `Disjoint
-               [(Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`x]) (Term.app `pure [`y])])))
+               [(Term.app (Topology.Topology.Basic.nhds "𝓝") [`x]) (Term.app `pure [`y])])))
             ","
             (Term.forall
              "∀"
@@ -560,7 +560,7 @@ protected theorem Finset.isClosed [T1Space α] (s : Finset α) : IsClosed (s : S
               "→"
               (Term.app
                `Disjoint
-               [(Term.app `pure [`x]) (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`y])])))
+               [(Term.app `pure [`x]) (Term.app (Topology.Topology.Basic.nhds "𝓝") [`y])])))
             ","
             (Term.forall
              "∀"
@@ -2253,8 +2253,8 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
              ","
              (Term.app
               `Disjoint
-              [(Term.app (TopologicalSpace.Topology.NhdsSet.nhds_set "𝓝ˢ") [`s])
-               (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])]))
+              [(Term.app (Topology.Topology.NhdsSet.nhds_set "𝓝ˢ") [`s])
+               (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a])]))
             ","
             (Term.forall
              "∀"
@@ -2265,8 +2265,8 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
              («term_↔_»
               (Term.app
                `Disjoint
-               [(Term.app (TopologicalSpace.Topology.NhdsSet.nhds_set "𝓝ˢ") [`s])
-                (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])])
+               [(Term.app (Topology.Topology.NhdsSet.nhds_set "𝓝ˢ") [`s])
+                (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a])])
               "↔"
               («term_∉_» `a "∉" (Term.app `closure [`s]))))
             ","
@@ -2278,12 +2278,12 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
              (Std.ExtendedBinder.«term∀__,_»
               "∀"
               (Lean.binderIdent `s)
-              («binderTerm∈_» "∈" (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a]))
+              («binderTerm∈_» "∈" (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a]))
               ","
               (Std.ExtendedBinder.«term∃__,_»
                "∃"
                (Lean.binderIdent `t)
-               («binderTerm∈_» "∈" (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a]))
+               («binderTerm∈_» "∈" (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a]))
                ","
                («term_∧_» (Term.app `IsClosed [`t]) "∧" («term_⊆_» `t "⊆" `s)))))
             ","
@@ -2294,10 +2294,10 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
              ","
              («term_≤_»
               (Term.app
-               (Term.proj (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a]) "." `lift')
+               (Term.proj (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a]) "." `lift')
                [`closure])
               "≤"
-              (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])))
+              (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a])))
             ","
             (Term.forall
              "∀"
@@ -2306,10 +2306,10 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
              ","
              («term_=_»
               (Term.app
-               (Term.proj (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a]) "." `lift')
+               (Term.proj (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a]) "." `lift')
                [`closure])
               "="
-              (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])))]
+              (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a])))]
            "]")])))
       (Command.declValSimple
        ":="
@@ -2403,7 +2403,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
               (Term.app
                (Term.proj (Term.app `h [`a]) "." `antisymm)
                [(Term.proj
-                 (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
+                 (Term.app (Topology.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
                  "."
                  `le_lift'_closure)]))))
            []
@@ -2427,10 +2427,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                  (Term.proj
                   (Term.proj
                    (Term.proj
-                    (Term.proj
-                     (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])
-                     "."
-                     `basis_sets)
+                    (Term.proj (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a]) "." `basis_sets)
                     "."
                     `lift'_closure)
                    "."
@@ -2486,7 +2483,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                   («term_∈_»
                    (Order.Basic.«term_ᶜ» `s "ᶜ")
                    "∈"
-                   (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])))]
+                   (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a])))]
                 ":="
                 (Term.byTactic
                  "by"
@@ -2702,7 +2699,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
              (Term.app
               (Term.proj (Term.app `h [`a]) "." `antisymm)
               [(Term.proj
-                (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
+                (Term.app (Topology.Topology.Basic.nhds "𝓝") [(Term.hole "_")])
                 "."
                 `le_lift'_closure)]))))
           []
@@ -2726,10 +2723,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                 (Term.proj
                  (Term.proj
                   (Term.proj
-                   (Term.proj
-                    (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])
-                    "."
-                    `basis_sets)
+                   (Term.proj (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a]) "." `basis_sets)
                    "."
                    `lift'_closure)
                   "."
@@ -2785,7 +2779,7 @@ class RegularSpace (X : Type u) [TopologicalSpace X] : Prop where
                  («term_∈_»
                   (Order.Basic.«term_ᶜ» `s "ᶜ")
                   "∈"
-                  (Term.app (TopologicalSpace.Topology.Basic.nhds "𝓝") [`a])))]
+                  (Term.app (Topology.Topology.Basic.nhds "𝓝") [`a])))]
                ":="
                (Term.byTactic
                 "by"

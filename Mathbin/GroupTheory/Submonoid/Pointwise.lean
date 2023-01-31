@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.pointwise
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -586,13 +586,12 @@ theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S *
     on_goal 1 =>
       intros ; apply closure_induction hb
       on_goal 1 => intros ; exact subset_closure ⟨_, _, ‹_›, ‹_›, rfl⟩
-    all_goals
-      intros ;
+    all_goals intros ;
       simp only [mul_zero, zero_mul, zero_mem, left_distrib, right_distrib, mul_smul_comm,
-        smul_mul_assoc]
-      solve_by_elim (config :=
-        { max_depth := 4
-          discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _]
+          smul_mul_assoc] <;>
+        solve_by_elim (config :=
+          { max_depth := 4
+            discharger := tactic.interactive.apply_instance }) [add_mem _ _, zero_mem _]
   · rw [closure_le]
     rintro _ ⟨a, b, ha, hb, rfl⟩
     exact mul_mem_mul (subset_closure ha) (subset_closure hb)

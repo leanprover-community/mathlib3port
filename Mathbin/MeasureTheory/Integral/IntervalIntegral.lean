@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,7 +174,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory Set Classical Filter Function
 
-open Classical TopologicalSpace Filter Ennreal BigOperators Interval Nnreal
+open Classical Topology Filter Ennreal BigOperators Interval Nnreal
 
 variable {ι 𝕜 E F A : Type _} [NormedAddCommGroup E]
 

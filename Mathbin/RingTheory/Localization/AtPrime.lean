@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.at_prime
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,6 +161,11 @@ theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := localRing S I) :
       is_unit_to_map_iff S I x
 #align is_localization.at_prime.to_map_mem_maximal_iff IsLocalization.AtPrime.to_map_mem_maximal_iff
 
+theorem comap_maximalIdeal (h : LocalRing S := localRing S I) :
+    (LocalRing.maximalIdeal S).comap (algebraMap R S) = I :=
+  Ideal.ext fun x => by simpa only [Ideal.mem_comap] using to_map_mem_maximal_iff _ I x
+#align is_localization.at_prime.comap_maximal_ideal IsLocalization.AtPrime.comap_maximalIdeal
+
 theorem isUnit_mk'_iff (x : R) (y : I.primeCompl) : IsUnit (mk' S x y) ↔ x ∈ I.primeCompl :=
   ⟨fun h hx => mk'_mem_iff.mpr ((to_map_mem_maximal_iff S I x).mpr hx) h, fun h =>
     isUnit_iff_exists_inv.mpr ⟨mk' S ↑y ⟨x, h⟩, mk'_mul_mk'_eq_one ⟨x, h⟩ y⟩⟩
@@ -193,7 +198,7 @@ theorem AtPrime.comap_maximalIdeal :
     Ideal.comap (algebraMap R (Localization.AtPrime I))
         (LocalRing.maximalIdeal (Localization I.primeCompl)) =
       I :=
-  Ideal.ext fun x => by simpa only [Ideal.mem_comap] using at_prime.to_map_mem_maximal_iff _ I x
+  AtPrime.comap_maximalIdeal _ _
 #align localization.at_prime.comap_maximal_ideal Localization.AtPrime.comap_maximalIdeal
 
 /-- The image of `I` in the localization at `I.prime_compl` is a maximal ideal, and in particular

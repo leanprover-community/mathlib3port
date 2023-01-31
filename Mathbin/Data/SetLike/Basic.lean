@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set_like.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,6 +89,15 @@ Note: if `set_like.coe` is a projection, implementers should create a simp lemma
 @[simp] lemma mem_carrier {p : my_subobject X} : x ∈ p.carrier ↔ x ∈ (p : set X) := iff.rfl
 ```
 to normalize terms.
+
+If you declare an unbundled subclass of `set_like`, for example:
+```
+class mul_mem_class (S : Type*) (M : Type*) [has_mul M] [set_like S M] where
+  ...
+```
+Then you should *not* repeat the `out_param` declaration, `set_like` will supply the value instead.
+This ensures in Lean 4 your subclass will not have issues with synthesis of the `[has_mul M]`
+parameter starting before the value of `M` is known.
 -/
 @[protect_proj]
 class SetLike (A : Type _) (B : outParam <| Type _) where

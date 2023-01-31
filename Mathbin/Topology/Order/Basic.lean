@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ open Function
 
 open OrderDual (toDual ofDual)
 
-open TopologicalSpace Classical Filter
+open Topology Classical Filter
 
 universe u v w
 
@@ -1644,17 +1644,17 @@ intervals to the right or to the left of `a`. We give now these characterization
          `TFAE
          [(«term[_]»
            "["
-           [(«term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within.gt "𝓝[>] " `a))
+           [(«term_∈_» `s "∈" (Topology.Topology.Basic.nhds_within.gt "𝓝[>] " `a))
             ","
             («term_∈_»
              `s
              "∈"
-             (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `Ioc [`a `b]) "] " `a))
+             (Topology.Topology.Basic.nhds_within "𝓝[" (Term.app `Ioc [`a `b]) "] " `a))
             ","
             («term_∈_»
              `s
              "∈"
-             (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `Ioo [`a `b]) "] " `a))
+             (Topology.Topology.Basic.nhds_within "𝓝[" (Term.app `Ioo [`a `b]) "] " `a))
             ","
             (Std.ExtendedBinder.«term∃__,_»
              "∃"
@@ -2500,17 +2500,17 @@ theorem mem_nhdsWithin_iio_iff_exists_ico_subset [NoMinOrder α] [DenselyOrdered
          `TFAE
          [(«term[_]»
            "["
-           [(«term_∈_» `s "∈" (TopologicalSpace.Topology.Basic.nhds_within.ge "𝓝[≥] " `a))
+           [(«term_∈_» `s "∈" (Topology.Topology.Basic.nhds_within.ge "𝓝[≥] " `a))
             ","
             («term_∈_»
              `s
              "∈"
-             (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `Icc [`a `b]) "] " `a))
+             (Topology.Topology.Basic.nhds_within "𝓝[" (Term.app `Icc [`a `b]) "] " `a))
             ","
             («term_∈_»
              `s
              "∈"
-             (TopologicalSpace.Topology.Basic.nhds_within "𝓝[" (Term.app `Ico [`a `b]) "] " `a))
+             (Topology.Topology.Basic.nhds_within "𝓝[" (Term.app `Ico [`a `b]) "] " `a))
             ","
             (Std.ExtendedBinder.«term∃__,_»
              "∃"

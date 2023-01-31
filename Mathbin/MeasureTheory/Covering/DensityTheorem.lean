@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.density_theorem
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open Nnreal TopologicalSpace
+open Nnreal Topology
 
 namespace IsDoublingMeasure
 
@@ -44,7 +44,7 @@ section
 
 variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ]
 
-open TopologicalSpace
+open Topology
 
 /-- A Vitali family in a space with a doubling measure, designed so that the sets at `x` contain
 all `closed_ball y r` when `dist x y ≤ K * r`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.normed_space.compact_operator
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ Compact operator
 
 open Function Set Filter Bornology Metric
 
-open Pointwise BigOperators TopologicalSpace
+open Pointwise BigOperators Topology
 
 /-- A compact operator between two topological vector spaces. This definition is usually
 given as "there exists a neighborhood of zero whose image is contained in a compact set",

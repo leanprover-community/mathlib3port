@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,8 +138,8 @@ theorem coeFn_coe_trans {α β γ δ} [Coe α β] [HasCoeTAux β γ] [CoeFun γ 
 #align coe_fn_coe_trans coeFn_coe_trans
 
 /-- Non-dependent version of `coe_fn_coe_trans`, helps `rw` figure out the argument. -/
-theorem coeFn_coe_trans' {α β γ} {δ : outParam <| _} [Coe α β] [HasCoeTAux β γ]
-    [CoeFun γ fun _ => δ] (x : α) : @coeFn α _ _ x = @coeFn β _ _ x :=
+theorem coeFn_coe_trans' {α β γ} {δ : _} [Coe α β] [HasCoeTAux β γ] [CoeFun γ fun _ => δ] (x : α) :
+    @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
 #align coe_fn_coe_trans' coeFn_coe_trans'
 
@@ -149,7 +149,7 @@ theorem coeFn_coeBase {α β γ} [Coe α β] [CoeFun β γ] (x : α) : @coeFn α
 #align coe_fn_coe_base coeFn_coeBase
 
 /-- Non-dependent version of `coe_fn_coe_base`, helps `rw` figure out the argument. -/
-theorem coeFn_coe_base' {α β} {γ : outParam <| _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
+theorem coeFn_coe_base' {α β} {γ : _} [Coe α β] [CoeFun β fun _ => γ] (x : α) :
     @coeFn α _ _ x = @coeFn β _ _ x :=
   rfl
 #align coe_fn_coe_base' coeFn_coe_base'

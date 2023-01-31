@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.subfield
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,8 +71,8 @@ universe u v w
 variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Field M]
 
 /-- `subfield_class S K` states `S` is a type of subsets `s ⊆ K` closed under field operations. -/
-class SubfieldClass (S : Type _) (K : outParam <| Type _) [Field K] [SetLike S K] extends
-  SubringClass S K, InvMemClass S K : Prop
+class SubfieldClass (S K : Type _) [Field K] [SetLike S K] extends SubringClass S K,
+  InvMemClass S K : Prop
 #align subfield_class SubfieldClass
 
 namespace SubfieldClass

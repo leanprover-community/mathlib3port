@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.grading
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,8 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
   GradedAlgebra.ofAlgHom _ (decomposeAux f)
     (by
       ext : 2
-      dsimp
+      simp only [AlgHom.coe_to_monoidHom, Function.comp_apply, AlgHom.coe_comp,
+        Function.comp.left_id, AlgHom.coe_id, AddMonoidAlgebra.of_apply, MonoidHom.coe_comp]
       rw [decompose_aux_single, DirectSum.coeAlgHom_of, Subtype.coe_mk])
     fun i x => by rw [decompose_aux_coe f x]
 #align add_monoid_algebra.grade_by.graded_algebra AddMonoidAlgebra.gradeBy.gradedAlgebra
@@ -214,7 +215,7 @@ theorem decomposeAux_eq_decompose :
 
 @[simp]
 theorem GradesBy.decompose_single (m : M) (r : R) :
-    DirectSum.decompose (gradeBy R f) (Finsupp.single m r) =
+    DirectSum.decompose (gradeBy R f) (Finsupp.single m r : AddMonoidAlgebra R M) =
       DirectSum.of (fun i : ι => gradeBy R f i) (f m)
         ⟨Finsupp.single m r, single_mem_gradeBy _ _ _⟩ :=
   decomposeAux_single _ _ _
@@ -231,7 +232,7 @@ instance grade.decomposition : DirectSum.Decomposition (grade R : ι → Submodu
 
 @[simp]
 theorem grade.decompose_single (i : ι) (r : R) :
-    DirectSum.decompose (grade R : ι → Submodule _ _) (Finsupp.single i r) =
+    DirectSum.decompose (grade R : ι → Submodule _ _) (Finsupp.single i r : AddMonoidAlgebra _ _) =
       DirectSum.of (fun i : ι => grade R i) i ⟨Finsupp.single i r, single_mem_grade _ _⟩ :=
   decomposeAux_single _ _ _
 #align add_monoid_algebra.grade.decompose_single AddMonoidAlgebra.grade.decompose_single

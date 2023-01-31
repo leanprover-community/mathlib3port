@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ We also set up the theory for `pseudo_emetric_space` and `pseudo_metric_space`.
 
 open Real Set Filter IsROrC Bornology
 
-open BigOperators uniformity TopologicalSpace Nnreal Ennreal
+open BigOperators uniformity Topology Nnreal Ennreal
 
 noncomputable section
 

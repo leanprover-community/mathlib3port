@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.local_at_target
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,7 +24,7 @@ We show that the following properties of continuous maps are local at the target
 
 open TopologicalSpace Set Filter
 
-open TopologicalSpace Filter
+open Topology Filter
 
 variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β}
 

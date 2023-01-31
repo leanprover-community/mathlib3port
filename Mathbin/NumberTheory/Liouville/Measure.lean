@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module number_theory.liouville.measure
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,7 @@ Liouville number, Lebesgue measure, residual, generic property
 -/
 
 
-open Filter BigOperators Ennreal TopologicalSpace Nnreal
+open Filter BigOperators Ennreal Topology Nnreal
 
 open Filter Set Metric MeasureTheory Real
 

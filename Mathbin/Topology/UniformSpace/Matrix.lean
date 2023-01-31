@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.uniform_space.matrix
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,7 +16,7 @@ import Mathbin.Data.Matrix.Basic
 -/
 
 
-open uniformity TopologicalSpace
+open uniformity Topology
 
 variable (m n 𝕜 : Type _) [UniformSpace 𝕜]
 

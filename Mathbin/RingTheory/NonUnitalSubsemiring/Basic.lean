@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module ring_theory.non_unital_subsemiring.basic
-! leanprover-community/mathlib commit f7fc89d5d5ff1db2d1242c7bb0e9062ce47ef47c
+! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,15 +32,15 @@ variable {R : Type u} {S : Type v} {T : Type w} [NonUnitalNonAssocSemiring R] (M
 
 /-- `non_unital_subsemiring_class S R` states that `S` is a type of subsets `s ⊆ R` that
 are both an additive submonoid and also a multiplicative subsemigroup. -/
-class NonUnitalSubsemiringClass (S : Type _) (R : outParam <| Type u) [NonUnitalNonAssocSemiring R]
+class NonUnitalSubsemiringClass (S : Type _) (R : Type u) [NonUnitalNonAssocSemiring R]
   [SetLike S R] extends AddSubmonoidClass S R where
   mul_mem : ∀ {s : S} {a b : R}, a ∈ s → b ∈ s → a * b ∈ s
 #align non_unital_subsemiring_class NonUnitalSubsemiringClass
 
 -- See note [lower instance priority]
-instance (priority := 100) NonUnitalSubsemiringClass.mulMemClass (S : Type _)
-    (R : outParam <| Type u) [NonUnitalNonAssocSemiring R] [SetLike S R]
-    [h : NonUnitalSubsemiringClass S R] : MulMemClass S R :=
+instance (priority := 100) NonUnitalSubsemiringClass.mulMemClass (S : Type _) (R : Type u)
+    [NonUnitalNonAssocSemiring R] [SetLike S R] [h : NonUnitalSubsemiringClass S R] :
+    MulMemClass S R :=
   { h with }
 #align non_unital_subsemiring_class.mul_mem_class NonUnitalSubsemiringClass.mulMemClass
 
