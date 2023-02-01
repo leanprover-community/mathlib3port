@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.ne_locus
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Dfinsupp.Basic
 
 /-!
 # Locus of unequal values of finitely supported dependent functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `N : α → Type*` be a type family, assume that `N a` has a `0` for all `a : α` and let
 `f g : Π₀ a, N a` be finitely supported dependent functions.

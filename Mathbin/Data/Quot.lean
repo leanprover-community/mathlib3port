@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.quot
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -590,6 +590,21 @@ theorem nonempty_quotient_iff (s : Setoid α) : Nonempty (Quotient s) ↔ Nonemp
 /-! ### Truncation -/
 
 
+#print true_equivalence /-
+theorem true_equivalence : @Equivalence α fun _ _ => True :=
+  ⟨fun _ => trivial, fun _ _ _ => trivial, fun _ _ _ _ _ => trivial⟩
+#align true_equivalence true_equivalence
+-/
+
+#print trueSetoid /-
+/-- Always-true relation as a `setoid`.
+
+Note that in later files the preferred spelling is `⊤ : setoid α`. -/
+def trueSetoid : Setoid α :=
+  ⟨_, true_equivalence⟩
+#align true_setoid trueSetoid
+-/
+
 #print Trunc /-
 /-- `trunc α` is the quotient of `α` by the always-true relation. This
   is related to the propositional truncation in HoTT, and is similar
@@ -597,14 +612,8 @@ theorem nonempty_quotient_iff (s : Setoid α) : Nonempty (Quotient s) ↔ Nonemp
   so the VM representation is the same as `α`, and so this can be used to
   maintain computability. -/
 def Trunc.{u} (α : Sort u) : Sort u :=
-  @Quot α fun _ _ => True
+  @Quotient α trueSetoid
 #align trunc Trunc
--/
-
-#print true_equivalence /-
-theorem true_equivalence : @Equivalence α fun _ _ => True :=
-  ⟨fun _ => trivial, fun _ _ _ => trivial, fun _ _ _ _ _ => trivial⟩
-#align true_equivalence true_equivalence
 -/
 
 namespace Trunc

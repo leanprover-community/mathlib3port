@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1480,13 +1480,13 @@ def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [Measura
         (measurable_set_range_inr.prod MeasurableSet.univ)
         (by rintro ⟨a | b, c⟩ <;> simp [Set.prod_eq]) _ _
     · refine' (Set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
-      refine' (prod_congr set.range_inl (Set.univ _)).symm.measurable_comp_iff.1 _
+      refine' (prod_congr Set.range_inl (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurable_inl
       ext ⟨a, c⟩
       rfl
     · refine' (Set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
-      refine' (prod_congr set.range_inr (Set.univ _)).symm.measurable_comp_iff.1 _
+      refine' (prod_congr Set.range_inr (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurable_inr
       ext ⟨b, c⟩

@@ -2148,6 +2148,7 @@ import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.MeasureTheory.Integral.Layercake
 import Mathbin.MeasureTheory.Integral.Lebesgue
 import Mathbin.MeasureTheory.Integral.MeanInequalities
+import Mathbin.MeasureTheory.Integral.PeakFunction
 import Mathbin.MeasureTheory.Integral.Periodic
 import Mathbin.MeasureTheory.Integral.RieszMarkovKakutani
 import Mathbin.MeasureTheory.Integral.SetIntegral
@@ -2412,7 +2413,8 @@ import Mathbin.Order.SuccPred.Relation
 import Mathbin.Order.SupIndep
 import Mathbin.Order.SymmDiff
 import Mathbin.Order.Synonym
-import Mathbin.Order.UpperLower
+import Mathbin.Order.UpperLower.Basic
+import Mathbin.Order.UpperLower.Hom
 import Mathbin.Order.WellFounded
 import Mathbin.Order.WellFoundedSet
 import Mathbin.Order.WithBot

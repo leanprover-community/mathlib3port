@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.n_ary
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,26 +87,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} (m : α -> β -> γ) (f : Filter.{u3} α) (g : Filter.{u2} β), Eq.{succ u1} (Filter.{u1} γ) (Filter.map.{max u3 u2, u1} (Prod.{u3, u2} α β) γ (fun (p : Prod.{u3, u2} α β) => m (Prod.fst.{u3, u2} α β p) (Prod.snd.{u3, u2} α β p)) (Filter.prod.{u3, u2} α β f g)) (Filter.map₂.{u3, u2, u1} α β γ m f g)
 Case conversion may be inaccurate. Consider using '#align filter.map_prod_eq_map₂ Filter.map_prod_eq_map₂ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem map_prod_eq_map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) :
     Filter.map (fun p : α × β => m p.1 p.2) (f ×ᶠ g) = map₂ m f g :=
   by
   ext s
-  constructor
-  · intro hmem
-    rw [Filter.mem_map_iff_exists_image] at hmem
-    obtain ⟨s', hs', hsub⟩ := hmem
-    rw [Filter.mem_prod_iff] at hs'
-    obtain ⟨t, ht, t', ht', hsub'⟩ := hs'
-    refine' ⟨t, t', ht, ht', _⟩
-    rw [← Set.image_prod]
-    exact subset_trans (Set.image_subset (fun p : α × β => m p.fst p.snd) hsub') hsub
-  · intro hmem
-    rw [mem_map₂_iff] at hmem
-    obtain ⟨t, t', ht, ht', hsub⟩ := hmem
-    rw [← Set.image_prod] at hsub
-    rw [Filter.mem_map_iff_exists_image]
-    exact ⟨t ×ˢ t', Filter.prod_mem_prod ht ht', hsub⟩
+  simp [mem_prod_iff, prod_subset_iff]
 #align filter.map_prod_eq_map₂ Filter.map_prod_eq_map₂
 
 /- warning: filter.map_prod_eq_map₂' -> Filter.map_prod_eq_map₂' is a dubious translation:
@@ -117,10 +102,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map_prod_eq_map₂' Filter.map_prod_eq_map₂'ₓ'. -/
 theorem map_prod_eq_map₂' (m : α × β → γ) (f : Filter α) (g : Filter β) :
     Filter.map m (f ×ᶠ g) = map₂ (fun a b => m (a, b)) f g :=
-  by
-  refine' Eq.trans _ (map_prod_eq_map₂ (curry m) f g)
-  ext
-  simp
+  (congr_arg₂ _ (uncurry_curry m).symm rfl).trans (map_prod_eq_map₂ _ _ _)
 #align filter.map_prod_eq_map₂' Filter.map_prod_eq_map₂'
 
 /- warning: filter.map₂_mk_eq_prod -> Filter.map₂_mk_eq_prod is a dubious translation:
@@ -131,7 +113,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map₂_mk_eq_prod Filter.map₂_mk_eq_prodₓ'. -/
 @[simp]
 theorem map₂_mk_eq_prod (f : Filter α) (g : Filter β) : map₂ Prod.mk f g = f ×ᶠ g := by
-  ext <;> simp [mem_prod_iff]
+  simp only [← map_prod_eq_map₂, Prod.mk.eta, map_id']
 #align filter.map₂_mk_eq_prod Filter.map₂_mk_eq_prod
 
 /- warning: filter.map₂_mono -> Filter.map₂_mono is a dubious translation:
@@ -465,22 +447,16 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {δ : Type.{u4}} {f : Filter.{u2} α} {g : Filter.{u1} β} (m : α -> β -> γ) (n : γ -> δ), Eq.{succ u4} (Filter.{u4} δ) (Filter.map.{u3, u4} γ δ n (Filter.map₂.{u2, u1, u3} α β γ m f g)) (Filter.map₂.{u2, u1, u4} α β δ (fun (a : α) (b : β) => n (m a b)) f g)
 Case conversion may be inaccurate. Consider using '#align filter.map_map₂ Filter.map_map₂ₓ'. -/
 theorem map_map₂ (m : α → β → γ) (n : γ → δ) :
-    (map₂ m f g).map n = map₂ (fun a b => n (m a b)) f g :=
-  Filter.ext fun u => exists₂_congr fun s t => by rw [← image_subset_iff, image_image2]
+    (map₂ m f g).map n = map₂ (fun a b => n (m a b)) f g := by
+  rw [← map_prod_eq_map₂, ← map_prod_eq_map₂, map_map]
 #align filter.map_map₂ Filter.map_map₂
 
 #print Filter.map₂_map_left /-
 theorem map₂_map_left (m : γ → β → δ) (n : α → γ) :
     map₂ m (f.map n) g = map₂ (fun a b => m (n a) b) f g :=
   by
-  ext u
-  constructor
-  · rintro ⟨s, t, hs, ht, hu⟩
-    refine' ⟨_, t, hs, ht, _⟩
-    rw [← image2_image_left]
-    exact (image2_subset_right <| image_preimage_subset _ _).trans hu
-  · rintro ⟨s, t, hs, ht, hu⟩
-    exact ⟨_, t, image_mem_map hs, ht, by rwa [image2_image_left]⟩
+  rw [← map_prod_eq_map₂, ← map_prod_eq_map₂, ← @map_id _ g, prod_map_map_eq, map_map, map_id]
+  rfl
 #align filter.map₂_map_left Filter.map₂_map_left
 -/
 
@@ -503,7 +479,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map₂_curry Filter.map₂_curryₓ'. -/
 @[simp]
 theorem map₂_curry (m : α × β → γ) (f : Filter α) (g : Filter β) :
-    map₂ (curry m) f g = (f ×ᶠ g).map m := by classical rw [← map₂_mk_eq_prod, map_map₂, curry]
+    map₂ (curry m) f g = (f ×ᶠ g).map m :=
+  (map_prod_eq_map₂' _ _ _).symm
 #align filter.map₂_curry Filter.map₂_curry
 
 /- warning: filter.map_uncurry_prod -> Filter.map_uncurry_prod is a dubious translation:

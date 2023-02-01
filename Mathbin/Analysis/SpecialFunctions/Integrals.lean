@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,23 +122,6 @@ theorem intervalIntegrableConst : IntervalIntegrable (fun x => c) μ a b :=
   continuous_const.IntervalIntegrable a b
 #align interval_integral.interval_integrable_const intervalIntegral.intervalIntegrableConst
 
-@[simp]
-theorem IntervalIntegrable.constMul (h : IntervalIntegrable f ν a b) :
-    IntervalIntegrable (fun x => c * f x) ν a b := by convert h.smul c
-#align interval_integral.interval_integrable.const_mul intervalIntegral.IntervalIntegrable.constMul
-
-@[simp]
-theorem IntervalIntegrable.mulConst (h : IntervalIntegrable f ν a b) :
-    IntervalIntegrable (fun x => f x * c) ν a b := by
-  simp only [mul_comm, IntervalIntegrable.constMul c h]
-#align interval_integral.interval_integrable.mul_const intervalIntegral.IntervalIntegrable.mulConst
-
-@[simp]
-theorem IntervalIntegrable.div (h : IntervalIntegrable f ν a b) :
-    IntervalIntegrable (fun x => f x / c) ν a b :=
-  IntervalIntegrable.mulConst c⁻¹ h
-#align interval_integral.interval_integrable.div intervalIntegral.IntervalIntegrable.div
-
 theorem intervalIntegrableOneDiv (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) (hf : ContinuousOn f [a, b]) :
     IntervalIntegrable (fun x => 1 / f x) μ a b :=
   (continuousOn_const.div hf h).IntervalIntegrable
@@ -159,7 +142,7 @@ theorem intervalIntegrableExp : IntervalIntegrable exp μ a b :=
 theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) :
     IntervalIntegrable (fun x => log (f x)) μ a b :=
   (ContinuousOn.log hf h).IntervalIntegrable
-#align interval_integral.interval_integrable.log intervalIntegral.IntervalIntegrable.log
+#align interval_integrable.log IntervalIntegrable.log
 
 @[simp]
 theorem intervalIntegrableLog (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable log μ a b :=

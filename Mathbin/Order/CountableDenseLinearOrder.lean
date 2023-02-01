@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Order.Ideal
+import Mathbin.Data.Finset.Lattice
 
 /-!
 # The back and forth method and countable dense linear orders

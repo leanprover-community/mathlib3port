@@ -3,15 +3,14 @@ Copyright (c) 2022 Yaël Dillies, Sara Rousta. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
-! This file was ported from Lean 3 source module order.upper_lower
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! This file was ported from Lean 3 source module order.upper_lower.basic
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.SetLike.Basic
 import Mathbin.Data.Set.Intervals.OrdConnected
 import Mathbin.Data.Set.Intervals.OrderIso
-import Mathbin.Order.Hom.CompleteLattice
 
 /-!
 # Up-sets and down-sets
@@ -1027,54 +1026,6 @@ theorem coe_map : (map f s : Set β) = f '' s :=
   rfl
 #align upper_set.coe_map UpperSet.coe_map
 
-@[simp]
-protected theorem map_sup : map f (s ⊔ t) = map f s ⊔ map f t :=
-  ext <| image_inter f.Injective
-#align upper_set.map_sup UpperSet.map_sup
-
-@[simp]
-protected theorem map_inf : map f (s ⊓ t) = map f s ⊓ map f t :=
-  ext <| image_union _ _ _
-#align upper_set.map_inf UpperSet.map_inf
-
-@[simp]
-protected theorem map_top : map f ⊤ = ⊤ :=
-  ext <| image_empty _
-#align upper_set.map_top UpperSet.map_top
-
-@[simp]
-protected theorem map_bot : map f ⊥ = ⊥ :=
-  ext <| image_univ_of_surjective f.Surjective
-#align upper_set.map_bot UpperSet.map_bot
-
-@[simp]
-protected theorem map_supₛ (S : Set (UpperSet α)) : map f (supₛ S) = ⨆ s ∈ S, map f s :=
-  ext <| by
-    push_cast
-    exact image_Inter₂ f.bijective _
-#align upper_set.map_Sup UpperSet.map_supₛ
-
-@[simp]
-protected theorem map_infₛ (S : Set (UpperSet α)) : map f (infₛ S) = ⨅ s ∈ S, map f s :=
-  ext <| by
-    push_cast
-    exact image_Union₂ _ _
-#align upper_set.map_Inf UpperSet.map_infₛ
-
-@[simp]
-protected theorem map_supᵢ (g : ι → UpperSet α) : map f (⨆ i, g i) = ⨆ i, map f (g i) :=
-  ext <| by
-    push_cast
-    exact image_Inter f.bijective _
-#align upper_set.map_supr UpperSet.map_supᵢ
-
-@[simp]
-protected theorem map_infᵢ (g : ι → UpperSet α) : map f (⨅ i, g i) = ⨅ i, map f (g i) :=
-  ext <| by
-    push_cast
-    exact image_Union
-#align upper_set.map_infi UpperSet.map_infᵢ
-
 end UpperSet
 
 namespace LowerSet
@@ -1123,51 +1074,6 @@ variable (f s t)
 theorem coe_map : (map f s : Set β) = f '' s :=
   rfl
 #align lower_set.coe_map LowerSet.coe_map
-
-@[simp]
-protected theorem map_sup : map f (s ⊔ t) = map f s ⊔ map f t :=
-  ext <| image_union _ _ _
-#align lower_set.map_sup LowerSet.map_sup
-
-@[simp]
-protected theorem map_inf : map f (s ⊓ t) = map f s ⊓ map f t :=
-  ext <| image_inter f.Injective
-#align lower_set.map_inf LowerSet.map_inf
-
-@[simp]
-protected theorem map_top : map f ⊤ = ⊤ :=
-  ext <| image_univ_of_surjective f.Surjective
-#align lower_set.map_top LowerSet.map_top
-
-@[simp]
-protected theorem map_bot : map f ⊥ = ⊥ :=
-  ext <| image_empty _
-#align lower_set.map_bot LowerSet.map_bot
-
-@[simp]
-protected theorem map_supₛ (S : Set (LowerSet α)) : map f (supₛ S) = ⨆ s ∈ S, map f s :=
-  ext <| by
-    push_cast
-    exact image_Union₂ _ _
-#align lower_set.map_Sup LowerSet.map_supₛ
-
-protected theorem map_infₛ (S : Set (LowerSet α)) : map f (infₛ S) = ⨅ s ∈ S, map f s :=
-  ext <| by
-    push_cast
-    exact image_Inter₂ f.bijective _
-#align lower_set.map_Inf LowerSet.map_infₛ
-
-protected theorem map_supᵢ (g : ι → LowerSet α) : map f (⨆ i, g i) = ⨆ i, map f (g i) :=
-  ext <| by
-    push_cast
-    exact image_Union
-#align lower_set.map_supr LowerSet.map_supᵢ
-
-protected theorem map_infᵢ (g : ι → LowerSet α) : map f (⨅ i, g i) = ⨅ i, map f (g i) :=
-  ext <| by
-    push_cast
-    exact image_Inter f.bijective _
-#align lower_set.map_infi LowerSet.map_infᵢ
 
 end LowerSet
 
@@ -1260,26 +1166,10 @@ theorem ici_bot [OrderBot α] : ici (⊥ : α) = ⊥ :=
 
 end Preorder
 
-section SemilatticeSup
-
-variable [SemilatticeSup α]
-
 @[simp]
-theorem ici_sup (a b : α) : ici (a ⊔ b) = ici a ⊔ ici b :=
+theorem ici_sup [SemilatticeSup α] (a b : α) : ici (a ⊔ b) = ici a ⊔ ici b :=
   ext Ici_inter_Ici.symm
 #align upper_set.Ici_sup UpperSet.ici_sup
-
-/-- `upper_set.Ici` as a `sup_hom`. -/
-def iciSupHom : SupHom α (UpperSet α) :=
-  ⟨ici, ici_sup⟩
-#align upper_set.Ici_sup_hom UpperSet.iciSupHom
-
-@[simp]
-theorem iciSupHom_apply (a : α) : iciSupHom a = ici a :=
-  rfl
-#align upper_set.Ici_sup_hom_apply UpperSet.iciSupHom_apply
-
-end SemilatticeSup
 
 section CompleteLattice
 
@@ -1301,30 +1191,6 @@ theorem ici_supᵢ (f : ι → α) : ici (⨆ i, f i) = ⨆ i, ici (f i) :=
 theorem ici_supr₂ (f : ∀ i, κ i → α) : ici (⨆ (i) (j), f i j) = ⨆ (i) (j), ici (f i j) := by
   simp_rw [Ici_supr]
 #align upper_set.Ici_supr₂ UpperSet.ici_supr₂
-
-/- warning: upper_set.Ici_Sup_hom clashes with upper_set.Ici_sup_hom -> UpperSet.iciSupHom
-warning: upper_set.Ici_Sup_hom -> UpperSet.iciSupHom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], SupHomCat.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α], SupHom.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α _inst_1) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))
-Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup_hom UpperSet.iciSupHomₓ'. -/
-/-- `upper_set.Ici` as a `Sup_hom`. -/
-def iciSupHom : SupHomCat α (UpperSet α) :=
-  ⟨ici, fun s => (ici_supₛ s).trans supₛ_image.symm⟩
-#align upper_set.Ici_Sup_hom UpperSet.iciSupHom
-
-/- warning: upper_set.Ici_Sup_hom_apply clashes with upper_set.Ici_sup_hom_apply -> UpperSet.iciSupHom_apply
-warning: upper_set.Ici_Sup_hom_apply -> UpperSet.iciSupHom_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (a : α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (coeFn.{succ u1, succ u1} (SupHomCat.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (fun (_x : SupHomCat.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) => α -> (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (SupHomCat.hasCoeToFun.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeSup.toHasSup.{u1} α (CompleteLattice.toCompleteSemilatticeSup.{u1} α _inst_1)) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (UpperSet.iciSupHom.{u1} α _inst_1) a) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (OrderDual.{u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))))) (fun (_x : Equiv.{succ u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (OrderDual.{u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))))) => (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) -> (OrderDual.{u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))))) (Equiv.hasCoeToFun.{succ u1, succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (OrderDual.{u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))))) (OrderDual.toDual.{u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (UpperSet.ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] (a : α), Eq.{succ u1} (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (coeFn.{succ u1, succ u1} (SupHom.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α _inst_1) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))) (fun (_x : SupHom.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α _inst_1) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))) => α -> (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))) (SupHom.hasCoeToFun.{u1, u1} α (UpperSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α _inst_1) (UpperSet.hasSup.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))))) (UpperSet.iciSupHom.{u1} α _inst_1) a) (UpperSet.ici.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)) a)
-Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup_hom_apply UpperSet.iciSupHom_applyₓ'. -/
-@[simp]
-theorem iciSupHom_apply (a : α) : iciSupHom a = toDual (ici a) :=
-  rfl
-#align upper_set.Ici_Sup_hom_apply UpperSet.iciSupHom_apply
 
 end CompleteLattice
 
@@ -1397,31 +1263,10 @@ theorem iio_bot [OrderBot α] : iio (⊥ : α) = ⊥ :=
 
 end Preorder
 
-section SemilatticeInf
-
-variable [SemilatticeInf α]
-
 @[simp]
-theorem iic_inf (a b : α) : iic (a ⊓ b) = iic a ⊓ iic b :=
+theorem iic_inf [SemilatticeInf α] (a b : α) : iic (a ⊓ b) = iic a ⊓ iic b :=
   SetLike.coe_injective Iic_inter_Iic.symm
 #align lower_set.Iic_inf LowerSet.iic_inf
-
-/-- `lower_set.Iic` as an `inf_hom`. -/
-def iicInfHom : InfHom α (LowerSet α) :=
-  ⟨iic, iic_inf⟩
-#align lower_set.Iic_inf_hom LowerSet.iicInfHom
-
-@[simp]
-theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = iic :=
-  rfl
-#align lower_set.coe_Iic_inf_hom LowerSet.coe_iicInfHom
-
-@[simp]
-theorem iicInfHom_apply (a : α) : iicInfHom a = iic a :=
-  rfl
-#align lower_set.Iic_inf_hom_apply LowerSet.iicInfHom_apply
-
-end SemilatticeInf
 
 section CompleteLattice
 
@@ -1443,42 +1288,6 @@ theorem iic_infᵢ (f : ι → α) : iic (⨅ i, f i) = ⨅ i, iic (f i) :=
 theorem iic_infi₂ (f : ∀ i, κ i → α) : iic (⨅ (i) (j), f i j) = ⨅ (i) (j), iic (f i j) := by
   simp_rw [Iic_infi]
 #align lower_set.Iic_infi₂ LowerSet.iic_infi₂
-
-/- warning: lower_set.Iic_Inf_hom clashes with lower_set.Iic_inf_hom -> LowerSet.iicInfHom
-warning: lower_set.Iic_Inf_hom -> LowerSet.iicInfHom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], InfHomCat.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α], InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))
-Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf_hom LowerSet.iicInfHomₓ'. -/
-/-- `lower_set.Iic` as an `Inf_hom`. -/
-def iicInfHom : InfHomCat α (LowerSet α) :=
-  ⟨iic, fun s => (iic_infₛ s).trans infₛ_image.symm⟩
-#align lower_set.Iic_Inf_hom LowerSet.iicInfHom
-
-/- warning: lower_set.coe_Iic_Inf_hom clashes with lower_set.coe_Iic_inf_hom -> LowerSet.coe_iicInfHom
-warning: lower_set.coe_Iic_Inf_hom -> LowerSet.coe_iicInfHom is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α], Eq.{succ u1} ((fun (_x : InfHomCat.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (LowerSet.iicInfHom.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (InfHomCat.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (fun (_x : InfHomCat.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (InfHomCat.hasCoeToFun.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (LowerSet.iicInfHom.{u1} α _inst_1)) (LowerSet.iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α], Eq.{succ u1} ((fun (_x : InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (LowerSet.iicInfHom.{u1} α _inst_1)) (coeFn.{succ u1, succ u1} (InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (fun (_x : InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (InfHom.hasCoeToFun.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (LowerSet.iicInfHom.{u1} α _inst_1)) (LowerSet.iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))
-Case conversion may be inaccurate. Consider using '#align lower_set.coe_Iic_Inf_hom LowerSet.coe_iicInfHomₓ'. -/
-@[simp]
-theorem coe_iicInfHom : (iicInfHom : α → LowerSet α) = iic :=
-  rfl
-#align lower_set.coe_Iic_Inf_hom LowerSet.coe_iicInfHom
-
-/- warning: lower_set.Iic_Inf_hom_apply clashes with lower_set.Iic_inf_hom_apply -> LowerSet.iicInfHom_apply
-warning: lower_set.Iic_Inf_hom_apply -> LowerSet.iicInfHom_apply is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (a : α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (coeFn.{succ u1, succ u1} (InfHomCat.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (fun (_x : InfHomCat.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (InfHomCat.hasCoeToFun.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))))) (CompleteSemilatticeInf.toHasInf.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))))) (LowerSet.iicInfHom.{u1} α _inst_1) a) (LowerSet.iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] (a : α), Eq.{succ u1} (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (coeFn.{succ u1, succ u1} (InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (fun (_x : InfHom.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) => α -> (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (InfHom.hasCoeToFun.{u1, u1} α (LowerSet.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))) (SemilatticeInf.toHasInf.{u1} α _inst_1) (LowerSet.hasInf.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))))) (LowerSet.iicInfHom.{u1} α _inst_1) a) (LowerSet.iic.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)) a)
-Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf_hom_apply LowerSet.iicInfHom_applyₓ'. -/
-@[simp]
-theorem iicInfHom_apply (a : α) : iicInfHom a = iic a :=
-  rfl
-#align lower_set.Iic_Inf_hom_apply LowerSet.iicInfHom_apply
 
 end CompleteLattice
 

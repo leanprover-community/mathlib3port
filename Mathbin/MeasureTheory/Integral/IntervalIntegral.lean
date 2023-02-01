@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -442,15 +442,23 @@ theorem continuousOnMul {f g : ℝ → A} (hf : IntervalIntegrable f μ a b)
   exact hf.continuous_on_mul_of_subset hg isCompact_uIcc measurableSet_Ioc Ioc_subset_Icc_self
 #align interval_integrable.continuous_on_mul IntervalIntegrable.continuousOnMul
 
+@[simp]
 theorem constMul {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
     IntervalIntegrable (fun x => c * f x) μ a b :=
   hf.continuousOnMul continuousOn_const
 #align interval_integrable.const_mul IntervalIntegrable.constMul
 
+@[simp]
 theorem mulConst {f : ℝ → A} (hf : IntervalIntegrable f μ a b) (c : A) :
     IntervalIntegrable (fun x => f x * c) μ a b :=
   hf.mulContinuousOn continuousOn_const
 #align interval_integrable.mul_const IntervalIntegrable.mulConst
+
+@[simp]
+theorem divConst {𝕜 : Type _} {f : ℝ → 𝕜} [NormedField 𝕜] (h : IntervalIntegrable f μ a b) (c : 𝕜) :
+    IntervalIntegrable (fun x => f x / c) μ a b := by
+  simpa only [div_eq_mul_inv] using mul_const h c⁻¹
+#align interval_integrable.div_const IntervalIntegrable.divConst
 
 theorem compMulLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (c * x)) volume (a / c) (b / c) :=
@@ -474,10 +482,46 @@ theorem compMulLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     field_simp [hc]
 #align interval_integrable.comp_mul_left IntervalIntegrable.compMulLeft
 
+theorem compMulRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+    IntervalIntegrable (fun x => f (x * c)) volume (a / c) (b / c) := by
+  simpa only [mul_comm] using comp_mul_left hf c
+#align interval_integrable.comp_mul_right IntervalIntegrable.compMulRight
+
+theorem compAddRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+    IntervalIntegrable (fun x => f (x + c)) volume (a - c) (b - c) :=
+  by
+  wlog (discharger := tactic.skip) h := le_total a b using a b, b a
+  swap
+  · exact fun h => IntervalIntegrable.symm (this h.symm)
+  rw [intervalIntegrable_iff'] at hf⊢
+  have A : MeasurableEmbedding fun x => x + c :=
+    (Homeomorph.addRight c).ClosedEmbedding.MeasurableEmbedding
+  have Am : measure.map (fun x => x + c) volume = volume :=
+    is_add_left_invariant.is_add_right_invariant.map_add_right_eq_self _
+  rw [← Am] at hf
+  convert (MeasurableEmbedding.integrableOn_map_iff A).mp hf
+  rw [preimage_add_const_uIcc]
+#align interval_integrable.comp_add_right IntervalIntegrable.compAddRight
+
+theorem compAddLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+    IntervalIntegrable (fun x => f (c + x)) volume (a - c) (b - c) := by
+  simpa only [add_comm] using IntervalIntegrable.compAddRight hf c
+#align interval_integrable.comp_add_left IntervalIntegrable.compAddLeft
+
+theorem compSubRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+    IntervalIntegrable (fun x => f (x - c)) volume (a + c) (b + c) := by
+  simpa only [sub_neg_eq_add] using IntervalIntegrable.compAddRight hf (-c)
+#align interval_integrable.comp_sub_right IntervalIntegrable.compSubRight
+
 theorem iff_comp_neg :
     IntervalIntegrable f volume a b ↔ IntervalIntegrable (fun x => f (-x)) volume (-a) (-b) := by
   constructor; all_goals intro hf; convert comp_mul_left hf (-1); simp; field_simp; field_simp
 #align interval_integrable.iff_comp_neg IntervalIntegrable.iff_comp_neg
+
+theorem compSubLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
+    IntervalIntegrable (fun x => f (c - x)) volume (c - a) (c - b) := by
+  simpa only [neg_sub, ← sub_eq_add_neg] using iff_comp_neg.mp (hf.comp_add_left c)
+#align interval_integrable.comp_sub_left IntervalIntegrable.compSubLeft
 
 end IntervalIntegrable
 

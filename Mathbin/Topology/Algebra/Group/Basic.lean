@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -895,29 +895,18 @@ theorem TopologicalGroup.ext_iff {G : Type _} [Group G] {t t' : TopologicalSpace
 #align topological_add_group.ext_iff TopologicalAddGroup.ext_iff
 
 @[to_additive]
-theorem TopologicalGroup.of_nhds_aux {G : Type _} [Group G] [TopologicalSpace G]
+theorem HasContinuousInv.of_nhds_one {G : Type _} [Group G] [TopologicalSpace G]
     (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x : G => x₀ * x) (𝓝 1))
-    (hconj : ∀ x₀ : G, map (fun x : G => x₀ * x * x₀⁻¹) (𝓝 1) ≤ 𝓝 1) :
-    Continuous fun x : G => x⁻¹ :=
+    (hconj : ∀ x₀ : G, Tendsto (fun x : G => x₀ * x * x₀⁻¹) (𝓝 1) (𝓝 1)) : HasContinuousInv G :=
   by
-  rw [continuous_iff_continuousAt]
-  rintro x₀
-  have key :
-    (fun x => (x₀ * x)⁻¹) = (fun x => x₀⁻¹ * x) ∘ (fun x => x₀ * x * x₀⁻¹) ∘ fun x => x⁻¹ := by
-    ext <;> simp [mul_assoc]
-  calc
-    map (fun x => x⁻¹) (𝓝 x₀) = map (fun x => x⁻¹) ((map fun x => x₀ * x) <| 𝓝 1) := by rw [hleft]
-    _ = map (fun x => (x₀ * x)⁻¹) (𝓝 1) := by rw [Filter.map_map]
-    _ = map (((fun x => x₀⁻¹ * x) ∘ fun x => x₀ * x * x₀⁻¹) ∘ fun x => x⁻¹) (𝓝 1) := by rw [key]
-    _ = map ((fun x => x₀⁻¹ * x) ∘ fun x => x₀ * x * x₀⁻¹) _ := by rw [← Filter.map_map]
-    _ ≤ map ((fun x => x₀⁻¹ * x) ∘ fun x => x₀ * x * x₀⁻¹) (𝓝 1) := map_mono hinv
-    _ = map (fun x => x₀⁻¹ * x) (map (fun x => x₀ * x * x₀⁻¹) (𝓝 1)) := Filter.map_map
-    _ ≤ map (fun x => x₀⁻¹ * x) (𝓝 1) := map_mono (hconj x₀)
-    _ = 𝓝 x₀⁻¹ := (hleft _).symm
-    
-#align topological_group.of_nhds_aux TopologicalGroup.of_nhds_aux
-#align topological_add_group.of_nhds_aux TopologicalAddGroup.of_nhds_aux
+  refine' ⟨continuous_iff_continuousAt.2 fun x₀ => _⟩
+  have : tendsto (fun x => x₀⁻¹ * (x₀ * x⁻¹ * x₀⁻¹)) (𝓝 1) (map ((· * ·) x₀⁻¹) (𝓝 1)) :=
+    (tendsto_map.comp <| hconj x₀).comp hinv
+  simpa only [ContinuousAt, hleft x₀, hleft x₀⁻¹, tendsto_map'_iff, (· ∘ ·), mul_assoc, mul_inv_rev,
+    inv_mul_cancel_left] using this
+#align has_continuous_inv.of_nhds_one HasContinuousInv.of_nhds_one
+#align has_continuous_neg.of_nhds_zero HasContinuousNeg.of_nhds_zero
 
 @[to_additive]
 theorem TopologicalGroup.of_nhds_one' {G : Type u} [Group G] [TopologicalSpace G]
@@ -925,20 +914,14 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Group G] [TopologicalSpace G
     (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1))
     (hright : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) : TopologicalGroup G :=
-  by
-  refine'
-    { continuous_mul := (HasContinuousMul.of_nhds_one hmul hleft hright).continuous_mul
-      continuous_inv := TopologicalGroup.of_nhds_aux hinv hleft _ }
-  intro x₀
-  suffices map (fun x : G => x₀ * x * x₀⁻¹) (𝓝 1) = 𝓝 1 by simp [this, le_refl]
-  rw [show (fun x => x₀ * x * x₀⁻¹) = (fun x => x₀ * x) ∘ fun x => x * x₀⁻¹
-      by
-      ext
-      simp [mul_assoc],
-    ← Filter.map_map, ← hright, hleft x₀⁻¹, Filter.map_map]
-  convert map_id
-  ext
-  simp
+  { to_hasContinuousMul := HasContinuousMul.of_nhds_one hmul hleft hright
+    to_hasContinuousInv :=
+      HasContinuousInv.of_nhds_one hinv hleft fun x₀ =>
+        le_of_eq
+          (by
+            rw [show (fun x => x₀ * x * x₀⁻¹) = (fun x => x * x₀⁻¹) ∘ fun x => x₀ * x from rfl, ←
+              map_map, ← hleft, hright, map_map]
+            simp [(· ∘ ·)]) }
 #align topological_group.of_nhds_one' TopologicalGroup.of_nhds_one'
 #align topological_add_group.of_nhds_zero' TopologicalAddGroup.of_nhds_zero'
 
@@ -948,39 +931,17 @@ theorem TopologicalGroup.of_nhds_one {G : Type u} [Group G] [TopologicalSpace G]
     (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1))
     (hconj : ∀ x₀ : G, Tendsto (fun x => x₀ * x * x₀⁻¹) (𝓝 1) (𝓝 1)) : TopologicalGroup G :=
-  { continuous_mul := by
-      rw [continuous_iff_continuousAt]
-      rintro ⟨x₀, y₀⟩
-      have key :
-        (fun p : G × G => x₀ * p.1 * (y₀ * p.2)) =
-          (fun x => x₀ * y₀ * x) ∘ uncurry (· * ·) ∘ Prod.map (fun x => y₀⁻¹ * x * y₀) id :=
-        by
+  by
+  refine' TopologicalGroup.of_nhds_one' hmul hinv hleft fun x₀ => _
+  replace hconj : ∀ x₀ : G, map (fun x => x₀ * x * x₀⁻¹) (𝓝 1) = 𝓝 1
+  exact fun x₀ =>
+    map_eq_of_inverse (fun x => x₀⁻¹ * x * x₀⁻¹⁻¹)
+      (by
         ext
-        simp [uncurry, Prod.map, mul_assoc]
-      specialize hconj y₀⁻¹
-      rw [inv_inv] at hconj
-      calc
-        map (fun p : G × G => p.1 * p.2) (𝓝 (x₀, y₀)) =
-            map (fun p : G × G => p.1 * p.2) (𝓝 x₀ ×ᶠ 𝓝 y₀) :=
-          by rw [nhds_prod_eq]
-        _ = map (fun p : G × G => x₀ * p.1 * (y₀ * p.2)) (𝓝 1 ×ᶠ 𝓝 1) := by
-          rw [hleft x₀, hleft y₀, prod_map_map_eq, Filter.map_map]
-        _ =
-            map (((fun x => x₀ * y₀ * x) ∘ uncurry (· * ·)) ∘ Prod.map (fun x => y₀⁻¹ * x * y₀) id)
-              (𝓝 1 ×ᶠ 𝓝 1) :=
-          by rw [key]
-        _ =
-            map ((fun x => x₀ * y₀ * x) ∘ uncurry (· * ·))
-              (((map fun x => y₀⁻¹ * x * y₀) <| 𝓝 1) ×ᶠ 𝓝 1) :=
-          by rw [← Filter.map_map, ← prod_map_map_eq', map_id]
-        _ ≤ map ((fun x => x₀ * y₀ * x) ∘ uncurry (· * ·)) (𝓝 1 ×ᶠ 𝓝 1) :=
-          map_mono (Filter.prod_mono hconj <| le_rfl)
-        _ = map (fun x => x₀ * y₀ * x) (map (uncurry (· * ·)) (𝓝 1 ×ᶠ 𝓝 1)) := by
-          rw [Filter.map_map]
-        _ ≤ map (fun x => x₀ * y₀ * x) (𝓝 1) := map_mono hmul
-        _ = 𝓝 (x₀ * y₀) := (hleft _).symm
-        
-    continuous_inv := TopologicalGroup.of_nhds_aux hinv hleft hconj }
+        simp [mul_assoc])
+      (hconj _) (hconj _)
+  rw [← hconj x₀]
+  simpa [(· ∘ ·)] using hleft _
 #align topological_group.of_nhds_one TopologicalGroup.of_nhds_one
 #align topological_add_group.of_nhds_zero TopologicalAddGroup.of_nhds_zero
 

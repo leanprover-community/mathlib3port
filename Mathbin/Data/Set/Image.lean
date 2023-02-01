@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1506,6 +1506,24 @@ theorem range_eval {ι : Type _} {α : ι → Sort _} [∀ i, Nonempty (α i)] (
     range (eval i : (∀ i, α i) → α i) = univ :=
   (surjective_eval i).range_eq
 #align set.range_eval Set.range_eval
+
+/- warning: set.range_inl -> Set.range_inl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}}, Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sum.{u1, u2} α β)) (Set.range.{max u1 u2, succ u1} (Sum.{u1, u2} α β) α (Sum.inl.{u1, u2} α β)) (setOf.{max u1 u2} (Sum.{u1, u2} α β) (fun (x : Sum.{u1, u2} α β) => coeSort.{1, 1} Bool Prop coeSortBool (Sum.isLeft.{u1, u2} α β x)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}}, Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (Set.range.{max u2 u1, succ u2} (Sum.{u2, u1} α β) α (Sum.inl.{u2, u1} α β)) (setOf.{max u1 u2} (Sum.{u2, u1} α β) (fun (x : Sum.{u2, u1} α β) => Eq.{1} Bool (Sum.isLeft.{u2, u1} α β x) Bool.true))
+Case conversion may be inaccurate. Consider using '#align set.range_inl Set.range_inlₓ'. -/
+theorem range_inl : range (@Sum.inl α β) = { x | x.isLeft } := by ext (_ | _) <;> simp
+#align set.range_inl Set.range_inl
+
+/- warning: set.range_inr -> Set.range_inr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}}, Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sum.{u1, u2} α β)) (Set.range.{max u1 u2, succ u2} (Sum.{u1, u2} α β) β (Sum.inr.{u1, u2} α β)) (setOf.{max u1 u2} (Sum.{u1, u2} α β) (fun (x : Sum.{u1, u2} α β) => coeSort.{1, 1} Bool Prop coeSortBool (Sum.isRight.{u1, u2} α β x)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}}, Eq.{max (succ u2) (succ u1)} (Set.{max u2 u1} (Sum.{u2, u1} α β)) (Set.range.{max u2 u1, succ u1} (Sum.{u2, u1} α β) β (Sum.inr.{u2, u1} α β)) (setOf.{max u1 u2} (Sum.{u2, u1} α β) (fun (x : Sum.{u2, u1} α β) => Eq.{1} Bool (Sum.isRight.{u2, u1} α β x) Bool.true))
+Case conversion may be inaccurate. Consider using '#align set.range_inr Set.range_inrₓ'. -/
+theorem range_inr : range (@Sum.inr α β) = { x | x.isRight } := by ext (_ | _) <;> simp
+#align set.range_inr Set.range_inr
 
 /- warning: set.is_compl_range_inl_range_inr -> Set.isCompl_range_inl_range_inr is a dubious translation:
 lean 3 declaration is

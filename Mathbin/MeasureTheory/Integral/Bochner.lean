@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -912,6 +912,13 @@ theorem integral_zero' : integral μ (0 : α → E) = 0 :=
 #align measure_theory.integral_zero' MeasureTheory.integral_zero'
 
 variable {α E}
+
+theorem integrableOfIntegralEqOne {f : α → ℝ} (h : (∫ x, f x ∂μ) = 1) : Integrable f μ :=
+  by
+  contrapose h
+  rw [integral_undef h]
+  exact zero_ne_one
+#align measure_theory.integrable_of_integral_eq_one MeasureTheory.integrableOfIntegralEqOne
 
 theorem integral_add (hf : Integrable f μ) (hg : Integrable g μ) :
     (∫ a, f a + g a ∂μ) = (∫ a, f a ∂μ) + ∫ a, g a ∂μ :=

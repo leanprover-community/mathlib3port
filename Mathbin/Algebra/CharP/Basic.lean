@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -620,7 +620,7 @@ end
 
 section Prod
 
-variable (S : Type v) [Semiring R] [Semiring S] (p q : ℕ) [CharP R p]
+variable (S : Type v) [AddMonoidWithOne R] [AddMonoidWithOne S] (p q : ℕ) [CharP R p]
 
 /-- The characteristic of the product of rings is the least common multiple of the
 characteristics of the two rings. -/
@@ -634,6 +634,14 @@ instance Prod.charP [CharP S p] : CharP (R × S) p := by convert Nat.lcm.charP R
 #align prod.char_p Prod.charP
 
 end Prod
+
+instance ULift.charP [AddMonoidWithOne R] (p : ℕ) [CharP R p] : CharP (ULift.{v} R) p
+    where cast_eq_zero_iff n := Iff.trans (ULift.ext_iff _ _) <| CharP.cast_eq_zero_iff R p n
+#align ulift.char_p ULift.charP
+
+instance MulOpposite.charP [AddMonoidWithOne R] (p : ℕ) [CharP R p] : CharP Rᵐᵒᵖ p
+    where cast_eq_zero_iff n := MulOpposite.unop_inj.symm.trans <| CharP.cast_eq_zero_iff R p n
+#align mul_opposite.char_p MulOpposite.charP
 
 section
 

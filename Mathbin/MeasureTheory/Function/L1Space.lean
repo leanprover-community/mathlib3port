@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1003,6 +1003,23 @@ theorem integrable_smul_iff {c : 𝕜} (hc : c ≠ 0) (f : α → β) :
     Integrable (c • f) μ ↔ Integrable f μ :=
   and_congr (aeStronglyMeasurable_const_smul_iff₀ hc) (hasFiniteIntegral_smul_iff hc f)
 #align measure_theory.integrable_smul_iff MeasureTheory.integrable_smul_iff
+
+theorem Integrable.smulOfTopRight {f : α → β} {φ : α → 𝕜} (hf : Integrable f μ) (hφ : Memℒp φ ∞ μ) :
+    Integrable (φ • f) μ := by
+  rw [← mem_ℒp_one_iff_integrable] at hf⊢
+  exact mem_ℒp.smul_of_top_right hf hφ
+#align measure_theory.integrable.smul_of_top_right MeasureTheory.Integrable.smulOfTopRight
+
+theorem Integrable.smulOfTopLeft {f : α → β} {φ : α → 𝕜} (hφ : Integrable φ μ) (hf : Memℒp f ∞ μ) :
+    Integrable (φ • f) μ := by
+  rw [← mem_ℒp_one_iff_integrable] at hφ⊢
+  exact mem_ℒp.smul_of_top_left hf hφ
+#align measure_theory.integrable.smul_of_top_left MeasureTheory.Integrable.smulOfTopLeft
+
+theorem Integrable.smulConst {f : α → 𝕜} (hf : Integrable f μ) (c : β) :
+    Integrable (fun x => f x • c) μ :=
+  hf.smulOfTopLeft (memℒpTopConst c)
+#align measure_theory.integrable.smul_const MeasureTheory.Integrable.smulConst
 
 end NormedSpace
 

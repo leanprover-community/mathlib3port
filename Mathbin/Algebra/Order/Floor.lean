@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.order.floor
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1481,6 +1481,17 @@ Case conversion may be inaccurate. Consider using '#align int.fract_nonneg Int.f
 theorem fract_nonneg (a : α) : 0 ≤ fract a :=
   sub_nonneg.2 <| floor_le _
 #align int.fract_nonneg Int.fract_nonneg
+
+/- warning: int.fract_pos -> Int.fract_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α (StrictOrderedRing.toOrderedAddCommGroup.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))))) (Int.fract.{u1} α _inst_1 _inst_2 a)) (Ne.{succ u1} α a ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Int α (HasLiftT.mk.{1, succ u1} Int α (CoeTCₓ.coe.{1, succ u1} Int α (Int.castCoe.{u1} α (AddGroupWithOne.toHasIntCast.{u1} α (NonAssocRing.toAddGroupWithOne.{u1} α (Ring.toNonAssocRing.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))))))) (Int.floor.{u1} α _inst_1 _inst_2 a)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1] {a : α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedRing.toPartialOrder.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1))))))) (Int.fract.{u1} α _inst_1 _inst_2 a)) (Ne.{succ u1} α a (Int.cast.{u1} α (Ring.toIntCast.{u1} α (StrictOrderedRing.toRing.{u1} α (LinearOrderedRing.toStrictOrderedRing.{u1} α _inst_1))) (Int.floor.{u1} α _inst_1 _inst_2 a)))
+Case conversion may be inaccurate. Consider using '#align int.fract_pos Int.fract_posₓ'. -/
+/-- The fractional part of `a` is positive if and only if `a ≠ ⌊a⌋`. -/
+theorem fract_pos : 0 < fract a ↔ a ≠ ⌊a⌋ :=
+  (fract_nonneg a).lt_iff_ne.trans <| ne_comm.trans sub_ne_zero
+#align int.fract_pos Int.fract_pos
 
 #print Int.fract_lt_one /-
 theorem fract_lt_one (a : α) : fract a < 1 :=

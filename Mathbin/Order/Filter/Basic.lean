@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.basic
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -5182,7 +5182,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {p : α -> Prop} [_inst_1 : forall (x : α), Decidable (p x)], (Filter.Tendsto.{u1, u2} α β f (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ (Filter.principal.{u1} α (setOf.{u1} α (fun (x : α) => p x)))) l₂) -> (Filter.Tendsto.{u1, u2} α β g (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ (Filter.principal.{u1} α (setOf.{u1} α (fun (x : α) => Not (p x))))) l₂) -> (Filter.Tendsto.{u1, u2} α β (fun (x : α) => ite.{succ u2} β (p x) (_inst_1 x) (f x) (g x)) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.if Filter.Tendsto.ifₓ'. -/
-theorem Tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop}
+protected theorem Tendsto.if {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop}
     [∀ x, Decidable (p x)] (h₀ : Tendsto f (l₁ ⊓ 𝓟 { x | p x }) l₂)
     (h₁ : Tendsto g (l₁ ⊓ 𝓟 { x | ¬p x }) l₂) : Tendsto (fun x => if p x then f x else g x) l₁ l₂ :=
   by
@@ -5201,8 +5201,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {l₁ : Filter.{u2} α} {l₂ : Filter.{u1} β} {f : α -> β} {g : α -> β} {p : α -> Prop} [_inst_1 : DecidablePred.{succ u2} α p], (Filter.Tendsto.{u2, u1} α β f l₁ l₂) -> (Filter.Tendsto.{u2, u1} α β g l₁ l₂) -> (Filter.Tendsto.{u2, u1} α β (fun (a : α) => ite.{succ u1} β (p a) (_inst_1 a) (f a) (g a)) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.if' Filter.Tendsto.if'ₓ'. -/
-theorem Tendsto.if' {α β : Type _} {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {p : α → Prop}
-    [DecidablePred p] (hf : Tendsto f l₁ l₂) (hg : Tendsto g l₁ l₂) :
+protected theorem Tendsto.if' {α β : Type _} {l₁ : Filter α} {l₂ : Filter β} {f g : α → β}
+    {p : α → Prop} [DecidablePred p] (hf : Tendsto f l₁ l₂) (hg : Tendsto g l₁ l₂) :
     Tendsto (fun a => if p a then f a else g a) l₁ l₂ :=
   by
   replace hf : tendsto f (l₁ ⊓ 𝓟 { x | p x }) l₂ := tendsto_inf_left hf
@@ -5216,7 +5216,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u2} β} {f : α -> β} {g : α -> β} {s : Set.{u1} α} [_inst_1 : forall (x : α), Decidable (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s)], (Filter.Tendsto.{u1, u2} α β f (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ (Filter.principal.{u1} α s)) l₂) -> (Filter.Tendsto.{u1, u2} α β g (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ (Filter.principal.{u1} α (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))) l₂) -> (Filter.Tendsto.{u1, u2} α β (Set.piecewise.{u1, succ u2} α (fun (ᾰ : α) => β) s f g (fun (j : α) => _inst_1 j)) l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.piecewise Filter.Tendsto.piecewiseₓ'. -/
-theorem Tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {s : Set α}
+protected theorem Tendsto.piecewise {l₁ : Filter α} {l₂ : Filter β} {f g : α → β} {s : Set α}
     [∀ x, Decidable (x ∈ s)] (h₀ : Tendsto f (l₁ ⊓ 𝓟 s) l₂) (h₁ : Tendsto g (l₁ ⊓ 𝓟 (sᶜ)) l₂) :
     Tendsto (piecewise s f g) l₁ l₂ :=
   h₀.if h₁

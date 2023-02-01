@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit bcfa726826abd57587355b4b5b7e78ad6527b7e4
+! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1422,6 +1422,20 @@ theorem Memℒp.smul {p q r : ℝ≥0∞} {f : α → E} {φ : α → 𝕜} (hf 
     (snorm_smul_le_mul_snorm hf.1 hφ.1 hpqr).trans_lt
       (Ennreal.mul_lt_top hφ.snorm_ne_top hf.snorm_ne_top)⟩
 #align measure_theory.mem_ℒp.smul MeasureTheory.Memℒp.smul
+
+theorem Memℒp.smulOfTopRight {p : ℝ≥0∞} {f : α → E} {φ : α → 𝕜} (hf : Memℒp f p μ)
+    (hφ : Memℒp φ ∞ μ) : Memℒp (φ • f) p μ :=
+  by
+  apply hf.smul hφ
+  simp only [Ennreal.div_top, zero_add]
+#align measure_theory.mem_ℒp.smul_of_top_right MeasureTheory.Memℒp.smulOfTopRight
+
+theorem Memℒp.smulOfTopLeft {p : ℝ≥0∞} {f : α → E} {φ : α → 𝕜} (hf : Memℒp f ∞ μ)
+    (hφ : Memℒp φ p μ) : Memℒp (φ • f) p μ :=
+  by
+  apply hf.smul hφ
+  simp only [Ennreal.div_top, add_zero]
+#align measure_theory.mem_ℒp.smul_of_top_left MeasureTheory.Memℒp.smulOfTopLeft
 
 end NormedSpace
 
