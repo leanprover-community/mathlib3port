@@ -780,12 +780,12 @@ def associatedHom : QuadraticForm R M →ₗ[S] BilinForm R M
       ⟨⅟ 2, fun x => (Commute.one_right x).bit0_right.invOf_right⟩ Q.polarBilin
   map_add' Q Q' := by
     ext
-    simp only [BilinForm.add_apply, BilinForm.smul_apply, coe_fn_mk, polar_bilin_apply, polar_add,
+    simp only [BilinForm.add_apply, BilinForm.smul_apply, [anonymous], polar_bilin_apply, polar_add,
       coe_fn_add, smul_add]
   map_smul' s Q := by
     ext
-    simp only [RingHom.id_apply, polar_smul, smul_comm s, polar_bilin_apply, coe_fn_mk, coe_fn_smul,
-      BilinForm.smul_apply]
+    simp only [RingHom.id_apply, polar_smul, smul_comm s, polar_bilin_apply, [anonymous],
+      coe_fn_smul, BilinForm.smul_apply]
 #align quadratic_form.associated_hom QuadraticForm.associatedHom
 
 variable (Q : QuadraticForm R M) (S)

@@ -652,7 +652,7 @@ theorem det_blockDiagonal {o : Type _} [Fintype o] [DecidableEq o] (M : o → Ma
       simp only [mk_inv_apply_eq, apply_inv_self]
     · apply Finset.mem_univ
     · ext ⟨k, x⟩
-      · simp only [coe_fn_mk, prod_congr_left_apply]
+      · simp only [[anonymous], prod_congr_left_apply]
       · simp only [prod_congr_left_apply, hσ]
   · intro σ _ hσ
     rw [mem_preserving_snd] at hσ

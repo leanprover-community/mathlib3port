@@ -224,7 +224,7 @@ theorem comp_eq_mk (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) :
 theorem coeFn_comp (g : β → γ) (hg : Continuous g) (f : α →ₘ[μ] β) : comp g hg f =ᵐ[μ] g ∘ f :=
   by
   rw [comp_eq_mk]
-  apply coe_fn_mk
+  apply [anonymous]
 #align measure_theory.ae_eq_fun.coe_fn_comp MeasureTheory.AeEqFun.coeFn_comp
 
 section CompMeasurable
@@ -258,7 +258,7 @@ theorem coeFn_compMeasurable (g : β → γ) (hg : Measurable g) (f : α →ₘ[
     compMeasurable g hg f =ᵐ[μ] g ∘ f :=
   by
   rw [comp_measurable_eq_mk]
-  apply coe_fn_mk
+  apply [anonymous]
 #align measure_theory.ae_eq_fun.coe_fn_comp_measurable MeasureTheory.AeEqFun.coeFn_compMeasurable
 
 end CompMeasurable
@@ -283,7 +283,7 @@ theorem pair_eq_mk (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) :
 theorem coeFn_pair (f : α →ₘ[μ] β) (g : α →ₘ[μ] γ) : f.pair g =ᵐ[μ] fun x => (f x, g x) :=
   by
   rw [pair_eq_mk]
-  apply coe_fn_mk
+  apply [anonymous]
 #align measure_theory.ae_eq_fun.coe_fn_pair MeasureTheory.AeEqFun.coeFn_pair
 
 /-- Given a continuous function `g : β → γ → δ`, and almost everywhere equal functions
@@ -320,7 +320,7 @@ theorem coeFn_comp₂ (g : β → γ → δ) (hg : Continuous (uncurry g)) (f₁
     (f₂ : α →ₘ[μ] γ) : comp₂ g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) :=
   by
   rw [comp₂_eq_mk]
-  apply coe_fn_mk
+  apply [anonymous]
 #align measure_theory.ae_eq_fun.coe_fn_comp₂ MeasureTheory.AeEqFun.coeFn_comp₂
 
 section
@@ -364,7 +364,7 @@ theorem coeFn_comp₂Measurable (g : β → γ → δ) (hg : Measurable (uncurry
     (f₂ : α →ₘ[μ] γ) : comp₂Measurable g hg f₁ f₂ =ᵐ[μ] fun a => g (f₁ a) (f₂ a) :=
   by
   rw [comp₂_measurable_eq_mk]
-  apply coe_fn_mk
+  apply [anonymous]
 #align measure_theory.ae_eq_fun.coe_fn_comp₂_measurable MeasureTheory.AeEqFun.coeFn_comp₂Measurable
 
 end

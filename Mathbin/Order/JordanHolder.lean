@@ -428,7 +428,7 @@ theorem mem_eraseTop {s : CompositionSeries X} {x : X} (h : 0 < s.length) :
     x ∈ s.eraseTop ↔ x ≠ s.top ∧ x ∈ s :=
   by
   simp only [mem_def]
-  dsimp only [erase_top, coe_fn_mk]
+  dsimp only [erase_top, [anonymous]]
   constructor
   · rintro ⟨i, rfl⟩
     have hi : (i : ℕ) < s.length :=
