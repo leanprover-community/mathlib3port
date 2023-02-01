@@ -280,7 +280,7 @@ variable {I J : Ideal P} {x y : P}
 /-- The smallest ideal containing a given element. -/
 @[simps]
 def principal (p : P) : Ideal P where
-  toLowerSet := LowerSet.iic p
+  toLowerSet := LowerSet.Iic p
   nonempty' := nonempty_Iic
   directed' x hx y hy := ⟨p, le_rfl, hx, hy⟩
 #align order.ideal.principal Order.Ideal.principal
@@ -322,7 +322,7 @@ variable [OrderTop P]
 
 @[simp]
 theorem principal_top : principal (⊤ : P) = ⊤ :=
-  toLowerSet_injective <| LowerSet.iic_top
+  toLowerSet_injective <| LowerSet.Iic_top
 #align order.ideal.principal_top Order.Ideal.principal_top
 
 end OrderTop
@@ -435,19 +435,19 @@ instance : InfSet (Ideal P) :=
     { toLowerSet := ⨅ s ∈ S, toLowerSet s
       nonempty' :=
         ⟨⊥, by
-          rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_interᵢ₂]
+          rw [LowerSet.carrier_eq_coe, LowerSet.coe_infᵢ₂, Set.mem_interᵢ₂]
           exact fun s _ => s.bot_mem⟩
       directed' := fun a ha b hb =>
         ⟨a ⊔ b,
           ⟨by
-            rw [LowerSet.carrier_eq_coe, LowerSet.coe_infi₂, Set.mem_interᵢ₂] at ha hb⊢
+            rw [LowerSet.carrier_eq_coe, LowerSet.coe_infᵢ₂, Set.mem_interᵢ₂] at ha hb⊢
             exact fun s hs => sup_mem (ha _ hs) (hb _ hs), le_sup_left, le_sup_right⟩⟩ }⟩
 
 variable {S : Set (Ideal P)}
 
 @[simp]
 theorem coe_infₛ : (↑(infₛ S) : Set P) = ⋂ s ∈ S, ↑s :=
-  LowerSet.coe_infi₂ _
+  LowerSet.coe_infᵢ₂ _
 #align order.ideal.coe_Inf Order.Ideal.coe_infₛ
 
 @[simp]

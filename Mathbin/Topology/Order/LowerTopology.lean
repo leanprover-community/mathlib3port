@@ -187,7 +187,7 @@ theorem isClosed_Ici (a : α) : IsClosed (Ici a) :=
 /-- The upper closure of a finite set is closed in the lower topology. -/
 theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α) :=
   by
-  simp only [← UpperSet.infᵢ_ici, UpperSet.coe_infᵢ]
+  simp only [← UpperSet.infᵢ_Ici, UpperSet.coe_infᵢ]
   exact isClosed_bunionᵢ h fun a h₁ => isClosed_Ici a
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
 

@@ -71,7 +71,7 @@ theorem Set.OrdConnected.smul (hs : s.OrdConnected) : (a • s).OrdConnected :=
 theorem IsUpperSet.mul_left (ht : IsUpperSet t) : IsUpperSet (s * t) :=
   by
   rw [← smul_eq_mul, ← bUnion_smul_set]
-  exact isUpperSet_Union₂ fun x hx => ht.smul
+  exact isUpperSet_unionᵢ₂ fun x hx => ht.smul
 #align is_upper_set.mul_left IsUpperSet.mul_left
 #align is_upper_set.add_left IsUpperSet.add_left
 
@@ -137,7 +137,7 @@ namespace UpperSet
 
 @[to_additive]
 instance : One (UpperSet α) :=
-  ⟨ici 1⟩
+  ⟨Ici 1⟩
 
 @[to_additive]
 instance : Mul (UpperSet α) :=
@@ -176,10 +176,10 @@ theorem coe_div (s t : UpperSet α) : (↑(s / t) : Set α) = s / t :=
 #align upper_set.coe_sub UpperSet.coe_sub
 
 @[simp, to_additive]
-theorem ici_one : ici (1 : α) = 1 :=
+theorem Ici_one : Ici (1 : α) = 1 :=
   rfl
-#align upper_set.Ici_one UpperSet.ici_one
-#align upper_set.Ici_zero UpperSet.ici_zero
+#align upper_set.Ici_one UpperSet.Ici_one
+#align upper_set.Ici_zero UpperSet.Ici_zero
 
 @[to_additive]
 instance : MulAction α (UpperSet α) :=
@@ -214,7 +214,7 @@ namespace LowerSet
 
 @[to_additive]
 instance : One (LowerSet α) :=
-  ⟨iic 1⟩
+  ⟨Iic 1⟩
 
 @[to_additive]
 instance : Mul (LowerSet α) :=
@@ -247,10 +247,10 @@ theorem coe_div (s t : LowerSet α) : (↑(s / t) : Set α) = s / t :=
 #align lower_set.coe_sub LowerSet.coe_sub
 
 @[simp, to_additive]
-theorem iic_one : iic (1 : α) = 1 :=
+theorem Iic_one : Iic (1 : α) = 1 :=
   rfl
-#align lower_set.Iic_one LowerSet.iic_one
-#align lower_set.Iic_zero LowerSet.iic_zero
+#align lower_set.Iic_one LowerSet.Iic_one
+#align lower_set.Iic_zero LowerSet.Iic_zero
 
 @[to_additive]
 instance : MulAction α (LowerSet α) :=
@@ -310,14 +310,14 @@ theorem lowerClosure_smul : lowerClosure (a • s) = a • lowerClosure s :=
 @[to_additive]
 theorem mul_upperClosure : s * upperClosure t = upperClosure (s * t) := by
   simp_rw [← smul_eq_mul, ← bUnion_smul_set, upperClosure_unionᵢ, upperClosure_smul,
-    UpperSet.coe_infi₂, UpperSet.coe_smul]
+    UpperSet.coe_infᵢ₂, UpperSet.coe_smul]
 #align mul_upper_closure mul_upperClosure
 #align add_upper_closure add_upperClosure
 
 @[to_additive]
 theorem mul_lowerClosure : s * lowerClosure t = lowerClosure (s * t) := by
   simp_rw [← smul_eq_mul, ← bUnion_smul_set, lowerClosure_unionᵢ, lowerClosure_smul,
-    LowerSet.coe_supr₂, LowerSet.coe_smul]
+    LowerSet.coe_supᵢ₂, LowerSet.coe_smul]
 #align mul_lower_closure mul_lowerClosure
 #align add_lower_closure add_lowerClosure
 

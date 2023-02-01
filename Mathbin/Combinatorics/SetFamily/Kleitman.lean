@@ -81,7 +81,7 @@ theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Fin
             (mul_le_mul_left <| zero_lt_two' ℕ).2 <| IsUpperSet.card_inter_le_finset _ _).trans
         _
     · rw [coe_bUnion]
-      exact isUpperSet_Union₂ fun i hi => hf₂ _ <| subset_cons _ hi
+      exact isUpperSet_unionᵢ₂ fun i hi => hf₂ _ <| subset_cons _ hi
     · rw [coe_compl]
       exact (hf₂ _ <| mem_cons_self _ _).compl
     rw [mul_tsub, card_compl, Fintype.card_finset, mul_left_comm, mul_tsub,
