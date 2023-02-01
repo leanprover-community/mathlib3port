@@ -407,9 +407,9 @@ theorem Countable.image2 {s : Set α} {t : Set β} (hs : s.Countable) (ht : t.Co
 
 end Set
 
-#print Finset.countable_to_set /-
-theorem Finset.countable_to_set (s : Finset α) : Set.Countable (↑s : Set α) :=
+#print Finset.countable_toSet /-
+theorem Finset.countable_toSet (s : Finset α) : Set.Countable (↑s : Set α) :=
   s.finite_toSet.Countable
-#align finset.countable_to_set Finset.countable_to_set
+#align finset.countable_to_set Finset.countable_toSet
 -/
 

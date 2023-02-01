@@ -2013,7 +2013,7 @@ assumed to be Hausdorff. -/
 theorem exists_subset_nhds_of_isCompact [T2Space α] {ι : Type _} [Nonempty ι] {V : ι → Set α}
     (hV : Directed (· ⊇ ·) V) (hV_cpct : ∀ i, IsCompact (V i)) {U : Set α}
     (hU : ∀ x ∈ ⋂ i, V i, U ∈ 𝓝 x) : ∃ i, V i ⊆ U :=
-  exists_subset_nhds_of_is_compact' hV hV_cpct (fun i => (hV_cpct i).IsClosed) hU
+  exists_subset_nhds_of_isCompact' hV hV_cpct (fun i => (hV_cpct i).IsClosed) hU
 #align exists_subset_nhds_of_is_compact exists_subset_nhds_of_isCompact
 
 theorem CompactExhaustion.isClosed [T2Space α] (K : CompactExhaustion α) (n : ℕ) : IsClosed (K n) :=
@@ -3584,7 +3584,7 @@ theorem connectedComponent_eq_interᵢ_clopen [T2Space α] [CompactSpace α] (x 
   rw [← not_disjoint_iff_nonempty_inter, imp_not_comm, not_forall] at H1
   cases' H1 (disjoint_compl_left_iff_subset.2 <| hab.trans <| union_subset_union hau hbv) with Zi H2
   refine' ⟨⋂ U ∈ Zi, Subtype.val U, _, _, _⟩
-  · exact isClopen_bInter_finset fun Z hZ => Z.2.1
+  · exact isClopen_binterᵢ_finset fun Z hZ => Z.2.1
   · exact mem_Inter₂.2 fun Z hZ => Z.2.2
   · rwa [← disjoint_compl_left_iff_subset, disjoint_iff_inter_eq_empty, ← not_nonempty_iff_eq_empty]
 #align connected_component_eq_Inter_clopen connectedComponent_eq_interᵢ_clopen
@@ -3751,7 +3751,7 @@ instance ConnectedComponents.t2 [T2Space α] [CompactSpace α] : T2Space (Connec
     · exact fun Z => Z.2.1.2
     -- This clopen and its complement will separate the connected components of `a` and `b`
     set U : Set α := ⋂ (i : { Z // IsClopen Z ∧ b ∈ Z }) (H : i ∈ fin_a), i
-    have hU : IsClopen U := isClopen_bInter_finset fun i j => i.2.1
+    have hU : IsClopen U := isClopen_binterᵢ_finset fun i j => i.2.1
     exact
       ⟨U, coe '' U, hU, ha, subset_Inter₂ fun Z _ => Z.2.1.connectedComponent_subset Z.2.2,
         (connectedComponents_preimage_image U).symm ▸ hU.bUnion_connected_component_eq⟩

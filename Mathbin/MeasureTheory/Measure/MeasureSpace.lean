@@ -2750,7 +2750,7 @@ theorem ae_restrict_bUnion_eq (s : ι → Set α) {t : Set ι} (ht : t.Countable
 
 theorem ae_restrict_bUnion_finset_eq (s : ι → Set α) (t : Finset ι) :
     (μ.restrict (⋃ i ∈ t, s i)).ae = ⨆ i ∈ t, (μ.restrict (s i)).ae :=
-  ae_restrict_bUnion_eq s t.countable_to_set
+  ae_restrict_bUnion_eq s t.countable_toSet
 #align measure_theory.ae_restrict_bUnion_finset_eq MeasureTheory.ae_restrict_bUnion_finset_eq
 
 theorem ae_restrict_unionᵢ_iff [Countable ι] (s : ι → Set α) (p : α → Prop) :
@@ -2784,7 +2784,7 @@ theorem ae_eq_restrict_bUnion_iff (s : ι → Set α) {t : Set ι} (ht : t.Count
 
 theorem ae_eq_restrict_bUnion_finset_iff (s : ι → Set α) (t : Finset ι) (f g : α → δ) :
     f =ᵐ[μ.restrict (⋃ i ∈ t, s i)] g ↔ ∀ i ∈ t, f =ᵐ[μ.restrict (s i)] g :=
-  ae_eq_restrict_bUnion_iff s t.countable_to_set f g
+  ae_eq_restrict_bUnion_iff s t.countable_toSet f g
 #align measure_theory.ae_eq_restrict_bUnion_finset_iff MeasureTheory.ae_eq_restrict_bUnion_finset_iff
 
 theorem ae_restrict_uIoc_eq [LinearOrder α] (a b : α) :
