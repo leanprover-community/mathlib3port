@@ -1907,11 +1907,11 @@ theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ closure (
 #align subtype.dense_iff Subtype.dense_iff
 -/
 
-#print map_nhds_subtype_coe_eq /-
-theorem map_nhds_subtype_coe_eq {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
+#print map_nhds_subtype_coe_eq_nhds /-
+theorem map_nhds_subtype_coe_eq_nhds {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
     map (coe : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
   map_nhds_induced_of_mem <| by simpa only [Subtype.coe_mk, Subtype.range_coe] using h
-#align map_nhds_subtype_coe_eq map_nhds_subtype_coe_eq
+#align map_nhds_subtype_coe_eq map_nhds_subtype_coe_eq_nhds
 -/
 
 #print nhds_subtype_eq_comap /-
@@ -1945,7 +1945,7 @@ theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → 
     let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
     calc
       map f (𝓝 x) = map f (map coe (𝓝 x')) :=
-        congr_arg (map f) (map_nhds_subtype_coe_eq _ <| c_sets).symm
+        congr_arg (map f) (map_nhds_subtype_coe_eq_nhds _ <| c_sets).symm
       _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl
       _ ≤ 𝓝 (f x) := continuous_iff_continuousAt.mp (f_cont i) x'
       

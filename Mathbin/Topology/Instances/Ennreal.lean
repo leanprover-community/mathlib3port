@@ -1601,7 +1601,7 @@ attribute [local instance] metricSpaceEmetricBall
 
 theorem nhds_eq_nhds_emetric_ball (a x : β) (r : ℝ≥0∞) (h : x ∈ ball a r) :
     𝓝 x = map (coe : ball a r → β) (𝓝 ⟨x, h⟩) :=
-  (map_nhds_subtype_coe_eq _ <| IsOpen.mem_nhds Emetric.isOpen_ball h).symm
+  (map_nhds_subtype_coe_eq_nhds _ <| IsOpen.mem_nhds Emetric.isOpen_ball h).symm
 #align nhds_eq_nhds_emetric_ball nhds_eq_nhds_emetric_ball
 
 end
