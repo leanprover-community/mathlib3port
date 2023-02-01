@@ -297,7 +297,7 @@ instance [Semiring k] [SMulZeroClass R k] : SMulZeroClass R (MonoidAlgebra k G) 
   Finsupp.smulZeroClass
 
 instance [Semiring k] [DistribSMul R k] : DistribSMul R (MonoidAlgebra k G) :=
-  Finsupp.distribSmul _ _
+  Finsupp.distribSMul _ _
 
 instance [Monoid R] [Semiring k] [DistribMulAction R k] : DistribMulAction R (MonoidAlgebra k G) :=
   Finsupp.distribMulAction G k
