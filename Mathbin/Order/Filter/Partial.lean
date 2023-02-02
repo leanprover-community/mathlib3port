@@ -237,20 +237,20 @@ theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →.
   Iff.rfl
 #align filter.ptendsto_iff_rtendsto Filter.ptendsto_iff_rtendsto
 
-theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (Pfun.res f s) l = map f (l ⊓ 𝓟 s) :=
+theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (PFun.res f s) l = map f (l ⊓ 𝓟 s) :=
   by
   ext t
-  simp only [Pfun.core_res, mem_pmap, mem_map, mem_inf_principal, imp_iff_not_or]
+  simp only [PFun.core_res, mem_pmap, mem_map, mem_inf_principal, imp_iff_not_or]
   rfl
 #align filter.pmap_res Filter.pmap_res
 
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
-    Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (Pfun.res f s) l₁ l₂ := by
+    Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (PFun.res f s) l₁ l₂ := by
   simp only [tendsto, ptendsto, pmap_res]
 #align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendsto
 
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :
-    Tendsto f l₁ l₂ ↔ Ptendsto (Pfun.res f Set.univ) l₁ l₂ :=
+    Tendsto f l₁ l₂ ↔ Ptendsto (PFun.res f Set.univ) l₁ l₂ :=
   by
   rw [← tendsto_iff_ptendsto]
   simp [principal_univ]
@@ -278,7 +278,7 @@ theorem ptendsto_of_ptendsto' {f : α →. β} {l₁ : Filter α} {l₂ : Filter
     Ptendsto' f l₁ l₂ → Ptendsto f l₁ l₂ :=
   by
   rw [ptendsto_def, ptendsto'_def]
-  exact fun h s sl₂ => mem_of_superset (h s sl₂) (Pfun.preimage_subset_core _ _)
+  exact fun h s sl₂ => mem_of_superset (h s sl₂) (PFun.preimage_subset_core _ _)
 #align filter.ptendsto_of_ptendsto' Filter.ptendsto_of_ptendsto'
 
 theorem ptendsto'_of_ptendsto {f : α →. β} {l₁ : Filter α} {l₂ : Filter β} (h : f.Dom ∈ l₁) :
@@ -286,7 +286,7 @@ theorem ptendsto'_of_ptendsto {f : α →. β} {l₁ : Filter α} {l₂ : Filter
   by
   rw [ptendsto_def, ptendsto'_def]
   intro h' s sl₂
-  rw [Pfun.preimage_eq]
+  rw [PFun.preimage_eq]
   exact inter_mem (h' s sl₂) h
 #align filter.ptendsto'_of_ptendsto Filter.ptendsto'_of_ptendsto
 

@@ -181,7 +181,7 @@ theorem prod_Ico_eq_mul_inv {δ : Type _} [CommGroup δ] (f : ℕ → δ) {m n :
     (∏ k in Ico m n, f k) = (∏ k in range n, f k) * (∏ k in range m, f k)⁻¹ :=
   eq_mul_inv_iff_mul_eq.2 <| by rw [mul_comm] <;> exact prod_range_mul_prod_Ico f h
 #align finset.prod_Ico_eq_mul_inv Finset.prod_Ico_eq_mul_inv
-#align finset.sum_ico_eq_add_neg Finset.sum_Ico_eq_add_neg
+#align finset.sum_Ico_eq_add_neg Finset.sum_Ico_eq_add_neg
 
 /- warning: finset.prod_Ico_eq_div -> Finset.prod_Ico_eq_div is a dubious translation:
 lean 3 declaration is
@@ -232,17 +232,17 @@ theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoid M] (a b : ℕ) (f : ℕ →
 #align finset.sum_Ico_Ico_comm Finset.sum_Ico_Ico_comm
 -/
 
-#print Finset.prod_ico_eq_prod_range /-
+#print Finset.prod_Ico_eq_prod_range /-
 @[to_additive]
-theorem prod_ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
+theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) :
     (∏ k in Ico m n, f k) = ∏ k in range (n - m), f (m + k) :=
   by
   by_cases h : m ≤ n
   · rw [← Nat.Ico_zero_eq_range, prod_Ico_add, zero_add, tsub_add_cancel_of_le h]
   · replace h : n ≤ m := le_of_not_ge h
     rw [Ico_eq_empty_of_le h, tsub_eq_zero_iff_le.mpr h, range_zero, prod_empty, prod_empty]
-#align finset.prod_Ico_eq_prod_range Finset.prod_ico_eq_prod_range
-#align finset.sum_Ico_eq_sum_range Finset.sum_ico_eq_sum_range
+#align finset.prod_Ico_eq_prod_range Finset.prod_Ico_eq_prod_range
+#align finset.sum_Ico_eq_sum_range Finset.sum_Ico_eq_sum_range
 -/
 
 #print Finset.prod_Ico_reflect /-

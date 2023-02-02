@@ -64,12 +64,12 @@ instance : Inhabited PartialFun :=
 
 instance largeCategory : LargeCategory.{u} PartialFun
     where
-  Hom := Pfun
-  id := Pfun.id
+  Hom := PFun
+  id := PFun.id
   comp X Y Z f g := g.comp f
-  id_comp' := @Pfun.comp_id
-  comp_id' := @Pfun.id_comp
-  assoc' W X Y Z _ _ _ := (Pfun.comp_assoc _ _ _).symm
+  id_comp' := @PFun.comp_id
+  comp_id' := @PFun.id_comp
+  assoc' W X Y Z _ _ _ := (PFun.comp_assoc _ _ _).symm
 #align PartialFun.large_category PartialFun.largeCategory
 
 /-- Constructs a partial function isomorphism between types from an equivalence between them. -/
@@ -78,8 +78,8 @@ def Iso.mk {α β : PartialFun.{u}} (e : α ≃ β) : α ≅ β
     where
   Hom := e
   inv := e.symm
-  hom_inv_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
-  inv_hom_id' := (Pfun.coe_comp _ _).symm.trans <| congr_arg coe e.self_comp_symm
+  hom_inv_id' := (PFun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
+  inv_hom_id' := (PFun.coe_comp _ _).symm.trans <| congr_arg coe e.self_comp_symm
 #align PartialFun.iso.mk PartialFun.Iso.mk
 
 end PartialFun
@@ -88,12 +88,12 @@ end PartialFun
 def typeToPartialFun : Type u ⥤ PartialFun
     where
   obj := id
-  map := @Pfun.lift
-  map_comp' _ _ _ _ _ := Pfun.coe_comp _ _
+  map := @PFun.lift
+  map_comp' _ _ _ _ _ := PFun.coe_comp _ _
 #align Type_to_PartialFun typeToPartialFun
 
 instance : Faithful typeToPartialFun :=
-  ⟨fun X Y => Pfun.coe_injective⟩
+  ⟨fun X Y => PFun.lift_injective⟩
 
 /-- The functor which deletes the point of a pointed type. In return, this makes the maps partial.
 This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
@@ -101,14 +101,14 @@ This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
 def pointedToPartialFun : Pointed.{u} ⥤ PartialFun
     where
   obj X := { x : X // x ≠ X.point }
-  map X Y f := Pfun.toSubtype _ f.toFun ∘ Subtype.val
+  map X Y f := PFun.toSubtype _ f.toFun ∘ Subtype.val
   map_id' X :=
-    Pfun.ext fun a b => Pfun.mem_toSubtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
+    PFun.ext fun a b => PFun.mem_to_subtype_iff.trans (Subtype.coe_inj.trans Part.mem_some_iff.symm)
   map_comp' X Y Z f g :=
-    Pfun.ext fun a c =>
+    PFun.ext fun a c =>
       by
       refine' (pfun.mem_to_subtype_iff.trans _).trans part.mem_bind_iff.symm
-      simp_rw [Pfun.mem_toSubtype_iff, Subtype.exists]
+      simp_rw [PFun.mem_to_subtype_iff, Subtype.exists]
       refine'
         ⟨fun h =>
           ⟨f.to_fun a, fun ha =>
@@ -148,7 +148,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
                 right_inv := fun a => by
                   simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
           fun X Y f =>
-          Pfun.ext fun a b => by
+          PFun.ext fun a b => by
             unfold_projs
             dsimp
             rw [Part.bind_some]

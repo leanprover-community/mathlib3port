@@ -3697,23 +3697,29 @@ instance [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) 
 
 end Prod
 
+/- warning: Inf_prod -> infₛ_prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : InfSet.{u1} α] [_inst_2 : InfSet.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (Set.Nonempty.{u1} α s) -> (Set.Nonempty.{u2} β t) -> (Eq.{succ (max u1 u2)} (Prod.{u1, u2} α β) (InfSet.infₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasInf.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t)) (Prod.mk.{u1, u2} α β (InfSet.infₛ.{u1} α _inst_1 s) (InfSet.infₛ.{u2} β _inst_2 t)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : InfSet.{u2} α] [_inst_2 : InfSet.{u1} β] {s : Set.{u2} α} {t : Set.{u1} β}, (Set.Nonempty.{u2} α s) -> (Set.Nonempty.{u1} β t) -> (Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (InfSet.infₛ.{max u1 u2} (Prod.{u2, u1} α β) (Prod.infSet.{u2, u1} α β _inst_1 _inst_2) (Set.prod.{u2, u1} α β s t)) (Prod.mk.{u2, u1} α β (InfSet.infₛ.{u2} α _inst_1 s) (InfSet.infₛ.{u1} β _inst_2 t)))
+Case conversion may be inaccurate. Consider using '#align Inf_prod infₛ_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem infₛ_prod [InfSet α] [InfSet β] {s : Set α} {t : Set β} (hs : s.Nonempty)
     (ht : t.Nonempty) : infₛ (s ×ˢ t) = (infₛ s, infₛ t) :=
   congr_arg₂ Prod.mk (congr_arg infₛ <| fst_image_prod _ ht) (congr_arg infₛ <| snd_image_prod hs _)
 #align Inf_prod infₛ_prod
 
-/- warning: Sup_prod -> Sup_prod is a dubious translation:
+/- warning: Sup_prod -> supₛ_prod is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : SupSet.{u1} α] [_inst_2 : SupSet.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (Set.Nonempty.{u1} α s) -> (Set.Nonempty.{u2} β t) -> (Eq.{succ (max u1 u2)} (Prod.{u1, u2} α β) (SupSet.supₛ.{max u1 u2} (Prod.{u1, u2} α β) (Prod.hasSup.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t)) (Prod.mk.{u1, u2} α β (SupSet.supₛ.{u1} α _inst_1 s) (SupSet.supₛ.{u2} β _inst_2 t)))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SupSet.{u2} α] [_inst_2 : SupSet.{u1} β] {s : Set.{u2} α} {t : Set.{u1} β}, (Set.Nonempty.{u2} α s) -> (Set.Nonempty.{u1} β t) -> (Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (SupSet.supₛ.{max u1 u2} (Prod.{u2, u1} α β) (Prod.supSet.{u2, u1} α β _inst_1 _inst_2) (Set.prod.{u2, u1} α β s t)) (Prod.mk.{u2, u1} α β (SupSet.supₛ.{u2} α _inst_1 s) (SupSet.supₛ.{u1} β _inst_2 t)))
-Case conversion may be inaccurate. Consider using '#align Sup_prod Sup_prodₓ'. -/
+Case conversion may be inaccurate. Consider using '#align Sup_prod supₛ_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem Sup_prod [SupSet α] [SupSet β] {s : Set α} {t : Set β} (hs : s.Nonempty) (ht : t.Nonempty) :
-    supₛ (s ×ˢ t) = (supₛ s, supₛ t) :=
+theorem supₛ_prod [SupSet α] [SupSet β] {s : Set α} {t : Set β} (hs : s.Nonempty)
+    (ht : t.Nonempty) : supₛ (s ×ˢ t) = (supₛ s, supₛ t) :=
   congr_arg₂ Prod.mk (congr_arg supₛ <| fst_image_prod _ ht) (congr_arg supₛ <| snd_image_prod hs _)
-#align Sup_prod Sup_prod
+#align Sup_prod supₛ_prod
 
 section CompleteLattice
 

@@ -694,7 +694,7 @@ theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : Code, eval c 
     case rfind f pf hf =>
       rcases hf with ⟨cf, rfl⟩
       refine' ⟨comp (rfind' cf) (pair code.id zero), _⟩
-      simp [eval, (· <*> ·), pure, Pfun.pure, Part.map_id'],
+      simp [eval, (· <*> ·), pure, PFun.pure, Part.map_id'],
     fun h => by
     rcases h with ⟨c, rfl⟩; induction c
     case zero => exact Nat.Partrec.zero
@@ -788,7 +788,7 @@ theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
     induction' c with cf cg hf hg cf cg hf hg cf cg hf hg cf hf generalizing x n <;>
         simp [eval, evaln, (· >> ·), (· <*> ·)] at h⊢ <;>
       cases' h with _ h
-    iterate 4 simpa [pure, Pfun.pure, eq_comm] using h
+    iterate 4 simpa [pure, PFun.pure, eq_comm] using h
     · -- pair cf cg
       rcases h with ⟨y, ef, z, eg, rfl⟩
       exact ⟨_, hf _ _ ef, _, hg _ _ eg, rfl⟩
@@ -827,7 +827,7 @@ theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n :=
   ⟨fun h => by
     rsuffices ⟨k, h⟩ : ∃ k, x ∈ evaln (k + 1) c n
     · exact ⟨k + 1, h⟩
-    induction c generalizing n x <;> simp [eval, evaln, pure, Pfun.pure, (· <*> ·), (· >> ·)] at h⊢
+    induction c generalizing n x <;> simp [eval, evaln, pure, PFun.pure, (· <*> ·), (· >> ·)] at h⊢
     iterate 4 exact ⟨⟨_, le_rfl⟩, h.symm⟩
     case pair cf cg hf hg =>
       rcases h with ⟨x, hx, y, hy, rfl⟩

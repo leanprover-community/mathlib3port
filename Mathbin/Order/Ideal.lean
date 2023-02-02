@@ -55,6 +55,7 @@ namespace Order
 
 variable {P : Type _}
 
+#print Order.Ideal /-
 /-- An ideal on an order `P` is a subset of `P` that is
   - nonempty
   - upward directed (any pair of elements in the ideal has an upper bound in the ideal)
@@ -63,7 +64,9 @@ structure Ideal (P) [LE P] extends LowerSet P where
   nonempty' : carrier.Nonempty
   directed' : DirectedOn (· ≤ ·) carrier
 #align order.ideal Order.Ideal
+-/
 
+#print Order.IsIdeal /-
 /-- A subset of a preorder `P` is an ideal if it is
   - nonempty
   - upward directed (any pair of elements in the ideal has an upper bound in the ideal)
@@ -74,12 +77,15 @@ structure IsIdeal {P} [LE P] (I : Set P) : Prop where
   Nonempty : I.Nonempty
   Directed : DirectedOn (· ≤ ·) I
 #align order.is_ideal Order.IsIdeal
+-/
 
+#print Order.IsIdeal.toIdeal /-
 /-- Create an element of type `order.ideal` from a set satisfying the predicate
 `order.is_ideal`. -/
 def IsIdeal.toIdeal [LE P] {I : Set P} (h : IsIdeal I) : Ideal P :=
   ⟨⟨I, h.IsLowerSet⟩, h.Nonempty, h.Directed⟩
 #align order.is_ideal.to_ideal Order.IsIdeal.toIdeal
+-/
 
 namespace Ideal
 
@@ -91,48 +97,70 @@ section
 
 variable {I J s t : Ideal P} {x y : P}
 
+#print Order.Ideal.toLowerSet_injective /-
 theorem toLowerSet_injective : Injective (toLowerSet : Ideal P → LowerSet P) := fun s t h =>
   by
   cases s
   cases t
   congr
 #align order.ideal.to_lower_set_injective Order.Ideal.toLowerSet_injective
+-/
 
 instance : SetLike (Ideal P) P where
   coe s := s.carrier
   coe_injective' s t h := toLowerSet_injective <| SetLike.coe_injective h
 
+#print Order.Ideal.ext /-
 @[ext]
 theorem ext {s t : Ideal P} : (s : Set P) = t → s = t :=
   SetLike.ext'
 #align order.ideal.ext Order.Ideal.ext
+-/
 
+#print Order.Ideal.carrier_eq_coe /-
 @[simp]
 theorem carrier_eq_coe (s : Ideal P) : s.carrier = s :=
   rfl
 #align order.ideal.carrier_eq_coe Order.Ideal.carrier_eq_coe
+-/
 
+#print Order.Ideal.coe_toLowerSet /-
 @[simp]
 theorem coe_toLowerSet (s : Ideal P) : (s.toLowerSet : Set P) = s :=
   rfl
 #align order.ideal.coe_to_lower_set Order.Ideal.coe_toLowerSet
+-/
 
+#print Order.Ideal.lower /-
 protected theorem lower (s : Ideal P) : IsLowerSet (s : Set P) :=
   s.lower'
 #align order.ideal.lower Order.Ideal.lower
+-/
 
+#print Order.Ideal.nonempty /-
 protected theorem nonempty (s : Ideal P) : (s : Set P).Nonempty :=
   s.nonempty'
 #align order.ideal.nonempty Order.Ideal.nonempty
+-/
 
+#print Order.Ideal.directed /-
 protected theorem directed (s : Ideal P) : DirectedOn (· ≤ ·) (s : Set P) :=
   s.directed'
 #align order.ideal.directed Order.Ideal.directed
+-/
 
+#print Order.Ideal.isIdeal /-
 protected theorem isIdeal (s : Ideal P) : IsIdeal (s : Set P) :=
   ⟨s.lower, s.Nonempty, s.Directed⟩
 #align order.ideal.is_ideal Order.Ideal.isIdeal
+-/
 
+/- warning: order.ideal.mem_compl_of_ge -> Order.Ideal.mem_compl_of_ge is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {I : Order.Ideal.{u1} P _inst_1} {x : P} {y : P}, (LE.le.{u1} P _inst_1 x y) -> (Membership.Mem.{u1, u1} P (Set.{u1} P) (Set.hasMem.{u1} P) x (HasCompl.compl.{u1} (Set.{u1} P) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} P) (Set.booleanAlgebra.{u1} P)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) I))) -> (Membership.Mem.{u1, u1} P (Set.{u1} P) (Set.hasMem.{u1} P) y (HasCompl.compl.{u1} (Set.{u1} P) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} P) (Set.booleanAlgebra.{u1} P)) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) I)))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {I : Order.Ideal.{u1} P _inst_1} {x : P} {y : P}, (LE.le.{u1} P _inst_1 x y) -> (Membership.mem.{u1, u1} P (Set.{u1} P) (Set.instMembershipSet.{u1} P) x (HasCompl.compl.{u1} (Set.{u1} P) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} P) (Set.instBooleanAlgebraSet.{u1} P)) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) I))) -> (Membership.mem.{u1, u1} P (Set.{u1} P) (Set.instMembershipSet.{u1} P) y (HasCompl.compl.{u1} (Set.{u1} P) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} P) (Set.instBooleanAlgebraSet.{u1} P)) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) I)))
+Case conversion may be inaccurate. Consider using '#align order.ideal.mem_compl_of_ge Order.Ideal.mem_compl_of_geₓ'. -/
 theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (I : Set P)ᶜ := fun h =>
   mt <| I.lower h
 #align order.ideal.mem_compl_of_ge Order.Ideal.mem_compl_of_ge
@@ -141,35 +169,58 @@ theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ (I : Set P)ᶜ → y ∈ (
 instance : PartialOrder (Ideal P) :=
   PartialOrder.lift coe SetLike.coe_injective
 
+/- warning: order.ideal.coe_subset_coe -> Order.Ideal.coe_subset_coe is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {s : Order.Ideal.{u1} P _inst_1} {t : Order.Ideal.{u1} P _inst_1}, Iff (HasSubset.Subset.{u1} (Set.{u1} P) (Set.hasSubset.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) t)) (LE.le.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) s t)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {s : Order.Ideal.{u1} P _inst_1} {t : Order.Ideal.{u1} P _inst_1}, Iff (HasSubset.Subset.{u1} (Set.{u1} P) (Set.instHasSubsetSet.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) s) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) t)) (LE.le.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) s t)
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_subset_coe Order.Ideal.coe_subset_coeₓ'. -/
 @[simp]
 theorem coe_subset_coe : (s : Set P) ⊆ t ↔ s ≤ t :=
   Iff.rfl
 #align order.ideal.coe_subset_coe Order.Ideal.coe_subset_coe
 
+/- warning: order.ideal.coe_ssubset_coe -> Order.Ideal.coe_sSubset_coe is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {s : Order.Ideal.{u1} P _inst_1} {t : Order.Ideal.{u1} P _inst_1}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} P) (Set.hasSsubset.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) t)) (LT.lt.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLT.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) s t)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {s : Order.Ideal.{u1} P _inst_1} {t : Order.Ideal.{u1} P _inst_1}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} P) (Set.instHasSSubsetSet.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) s) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) t)) (LT.lt.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLT.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) s t)
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_ssubset_coe Order.Ideal.coe_sSubset_coeₓ'. -/
 @[simp]
 theorem coe_sSubset_coe : (s : Set P) ⊂ t ↔ s < t :=
   Iff.rfl
 #align order.ideal.coe_ssubset_coe Order.Ideal.coe_sSubset_coe
 
+/- warning: order.ideal.mem_of_mem_of_le -> Order.Ideal.mem_of_mem_of_le is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {x : P} {I : Order.Ideal.{u1} P _inst_1} {J : Order.Ideal.{u1} P _inst_1}, (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)) x I) -> (LE.le.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) I J) -> (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)) x J)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {x : P} {I : Order.Ideal.{u1} P _inst_1} {J : Order.Ideal.{u1} P _inst_1}, (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) x I) -> (LE.le.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) I J) -> (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) x J)
+Case conversion may be inaccurate. Consider using '#align order.ideal.mem_of_mem_of_le Order.Ideal.mem_of_mem_of_leₓ'. -/
 @[trans]
 theorem mem_of_mem_of_le {x : P} {I J : Ideal P} : x ∈ I → I ≤ J → x ∈ J :=
   @Set.mem_of_mem_of_subset P x I J
 #align order.ideal.mem_of_mem_of_le Order.Ideal.mem_of_mem_of_le
 
+#print Order.Ideal.IsProper /-
 /-- A proper ideal is one that is not the whole set.
     Note that the whole set might not be an ideal. -/
 @[mk_iff]
 class IsProper (I : Ideal P) : Prop where
   ne_univ : (I : Set P) ≠ univ
 #align order.ideal.is_proper Order.Ideal.IsProper
+-/
 
+#print Order.Ideal.isProper_of_not_mem /-
 theorem isProper_of_not_mem {I : Ideal P} {p : P} (nmem : p ∉ I) : IsProper I :=
   ⟨fun hp => by
     change p ∉ ↑I at nmem
     rw [hp] at nmem
     exact nmem (mem_univ p)⟩
 #align order.ideal.is_proper_of_not_mem Order.Ideal.isProper_of_not_mem
+-/
 
+#print Order.Ideal.IsMaximal /-
 /-- An ideal is maximal if it is maximal in the collection of proper ideals.
 
 Note that `is_coatom` is less general because ideals only have a top element when `P` is directed
@@ -178,7 +229,14 @@ and nonempty. -/
 class IsMaximal (I : Ideal P) extends IsProper I : Prop where
   maximal_proper : ∀ ⦃J : Ideal P⦄, I < J → (J : Set P) = univ
 #align order.ideal.is_maximal Order.Ideal.IsMaximal
+-/
 
+/- warning: order.ideal.inter_nonempty -> Order.Ideal.inter_nonempty is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (GE.ge.{u1} P _inst_1)] (I : Order.Ideal.{u1} P _inst_1) (J : Order.Ideal.{u1} P _inst_1), Set.Nonempty.{u1} P (Inter.inter.{u1} (Set.{u1} P) (Set.hasInter.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) I) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) J))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.882 : P) (x._@.Mathlib.Order.Ideal._hyg.884 : P) => GE.ge.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.882 x._@.Mathlib.Order.Ideal._hyg.884)] (I : Order.Ideal.{u1} P _inst_1) (J : Order.Ideal.{u1} P _inst_1), Set.Nonempty.{u1} P (Inter.inter.{u1} (Set.{u1} P) (Set.instInterSet.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) I) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) J))
+Case conversion may be inaccurate. Consider using '#align order.ideal.inter_nonempty Order.Ideal.inter_nonemptyₓ'. -/
 theorem inter_nonempty [IsDirected P (· ≥ ·)] (I J : Ideal P) : (I ∩ J : Set P).Nonempty :=
   by
   obtain ⟨a, ha⟩ := I.nonempty
@@ -199,43 +257,103 @@ instance : OrderTop (Ideal P)
   top := ⟨⊤, univ_nonempty, directedOn_univ⟩
   le_top I := le_top
 
+/- warning: order.ideal.top_to_lower_set -> Order.Ideal.top_toLowerSet is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P], Eq.{succ u1} (LowerSet.{u1} P _inst_1) (Order.Ideal.toLowerSet.{u1} P _inst_1 (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3)))) (Top.top.{u1} (LowerSet.{u1} P _inst_1) (LowerSet.hasTop.{u1} P _inst_1))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1033 : P) (x._@.Mathlib.Order.Ideal._hyg.1035 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1033 x._@.Mathlib.Order.Ideal._hyg.1035)] [_inst_3 : Nonempty.{succ u1} P], Eq.{succ u1} (LowerSet.{u1} P _inst_1) (Order.Ideal.toLowerSet.{u1} P _inst_1 (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3)))) (Top.top.{u1} (LowerSet.{u1} P _inst_1) (LowerSet.instTopLowerSet.{u1} P _inst_1))
+Case conversion may be inaccurate. Consider using '#align order.ideal.top_to_lower_set Order.Ideal.top_toLowerSetₓ'. -/
 @[simp]
 theorem top_toLowerSet : (⊤ : Ideal P).toLowerSet = ⊤ :=
   rfl
 #align order.ideal.top_to_lower_set Order.Ideal.top_toLowerSet
 
+/- warning: order.ideal.coe_top -> Order.Ideal.coe_top is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P], Eq.{succ u1} (Set.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3)))) (Set.univ.{u1} P)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1076 : P) (x._@.Mathlib.Order.Ideal._hyg.1078 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1076 x._@.Mathlib.Order.Ideal._hyg.1078)] [_inst_3 : Nonempty.{succ u1} P], Eq.{succ u1} (Set.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3)))) (Set.univ.{u1} P)
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_top Order.Ideal.coe_topₓ'. -/
 @[simp]
 theorem coe_top : ((⊤ : Ideal P) : Set P) = univ :=
   rfl
 #align order.ideal.coe_top Order.Ideal.coe_top
 
+/- warning: order.ideal.is_proper_of_ne_top -> Order.Ideal.isProper_of_ne_top is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (Ne.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3)))) -> (Order.Ideal.IsProper.{u1} P _inst_1 I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1122 : P) (x._@.Mathlib.Order.Ideal._hyg.1124 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1122 x._@.Mathlib.Order.Ideal._hyg.1124)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (Ne.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3)))) -> (Order.Ideal.IsProper.{u1} P _inst_1 I)
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_proper_of_ne_top Order.Ideal.isProper_of_ne_topₓ'. -/
 theorem isProper_of_ne_top (ne_top : I ≠ ⊤) : IsProper I :=
   ⟨fun h => ne_top <| ext h⟩
 #align order.ideal.is_proper_of_ne_top Order.Ideal.isProper_of_ne_top
 
+/- warning: order.ideal.is_proper.ne_top -> Order.Ideal.IsProper.ne_top is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (Order.Ideal.IsProper.{u1} P _inst_1 I) -> (Ne.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1173 : P) (x._@.Mathlib.Order.Ideal._hyg.1175 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1173 x._@.Mathlib.Order.Ideal._hyg.1175)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (Order.Ideal.IsProper.{u1} P _inst_1 I) -> (Ne.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_proper.ne_top Order.Ideal.IsProper.ne_topₓ'. -/
 theorem IsProper.ne_top (hI : IsProper I) : I ≠ ⊤ := fun h => IsProper.ne_univ <| congr_arg coe h
 #align order.ideal.is_proper.ne_top Order.Ideal.IsProper.ne_top
 
-theorem IsCoatom.isProper (hI : IsCoatom I) : IsProper I :=
+/- warning: is_coatom.is_proper -> Order.Ideal.IsCoatom.isProper is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1)) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3) I) -> (Order.Ideal.IsProper.{u1} P _inst_1 I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1225 : P) (x._@.Mathlib.Order.Ideal._hyg.1227 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1225 x._@.Mathlib.Order.Ideal._hyg.1227)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1)) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3) I) -> (Order.Ideal.IsProper.{u1} P _inst_1 I)
+Case conversion may be inaccurate. Consider using '#align is_coatom.is_proper Order.Ideal.IsCoatom.isProperₓ'. -/
+theorem Order.Ideal.IsCoatom.isProper (hI : IsCoatom I) : IsProper I :=
   isProper_of_ne_top hI.1
-#align is_coatom.is_proper IsCoatom.isProper
+#align is_coatom.is_proper Order.Ideal.IsCoatom.isProper
 
+/- warning: order.ideal.is_proper_iff_ne_top -> Order.Ideal.isProper_iff_ne_top is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, Iff (Order.Ideal.IsProper.{u1} P _inst_1 I) (Ne.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1261 : P) (x._@.Mathlib.Order.Ideal._hyg.1263 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1261 x._@.Mathlib.Order.Ideal._hyg.1263)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, Iff (Order.Ideal.IsProper.{u1} P _inst_1 I) (Ne.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_proper_iff_ne_top Order.Ideal.isProper_iff_ne_topₓ'. -/
 theorem isProper_iff_ne_top : IsProper I ↔ I ≠ ⊤ :=
   ⟨fun h => h.ne_top, fun h => isProper_of_ne_top h⟩
 #align order.ideal.is_proper_iff_ne_top Order.Ideal.isProper_iff_ne_top
 
+/- warning: order.ideal.is_maximal.is_coatom -> Order.Ideal.IsMaximal.isCoatom is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (Order.Ideal.IsMaximal.{u1} P _inst_1 I) -> (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1)) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3) I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1316 : P) (x._@.Mathlib.Order.Ideal._hyg.1318 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1316 x._@.Mathlib.Order.Ideal._hyg.1318)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (Order.Ideal.IsMaximal.{u1} P _inst_1 I) -> (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1)) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3) I)
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_maximal.is_coatom Order.Ideal.IsMaximal.isCoatomₓ'. -/
 theorem IsMaximal.isCoatom (h : IsMaximal I) : IsCoatom I :=
   ⟨IsMaximal.to_isProper.ne_top, fun J h => ext <| IsMaximal.maximal_proper h⟩
 #align order.ideal.is_maximal.is_coatom Order.Ideal.IsMaximal.isCoatom
 
-theorem IsMaximal.is_coatom' [IsMaximal I] : IsCoatom I :=
+/- warning: order.ideal.is_maximal.is_coatom' -> Order.Ideal.IsMaximal.isCoatom' is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1} [_inst_4 : Order.Ideal.IsMaximal.{u1} P _inst_1 I], IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1)) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3) I
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1367 : P) (x._@.Mathlib.Order.Ideal._hyg.1369 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1367 x._@.Mathlib.Order.Ideal._hyg.1369)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1} [_inst_4 : Order.Ideal.IsMaximal.{u1} P _inst_1 I], IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1)) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3) I
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_maximal.is_coatom' Order.Ideal.IsMaximal.isCoatom'ₓ'. -/
+theorem IsMaximal.isCoatom' [IsMaximal I] : IsCoatom I :=
   IsMaximal.isCoatom ‹_›
-#align order.ideal.is_maximal.is_coatom' Order.Ideal.IsMaximal.is_coatom'
+#align order.ideal.is_maximal.is_coatom' Order.Ideal.IsMaximal.isCoatom'
 
-theorem IsCoatom.isMaximal (hI : IsCoatom I) : IsMaximal I :=
-  { IsCoatom.isProper ‹_› with maximal_proper := fun _ _ => by simp [hI.2 _ ‹_›] }
-#align is_coatom.is_maximal IsCoatom.isMaximal
+/- warning: is_coatom.is_maximal -> Order.Ideal.IsCoatom.isMaximal is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1)) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3) I) -> (Order.Ideal.IsMaximal.{u1} P _inst_1 I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1415 : P) (x._@.Mathlib.Order.Ideal._hyg.1417 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1415 x._@.Mathlib.Order.Ideal._hyg.1417)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1)) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3) I) -> (Order.Ideal.IsMaximal.{u1} P _inst_1 I)
+Case conversion may be inaccurate. Consider using '#align is_coatom.is_maximal Order.Ideal.IsCoatom.isMaximalₓ'. -/
+theorem Order.Ideal.IsCoatom.isMaximal (hI : IsCoatom I) : IsMaximal I :=
+  { Order.Ideal.IsCoatom.isProper ‹_› with maximal_proper := fun _ _ => by simp [hI.2 _ ‹_›] }
+#align is_coatom.is_maximal Order.Ideal.IsCoatom.isMaximal
 
+/- warning: order.ideal.is_maximal_iff_is_coatom -> Order.Ideal.isMaximal_iff_isCoatom is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (LE.le.{u1} P _inst_1)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, Iff (Order.Ideal.IsMaximal.{u1} P _inst_1 I) (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1)) (Order.Ideal.orderTop.{u1} P _inst_1 _inst_2 _inst_3) I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1475 : P) (x._@.Mathlib.Order.Ideal._hyg.1477 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1475 x._@.Mathlib.Order.Ideal._hyg.1477)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, Iff (Order.Ideal.IsMaximal.{u1} P _inst_1 I) (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1)) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3) I)
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_maximal_iff_is_coatom Order.Ideal.isMaximal_iff_isCoatomₓ'. -/
 theorem isMaximal_iff_isCoatom : IsMaximal I ↔ IsCoatom I :=
   ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
 #align order.ideal.is_maximal_iff_is_coatom Order.Ideal.isMaximal_iff_isCoatom
@@ -246,6 +364,12 @@ section OrderBot
 
 variable [OrderBot P]
 
+/- warning: order.ideal.bot_mem -> Order.Ideal.bot_mem is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderBot.{u1} P _inst_1] (s : Order.Ideal.{u1} P _inst_1), Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)) (Bot.bot.{u1} P (OrderBot.toHasBot.{u1} P _inst_1 _inst_2)) s
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderBot.{u1} P _inst_1] (s : Order.Ideal.{u1} P _inst_1), Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) (Bot.bot.{u1} P (OrderBot.toBot.{u1} P _inst_1 _inst_2)) s
+Case conversion may be inaccurate. Consider using '#align order.ideal.bot_mem Order.Ideal.bot_memₓ'. -/
 @[simp]
 theorem bot_mem (s : Ideal P) : ⊥ ∈ s :=
   s.lower bot_le s.Nonempty.some_mem
@@ -257,11 +381,23 @@ section OrderTop
 
 variable [OrderTop P] {I : Ideal P}
 
+/- warning: order.ideal.top_of_top_mem -> Order.Ideal.top_of_top_mem is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderTop.{u1} P _inst_1] {I : Order.Ideal.{u1} P _inst_1}, (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)) (Top.top.{u1} P (OrderTop.toHasTop.{u1} P _inst_1 _inst_2)) I) -> (Eq.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) (Order.Ideal.orderTop.{u1} P _inst_1 (OrderTop.to_isDirected_le.{u1} P _inst_1 _inst_2) (top_nonempty.{u1} P (OrderTop.toHasTop.{u1} P _inst_1 _inst_2))))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderTop.{u1} P _inst_1] {I : Order.Ideal.{u1} P _inst_1}, (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) (Top.top.{u1} P (OrderTop.toTop.{u1} P _inst_1 _inst_2)) I) -> (Eq.{succ u1} (Order.Ideal.{u1} P _inst_1) I (Top.top.{u1} (Order.Ideal.{u1} P _inst_1) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 (OrderTop.to_isDirected_le.{u1} P _inst_1 _inst_2) (top_nonempty.{u1} P (OrderTop.toTop.{u1} P _inst_1 _inst_2))))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.top_of_top_mem Order.Ideal.top_of_top_memₓ'. -/
 theorem top_of_top_mem (h : ⊤ ∈ I) : I = ⊤ := by
   ext
   exact iff_of_true (I.lower le_top h) trivial
 #align order.ideal.top_of_top_mem Order.Ideal.top_of_top_mem
 
+/- warning: order.ideal.is_proper.top_not_mem -> Order.Ideal.IsProper.top_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderTop.{u1} P _inst_1] {I : Order.Ideal.{u1} P _inst_1}, (Order.Ideal.IsProper.{u1} P _inst_1 I) -> (Not (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)) (Top.top.{u1} P (OrderTop.toHasTop.{u1} P _inst_1 _inst_2)) I))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : OrderTop.{u1} P _inst_1] {I : Order.Ideal.{u1} P _inst_1}, (Order.Ideal.IsProper.{u1} P _inst_1 I) -> (Not (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) (Top.top.{u1} P (OrderTop.toTop.{u1} P _inst_1 _inst_2)) I))
+Case conversion may be inaccurate. Consider using '#align order.ideal.is_proper.top_not_mem Order.Ideal.IsProper.top_not_memₓ'. -/
 theorem IsProper.top_not_mem (hI : IsProper I) : ⊤ ∉ I := fun h => hI.ne_top <| top_of_top_mem h
 #align order.ideal.is_proper.top_not_mem Order.Ideal.IsProper.top_not_mem
 
@@ -277,6 +413,7 @@ section
 
 variable {I J : Ideal P} {x y : P}
 
+#print Order.Ideal.principal /-
 /-- The smallest ideal containing a given element. -/
 @[simps]
 def principal (p : P) : Ideal P where
@@ -284,19 +421,28 @@ def principal (p : P) : Ideal P where
   nonempty' := nonempty_Iic
   directed' x hx y hy := ⟨p, le_rfl, hx, hy⟩
 #align order.ideal.principal Order.Ideal.principal
+-/
 
 instance [Inhabited P] : Inhabited (Ideal P) :=
   ⟨Ideal.principal default⟩
 
+/- warning: order.ideal.principal_le_iff -> Order.Ideal.principal_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)} {x : P}, Iff (LE.le.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Preorder.toLE.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.partialOrder.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (Order.Ideal.principal.{u1} P _inst_1 x) I) (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P _inst_1))) x I)
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)} {x : P}, Iff (LE.le.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Preorder.toLE.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.instPartialOrderIdeal.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (Order.Ideal.principal.{u1} P _inst_1 x) I) (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P _inst_1))) x I)
+Case conversion may be inaccurate. Consider using '#align order.ideal.principal_le_iff Order.Ideal.principal_le_iffₓ'. -/
 @[simp]
 theorem principal_le_iff : principal x ≤ I ↔ x ∈ I :=
   ⟨fun h => h le_rfl, fun hx y hy => I.lower hy hx⟩
 #align order.ideal.principal_le_iff Order.Ideal.principal_le_iff
 
+#print Order.Ideal.mem_principal /-
 @[simp]
 theorem mem_principal : x ∈ principal y ↔ x ≤ y :=
   Iff.rfl
 #align order.ideal.mem_principal Order.Ideal.mem_principal
+-/
 
 end
 
@@ -309,6 +455,12 @@ instance : OrderBot (Ideal P) where
   bot := principal ⊥
   bot_le := by simp
 
+/- warning: order.ideal.principal_bot -> Order.Ideal.principal_bot is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderBot.{u1} P (Preorder.toLE.{u1} P _inst_1)], Eq.{succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.principal.{u1} P _inst_1 (Bot.bot.{u1} P (OrderBot.toHasBot.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2))) (Bot.bot.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (OrderBot.toHasBot.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Preorder.toLE.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.partialOrder.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (Order.Ideal.orderBot.{u1} P _inst_1 _inst_2)))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderBot.{u1} P (Preorder.toLE.{u1} P _inst_1)], Eq.{succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.principal.{u1} P _inst_1 (Bot.bot.{u1} P (OrderBot.toBot.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2))) (Bot.bot.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (OrderBot.toBot.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Preorder.toLE.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.instPartialOrderIdeal.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (Order.Ideal.instOrderBotIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2)))
+Case conversion may be inaccurate. Consider using '#align order.ideal.principal_bot Order.Ideal.principal_botₓ'. -/
 @[simp]
 theorem principal_bot : principal (⊥ : P) = ⊥ :=
   rfl
@@ -320,6 +472,12 @@ section OrderTop
 
 variable [OrderTop P]
 
+/- warning: order.ideal.principal_top -> Order.Ideal.principal_top is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderTop.{u1} P (Preorder.toLE.{u1} P _inst_1)], Eq.{succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.principal.{u1} P _inst_1 (Top.top.{u1} P (OrderTop.toHasTop.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2))) (Top.top.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (OrderTop.toHasTop.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Preorder.toLE.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.partialOrder.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (Order.Ideal.orderTop.{u1} P (Preorder.toLE.{u1} P _inst_1) (OrderTop.to_isDirected_le.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2) (top_nonempty.{u1} P (OrderTop.toHasTop.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2)))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] [_inst_2 : OrderTop.{u1} P (Preorder.toLE.{u1} P _inst_1)], Eq.{succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.principal.{u1} P _inst_1 (Top.top.{u1} P (OrderTop.toTop.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2))) (Top.top.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (OrderTop.toTop.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Preorder.toLE.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (Order.Ideal.instPartialOrderIdeal.{u1} P (Preorder.toLE.{u1} P _inst_1)))) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P (Preorder.toLE.{u1} P _inst_1) (OrderTop.to_isDirected_le.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2) (top_nonempty.{u1} P (OrderTop.toTop.{u1} P (Preorder.toLE.{u1} P _inst_1) _inst_2)))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.principal_top Order.Ideal.principal_topₓ'. -/
 @[simp]
 theorem principal_top : principal (⊤ : P) = ⊤ :=
   toLowerSet_injective <| LowerSet.Iic_top
@@ -333,16 +491,20 @@ section SemilatticeSup
 
 variable [SemilatticeSup P] {x y : P} {I s : Ideal P}
 
+#print Order.Ideal.sup_mem /-
 /-- A specific witness of `I.directed` when `P` has joins. -/
 theorem sup_mem (hx : x ∈ s) (hy : y ∈ s) : x ⊔ y ∈ s :=
   let ⟨z, hz, hx, hy⟩ := s.Directed x hx y hy
   s.lower (sup_le hx hy) hz
 #align order.ideal.sup_mem Order.Ideal.sup_mem
+-/
 
+#print Order.Ideal.sup_mem_iff /-
 @[simp]
 theorem sup_mem_iff : x ⊔ y ∈ I ↔ x ∈ I ∧ y ∈ I :=
   ⟨fun h => ⟨I.lower le_sup_left h, I.lower le_sup_right h⟩, fun h => sup_mem h.1 h.2⟩
 #align order.ideal.sup_mem_iff Order.Ideal.sup_mem_iff
+-/
 
 end SemilatticeSup
 
@@ -400,26 +562,56 @@ instance : Lattice (Ideal P) :=
     inf_le_right := fun I J => inter_subset_right I J
     le_inf := fun I J K => subset_inter }
 
+/- warning: order.ideal.coe_sup -> Order.Ideal.coe_sup is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))] {s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {t : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Eq.{succ u1} (Set.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))))) (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasSup.{u1} P _inst_1 _inst_2) s t)) (setOf.{u1} P (fun (x : P) => Exists.{succ u1} P (fun (a : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) a s) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) a s) => Exists.{succ u1} P (fun (b : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) b t) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) b t) => LE.le.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P _inst_1) a b)))))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.2876 : P) (x._@.Mathlib.Order.Ideal._hyg.2878 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x._@.Mathlib.Order.Ideal._hyg.2876 x._@.Mathlib.Order.Ideal._hyg.2878)] {s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {t : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Eq.{succ u1} (Set.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instHasSupIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) s t)) (setOf.{u1} P (fun (x : P) => Exists.{succ u1} P (fun (a : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) a s) (Exists.{succ u1} P (fun (b : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) b t) (LE.le.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P _inst_1) a b)))))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_sup Order.Ideal.coe_supₓ'. -/
 @[simp]
 theorem coe_sup : ↑(s ⊔ t) = { x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a ⊔ b } :=
   rfl
 #align order.ideal.coe_sup Order.Ideal.coe_sup
 
+/- warning: order.ideal.coe_inf -> Order.Ideal.coe_inf is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))] {s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {t : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Eq.{succ u1} (Set.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))))) (HasInf.inf.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasInf.{u1} P _inst_1 _inst_2) s t)) (Inter.inter.{u1} (Set.{u1} P) (Set.hasInter.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))))) t))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.2975 : P) (x._@.Mathlib.Order.Ideal._hyg.2977 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x._@.Mathlib.Order.Ideal._hyg.2975 x._@.Mathlib.Order.Ideal._hyg.2977)] {s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {t : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Eq.{succ u1} (Set.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (HasInf.inf.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instHasInfIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) s t)) (Inter.inter.{u1} (Set.{u1} P) (Set.instInterSet.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) s) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) t))
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_inf Order.Ideal.coe_infₓ'. -/
 @[simp]
 theorem coe_inf : (↑(s ⊓ t) : Set P) = s ∩ t :=
   rfl
 #align order.ideal.coe_inf Order.Ideal.coe_inf
 
+/- warning: order.ideal.mem_inf -> Order.Ideal.mem_inf is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))] {x : P} {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Iff (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x (HasInf.inf.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasInf.{u1} P _inst_1 _inst_2) I J)) (And (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x I) (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x J))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.3037 : P) (x._@.Mathlib.Order.Ideal._hyg.3039 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x._@.Mathlib.Order.Ideal._hyg.3037 x._@.Mathlib.Order.Ideal._hyg.3039)] {x : P} {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Iff (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x (HasInf.inf.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instHasInfIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) I J)) (And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x I) (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x J))
+Case conversion may be inaccurate. Consider using '#align order.ideal.mem_inf Order.Ideal.mem_infₓ'. -/
 @[simp]
 theorem mem_inf : x ∈ I ⊓ J ↔ x ∈ I ∧ x ∈ J :=
   Iff.rfl
 #align order.ideal.mem_inf Order.Ideal.mem_inf
 
+/- warning: order.ideal.mem_sup -> Order.Ideal.mem_sup is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))] {x : P} {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Iff (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasSup.{u1} P _inst_1 _inst_2) I J)) (Exists.{succ u1} P (fun (i : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) i I) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) i I) => Exists.{succ u1} P (fun (j : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) j J) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) j J) => LE.le.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P _inst_1) i j))))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.3098 : P) (x._@.Mathlib.Order.Ideal._hyg.3100 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x._@.Mathlib.Order.Ideal._hyg.3098 x._@.Mathlib.Order.Ideal._hyg.3100)] {x : P} {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, Iff (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instHasSupIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) I J)) (Exists.{succ u1} P (fun (i : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) i I) (Exists.{succ u1} P (fun (j : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) j J) (LE.le.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P _inst_1) i j))))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.mem_sup Order.Ideal.mem_supₓ'. -/
 @[simp]
 theorem mem_sup : x ∈ I ⊔ J ↔ ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j :=
   Iff.rfl
 #align order.ideal.mem_sup Order.Ideal.mem_sup
 
+/- warning: order.ideal.lt_sup_principal_of_not_mem -> Order.Ideal.lt_sup_principal_of_not_mem is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))] {x : P} {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, (Not (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x I)) -> (LT.lt.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Preorder.toLT.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.partialOrder.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))))) I (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasSup.{u1} P _inst_1 _inst_2) I (Order.Ideal.principal.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)) x)))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.3190 : P) (x._@.Mathlib.Order.Ideal._hyg.3192 : P) => GE.ge.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))) x._@.Mathlib.Order.Ideal._hyg.3190 x._@.Mathlib.Order.Ideal._hyg.3192)] {x : P} {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))}, (Not (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x I)) -> (LT.lt.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Preorder.toLT.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instPartialOrderIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))))) I (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instHasSupIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) I (Order.Ideal.principal.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)) x)))
+Case conversion may be inaccurate. Consider using '#align order.ideal.lt_sup_principal_of_not_mem Order.Ideal.lt_sup_principal_of_not_memₓ'. -/
 theorem lt_sup_principal_of_not_mem (hx : x ∉ I) : I < I ⊔ principal x :=
   le_sup_left.lt_of_ne fun h => hx <| by simpa only [left_eq_sup, principal_le_iff] using h
 #align order.ideal.lt_sup_principal_of_not_mem Order.Ideal.lt_sup_principal_of_not_mem
@@ -445,11 +637,23 @@ instance : InfSet (Ideal P) :=
 
 variable {S : Set (Ideal P)}
 
+/- warning: order.ideal.coe_Inf -> Order.Ideal.coe_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : OrderBot.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))] {S : Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))}, Eq.{succ u1} (Set.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))))) (InfSet.infₛ.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasInf.{u1} P _inst_1 _inst_2) S)) (Set.interᵢ.{u1, succ u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (fun (s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) => Set.interᵢ.{u1, 0} P (Membership.Mem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) (Set.hasMem.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) s S) (fun (H : Membership.Mem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) (Set.hasMem.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) s S) => (fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))))) s)))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : OrderBot.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))] {S : Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))}, Eq.{succ u1} (Set.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (InfSet.infₛ.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instInfSetIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) S)) (Set.interᵢ.{u1, succ u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (fun (s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) => Set.interᵢ.{u1, 0} P (Membership.mem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) (Set.instMembershipSet.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) s S) (fun (H : Membership.mem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) (Set.instMembershipSet.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) s S) => SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) s)))
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_Inf Order.Ideal.coe_infₛₓ'. -/
 @[simp]
 theorem coe_infₛ : (↑(infₛ S) : Set P) = ⋂ s ∈ S, ↑s :=
   LowerSet.coe_infᵢ₂ _
 #align order.ideal.coe_Inf Order.Ideal.coe_infₛ
 
+/- warning: order.ideal.mem_Inf -> Order.Ideal.mem_infₛ is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : OrderBot.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))] {x : P} {S : Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))}, Iff (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x (InfSet.infₛ.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.hasInf.{u1} P _inst_1 _inst_2) S)) (forall (s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))), (Membership.Mem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) (Set.hasMem.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) s S) -> (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x s))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} P] [_inst_2 : OrderBot.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))] {x : P} {S : Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))}, Iff (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x (InfSet.infₛ.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Order.Ideal.instInfSetIdealToLEToPreorderToPartialOrder.{u1} P _inst_1 _inst_2) S)) (forall (s : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))), (Membership.mem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (Set.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) (Set.instMembershipSet.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) s S) -> (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1)))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeSup.toPartialOrder.{u1} P _inst_1))))) x s))
+Case conversion may be inaccurate. Consider using '#align order.ideal.mem_Inf Order.Ideal.mem_infₛₓ'. -/
 @[simp]
 theorem mem_infₛ : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by
   simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
@@ -471,6 +675,12 @@ variable [DistribLattice P]
 
 variable {I J : Ideal P}
 
+/- warning: order.ideal.eq_sup_of_le_sup -> Order.Ideal.eq_sup_of_le_sup is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : DistribLattice.{u1} P] {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))} {x : P} {i : P} {j : P}, (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i I) -> (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j J) -> (LE.le.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))) x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))) i j)) -> (Exists.{succ u1} P (fun (i' : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i' I) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i' I) => Exists.{succ u1} P (fun (j' : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j' J) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j' J) => Eq.{succ u1} P x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))) i' j'))))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : DistribLattice.{u1} P] {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))} {x : P} {i : P} {j : P}, (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i I) -> (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j J) -> (LE.le.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))) x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))) i j)) -> (Exists.{succ u1} P (fun (i' : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i' I) (Exists.{succ u1} P (fun (j' : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j' J) (Eq.{succ u1} P x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))) i' j'))))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.eq_sup_of_le_sup Order.Ideal.eq_sup_of_le_supₓ'. -/
 theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i ⊔ j) :
     ∃ i' ∈ I, ∃ j' ∈ J, x = i' ⊔ j' :=
   by
@@ -481,6 +691,12 @@ theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i
     
 #align order.ideal.eq_sup_of_le_sup Order.Ideal.eq_sup_of_le_sup
 
+/- warning: order.ideal.coe_sup_eq -> Order.Ideal.coe_sup_eq is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : DistribLattice.{u1} P] {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))}, Eq.{succ u1} (Set.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))))) (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (Order.Ideal.hasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)) (SemilatticeInf.to_isDirected_ge.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))) I J)) (setOf.{u1} P (fun (x : P) => Exists.{succ u1} P (fun (i : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i I) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i I) => Exists.{succ u1} P (fun (j : P) => Exists.{0} (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j J) (fun (H : Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j J) => Eq.{succ u1} P x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))) i j)))))))
+but is expected to have type
+  forall {P : Type.{u1}} [_inst_1 : DistribLattice.{u1} P] {I : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))} {J : Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))}, Eq.{succ u1} (Set.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (HasSup.sup.{u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (Order.Ideal.instHasSupIdealToLEToPreorderToPartialOrder.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)) (SemilatticeInf.to_isDirected_ge.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))) I J)) (setOf.{u1} P (fun (x : P) => Exists.{succ u1} P (fun (i : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) i I) (Exists.{succ u1} P (fun (j : P) => And (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1)))))) P (Order.Ideal.instSetLikeIdeal.{u1} P (Preorder.toLE.{u1} P (PartialOrder.toPreorder.{u1} P (SemilatticeInf.toPartialOrder.{u1} P (Lattice.toSemilatticeInf.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))))))) j J) (Eq.{succ u1} P x (HasSup.sup.{u1} P (SemilatticeSup.toHasSup.{u1} P (Lattice.toSemilatticeSup.{u1} P (DistribLattice.toLattice.{u1} P _inst_1))) i j)))))))
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_sup_eq Order.Ideal.coe_sup_eqₓ'. -/
 theorem coe_sup_eq : ↑(I ⊔ J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j } :=
   Set.ext fun _ =>
     ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ =>
@@ -493,6 +709,7 @@ section BooleanAlgebra
 
 variable [BooleanAlgebra P] {x : P} {I : Ideal P}
 
+#print Order.Ideal.IsProper.not_mem_of_compl_mem /-
 theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x ∉ I :=
   by
   intro hx
@@ -500,17 +717,21 @@ theorem IsProper.not_mem_of_compl_mem (hI : IsProper I) (hxc : xᶜ ∈ I) : x �
   have ht : x ⊔ xᶜ ∈ I := sup_mem ‹_› ‹_›
   rwa [sup_compl_eq_top] at ht
 #align order.ideal.is_proper.not_mem_of_compl_mem Order.Ideal.IsProper.not_mem_of_compl_mem
+-/
 
+#print Order.Ideal.IsProper.not_mem_or_compl_not_mem /-
 theorem IsProper.not_mem_or_compl_not_mem (hI : IsProper I) : x ∉ I ∨ xᶜ ∉ I :=
   by
   have h : xᶜ ∈ I → x ∉ I := hI.not_mem_of_compl_mem
   tauto
 #align order.ideal.is_proper.not_mem_or_compl_not_mem Order.Ideal.IsProper.not_mem_or_compl_not_mem
+-/
 
 end BooleanAlgebra
 
 end Ideal
 
+#print Order.Cofinal /-
 /-- For a preorder `P`, `cofinal P` is the type of subsets of `P`
   containing arbitrarily large elements. They are the dense sets in
   the topology whose open sets are terminal segments. -/
@@ -518,6 +739,7 @@ structure Cofinal (P) [Preorder P] where
   carrier : Set P
   mem_gt : ∀ x : P, ∃ y ∈ carrier, x ≤ y
 #align order.cofinal Order.Cofinal
+-/
 
 namespace Cofinal
 
@@ -532,18 +754,24 @@ instance : Membership P (Cofinal P) :=
 
 variable (D : Cofinal P) (x : P)
 
+#print Order.Cofinal.above /-
 /-- A (noncomputable) element of a cofinal set lying above a given element. -/
 noncomputable def above : P :=
   Classical.choose <| D.mem_gt x
 #align order.cofinal.above Order.Cofinal.above
+-/
 
+#print Order.Cofinal.above_mem /-
 theorem above_mem : D.above x ∈ D :=
   Exists.elim (Classical.choose_spec <| D.mem_gt x) fun a _ => a
 #align order.cofinal.above_mem Order.Cofinal.above_mem
+-/
 
+#print Order.Cofinal.le_above /-
 theorem le_above : x ≤ D.above x :=
   Exists.elim (Classical.choose_spec <| D.mem_gt x) fun _ b => b
 #align order.cofinal.le_above Order.Cofinal.le_above
+-/
 
 end Cofinal
 
@@ -551,6 +779,7 @@ section IdealOfCofinals
 
 variable [Preorder P] (p : P) {ι : Type _} [Encodable ι] (𝒟 : ι → Cofinal P)
 
+#print Order.sequenceOfCofinals /-
 /-- Given a starting point, and a countable family of cofinal sets,
   this is an increasing sequence that intersects each cofinal set. -/
 noncomputable def sequenceOfCofinals : ℕ → P
@@ -560,7 +789,14 @@ noncomputable def sequenceOfCofinals : ℕ → P
     | none => sequence_of_cofinals n
     | some i => (𝒟 i).above (sequence_of_cofinals n)
 #align order.sequence_of_cofinals Order.sequenceOfCofinals
+-/
 
+/- warning: order.sequence_of_cofinals.monotone -> Order.sequenceOfCofinals.monotone is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (p : P) {ι : Type.{u2}} [_inst_2 : Encodable.{u2} ι] (𝒟 : ι -> (Order.Cofinal.{u1} P _inst_1)), Monotone.{0, u1} Nat P (PartialOrder.toPreorder.{0} Nat (OrderedCancelAddCommMonoid.toPartialOrder.{0} Nat (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} Nat Nat.strictOrderedSemiring))) _inst_1 (Order.sequenceOfCofinals.{u1, u2} P _inst_1 p ι _inst_2 𝒟)
+but is expected to have type
+  forall {P : Type.{u2}} [_inst_1 : Preorder.{u2} P] (p : P) {ι : Type.{u1}} [_inst_2 : Encodable.{u1} ι] (𝒟 : ι -> (Order.Cofinal.{u2} P _inst_1)), Monotone.{0, u2} Nat P (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) _inst_1 (Order.sequenceOfCofinals.{u2, u1} P _inst_1 p ι _inst_2 𝒟)
+Case conversion may be inaccurate. Consider using '#align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotoneₓ'. -/
 theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) :=
   by
   apply monotone_nat_of_le_succ
@@ -571,6 +807,12 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) :=
   · apply cofinal.le_above
 #align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotone
 
+/- warning: order.sequence_of_cofinals.encode_mem -> Order.sequenceOfCofinals.encode_mem is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (p : P) {ι : Type.{u2}} [_inst_2 : Encodable.{u2} ι] (𝒟 : ι -> (Order.Cofinal.{u1} P _inst_1)) (i : ι), Membership.Mem.{u1, u1} P (Order.Cofinal.{u1} P _inst_1) (Order.Cofinal.hasMem.{u1} P _inst_1) (Order.sequenceOfCofinals.{u1, u2} P _inst_1 p ι _inst_2 𝒟 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) (Encodable.encode.{u2} ι _inst_2 i) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))) (𝒟 i)
+but is expected to have type
+  forall {P : Type.{u2}} [_inst_1 : Preorder.{u2} P] (p : P) {ι : Type.{u1}} [_inst_2 : Encodable.{u1} ι] (𝒟 : ι -> (Order.Cofinal.{u2} P _inst_1)) (i : ι), Membership.mem.{u2, u2} P (Order.Cofinal.{u2} P _inst_1) (Order.Cofinal.instMembershipCofinal.{u2} P _inst_1) (Order.sequenceOfCofinals.{u2, u1} P _inst_1 p ι _inst_2 𝒟 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Encodable.encode.{u1} ι _inst_2 i) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (𝒟 i)
+Case conversion may be inaccurate. Consider using '#align order.sequence_of_cofinals.encode_mem Order.sequenceOfCofinals.encode_memₓ'. -/
 theorem sequenceOfCofinals.encode_mem (i : ι) :
     sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i :=
   by
@@ -579,6 +821,7 @@ theorem sequenceOfCofinals.encode_mem (i : ι) :
   apply cofinal.above_mem
 #align order.sequence_of_cofinals.encode_mem Order.sequenceOfCofinals.encode_mem
 
+#print Order.idealOfCofinals /-
 /-- Given an element `p : P` and a family `𝒟` of cofinal subsets of a preorder `P`,
   indexed by a countable type, `ideal_of_cofinals p 𝒟` is an ideal in `P` which
   - contains `p`, according to `mem_ideal_of_cofinals p 𝒟`, and
@@ -594,11 +837,24 @@ def idealOfCofinals : Ideal P
     ⟨_, ⟨max n m, le_rfl⟩, le_trans hn <| sequenceOfCofinals.monotone p 𝒟 (le_max_left _ _),
       le_trans hm <| sequenceOfCofinals.monotone p 𝒟 (le_max_right _ _)⟩
 #align order.ideal_of_cofinals Order.idealOfCofinals
+-/
 
+/- warning: order.mem_ideal_of_cofinals -> Order.mem_idealOfCofinals is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (p : P) {ι : Type.{u2}} [_inst_2 : Encodable.{u2} ι] (𝒟 : ι -> (Order.Cofinal.{u1} P _inst_1)), Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P _inst_1))) p (Order.idealOfCofinals.{u1, u2} P _inst_1 p ι _inst_2 𝒟)
+but is expected to have type
+  forall {P : Type.{u2}} [_inst_1 : Preorder.{u2} P] (p : P) {ι : Type.{u1}} [_inst_2 : Encodable.{u1} ι] (𝒟 : ι -> (Order.Cofinal.{u2} P _inst_1)), Membership.mem.{u2, u2} P (Order.Ideal.{u2} P (Preorder.toLE.{u2} P _inst_1)) (SetLike.instMembership.{u2, u2} (Order.Ideal.{u2} P (Preorder.toLE.{u2} P _inst_1)) P (Order.Ideal.instSetLikeIdeal.{u2} P (Preorder.toLE.{u2} P _inst_1))) p (Order.idealOfCofinals.{u2, u1} P _inst_1 p ι _inst_2 𝒟)
+Case conversion may be inaccurate. Consider using '#align order.mem_ideal_of_cofinals Order.mem_idealOfCofinalsₓ'. -/
 theorem mem_idealOfCofinals : p ∈ idealOfCofinals p 𝒟 :=
   ⟨0, le_rfl⟩
 #align order.mem_ideal_of_cofinals Order.mem_idealOfCofinals
 
+/- warning: order.cofinal_meets_ideal_of_cofinals -> Order.cofinal_meets_idealOfCofinals is a dubious translation:
+lean 3 declaration is
+  forall {P : Type.{u1}} [_inst_1 : Preorder.{u1} P] (p : P) {ι : Type.{u2}} [_inst_2 : Encodable.{u2} ι] (𝒟 : ι -> (Order.Cofinal.{u1} P _inst_1)) (i : ι), Exists.{succ u1} P (fun (x : P) => And (Membership.Mem.{u1, u1} P (Order.Cofinal.{u1} P _inst_1) (Order.Cofinal.hasMem.{u1} P _inst_1) x (𝒟 i)) (Membership.Mem.{u1, u1} P (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) (SetLike.hasMem.{u1, u1} (Order.Ideal.{u1} P (Preorder.toLE.{u1} P _inst_1)) P (Order.Ideal.setLike.{u1} P (Preorder.toLE.{u1} P _inst_1))) x (Order.idealOfCofinals.{u1, u2} P _inst_1 p ι _inst_2 𝒟)))
+but is expected to have type
+  forall {P : Type.{u2}} [_inst_1 : Preorder.{u2} P] (p : P) {ι : Type.{u1}} [_inst_2 : Encodable.{u1} ι] (𝒟 : ι -> (Order.Cofinal.{u2} P _inst_1)) (i : ι), Exists.{succ u2} P (fun (x : P) => And (Membership.mem.{u2, u2} P (Order.Cofinal.{u2} P _inst_1) (Order.Cofinal.instMembershipCofinal.{u2} P _inst_1) x (𝒟 i)) (Membership.mem.{u2, u2} P (Order.Ideal.{u2} P (Preorder.toLE.{u2} P _inst_1)) (SetLike.instMembership.{u2, u2} (Order.Ideal.{u2} P (Preorder.toLE.{u2} P _inst_1)) P (Order.Ideal.instSetLikeIdeal.{u2} P (Preorder.toLE.{u2} P _inst_1))) x (Order.idealOfCofinals.{u2, u1} P _inst_1 p ι _inst_2 𝒟)))
+Case conversion may be inaccurate. Consider using '#align order.cofinal_meets_ideal_of_cofinals Order.cofinal_meets_idealOfCofinalsₓ'. -/
 /-- `ideal_of_cofinals p 𝒟` is `𝒟`-generic. -/
 theorem cofinal_meets_idealOfCofinals (i : ι) : ∃ x : P, x ∈ 𝒟 i ∧ x ∈ idealOfCofinals p 𝒟 :=
   ⟨_, sequenceOfCofinals.encode_mem p 𝒟 i, _, le_rfl⟩

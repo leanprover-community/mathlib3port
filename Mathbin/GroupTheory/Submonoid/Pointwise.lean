@@ -420,16 +420,16 @@ theorem smul_closure (a : α) (s : Set M) : a • closure s = closure (a • s) 
 #align submonoid.smul_closure Submonoid.smul_closure
 -/
 
-/- warning: submonoid.pointwise_central_scalar -> Submonoid.pointwise_central_scalar is a dubious translation:
+/- warning: submonoid.pointwise_central_scalar -> Submonoid.pointwise_isCentralScalar is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : Monoid.{u2} M] [_inst_3 : Monoid.{u1} α] [_inst_4 : MulDistribMulAction.{u1, u2} α M _inst_3 _inst_1] [_inst_5 : MulDistribMulAction.{u1, u2} (MulOpposite.{u1} α) M (MulOpposite.monoid.{u1} α _inst_3) _inst_1] [_inst_6 : IsCentralScalar.{u1, u2} α M (MulAction.toHasSmul.{u1, u2} α M _inst_3 (MulDistribMulAction.toMulAction.{u1, u2} α M _inst_3 _inst_1 _inst_4)) (MulAction.toHasSmul.{u1, u2} (MulOpposite.{u1} α) M (MulOpposite.monoid.{u1} α _inst_3) (MulDistribMulAction.toMulAction.{u1, u2} (MulOpposite.{u1} α) M (MulOpposite.monoid.{u1} α _inst_3) _inst_1 _inst_5))], IsCentralScalar.{u1, u2} α (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulAction.toHasSmul.{u1, u2} α (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) _inst_3 (Submonoid.pointwiseMulAction.{u1, u2} α M _inst_1 _inst_3 _inst_4)) (MulAction.toHasSmul.{u1, u2} (MulOpposite.{u1} α) (Submonoid.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (MulOpposite.monoid.{u1} α _inst_3) (Submonoid.pointwiseMulAction.{u1, u2} (MulOpposite.{u1} α) M _inst_1 (MulOpposite.monoid.{u1} α _inst_3) _inst_5))
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] [_inst_3 : Monoid.{u2} α] [_inst_4 : MulDistribMulAction.{u2, u1} α M _inst_3 _inst_1] [_inst_5 : MulDistribMulAction.{u2, u1} (MulOpposite.{u2} α) M (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) _inst_1] [_inst_6 : IsCentralScalar.{u2, u1} α M (MulAction.toSMul.{u2, u1} α M _inst_3 (MulDistribMulAction.toMulAction.{u2, u1} α M _inst_3 _inst_1 _inst_4)) (MulAction.toSMul.{u2, u1} (MulOpposite.{u2} α) M (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) (MulDistribMulAction.toMulAction.{u2, u1} (MulOpposite.{u2} α) M (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) _inst_1 _inst_5))], IsCentralScalar.{u2, u1} α (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulAction.toSMul.{u2, u1} α (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) _inst_3 (Submonoid.pointwiseMulAction.{u2, u1} α M _inst_1 _inst_3 _inst_4)) (MulAction.toSMul.{u2, u1} (MulOpposite.{u2} α) (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) (Submonoid.pointwiseMulAction.{u2, u1} (MulOpposite.{u2} α) M _inst_1 (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) _inst_5))
-Case conversion may be inaccurate. Consider using '#align submonoid.pointwise_central_scalar Submonoid.pointwise_central_scalarₓ'. -/
-instance pointwise_central_scalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
+Case conversion may be inaccurate. Consider using '#align submonoid.pointwise_central_scalar Submonoid.pointwise_isCentralScalarₓ'. -/
+instance pointwise_isCentralScalar [MulDistribMulAction αᵐᵒᵖ M] [IsCentralScalar α M] :
     IsCentralScalar α (Submonoid M) :=
   ⟨fun a S => (congr_arg fun f : Monoid.End M => S.map f) <| MonoidHom.ext <| op_smul_eq_smul _⟩
-#align submonoid.pointwise_central_scalar Submonoid.pointwise_central_scalar
+#align submonoid.pointwise_central_scalar Submonoid.pointwise_isCentralScalar
 
 end Monoid
 
@@ -683,17 +683,17 @@ theorem smul_closure (a : α) (s : Set A) : a • closure s = closure (a • s) 
   AddMonoidHom.map_mclosure _ _
 #align add_submonoid.smul_closure AddSubmonoid.smul_closure
 
-/- warning: add_submonoid.pointwise_central_scalar -> AddSubmonoid.pointwise_central_scalar is a dubious translation:
+/- warning: add_submonoid.pointwise_central_scalar -> AddSubmonoid.pointwise_isCentralScalar is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {A : Type.{u2}} [_inst_2 : AddMonoid.{u2} A] [_inst_3 : Monoid.{u1} α] [_inst_4 : DistribMulAction.{u1, u2} α A _inst_3 _inst_2] [_inst_5 : DistribMulAction.{u1, u2} (MulOpposite.{u1} α) A (MulOpposite.monoid.{u1} α _inst_3) _inst_2] [_inst_6 : IsCentralScalar.{u1, u2} α A (SMulZeroClass.toHasSmul.{u1, u2} α A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (DistribSMul.toSmulZeroClass.{u1, u2} α A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} α A _inst_3 _inst_2 _inst_4))) (SMulZeroClass.toHasSmul.{u1, u2} (MulOpposite.{u1} α) A (AddZeroClass.toHasZero.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (DistribSMul.toSmulZeroClass.{u1, u2} (MulOpposite.{u1} α) A (AddMonoid.toAddZeroClass.{u2} A _inst_2) (DistribMulAction.toDistribSMul.{u1, u2} (MulOpposite.{u1} α) A (MulOpposite.monoid.{u1} α _inst_3) _inst_2 _inst_5)))], IsCentralScalar.{u1, u2} α (AddSubmonoid.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (MulAction.toHasSmul.{u1, u2} α (AddSubmonoid.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) _inst_3 (AddSubmonoid.pointwiseMulAction.{u1, u2} α A _inst_2 _inst_3 _inst_4)) (MulAction.toHasSmul.{u1, u2} (MulOpposite.{u1} α) (AddSubmonoid.{u2} A (AddMonoid.toAddZeroClass.{u2} A _inst_2)) (MulOpposite.monoid.{u1} α _inst_3) (AddSubmonoid.pointwiseMulAction.{u1, u2} (MulOpposite.{u1} α) A _inst_2 (MulOpposite.monoid.{u1} α _inst_3) _inst_5))
 but is expected to have type
   forall {α : Type.{u2}} {A : Type.{u1}} [_inst_2 : AddMonoid.{u1} A] [_inst_3 : Monoid.{u2} α] [_inst_4 : DistribMulAction.{u2, u1} α A _inst_3 _inst_2] [_inst_5 : DistribMulAction.{u2, u1} (MulOpposite.{u2} α) A (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) _inst_2] [_inst_6 : IsCentralScalar.{u2, u1} α A (SMulZeroClass.toSMul.{u2, u1} α A (AddMonoid.toZero.{u1} A _inst_2) (DistribSMul.toSMulZeroClass.{u2, u1} α A (AddMonoid.toAddZeroClass.{u1} A _inst_2) (DistribMulAction.toDistribSMul.{u2, u1} α A _inst_3 _inst_2 _inst_4))) (SMulZeroClass.toSMul.{u2, u1} (MulOpposite.{u2} α) A (AddMonoid.toZero.{u1} A _inst_2) (DistribSMul.toSMulZeroClass.{u2, u1} (MulOpposite.{u2} α) A (AddMonoid.toAddZeroClass.{u1} A _inst_2) (DistribMulAction.toDistribSMul.{u2, u1} (MulOpposite.{u2} α) A (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) _inst_2 _inst_5)))], IsCentralScalar.{u2, u1} α (AddSubmonoid.{u1} A (AddMonoid.toAddZeroClass.{u1} A _inst_2)) (MulAction.toSMul.{u2, u1} α (AddSubmonoid.{u1} A (AddMonoid.toAddZeroClass.{u1} A _inst_2)) _inst_3 (AddSubmonoid.pointwiseMulAction.{u2, u1} α A _inst_2 _inst_3 _inst_4)) (MulAction.toSMul.{u2, u1} (MulOpposite.{u2} α) (AddSubmonoid.{u1} A (AddMonoid.toAddZeroClass.{u1} A _inst_2)) (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) (AddSubmonoid.pointwiseMulAction.{u2, u1} (MulOpposite.{u2} α) A _inst_2 (MulOpposite.instMonoidMulOpposite.{u2} α _inst_3) _inst_5))
-Case conversion may be inaccurate. Consider using '#align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_central_scalarₓ'. -/
-instance pointwise_central_scalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
+Case conversion may be inaccurate. Consider using '#align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_isCentralScalarₓ'. -/
+instance pointwise_isCentralScalar [DistribMulAction αᵐᵒᵖ A] [IsCentralScalar α A] :
     IsCentralScalar α (AddSubmonoid A) :=
   ⟨fun a S =>
     (congr_arg fun f : AddMonoid.End A => S.map f) <| AddMonoidHom.ext <| op_smul_eq_smul _⟩
-#align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_central_scalar
+#align add_submonoid.pointwise_central_scalar AddSubmonoid.pointwise_isCentralScalar
 
 end Monoid
 
@@ -870,15 +870,15 @@ theorem one_eq_mrange : (1 : AddSubmonoid R) = (Nat.castAddMonoidHom R).mrange :
 #align add_submonoid.one_eq_mrange AddSubmonoid.one_eq_mrange
 -/
 
-/- warning: add_submonoid.nat_cast_mem_one -> AddSubmonoid.nat_cast_mem_one is a dubious translation:
+/- warning: add_submonoid.nat_cast_mem_one -> AddSubmonoid.natCast_mem_one is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} [_inst_3 : AddMonoidWithOne.{u1} R] (n : Nat), Membership.Mem.{u1, u1} R (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) (SetLike.hasMem.{u1, u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) R (AddSubmonoid.setLike.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3)))) ((fun (a : Type) (b : Type.{u1}) [self : HasLiftT.{1, succ u1} a b] => self.0) Nat R (HasLiftT.mk.{1, succ u1} Nat R (CoeTCₓ.coe.{1, succ u1} Nat R (Nat.castCoe.{u1} R (AddMonoidWithOne.toNatCast.{u1} R _inst_3)))) n) (OfNat.ofNat.{u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) 1 (OfNat.mk.{u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) 1 (One.one.{u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) (AddSubmonoid.hasOne.{u1} R _inst_3))))
 but is expected to have type
   forall {R : Type.{u1}} [_inst_3 : AddMonoidWithOne.{u1} R] (n : Nat), Membership.mem.{u1, u1} R (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) (SetLike.instMembership.{u1, u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) R (AddSubmonoid.instSetLikeAddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3)))) (Nat.cast.{u1} R (AddMonoidWithOne.toNatCast.{u1} R _inst_3) n) (OfNat.ofNat.{u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) 1 (One.toOfNat1.{u1} (AddSubmonoid.{u1} R (AddMonoid.toAddZeroClass.{u1} R (AddMonoidWithOne.toAddMonoid.{u1} R _inst_3))) (AddSubmonoid.one.{u1} R _inst_3)))
-Case conversion may be inaccurate. Consider using '#align add_submonoid.nat_cast_mem_one AddSubmonoid.nat_cast_mem_oneₓ'. -/
-theorem nat_cast_mem_one (n : ℕ) : (n : R) ∈ (1 : AddSubmonoid R) :=
+Case conversion may be inaccurate. Consider using '#align add_submonoid.nat_cast_mem_one AddSubmonoid.natCast_mem_oneₓ'. -/
+theorem natCast_mem_one (n : ℕ) : (n : R) ∈ (1 : AddSubmonoid R) :=
   ⟨_, rfl⟩
-#align add_submonoid.nat_cast_mem_one AddSubmonoid.nat_cast_mem_one
+#align add_submonoid.nat_cast_mem_one AddSubmonoid.natCast_mem_one
 
 /- warning: add_submonoid.mem_one -> AddSubmonoid.mem_one is a dubious translation:
 lean 3 declaration is

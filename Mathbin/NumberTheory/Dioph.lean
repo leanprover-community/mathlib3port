@@ -499,12 +499,12 @@ theorem ex1_dioph {S : Set (Option α → ℕ)} : Dioph S → Dioph { v | ∃ x,
 #align dioph.ex1_dioph Dioph.ex1_dioph
 
 theorem dom_dioph {f : (α → ℕ) →. ℕ} (d : DiophPfun f) : Dioph f.Dom :=
-  cast (congr_arg Dioph <| Set.ext fun v => (Pfun.dom_iff_graph _ _).symm) (ex1_dioph d)
+  cast (congr_arg Dioph <| Set.ext fun v => (PFun.dom_iff_graph _ _).symm) (ex1_dioph d)
 #align dioph.dom_dioph Dioph.dom_dioph
 
-theorem diophFn_iff_pfun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α f := by
+theorem diophFn_iff_pFun (f : (α → ℕ) → ℕ) : DiophFn f = @DiophPfun α f := by
   refine' congr_arg Dioph (Set.ext fun v => _) <;> exact pfun.lift_graph.symm
-#align dioph.dioph_fn_iff_pfun Dioph.diophFn_iff_pfun
+#align dioph.dioph_fn_iff_pfun Dioph.diophFn_iff_pFun
 
 theorem abs_poly_dioph (p : Poly α) : DiophFn fun v => (p v).natAbs :=
   of_no_dummies _ ((p.map some - Poly.proj none) * (p.map some + Poly.proj none)) fun v =>
@@ -523,7 +523,7 @@ theorem diophPfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : Di
     ⟨fun ⟨x, hS, (h : Exists _)⟩ => by
       rw [show (x ::ₒ v) ∘ some = v from funext fun s => rfl] at h <;> cases' h with hf h <;>
             refine' ⟨hf, _⟩ <;>
-          rw [Pfun.fn, h] <;>
+          rw [PFun.fn, h] <;>
         exact hS,
       fun ⟨x, hS⟩ =>
       ⟨f.fn v x, hS,
@@ -533,7 +533,7 @@ theorem diophPfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : Di
 
 theorem diophFn_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f : (α → ℕ) → ℕ} (df : DiophFn f) :
     Dioph { v | f v ::ₒ v ∈ S } :=
-  ext (diophPfun_comp1 d <| cast (diophFn_iff_pfun f) df) fun v =>
+  ext (diophPfun_comp1 d <| cast (diophFn_iff_pFun f) df) fun v =>
     ⟨fun ⟨_, h⟩ => h, fun h => ⟨trivial, h⟩⟩
 #align dioph.dioph_fn_comp1 Dioph.diophFn_comp1
 

@@ -127,7 +127,7 @@ def Code.eval : Code → List ℕ →. List ℕ
   | code.comp f g => fun v => g.eval v >>= f.eval
   | code.case f g => fun v => v.headI.elim (f.eval v.tail) fun y _ => g.eval (y::v.tail)
   | code.fix f =>
-    Pfun.fix fun v => (f.eval v).map fun v => if v.headI = 0 then Sum.inl v.tail else Sum.inr v.tail
+    PFun.fix fun v => (f.eval v).map fun v => if v.headI = 0 then Sum.inl v.tail else Sum.inr v.tail
 #align turing.to_partrec.code.eval Turing.ToPartrec.Code.eval
 
 namespace Code
@@ -292,14 +292,14 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
   case prim.prec n f g hf hg IHf IHg =>
     obtain ⟨cf, hf⟩ := IHf
     obtain ⟨cg, hg⟩ := IHg
-    simp only [Part.map_eq_map, Part.map_some, Pfun.coe_val] at hf hg
+    simp only [Part.map_eq_map, Part.map_some, PFun.coe_val] at hf hg
     refine' ⟨prec cf cg, fun v => _⟩
     rw [← v.cons_head_tail]
     specialize hf v.tail
     replace hg := fun a b => hg (a ::ᵥ b ::ᵥ v.tail)
     simp only [Vector.cons_val, Vector.tail_val] at hf hg
     simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Vector.tail_cons, Vector.head_cons,
-      Pfun.coe_val, Vector.tail_val]
+      PFun.coe_val, Vector.tail_val]
     simp only [← Part.pure_eq_some] at hf hg⊢
     induction' v.head with n IH <;>
       simp [prec, hf, bind_assoc, ← Part.map_eq_map, ← bind_pure_comp_eq_map,
@@ -312,7 +312,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
                         Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) n ::ᵥ
                           v.tail)::v.val.tail :
               List ℕ) ∈
-            Pfun.fix
+            PFun.fix
               (fun v : List ℕ => do
                 let x ← cg.eval (v.headI::v.tail.tail)
                 pure <|
@@ -320,23 +320,23 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
                     else Sum.inr (v::v::x.headI::v))
               (a::b::Nat.elim (f v.tail) (fun y IH => g (y ::ᵥ IH ::ᵥ v.tail)) a::v.val.tail)
       by
-      rw [(_ : Pfun.fix _ _ = pure _)]
+      rw [(_ : PFun.fix _ _ = pure _)]
       swap
       exact Part.eq_some_iff.2 (this 0 n (zero_add n))
       simp only [List.headI, pure_bind, List.tail_cons]
     intro a b e
     induction' b with b IH generalizing a e
-    · refine' Pfun.mem_fix_iff.2 (Or.inl <| Part.eq_some_iff.1 _)
+    · refine' PFun.mem_fix_iff.2 (Or.inl <| Part.eq_some_iff.1 _)
       simp only [hg, ← e, pure_bind, List.tail_cons]
       rfl
-    · refine' Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, IH (a + 1) (by rwa [add_right_comm])⟩)
+    · refine' PFun.mem_fix_iff.2 (Or.inr ⟨_, _, IH (a + 1) (by rwa [add_right_comm])⟩)
       simp only [hg, eval, pure_bind, Nat.elim_succ, List.tail]
       exact Part.mem_some_iff.2 rfl
   case comp m n f g hf hg IHf IHg => exact exists_code.comp IHf IHg
   case rfind n f hf IHf =>
     obtain ⟨cf, hf⟩ := IHf; refine' ⟨rfind cf, fun v => _⟩
     replace hf := fun a => hf (a ::ᵥ v)
-    simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, Pfun.coe_val,
+    simp only [Part.map_eq_map, Part.map_some, Vector.cons_val, PFun.coe_val,
       show ∀ x, pure x = [x] from fun _ => rfl] at hf⊢
     refine' Part.ext fun x => _
     simp only [rfind, Part.bind_eq_bind, Part.pure_eq_some, Part.map_eq_map, Part.bind_some,
@@ -348,7 +348,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
       suffices
         ∀ v₁ : List ℕ,
           v' ∈
-              Pfun.fix
+              PFun.fix
                 (fun v =>
                   (cf.eval v).bind fun y =>
                     Part.some <|
@@ -363,10 +363,10 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
         by exact this _ h1 0 rfl (by rintro _ ⟨⟩)
       clear h1
       intro v₀ h1
-      refine' Pfun.fixInduction h1 fun v₁ h2 IH => _
+      refine' PFun.fixInduction h1 fun v₁ h2 IH => _
       clear h1
       rintro n rfl hm
-      have := Pfun.mem_fix_iff.1 h2
+      have := PFun.mem_fix_iff.1 h2
       simp only [hf, Part.bind_some] at this
       split_ifs  at this
       · simp only [List.headI, exists_false, or_false_iff, Part.mem_some_iff, List.tail_cons,
@@ -380,19 +380,19 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
       refine' ⟨n.succ::v.1, _, rfl⟩
       have :
         (n.succ::v.1 : List ℕ) ∈
-          Pfun.fix
+          PFun.fix
             (fun v =>
               (cf.eval v).bind fun y =>
                 Part.some <|
                   if y.headI = 0 then Sum.inl (v.head.succ::v.tail)
                   else Sum.inr (v.head.succ::v.tail))
             (n::v.val) :=
-        Pfun.mem_fix_iff.2 (Or.inl (by simp [hf, hn, -Subtype.val_eq_coe]))
+        PFun.mem_fix_iff.2 (Or.inl (by simp [hf, hn, -Subtype.val_eq_coe]))
       generalize (n.succ::v.1 : List ℕ) = w at this⊢
       clear hn
       induction' n with n IH
       · exact this
-      refine' IH (fun m h' => hm (Nat.lt_succ_of_lt h')) (Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, this⟩))
+      refine' IH (fun m h' => hm (Nat.lt_succ_of_lt h')) (PFun.mem_fix_iff.2 (Or.inr ⟨_, _, this⟩))
       simp only [hf, hm n.lt_succ_self, Part.bind_some, List.headI, eq_self_iff_true, if_false,
         Part.mem_some_iff, and_self_iff, List.tail_cons]
 #align turing.to_partrec.code.exists_code Turing.ToPartrec.Code.exists_code
@@ -643,7 +643,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       intro h
       obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ :=
         this _ h _ _ (step_normal_then _ cont.halt _ _) refl_trans_gen.refl
-      refine' ⟨v₂, Pfun.mem_fix_iff.2 _, h₃⟩
+      refine' ⟨v₂, PFun.mem_fix_iff.2 _, h₃⟩
       simp only [Part.eq_some_iff.2 hv₁, Part.map_some]
       split_ifs  at hv₂⊢
       · rw [Part.mem_some_iff.1 hv₂]
@@ -671,7 +671,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
         rw [e₀, cont.then, cfg.then] at e₁
         obtain ⟨v₁, hv₁, v₂, hv₂, h₃⟩ :=
           IH (step_ret (k₀.then (cont.fix f k)) v₀) _ v'.tail _ step_ret_then _
-        · refine' ⟨_, Pfun.mem_fix_iff.2 _, h₃⟩
+        · refine' ⟨_, PFun.mem_fix_iff.2 _, h₃⟩
           simp only [Part.eq_some_iff.2 hv₁, Part.map_some, Part.mem_some_iff]
           split_ifs  at hv₂⊢ <;> [exact Or.inl (Part.mem_some_iff.1 hv₂),
             exact Or.inr ⟨_, rfl, hv₂⟩]
@@ -685,9 +685,9 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     rw [reaches_eval] at hr
     swap
     exact refl_trans_gen.single rfl
-    refine' Pfun.fixInduction he fun v (he : v' ∈ f.fix.eval v) IH => _
+    refine' PFun.fixInduction he fun v (he : v' ∈ f.fix.eval v) IH => _
     rw [fok, Part.bind_eq_bind, Part.mem_bind_iff]
-    obtain he | ⟨v'', he₁', _⟩ := Pfun.mem_fix_iff.1 he
+    obtain he | ⟨v'', he₁', _⟩ := PFun.mem_fix_iff.1 he
     · obtain ⟨v', he₁, he₂⟩ := (Part.mem_map_iff _).1 he
       split_ifs  at he₂ <;> cases he₂
       refine' ⟨_, he₁, _⟩

@@ -752,7 +752,7 @@ theorem Tape.map_mk₁ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap �
 state returned before a `none` result. If the state transition function always returns `some`,
 then the computation diverges, returning `part.none`. -/
 def eval {σ} (f : σ → Option σ) : σ → Part σ :=
-  Pfun.fix fun s => Part.some <| (f s).elim (Sum.inl s) Sum.inr
+  PFun.fix fun s => Part.some <| (f s).elim (Sum.inl s) Sum.inr
 #align turing.eval Turing.eval
 
 /-- The reflexive transitive closure of a state transition function. `reaches f a b` means
@@ -840,7 +840,7 @@ holds of any point where `eval f a` evaluates to `b`. This formalizes the notion
 @[elab_as_elim]
 def evalInduction {σ} {f : σ → Option σ} {b : σ} {C : σ → Sort _} {a : σ} (h : b ∈ eval f a)
     (H : ∀ a, b ∈ eval f a → (∀ a', f a = some a' → C a') → C a) : C a :=
-  Pfun.fixInduction h fun a' ha' h' =>
+  PFun.fixInduction h fun a' ha' h' =>
     H _ ha' fun b' e => h' _ <| Part.mem_some_iff.2 <| by rw [e] <;> rfl
 #align turing.eval_induction Turing.evalInduction
 
@@ -849,18 +849,18 @@ theorem mem_eval {σ} {f : σ → Option σ} {a b} : b ∈ eval f a ↔ Reaches 
     refine' eval_induction h fun a h IH => _
     cases' e : f a with a'
     · rw [Part.mem_unique h
-          (Pfun.mem_fix_iff.2 <| Or.inl <| Part.mem_some_iff.2 <| by rw [e] <;> rfl)]
+          (PFun.mem_fix_iff.2 <| Or.inl <| Part.mem_some_iff.2 <| by rw [e] <;> rfl)]
       exact ⟨refl_trans_gen.refl, e⟩
-    · rcases Pfun.mem_fix_iff.1 h with (h | ⟨_, h, _⟩) <;> rw [e] at h <;>
+    · rcases PFun.mem_fix_iff.1 h with (h | ⟨_, h, _⟩) <;> rw [e] at h <;>
         cases Part.mem_some_iff.1 h
       cases' IH a' (by rwa [e]) with h₁ h₂
       exact ⟨refl_trans_gen.head e h₁, h₂⟩, fun ⟨h₁, h₂⟩ =>
     by
     refine' refl_trans_gen.head_induction_on h₁ _ fun a a' h _ IH => _
-    · refine' Pfun.mem_fix_iff.2 (Or.inl _)
+    · refine' PFun.mem_fix_iff.2 (Or.inl _)
       rw [h₂]
       apply Part.mem_some
-    · refine' Pfun.mem_fix_iff.2 (Or.inr ⟨_, _, IH⟩)
+    · refine' PFun.mem_fix_iff.2 (Or.inr ⟨_, _, IH⟩)
       rw [show f a = _ from h]
       apply Part.mem_some⟩
 #align turing.mem_eval Turing.mem_eval

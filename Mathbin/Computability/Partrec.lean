@@ -822,33 +822,33 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
     (∃ n : ℕ,
         ((∃ b' : σ, Sum.inl b' ∈ F a n) ∧ ∀ {m : ℕ}, m < n → ∃ b : α, Sum.inr b ∈ F a m) ∧
           Sum.inl b ∈ F a n) ↔
-      b ∈ Pfun.fix f a :=
+      b ∈ PFun.fix f a :=
   by
   intro ; refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨n, ⟨_x, h₁⟩, h₂⟩
-    have : ∀ (m a') (_ : Sum.inr a' ∈ F a m) (_ : b ∈ Pfun.fix f a'), b ∈ Pfun.fix f a :=
+    have : ∀ (m a') (_ : Sum.inr a' ∈ F a m) (_ : b ∈ PFun.fix f a'), b ∈ PFun.fix f a :=
       by
       intro m a' am ba
       induction' m with m IH generalizing a' <;> simp [F] at am
       · rwa [← am]
       rcases am with ⟨a₂, am₂, fa₂⟩
-      exact IH _ am₂ (Pfun.mem_fix_iff.2 (Or.inr ⟨_, fa₂, ba⟩))
+      exact IH _ am₂ (PFun.mem_fix_iff.2 (Or.inr ⟨_, fa₂, ba⟩))
     cases n <;> simp [F] at h₂
     · cases h₂
     rcases h₂ with (h₂ | ⟨a', am', fa'⟩)
     · cases' h₁ (Nat.lt_succ_self _) with a' h
       injection mem_unique h h₂
-    · exact this _ _ am' (Pfun.mem_fix_iff.2 (Or.inl fa'))
+    · exact this _ _ am' (PFun.mem_fix_iff.2 (Or.inl fa'))
   · suffices
-      ∀ (a') (_ : b ∈ Pfun.fix f a') (k) (_ : Sum.inr a' ∈ F a k),
+      ∀ (a') (_ : b ∈ PFun.fix f a') (k) (_ : Sum.inr a' ∈ F a k),
         ∃ n, Sum.inl b ∈ F a n ∧ ∀ m < n, ∀ (_ : k ≤ m), ∃ a₂, Sum.inr a₂ ∈ F a m
       by
       rcases this _ h 0 (by simp [F]) with ⟨n, hn₁, hn₂⟩
       exact ⟨_, ⟨⟨_, hn₁⟩, fun m mn => hn₂ m mn (Nat.zero_le _)⟩, hn₁⟩
     intro a₁ h₁
-    apply Pfun.fixInduction h₁
+    apply PFun.fixInduction h₁
     intro a₂ h₂ IH k hk
-    rcases Pfun.mem_fix_iff.1 h₂ with (h₂ | ⟨a₃, am₃, fa₃⟩)
+    rcases PFun.mem_fix_iff.1 h₂ with (h₂ | ⟨a₃, am₃, fa₃⟩)
     · refine' ⟨k.succ, _, fun m mk km => ⟨a₂, _⟩⟩
       · simp [F]
         exact Or.inr ⟨_, hk, h₂⟩
@@ -862,7 +862,7 @@ theorem fix_aux {α σ} (f : α →. Sum σ α) (a : α) (b : σ) :
         exact ⟨_, hk, am₃⟩
 #align partrec.fix_aux Partrec.fix_aux
 
-theorem fix {f : α →. Sum σ α} (hf : Partrec f) : Partrec (Pfun.fix f) :=
+theorem fix {f : α →. Sum σ α} (hf : Partrec f) : Partrec (PFun.fix f) :=
   let F : α → ℕ →. Sum σ α := fun a n =>
     n.elim (some (Sum.inr a)) fun y IH => IH.bind fun s => Sum.casesOn s (fun _ => Part.some s) f
   have hF : Partrec₂ F :=

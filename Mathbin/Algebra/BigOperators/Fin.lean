@@ -277,31 +277,31 @@ theorem sum_const [AddCommMonoid α] (n : ℕ) (x : α) : (∑ i : Fin n, x) = n
 #align fin.sum_const Fin.sum_const
 -/
 
-/- warning: fin.prod_Ioi_zero -> Fin.prod_ioi_zero is a dubious translation:
+/- warning: fin.prod_Ioi_zero -> Fin.prod_Ioi_zero is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {n : Nat} {v : (Fin (Nat.succ n)) -> M}, Eq.{succ u1} M (Finset.prod.{u1, 0} M (Fin (Nat.succ n)) _inst_1 (Finset.Ioi.{0} (Fin (Nat.succ n)) (PartialOrder.toPreorder.{0} (Fin (Nat.succ n)) (Fin.partialOrder (Nat.succ n))) (Fin.locallyFiniteOrderTop (Nat.succ n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (OfNat.mk.{0} (Fin (Nat.succ n)) 0 (Zero.zero.{0} (Fin (Nat.succ n)) (Fin.hasZeroOfNeZero (Nat.succ n) (NeZero.succ n)))))) (fun (i : Fin (Nat.succ n)) => v i)) (Finset.prod.{u1, 0} M (Fin n) _inst_1 (Finset.univ.{0} (Fin n) (Fin.fintype n)) (fun (j : Fin n) => v (Fin.succ n j)))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {n : Nat} {v : (Fin (Nat.succ n)) -> M}, Eq.{succ u1} M (Finset.prod.{u1, 0} M (Fin (Nat.succ n)) _inst_1 (Finset.Ioi.{0} (Fin (Nat.succ n)) (PartialOrder.toPreorder.{0} (Fin (Nat.succ n)) (Fin.instPartialOrderFin (Nat.succ n))) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin (Nat.succ n)) (OfNat.ofNat.{0} (Fin (Nat.succ n)) 0 (Fin.instOfNatFin (Nat.succ n) 0 (NeZero.succ n)))) (fun (i : Fin (Nat.succ n)) => v i)) (Finset.prod.{u1, 0} M (Fin n) _inst_1 (Finset.univ.{0} (Fin n) (Fin.fintype n)) (fun (j : Fin n) => v (Fin.succ n j)))
-Case conversion may be inaccurate. Consider using '#align fin.prod_Ioi_zero Fin.prod_ioi_zeroₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.prod_Ioi_zero Fin.prod_Ioi_zeroₓ'. -/
 @[to_additive]
-theorem prod_ioi_zero {M : Type _} [CommMonoid M] {n : ℕ} {v : Fin n.succ → M} :
+theorem prod_Ioi_zero {M : Type _} [CommMonoid M] {n : ℕ} {v : Fin n.succ → M} :
     (∏ i in Ioi 0, v i) = ∏ j : Fin n, v j.succ := by
   rw [Ioi_zero_eq_map, Finset.prod_map, RelEmbedding.coeFn_toEmbedding, coe_succ_embedding]
-#align fin.prod_Ioi_zero Fin.prod_ioi_zero
-#align fin.sum_Ioi_zero Fin.sum_ioi_zero
+#align fin.prod_Ioi_zero Fin.prod_Ioi_zero
+#align fin.sum_Ioi_zero Fin.sum_Ioi_zero
 
-/- warning: fin.prod_Ioi_succ -> Fin.prod_ioi_succ is a dubious translation:
+/- warning: fin.prod_Ioi_succ -> Fin.prod_Ioi_succ is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {n : Nat} (i : Fin n) (v : (Fin (Nat.succ n)) -> M), Eq.{succ u1} M (Finset.prod.{u1, 0} M (Fin (Nat.succ n)) _inst_1 (Finset.Ioi.{0} (Fin (Nat.succ n)) (PartialOrder.toPreorder.{0} (Fin (Nat.succ n)) (Fin.partialOrder (Nat.succ n))) (Fin.locallyFiniteOrderTop (Nat.succ n)) (Fin.succ n i)) (fun (j : Fin (Nat.succ n)) => v j)) (Finset.prod.{u1, 0} M (Fin n) _inst_1 (Finset.Ioi.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) (Fin.locallyFiniteOrderTop n) i) (fun (j : Fin n) => v (Fin.succ n j)))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {n : Nat} (i : Fin n) (v : (Fin (Nat.succ n)) -> M), Eq.{succ u1} M (Finset.prod.{u1, 0} M (Fin (Nat.succ n)) _inst_1 (Finset.Ioi.{0} (Fin (Nat.succ n)) (PartialOrder.toPreorder.{0} (Fin (Nat.succ n)) (Fin.instPartialOrderFin (Nat.succ n))) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin (Nat.succ n)) (Fin.succ n i)) (fun (j : Fin (Nat.succ n)) => v j)) (Finset.prod.{u1, 0} M (Fin n) _inst_1 (Finset.Ioi.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) i) (fun (j : Fin n) => v (Fin.succ n j)))
-Case conversion may be inaccurate. Consider using '#align fin.prod_Ioi_succ Fin.prod_ioi_succₓ'. -/
+Case conversion may be inaccurate. Consider using '#align fin.prod_Ioi_succ Fin.prod_Ioi_succₓ'. -/
 @[to_additive]
-theorem prod_ioi_succ {M : Type _} [CommMonoid M] {n : ℕ} (i : Fin n) (v : Fin n.succ → M) :
+theorem prod_Ioi_succ {M : Type _} [CommMonoid M] {n : ℕ} (i : Fin n) (v : Fin n.succ → M) :
     (∏ j in Ioi i.succ, v j) = ∏ j in Ioi i, v j.succ := by
   rw [Ioi_succ, Finset.prod_map, RelEmbedding.coeFn_toEmbedding, coe_succ_embedding]
-#align fin.prod_Ioi_succ Fin.prod_ioi_succ
-#align fin.sum_Ioi_succ Fin.sum_ioi_succ
+#align fin.prod_Ioi_succ Fin.prod_Ioi_succ
+#align fin.sum_Ioi_succ Fin.sum_Ioi_succ
 
 /- warning: fin.prod_congr' -> Fin.prod_congr' is a dubious translation:
 lean 3 declaration is
