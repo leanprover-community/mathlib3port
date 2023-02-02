@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.congruence_subgroups
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.LinearAlgebra.SpecialLinearGroup
 import Mathbin.Data.Zmod.Basic
-import Mathbin.GroupTheory.Subgroup.Pointwise
 import Mathbin.GroupTheory.GroupAction.ConjAct
+import Mathbin.GroupTheory.Subgroup.Pointwise
+import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
 
 /-!
 # Congruence subgroups

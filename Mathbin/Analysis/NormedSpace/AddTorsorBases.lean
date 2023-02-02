@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor_bases
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,18 +68,18 @@ TODO Restate this result for affine spaces (instead of vector spaces) once the d
 convexity is generalised to this setting. -/
 theorem AffineBasis.interior_convexHull {ι E : Type _} [Finite ι] [NormedAddCommGroup E]
     [NormedSpace ℝ E] (b : AffineBasis ι ℝ E) :
-    interior (convexHull ℝ (range b.points)) = { x | ∀ i, 0 < b.Coord i x } :=
+    interior (convexHull ℝ (range b)) = { x | ∀ i, 0 < b.Coord i x } :=
   by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
-    have : range b.points = univ :=
+    have : range b = univ :=
       AffineSubspace.eq_univ_of_subsingleton_span_eq_top (subsingleton_range _) b.tot
     simp [this]
   · -- The positive-dimensional case.
     haveI : FiniteDimensional ℝ E := b.finite_dimensional
-    have : convexHull ℝ (range b.points) = ⋂ i, b.coord i ⁻¹' Ici 0 :=
+    have : convexHull ℝ (range b) = ⋂ i, b.coord i ⁻¹' Ici 0 :=
       by
-      rw [convexHull_affineBasis_eq_nonneg_barycentric b, set_of_forall]
+      rw [b.convex_hull_eq_nonneg_coord, set_of_forall]
       rfl
     ext
     simp only [this, interior_interᵢ, ←
@@ -156,7 +156,7 @@ theorem affineSpan_eq_top_of_nonempty_interior {s : Set V}
 #align affine_span_eq_top_of_nonempty_interior affineSpan_eq_top_of_nonempty_interior
 
 theorem AffineBasis.centroid_mem_interior_convexHull {ι} [Fintype ι] (b : AffineBasis ι ℝ V) :
-    Finset.univ.centroid ℝ b.points ∈ interior (convexHull ℝ (range b.points)) :=
+    Finset.univ.centroid ℝ b ∈ interior (convexHull ℝ (range b)) :=
   by
   haveI := b.nonempty
   simp only [b.interior_convex_hull, mem_set_of_eq, b.coord_apply_centroid (Finset.mem_univ _),
@@ -168,7 +168,7 @@ theorem interior_convexHull_nonempty_iff_affineSpan_eq_top [FiniteDimensional �
   by
   refine' ⟨affineSpan_eq_top_of_nonempty_interior, fun h => _⟩
   obtain ⟨t, hts, b, hb⟩ := AffineBasis.exists_affine_subbasis h
-  suffices (interior (convexHull ℝ (range b.points))).Nonempty
+  suffices (interior (convexHull ℝ (range b))).Nonempty
     by
     rw [hb, Subtype.range_coe_subtype, set_of_mem_eq] at this
     refine' this.mono _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.combination
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -532,20 +532,18 @@ theorem mem_Icc_of_mem_stdSimplex (hf : f ∈ stdSimplex R ι) (x) : f x ∈ Icc
 
 /-- The convex hull of an affine basis is the intersection of the half-spaces defined by the
 corresponding barycentric coordinates. -/
-theorem convexHull_affineBasis_eq_nonneg_barycentric {ι : Type _} (b : AffineBasis ι R E) :
-    convexHull R (range b.points) = { x | ∀ i, 0 ≤ b.Coord i x } :=
+theorem AffineBasis.convexHull_eq_nonneg_coord {ι : Type _} (b : AffineBasis ι R E) :
+    convexHull R (range b) = { x | ∀ i, 0 ≤ b.Coord i x } :=
   by
   rw [convexHull_range_eq_exists_affineCombination]
   ext x
-  constructor
+  refine' ⟨_, fun hx => _⟩
   · rintro ⟨s, w, hw₀, hw₁, rfl⟩ i
     by_cases hi : i ∈ s
     · rw [b.coord_apply_combination_of_mem hi hw₁]
       exact hw₀ i hi
     · rw [b.coord_apply_combination_of_not_mem hi hw₁]
-  · intro hx
-    have hx' : x ∈ affineSpan R (range b.points) :=
-      by
+  · have hx' : x ∈ affineSpan R (range b) := by
       rw [b.tot]
       exact AffineSubspace.mem_top R E x
     obtain ⟨s, w, hw₁, rfl⟩ := (mem_affineSpan_iff_eq_affineCombination R E).mp hx'
@@ -554,5 +552,5 @@ theorem convexHull_affineBasis_eq_nonneg_barycentric {ι : Type _} (b : AffineBa
     specialize hx i
     rw [b.coord_apply_combination_of_mem hi hw₁] at hx
     exact hx
-#align convex_hull_affine_basis_eq_nonneg_barycentric convexHull_affineBasis_eq_nonneg_barycentric
+#align affine_basis.convex_hull_eq_nonneg_coord AffineBasis.convexHull_eq_nonneg_coord
 

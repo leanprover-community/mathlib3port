@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_lebesgue
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -718,8 +718,8 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux1 (s : Set E) (x : E
     filter_upwards [self_mem_nhdsWithin]
     rintro r (rpos : 0 < r)
     have : closed_ball x r = {x} + r • closed_ball 0 1 := by
-      simp only [smul_closedBall, Real.norm_of_nonneg rpos.le, zero_le_one, add_zero, mul_one,
-        singleton_add_closedBall, smul_zero]
+      simp only [_root_.smul_closed_ball, Real.norm_of_nonneg rpos.le, zero_le_one, add_zero,
+        mul_one, singleton_add_closedBall, smul_zero]
     simp only [this, add_haar_singleton_add_smul_div_singleton_add_smul μ rpos.ne']
     simp only [add_haar_closed_ball_center, image_add_left, measure_preimage_add, singleton_add]
   have C :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -632,6 +632,13 @@ theorem prod_span_singleton {ι : Type _} (s : Finset ι) (I : ι → R) :
     (∏ i in s, Ideal.span ({I i} : Set R)) = Ideal.span {∏ i in s, I i} :=
   Submodule.prod_span_singleton s I
 #align ideal.prod_span_singleton Ideal.prod_span_singleton
+
+@[simp]
+theorem multiset_prod_span_singleton (m : Multiset R) :
+    (m.map fun x => Ideal.span {x}).Prod = Ideal.span ({Multiset.prod m} : Set R) :=
+  Multiset.induction_on m (by simp) fun a m ih => by
+    simp only [Multiset.map_cons, Multiset.prod_cons, ih, ← Ideal.span_singleton_mul_span_singleton]
+#align ideal.multiset_prod_span_singleton Ideal.multiset_prod_span_singleton
 
 theorem finset_inf_span_singleton {ι : Type _} (s : Finset ι) (I : ι → R)
     (hI : Set.Pairwise (↑s) (IsCoprime on I)) :

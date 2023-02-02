@@ -5,7 +5,7 @@ Isometries of emetric and metric spaces
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometry
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,17 @@ theorem isometry_subsingleton [Subsingleton α] : Isometry f := fun x y => by
 theorem isometry_id : Isometry (id : α → α) := fun x y => rfl
 #align isometry_id isometry_id
 
-/-- The composition of isometries is an isometry -/
+theorem prod_map {δ} [PseudoEmetricSpace δ] {f : α → β} {g : γ → δ} (hf : Isometry f)
+    (hg : Isometry g) : Isometry (Prod.map f g) := fun x y => by
+  simp only [Prod.edist_eq, hf.edist_eq, hg.edist_eq, Prod_map]
+#align isometry.prod_map Isometry.prod_map
+
+theorem isometry_dcomp {ι} [Fintype ι] {α β : ι → Type _} [∀ i, PseudoEmetricSpace (α i)]
+    [∀ i, PseudoEmetricSpace (β i)] (f : ∀ i, α i → β i) (hf : ∀ i, Isometry (f i)) :
+    Isometry (dcomp f) := fun x y => by simp only [edist_pi_def, (hf _).edist_eq]
+#align isometry_dcomp isometry_dcomp
+
+/-- The composition of isometries is an isometry. -/
 theorem comp {g : β → γ} {f : α → β} (hg : Isometry g) (hf : Isometry f) : Isometry (g ∘ f) :=
   fun x y => (hg _ _).trans (hf _ _)
 #align isometry.comp Isometry.comp

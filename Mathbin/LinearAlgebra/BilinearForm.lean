@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow, Kexing Ying
 
 ! This file was ported from Lean 3 source module linear_algebra.bilinear_form
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -864,6 +864,9 @@ theorem sum_repr_mul_repr_mul (x y : M₂) :
 
 end Basis
 
+/-! ### Reflexivity, symmetry, and alternativity -/
+
+
 /-- The proposition that a bilinear form is reflexive -/
 def IsRefl (B : BilinForm R M) : Prop :=
   ∀ x y : M, B x y = 0 → B y x = 0
@@ -880,7 +883,31 @@ theorem ortho_comm {x y : M} : IsOrtho B x y ↔ IsOrtho B y x :=
   ⟨eq_zero H, eq_zero H⟩
 #align bilin_form.is_refl.ortho_comm BilinForm.IsRefl.ortho_comm
 
+protected theorem neg {B : BilinForm R₁ M₁} (hB : B.IsRefl) : (-B).IsRefl := fun x y =>
+  neg_eq_zero.mpr ∘ hB x y ∘ neg_eq_zero.mp
+#align bilin_form.is_refl.neg BilinForm.IsRefl.neg
+
+protected theorem smul {α} [Semiring α] [Module α R] [SMulCommClass α R R] [NoZeroSMulDivisors α R]
+    (a : α) {B : BilinForm R M} (hB : B.IsRefl) : (a • B).IsRefl := fun x y h =>
+  (smul_eq_zero.mp h).elim (fun ha => smul_eq_zero_of_left ha _) fun hBz =>
+    smul_eq_zero_of_right _ (hB _ _ hBz)
+#align bilin_form.is_refl.smul BilinForm.IsRefl.smul
+
+protected theorem groupSmul {α} [Group α] [DistribMulAction α R] [SMulCommClass α R R] (a : α)
+    {B : BilinForm R M} (hB : B.IsRefl) : (a • B).IsRefl := fun x y =>
+  (smul_eq_zero_iff_eq _).mpr ∘ hB x y ∘ (smul_eq_zero_iff_eq _).mp
+#align bilin_form.is_refl.group_smul BilinForm.IsRefl.groupSmul
+
 end IsRefl
+
+@[simp]
+theorem isReflZero : (0 : BilinForm R M).IsRefl := fun _ _ _ => rfl
+#align bilin_form.is_refl_zero BilinForm.isReflZero
+
+@[simp]
+theorem isRefl_neg {B : BilinForm R₁ M₁} : (-B).IsRefl ↔ B.IsRefl :=
+  ⟨fun h => neg_neg B ▸ h.neg, IsRefl.neg⟩
+#align bilin_form.is_refl_neg BilinForm.isRefl_neg
 
 /-- The proposition that a bilinear form is symmetric -/
 def IsSymm (B : BilinForm R M) : Prop :=
@@ -902,7 +929,33 @@ theorem ortho_comm {x y : M} : IsOrtho B x y ↔ IsOrtho B y x :=
   H.IsRefl.ortho_comm
 #align bilin_form.is_symm.ortho_comm BilinForm.IsSymm.ortho_comm
 
+protected theorem add {B₁ B₂ : BilinForm R M} (hB₁ : B₁.IsSymm) (hB₂ : B₂.IsSymm) :
+    (B₁ + B₂).IsSymm := fun x y => (congr_arg₂ (· + ·) (hB₁ x y) (hB₂ x y) : _)
+#align bilin_form.is_symm.add BilinForm.IsSymm.add
+
+protected theorem sub {B₁ B₂ : BilinForm R₁ M₁} (hB₁ : B₁.IsSymm) (hB₂ : B₂.IsSymm) :
+    (B₁ - B₂).IsSymm := fun x y => (congr_arg₂ Sub.sub (hB₁ x y) (hB₂ x y) : _)
+#align bilin_form.is_symm.sub BilinForm.IsSymm.sub
+
+protected theorem neg {B : BilinForm R₁ M₁} (hB : B.IsSymm) : (-B).IsSymm := fun x y =>
+  congr_arg Neg.neg (hB x y)
+#align bilin_form.is_symm.neg BilinForm.IsSymm.neg
+
+protected theorem smul {α} [Monoid α] [DistribMulAction α R] [SMulCommClass α R R] (a : α)
+    {B : BilinForm R M} (hB : B.IsSymm) : (a • B).IsSymm := fun x y =>
+  congr_arg ((· • ·) a) (hB x y)
+#align bilin_form.is_symm.smul BilinForm.IsSymm.smul
+
 end IsSymm
+
+@[simp]
+theorem isSymmZero : (0 : BilinForm R M).IsSymm := fun _ _ => rfl
+#align bilin_form.is_symm_zero BilinForm.isSymmZero
+
+@[simp]
+theorem isSymm_neg {B : BilinForm R₁ M₁} : (-B).IsSymm ↔ B.IsSymm :=
+  ⟨fun h => neg_neg B ▸ h.neg, IsSymm.neg⟩
+#align bilin_form.is_symm_neg BilinForm.isSymm_neg
 
 theorem isSymm_iff_flip' [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B :=
   by
@@ -926,25 +979,54 @@ theorem self_eq_zero (H : B.IsAlt) (x : M) : B x x = 0 :=
   H x
 #align bilin_form.is_alt.self_eq_zero BilinForm.IsAlt.self_eq_zero
 
-theorem neg (H : B₁.IsAlt) (x y : M₁) : -B₁ x y = B₁ y x :=
+theorem neg_eq (H : B₁.IsAlt) (x y : M₁) : -B₁ x y = B₁ y x :=
   by
   have H1 : B₁ (x + y) (x + y) = 0 := self_eq_zero H (x + y)
   rw [add_left, add_right, add_right, self_eq_zero H, self_eq_zero H, Ring.zero_add, Ring.add_zero,
     add_eq_zero_iff_neg_eq] at H1
   exact H1
-#align bilin_form.is_alt.neg BilinForm.IsAlt.neg
+#align bilin_form.is_alt.neg_eq BilinForm.IsAlt.neg_eq
 
 theorem isRefl (H : B₁.IsAlt) : B₁.IsRefl :=
   by
   intro x y h
-  rw [← neg H, h, neg_zero]
+  rw [← neg_eq H, h, neg_zero]
 #align bilin_form.is_alt.is_refl BilinForm.IsAlt.isRefl
 
 theorem ortho_comm (H : B₁.IsAlt) {x y : M₁} : IsOrtho B₁ x y ↔ IsOrtho B₁ y x :=
   H.IsRefl.ortho_comm
 #align bilin_form.is_alt.ortho_comm BilinForm.IsAlt.ortho_comm
 
+protected theorem add {B₁ B₂ : BilinForm R M} (hB₁ : B₁.IsAlt) (hB₂ : B₂.IsAlt) : (B₁ + B₂).IsAlt :=
+  fun x => (congr_arg₂ (· + ·) (hB₁ x) (hB₂ x) : _).trans <| add_zero _
+#align bilin_form.is_alt.add BilinForm.IsAlt.add
+
+protected theorem sub {B₁ B₂ : BilinForm R₁ M₁} (hB₁ : B₁.IsAlt) (hB₂ : B₂.IsAlt) :
+    (B₁ - B₂).IsAlt := fun x => (congr_arg₂ Sub.sub (hB₁ x) (hB₂ x)).trans <| sub_zero _
+#align bilin_form.is_alt.sub BilinForm.IsAlt.sub
+
+protected theorem neg {B : BilinForm R₁ M₁} (hB : B.IsAlt) : (-B).IsAlt := fun x =>
+  neg_eq_zero.mpr <| hB x
+#align bilin_form.is_alt.neg BilinForm.IsAlt.neg
+
+protected theorem smul {α} [Monoid α] [DistribMulAction α R] [SMulCommClass α R R] (a : α)
+    {B : BilinForm R M} (hB : B.IsAlt) : (a • B).IsAlt := fun x =>
+  (congr_arg ((· • ·) a) (hB x)).trans <| smul_zero _
+#align bilin_form.is_alt.smul BilinForm.IsAlt.smul
+
 end IsAlt
+
+@[simp]
+theorem isAltZero : (0 : BilinForm R M).IsAlt := fun _ => rfl
+#align bilin_form.is_alt_zero BilinForm.isAltZero
+
+@[simp]
+theorem isAlt_neg {B : BilinForm R₁ M₁} : (-B).IsAlt ↔ B.IsAlt :=
+  ⟨fun h => neg_neg B ▸ h.neg, IsAlt.neg⟩
+#align bilin_form.is_alt_neg BilinForm.isAlt_neg
+
+/-! ### Linear adjoints -/
+
 
 section LinearAdjoints
 

@@ -235,7 +235,6 @@ import Mathbin.Algebra.Lie.BaseChange
 import Mathbin.Algebra.Lie.Basic
 import Mathbin.Algebra.Lie.CartanMatrix
 import Mathbin.Algebra.Lie.CartanSubalgebra
-import Mathbin.Algebra.Lie.Centralizer
 import Mathbin.Algebra.Lie.Character
 import Mathbin.Algebra.Lie.Classical
 import Mathbin.Algebra.Lie.DirectSum
@@ -245,6 +244,7 @@ import Mathbin.Algebra.Lie.IdealOperations
 import Mathbin.Algebra.Lie.Matrix
 import Mathbin.Algebra.Lie.Nilpotent
 import Mathbin.Algebra.Lie.NonUnitalNonAssocAlgebra
+import Mathbin.Algebra.Lie.Normalizer
 import Mathbin.Algebra.Lie.OfAssociative
 import Mathbin.Algebra.Lie.Quotient
 import Mathbin.Algebra.Lie.Semisimple
@@ -1325,6 +1325,7 @@ import Mathbin.Data.Fintype.Perm
 import Mathbin.Data.Fintype.Pi
 import Mathbin.Data.Fintype.Powerset
 import Mathbin.Data.Fintype.Prod
+import Mathbin.Data.Fintype.Quotient
 import Mathbin.Data.Fintype.Sigma
 import Mathbin.Data.Fintype.Small
 import Mathbin.Data.Fintype.Sort
@@ -1970,7 +1971,6 @@ import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
-import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.LinearAlgebra.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Isomorphisms
 import Mathbin.LinearAlgebra.Lagrange
@@ -1993,6 +1993,7 @@ import Mathbin.LinearAlgebra.Matrix.Diagonal
 import Mathbin.LinearAlgebra.Matrix.DotProduct
 import Mathbin.LinearAlgebra.Matrix.Dual
 import Mathbin.LinearAlgebra.Matrix.FiniteDimensional
+import Mathbin.LinearAlgebra.Matrix.GeneralLinearGroup
 import Mathbin.LinearAlgebra.Matrix.Hermitian
 import Mathbin.LinearAlgebra.Matrix.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Matrix.IsDiag
@@ -2006,6 +2007,7 @@ import Mathbin.LinearAlgebra.Matrix.PosDef
 import Mathbin.LinearAlgebra.Matrix.Reindex
 import Mathbin.LinearAlgebra.Matrix.SchurComplement
 import Mathbin.LinearAlgebra.Matrix.SesquilinearForm
+import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
 import Mathbin.LinearAlgebra.Matrix.Spectrum
 import Mathbin.LinearAlgebra.Matrix.Symmetric
 import Mathbin.LinearAlgebra.Matrix.ToLin
@@ -2036,7 +2038,6 @@ import Mathbin.LinearAlgebra.Ray
 import Mathbin.LinearAlgebra.SesquilinearForm
 import Mathbin.LinearAlgebra.Smodeq
 import Mathbin.LinearAlgebra.Span
-import Mathbin.LinearAlgebra.SpecialLinearGroup
 import Mathbin.LinearAlgebra.StdBasis
 import Mathbin.LinearAlgebra.SymplecticGroup
 import Mathbin.LinearAlgebra.TensorAlgebra.Basic
@@ -2480,6 +2481,7 @@ import Mathbin.RingTheory.DedekindDomain.Dvr
 import Mathbin.RingTheory.DedekindDomain.Factorization
 import Mathbin.RingTheory.DedekindDomain.Ideal
 import Mathbin.RingTheory.DedekindDomain.IntegralClosure
+import Mathbin.RingTheory.DedekindDomain.Pid
 import Mathbin.RingTheory.DedekindDomain.SelmerGroup
 import Mathbin.RingTheory.Derivation
 import Mathbin.RingTheory.DiscreteValuationRing
@@ -2941,6 +2943,7 @@ import Mathbin.Topology.Homotopy.Path
 import Mathbin.Topology.Homotopy.Product
 import Mathbin.Topology.Inseparable
 import Mathbin.Topology.Instances.AddCircle
+import Mathbin.Topology.Instances.Complex
 import Mathbin.Topology.Instances.Discrete
 import Mathbin.Topology.Instances.Ennreal
 import Mathbin.Topology.Instances.Ereal
@@ -2981,6 +2984,7 @@ import Mathbin.Topology.MetricSpace.HausdorffDimension
 import Mathbin.Topology.MetricSpace.HausdorffDistance
 import Mathbin.Topology.MetricSpace.Holder
 import Mathbin.Topology.MetricSpace.Infsep
+import Mathbin.Topology.MetricSpace.IsometricSmul
 import Mathbin.Topology.MetricSpace.Isometry
 import Mathbin.Topology.MetricSpace.Kuratowski
 import Mathbin.Topology.MetricSpace.Lipschitz

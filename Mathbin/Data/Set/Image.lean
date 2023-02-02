@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,13 +36,13 @@ set, sets, image, preimage, pre-image, range
 -/
 
 
+open Function Set
+
 universe u v
 
-open Function
+variable {α β γ : Type _} {ι ι' : Sort _}
 
 namespace Set
-
-variable {α β γ : Type _} {ι : Sort _}
 
 /-! ### Inverse image -/
 
@@ -2182,7 +2182,7 @@ end Set
 
 namespace Function
 
-variable {ι : Sort _} {α : Type _} {β : Type _} {f : α → β}
+variable {f : α → β}
 
 open Set
 
@@ -2287,11 +2287,11 @@ theorem Surjective.preimage_subset_preimage_iff {s t : Set β} (hf : Surjective 
 
 /- warning: function.surjective.range_comp -> Function.Surjective.range_comp is a dubious translation:
 lean 3 declaration is
-  forall {ι : Sort.{u1}} {α : Type.{u2}} {ι' : Sort.{u3}} {f : ι -> ι'}, (Function.Surjective.{u1, u3} ι ι' f) -> (forall (g : ι' -> α), Eq.{succ u2} (Set.{u2} α) (Set.range.{u2, u1} α ι (Function.comp.{u1, u3, succ u2} ι ι' α g f)) (Set.range.{u2, u3} α ι' g))
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} {f : ι -> ι'}, (Function.Surjective.{u2, u3} ι ι' f) -> (forall (g : ι' -> α), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, u2} α ι (Function.comp.{u2, u3, succ u1} ι ι' α g f)) (Set.range.{u1, u3} α ι' g))
 but is expected to have type
-  forall {ι : Sort.{u2}} {α : Type.{u1}} {ι' : Sort.{u3}} {f : ι -> ι'}, (Function.Surjective.{u2, u3} ι ι' f) -> (forall (g : ι' -> α), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, u2} α ι (Function.comp.{u2, u3, succ u1} ι ι' α g f)) (Set.range.{u1, u3} α ι' g))
+  forall {α : Sort.{u2}} {ι : Type.{u1}} {ι' : Sort.{u3}} {f : α -> ι'}, (Function.Surjective.{u2, u3} α ι' f) -> (forall (g : ι' -> ι), Eq.{succ u1} (Set.{u1} ι) (Set.range.{u1, u2} ι α (Function.comp.{u2, u3, succ u1} α ι' ι g f)) (Set.range.{u1, u3} ι ι' g))
 Case conversion may be inaccurate. Consider using '#align function.surjective.range_comp Function.Surjective.range_compₓ'. -/
-theorem Surjective.range_comp {ι' : Sort _} {f : ι → ι'} (hf : Surjective f) (g : ι' → α) :
+theorem Surjective.range_comp {f : ι → ι'} (hf : Surjective f) (g : ι' → α) :
     range (g ∘ f) = range g :=
   ext fun y => (@Surjective.exists _ _ _ hf fun x => g x = y).symm
 #align function.surjective.range_comp Function.Surjective.range_comp
@@ -2355,14 +2355,25 @@ theorem LeftInverse.preimage_preimage {g : β → α} (h : LeftInverse g f) (s :
 
 end Function
 
+namespace EquivLike
+
+variable {E : Type _} [EquivLike E ι ι']
+
+include ι
+
+@[simp]
+theorem range_comp (f : ι' → α) (e : E) : Set.range (f ∘ e) = Set.range f :=
+  (EquivLike.surjective _).range_comp _
+#align equiv_like.range_comp EquivLike.range_comp
+
+end EquivLike
+
 /-! ### Image and preimage on subtypes -/
 
 
 namespace Subtype
 
 open Set
-
-variable {α : Type _}
 
 #print Subtype.coe_image /-
 theorem coe_image {p : α → Prop} {s : Set (Subtype p)} :
@@ -2612,7 +2623,7 @@ open Function
 
 section ImagePreimage
 
-variable {α : Type u} {β : Type v} {f : α → β}
+variable {f : α → β}
 
 #print Set.preimage_injective /-
 @[simp]
@@ -2679,7 +2690,7 @@ end Set
 
 section Disjoint
 
-variable {α β γ : Type _} {f : α → β} {s t : Set α}
+variable {f : α → β} {s t : Set α}
 
 /- warning: disjoint.preimage -> Disjoint.preimage is a dubious translation:
 lean 3 declaration is

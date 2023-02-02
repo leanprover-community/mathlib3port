@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu, Jack McKoen
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_subring
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -336,17 +336,17 @@ def ofPrime (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] : ValuationSubrin
 #align valuation_subring.of_prime ValuationSubring.ofPrime
 
 instance ofPrimeAlgebra (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
-    Algebra A (A.ofPrime P) :=
+    Algebra A (A.of_prime P) :=
   Subalgebra.algebra _
 #align valuation_subring.of_prime_algebra ValuationSubring.ofPrimeAlgebra
 
 instance ofPrime_scalar_tower (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
-    IsScalarTower A (A.ofPrime P) K :=
+    IsScalarTower A (A.of_prime P) K :=
   IsScalarTower.subalgebra' A K K _
 #align valuation_subring.of_prime_scalar_tower ValuationSubring.ofPrime_scalar_tower
 
 instance ofPrime_localization (A : ValuationSubring K) (P : Ideal A) [P.IsPrime] :
-    IsLocalization.AtPrime (A.ofPrime P) P := by
+    IsLocalization.AtPrime (A.of_prime P) P := by
   apply
     Localization.subalgebra.isLocalization_ofField K P.prime_compl
       P.prime_compl_le_non_zero_divisors

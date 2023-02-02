@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.nilpotent
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Lie.Solvable
 import Mathbin.Algebra.Lie.Quotient
-import Mathbin.Algebra.Lie.Centralizer
+import Mathbin.Algebra.Lie.Normalizer
 import Mathbin.LinearAlgebra.Eigenspace
 import Mathbin.RingTheory.Nilpotent
 
@@ -384,7 +384,7 @@ variable {N₁ N₂ : LieSubmodule R L M}
 
 See also `lie_submodule.lcs`. -/
 def ucs (k : ℕ) : LieSubmodule R L M → LieSubmodule R L M :=
-  centralizer^[k]
+  normalizer^[k]
 #align lie_submodule.ucs LieSubmodule.ucs
 
 @[simp]
@@ -393,12 +393,12 @@ theorem ucs_zero : N.ucs 0 = N :=
 #align lie_submodule.ucs_zero LieSubmodule.ucs_zero
 
 @[simp]
-theorem ucs_succ (k : ℕ) : N.ucs (k + 1) = (N.ucs k).centralizer :=
-  Function.iterate_succ_apply' centralizer k N
+theorem ucs_succ (k : ℕ) : N.ucs (k + 1) = (N.ucs k).normalizer :=
+  Function.iterate_succ_apply' normalizer k N
 #align lie_submodule.ucs_succ LieSubmodule.ucs_succ
 
 theorem ucs_add (k l : ℕ) : N.ucs (k + l) = (N.ucs l).ucs k :=
-  Function.iterate_add_apply centralizer k l N
+  Function.iterate_add_apply normalizer k l N
 #align lie_submodule.ucs_add LieSubmodule.ucs_add
 
 @[mono]
@@ -409,32 +409,32 @@ theorem ucs_mono (k : ℕ) (h : N₁ ≤ N₂) : N₁.ucs k ≤ N₂.ucs k :=
   mono
 #align lie_submodule.ucs_mono LieSubmodule.ucs_mono
 
-theorem ucs_eq_self_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) : N₁.ucs k = N₁ :=
+theorem ucs_eq_self_of_normalizer_eq_self (h : N₁.normalizer = N₁) (k : ℕ) : N₁.ucs k = N₁ :=
   by
   induction' k with k ih
   · simp
   · rwa [ucs_succ, ih]
-#align lie_submodule.ucs_eq_self_of_centralizer_eq_self LieSubmodule.ucs_eq_self_of_centralizer_eq_self
+#align lie_submodule.ucs_eq_self_of_normalizer_eq_self LieSubmodule.ucs_eq_self_of_normalizer_eq_self
 
-/-- If a Lie module `M` contains a self-centralizing Lie submodule `N`, then all terms of the upper
+/-- If a Lie module `M` contains a self-normalizing Lie submodule `N`, then all terms of the upper
 central series of `M` are contained in `N`.
 
 An important instance of this situation arises from a Cartan subalgebra `H ⊆ L` with the roles of
 `L`, `M`, `N` played by `H`, `L`, `H`, respectively. -/
-theorem ucs_le_of_centralizer_eq_self (h : N₁.centralizer = N₁) (k : ℕ) :
+theorem ucs_le_of_normalizer_eq_self (h : N₁.normalizer = N₁) (k : ℕ) :
     (⊥ : LieSubmodule R L M).ucs k ≤ N₁ :=
   by
-  rw [← ucs_eq_self_of_centralizer_eq_self h k]
+  rw [← ucs_eq_self_of_normalizer_eq_self h k]
   mono
   simp
-#align lie_submodule.ucs_le_of_centralizer_eq_self LieSubmodule.ucs_le_of_centralizer_eq_self
+#align lie_submodule.ucs_le_of_normalizer_eq_self LieSubmodule.ucs_le_of_normalizer_eq_self
 
 theorem lcs_add_le_iff (l k : ℕ) : N₁.lcs (l + k) ≤ N₂ ↔ N₁.lcs l ≤ N₂.ucs k :=
   by
   revert l
   induction' k with k ih; · simp
   intro l
-  rw [(by abel : l + (k + 1) = l + 1 + k), ih, ucs_succ, lcs_succ, top_lie_le_iff_le_centralizer]
+  rw [(by abel : l + (k + 1) = l + 1 + k), ih, ucs_succ, lcs_succ, top_lie_le_iff_le_normalizer]
 #align lie_submodule.lcs_add_le_iff LieSubmodule.lcs_add_le_iff
 
 theorem lcs_le_iff (k : ℕ) : N₁.lcs k ≤ N₂ ↔ N₁ ≤ N₂.ucs k :=

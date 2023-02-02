@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,21 +99,21 @@ theorem inv_norm_smul_mem_closed_unit_ball [NormedSpace ℝ β] (x : β) :
     div_self_le_one]
 #align inv_norm_smul_mem_closed_unit_ball inv_norm_smul_mem_closed_unit_ball
 
-theorem dist_smul [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s • y) = ‖s‖ * dist x y := by
+theorem dist_smul₀ [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s • y) = ‖s‖ * dist x y := by
   simp only [dist_eq_norm, (norm_smul _ _).symm, smul_sub]
-#align dist_smul dist_smul
+#align dist_smul₀ dist_smul₀
 
 theorem nnnorm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖₊ = ‖s‖₊ * ‖x‖₊ :=
   Nnreal.eq <| norm_smul s x
 #align nnnorm_smul nnnorm_smul
 
-theorem nndist_smul [NormedSpace α β] (s : α) (x y : β) :
+theorem nndist_smul₀ [NormedSpace α β] (s : α) (x y : β) :
     nndist (s • x) (s • y) = ‖s‖₊ * nndist x y :=
-  Nnreal.eq <| dist_smul s x y
-#align nndist_smul nndist_smul
+  Nnreal.eq <| dist_smul₀ s x y
+#align nndist_smul₀ nndist_smul₀
 
 theorem lipschitzWith_smul [NormedSpace α β] (s : α) : LipschitzWith ‖s‖₊ ((· • ·) s : β → β) :=
-  lipschitzWith_iff_dist_le_mul.2 fun x y => by rw [dist_smul, coe_nnnorm]
+  lipschitzWith_iff_dist_le_mul.2 fun x y => by rw [dist_smul₀, coe_nnnorm]
 #align lipschitz_with_smul lipschitzWith_smul
 
 theorem norm_smul_of_nonneg [NormedSpace ℝ β] {t : ℝ} (ht : 0 ≤ t) (x : β) : ‖t • x‖ = t * ‖x‖ := by

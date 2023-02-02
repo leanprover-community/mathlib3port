@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,6 +326,12 @@ instance : IsCoatomic (Ideal α) :=
   apply CompleteLattice.coatomic_of_top_compact
   rw [← span_singleton_one]
   exact Submodule.singleton_span_isCompactElement 1
+
+theorem IsMaximal.coprime_of_ne {M M' : Ideal α} (hM : M.IsMaximal) (hM' : M'.IsMaximal)
+    (hne : M ≠ M') : M ⊔ M' = ⊤ := by
+  contrapose! hne with h
+  exact hM.eq_of_le hM'.ne_top (le_sup_left.trans_eq (hM'.eq_of_le h le_sup_right).symm)
+#align ideal.is_maximal.coprime_of_ne Ideal.IsMaximal.coprime_of_ne
 
 /-- **Krull's theorem**: if `I` is an ideal that is not the whole ring, then it is included in some
     maximal ideal. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.fractional_ideal
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -660,6 +660,11 @@ theorem le_one_iff_exists_coe_ideal {J : FractionalIdeal S P} :
     rw [← hI]
     apply coe_ideal_le_one
 #align fractional_ideal.le_one_iff_exists_coe_ideal FractionalIdeal.le_one_iff_exists_coe_ideal
+
+@[simp]
+theorem one_le {I : FractionalIdeal S P} : 1 ≤ I ↔ (1 : P) ∈ I := by
+  rw [← coe_le_coe, coe_one, Submodule.one_le, mem_coe]
+#align fractional_ideal.one_le FractionalIdeal.one_le
 
 variable (S P)
 
@@ -1334,6 +1339,12 @@ theorem mem_spanSingleton_self (x : P) : x ∈ spanSingleton S x :=
 #align fractional_ideal.mem_span_singleton_self FractionalIdeal.mem_spanSingleton_self
 
 variable {S}
+
+@[simp]
+theorem spanSingleton_le_iff_mem {x : P} {I : FractionalIdeal S P} :
+    spanSingleton S x ≤ I ↔ x ∈ I := by
+  rw [← coe_le_coe, coe_span_singleton, Submodule.span_singleton_le_iff_mem x ↑I, mem_coe]
+#align fractional_ideal.span_singleton_le_iff_mem FractionalIdeal.spanSingleton_le_iff_mem
 
 theorem spanSingleton_eq_spanSingleton [NoZeroSMulDivisors R P] {x y : P} :
     spanSingleton S x = spanSingleton S y ↔ ∃ z : Rˣ, z • x = y :=

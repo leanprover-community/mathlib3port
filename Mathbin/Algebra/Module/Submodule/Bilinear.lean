@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.bilinear
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,6 +154,13 @@ theorem map₂_eq_span_image2 (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M
   rw [← map₂_span_span, span_eq, span_eq]
 #align submodule.map₂_eq_span_image2 Submodule.map₂_eq_span_image2
 
+theorem map₂_flip (f : M →ₗ[R] N →ₗ[R] P) (p : Submodule R M) (q : Submodule R N) :
+    map₂ f.flip q p = map₂ f p q :=
+  by
+  rw [map₂_eq_span_image2, map₂_eq_span_image2, Set.image2_swap]
+  rfl
+#align submodule.map₂_flip Submodule.map₂_flip
+
 theorem map₂_supᵢ_left (f : M →ₗ[R] N →ₗ[R] P) (s : ι → Submodule R M) (t : Submodule R N) :
     map₂ f (⨆ i, s i) t = ⨆ i, map₂ f (s i) t :=
   by
@@ -169,6 +176,22 @@ theorem map₂_supᵢ_right (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) 
     simpa only [span_eq] using this
   simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_right]
 #align submodule.map₂_supr_right Submodule.map₂_supᵢ_right
+
+theorem map₂_span_singleton_eq_map (f : M →ₗ[R] N →ₗ[R] P) (m : M) :
+    map₂ f (span R {m}) = map (f m) := by
+  funext; rw [map₂_eq_span_image2]; apply le_antisymm
+  · rw [span_le, Set.image2_subset_iff]
+    intro x hx y hy
+    obtain ⟨a, rfl⟩ := mem_span_singleton.1 hx
+    rw [f.map_smul]
+    exact smul_mem _ a (mem_map_of_mem hy)
+  · rintro _ ⟨n, hn, rfl⟩
+    exact subset_span ⟨m, n, mem_span_singleton_self m, hn, rfl⟩
+#align submodule.map₂_span_singleton_eq_map Submodule.map₂_span_singleton_eq_map
+
+theorem map₂_span_singleton_eq_map_flip (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) (n : N) :
+    map₂ f s (span R {n}) = map (f.flip n) s := by rw [← map₂_span_singleton_eq_map, map₂_flip]
+#align submodule.map₂_span_singleton_eq_map_flip Submodule.map₂_span_singleton_eq_map_flip
 
 end Submodule
 

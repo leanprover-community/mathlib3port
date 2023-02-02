@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.algebra.operations
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,6 +379,18 @@ theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈
 #align submodule.mem_span_mul_finite_of_mem_mul Submodule.mem_span_mul_finite_of_mem_mul
 
 variable {M N P}
+
+theorem mem_span_singleton_mul {x y : A} : x ∈ span R {y} * P ↔ ∃ z ∈ P, y * z = x :=
+  by
+  simp_rw [(· * ·), map₂_span_singleton_eq_map, exists_prop]
+  rfl
+#align submodule.mem_span_singleton_mul Submodule.mem_span_singleton_mul
+
+theorem mem_mul_span_singleton {x y : A} : x ∈ P * span R {y} ↔ ∃ z ∈ P, z * y = x :=
+  by
+  simp_rw [(· * ·), map₂_span_singleton_eq_map_flip, exists_prop]
+  rfl
+#align submodule.mem_mul_span_singleton Submodule.mem_mul_span_singleton
 
 /-- Sub-R-modules of an R-algebra form a semiring. -/
 instance : Semiring (Submodule R A) :=

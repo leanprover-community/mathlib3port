@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.spectrum
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,12 +113,12 @@ theorem spectral_theorem :
       PiLp.equiv_single, LinearMap.stdBasis, LinearMap.coe_single, PiLp.equiv_symm_single,
       LinearEquiv.symm_symm, eigenvector_basis, to_lin'_apply]
     simp only [Basis.toMatrix, Basis.coe_toOrthonormalBasis_repr, Basis.equivFun_apply]
-    simp_rw [OrthonormalBasis.coe_toBasis_repr_apply, OrthonormalBasis.reindex_repr,
+    simp_rw [OrthonormalBasis.coe_toBasis_repr_apply, OrthonormalBasis.repr_reindex,
       LinearEquiv.symm_symm, PiLp.linearEquiv_apply, PiLp.equiv_single, mul_vec_single, mul_one]
     rfl
   · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]
     rw [Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
-      OrthonormalBasis.reindex_repr, eigenvalues₀, PiLp.basisFun_apply, PiLp.equiv_symm_single]
+      OrthonormalBasis.repr_reindex, eigenvalues₀, PiLp.basisFun_apply, PiLp.equiv_symm_single]
 #align matrix.is_hermitian.spectral_theorem Matrix.IsHermitian.spectral_theorem
 
 theorem eigenvalues_eq (i : n) :

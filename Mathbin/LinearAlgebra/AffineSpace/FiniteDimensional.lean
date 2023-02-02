@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.finite_dimensional
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -288,6 +288,12 @@ theorem AffineIndependent.affineSpan_eq_top_iff_card_eq_finrank_add_one [FiniteD
     rw [← finrank_top, ← direction_top k V P] at hc
     exact hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc
 #align affine_independent.affine_span_eq_top_iff_card_eq_finrank_add_one AffineIndependent.affineSpan_eq_top_iff_card_eq_finrank_add_one
+
+theorem Affine.Simplex.span_eq_top [FiniteDimensional k V] {n : ℕ} (T : Affine.Simplex k V n)
+    (hrank : finrank k V = n) : affineSpan k (Set.range T.points) = ⊤ := by
+  rw [AffineIndependent.affineSpan_eq_top_iff_card_eq_finrank_add_one T.independent,
+    Fintype.card_fin, hrank]
+#align affine.simplex.span_eq_top Affine.Simplex.span_eq_top
 
 /-- The `vector_span` of adding a point to a finite-dimensional subspace is finite-dimensional. -/
 instance finiteDimensional_vectorSpan_insert (s : AffineSubspace k P)
@@ -824,7 +830,7 @@ theorem exists_affineBasis_of_finiteDimensional [Fintype ι] [FiniteDimensional 
   by
   obtain ⟨s, b, hb⟩ := AffineBasis.exists_affineBasis k V P
   lift s to Finset P using b.finite_set
-  refine' ⟨b.comp_equiv <| Fintype.equivOfCardEq _⟩
+  refine' ⟨b.reindex <| Fintype.equivOfCardEq _⟩
   rw [h, ← b.card_eq_finrank_add_one]
 #align affine_basis.exists_affine_basis_of_finite_dimensional AffineBasis.exists_affineBasis_of_finiteDimensional
 

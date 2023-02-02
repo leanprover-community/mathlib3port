@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.Data.Complex.Basic
 import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathbin.NumberTheory.NumberField.Basic
+import Mathbin.Topology.Instances.Complex
 
 /-!
 # Embeddings of number fields
@@ -290,6 +291,91 @@ theorem mk_embedding (w : InfinitePlace K) : mk (embedding w) = w :=
 theorem pos_iff (w : InfinitePlace K) (x : K) : 0 < w x ↔ x ≠ 0 :=
   AbsoluteValue.pos_iff w.1
 #align number_field.infinite_place.pos_iff NumberField.InfinitePlace.pos_iff
+
+@[simp]
+theorem mk_conjugate_eq (φ : K →+* ℂ) : mk (ComplexEmbedding.conjugate φ) = mk φ :=
+  by
+  ext x
+  exact congr_fun (congr_arg coeFn (complex_embedding.place_conjugate φ)) x
+#align number_field.infinite_place.mk_conjugate_eq NumberField.InfinitePlace.mk_conjugate_eq
+
+@[simp]
+theorem mk_eq_iff {φ ψ : K →+* ℂ} : mk φ = mk ψ ↔ φ = ψ ∨ ComplexEmbedding.conjugate φ = ψ :=
+  by
+  constructor
+  · -- We prove that the map ψ ∘ φ⁻¹ between φ(K) and ℂ is uniform continuous, thus it is either the
+    -- inclusion or the complex conjugation using complex.uniform_continuous_ring_hom_eq_id_or_conj
+    intro h₀
+    obtain ⟨j, hiφ⟩ := φ.injective.has_left_inverse
+    let ι := RingEquiv.ofLeftInverse hiφ
+    have hlip : LipschitzWith 1 (RingHom.comp ψ ι.symm.to_ring_hom) :=
+      by
+      change LipschitzWith 1 (ψ ∘ ι.symm)
+      apply LipschitzWith.of_dist_le_mul
+      intro x y
+      rw [Nonneg.coe_one, one_mul, NormedField.dist_eq, ← map_sub, ← map_sub]
+      apply le_of_eq
+      suffices ‖φ (ι.symm (x - y))‖ = ‖ψ (ι.symm (x - y))‖
+        by
+        rw [← this, ← RingEquiv.ofLeftInverse_apply hiφ _, RingEquiv.apply_symm_apply ι _]
+        rfl
+      exact congr_fun (congr_arg coeFn h₀) _
+    cases Complex.uniformContinuous_ringHom_eq_id_or_conj φ.field_range hlip.uniform_continuous
+    · left
+      ext1 x
+      convert (congr_fun h (ι x)).symm
+      exact (RingEquiv.apply_symm_apply ι.symm x).symm
+    · right
+      ext1 x
+      convert (congr_fun h (ι x)).symm
+      exact (RingEquiv.apply_symm_apply ι.symm x).symm
+  · rintro (⟨h⟩ | ⟨h⟩)
+    · exact congr_arg mk h
+    · rw [← mk_conjugate_eq]
+      exact congr_arg mk h
+#align number_field.infinite_place.mk_eq_iff NumberField.InfinitePlace.mk_eq_iff
+
+/-- An infinite place is real if it is defined by a real embedding. -/
+def IsReal (w : InfinitePlace K) : Prop :=
+  ∃ φ : K →+* ℂ, ComplexEmbedding.IsReal φ ∧ mk φ = w
+#align number_field.infinite_place.is_real NumberField.InfinitePlace.IsReal
+
+/-- An infinite place is complex if it is defined by a complex (ie. not real) embedding. -/
+def IsComplex (w : InfinitePlace K) : Prop :=
+  ∃ φ : K →+* ℂ, ¬ComplexEmbedding.IsReal φ ∧ mk φ = w
+#align number_field.infinite_place.is_complex NumberField.InfinitePlace.IsComplex
+
+theorem NumberField.ComplexEmbeddings.IsReal.embedding_mk {φ : K →+* ℂ}
+    (h : ComplexEmbedding.IsReal φ) : embedding (mk φ) = φ :=
+  by
+  have := mk_eq_iff.mp (mk_embedding (mk φ)).symm
+  rwa [complex_embedding.is_real_iff.mp h, or_self_iff, eq_comm] at this
+#align number_field.complex_embeddings.is_real.embedding_mk NumberField.ComplexEmbeddings.IsReal.embedding_mk
+
+theorem isReal_iff {w : InfinitePlace K} : IsReal w ↔ ComplexEmbedding.IsReal (embedding w) :=
+  by
+  constructor
+  · rintro ⟨φ, ⟨hφ, rfl⟩⟩
+    rwa [_root_.number_field.complex_embeddings.is_real.embedding_mk hφ]
+  · exact fun h => ⟨Embedding w, h, mk_embedding w⟩
+#align number_field.infinite_place.is_real_iff NumberField.InfinitePlace.isReal_iff
+
+theorem isComplex_iff {w : InfinitePlace K} :
+    IsComplex w ↔ ¬ComplexEmbedding.IsReal (embedding w) :=
+  by
+  constructor
+  · rintro ⟨φ, ⟨hφ, rfl⟩⟩
+    contrapose! hφ
+    cases mk_eq_iff.mp (mk_embedding (mk φ))
+    · rwa [← h]
+    · rw [← complex_embedding.is_real_conjugate_iff] at hφ
+      rwa [← h]
+  · exact fun h => ⟨Embedding w, h, mk_embedding w⟩
+#align number_field.infinite_place.is_complex_iff NumberField.InfinitePlace.isComplex_iff
+
+theorem not_isReal_iff_isComplex {w : InfinitePlace K} : ¬IsReal w ↔ IsComplex w := by
+  rw [is_complex_iff, is_real_iff]
+#align number_field.infinite_place.not_is_real_iff_is_complex NumberField.InfinitePlace.not_isReal_iff_isComplex
 
 end NumberField.InfinitePlace
 

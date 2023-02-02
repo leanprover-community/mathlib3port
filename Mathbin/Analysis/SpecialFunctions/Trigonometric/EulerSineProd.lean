@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.euler_sine_prod
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.SpecialFunctions.Integrals
-import Mathbin.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathbin.Data.Real.Pi.Wallis
+import Mathbin.MeasureTheory.Integral.PeakFunction
 
 /-! # Euler's infinite product for the sine function
 
@@ -301,6 +300,88 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
 #align euler_sine.sin_pi_mul_eq EulerSine.sin_pi_mul_eq
 
 end IntegralRecursion
+
+/-! ## Conclusion of the proof
+
+The main theorem `complex.tendsto_euler_sin_prod`, and its real variant
+`real.tendsto_euler_sin_prod`, now follow by combining `sin_pi_mul_eq` with a lemma
+stating that the sequence of measures on `[0, π/2]` given by integration against `cos x ^ n`
+(suitably normalised) tends to the Dirac measure at 0, as a special case of the general result
+`tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`. -/
+
+
+theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f (Icc 0 (π / 2))) :
+    Tendsto
+      (fun n : ℕ => (∫ x : ℝ in 0 ..π / 2, ↑(cos x) ^ n * f x) / ↑(∫ x : ℝ in 0 ..π / 2, cos x ^ n))
+      atTop (𝓝 <| f 0) :=
+  by
+  simp_rw [div_eq_inv_mul _ (coe _), ← Complex.of_real_inv, integral_of_le pi_div_two_pos.le, ←
+    MeasureTheory.integral_Icc_eq_integral_Ioc, ← Complex.of_real_pow, ← Complex.real_smul]
+  have c_lt : ∀ y : ℝ, y ∈ Icc 0 (π / 2) → y ≠ 0 → cos y < cos 0 := fun y hy hy' =>
+    cos_lt_cos_of_nonneg_of_le_pi_div_two (le_refl 0) hy.2 (lt_of_le_of_ne hy.1 hy'.symm)
+  have c_nonneg : ∀ x : ℝ, x ∈ Icc 0 (π / 2) → 0 ≤ cos x := fun x hx =>
+    cos_nonneg_of_mem_Icc ((Icc_subset_Icc_left (neg_nonpos_of_nonneg pi_div_two_pos.le)) hx)
+  have c_zero_pos : 0 < cos 0 := by
+    rw [cos_zero]
+    exact zero_lt_one
+  have zero_mem : (0 : ℝ) ∈ closure (interior (Icc 0 (π / 2))) :=
+    by
+    rw [interior_Icc, closure_Ioo pi_div_two_pos.ne, left_mem_Icc]
+    exact pi_div_two_pos.le
+  exact
+    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn is_compact_Icc
+      continuous_on_cos c_lt c_nonneg c_zero_pos zero_mem hf
+#align euler_sine.tendsto_integral_cos_pow_mul_div EulerSine.tendsto_integral_cos_pow_mul_div
+
+/-- Euler's infinite product formula for the complex sine function. -/
+theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
+    Tendsto (fun n : ℕ => ↑π * z * ∏ j in Finset.range n, 1 - z ^ 2 / (j + 1) ^ 2) atTop
+      (𝓝 <| Complex.sin (π * z)) :=
+  by
+  have A :
+    tendsto
+      (fun n : ℕ =>
+        ((↑π * z * ∏ j in Finset.range n, 1 - z ^ 2 / (j + 1) ^ 2) *
+            ∫ x in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ (2 * n)) /
+          ↑(∫ x in 0 ..π / 2, cos x ^ (2 * n)))
+      at_top (𝓝 <| _) :=
+    tendsto.congr (fun n => sin_pi_mul_eq z n) tendsto_const_nhds
+  have : 𝓝 (Complex.sin (π * z)) = 𝓝 (Complex.sin (π * z) * 1) := by rw [mul_one]
+  simp_rw [this, mul_div_assoc] at A
+  convert (tendsto_mul_iff_of_ne_zero _ one_ne_zero).mp A
+  suffices :
+    tendsto
+      (fun n : ℕ =>
+        (∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n) /
+          ↑(∫ x : ℝ in 0 ..π / 2, cos x ^ n))
+      at_top (𝓝 1)
+  exact this.comp (tendsto_id.const_mul_at_top' zero_lt_two)
+  have : ContinuousOn (fun x : ℝ => Complex.cos (2 * z * x)) (Icc 0 (π / 2)) :=
+    (complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)).ContinuousOn
+  convert tendsto_integral_cos_pow_mul_div this
+  · ext1 n
+    congr 2 with x : 1
+    rw [mul_comm]
+  · rw [Complex.of_real_zero, mul_zero, Complex.cos_zero]
+#align complex.tendsto_euler_sin_prod Complex.tendsto_euler_sin_prod
+
+/-- Euler's infinite product formula for the real sine function. -/
+theorem Real.tendsto_euler_sin_prod (x : ℝ) :
+    Tendsto (fun n : ℕ => π * x * ∏ j in Finset.range n, 1 - x ^ 2 / (j + 1) ^ 2) atTop
+      (𝓝 <| sin (π * x)) :=
+  by
+  convert (complex.continuous_re.tendsto _).comp (Complex.tendsto_euler_sin_prod x)
+  · ext1 n
+    rw [Function.comp_apply, ← Complex.of_real_mul, Complex.of_real_mul_re]
+    suffices
+      (∏ j : ℕ in Finset.range n, 1 - (x : ℂ) ^ 2 / (↑j + 1) ^ 2) =
+        ↑(∏ j : ℕ in Finset.range n, 1 - x ^ 2 / (↑j + 1) ^ 2)
+      by rw [this, Complex.of_real_re]
+    rw [Complex.of_real_prod]
+    refine' Finset.prod_congr (by rfl) fun n hn => _
+    norm_cast
+  · rw [← Complex.of_real_mul, ← Complex.of_real_sin, Complex.of_real_re]
+#align real.tendsto_euler_sin_prod Real.tendsto_euler_sin_prod
 
 end EulerSine
 

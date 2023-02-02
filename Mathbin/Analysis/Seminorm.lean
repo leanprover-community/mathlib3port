@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yaël Dillies, Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.seminorm
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -756,13 +756,13 @@ theorem sub_mem_ball (p : Seminorm 𝕜 E) (x₁ x₂ y : E) (r : ℝ) :
 /-- The image of a ball under addition with a singleton is another ball. -/
 theorem vadd_ball (p : Seminorm 𝕜 E) : x +ᵥ p.ball y r = p.ball (x +ᵥ y) r :=
   letI := AddGroupSeminorm.toSeminormedAddCommGroup p.to_add_group_seminorm
-  vadd_ball x y r
+  Metric.vadd_ball x y r
 #align seminorm.vadd_ball Seminorm.vadd_ball
 
 /-- The image of a closed ball under addition with a singleton is another closed ball. -/
 theorem vadd_closedBall (p : Seminorm 𝕜 E) : x +ᵥ p.closedBall y r = p.closedBall (x +ᵥ y) r :=
   letI := AddGroupSeminorm.toSeminormedAddCommGroup p.to_add_group_seminorm
-  vadd_closedBall x y r
+  Metric.vadd_closedBall x y r
 #align seminorm.vadd_closed_ball Seminorm.vadd_closedBall
 
 end SMul

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1443,6 +1443,50 @@ noncomputable def Ideal.quotientMulEquivQuotientProd (I J : Ideal R) (coprime : 
   RingEquiv.trans (Ideal.quotEquivOfEq (inf_eq_mul_of_coprime coprime).symm)
     (Ideal.quotientInfEquivQuotientProd I J coprime)
 #align ideal.quotient_mul_equiv_quotient_prod Ideal.quotientMulEquivQuotientProd
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/-- **Chinese remainder theorem** for a Dedekind domain: if the ideal `I` factors as
+`∏ i in s, P i ^ e i`, then `R ⧸ I` factors as `Π (i : s), R ⧸ (P i ^ e i)`.
+
+This is a version of `is_dedekind_domain.quotient_equiv_pi_of_prod_eq` where we restrict
+the product to a finite subset `s` of a potentially infinite indexing type `ι`.
+-/
+noncomputable def IsDedekindDomain.quotientEquivPiOfFinsetProdEq {ι : Type _} {s : Finset ι}
+    (I : Ideal R) (P : ι → Ideal R) (e : ι → ℕ) (prime : ∀ i ∈ s, Prime (P i))
+    (coprime : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → P i ≠ P j)
+    (prod_eq : (∏ i in s, P i ^ e i) = I) : R ⧸ I ≃+* ∀ i : s, R ⧸ P i ^ e i :=
+  IsDedekindDomain.quotientEquivPiOfProdEq I (fun i : s => P i) (fun i : s => e i)
+    (fun i => Prime i i.2) (fun i j h => coprime i i.2 j j.2 (Subtype.coe_injective.Ne h))
+    (trans (Finset.prod_coe_sort s fun i => P i ^ e i) prod_eq)
+#align is_dedekind_domain.quotient_equiv_pi_of_finset_prod_eq IsDedekindDomain.quotientEquivPiOfFinsetProdEq
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/-- Corollary of the Chinese remainder theorem: given elements `x i : R / P i ^ e i`,
+we can choose a representative `y : R` such that `y ≡ x i (mod P i ^ e i)`.-/
+theorem IsDedekindDomain.exists_representative_mod_finset {ι : Type _} {s : Finset ι}
+    (P : ι → Ideal R) (e : ι → ℕ) (prime : ∀ i ∈ s, Prime (P i))
+    (coprime : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → P i ≠ P j) (x : ∀ i : s, R ⧸ P i ^ e i) :
+    ∃ y, ∀ (i) (hi : i ∈ s), Ideal.Quotient.mk (P i ^ e i) y = x ⟨i, hi⟩ :=
+  by
+  let f := IsDedekindDomain.quotientEquivPiOfFinsetProdEq _ P e Prime coprime rfl
+  obtain ⟨y, rfl⟩ := f.surjective x
+  obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective y
+  exact ⟨z, fun i hi => rfl⟩
+#align is_dedekind_domain.exists_representative_mod_finset IsDedekindDomain.exists_representative_mod_finset
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+/-- Corollary of the Chinese remainder theorem: given elements `x i : R`,
+we can choose a representative `y : R` such that `y - x i ∈ P i ^ e i`.-/
+theorem IsDedekindDomain.exists_forall_sub_mem_ideal {ι : Type _} {s : Finset ι} (P : ι → Ideal R)
+    (e : ι → ℕ) (prime : ∀ i ∈ s, Prime (P i))
+    (coprime : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → P i ≠ P j) (x : s → R) :
+    ∃ y, ∀ (i) (hi : i ∈ s), y - x ⟨i, hi⟩ ∈ P i ^ e i :=
+  by
+  obtain ⟨y, hy⟩ :=
+    IsDedekindDomain.exists_representative_mod_finset P e Prime coprime fun i =>
+      Ideal.Quotient.mk _ (x i)
+  exact ⟨y, fun i hi => ideal.quotient.eq.mp (hy i hi)⟩
+#align is_dedekind_domain.exists_forall_sub_mem_ideal IsDedekindDomain.exists_forall_sub_mem_ideal
 
 end DedekindDomain
 

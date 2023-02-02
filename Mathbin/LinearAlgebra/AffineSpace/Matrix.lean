@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.matrix
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem toMatrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) :
 #align affine_basis.to_matrix_apply AffineBasis.toMatrix_apply
 
 @[simp]
-theorem toMatrix_self [DecidableEq ι] : b.toMatrix b.points = (1 : Matrix ι ι k) :=
+theorem toMatrix_self [DecidableEq ι] : b.toMatrix b = (1 : Matrix ι ι k) :=
   by
   ext (i j)
   rw [to_matrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
@@ -85,7 +85,7 @@ coordinates of `p` with respect `b` has a left inverse, then `p` spans the entir
 theorem affineSpan_eq_top_of_toMatrix_left_inv [DecidableEq ι] [Nontrivial k] (p : ι' → P)
     {A : Matrix ι ι' k} (hA : A ⬝ b.toMatrix p = 1) : affineSpan k (range p) = ⊤ :=
   by
-  suffices ∀ i, b.points i ∈ affineSpan k (range p)
+  suffices ∀ i, b i ∈ affineSpan k (range p)
     by
     rw [eq_top_iff, ← b.tot, affineSpan_le]
     rintro q ⟨i, rfl⟩
@@ -99,7 +99,7 @@ theorem affineSpan_eq_top_of_toMatrix_left_inv [DecidableEq ι] [Nontrivial k] (
       _ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl
       _ = 1 := by simp [hA, Matrix.one_apply, Finset.filter_eq]
       
-  have hbi : b.points i = finset.univ.affine_combination p (A i) :=
+  have hbi : b i = finset.univ.affine_combination p (A i) :=
     by
     apply b.ext_elem
     intro j
@@ -115,7 +115,7 @@ theorem affineSpan_eq_top_of_toMatrix_left_inv [DecidableEq ι] [Nontrivial k] (
 
 See also `affine_basis.to_matrix_inv_mul_affine_basis_to_matrix`. -/
 @[simp]
-theorem toMatrix_vecMul_coords (x : P) : (b.toMatrix b₂.points).vecMul (b₂.coords x) = b.coords x :=
+theorem toMatrix_vecMul_coords (x : P) : (b.toMatrix b₂).vecMul (b₂.coords x) = b.coords x :=
   by
   ext j
   change _ = b.coord j x
@@ -126,16 +126,16 @@ theorem toMatrix_vecMul_coords (x : P) : (b.toMatrix b₂.points).vecMul (b₂.c
 
 variable [DecidableEq ι]
 
-theorem toMatrix_mul_toMatrix : b.toMatrix b₂.points ⬝ b₂.toMatrix b.points = 1 :=
+theorem toMatrix_mul_toMatrix : b.toMatrix b₂ ⬝ b₂.toMatrix b = 1 :=
   by
   ext (l m)
-  change (b₂.to_matrix b.points).vecMul (b.coords (b₂.points l)) m = _
+  change (b₂.to_matrix b).vecMul (b.coords (b₂ l)) m = _
   rw [to_matrix_vec_mul_coords, coords_apply, ← to_matrix_apply, to_matrix_self]
 #align affine_basis.to_matrix_mul_to_matrix AffineBasis.toMatrix_mul_toMatrix
 
-theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂.points) :=
-  ⟨{  val := b.toMatrix b₂.points
-      inv := b₂.toMatrix b.points
+theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂) :=
+  ⟨{  val := b.toMatrix b₂
+      inv := b₂.toMatrix b
       val_inv := b.toMatrix_mul_toMatrix b₂
       inv_val := b₂.toMatrix_mul_toMatrix b }, rfl⟩
 #align affine_basis.is_unit_to_matrix AffineBasis.isUnit_toMatrix
@@ -151,7 +151,7 @@ theorem isUnit_toMatrix_iff [Nontrivial k] (p : ι → P) :
         b.affine_span_eq_top_of_to_matrix_left_inv p hA'⟩
   · rintro ⟨h_tot, h_ind⟩
     let b' : AffineBasis ι k P := ⟨p, h_tot, h_ind⟩
-    change IsUnit (b.to_matrix b'.points)
+    change IsUnit (b.to_matrix b')
     exact b.is_unit_to_matrix b'
 #align affine_basis.is_unit_to_matrix_iff AffineBasis.isUnit_toMatrix_iff
 
@@ -168,7 +168,7 @@ variable (b b₂ : AffineBasis ι k P)
 See also `affine_basis.to_matrix_vec_mul_coords`. -/
 @[simp]
 theorem toMatrix_inv_vecMul_toMatrix (x : P) :
-    (b.toMatrix b₂.points)⁻¹.vecMul (b.coords x) = b₂.coords x :=
+    (b.toMatrix b₂)⁻¹.vecMul (b.coords x) = b₂.coords x :=
   by
   have hu := b.is_unit_to_matrix b₂
   rw [Matrix.isUnit_iff_isUnit_det] at hu
@@ -179,7 +179,7 @@ theorem toMatrix_inv_vecMul_toMatrix (x : P) :
 /-- If we fix a background affine basis `b`, then for any other basis `b₂`, we can characterise
 the barycentric coordinates provided by `b₂` in terms of determinants relative to `b`. -/
 theorem det_smul_coords_eq_cramer_coords (x : P) :
-    (b.toMatrix b₂.points).det • b₂.coords x = (b.toMatrix b₂.points)ᵀ.cramer (b.coords x) :=
+    (b.toMatrix b₂).det • b₂.coords x = (b.toMatrix b₂)ᵀ.cramer (b.coords x) :=
   by
   have hu := b.is_unit_to_matrix b₂
   rw [Matrix.isUnit_iff_isUnit_det] at hu

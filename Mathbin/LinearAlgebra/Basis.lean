@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.basis
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,8 +115,26 @@ variable (b b₁ : Basis ι R M) (i : ι) (c : R) (x : M)
 
 section repr
 
+theorem repr_injective : Injective (repr : Basis ι R M → M ≃ₗ[R] ι →₀ R) := fun f g h => by
+  cases f <;> cases g <;> congr
+#align basis.repr_injective Basis.repr_injective
+
 /-- `b i` is the `i`th basis vector. -/
-instance : CoeFun (Basis ι R M) fun _ => ι → M where coe b i := b.repr.symm (Finsupp.single i 1)
+instance funLike : FunLike (Basis ι R M) ι fun _ => M
+    where
+  coe b i := b.repr.symm (Finsupp.single i 1)
+  coe_injective' f g h :=
+    repr_injective <|
+      LinearEquiv.symm_bijective.Injective
+        (by
+          ext x
+          rw [← Finsupp.sum_single x, map_finsupp_sum, map_finsupp_sum]
+          congr with (i r)
+          have := congr_fun h i
+          dsimp at this
+          rw [← mul_one r, ← Finsupp.smul_single', LinearEquiv.map_smul, LinearEquiv.map_smul,
+            this])
+#align basis.fun_like Basis.funLike
 
 @[simp]
 theorem coe_of_repr (e : M ≃ₗ[R] ι →₀ R) : ⇑(of_repr e) = fun i => e.symm (Finsupp.single i 1) :=
@@ -330,23 +348,15 @@ theorem repr_apply_eq (f : M → ι → R) (hadd : ∀ x y, f (x + y) = f x + f 
 
 /-- Two bases are equal if they assign the same coordinates. -/
 theorem eq_of_repr_eq_repr {b₁ b₂ : Basis ι R M} (h : ∀ x i, b₁.repr x i = b₂.repr x i) : b₁ = b₂ :=
-  by
-  have : b₁.repr = b₂.repr := by
+  repr_injective <| by
     ext
     apply h
-  cases b₁
-  cases b₂
-  simpa
 #align basis.eq_of_repr_eq_repr Basis.eq_of_repr_eq_repr
 
 /-- Two bases are equal if their basis vectors are the same. -/
 @[ext]
-theorem eq_of_apply_eq {b₁ b₂ : Basis ι R M} (h : ∀ i, b₁ i = b₂ i) : b₁ = b₂ :=
-  suffices b₁.repr = b₂.repr by
-    cases b₁
-    cases b₂
-    simpa
-  repr_eq_iff'.mpr fun i => by rw [h, b₂.repr_self]
+theorem eq_of_apply_eq {b₁ b₂ : Basis ι R M} : (∀ i, b₁ i = b₂ i) → b₁ = b₂ :=
+  FunLike.ext _ _
 #align basis.eq_of_apply_eq Basis.eq_of_apply_eq
 
 end Ext
@@ -428,29 +438,32 @@ theorem coe_reindex : (b.reindex e : ι' → M) = b ∘ e.symm :=
   funext (b.reindex_apply e)
 #align basis.coe_reindex Basis.coe_reindex
 
-@[simp]
-theorem coe_reindex_repr : ((b.reindex e).repr x : ι' → R) = b.repr x ∘ e.symm :=
-  funext fun i' => show (Finsupp.domLcongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by simp
-#align basis.coe_reindex_repr Basis.coe_reindex_repr
+theorem repr_reindex_apply (i' : ι') : (b.reindex e).repr x i' = b.repr x (e.symm i') :=
+  show (Finsupp.domLcongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by simp
+#align basis.repr_reindex_apply Basis.repr_reindex_apply
 
 @[simp]
-theorem reindex_repr (i' : ι') : (b.reindex e).repr x i' = b.repr x (e.symm i') := by
-  rw [coe_reindex_repr]
-#align basis.reindex_repr Basis.reindex_repr
+theorem repr_reindex : (b.reindex e).repr x = (b.repr x).mapDomain e :=
+  FunLike.ext _ _ <| by simp [repr_reindex_apply]
+#align basis.repr_reindex Basis.repr_reindex
 
 @[simp]
 theorem reindex_refl : b.reindex (Equiv.refl ι) = b :=
   eq_of_apply_eq fun i => by simp
 #align basis.reindex_refl Basis.reindex_refl
 
-/-- `simp` normal form version of `range_reindex` -/
-@[simp]
-theorem range_reindex' : Set.range (b ∘ e.symm) = Set.range b := by
-  rw [range_comp, Equiv.range_eq_univ, Set.image_univ]
-#align basis.range_reindex' Basis.range_reindex'
-
-theorem range_reindex : Set.range (b.reindex e) = Set.range b := by rw [coe_reindex, range_reindex']
+/-- `simp` can prove this as `basis.coe_reindex` + `equiv_like.range_comp` -/
+theorem range_reindex : Set.range (b.reindex e) = Set.range b := by
+  rw [coe_reindex, EquivLike.range_comp]
 #align basis.range_reindex Basis.range_reindex
+
+@[simp]
+theorem sumCoords_reindex : (b.reindex e).sumCoords = b.sumCoords :=
+  by
+  ext x
+  simp only [coe_sum_coords, repr_reindex]
+  exact Finsupp.sum_mapDomain_index (fun _ => rfl) fun _ _ _ => rfl
+#align basis.sum_coords_reindex Basis.sumCoords_reindex
 
 /-- `b.reindex_range` is a basis indexed by `range b`, the basis vectors themselves. -/
 def reindexRange : Basis (range b) R M :=
@@ -545,7 +558,7 @@ theorem reindexFinsetRange_repr_self (i : ι) :
       Finsupp.single ⟨b i, Finset.mem_image_of_mem b (Finset.mem_univ i)⟩ 1 :=
   by
   ext ⟨bi, hbi⟩
-  rw [reindex_finset_range, reindex_repr, reindex_range_repr_self]
+  rw [reindex_finset_range, repr_reindex, Finsupp.mapDomain_equiv_apply, reindex_range_repr_self]
   convert Finsupp.single_apply_left ((Equiv.refl M).subtypeEquiv _).symm.Injective _ _ _
   rfl
 #align basis.reindex_finset_range_repr_self Basis.reindexFinsetRange_repr_self

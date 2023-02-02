@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -545,6 +545,27 @@ theorem ConvolutionExists.add_distrib (hfg : ConvolutionExists f g L μ)
   ext
   exact (hfg x).add_distrib (hfg' x)
 #align convolution_exists.add_distrib ConvolutionExists.add_distrib
+
+theorem convolution_mono_right {f g g' : G → ℝ} (hfg : ConvolutionExistsAt f g x (lsmul ℝ ℝ) μ)
+    (hfg' : ConvolutionExistsAt f g' x (lsmul ℝ ℝ) μ) (hf : ∀ x, 0 ≤ f x) (hg : ∀ x, g x ≤ g' x) :
+    (f ⋆[lsmul ℝ ℝ, μ] g) x ≤ (f ⋆[lsmul ℝ ℝ, μ] g') x :=
+  by
+  apply integral_mono hfg hfg'
+  simp only [lsmul_apply, Algebra.id.smul_eq_mul]
+  intro t
+  apply mul_le_mul_of_nonneg_left (hg _) (hf _)
+#align convolution_mono_right convolution_mono_right
+
+theorem convolution_mono_right_of_nonneg {f g g' : G → ℝ}
+    (hfg' : ConvolutionExistsAt f g' x (lsmul ℝ ℝ) μ) (hf : ∀ x, 0 ≤ f x) (hg : ∀ x, g x ≤ g' x)
+    (hg' : ∀ x, 0 ≤ g' x) : (f ⋆[lsmul ℝ ℝ, μ] g) x ≤ (f ⋆[lsmul ℝ ℝ, μ] g') x :=
+  by
+  by_cases H : ConvolutionExistsAt f g x (lsmul ℝ ℝ) μ
+  · exact convolution_mono_right H hfg' hf hg
+  have : (f ⋆[lsmul ℝ ℝ, μ] g) x = 0 := integral_undef H
+  rw [this]
+  exact integral_nonneg fun y => mul_nonneg (hf y) (hg' (x - y))
+#align convolution_mono_right_of_nonneg convolution_mono_right_of_nonneg
 
 variable (L)
 

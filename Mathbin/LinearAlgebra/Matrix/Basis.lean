@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.basis
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,8 +245,9 @@ theorem Basis.toMatrix_reindex' [DecidableEq ι] [DecidableEq ι'] (b : Basis ι
     (e : ι ≃ ι') : (b.reindex e).toMatrix v = Matrix.reindexAlgEquiv _ e (b.toMatrix (v ∘ e)) :=
   by
   ext
-  simp only [Basis.toMatrix_apply, Basis.reindex_repr, Matrix.reindexAlgEquiv_apply,
-    Matrix.reindex_apply, Matrix.submatrix_apply, Function.comp_apply, e.apply_symm_apply]
+  simp only [Basis.toMatrix_apply, Basis.repr_reindex, Matrix.reindexAlgEquiv_apply,
+    Matrix.reindex_apply, Matrix.submatrix_apply, Function.comp_apply, e.apply_symm_apply,
+    Finsupp.mapDomain_equiv_apply]
 #align basis.to_matrix_reindex' Basis.toMatrix_reindex'
 
 end Fintype
@@ -279,7 +280,8 @@ theorem Basis.toMatrix_reindex (b : Basis ι R M) (v : ι' → M) (e : ι ≃ ι
     (b.reindex e).toMatrix v = (b.toMatrix v).submatrix e.symm id :=
   by
   ext
-  simp only [Basis.toMatrix_apply, Basis.reindex_repr, Matrix.submatrix_apply, id.def]
+  simp only [Basis.toMatrix_apply, Basis.repr_reindex, Matrix.submatrix_apply, id.def,
+    Finsupp.mapDomain_equiv_apply]
 #align basis.to_matrix_reindex Basis.toMatrix_reindex
 
 @[simp]

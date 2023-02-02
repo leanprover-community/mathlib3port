@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Sébastien Gouëzel, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.pi_L2
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -536,10 +536,10 @@ protected theorem coe_reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') 
 #align orthonormal_basis.coe_reindex OrthonormalBasis.coe_reindex
 
 @[simp]
-protected theorem reindex_repr (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') (x : E) (i' : ι') :
-    ((b.reindex e).repr x) i' = (b.repr x) (e.symm i') := by
+protected theorem repr_reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') (x : E) (i' : ι') :
+    (b.reindex e).repr x i' = b.repr x (e.symm i') := by
   classical rw [OrthonormalBasis.repr_apply_apply, b.repr_apply_apply, OrthonormalBasis.coe_reindex]
-#align orthonormal_basis.reindex_repr OrthonormalBasis.reindex_repr
+#align orthonormal_basis.repr_reindex OrthonormalBasis.repr_reindex
 
 end OrthonormalBasis
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pointwise
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem smul_ball {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) : c • ball x r =
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
-  simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul]
+  simp [← div_eq_inv_mul, div_lt_iff (norm_pos_iff.2 hc), mul_comm _ r, dist_smul₀]
 #align smul_ball smul_ball
 
 theorem smul_unit_ball {c : 𝕜} (hc : c ≠ 0) : c • ball (0 : E) (1 : ℝ) = ball (0 : E) ‖c‖ := by
@@ -49,7 +49,7 @@ theorem smul_sphere' {c : 𝕜} (hc : c ≠ 0) (x : E) (r : ℝ) :
   ext y
   rw [mem_smul_set_iff_inv_smul_mem₀ hc]
   conv_lhs => rw [← inv_smul_smul₀ hc x]
-  simp only [mem_sphere, dist_smul, norm_inv, ← div_eq_inv_mul, div_eq_iff (norm_pos_iff.2 hc).ne',
+  simp only [mem_sphere, dist_smul₀, norm_inv, ← div_eq_inv_mul, div_eq_iff (norm_pos_iff.2 hc).ne',
     mul_comm r]
 #align smul_sphere' smul_sphere'
 
@@ -323,7 +323,7 @@ theorem cthickening_closedBall (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (x : E) :
 
 theorem ball_add_ball (hε : 0 < ε) (hδ : 0 < δ) (a b : E) :
     ball a ε + ball b δ = ball (a + b) (ε + δ) := by
-  rw [ball_add, thickening_ball hε hδ, vadd_ball, vadd_eq_add] <;> infer_instance
+  rw [ball_add, thickening_ball hε hδ b, Metric.vadd_ball, vadd_eq_add]
 #align ball_add_ball ball_add_ball
 
 theorem ball_sub_ball (hε : 0 < ε) (hδ : 0 < δ) (a b : E) :
@@ -333,7 +333,7 @@ theorem ball_sub_ball (hε : 0 < ε) (hδ : 0 < δ) (a b : E) :
 
 theorem ball_add_closedBall (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) :
     ball a ε + closedBall b δ = ball (a + b) (ε + δ) := by
-  rw [ball_add, thickening_closedBall hε hδ, vadd_ball, vadd_eq_add] <;> infer_instance
+  rw [ball_add, thickening_closedBall hε hδ b, Metric.vadd_ball, vadd_eq_add]
 #align ball_add_closed_ball ball_add_closedBall
 
 theorem ball_sub_closedBall (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) :
@@ -343,7 +343,7 @@ theorem ball_sub_closedBall (hε : 0 < ε) (hδ : 0 ≤ δ) (a b : E) :
 
 theorem closedBall_add_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) :
     closedBall a ε + ball b δ = ball (a + b) (ε + δ) := by
-  rw [add_comm, ball_add_closedBall hδ hε, add_comm, add_comm δ] <;> infer_instance
+  rw [add_comm, ball_add_closedBall hδ hε b, add_comm, add_comm δ]
 #align closed_ball_add_ball closedBall_add_ball
 
 theorem closedBall_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) :
@@ -353,9 +353,8 @@ theorem closedBall_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) :
 
 theorem closedBall_add_closedBall [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
     closedBall a ε + closedBall b δ = closedBall (a + b) (ε + δ) := by
-  rw [(is_compact_closed_ball _ _).add_closedBall hδ, cthickening_closedBall hδ hε, vadd_closedBall,
-      vadd_eq_add, add_comm, add_comm δ] <;>
-    infer_instance
+  rw [(is_compact_closed_ball _ _).add_closedBall hδ b, cthickening_closedBall hδ hε a,
+    Metric.vadd_closedBall, vadd_eq_add, add_comm, add_comm δ]
 #align closed_ball_add_closed_ball closedBall_add_closedBall
 
 theorem closedBall_sub_closedBall [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,7 +13,7 @@ import Mathbin.Order.LiminfLimsup
 import Mathbin.Topology.Algebra.UniformGroup
 import Mathbin.Topology.Instances.Rat
 import Mathbin.Topology.MetricSpace.Algebra
-import Mathbin.Topology.MetricSpace.Isometry
+import Mathbin.Topology.MetricSpace.IsometricSmul
 import Mathbin.Topology.Sequences
 
 /-!
@@ -362,6 +362,12 @@ alias dist_eq_norm_sub ← dist_eq_norm
 alias dist_eq_norm_sub' ← dist_eq_norm'
 #align dist_eq_norm' dist_eq_norm'
 
+@[to_additive]
+instance NormedGroup.to_hasIsometricSmul_right : HasIsometricSmul Eᵐᵒᵖ E :=
+  ⟨fun a => Isometry.of_dist_eq fun b c => by simp [dist_eq_norm_div]⟩
+#align normed_group.to_has_isometric_smul_right NormedGroup.to_hasIsometricSmul_right
+#align normed_add_group.to_has_isometric_vadd_right NormedAddGroup.to_has_isometric_vadd_right
+
 @[simp, to_additive]
 theorem dist_one_right (a : E) : dist a 1 = ‖a‖ := by rw [dist_eq_norm_div, div_one]
 #align dist_one_right dist_one_right
@@ -397,12 +403,6 @@ theorem norm_inv' (a : E) : ‖a⁻¹‖ = ‖a‖ := by simpa using norm_div_re
 #align norm_neg norm_neg
 
 @[simp, to_additive]
-theorem dist_mul_right (a₁ a₂ b : E) : dist (a₁ * b) (a₂ * b) = dist a₁ a₂ := by
-  simp [dist_eq_norm_div]
-#align dist_mul_right dist_mul_right
-#align dist_add_right dist_add_right
-
-@[simp, to_additive]
 theorem dist_mul_self_right (a b : E) : dist b (a * b) = ‖a‖ := by
   rw [← dist_one_left, ← dist_mul_right 1 a b, one_mul]
 #align dist_mul_self_right dist_mul_self_right
@@ -413,12 +413,6 @@ theorem dist_mul_self_left (a b : E) : dist (a * b) b = ‖a‖ := by
   rw [dist_comm, dist_mul_self_right]
 #align dist_mul_self_left dist_mul_self_left
 #align dist_add_self_left dist_add_self_left
-
-@[to_additive]
-theorem dist_div_right (a₁ a₂ b : E) : dist (a₁ / b) (a₂ / b) = dist a₁ a₂ := by
-  simpa only [div_eq_mul_inv] using dist_mul_right _ _ _
-#align dist_div_right dist_div_right
-#align dist_sub_right dist_sub_right
 
 @[simp, to_additive]
 theorem dist_div_eq_dist_mul_left (a b c : E) : dist (a / b) c = dist a (c * b) := by
@@ -714,43 +708,6 @@ theorem coe_normGroupSeminorm : ⇑(normGroupSeminorm E) = norm :=
 
 variable {E}
 
-namespace IsometryEquiv
-
--- TODO This material is superseded by similar constructions such as
--- `affine_isometry_equiv.const_vadd`; deduplicate
-/-- Multiplication `y ↦ y * x` as an `isometry`. -/
-@[to_additive "Addition `y ↦ y + x` as an `isometry`"]
-protected def mulRight (x : E) : E ≃ᵢ E :=
-  { Equiv.mulRight x with isometry_toFun := Isometry.of_dist_eq fun y z => dist_mul_right _ _ _ }
-#align isometry_equiv.mul_right IsometryEquiv.mulRight
-#align isometry_equiv.add_right IsometryEquiv.addRight
-
-@[simp, to_additive]
-theorem mulRight_toEquiv (x : E) : (IsometryEquiv.mulRight x).toEquiv = Equiv.mulRight x :=
-  rfl
-#align isometry_equiv.mul_right_to_equiv IsometryEquiv.mulRight_toEquiv
-#align isometry_equiv.add_right_to_equiv IsometryEquiv.add_right_toEquiv
-
-@[simp, to_additive]
-theorem coe_mulRight (x : E) : (IsometryEquiv.mulRight x : E → E) = fun y => y * x :=
-  rfl
-#align isometry_equiv.coe_mul_right IsometryEquiv.coe_mulRight
-#align isometry_equiv.coe_add_right IsometryEquiv.coe_add_right
-
-@[to_additive]
-theorem mulRight_apply (x y : E) : (IsometryEquiv.mulRight x : E → E) y = y * x :=
-  rfl
-#align isometry_equiv.mul_right_apply IsometryEquiv.mulRight_apply
-#align isometry_equiv.add_right_apply IsometryEquiv.add_right_apply
-
-@[simp, to_additive]
-theorem mulRight_symm (x : E) : (IsometryEquiv.mulRight x).symm = IsometryEquiv.mulRight x⁻¹ :=
-  ext fun y => rfl
-#align isometry_equiv.mul_right_symm IsometryEquiv.mulRight_symm
-#align isometry_equiv.add_right_symm IsometryEquiv.add_right_symm
-
-end IsometryEquiv
-
 @[to_additive]
 theorem NormedCommGroup.tendsto_nhds_one {f : α → E} {l : Filter α} :
     Tendsto f l (𝓝 1) ↔ ∀ ε > 0, ∀ᶠ x in l, ‖f x‖ < ε :=
@@ -1011,18 +968,6 @@ theorem mem_emetric_ball_one_iff {r : ℝ≥0∞} : a ∈ Emetric.ball (1 : E) r
   rw [Emetric.mem_ball, edist_eq_coe_nnnorm']
 #align mem_emetric_ball_one_iff mem_emetric_ball_one_iff
 #align mem_emetric_ball_zero_iff mem_emetric_ball_zero_iff
-
-@[simp, to_additive]
-theorem edist_mul_right (a₁ a₂ b : E) : edist (a₁ * b) (a₂ * b) = edist a₁ a₂ := by
-  simp [edist_dist]
-#align edist_mul_right edist_mul_right
-#align edist_add_right edist_add_right
-
-@[simp, to_additive]
-theorem edist_div_right (a₁ a₂ b : E) : edist (a₁ / b) (a₂ / b) = edist a₁ a₂ := by
-  simpa only [div_eq_mul_inv] using edist_mul_right _ _ _
-#align edist_div_right edist_div_right
-#align edist_sub_right edist_sub_right
 
 @[to_additive]
 theorem MonoidHomClass.lipschitz_of_bound_nnnorm [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ≥0)
@@ -1419,28 +1364,17 @@ section SeminormedCommGroup
 
 variable [SeminormedCommGroup E] [SeminormedCommGroup F] {a a₁ a₂ b b₁ b₂ : E} {r r₁ r₂ : ℝ}
 
-@[simp, to_additive]
-theorem dist_mul_left (a b₁ b₂ : E) : dist (a * b₁) (a * b₂) = dist b₁ b₂ := by
-  simp [dist_eq_norm_div]
-#align dist_mul_left dist_mul_left
-#align dist_add_left dist_add_left
+@[to_additive]
+instance NormedGroup.to_hasIsometricSmul_left : HasIsometricSmul E E :=
+  ⟨fun a => Isometry.of_dist_eq fun b c => by simp [dist_eq_norm_div]⟩
+#align normed_group.to_has_isometric_smul_left NormedGroup.to_hasIsometricSmul_left
+#align normed_add_group.to_has_isometric_vadd_left NormedAddGroup.to_has_isometric_vadd_left
 
 @[to_additive]
 theorem dist_inv (x y : E) : dist x⁻¹ y = dist x y⁻¹ := by
   simp_rw [dist_eq_norm_div, ← norm_inv' (x⁻¹ / y), inv_div, div_inv_eq_mul, mul_comm]
 #align dist_inv dist_inv
 #align dist_neg dist_neg
-
-@[simp, to_additive]
-theorem dist_inv_inv (a b : E) : dist a⁻¹ b⁻¹ = dist a b := by rw [dist_inv, inv_inv]
-#align dist_inv_inv dist_inv_inv
-#align dist_neg_neg dist_neg_neg
-
-@[simp, to_additive]
-theorem dist_div_left (a b₁ b₂ : E) : dist (a / b₁) (a / b₂) = dist b₁ b₂ := by
-  simp only [div_eq_mul_inv, dist_mul_left, dist_inv_inv]
-#align dist_div_left dist_div_left
-#align dist_sub_left dist_sub_left
 
 @[simp, to_additive]
 theorem dist_self_mul_right (a b : E) : dist a (a * b) = ‖b‖ := by
@@ -1657,68 +1591,6 @@ theorem smul_ball'' : a • ball b r = ball (a • b) r :=
 #align smul_ball'' smul_ball''
 #align vadd_ball'' vadd_ball''
 
-namespace IsometryEquiv
-
-/-- Multiplication `y ↦ x * y` as an `isometry`. -/
-@[to_additive "Addition `y ↦ x + y` as an `isometry`"]
-protected def mulLeft (x : E) : E ≃ᵢ E
-    where
-  isometry_toFun := Isometry.of_dist_eq fun y z => dist_mul_left _ _ _
-  toEquiv := Equiv.mulLeft x
-#align isometry_equiv.mul_left IsometryEquiv.mulLeft
-#align isometry_equiv.add_left IsometryEquiv.addLeft
-
-@[simp, to_additive]
-theorem mulLeft_toEquiv (x : E) : (IsometryEquiv.mulLeft x).toEquiv = Equiv.mulLeft x :=
-  rfl
-#align isometry_equiv.mul_left_to_equiv IsometryEquiv.mulLeft_toEquiv
-#align isometry_equiv.add_left_to_equiv IsometryEquiv.add_left_toEquiv
-
-@[simp, to_additive]
-theorem coe_mulLeft (x : E) : ⇑(IsometryEquiv.mulLeft x) = (· * ·) x :=
-  rfl
-#align isometry_equiv.coe_mul_left IsometryEquiv.coe_mulLeft
-#align isometry_equiv.coe_add_left IsometryEquiv.coe_add_left
-
-@[simp, to_additive]
-theorem mulLeft_symm (x : E) : (IsometryEquiv.mulLeft x).symm = IsometryEquiv.mulLeft x⁻¹ :=
-  ext fun y => rfl
-#align isometry_equiv.mul_left_symm IsometryEquiv.mulLeft_symm
-#align isometry_equiv.add_left_symm IsometryEquiv.add_left_symm
-
-variable (E)
-
-/-- Inversion `x ↦ x⁻¹` as an `isometry`. -/
-@[to_additive "Negation `x ↦ -x` as an `isometry`."]
-protected def inv : E ≃ᵢ E
-    where
-  isometry_toFun := Isometry.of_dist_eq fun x y => dist_inv_inv _ _
-  toEquiv := Equiv.inv E
-#align isometry_equiv.inv IsometryEquiv.inv
-#align isometry_equiv.neg IsometryEquiv.neg
-
-variable {E}
-
-@[simp, to_additive]
-theorem inv_symm : (IsometryEquiv.inv E).symm = IsometryEquiv.inv E :=
-  rfl
-#align isometry_equiv.inv_symm IsometryEquiv.inv_symm
-#align isometry_equiv.neg_symm IsometryEquiv.neg_symm
-
-@[simp, to_additive]
-theorem inv_toEquiv : (IsometryEquiv.inv E).toEquiv = Equiv.inv E :=
-  rfl
-#align isometry_equiv.inv_to_equiv IsometryEquiv.inv_toEquiv
-#align isometry_equiv.neg_to_equiv IsometryEquiv.neg_toEquiv
-
-@[simp, to_additive]
-theorem coe_inv : ⇑(IsometryEquiv.inv E) = Inv.inv :=
-  rfl
-#align isometry_equiv.coe_inv IsometryEquiv.coe_inv
-#align isometry_equiv.coe_neg IsometryEquiv.coe_neg
-
-end IsometryEquiv
-
 open Finset
 
 @[to_additive]
@@ -1788,27 +1660,6 @@ theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
   apply nndist_mul_mul_le
 #align edist_mul_mul_le edist_mul_mul_le
 #align edist_add_add_le edist_add_add_le
-
-@[simp, to_additive]
-theorem edist_mul_left (a b₁ b₂ : E) : edist (a * b₁) (a * b₂) = edist b₁ b₂ := by simp [edist_dist]
-#align edist_mul_left edist_mul_left
-#align edist_add_left edist_add_left
-
-@[to_additive]
-theorem edist_inv (a b : E) : edist a⁻¹ b = edist a b⁻¹ := by simp_rw [edist_dist, dist_inv]
-#align edist_inv edist_inv
-#align edist_neg edist_neg
-
-@[simp, to_additive]
-theorem edist_inv_inv (x y : E) : edist x⁻¹ y⁻¹ = edist x y := by rw [edist_inv, inv_inv]
-#align edist_inv_inv edist_inv_inv
-#align edist_neg_neg edist_neg_neg
-
-@[simp, to_additive]
-theorem edist_div_left (a b₁ b₂ : E) : edist (a / b₁) (a / b₂) = edist b₁ b₂ := by
-  simp only [div_eq_mul_inv, edist_mul_left, edist_inv_inv]
-#align edist_div_left edist_div_left
-#align edist_sub_left edist_sub_left
 
 @[to_additive]
 theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
