@@ -248,7 +248,7 @@ theorem innerContent_pos_of_is_mul_left_invariant [T2Space G] [Group G] [Topolog
     simpa only [opens.supr_def, opens.coe_comap, Subtype.coe_mk]
   refine' (μ.le_inner_content _ _ this).trans _
   refine'
-    (relSuprSum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
+    (rel_supᵢ_sum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
   simp only [μ.is_mul_left_invariant_inner_content h3, Finset.sum_const, nsmul_eq_mul, le_refl]
 #align measure_theory.content.inner_content_pos_of_is_mul_left_invariant MeasureTheory.Content.innerContent_pos_of_is_mul_left_invariant
 #align measure_theory.content.inner_content_pos_of_is_add_left_invariant MeasureTheory.Content.inner_content_pos_of_is_add_left_invariant

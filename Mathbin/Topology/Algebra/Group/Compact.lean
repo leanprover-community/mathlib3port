@@ -55,7 +55,7 @@ theorem TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_group [T2Space 
   rw [this]
   exact mem_interior_iff_mem_nhds.1 hy
 #align topological_space.positive_compacts.locally_compact_space_of_group TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_group
-#align topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locally_compact_space_of_add_group
+#align topological_space.positive_compacts.locally_compact_space_of_add_group TopologicalSpace.PositiveCompacts.locallyCompactSpace_of_add_group
 
 end
 

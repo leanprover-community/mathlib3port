@@ -117,11 +117,11 @@ noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : M
   h.exists_metric.some.replaceTopology h.exists_metric.choose_spec.symm
 #align topological_space.metrizable_space_metric TopologicalSpace.metrizableSpaceMetric
 
-instance (priority := 100) t2SpaceOfMetrizableSpace [MetrizableSpace X] : T2Space X :=
+instance (priority := 100) t2Space_of_metrizableSpace [MetrizableSpace X] : T2Space X :=
   by
   letI : MetricSpace X := metrizable_space_metric X
   infer_instance
-#align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2SpaceOfMetrizableSpace
+#align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2Space_of_metrizableSpace
 
 instance metrizableSpace_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) :=
   by

@@ -645,7 +645,7 @@ instance Subgroup.isClosed_of_discrete [T2Space G] {H : Subgroup G} [DiscreteTop
   have : h' / h ∈ ({1} : Set G) := VH ▸ Set.mem_inter hyp (H.div_mem h'_in h_in)
   exact (eq_of_div_eq_one this).symm
 #align subgroup.is_closed_of_discrete Subgroup.isClosed_of_discrete
-#align add_subgroup.is_closed_of_discrete AddSubgroup.is_closed_of_discrete
+#align add_subgroup.is_closed_of_discrete AddSubgroup.isClosed_of_discrete
 
 @[to_additive]
 theorem TopologicalGroup.tendstoUniformly_iff {ι α : Type _} (F : ι → α → G) (f : α → G)
@@ -742,10 +742,10 @@ theorem TopologicalGroup.t2Space_iff_one_closed : T2Space G ↔ IsClosed ({1} : 
     rw [group_separationRel x, h, mem_singleton_iff, div_eq_one]
     rfl
 #align topological_group.t2_space_iff_one_closed TopologicalGroup.t2Space_iff_one_closed
-#align topological_add_group.t2_space_iff_zero_closed TopologicalAddGroup.t2_space_iff_zero_closed
+#align topological_add_group.t2_space_iff_zero_closed TopologicalAddGroup.t2Space_iff_zero_closed
 
 @[to_additive]
-theorem TopologicalGroup.t2SpaceOfOneSep (H : ∀ x : G, x ≠ 1 → ∃ U ∈ nhds (1 : G), x ∉ U) :
+theorem TopologicalGroup.t2Space_of_one_sep (H : ∀ x : G, x ≠ 1 → ∃ U ∈ nhds (1 : G), x ∉ U) :
     T2Space G :=
   by
   rw [TopologicalGroup.t2Space_iff_one_closed, ← isOpen_compl_iff, isOpen_iff_mem_nhds]
@@ -759,8 +759,8 @@ theorem TopologicalGroup.t2SpaceOfOneSep (H : ∀ x : G, x ≠ 1 → ∃ U ∈ n
   rw [subset_compl_comm]
   suffices x⁻¹ ∉ W by simpa
   exact fun h => xU (UW h)
-#align topological_group.t2_space_of_one_sep TopologicalGroup.t2SpaceOfOneSep
-#align topological_add_group.t2_space_of_zero_sep TopologicalAddGroup.t2_space_of_zero_sep
+#align topological_group.t2_space_of_one_sep TopologicalGroup.t2Space_of_one_sep
+#align topological_add_group.t2_space_of_zero_sep TopologicalAddGroup.t2Space_of_zero_sep
 
 end
 

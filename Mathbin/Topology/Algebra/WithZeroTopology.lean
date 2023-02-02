@@ -187,8 +187,8 @@ instance (priority := 100) orderClosedTopology : OrderClosedTopology Γ₀
 
 /-- The topology on a linearly ordered group with zero element adjoined is T₃. -/
 instance (priority := 100) t3Space : T3Space Γ₀
-    where toRegularSpace :=
-    RegularSpace.ofLift'Closure fun γ =>
+    where to_regularSpace :=
+    RegularSpace.ofLift'_closure fun γ =>
       by
       rcases ne_or_eq γ 0 with (h₀ | rfl)
       ·

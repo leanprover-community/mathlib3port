@@ -286,11 +286,11 @@ variable [TopologicalSpace α] [PartialOrder α] [t : OrderClosedTopology α]
 include t
 
 -- see Note [lower instance priority]
-instance (priority := 90) OrderClosedTopology.toT2Space : T2Space α :=
+instance (priority := 90) OrderClosedTopology.to_t2Space : T2Space α :=
   t2_iff_isClosed_diagonal.2 <| by
     simpa only [diagonal, le_antisymm_iff] using
       t.is_closed_le'.inter (isClosed_le continuous_snd continuous_fst)
-#align order_closed_topology.to_t2_space OrderClosedTopology.toT2Space
+#align order_closed_topology.to_t2_space OrderClosedTopology.to_t2Space
 
 end PartialOrder
 

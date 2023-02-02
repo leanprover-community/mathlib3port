@@ -489,7 +489,7 @@ theorem isOpenMap_quotient_mk'_mul [HasContinuousConstSmul Γ T] :
 
 /-- The quotient by a discontinuous group action of a locally compact t2 space is t2. -/
 @[to_additive "The quotient by a discontinuous group action of a locally compact t2\nspace is t2."]
-instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space T]
+instance (priority := 100) t2Space_of_properlyDiscontinuousSmul_of_t2Space [T2Space T]
     [LocallyCompactSpace T] [HasContinuousConstSmul Γ T] [ProperlyDiscontinuousSmul Γ T] :
     T2Space (Quotient (MulAction.orbitRel Γ T)) :=
   by
@@ -522,8 +522,8 @@ instance (priority := 100) t2SpaceOfProperlyDiscontinuousSmulOfT2Space [T2Space 
   · rintro ⟨-, h'⟩
     simp only [image_smul, Classical.not_not, mem_set_of_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
-#align t2_space_of_properly_discontinuous_smul_of_t2_space t2SpaceOfProperlyDiscontinuousSmulOfT2Space
-#align t2_space_of_properly_discontinuous_vadd_of_t2_space t2_space_of_properly_discontinuous_vadd_of_t2_space
+#align t2_space_of_properly_discontinuous_smul_of_t2_space t2Space_of_properlyDiscontinuousSmul_of_t2Space
+#align t2_space_of_properly_discontinuous_vadd_of_t2_space t2Space_of_properly_discontinuous_vadd_of_t2Space
 
 /-- The quotient of a second countable space by a group action is second countable. -/
 @[to_additive

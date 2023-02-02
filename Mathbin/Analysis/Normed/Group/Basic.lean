@@ -2052,7 +2052,7 @@ variable [NormedAddGroup E] [TopologicalSpace α] {f : α → E}
 
 
 theorem hasCompactSupport_norm_iff : (HasCompactSupport fun x => ‖f x‖) ↔ HasCompactSupport f :=
-  has_compact_support_comp_left fun x => norm_eq_zero
+  hasCompactSupport_comp_left fun x => norm_eq_zero
 #align has_compact_support_norm_iff hasCompactSupport_norm_iff
 
 alias hasCompactSupport_norm_iff ↔ _ HasCompactSupport.norm

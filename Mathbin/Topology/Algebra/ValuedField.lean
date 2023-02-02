@@ -105,7 +105,7 @@ instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
 instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpace K :=
   by
   rw [separated_iff_t2]
-  apply TopologicalAddGroup.t2_space_of_zero_sep
+  apply TopologicalAddGroup.t2Space_of_zero_sep
   intro x x_ne
   refine' ⟨{ k | v k < v x }, _, fun h => lt_irrefl _ h⟩
   rw [Valued.mem_nhds]

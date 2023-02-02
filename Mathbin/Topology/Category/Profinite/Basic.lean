@@ -144,7 +144,7 @@ def CompHaus.toProfiniteObj (X : CompHaus.{u}) : Profinite.{u}
   toCompHaus :=
     { toTop := TopCat.of (ConnectedComponents X)
       IsCompact := Quotient.compactSpace
-      isHausdorff := ConnectedComponents.t2 }
+      is_hausdorff := ConnectedComponents.t2 }
   IsTotallyDisconnected := ConnectedComponents.totallyDisconnectedSpace
 #align CompHaus.to_Profinite_obj CompHaus.toProfiniteObj
 

@@ -240,7 +240,7 @@ theorem IntermediateField.fixingSubgroup_isClosed {K L : Type _} [Field K] [Fiel
 #align intermediate_field.fixing_subgroup_is_closed IntermediateField.fixingSubgroup_isClosed
 
 /-- If `L/K` is an algebraic extension, then the Krull topology on `L ≃ₐ[K] L` is Hausdorff. -/
-theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L]
+theorem krullTopology_t2 {K L : Type _} [Field K] [Field L] [Algebra K L]
     (h_int : Algebra.IsIntegral K L) : T2Space (L ≃ₐ[K] L) :=
   {
     t2 := fun f g hfg => by
@@ -274,7 +274,7 @@ theorem krullTopologyT2 {K L : Type _} [Field K] [Field L] [Algebra K L]
         apply IntermediateField.subset_adjoin
         apply Set.mem_singleton
       exact hφx (h_in_H hxE) }
-#align krull_topology_t2 krullTopologyT2
+#align krull_topology_t2 krullTopology_t2
 
 end KrullT2
 

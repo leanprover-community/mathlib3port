@@ -590,7 +590,7 @@ theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [Topologic
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ)(hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f
   exact metric.nhds_basis_closed_ball.mem_iff.1 this
   have : IsCompact (Metric.closedBall x r) :=
-    isCompact_of_isClosed_subset hf Metric.isClosed_ball (hr.trans (subset_mulTsupport _))
+    isCompact_of_isClosed_subset hf Metric.isClosed_ball (hr.trans (subset_mulTSupport _))
   exact finiteDimensional_of_isCompact_closedBall 𝕜 rpos this
 #align has_compact_mul_support.eq_one_or_finite_dimensional HasCompactMulSupport.eq_one_or_finiteDimensional
 #align has_compact_support.eq_zero_or_finite_dimensional HasCompactSupport.eq_zero_or_finite_dimensional

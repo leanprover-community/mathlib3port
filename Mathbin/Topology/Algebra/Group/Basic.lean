@@ -303,7 +303,7 @@ theorem isClosed_setOf_map_inv [Inv G₁] [Inv G₂] [HasContinuousInv G₂] :
   simp only [set_of_forall]
   refine' isClosed_interᵢ fun i => isClosed_eq (continuous_apply _) (continuous_apply _).inv
 #align is_closed_set_of_map_inv isClosed_setOf_map_inv
-#align is_closed_set_of_map_neg is_closed_set_of_map_neg
+#align is_closed_set_of_map_neg isClosed_setOf_map_neg
 
 end PointwiseLimits
 
@@ -803,7 +803,7 @@ def Subgroup.commGroupTopologicalClosure [T2Space G] (s : Subgroup G)
     (hs : ∀ x y : s, x * y = y * x) : CommGroup s.topologicalClosure :=
   { s.topologicalClosure.toGroup, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 #align subgroup.comm_group_topological_closure Subgroup.commGroupTopologicalClosure
-#align add_subgroup.add_comm_group_topological_closure AddSubgroup.add_comm_group_topological_closure
+#align add_subgroup.add_comm_group_topological_closure AddSubgroup.addCommGroupTopologicalClosure
 
 @[to_additive exists_nhds_half_neg]
 theorem exists_nhds_split_inv {s : Set G} (hs : s ∈ 𝓝 (1 : G)) :
@@ -1443,13 +1443,13 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G :=
     _ ⊆ s := hUV
     
 #align topological_group.regular_space TopologicalGroup.regularSpace
-#align topological_add_group.regular_space TopologicalAddGroup.regular_space
+#align topological_add_group.regular_space TopologicalAddGroup.regularSpace
 
 @[to_additive]
 theorem TopologicalGroup.t3Space [T1Space G] : T3Space G :=
   ⟨⟩
 #align topological_group.t3_space TopologicalGroup.t3Space
-#align topological_add_group.t3_space TopologicalAddGroup.t3_space
+#align topological_add_group.t3_space TopologicalAddGroup.t3Space
 
 @[to_additive]
 theorem TopologicalGroup.t2Space [T1Space G] : T2Space G :=
@@ -1457,20 +1457,20 @@ theorem TopologicalGroup.t2Space [T1Space G] : T2Space G :=
   haveI := TopologicalGroup.t3Space G
   infer_instance
 #align topological_group.t2_space TopologicalGroup.t2Space
-#align topological_add_group.t2_space TopologicalAddGroup.t2_space
+#align topological_add_group.t2_space TopologicalAddGroup.t2Space
 
 variable {G} (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)]
 
 @[to_additive]
-instance Subgroup.t3QuotientOfIsClosed (S : Subgroup G) [Subgroup.Normal S] [IsClosed (S : Set G)] :
-    T3Space (G ⧸ S) :=
+instance Subgroup.t3_quotient_of_isClosed (S : Subgroup G) [Subgroup.Normal S]
+    [IsClosed (S : Set G)] : T3Space (G ⧸ S) :=
   by
   suffices T1Space (G ⧸ S) by exact @TopologicalGroup.t3Space _ _ _ _ this
   have hS : IsClosed (S : Set G) := inferInstance
   rw [← QuotientGroup.ker_mk' S] at hS
   exact TopologicalGroup.t1Space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)
-#align subgroup.t3_quotient_of_is_closed Subgroup.t3QuotientOfIsClosed
-#align add_subgroup.t3_quotient_of_is_closed AddSubgroup.t3_quotient_of_is_closed
+#align subgroup.t3_quotient_of_is_closed Subgroup.t3_quotient_of_isClosed
+#align add_subgroup.t3_quotient_of_is_closed AddSubgroup.t3_quotient_of_isClosed
 
 /-- A subgroup `S` of a topological group `G` acts on `G` properly discontinuously on the left, if
 it is discrete in the sense that `S ∩ K` is finite for all compact `K`. (See also

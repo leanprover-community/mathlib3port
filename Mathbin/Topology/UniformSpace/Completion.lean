@@ -374,7 +374,7 @@ instance : SeparatedSpace (Completion α) :=
   UniformSpace.separated_separation
 
 instance : T3Space (Completion α) :=
-  separatedT3
+  separated_t3
 
 /-- Automatic coercion from `α` to its completion. Not always injective. -/
 instance : CoeTC α (Completion α) :=

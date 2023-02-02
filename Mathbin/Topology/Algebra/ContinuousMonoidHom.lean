@@ -329,7 +329,7 @@ theorem closedEmbedding_toContinuousMap [HasContinuousMul B] [T2Space B] :
         rintro _ ⟨x, y, hx : (x, y).1 ∈ U, hy : (x, y).2 ∈ V, rfl⟩
         exact h' ⟨hx, hy⟩⟩⟩
 #align continuous_monoid_hom.closed_embedding_to_continuous_map ContinuousMonoidHom.closedEmbedding_toContinuousMap
-#align continuous_add_monoid_hom.closed_embedding_to_continuous_map ContinuousAddMonoidHom.closed_embedding_to_continuous_map
+#align continuous_add_monoid_hom.closed_embedding_to_continuous_map ContinuousAddMonoidHom.closedEmbedding_toContinuousMap
 
 variable {A B C D E}
 

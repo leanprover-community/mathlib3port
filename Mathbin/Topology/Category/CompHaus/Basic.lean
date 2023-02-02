@@ -40,7 +40,7 @@ open CategoryTheory
 structure CompHaus where
   toTop : TopCat
   [IsCompact : CompactSpace to_Top]
-  [isHausdorff : T2Space to_Top]
+  [is_hausdorff : T2Space to_Top]
 #align CompHaus CompHaus
 
 namespace CompHaus
@@ -55,7 +55,7 @@ instance {X : CompHaus} : CompactSpace X :=
   X.IsCompact
 
 instance {X : CompHaus} : T2Space X :=
-  X.isHausdorff
+  X.is_hausdorff
 
 instance category : Category CompHaus :=
   InducedCategory.category toTop
@@ -78,7 +78,7 @@ found by typeclass inference. -/
 def of : CompHaus where
   toTop := TopCat.of X
   IsCompact := ‹_›
-  isHausdorff := ‹_›
+  is_hausdorff := ‹_›
 #align CompHaus.of CompHaus.of
 
 @[simp]
@@ -218,7 +218,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
         apply isClosed_eq
         · exact (ContinuousMap.continuous (F.map f)).comp (continuous_apply i)
         · exact continuous_apply j
-      isHausdorff :=
+      is_hausdorff :=
         show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from
           inferInstance }
   π :=

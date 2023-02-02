@@ -77,11 +77,11 @@ theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
 #align exists_clopen_upper_or_lower_of_ne exists_clopen_upper_or_lower_of_ne
 
 -- See note [lower instance priority]
-instance (priority := 100) PriestleySpace.toT2Space : T2Space α :=
+instance (priority := 100) PriestleySpace.to_t2Space : T2Space α :=
   ⟨fun x y h =>
     let ⟨U, hU, _, hx, hy⟩ := exists_clopen_upper_or_lower_of_ne h
     ⟨U, Uᶜ, hU.IsOpen, hU.compl.IsOpen, hx, hy, disjoint_compl_right⟩⟩
-#align priestley_space.to_t2_space PriestleySpace.toT2Space
+#align priestley_space.to_t2_space PriestleySpace.to_t2Space
 
 end PartialOrder
 

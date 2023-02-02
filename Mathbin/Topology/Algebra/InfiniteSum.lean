@@ -841,33 +841,33 @@ section Countable
 variable [Countable γ]
 
 /-- If a function is countably sub-additive then it is sub-additive on countable types -/
-theorem relSuprTsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
+theorem rel_supᵢ_tsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : γ → β) :
     R (m (⨆ b : γ, s b)) (∑' b : γ, m (s b)) :=
   by
   cases nonempty_encodable γ
   rw [← supr_decode₂, ← tsum_supᵢ_decode₂ _ m0 s]
   exact m_supr _
-#align rel_supr_tsum relSuprTsum
+#align rel_supr_tsum rel_supᵢ_tsum
 
 /-- If a function is countably sub-additive then it is sub-additive on finite sets -/
-theorem relSuprSum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
+theorem rel_supᵢ_sum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s : δ → β) (t : Finset δ) :
     R (m (⨆ d ∈ t, s d)) (∑ d in t, m (s d)) :=
   by
   rw [supᵢ_subtype', ← Finset.tsum_subtype]
-  exact relSuprTsum m m0 R m_supr _
-#align rel_supr_sum relSuprSum
+  exact rel_supᵢ_tsum m m0 R m_supr _
+#align rel_supr_sum rel_supᵢ_sum
 
 /-- If a function is countably sub-additive then it is binary sub-additive -/
-theorem relSupAdd [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
+theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
     (m_supr : ∀ s : ℕ → β, R (m (⨆ i, s i)) (∑' i, m (s i))) (s₁ s₂ : β) :
     R (m (s₁ ⊔ s₂)) (m s₁ + m s₂) :=
   by
-  convert relSuprTsum m m0 R m_supr fun b => cond b s₁ s₂
+  convert rel_supᵢ_tsum m m0 R m_supr fun b => cond b s₁ s₂
   · simp only [supᵢ_bool_eq, cond]
   · rw [tsum_fintype, Fintype.sum_bool, cond, cond]
-#align rel_sup_add relSupAdd
+#align rel_sup_add rel_sup_add
 
 end Countable
 
@@ -1616,7 +1616,7 @@ theorem cauchySeq_finset_iff_vanishing :
     exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
 #align cauchy_seq_finset_iff_vanishing cauchySeq_finset_iff_vanishing
 
-attribute [local instance] TopologicalAddGroup.t3_space
+attribute [local instance] TopologicalAddGroup.t3Space
 
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/

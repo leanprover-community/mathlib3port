@@ -195,7 +195,7 @@ theorem Filter.TendstoNhdsWithinIio.mul_const [MulPosStrictMono 𝕜] [MulPosRef
 end tendsto_nhds
 
 /-- Construct a unit from limits of units and their inverses. -/
-@[to_additive Filter.Tendsto.add_units
+@[to_additive Filter.Tendsto.addUnits
       "Construct an additive unit from limits of additive units\nand their negatives.",
   simps]
 def Filter.Tendsto.units [TopologicalSpace N] [Monoid N] [HasContinuousMul N] [T2Space N]
@@ -211,7 +211,7 @@ def Filter.Tendsto.units [TopologicalSpace N] [Monoid N] [HasContinuousMul N] [T
     symm
     simpa using h₂.mul h₁
 #align filter.tendsto.units Filter.Tendsto.units
-#align filter.tendsto.add_units Filter.Tendsto.add_units
+#align filter.tendsto.add_units Filter.Tendsto.addUnits
 
 @[to_additive]
 theorem ContinuousAt.mul {f g : X → M} {x : X} (hf : ContinuousAt f x) (hg : ContinuousAt g x) :
@@ -312,7 +312,7 @@ variable (M₁ M₂ : Type _) [TopologicalSpace M₂] [T2Space M₂]
 theorem isClosed_setOf_map_one [One M₁] [One M₂] : IsClosed { f : M₁ → M₂ | f 1 = 1 } :=
   isClosed_eq (continuous_apply 1) continuous_const
 #align is_closed_set_of_map_one isClosed_setOf_map_one
-#align is_closed_set_of_map_zero is_closed_set_of_map_zero
+#align is_closed_set_of_map_zero isClosed_setOf_map_zero
 
 @[to_additive]
 theorem isClosed_setOf_map_mul [Mul M₁] [Mul M₂] [HasContinuousMul M₂] :
@@ -324,7 +324,7 @@ theorem isClosed_setOf_map_mul [Mul M₁] [Mul M₂] [HasContinuousMul M₂] :
       isClosed_interᵢ fun y =>
         isClosed_eq (continuous_apply _) ((continuous_apply _).mul (continuous_apply _))
 #align is_closed_set_of_map_mul isClosed_setOf_map_mul
-#align is_closed_set_of_map_add is_closed_set_of_map_add
+#align is_closed_set_of_map_add isClosed_setOf_map_add
 
 variable {M₁ M₂} [MulOneClass M₁] [MulOneClass M₂] [HasContinuousMul M₂] {F : Type _}
   [MonoidHomClass F M₁ M₂] {l : Filter α}
@@ -342,7 +342,7 @@ def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂)
   map_one' := (isClosed_setOf_map_one M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_one) hf
   map_mul' := (isClosed_setOf_map_mul M₁ M₂).closure_subset_iff.2 (range_subset_iff.2 map_mul) hf
 #align monoid_hom_of_mem_closure_range_coe monoidHomOfMemClosureRangeCoe
-#align add_monoid_hom_of_mem_closure_range_coe add_monoid_hom_of_mem_closure_range_coe
+#align add_monoid_hom_of_mem_closure_range_coe addMonoidHomOfMemClosureRangeCoe
 
 /-- Construct a bundled monoid homomorphism from a pointwise limit of monoid homomorphisms. -/
 @[to_additive
@@ -353,7 +353,7 @@ def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.ne_bot]
   monoidHomOfMemClosureRangeCoe f <|
     mem_closure_of_tendsto h <| eventually_of_forall fun a => mem_range_self _
 #align monoid_hom_of_tendsto monoidHomOfTendsto
-#align add_monoid_hom_of_tendsto add_monoid_hom_of_tendsto
+#align add_monoid_hom_of_tendsto addMonoidHomOfTendsto
 
 variable (M₁ M₂)
 
@@ -361,7 +361,7 @@ variable (M₁ M₂)
 theorem MonoidHom.isClosed_range_coe : IsClosed (range (coeFn : (M₁ →* M₂) → M₁ → M₂)) :=
   isClosed_of_closure_subset fun f hf => ⟨monoidHomOfMemClosureRangeCoe f hf, rfl⟩
 #align monoid_hom.is_closed_range_coe MonoidHom.isClosed_range_coe
-#align add_monoid_hom.is_closed_range_coe AddMonoidHom.is_closed_range_coe
+#align add_monoid_hom.is_closed_range_coe AddMonoidHom.isClosed_range_coe
 
 end PointwiseLimits
 
@@ -458,9 +458,9 @@ def Submonoid.commMonoidTopologicalClosure [T2Space M] (s : Submonoid M)
         congr_arg Subtype.val (hs ⟨x, hx⟩ ⟨y, hy⟩)
       fun ⟨x, hx⟩ ⟨y, hy⟩ =>
       Subtype.ext <|
-        eq_on_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
+        eqOn_closure₂ this continuous_mul (continuous_snd.mul continuous_fst) x hx y hy }
 #align submonoid.comm_monoid_topological_closure Submonoid.commMonoidTopologicalClosure
-#align add_submonoid.add_comm_monoid_topological_closure AddSubmonoid.add_comm_monoid_topological_closure
+#align add_submonoid.add_comm_monoid_topological_closure AddSubmonoid.addCommMonoidTopologicalClosure
 
 @[to_additive exists_open_nhds_zero_half]
 theorem exists_open_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :

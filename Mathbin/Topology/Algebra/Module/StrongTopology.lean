@@ -136,7 +136,7 @@ theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2S
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
   letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
-  haveI : T2Space (E →ᵤ[𝔖] F) := UniformOnFun.t2SpaceOfCovering h𝔖
+  haveI : T2Space (E →ᵤ[𝔖] F) := UniformOnFun.t2Space_of_covering h𝔖
   exact (strong_topology.embedding_coe_fn σ F 𝔖).T2Space
 #align continuous_linear_map.strong_topology.t2_space ContinuousLinearMap.strongTopology.t2Space
 

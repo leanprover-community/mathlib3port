@@ -289,7 +289,7 @@ theorem u_support : support (u : E → ℝ) = ball 0 1 :=
 
 theorem u_compact_support : HasCompactSupport (u : E → ℝ) :=
   by
-  rw [has_compact_support_def, u_support, closure_ball (0 : E) one_ne_zero]
+  rw [hasCompactSupport_def, u_support, closure_ball (0 : E) one_ne_zero]
   exact is_compact_closed_ball _ _
 #align exists_cont_diff_bump_base.u_compact_support ExistsContDiffBumpBase.u_compact_support
 
@@ -370,7 +370,7 @@ theorem w_support {D : ℝ} (Dpos : 0 < D) : support (w D : E → ℝ) = ball 0 
 
 theorem w_compact_support {D : ℝ} (Dpos : 0 < D) : HasCompactSupport (w D : E → ℝ) :=
   by
-  rw [has_compact_support_def, W_support E Dpos, closure_ball (0 : E) Dpos.ne']
+  rw [hasCompactSupport_def, W_support E Dpos, closure_ball (0 : E) Dpos.ne']
   exact is_compact_closed_ball _ _
 #align exists_cont_diff_bump_base.W_compact_support ExistsContDiffBumpBase.w_compact_support
 

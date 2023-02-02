@@ -371,7 +371,7 @@ theorem WithSeminorms.t1_of_separating (hp : WithSeminorms p)
 /-- A family of seminorms inducing a T₁ topology is separating. -/
 theorem WithSeminorms.separating_of_t1 [T1Space E] (hp : WithSeminorms p) (x : E) (hx : x ≠ 0) :
     ∃ i, p i x ≠ 0 := by
-  have := ((t1Space_tFAE E).out 0 9).mp inferInstance
+  have := ((t1Space_TFAE E).out 0 9).mp inferInstance
   by_contra' h
   refine' hx (this _)
   rw [hp.has_basis_zero_ball.specializes_iff]

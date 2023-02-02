@@ -862,14 +862,14 @@ protected def congrLeft {𝔗 : Set (Set γ)} (e : γ ≃ α) (he : 𝔗 ⊆ ima
 #align uniform_on_fun.congr_left UniformOnFun.congrLeft
 
 /-- If `𝔖` covers `α`, then the topology of `𝔖`-convergence is T₂. -/
-theorem t2SpaceOfCovering [T2Space β] (h : ⋃₀ 𝔖 = univ) : T2Space (α →ᵤ[𝔖] β) :=
+theorem t2Space_of_covering [T2Space β] (h : ⋃₀ 𝔖 = univ) : T2Space (α →ᵤ[𝔖] β) :=
   {
     t2 := by
       intro f g hfg
       obtain ⟨x, hx⟩ := not_forall.mp (mt funext hfg)
       obtain ⟨s, hs, hxs⟩ : ∃ s ∈ 𝔖, x ∈ s := mem_sUnion.mp (h.symm ▸ True.intro)
       exact separated_by_continuous (uniform_continuous_eval_of_mem β 𝔖 hxs hs).Continuous hx }
-#align uniform_on_fun.t2_space_of_covering UniformOnFun.t2SpaceOfCovering
+#align uniform_on_fun.t2_space_of_covering UniformOnFun.t2Space_of_covering
 
 /-- If `𝔖` covers `α`, the natural map `uniform_on_fun.to_fun` from `α →ᵤ[𝔖] β` to `α → β` is
 uniformly continuous.

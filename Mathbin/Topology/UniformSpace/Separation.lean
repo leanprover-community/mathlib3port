@@ -90,13 +90,13 @@ variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 -/
 
 
-instance (priority := 100) UniformSpace.toRegularSpace : RegularSpace α :=
+instance (priority := 100) UniformSpace.to_regularSpace : RegularSpace α :=
   RegularSpace.ofBasis
     (fun a => by
       rw [nhds_eq_comap_uniformity]
       exact uniformity_has_basis_closed.comap _)
     fun a V hV => hV.2.Preimage <| continuous_const.prod_mk continuous_id
-#align uniform_space.to_regular_space UniformSpace.toRegularSpace
+#align uniform_space.to_regular_space UniformSpace.to_regularSpace
 
 /-- The separation relation is the intersection of all entourages.
   Two points which are related by the separation relation are "indistinguishable"
@@ -218,10 +218,10 @@ theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
 #align separated_iff_t2 separated_iff_t2
 
 -- see Note [lower instance priority]
-instance (priority := 100) separatedT3 [SeparatedSpace α] : T3Space α :=
+instance (priority := 100) separated_t3 [SeparatedSpace α] : T3Space α :=
   haveI := separated_iff_t2.mp ‹_›
   ⟨⟩
-#align separated_t3 separatedT3
+#align separated_t3 separated_t3
 
 instance Subtype.separatedSpace [SeparatedSpace α] (s : Set α) : SeparatedSpace s :=
   separated_iff_t2.mpr Subtype.t2Space

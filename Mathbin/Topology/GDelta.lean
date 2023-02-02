@@ -169,7 +169,7 @@ variable [FirstCountableTopology α]
 theorem isGδ_singleton (a : α) : IsGδ ({a} : Set α) :=
   by
   rcases(nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩
-  rw [← bInter_basis_nhds h_basis.to_has_basis]
+  rw [← binterᵢ_basis_nhds h_basis.to_has_basis]
   exact isGδ_bInter (to_countable _) fun n hn => (hU n).2.IsGδ
 #align is_Gδ_singleton isGδ_singleton
 

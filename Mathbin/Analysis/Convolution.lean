@@ -1745,7 +1745,7 @@ theorem contDiffOn_convolution_left_with_param_comp [μ.IsAddLeftInvariant] [μ.
 theorem HasCompactSupport.contDiff_convolution_right {n : ℕ∞} (hcg : HasCompactSupport g)
     (hf : LocallyIntegrable f μ) (hg : ContDiff 𝕜 n g) : ContDiff 𝕜 n (f ⋆[L, μ] g) :=
   by
-  rcases exists_compact_iff_has_compact_support.2 hcg with ⟨k, hk, h'k⟩
+  rcases exists_compact_iff_hasCompactSupport.2 hcg with ⟨k, hk, h'k⟩
   rw [← contDiffOn_univ]
   exact
     contDiffOn_convolution_right_with_param_comp L contDiffOn_id isOpen_univ hk

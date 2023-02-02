@@ -525,7 +525,7 @@ instance : ProperlyDiscontinuousVadd (zmultiples p).opposite ℝ :=
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is Hausdorff. -/
 instance : T2Space (AddCircle p) :=
-  t2_space_of_properly_discontinuous_vadd_of_t2_space
+  t2Space_of_properly_discontinuous_vadd_of_t2Space
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is normal. -/
 instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=

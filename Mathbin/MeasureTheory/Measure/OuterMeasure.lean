@@ -109,7 +109,7 @@ theorem pos_of_subset_ne_zero (m : OuterMeasure α) {a b : Set α} (hs : a ⊆ b
 
 protected theorem unionᵢ (m : OuterMeasure α) {β} [Countable β] (s : β → Set α) :
     m (⋃ i, s i) ≤ ∑' i, m (s i) :=
-  relSuprTsum m m.Empty (· ≤ ·) m.unionᵢ_nat s
+  rel_supᵢ_tsum m m.Empty (· ≤ ·) m.unionᵢ_nat s
 #align measure_theory.outer_measure.Union MeasureTheory.OuterMeasure.unionᵢ
 
 theorem unionᵢ_null [Countable β] (m : OuterMeasure α) {s : β → Set α} (h : ∀ i, m (s i) = 0) :
@@ -143,11 +143,11 @@ theorem unionₛ_null_iff (m : OuterMeasure α) {S : Set (Set α)} (hS : S.Count
 
 protected theorem unionᵢ_finset (m : OuterMeasure α) (s : β → Set α) (t : Finset β) :
     m (⋃ i ∈ t, s i) ≤ ∑ i in t, m (s i) :=
-  relSuprSum m m.Empty (· ≤ ·) m.unionᵢ_nat s t
+  rel_supᵢ_sum m m.Empty (· ≤ ·) m.unionᵢ_nat s t
 #align measure_theory.outer_measure.Union_finset MeasureTheory.OuterMeasure.unionᵢ_finset
 
 protected theorem union (m : OuterMeasure α) (s₁ s₂ : Set α) : m (s₁ ∪ s₂) ≤ m s₁ + m s₂ :=
-  relSupAdd m m.Empty (· ≤ ·) m.unionᵢ_nat s₁ s₂
+  rel_sup_add m m.Empty (· ≤ ·) m.unionᵢ_nat s₁ s₂
 #align measure_theory.outer_measure.union MeasureTheory.OuterMeasure.union
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
