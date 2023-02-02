@@ -1467,7 +1467,7 @@ instance Subgroup.t3QuotientOfIsClosed (S : Subgroup G) [Subgroup.Normal S] [IsC
   by
   suffices T1Space (G ⧸ S) by exact @TopologicalGroup.t3Space _ _ _ _ this
   have hS : IsClosed (S : Set G) := inferInstance
-  rw [← QuotientGroup.ker_mk S] at hS
+  rw [← QuotientGroup.ker_mk' S] at hS
   exact TopologicalGroup.t1Space (G ⧸ S) (quotient_map_quotient_mk.is_closed_preimage.mp hS)
 #align subgroup.t3_quotient_of_is_closed Subgroup.t3QuotientOfIsClosed
 #align add_subgroup.t3_quotient_of_is_closed AddSubgroup.t3_quotient_of_is_closed

@@ -98,7 +98,7 @@ theorem toCircle_add (x : AddCircle T) (y : AddCircle T) :
   by
   induction x using QuotientAddGroup.induction_on'
   induction y using QuotientAddGroup.induction_on'
-  simp_rw [← quotientAddGroup.coe_add, to_circle, Function.Periodic.lift_coe, mul_add,
+  simp_rw [← QuotientAddGroup.mk_add, to_circle, Function.Periodic.lift_coe, mul_add,
     expMapCircle_add]
 #align add_circle.to_circle_add AddCircle.toCircle_add
 
@@ -166,7 +166,7 @@ theorem fourier_apply {n : ℤ} {x : AddCircle T} : fourier n x = toCircle (n �
 theorem fourier_coe_apply {n : ℤ} {x : ℝ} :
     fourier n (x : AddCircle T) = Complex.exp (2 * π * Complex.i * n * x / T) :=
   by
-  rw [fourier_apply, ← quotientAddGroup.coe_zsmul, to_circle, Function.Periodic.lift_coe,
+  rw [fourier_apply, ← QuotientAddGroup.mk_zsmul, to_circle, Function.Periodic.lift_coe,
     expMapCircle_apply, Complex.of_real_mul, Complex.of_real_div, Complex.of_real_mul, zsmul_eq_mul,
     Complex.of_real_mul, Complex.of_real_int_cast, Complex.of_real_bit0, Complex.of_real_one]
   congr 1; ring
@@ -181,7 +181,7 @@ theorem fourier_zero {x : AddCircle T} : fourier 0 x = 1 :=
 
 @[simp]
 theorem fourier_eval_zero (n : ℤ) : fourier n (0 : AddCircle T) = 1 := by
-  rw [← quotientAddGroup.coe_zero, fourier_coe_apply, Complex.of_real_zero, mul_zero, zero_div,
+  rw [← QuotientAddGroup.mk_zero, fourier_coe_apply, Complex.of_real_zero, mul_zero, zero_div,
     Complex.exp_zero]
 #align fourier_eval_zero fourier_eval_zero
 
@@ -193,7 +193,7 @@ theorem fourier_one {x : AddCircle T} : fourier 1 x = toCircle x := by rw [fouri
 theorem fourier_neg {n : ℤ} {x : AddCircle T} : fourier (-n) x = conj (fourier n x) :=
   by
   induction x using QuotientAddGroup.induction_on'
-  simp_rw [fourier_apply, to_circle, ← quotientAddGroup.coe_zsmul, Function.Periodic.lift_coe, ←
+  simp_rw [fourier_apply, to_circle, ← QuotientAddGroup.mk_zsmul, Function.Periodic.lift_coe, ←
     coe_inv_circle_eq_conj, ← expMapCircle_neg, neg_smul, mul_neg]
 #align fourier_neg fourier_neg
 
@@ -214,7 +214,7 @@ theorem fourier_norm [Fact (0 < T)] (n : ℤ) : ‖@fourier T n‖ = 1 :=
 theorem fourier_add_half_inv_index {n : ℤ} (hn : n ≠ 0) (hT : 0 < T) (x : AddCircle T) :
     fourier n (x + (T / 2 / n : ℝ)) = -fourier n x :=
   by
-  rw [fourier_apply, zsmul_add, ← quotientAddGroup.coe_zsmul, to_circle_add, coe_mul_unit_sphere]
+  rw [fourier_apply, zsmul_add, ← QuotientAddGroup.mk_zsmul, to_circle_add, coe_mul_unit_sphere]
   have : (n : ℂ) ≠ 0 := by simpa using hn
   have : (@to_circle T (n • (T / 2 / n) : ℝ) : ℂ) = -1 :=
     by

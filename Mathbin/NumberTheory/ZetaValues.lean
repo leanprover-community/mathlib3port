@@ -126,7 +126,7 @@ theorem bernoulliFourierCoeff_recurrence (k : ℕ) {n : ℤ} (hn : n ≠ 0) :
         _ _)]
   dsimp only
   simp_rw [of_real_one, of_real_zero, sub_zero, one_mul]
-  rw [quotientAddGroup.coe_zero, fourier_eval_zero, one_mul, ← of_real_sub, bernoulliFun_eval_one,
+  rw [QuotientAddGroup.mk_zero, fourier_eval_zero, one_mul, ← of_real_sub, bernoulliFun_eval_one,
     add_sub_cancel']
   congr 2
   · split_ifs
@@ -230,7 +230,7 @@ theorem hasSum_one_div_pow_mul_fourier_mul_bernoulliFun {k : ℕ} (hk : 2 ≤ k)
     rcases hx with (hx | rfl)
     · exact this hx
     · convert this (left_mem_Ico.mpr zero_lt_one) using 1
-      · rw [AddCircle.coe_period, quotientAddGroup.coe_zero]
+      · rw [AddCircle.coe_period, QuotientAddGroup.mk_zero]
       · rw [bernoulliFun_endpoints_eq_of_ne_one (by linarith : k ≠ 1)]
   intro y hy
   let B : C(𝕌, ℂ) :=

@@ -56,49 +56,75 @@ variable {α : Type u} {β : Type v} {ι : Type _} {π : ι → Type _} [Topolog
 
 section Preconnected
 
+#print IsPreconnected /-
 /-- A preconnected set is one where there is no non-trivial open partition. -/
 def IsPreconnected (s : Set α) : Prop :=
   ∀ u v : Set α,
     IsOpen u → IsOpen v → s ⊆ u ∪ v → (s ∩ u).Nonempty → (s ∩ v).Nonempty → (s ∩ (u ∩ v)).Nonempty
 #align is_preconnected IsPreconnected
+-/
 
+#print IsConnected /-
 /-- A connected set is one that is nonempty and where there is no non-trivial open partition. -/
 def IsConnected (s : Set α) : Prop :=
   s.Nonempty ∧ IsPreconnected s
 #align is_connected IsConnected
+-/
 
+#print IsConnected.nonempty /-
 theorem IsConnected.nonempty {s : Set α} (h : IsConnected s) : s.Nonempty :=
   h.1
 #align is_connected.nonempty IsConnected.nonempty
+-/
 
+#print IsConnected.isPreconnected /-
 theorem IsConnected.isPreconnected {s : Set α} (h : IsConnected s) : IsPreconnected s :=
   h.2
 #align is_connected.is_preconnected IsConnected.isPreconnected
+-/
 
+#print IsPreirreducible.isPreconnected /-
 theorem IsPreirreducible.isPreconnected {s : Set α} (H : IsPreirreducible s) : IsPreconnected s :=
   fun _ _ hu hv _ => H _ _ hu hv
 #align is_preirreducible.is_preconnected IsPreirreducible.isPreconnected
+-/
 
+#print IsIrreducible.isConnected /-
 theorem IsIrreducible.isConnected {s : Set α} (H : IsIrreducible s) : IsConnected s :=
   ⟨H.Nonempty, H.IsPreirreducible.IsPreconnected⟩
 #align is_irreducible.is_connected IsIrreducible.isConnected
+-/
 
+#print isPreconnected_empty /-
 theorem isPreconnected_empty : IsPreconnected (∅ : Set α) :=
   isPreirreducible_empty.IsPreconnected
 #align is_preconnected_empty isPreconnected_empty
+-/
 
+#print isConnected_singleton /-
 theorem isConnected_singleton {x} : IsConnected ({x} : Set α) :=
   isIrreducible_singleton.IsConnected
 #align is_connected_singleton isConnected_singleton
+-/
 
+#print isPreconnected_singleton /-
 theorem isPreconnected_singleton {x} : IsPreconnected ({x} : Set α) :=
   isConnected_singleton.IsPreconnected
 #align is_preconnected_singleton isPreconnected_singleton
+-/
 
+#print Set.Subsingleton.isPreconnected /-
 theorem Set.Subsingleton.isPreconnected {s : Set α} (hs : s.Subsingleton) : IsPreconnected s :=
   hs.inductionOn isPreconnected_empty fun x => isPreconnected_singleton
 #align set.subsingleton.is_preconnected Set.Subsingleton.isPreconnected
+-/
 
+/- warning: is_preconnected_of_forall -> isPreconnected_of_forall is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} (x : α), (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (IsPreconnected.{u1} α _inst_1 t)))))) -> (IsPreconnected.{u1} α _inst_1 s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} (x : α), (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (IsPreconnected.{u1} α _inst_1 t)))))) -> (IsPreconnected.{u1} α _inst_1 s)
+Case conversion may be inaccurate. Consider using '#align is_preconnected_of_forall isPreconnected_of_forallₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any point of a set is joined to a fixed point by a preconnected subset,
 then the original set is preconnected as well. -/
@@ -115,6 +141,12 @@ theorem isPreconnected_of_forall {s : Set α} (x : α)
   exact this.imp fun z hz => ⟨ts hz.1, hz.2⟩
 #align is_preconnected_of_forall isPreconnected_of_forall
 
+/- warning: is_preconnected_of_forall_pair -> isPreconnected_of_forall_pair is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) t s) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y t) (IsPreconnected.{u1} α _inst_1 t))))))) -> (IsPreconnected.{u1} α _inst_1 s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (IsPreconnected.{u1} α _inst_1 t))))))) -> (IsPreconnected.{u1} α _inst_1 s)
+Case conversion may be inaccurate. Consider using '#align is_preconnected_of_forall_pair isPreconnected_of_forall_pairₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- If any two points of a set are contained in a preconnected subset,
@@ -127,6 +159,7 @@ theorem isPreconnected_of_forall_pair {s : Set α}
   exacts[isPreconnected_empty, isPreconnected_of_forall x fun y => H x hx y]
 #align is_preconnected_of_forall_pair isPreconnected_of_forall_pair
 
+#print isPreconnected_unionₛ /-
 /-- A union of a family of preconnected sets with a common point is preconnected as well. -/
 theorem isPreconnected_unionₛ (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x ∈ s)
     (H2 : ∀ s ∈ c, IsPreconnected s) : IsPreconnected (⋃₀ c) :=
@@ -135,12 +168,25 @@ theorem isPreconnected_unionₛ (x : α) (c : Set (Set α)) (H1 : ∀ s ∈ c, x
   rintro y ⟨s, sc, ys⟩
   exact ⟨s, subset_sUnion_of_mem sc, H1 s sc, ys, H2 s sc⟩
 #align is_preconnected_sUnion isPreconnected_unionₛ
+-/
 
+/- warning: is_preconnected_Union -> isPreconnected_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Sort.{u2}} {s : ι -> (Set.{u1} α)}, (Set.Nonempty.{u1} α (Set.interᵢ.{u1, u2} α ι (fun (i : ι) => s i))) -> (forall (i : ι), IsPreconnected.{u1} α _inst_1 (s i)) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, u2} α ι (fun (i : ι) => s i)))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (Set.Nonempty.{u2} α (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => s i))) -> (forall (i : ι), IsPreconnected.{u2} α _inst_1 (s i)) -> (IsPreconnected.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected_Union isPreconnected_unionᵢₓ'. -/
 theorem isPreconnected_unionᵢ {ι : Sort _} {s : ι → Set α} (h₁ : (⋂ i, s i).Nonempty)
     (h₂ : ∀ i, IsPreconnected (s i)) : IsPreconnected (⋃ i, s i) :=
   Exists.elim h₁ fun f hf => isPreconnected_unionₛ f _ hf (forall_range_iff.2 h₂)
 #align is_preconnected_Union isPreconnected_unionᵢ
 
+/- warning: is_preconnected.union -> IsPreconnected.union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (x : α) {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x t) -> (IsPreconnected.{u1} α _inst_1 s) -> (IsPreconnected.{u1} α _inst_1 t) -> (IsPreconnected.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] (x : α) {s : Set.{u1} α} {t : Set.{u1} α}, (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (IsPreconnected.{u1} α _inst_1 s) -> (IsPreconnected.{u1} α _inst_1 t) -> (IsPreconnected.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.union IsPreconnected.unionₓ'. -/
 theorem IsPreconnected.union (x : α) {s t : Set α} (H1 : x ∈ s) (H2 : x ∈ t) (H3 : IsPreconnected s)
     (H4 : IsPreconnected t) : IsPreconnected (s ∪ t) :=
   unionₛ_pair s t ▸
@@ -148,6 +194,12 @@ theorem IsPreconnected.union (x : α) {s t : Set α} (H1 : x ∈ s) (H2 : x ∈ 
       (by rintro r (rfl | rfl | h) <;> assumption)
 #align is_preconnected.union IsPreconnected.union
 
+/- warning: is_preconnected.union' -> IsPreconnected.union' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (IsPreconnected.{u1} α _inst_1 s) -> (IsPreconnected.{u1} α _inst_1 t) -> (IsPreconnected.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) -> (IsPreconnected.{u1} α _inst_1 s) -> (IsPreconnected.{u1} α _inst_1 t) -> (IsPreconnected.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.union' IsPreconnected.union'ₓ'. -/
 theorem IsPreconnected.union' {s t : Set α} (H : (s ∩ t).Nonempty) (hs : IsPreconnected s)
     (ht : IsPreconnected t) : IsPreconnected (s ∪ t) :=
   by
@@ -155,6 +207,12 @@ theorem IsPreconnected.union' {s t : Set α} (H : (s ∩ t).Nonempty) (hs : IsPr
   exact hs.union x hxs hxt ht
 #align is_preconnected.union' IsPreconnected.union'
 
+/- warning: is_connected.union -> IsConnected.union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (IsConnected.{u1} α _inst_1 s) -> (IsConnected.{u1} α _inst_1 t) -> (IsConnected.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) -> (IsConnected.{u1} α _inst_1 s) -> (IsConnected.{u1} α _inst_1 t) -> (IsConnected.{u1} α _inst_1 (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t))
+Case conversion may be inaccurate. Consider using '#align is_connected.union IsConnected.unionₓ'. -/
 theorem IsConnected.union {s t : Set α} (H : (s ∩ t).Nonempty) (Hs : IsConnected s)
     (Ht : IsConnected t) : IsConnected (s ∪ t) :=
   by
@@ -165,6 +223,7 @@ theorem IsConnected.union {s t : Set α} (H : (s ∩ t).Nonempty) (Hs : IsConnec
       Ht.is_preconnected
 #align is_connected.union IsConnected.union
 
+#print IsPreconnected.unionₛ_directed /-
 /-- The directed sUnion of a set S of preconnected subsets is preconnected. -/
 theorem IsPreconnected.unionₛ_directed {S : Set (Set α)} (K : DirectedOn (· ⊆ ·) S)
     (H : ∀ s ∈ S, IsPreconnected s) : IsPreconnected (⋃₀ S) :=
@@ -176,13 +235,20 @@ theorem IsPreconnected.unionₛ_directed {S : Set (Set α)} (K : DirectedOn (· 
   have Kruv : r ∩ (u ∩ v) ⊆ ⋃₀ S ∩ (u ∩ v) := inter_subset_inter_left _ (subset_sUnion_of_mem hrS)
   exact Hnuv.mono Kruv
 #align is_preconnected.sUnion_directed IsPreconnected.unionₛ_directed
+-/
 
+/- warning: is_preconnected.bUnion_of_refl_trans_gen -> IsPreconnected.bunionᵢ_of_reflTransGen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {t : Set.{u2} ι} {s : ι -> (Set.{u1} α)}, (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (IsPreconnected.{u1} α _inst_1 (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t)) i j))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) => s n))))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {t : Set.{u1} ι} {s : ι -> (Set.{u2} α)}, (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (IsPreconnected.{u2} α _inst_1 (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t)) i j))) -> (IsPreconnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bunionᵢ_of_reflTransGenₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ⊆ » t) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
-theorem IsPreconnected.bUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
+theorem IsPreconnected.bunionᵢ_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (H : ∀ i ∈ t, IsPreconnected (s i))
     (K :
       ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
@@ -215,21 +281,33 @@ theorem IsPreconnected.bUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι
   obtain ⟨j : ι, hj : j ∈ t, hyj : y ∈ s j⟩ := mem_Union₂.1 hy
   obtain ⟨p, hpt, hip, hjp, hp⟩ := P i hi j hj (K i hi j hj)
   exact ⟨⋃ j ∈ p, s j, bUnion_subset_bUnion_left hpt, mem_bUnion hip hxi, mem_bUnion hjp hyj, hp⟩
-#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bUnion_of_reflTransGen
+#align is_preconnected.bUnion_of_refl_trans_gen IsPreconnected.bunionᵢ_of_reflTransGen
 
+/- warning: is_connected.bUnion_of_refl_trans_gen -> IsConnected.bunionᵢ_of_reflTransGen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {t : Set.{u2} ι} {s : ι -> (Set.{u1} α)}, (Set.Nonempty.{u2} ι t) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (IsConnected.{u1} α _inst_1 (s i))) -> (forall (i : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t) -> (forall (j : ι), (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) j t) -> (Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i t)) i j))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) n t) => s n))))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {t : Set.{u1} ι} {s : ι -> (Set.{u2} α)}, (Set.Nonempty.{u1} ι t) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (IsConnected.{u2} α _inst_1 (s i))) -> (forall (i : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t) -> (forall (j : ι), (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) j t) -> (Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => And (Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i t)) i j))) -> (IsConnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_connected.bUnion_of_refl_trans_gen IsConnected.bunionᵢ_of_reflTransGenₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i j «expr ∈ » t) -/
 /-- The bUnion of a family of preconnected sets is preconnected if the graph determined by
 whether two sets intersect is preconnected. -/
-theorem IsConnected.bUnion_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
+theorem IsConnected.bunionᵢ_of_reflTransGen {ι : Type _} {t : Set ι} {s : ι → Set α}
     (ht : t.Nonempty) (H : ∀ i ∈ t, IsConnected (s i))
     (K :
       ∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t),
         ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty ∧ i ∈ t) i j) :
     IsConnected (⋃ n ∈ t, s n) :=
   ⟨nonempty_bunionᵢ.2 <| ⟨ht.some, ht.some_mem, (H _ ht.some_mem).Nonempty⟩,
-    IsPreconnected.bUnion_of_reflTransGen (fun i hi => (H i hi).IsPreconnected) K⟩
-#align is_connected.bUnion_of_refl_trans_gen IsConnected.bUnion_of_reflTransGen
+    IsPreconnected.bunionᵢ_of_reflTransGen (fun i hi => (H i hi).IsPreconnected) K⟩
+#align is_connected.bUnion_of_refl_trans_gen IsConnected.bunionᵢ_of_reflTransGen
 
+/- warning: is_preconnected.Union_of_refl_trans_gen -> IsPreconnected.unionᵢ_of_reflTransGen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsPreconnected.{u1} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) i j) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => s n)))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsPreconnected.{u2} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) i j) -> (IsPreconnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.Union_of_refl_trans_gen IsPreconnected.unionᵢ_of_reflTransGenₓ'. -/
 /-- Preconnectedness of the Union of a family of preconnected sets
 indexed by the vertices of a preconnected graph,
 where two vertices are joined when the corresponding sets intersect. -/
@@ -239,10 +317,16 @@ theorem IsPreconnected.unionᵢ_of_reflTransGen {ι : Type _} {s : ι → Set α
     IsPreconnected (⋃ n, s n) := by
   rw [← bUnion_univ]
   exact
-    IsPreconnected.bUnion_of_reflTransGen (fun i _ => H i) fun i _ j _ => by
+    IsPreconnected.bunionᵢ_of_reflTransGen (fun i _ => H i) fun i _ j _ => by
       simpa [mem_univ] using K i j
 #align is_preconnected.Union_of_refl_trans_gen IsPreconnected.unionᵢ_of_reflTransGen
 
+/- warning: is_connected.Union_of_refl_trans_gen -> IsConnected.unionᵢ_of_reflTransGen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} [_inst_2 : Nonempty.{succ u2} ι] {s : ι -> (Set.{u1} α)}, (forall (i : ι), IsConnected.{u1} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u2} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s i) (s j))) i j) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α ι (fun (n : ι) => s n)))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} [_inst_2 : Nonempty.{succ u1} ι] {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsConnected.{u2} α _inst_1 (s i)) -> (forall (i : ι) (j : ι), Relation.ReflTransGen.{u1} ι (fun (i : ι) (j : ι) => Set.Nonempty.{u2} α (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (s i) (s j))) i j) -> (IsConnected.{u2} α _inst_1 (Set.unionᵢ.{u2, succ u1} α ι (fun (n : ι) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_connected.Union_of_refl_trans_gen IsConnected.unionᵢ_of_reflTransGenₓ'. -/
 theorem IsConnected.unionᵢ_of_reflTransGen {ι : Type _} [Nonempty ι] {s : ι → Set α}
     (H : ∀ i, IsConnected (s i))
     (K : ∀ i j, ReflTransGen (fun i j : ι => (s i ∩ s j).Nonempty) i j) : IsConnected (⋃ n, s n) :=
@@ -256,6 +340,12 @@ open Order
 
 variable [LinearOrder β] [SuccOrder β] [IsSuccArchimedean β]
 
+/- warning: is_preconnected.Union_of_chain -> IsPreconnected.unionᵢ_of_chain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)}, (forall (n : β), IsPreconnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n)))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)}, (forall (n : β), IsPreconnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n)))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.Union_of_chain IsPreconnected.unionᵢ_of_chainₓ'. -/
 /-- The Union of connected sets indexed by a type with an archimedean successor (like `ℕ` or `ℤ`)
   such that any two neighboring sets meet is preconnected. -/
 theorem IsPreconnected.unionᵢ_of_chain {s : β → Set α} (H : ∀ n, IsPreconnected (s n))
@@ -267,6 +357,12 @@ theorem IsPreconnected.unionᵢ_of_chain {s : β → Set α} (H : ∀ n, IsPreco
       exact K i
 #align is_preconnected.Union_of_chain IsPreconnected.unionᵢ_of_chain
 
+/- warning: is_connected.Union_of_chain -> IsConnected.unionᵢ_of_chain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] [_inst_5 : Nonempty.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (n : β), IsConnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n)))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] [_inst_5 : Nonempty.{succ u2} β] {s : β -> (Set.{u1} α)}, (forall (n : β), IsConnected.{u1} α _inst_1 (s n)) -> (forall (n : β), Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n)))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => s n)))
+Case conversion may be inaccurate. Consider using '#align is_connected.Union_of_chain IsConnected.unionᵢ_of_chainₓ'. -/
 /-- The Union of connected sets indexed by a type with an archimedean successor (like `ℕ` or `ℤ`)
   such that any two neighboring sets meet is connected. -/
 theorem IsConnected.unionᵢ_of_chain [Nonempty β] {s : β → Set α} (H : ∀ n, IsConnected (s n))
@@ -278,9 +374,15 @@ theorem IsConnected.unionᵢ_of_chain [Nonempty β] {s : β → Set α} (H : ∀
       exact K i
 #align is_connected.Union_of_chain IsConnected.unionᵢ_of_chain
 
+/- warning: is_preconnected.bUnion_of_chain -> IsPreconnected.bunionᵢ_of_chain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) t) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (IsPreconnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n))))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) => s n))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) t) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (IsPreconnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n))))) -> (IsPreconnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.bUnion_of_chain IsPreconnected.bunionᵢ_of_chainₓ'. -/
 /-- The Union of preconnected sets indexed by a subset of a type with an archimedean successor
   (like `ℕ` or `ℤ`) such that any two neighboring sets meet is preconnected. -/
-theorem IsPreconnected.bUnion_of_chain {s : β → Set α} {t : Set β} (ht : OrdConnected t)
+theorem IsPreconnected.bunionᵢ_of_chain {s : β → Set α} {t : Set β} (ht : OrdConnected t)
     (H : ∀ n ∈ t, IsPreconnected (s n))
     (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) :
     IsPreconnected (⋃ n ∈ t, s n) :=
@@ -291,25 +393,32 @@ theorem IsPreconnected.bUnion_of_chain {s : β → Set α} {t : Set β} (ht : Or
     ht.out hi hj ⟨hk.1.trans <| le_succ k, succ_le_of_lt hk.2⟩
   have h3 : ∀ {i j k : β}, i ∈ t → j ∈ t → k ∈ Ico i j → (s k ∩ s (succ k)).Nonempty :=
     fun i j k hi hj hk => K _ (h1 hi hj hk) (h2 hi hj hk)
-  refine' IsPreconnected.bUnion_of_reflTransGen H fun i hi j hj => _
+  refine' IsPreconnected.bunionᵢ_of_reflTransGen H fun i hi j hj => _
   exact
     reflTransGen_of_succ _ (fun k hk => ⟨h3 hi hj hk, h1 hi hj hk⟩) fun k hk =>
       ⟨by
         rw [inter_comm]
         exact h3 hj hi hk, h2 hj hi hk⟩
-#align is_preconnected.bUnion_of_chain IsPreconnected.bUnion_of_chain
+#align is_preconnected.bUnion_of_chain IsPreconnected.bunionᵢ_of_chain
 
+/- warning: is_connected.bUnion_of_chain -> IsConnected.bunionᵢ_of_chain is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.Nonempty.{u2} β t) -> (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) t) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (IsConnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) -> (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (LinearOrder.toLattice.{u2} β _inst_2)))) _inst_3 n))))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) n t) => s n))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : LinearOrder.{u2} β] [_inst_3 : SuccOrder.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2)))))] [_inst_4 : IsSuccArchimedean.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3] {s : β -> (Set.{u1} α)} {t : Set.{u2} β}, (Set.Nonempty.{u2} β t) -> (Set.OrdConnected.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) t) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (IsConnected.{u1} α _inst_1 (s n))) -> (forall (n : β), (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) -> (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n) t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (s n) (s (Order.succ.{u2} β (PartialOrder.toPreorder.{u2} β (SemilatticeInf.toPartialOrder.{u2} β (Lattice.toSemilatticeInf.{u2} β (DistribLattice.toLattice.{u2} β (instDistribLattice.{u2} β _inst_2))))) _inst_3 n))))) -> (IsConnected.{u1} α _inst_1 (Set.unionᵢ.{u1, succ u2} α β (fun (n : β) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) (fun (H : Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) n t) => s n))))
+Case conversion may be inaccurate. Consider using '#align is_connected.bUnion_of_chain IsConnected.bunionᵢ_of_chainₓ'. -/
 /-- The Union of connected sets indexed by a subset of a type with an archimedean successor
   (like `ℕ` or `ℤ`) such that any two neighboring sets meet is preconnected. -/
-theorem IsConnected.bUnion_of_chain {s : β → Set α} {t : Set β} (hnt : t.Nonempty)
+theorem IsConnected.bunionᵢ_of_chain {s : β → Set α} {t : Set β} (hnt : t.Nonempty)
     (ht : OrdConnected t) (H : ∀ n ∈ t, IsConnected (s n))
     (K : ∀ n : β, n ∈ t → succ n ∈ t → (s n ∩ s (succ n)).Nonempty) : IsConnected (⋃ n ∈ t, s n) :=
   ⟨nonempty_bunionᵢ.2 <| ⟨hnt.some, hnt.some_mem, (H _ hnt.some_mem).Nonempty⟩,
-    IsPreconnected.bUnion_of_chain ht (fun i hi => (H i hi).IsPreconnected) K⟩
-#align is_connected.bUnion_of_chain IsConnected.bUnion_of_chain
+    IsPreconnected.bunionᵢ_of_chain ht (fun i hi => (H i hi).IsPreconnected) K⟩
+#align is_connected.bUnion_of_chain IsConnected.bunionᵢ_of_chain
 
 end SuccOrder
 
+#print IsPreconnected.subset_closure /-
 /-- Theorem of bark and tree :
 if a set is within a (pre)connected set and its closure,
 then it is (pre)connected as well. -/
@@ -320,7 +429,9 @@ theorem IsPreconnected.subset_closure {s : Set α} {t : Set α} (H : IsPreconnec
   let ⟨r, hrs, hruv⟩ := H u v hu hv (Subset.trans Kst htuv) ⟨p, hps, hpu⟩ ⟨q, hqs, hqv⟩
   ⟨r, Kst hrs, hruv⟩
 #align is_preconnected.subset_closure IsPreconnected.subset_closure
+-/
 
+#print IsConnected.subset_closure /-
 theorem IsConnected.subset_closure {s : Set α} {t : Set α} (H : IsConnected s) (Kst : s ⊆ t)
     (Ktcs : t ⊆ closure s) : IsConnected t :=
   let hsne := H.left
@@ -328,16 +439,22 @@ theorem IsConnected.subset_closure {s : Set α} {t : Set α} (H : IsConnected s)
   let htne := Nonempty.mono ht hsne
   ⟨Nonempty.mono Kst H.left, IsPreconnected.subset_closure H.right Kst Ktcs⟩
 #align is_connected.subset_closure IsConnected.subset_closure
+-/
 
+#print IsPreconnected.closure /-
 /-- The closure of a (pre)connected set is (pre)connected as well. -/
 theorem IsPreconnected.closure {s : Set α} (H : IsPreconnected s) : IsPreconnected (closure s) :=
   IsPreconnected.subset_closure H subset_closure <| Subset.refl <| closure s
 #align is_preconnected.closure IsPreconnected.closure
+-/
 
+#print IsConnected.closure /-
 theorem IsConnected.closure {s : Set α} (H : IsConnected s) : IsConnected (closure s) :=
   IsConnected.subset_closure H subset_closure <| Subset.refl <| closure s
 #align is_connected.closure IsConnected.closure
+-/
 
+#print IsPreconnected.image /-
 /-- The image of a (pre)connected set is (pre)connected as well. -/
 theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnected s) (f : α → β)
     (hf : ContinuousOn f s) : IsPreconnected (f '' s) :=
@@ -361,12 +478,21 @@ theorem IsPreconnected.image [TopologicalSpace β] {s : Set α} (H : IsPreconnec
     ← u'_eq, ← v'_eq] at hz
   exact ⟨f z, ⟨z, hz.1.2, rfl⟩, hz.1.1, hz.2.1⟩
 #align is_preconnected.image IsPreconnected.image
+-/
 
+#print IsConnected.image /-
 theorem IsConnected.image [TopologicalSpace β] {s : Set α} (H : IsConnected s) (f : α → β)
     (hf : ContinuousOn f s) : IsConnected (f '' s) :=
   ⟨nonempty_image_iff.mpr H.Nonempty, H.IsPreconnected.image f hf⟩
 #align is_connected.image IsConnected.image
+-/
 
+/- warning: is_preconnected_closed_iff -> isPreconnected_closed_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreconnected.{u1} α _inst_1 s) (forall (t : Set.{u1} α) (t' : Set.{u1} α), (IsClosed.{u1} α _inst_1 t) -> (IsClosed.{u1} α _inst_1 t') -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) t t')) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t')) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t t'))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreconnected.{u1} α _inst_1 s) (forall (t : Set.{u1} α) (t' : Set.{u1} α), (IsClosed.{u1} α _inst_1 t) -> (IsClosed.{u1} α _inst_1 t') -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) t t')) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t')) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t t'))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected_closed_iff isPreconnected_closed_iffₓ'. -/
 theorem isPreconnected_closed_iff {s : Set α} :
     IsPreconnected s ↔
       ∀ t t',
@@ -393,6 +519,7 @@ theorem isPreconnected_closed_iff {s : Set α} :
     exact this.ne_empty huv.disjoint_compl_right.inter_eq⟩
 #align is_preconnected_closed_iff isPreconnected_closed_iff
 
+#print Inducing.isPreconnected_image /-
 theorem Inducing.isPreconnected_image [TopologicalSpace β] {s : Set α} {f : α → β}
     (hf : Inducing f) : IsPreconnected (f '' s) ↔ IsPreconnected s :=
   by
@@ -405,7 +532,9 @@ theorem Inducing.isPreconnected_image [TopologicalSpace β] {s : Set α} {f : α
     ⟨_, ⟨z, hzs, rfl⟩, hzuv⟩
   exact ⟨z, hzs, hzuv⟩
 #align inducing.is_preconnected_image Inducing.isPreconnected_image
+-/
 
+#print IsPreconnected.preimage_of_open_map /-
 /- TODO: The following lemmas about connection of preimages hold more generally for strict maps
 (the quotient and subspace topologies of the image agree) whose fibers are preconnected. -/
 theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsPreconnected s)
@@ -423,7 +552,9 @@ theorem IsPreconnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (
   · obtain ⟨y, hy1, hy2⟩ := hsv
     exact ⟨f y, hy1, y, hy2, rfl⟩
 #align is_preconnected.preimage_of_open_map IsPreconnected.preimage_of_open_map
+-/
 
+#print IsPreconnected.preimage_of_closed_map /-
 theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β}
     (hs : IsPreconnected s) {f : α → β} (hinj : Function.Injective f) (hf : IsClosedMap f)
     (hsf : s ⊆ range f) : IsPreconnected (f ⁻¹' s) :=
@@ -441,19 +572,30 @@ theorem IsPreconnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β}
     · obtain ⟨y, hy1, hy2⟩ := hsv
       exact ⟨f y, hy1, y, hy2, rfl⟩
 #align is_preconnected.preimage_of_closed_map IsPreconnected.preimage_of_closed_map
+-/
 
-theorem IsConnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
+#print IsConnected.preimage_of_openMap /-
+theorem IsConnected.preimage_of_openMap [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
     {f : α → β} (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ range f) :
     IsConnected (f ⁻¹' s) :=
   ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_open_map hinj hf hsf⟩
-#align is_connected.preimage_of_open_map IsConnected.preimage_of_open_map
+#align is_connected.preimage_of_open_map IsConnected.preimage_of_openMap
+-/
 
-theorem IsConnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
+#print IsConnected.preimage_of_closedMap /-
+theorem IsConnected.preimage_of_closedMap [TopologicalSpace β] {s : Set β} (hs : IsConnected s)
     {f : α → β} (hinj : Function.Injective f) (hf : IsClosedMap f) (hsf : s ⊆ range f) :
     IsConnected (f ⁻¹' s) :=
   ⟨hs.Nonempty.preimage' hsf, hs.IsPreconnected.preimage_of_closed_map hinj hf hsf⟩
-#align is_connected.preimage_of_closed_map IsConnected.preimage_of_closed_map
+#align is_connected.preimage_of_closed_map IsConnected.preimage_of_closedMap
+-/
 
+/- warning: is_preconnected.subset_or_subset -> IsPreconnected.subset_or_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α} {v : Set.{u1} α}, (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) u v)) -> (IsPreconnected.{u1} α _inst_1 s) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s v))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α} {v : Set.{u1} α}, (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) u v)) -> (IsPreconnected.{u1} α _inst_1 s) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s v))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.subset_or_subset IsPreconnected.subset_or_subsetₓ'. -/
 theorem IsPreconnected.subset_or_subset (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v)
     (hsuv : s ⊆ u ∪ v) (hs : IsPreconnected s) : s ⊆ u ∨ s ⊆ v :=
   by
@@ -466,6 +608,12 @@ theorem IsPreconnected.subset_or_subset (hu : IsOpen u) (hv : IsOpen v) (huv : D
     exact Or.inl ((hs s.disjoint_empty).subset_left_of_subset_union hsuv)
 #align is_preconnected.subset_or_subset IsPreconnected.subset_or_subset
 
+/- warning: is_preconnected.subset_left_of_subset_union -> IsPreconnected.subset_left_of_subset_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α} {v : Set.{u1} α}, (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) u v)) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s u)) -> (IsPreconnected.{u1} α _inst_1 s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α} {v : Set.{u1} α}, (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) u v)) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s u)) -> (IsPreconnected.{u1} α _inst_1 s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u)
+Case conversion may be inaccurate. Consider using '#align is_preconnected.subset_left_of_subset_union IsPreconnected.subset_left_of_subset_unionₓ'. -/
 theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen v)
     (huv : Disjoint u v) (hsuv : s ⊆ u ∪ v) (hsu : (s ∩ u).Nonempty) (hs : IsPreconnected s) :
     s ⊆ u :=
@@ -477,12 +625,24 @@ theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen 
       exact Set.disjoint_iff.1 huv hx)
 #align is_preconnected.subset_left_of_subset_union IsPreconnected.subset_left_of_subset_union
 
+/- warning: is_preconnected.subset_right_of_subset_union -> IsPreconnected.subset_right_of_subset_union is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α} {v : Set.{u1} α}, (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) u v)) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s v)) -> (IsPreconnected.{u1} α _inst_1 s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s v)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α} {v : Set.{u1} α}, (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) u v)) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s v)) -> (IsPreconnected.{u1} α _inst_1 s) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s v)
+Case conversion may be inaccurate. Consider using '#align is_preconnected.subset_right_of_subset_union IsPreconnected.subset_right_of_subset_unionₓ'. -/
 theorem IsPreconnected.subset_right_of_subset_union (hu : IsOpen u) (hv : IsOpen v)
     (huv : Disjoint u v) (hsuv : s ⊆ u ∪ v) (hsv : (s ∩ v).Nonempty) (hs : IsPreconnected s) :
     s ⊆ v :=
   hs.subset_left_of_subset_union hv hu huv.symm (union_comm u v ▸ hsuv) hsv
 #align is_preconnected.subset_right_of_subset_union IsPreconnected.subset_right_of_subset_union
 
+/- warning: is_preconnected.subset_of_closure_inter_subset -> IsPreconnected.subset_of_closure_inter_subset is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 u) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (closure.{u1} α _inst_1 u) s) u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {u : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 u) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (closure.{u1} α _inst_1 u) s) u) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u)
+Case conversion may be inaccurate. Consider using '#align is_preconnected.subset_of_closure_inter_subset IsPreconnected.subset_of_closure_inter_subsetₓ'. -/
 /-- If a preconnected set `s` intersects an open set `u`, and limit points of `u` inside `s` are
 contained in `u`, then the whole set `s` is contained in `u`. -/
 theorem IsPreconnected.subset_of_closure_inter_subset (hs : IsPreconnected s) (hu : IsOpen u)
@@ -499,6 +659,12 @@ theorem IsPreconnected.subset_of_closure_inter_subset (hs : IsPreconnected s) (h
   exact disjoint_compl_right.mono_right (compl_subset_compl.2 subset_closure)
 #align is_preconnected.subset_of_closure_inter_subset IsPreconnected.subset_of_closure_inter_subset
 
+/- warning: is_preconnected.prod -> IsPreconnected.prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsPreconnected.{u1} α _inst_1 s) -> (IsPreconnected.{u2} β _inst_2 t) -> (IsPreconnected.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsPreconnected.{u1} α _inst_1 s) -> (IsPreconnected.{u2} β _inst_2 t) -> (IsPreconnected.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.prod IsPreconnected.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsPreconnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs : IsPreconnected s)
     (ht : IsPreconnected t) : IsPreconnected (s ×ˢ t) :=
@@ -515,12 +681,19 @@ theorem IsPreconnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs 
         (hs.image _ (continuous_id.prod_mk continuous_const).ContinuousOn)
 #align is_preconnected.prod IsPreconnected.prod
 
+/- warning: is_connected.prod -> IsConnected.prod is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsConnected.{u1} α _inst_1 s) -> (IsConnected.{u2} β _inst_2 t) -> (IsConnected.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{u1} α} {t : Set.{u2} β}, (IsConnected.{u1} α _inst_1 s) -> (IsConnected.{u2} β _inst_2 t) -> (IsConnected.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) (Set.prod.{u1, u2} α β s t))
+Case conversion may be inaccurate. Consider using '#align is_connected.prod IsConnected.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsConnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs : IsConnected s)
     (ht : IsConnected t) : IsConnected (s ×ˢ t) :=
   ⟨hs.1.Prod ht.1, hs.2.Prod ht.2⟩
 #align is_connected.prod IsConnected.prod
 
+#print isPreconnected_univ_pi /-
 theorem isPreconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (π i)}
     (hs : ∀ i, IsPreconnected (s i)) : IsPreconnected (pi univ s) :=
   by
@@ -545,7 +718,9 @@ theorem isPreconnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set 
     refine' (hconn u v uo vo (hsub.trans hsuv) hSu hSv).mono _
     exact inter_subset_inter_left _ hsub
 #align is_preconnected_univ_pi isPreconnected_univ_pi
+-/
 
+#print isConnected_univ_pi /-
 @[simp]
 theorem isConnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (π i)} :
     IsConnected (pi univ s) ↔ ∀ i, IsConnected (s i) :=
@@ -555,7 +730,14 @@ theorem isConnected_univ_pi [∀ i, TopologicalSpace (π i)] {s : ∀ i, Set (π
   rw [← eval_image_univ_pi hne]
   exact hc.image _ (continuous_apply _).ContinuousOn
 #align is_connected_univ_pi isConnected_univ_pi
+-/
 
+/- warning: sigma.is_connected_iff -> Sigma.isConnected_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (π i)] {s : Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i))}, Iff (IsConnected.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i)) (Sigma.topologicalSpace.{u1, u2} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) s) (Exists.{succ u1} ι (fun (i : ι) => Exists.{succ u2} (Set.{u2} (π i)) (fun (t : Set.{u2} (π i)) => And (IsConnected.{u2} (π i) (_inst_2 i) t) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i))) s (Set.image.{u2, max u1 u2} (π i) (Sigma.{u1, u2} ι (fun (i : ι) => π i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => π i) i) t)))))
+but is expected to have type
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (π i)] {s : Set.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => π i))}, Iff (IsConnected.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i)) (instTopologicalSpaceSigma.{u1, u2} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) s) (Exists.{succ u1} ι (fun (i : ι) => Exists.{succ u2} (Set.{u2} (π i)) (fun (t : Set.{u2} (π i)) => And (IsConnected.{u2} (π i) (_inst_2 i) t) (Eq.{max (succ u1) (succ u2)} (Set.{max u2 u1} (Sigma.{u1, u2} ι (fun (i : ι) => π i))) s (Set.image.{u2, max u2 u1} (π i) (Sigma.{u1, u2} ι (fun (i : ι) => π i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => π i) i) t)))))
+Case conversion may be inaccurate. Consider using '#align sigma.is_connected_iff Sigma.isConnected_iffₓ'. -/
 theorem Sigma.isConnected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σi, π i)} :
     IsConnected s ↔ ∃ i t, IsConnected t ∧ s = Sigma.mk i '' t :=
   by
@@ -579,6 +761,12 @@ theorem Sigma.isConnected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σi, π
     exact ht.image _ continuous_sigma_mk.continuous_on
 #align sigma.is_connected_iff Sigma.isConnected_iff
 
+/- warning: sigma.is_preconnected_iff -> Sigma.isPreconnected_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [hι : Nonempty.{succ u1} ι] [_inst_2 : forall (i : ι), TopologicalSpace.{u2} (π i)] {s : Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i))}, Iff (IsPreconnected.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i)) (Sigma.topologicalSpace.{u1, u2} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) s) (Exists.{succ u1} ι (fun (i : ι) => Exists.{succ u2} (Set.{u2} (π i)) (fun (t : Set.{u2} (π i)) => And (IsPreconnected.{u2} (π i) (_inst_2 i) t) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sigma.{u1, u2} ι (fun (i : ι) => π i))) s (Set.image.{u2, max u1 u2} (π i) (Sigma.{u1, u2} ι (fun (i : ι) => π i)) (Sigma.mk.{u1, u2} ι (fun (i : ι) => π i) i) t)))))
+but is expected to have type
+  forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [hι : Nonempty.{succ u2} ι] [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] {s : Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => π i))}, Iff (IsPreconnected.{max u2 u1} (Sigma.{u2, u1} ι (fun (i : ι) => π i)) (instTopologicalSpaceSigma.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) s) (Exists.{succ u2} ι (fun (i : ι) => Exists.{succ u1} (Set.{u1} (π i)) (fun (t : Set.{u1} (π i)) => And (IsPreconnected.{u1} (π i) (_inst_2 i) t) (Eq.{max (succ u2) (succ u1)} (Set.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => π i))) s (Set.image.{u1, max u1 u2} (π i) (Sigma.{u2, u1} ι (fun (i : ι) => π i)) (Sigma.mk.{u2, u1} ι (fun (i : ι) => π i) i) t)))))
+Case conversion may be inaccurate. Consider using '#align sigma.is_preconnected_iff Sigma.isPreconnected_iffₓ'. -/
 theorem Sigma.isPreconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (π i)]
     {s : Set (Σi, π i)} : IsPreconnected s ↔ ∃ i t, IsPreconnected t ∧ s = Sigma.mk i '' t :=
   by
@@ -591,6 +779,12 @@ theorem Sigma.isPreconnected_iff [hι : Nonempty ι] [∀ i, TopologicalSpace (�
     exact ht.image _ continuous_sigma_mk.continuous_on
 #align sigma.is_preconnected_iff Sigma.isPreconnected_iff
 
+/- warning: sum.is_connected_iff -> Sum.isConnected_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{max u1 u2} (Sum.{u1, u2} α β)}, Iff (IsConnected.{max u1 u2} (Sum.{u1, u2} α β) (Sum.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) s) (Or (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsConnected.{u1} α _inst_1 t) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sum.{u1, u2} α β)) s (Set.image.{u1, max u1 u2} α (Sum.{u1, u2} α β) (Sum.inl.{u1, u2} α β) t)))) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (IsConnected.{u2} β _inst_2 t) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sum.{u1, u2} α β)) s (Set.image.{u2, max u1 u2} β (Sum.{u1, u2} α β) (Sum.inr.{u1, u2} α β) t)))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{max u2 u1} (Sum.{u1, u2} α β)}, Iff (IsConnected.{max u1 u2} (Sum.{u1, u2} α β) (instTopologicalSpaceSum.{u1, u2} α β _inst_1 _inst_2) s) (Or (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsConnected.{u1} α _inst_1 t) (Eq.{max (succ u1) (succ u2)} (Set.{max u2 u1} (Sum.{u1, u2} α β)) s (Set.image.{u1, max u2 u1} α (Sum.{u1, u2} α β) (Sum.inl.{u1, u2} α β) t)))) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (IsConnected.{u2} β _inst_2 t) (Eq.{max (succ u1) (succ u2)} (Set.{max u2 u1} (Sum.{u1, u2} α β)) s (Set.image.{u2, max u2 u1} β (Sum.{u1, u2} α β) (Sum.inr.{u1, u2} α β) t)))))
+Case conversion may be inaccurate. Consider using '#align sum.is_connected_iff Sum.isConnected_iffₓ'. -/
 theorem Sum.isConnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
     IsConnected s ↔
       (∃ t, IsConnected t ∧ s = Sum.inl '' t) ∨ ∃ t, IsConnected t ∧ s = Sum.inr '' t :=
@@ -617,6 +811,12 @@ theorem Sum.isConnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
     · exact ht.image _ continuous_inr.continuous_on
 #align sum.is_connected_iff Sum.isConnected_iff
 
+/- warning: sum.is_preconnected_iff -> Sum.isPreconnected_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{max u1 u2} (Sum.{u1, u2} α β)}, Iff (IsPreconnected.{max u1 u2} (Sum.{u1, u2} α β) (Sum.topologicalSpace.{u1, u2} α β _inst_1 _inst_2) s) (Or (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsPreconnected.{u1} α _inst_1 t) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sum.{u1, u2} α β)) s (Set.image.{u1, max u1 u2} α (Sum.{u1, u2} α β) (Sum.inl.{u1, u2} α β) t)))) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (IsPreconnected.{u2} β _inst_2 t) (Eq.{succ (max u1 u2)} (Set.{max u1 u2} (Sum.{u1, u2} α β)) s (Set.image.{u2, max u1 u2} β (Sum.{u1, u2} α β) (Sum.inr.{u1, u2} α β) t)))))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {s : Set.{max u2 u1} (Sum.{u1, u2} α β)}, Iff (IsPreconnected.{max u1 u2} (Sum.{u1, u2} α β) (instTopologicalSpaceSum.{u1, u2} α β _inst_1 _inst_2) s) (Or (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (IsPreconnected.{u1} α _inst_1 t) (Eq.{max (succ u1) (succ u2)} (Set.{max u2 u1} (Sum.{u1, u2} α β)) s (Set.image.{u1, max u2 u1} α (Sum.{u1, u2} α β) (Sum.inl.{u1, u2} α β) t)))) (Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => And (IsPreconnected.{u2} β _inst_2 t) (Eq.{max (succ u1) (succ u2)} (Set.{max u2 u1} (Sum.{u1, u2} α β)) s (Set.image.{u2, max u2 u1} β (Sum.{u1, u2} α β) (Sum.inr.{u1, u2} α β) t)))))
+Case conversion may be inaccurate. Consider using '#align sum.is_preconnected_iff Sum.isPreconnected_iffₓ'. -/
 theorem Sum.isPreconnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
     IsPreconnected s ↔
       (∃ t, IsPreconnected t ∧ s = Sum.inl '' t) ∨ ∃ t, IsPreconnected t ∧ s = Sum.inr '' t :=
@@ -632,12 +832,15 @@ theorem Sum.isPreconnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
     · exact ht.image _ continuous_inr.continuous_on
 #align sum.is_preconnected_iff Sum.isPreconnected_iff
 
+#print connectedComponent /-
 /-- The connected component of a point is the maximal connected set
 that contains this point. -/
 def connectedComponent (x : α) : Set α :=
   ⋃₀ { s : Set α | IsPreconnected s ∧ x ∈ s }
 #align connected_component connectedComponent
+-/
 
+#print connectedComponentIn /-
 /-- Given a set `F` in a topological space `α` and a point `x : α`, the connected
 component of `x` in `F` is the connected component of `x` in the subtype `F` seen as
 a set in `α`. This definition does not make sense if `x` is not in `F` so we return the
@@ -645,46 +848,64 @@ empty set in this case. -/
 def connectedComponentIn (F : Set α) (x : α) : Set α :=
   if h : x ∈ F then coe '' connectedComponent (⟨x, h⟩ : F) else ∅
 #align connected_component_in connectedComponentIn
+-/
 
+#print connectedComponentIn_eq_image /-
 theorem connectedComponentIn_eq_image {F : Set α} {x : α} (h : x ∈ F) :
     connectedComponentIn F x = coe '' connectedComponent (⟨x, h⟩ : F) :=
   dif_pos h
 #align connected_component_in_eq_image connectedComponentIn_eq_image
+-/
 
+#print connectedComponentIn_eq_empty /-
 theorem connectedComponentIn_eq_empty {F : Set α} {x : α} (h : x ∉ F) :
     connectedComponentIn F x = ∅ :=
   dif_neg h
 #align connected_component_in_eq_empty connectedComponentIn_eq_empty
+-/
 
+#print mem_connectedComponent /-
 theorem mem_connectedComponent {x : α} : x ∈ connectedComponent x :=
   mem_unionₛ_of_mem (mem_singleton x) ⟨isConnected_singleton.IsPreconnected, mem_singleton x⟩
 #align mem_connected_component mem_connectedComponent
+-/
 
+#print mem_connectedComponentIn /-
 theorem mem_connectedComponentIn {x : α} {F : Set α} (hx : x ∈ F) : x ∈ connectedComponentIn F x :=
   by simp [connectedComponentIn_eq_image hx, mem_connectedComponent, hx]
 #align mem_connected_component_in mem_connectedComponentIn
+-/
 
+#print connectedComponent_nonempty /-
 theorem connectedComponent_nonempty {x : α} : (connectedComponent x).Nonempty :=
   ⟨x, mem_connectedComponent⟩
 #align connected_component_nonempty connectedComponent_nonempty
+-/
 
+#print connectedComponentIn_nonempty_iff /-
 theorem connectedComponentIn_nonempty_iff {x : α} {F : Set α} :
     (connectedComponentIn F x).Nonempty ↔ x ∈ F :=
   by
   rw [connectedComponentIn]
   split_ifs <;> simp [connectedComponent_nonempty, h]
 #align connected_component_in_nonempty_iff connectedComponentIn_nonempty_iff
+-/
 
+#print connectedComponentIn_subset /-
 theorem connectedComponentIn_subset (F : Set α) (x : α) : connectedComponentIn F x ⊆ F :=
   by
   rw [connectedComponentIn]
   split_ifs <;> simp
 #align connected_component_in_subset connectedComponentIn_subset
+-/
 
+#print isPreconnected_connectedComponent /-
 theorem isPreconnected_connectedComponent {x : α} : IsPreconnected (connectedComponent x) :=
   isPreconnected_unionₛ x _ (fun _ => And.right) fun _ => And.left
 #align is_preconnected_connected_component isPreconnected_connectedComponent
+-/
 
+#print isPreconnected_connectedComponentIn /-
 theorem isPreconnected_connectedComponentIn {x : α} {F : Set α} :
     IsPreconnected (connectedComponentIn F x) :=
   by
@@ -694,21 +915,29 @@ theorem isPreconnected_connectedComponentIn {x : α} {F : Set α} :
       embedding_subtype_coe.to_inducing.is_preconnected_image.mpr isPreconnected_connectedComponent
   · exact isPreconnected_empty
 #align is_preconnected_connected_component_in isPreconnected_connectedComponentIn
+-/
 
+#print isConnected_connectedComponent /-
 theorem isConnected_connectedComponent {x : α} : IsConnected (connectedComponent x) :=
   ⟨⟨x, mem_connectedComponent⟩, isPreconnected_connectedComponent⟩
 #align is_connected_connected_component isConnected_connectedComponent
+-/
 
+#print isConnected_connectedComponentIn_iff /-
 theorem isConnected_connectedComponentIn_iff {x : α} {F : Set α} :
     IsConnected (connectedComponentIn F x) ↔ x ∈ F := by
   simp_rw [← connectedComponentIn_nonempty_iff, IsConnected, isPreconnected_connectedComponentIn,
     and_true_iff]
 #align is_connected_connected_component_in_iff isConnected_connectedComponentIn_iff
+-/
 
+#print IsPreconnected.subset_connectedComponent /-
 theorem IsPreconnected.subset_connectedComponent {x : α} {s : Set α} (H1 : IsPreconnected s)
     (H2 : x ∈ s) : s ⊆ connectedComponent x := fun z hz => mem_unionₛ_of_mem hz ⟨H1, H2⟩
 #align is_preconnected.subset_connected_component IsPreconnected.subset_connectedComponent
+-/
 
+#print IsPreconnected.subset_connectedComponentIn /-
 theorem IsPreconnected.subset_connectedComponentIn {x : α} {F : Set α} (hs : IsPreconnected s)
     (hxs : x ∈ s) (hsF : s ⊆ F) : s ⊆ connectedComponentIn F x :=
   by
@@ -725,17 +954,23 @@ theorem IsPreconnected.subset_connectedComponentIn {x : α} {F : Set α} (hs : I
   refine' subset.trans _ (image_subset _ this)
   rw [Subtype.image_preimage_coe, inter_eq_left_iff_subset.mpr hsF]
 #align is_preconnected.subset_connected_component_in IsPreconnected.subset_connectedComponentIn
+-/
 
+#print IsConnected.subset_connectedComponent /-
 theorem IsConnected.subset_connectedComponent {x : α} {s : Set α} (H1 : IsConnected s)
     (H2 : x ∈ s) : s ⊆ connectedComponent x :=
   H1.2.subset_connectedComponent H2
 #align is_connected.subset_connected_component IsConnected.subset_connectedComponent
+-/
 
+#print IsPreconnected.connectedComponentIn /-
 theorem IsPreconnected.connectedComponentIn {x : α} {F : Set α} (h : IsPreconnected F)
     (hx : x ∈ F) : connectedComponentIn F x = F :=
   (connectedComponentIn_subset F x).antisymm (h.subset_connectedComponentIn hx subset_rfl)
 #align is_preconnected.connected_component_in IsPreconnected.connectedComponentIn
+-/
 
+#print connectedComponent_eq /-
 theorem connectedComponent_eq {x y : α} (h : y ∈ connectedComponent x) :
     connectedComponent x = connectedComponent y :=
   eq_of_subset_of_subset (isConnected_connectedComponent.subset_connectedComponent h)
@@ -743,7 +978,9 @@ theorem connectedComponent_eq {x y : α} (h : y ∈ connectedComponent x) :
       (Set.mem_of_mem_of_subset mem_connectedComponent
         (isConnected_connectedComponent.subset_connectedComponent h)))
 #align connected_component_eq connectedComponent_eq
+-/
 
+#print connectedComponentIn_eq /-
 theorem connectedComponentIn_eq {x y : α} {F : Set α} (h : y ∈ connectedComponentIn F x) :
     connectedComponentIn F x = connectedComponentIn F y :=
   by
@@ -752,7 +989,9 @@ theorem connectedComponentIn_eq {x y : α} {F : Set α} (h : y ∈ connectedComp
   obtain ⟨⟨y, hy⟩, h2y, rfl⟩ := h
   simp_rw [Subtype.coe_mk, connectedComponentIn_eq_image hy, connectedComponent_eq h2y]
 #align connected_component_in_eq connectedComponentIn_eq
+-/
 
+#print connectedComponentIn_univ /-
 theorem connectedComponentIn_univ (x : α) : connectedComponentIn univ x = connectedComponent x :=
   subset_antisymm
     (isPreconnected_connectedComponentIn.subset_connectedComponent <|
@@ -760,35 +999,51 @@ theorem connectedComponentIn_univ (x : α) : connectedComponentIn univ x = conne
     (isPreconnected_connectedComponent.subset_connectedComponentIn mem_connectedComponent <|
       subset_univ _)
 #align connected_component_in_univ connectedComponentIn_univ
+-/
 
+/- warning: connected_component_disjoint -> connectedComponent_disjoint is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {y : α}, (Ne.{succ u1} (Set.{u1} α) (connectedComponent.{u1} α _inst_1 x) (connectedComponent.{u1} α _inst_1 y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) (connectedComponent.{u1} α _inst_1 x) (connectedComponent.{u1} α _inst_1 y))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {x : α} {y : α}, (Ne.{succ u1} (Set.{u1} α) (connectedComponent.{u1} α _inst_1 x) (connectedComponent.{u1} α _inst_1 y)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (connectedComponent.{u1} α _inst_1 x) (connectedComponent.{u1} α _inst_1 y))
+Case conversion may be inaccurate. Consider using '#align connected_component_disjoint connectedComponent_disjointₓ'. -/
 theorem connectedComponent_disjoint {x y : α} (h : connectedComponent x ≠ connectedComponent y) :
     Disjoint (connectedComponent x) (connectedComponent y) :=
   Set.disjoint_left.2 fun a h1 h2 =>
     h ((connectedComponent_eq h1).trans (connectedComponent_eq h2).symm)
 #align connected_component_disjoint connectedComponent_disjoint
 
+#print isClosed_connectedComponent /-
 theorem isClosed_connectedComponent {x : α} : IsClosed (connectedComponent x) :=
   closure_subset_iff_isClosed.1 <|
     isConnected_connectedComponent.closure.subset_connectedComponent <|
       subset_closure mem_connectedComponent
 #align is_closed_connected_component isClosed_connectedComponent
+-/
 
+#print Continuous.image_connectedComponent_subset /-
 theorem Continuous.image_connectedComponent_subset [TopologicalSpace β] {f : α → β}
     (h : Continuous f) (a : α) : f '' connectedComponent a ⊆ connectedComponent (f a) :=
   (isConnected_connectedComponent.image f h.ContinuousOn).subset_connectedComponent
     ((mem_image f (connectedComponent a) (f a)).2 ⟨a, mem_connectedComponent, rfl⟩)
 #align continuous.image_connected_component_subset Continuous.image_connectedComponent_subset
+-/
 
+#print Continuous.mapsTo_connectedComponent /-
 theorem Continuous.mapsTo_connectedComponent [TopologicalSpace β] {f : α → β} (h : Continuous f)
     (a : α) : MapsTo f (connectedComponent a) (connectedComponent (f a)) :=
   mapsTo'.2 <| h.image_connectedComponent_subset a
 #align continuous.maps_to_connected_component Continuous.mapsTo_connectedComponent
+-/
 
+#print irreducibleComponent_subset_connectedComponent /-
 theorem irreducibleComponent_subset_connectedComponent {x : α} :
     irreducibleComponent x ⊆ connectedComponent x :=
   isIrreducible_irreducibleComponent.IsConnected.subset_connectedComponent mem_irreducibleComponent
 #align irreducible_component_subset_connected_component irreducibleComponent_subset_connectedComponent
+-/
 
+#print connectedComponentIn_mono /-
 @[mono]
 theorem connectedComponentIn_mono (x : α) {F G : Set α} (h : F ⊆ G) :
     connectedComponentIn F x ⊆ connectedComponentIn G x :=
@@ -800,41 +1055,55 @@ theorem connectedComponentIn_mono (x : α) {F G : Set α} (h : F ⊆ G) :
   · rw [connectedComponentIn_eq_empty hx]
     exact Set.empty_subset _
 #align connected_component_in_mono connectedComponentIn_mono
+-/
 
+#print PreconnectedSpace /-
 /-- A preconnected space is one where there is no non-trivial open partition. -/
 class PreconnectedSpace (α : Type u) [TopologicalSpace α] : Prop where
   isPreconnected_univ : IsPreconnected (univ : Set α)
 #align preconnected_space PreconnectedSpace
+-/
 
 export PreconnectedSpace (isPreconnected_univ)
 
+#print ConnectedSpace /-
 /-- A connected space is a nonempty one where there is no non-trivial open partition. -/
 class ConnectedSpace (α : Type u) [TopologicalSpace α] extends PreconnectedSpace α : Prop where
   to_nonempty : Nonempty α
 #align connected_space ConnectedSpace
+-/
 
 attribute [instance] ConnectedSpace.to_nonempty
 
+#print isConnected_univ /-
 -- see Note [lower instance priority]
 theorem isConnected_univ [ConnectedSpace α] : IsConnected (univ : Set α) :=
   ⟨univ_nonempty, isPreconnected_univ⟩
 #align is_connected_univ isConnected_univ
+-/
 
+#print isPreconnected_range /-
 theorem isPreconnected_range [TopologicalSpace β] [PreconnectedSpace α] {f : α → β}
     (h : Continuous f) : IsPreconnected (range f) :=
   @image_univ _ _ f ▸ isPreconnected_univ.image _ h.ContinuousOn
 #align is_preconnected_range isPreconnected_range
+-/
 
+#print isConnected_range /-
 theorem isConnected_range [TopologicalSpace β] [ConnectedSpace α] {f : α → β} (h : Continuous f) :
     IsConnected (range f) :=
   ⟨range_nonempty f, isPreconnected_range h⟩
 #align is_connected_range isConnected_range
+-/
 
+#print DenseRange.preconnectedSpace /-
 theorem DenseRange.preconnectedSpace [TopologicalSpace β] [PreconnectedSpace α] {f : α → β}
     (hf : DenseRange f) (hc : Continuous f) : PreconnectedSpace β :=
   ⟨hf.closure_eq ▸ (isPreconnected_range hc).closure⟩
 #align dense_range.preconnected_space DenseRange.preconnectedSpace
+-/
 
+#print connectedSpace_iff_connectedComponent /-
 theorem connectedSpace_iff_connectedComponent :
     ConnectedSpace α ↔ ∃ x : α, connectedComponent x = univ :=
   by
@@ -849,7 +1118,9 @@ theorem connectedSpace_iff_connectedComponent :
         exact isPreconnected_connectedComponent⟩
     exact ⟨⟨x⟩⟩
 #align connected_space_iff_connected_component connectedSpace_iff_connectedComponent
+-/
 
+#print preconnectedSpace_iff_connectedComponent /-
 theorem preconnectedSpace_iff_connectedComponent :
     PreconnectedSpace α ↔ ∀ x : α, connectedComponent x = univ :=
   by
@@ -869,12 +1140,15 @@ theorem preconnectedSpace_iff_connectedComponent :
           rw [← h (Classical.choice hα)]
           exact isPreconnected_connectedComponent⟩
 #align preconnected_space_iff_connected_component preconnectedSpace_iff_connectedComponent
+-/
 
+#print PreconnectedSpace.connectedComponent_eq_univ /-
 @[simp]
 theorem PreconnectedSpace.connectedComponent_eq_univ {X : Type _} [TopologicalSpace X]
     [h : PreconnectedSpace X] (x : X) : connectedComponent x = univ :=
   preconnectedSpace_iff_connectedComponent.mp h x
 #align preconnected_space.connected_component_eq_univ PreconnectedSpace.connectedComponent_eq_univ
+-/
 
 instance [TopologicalSpace β] [PreconnectedSpace α] [PreconnectedSpace β] :
     PreconnectedSpace (α × β) :=
@@ -894,22 +1168,33 @@ instance [∀ i, TopologicalSpace (π i)] [∀ i, PreconnectedSpace (π i)] :
 instance [∀ i, TopologicalSpace (π i)] [∀ i, ConnectedSpace (π i)] : ConnectedSpace (∀ i, π i) :=
   ⟨Classical.nonempty_pi.2 fun i => by infer_instance⟩
 
+#print PreirreducibleSpace.preconnectedSpace /-
 -- see Note [lower instance priority]
 instance (priority := 100) PreirreducibleSpace.preconnectedSpace (α : Type u) [TopologicalSpace α]
     [PreirreducibleSpace α] : PreconnectedSpace α :=
   ⟨(PreirreducibleSpace.isPreirreducible_univ α).IsPreconnected⟩
 #align preirreducible_space.preconnected_space PreirreducibleSpace.preconnectedSpace
+-/
 
+#print IrreducibleSpace.connectedSpace /-
 -- see Note [lower instance priority]
 instance (priority := 100) IrreducibleSpace.connectedSpace (α : Type u) [TopologicalSpace α]
     [IrreducibleSpace α] : ConnectedSpace α where to_nonempty := IrreducibleSpace.to_nonempty α
 #align irreducible_space.connected_space IrreducibleSpace.connectedSpace
+-/
 
+/- warning: nonempty_inter -> nonempty_inter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PreconnectedSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 t) -> (Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s t) (Set.univ.{u1} α)) -> (Set.Nonempty.{u1} α s) -> (Set.Nonempty.{u1} α t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : PreconnectedSpace.{u1} α _inst_1] {s : Set.{u1} α} {t : Set.{u1} α}, (IsOpen.{u1} α _inst_1 s) -> (IsOpen.{u1} α _inst_1 t) -> (Eq.{succ u1} (Set.{u1} α) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s t) (Set.univ.{u1} α)) -> (Set.Nonempty.{u1} α s) -> (Set.Nonempty.{u1} α t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
+Case conversion may be inaccurate. Consider using '#align nonempty_inter nonempty_interₓ'. -/
 theorem nonempty_inter [PreconnectedSpace α] {s t : Set α} :
     IsOpen s → IsOpen t → s ∪ t = univ → s.Nonempty → t.Nonempty → (s ∩ t).Nonempty := by
   simpa only [univ_inter, univ_subset_iff] using @PreconnectedSpace.isPreconnected_univ α _ _ s t
 #align nonempty_inter nonempty_inter
 
+#print isClopen_iff /-
 theorem isClopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = ∅ ∨ s = univ :=
   ⟨fun hs =>
     by_contradiction fun h =>
@@ -922,45 +1207,66 @@ theorem isClopen_iff [PreconnectedSpace α] {s : Set α} : IsClopen s ↔ s = �
       h3 h2,
     by rintro (rfl | rfl) <;> [exact isClopen_empty, exact isClopen_univ]⟩
 #align is_clopen_iff isClopen_iff
+-/
 
+#print IsClopen.eq_univ /-
 theorem IsClopen.eq_univ [PreconnectedSpace α] {s : Set α} (h' : IsClopen s) (h : s.Nonempty) :
     s = univ :=
   (isClopen_iff.mp h').resolve_left h.ne_empty
 #align is_clopen.eq_univ IsClopen.eq_univ
+-/
 
+#print frontier_eq_empty_iff /-
 theorem frontier_eq_empty_iff [PreconnectedSpace α] {s : Set α} :
     frontier s = ∅ ↔ s = ∅ ∨ s = univ :=
   isClopen_iff_frontier_eq_empty.symm.trans isClopen_iff
 #align frontier_eq_empty_iff frontier_eq_empty_iff
+-/
 
+#print nonempty_frontier_iff /-
 theorem nonempty_frontier_iff [PreconnectedSpace α] {s : Set α} :
     (frontier s).Nonempty ↔ s.Nonempty ∧ s ≠ univ := by
   simp only [nonempty_iff_ne_empty, Ne.def, frontier_eq_empty_iff, not_or]
 #align nonempty_frontier_iff nonempty_frontier_iff
+-/
 
+#print Subtype.preconnectedSpace /-
 theorem Subtype.preconnectedSpace {s : Set α} (h : IsPreconnected s) : PreconnectedSpace s :=
   {
     isPreconnected_univ := by
       rwa [← embedding_subtype_coe.to_inducing.is_preconnected_image, image_univ,
         Subtype.range_coe] }
 #align subtype.preconnected_space Subtype.preconnectedSpace
+-/
 
+#print Subtype.connectedSpace /-
 theorem Subtype.connectedSpace {s : Set α} (h : IsConnected s) : ConnectedSpace s :=
   { to_preconnectedSpace := Subtype.preconnectedSpace h.IsPreconnected
     to_nonempty := h.Nonempty.to_subtype }
 #align subtype.connected_space Subtype.connectedSpace
+-/
 
+#print isPreconnected_iff_preconnectedSpace /-
 theorem isPreconnected_iff_preconnectedSpace {s : Set α} : IsPreconnected s ↔ PreconnectedSpace s :=
   ⟨Subtype.preconnectedSpace, by
     intro
     simpa using is_preconnected_univ.image (coe : s → α) continuous_subtype_coe.continuous_on⟩
 #align is_preconnected_iff_preconnected_space isPreconnected_iff_preconnectedSpace
+-/
 
+#print isConnected_iff_connectedSpace /-
 theorem isConnected_iff_connectedSpace {s : Set α} : IsConnected s ↔ ConnectedSpace s :=
   ⟨Subtype.connectedSpace, fun h =>
     ⟨nonempty_subtype.mp h.2, isPreconnected_iff_preconnectedSpace.mpr h.1⟩⟩
 #align is_connected_iff_connected_space isConnected_iff_connectedSpace
+-/
 
+/- warning: is_preconnected_iff_subset_of_disjoint -> isPreconnected_iff_subset_of_disjoint is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreconnected.{u1} α _inst_1 s) (forall (u : Set.{u1} α) (v : Set.{u1} α), (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) u v)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) u v)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s v)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreconnected.{u1} α _inst_1 s) (forall (u : Set.{u1} α) (v : Set.{u1} α), (IsOpen.{u1} α _inst_1 u) -> (IsOpen.{u1} α _inst_1 v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) u v)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) u v)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s v)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected_iff_subset_of_disjoint isPreconnected_iff_subset_of_disjointₓ'. -/
 /-- A set `s` is preconnected if and only if
 for every cover by two open sets that are disjoint on `s`,
 it is contained in one of the two covering sets. -/
@@ -992,6 +1298,12 @@ theorem isPreconnected_iff_subset_of_disjoint {s : Set α} :
       exact ⟨x, hxs, ⟨hxu, h hxs⟩⟩
 #align is_preconnected_iff_subset_of_disjoint isPreconnected_iff_subset_of_disjoint
 
+/- warning: is_connected_iff_sUnion_disjoint_open -> isConnected_iff_unionₛ_disjoint_open is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsConnected.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α) (v : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) v U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) u v))) -> (Eq.{succ u1} (Set.{u1} α) u v)) -> (forall (u : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Set.unionₛ.{u1} α ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} (Set.{u1} α)) (Set.{u1} (Set.{u1} α)) (Finset.Set.hasCoeT.{u1} (Set.{u1} α)))) U))) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.hasMem.{u1} (Set.{u1} α)) u U) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsConnected.{u1} α _inst_1 s) (forall (U : Finset.{u1} (Set.{u1} α)), (forall (u : Set.{u1} α) (v : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) v U) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) u v))) -> (Eq.{succ u1} (Set.{u1} α) u v)) -> (forall (u : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) -> (IsOpen.{u1} α _inst_1 u)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionₛ.{u1} α (Finset.toSet.{u1} (Set.{u1} α) U))) -> (Exists.{succ u1} (Set.{u1} α) (fun (u : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Finset.{u1} (Set.{u1} α)) (Finset.instMembershipFinset.{u1} (Set.{u1} α)) u U) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u))))
+Case conversion may be inaccurate. Consider using '#align is_connected_iff_sUnion_disjoint_open isConnected_iff_unionₛ_disjoint_openₓ'. -/
 /-- A set `s` is connected if and only if
 for every cover by a finite collection of open sets that are pairwise disjoint on `s`,
 it is contained in one of the members of the collection. -/
@@ -1051,6 +1363,12 @@ theorem isConnected_iff_unionₛ_disjoint_open {s : Set α} :
     · simpa using hs
 #align is_connected_iff_sUnion_disjoint_open isConnected_iff_unionₛ_disjoint_open
 
+/- warning: is_preconnected.subset_clopen -> IsPreconnected.subset_clopen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (Set.Nonempty.{u1} α (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t)) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t)
+Case conversion may be inaccurate. Consider using '#align is_preconnected.subset_clopen IsPreconnected.subset_clopenₓ'. -/
 /-- Preconnected sets are either contained in or disjoint to any given clopen set. -/
 theorem IsPreconnected.subset_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t)
     (hne : (s ∩ t).Nonempty) : s ⊆ t := by
@@ -1061,12 +1379,24 @@ theorem IsPreconnected.subset_clopen {s t : Set α} (hs : IsPreconnected s) (ht 
   exact hx' hx
 #align is_preconnected.subset_clopen IsPreconnected.subset_clopen
 
+/- warning: disjoint_or_subset_of_clopen -> disjoint_or_subset_of_clopen is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (Or (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s t))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α} {t : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (IsClopen.{u1} α _inst_1 t) -> (Or (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t))
+Case conversion may be inaccurate. Consider using '#align disjoint_or_subset_of_clopen disjoint_or_subset_of_clopenₓ'. -/
 /-- Preconnected sets are either contained in or disjoint to any given clopen set. -/
 theorem disjoint_or_subset_of_clopen {s t : Set α} (hs : IsPreconnected s) (ht : IsClopen t) :
     Disjoint s t ∨ s ⊆ t :=
   (disjoint_or_nonempty_inter s t).imp_right <| hs.subset_clopen ht
 #align disjoint_or_subset_of_clopen disjoint_or_subset_of_clopen
 
+/- warning: is_preconnected_iff_subset_of_disjoint_closed -> isPreconnected_iff_subset_of_disjoint_closed is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreconnected.{u1} α _inst_1 s) (forall (u : Set.{u1} α) (v : Set.{u1} α), (IsClosed.{u1} α _inst_1 u) -> (IsClosed.{u1} α _inst_1 v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) u v)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) u v)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s v)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, Iff (IsPreconnected.{u1} α _inst_1 s) (forall (u : Set.{u1} α) (v : Set.{u1} α), (IsClosed.{u1} α _inst_1 u) -> (IsClosed.{u1} α _inst_1 v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) u v)) -> (Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) u v)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s v)))
+Case conversion may be inaccurate. Consider using '#align is_preconnected_iff_subset_of_disjoint_closed isPreconnected_iff_subset_of_disjoint_closedₓ'. -/
 /-- A set `s` is preconnected if and only if
 for every cover by two closed sets that are disjoint on `s`,
 it is contained in one of the two covering sets. -/
@@ -1100,6 +1430,12 @@ theorem isPreconnected_iff_subset_of_disjoint_closed :
       exact ⟨x, hxs, ⟨hxu, h hxs⟩⟩
 #align is_preconnected_iff_subset_of_disjoint_closed isPreconnected_iff_subset_of_disjoint_closed
 
+/- warning: is_preconnected_iff_subset_of_fully_disjoint_closed -> isPreconnected_iff_subset_of_fully_disjoint_closed is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsClosed.{u1} α _inst_1 s) -> (Iff (IsPreconnected.{u1} α _inst_1 s) (forall (u : Set.{u1} α) (v : Set.{u1} α), (IsClosed.{u1} α _inst_1 u) -> (IsClosed.{u1} α _inst_1 v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) u v)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) u v) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s v))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (IsClosed.{u1} α _inst_1 s) -> (Iff (IsPreconnected.{u1} α _inst_1 s) (forall (u : Set.{u1} α) (v : Set.{u1} α), (IsClosed.{u1} α _inst_1 u) -> (IsClosed.{u1} α _inst_1 v) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) u v)) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) u v) -> (Or (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s u) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s v))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected_iff_subset_of_fully_disjoint_closed isPreconnected_iff_subset_of_fully_disjoint_closedₓ'. -/
 /-- A closed set `s` is preconnected if and only if
 for every cover by two closed sets that are disjoint,
 it is contained in one of the two covering sets. -/
@@ -1124,25 +1460,32 @@ theorem isPreconnected_iff_subset_of_fully_disjoint_closed {s : Set α} (hs : Is
   · rwa [disjoint_iff_inter_eq_empty, ← inter_inter_distrib_right, inter_comm]
 #align is_preconnected_iff_subset_of_fully_disjoint_closed isPreconnected_iff_subset_of_fully_disjoint_closed
 
+#print IsClopen.connectedComponent_subset /-
 theorem IsClopen.connectedComponent_subset {x} (hs : IsClopen s) (hx : x ∈ s) :
     connectedComponent x ⊆ s :=
   isPreconnected_connectedComponent.subset_clopen hs ⟨x, mem_connectedComponent, hx⟩
 #align is_clopen.connected_component_subset IsClopen.connectedComponent_subset
+-/
 
+#print connectedComponent_subset_interᵢ_clopen /-
 /-- The connected component of a point is always a subset of the intersection of all its clopen
 neighbourhoods. -/
 theorem connectedComponent_subset_interᵢ_clopen {x : α} :
     connectedComponent x ⊆ ⋂ Z : { Z : Set α // IsClopen Z ∧ x ∈ Z }, Z :=
   subset_interᵢ fun Z => Z.2.1.connectedComponent_subset Z.2.2
 #align connected_component_subset_Inter_clopen connectedComponent_subset_interᵢ_clopen
+-/
 
+#print IsClopen.bunionᵢ_connectedComponent_eq /-
 /-- A clopen set is the union of its connected components. -/
-theorem IsClopen.bUnion_connectedComponent_eq {Z : Set α} (h : IsClopen Z) :
+theorem IsClopen.bunionᵢ_connectedComponent_eq {Z : Set α} (h : IsClopen Z) :
     (⋃ x ∈ Z, connectedComponent x) = Z :=
   Subset.antisymm (unionᵢ₂_subset fun x => h.connectedComponent_subset) fun x hx =>
     mem_unionᵢ₂_of_mem hx mem_connectedComponent
-#align is_clopen.bUnion_connected_component_eq IsClopen.bUnion_connectedComponent_eq
+#align is_clopen.bUnion_connected_component_eq IsClopen.bunionᵢ_connectedComponent_eq
+-/
 
+#print preimage_connectedComponent_connected /-
 /-- The preimage of a connected component is preconnected if the function has connected fibers
 and a subset is closed iff the preimage is. -/
 theorem preimage_connectedComponent_connected [TopologicalSpace β] {f : α → β}
@@ -1237,7 +1580,9 @@ theorem preimage_connectedComponent_connected [TopologicalSpace β] {f : α → 
     exact subset.trans (subset.trans this T₂_v.1) (inter_subset_right _ _)
   exact preimage_mono h
 #align preimage_connected_component_connected preimage_connectedComponent_connected
+-/
 
+#print QuotientMap.preimage_connectedComponent /-
 theorem QuotientMap.preimage_connectedComponent [TopologicalSpace β] {f : α → β}
     (hf : QuotientMap f) (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) :
     f ⁻¹' connectedComponent (f a) = connectedComponent a :=
@@ -1246,17 +1591,21 @@ theorem QuotientMap.preimage_connectedComponent [TopologicalSpace β] {f : α �
         mem_connectedComponent).antisymm
     (hf.Continuous.mapsTo_connectedComponent a)
 #align quotient_map.preimage_connected_component QuotientMap.preimage_connectedComponent
+-/
 
+#print QuotientMap.image_connectedComponent /-
 theorem QuotientMap.image_connectedComponent [TopologicalSpace β] {f : α → β} (hf : QuotientMap f)
     (h_fibers : ∀ y : β, IsConnected (f ⁻¹' {y})) (a : α) :
     f '' connectedComponent a = connectedComponent (f a) := by
   rw [← hf.preimage_connected_component h_fibers, image_preimage_eq _ hf.surjective]
 #align quotient_map.image_connected_component QuotientMap.image_connectedComponent
+-/
 
 end Preconnected
 
 section LocallyConnectedSpace
 
+#print LocallyConnectedSpace /-
 /-- A topological space is **locally connected** if each neighborhood filter admits a basis
 of connected *open* sets. Note that it is equivalent to each point having a basis of connected
 (non necessarily open) sets but in a non-trivial way, so we choose this definition and prove the
@@ -1264,13 +1613,22 @@ equivalence later in `locally_connected_space_iff_connected_basis`. -/
 class LocallyConnectedSpace (α : Type _) [TopologicalSpace α] : Prop where
   open_connected_basis : ∀ x, (𝓝 x).HasBasis (fun s : Set α => IsOpen s ∧ x ∈ s ∧ IsConnected s) id
 #align locally_connected_space LocallyConnectedSpace
+-/
 
+#print locallyConnectedSpace_iff_open_connected_basis /-
 theorem locallyConnectedSpace_iff_open_connected_basis :
     LocallyConnectedSpace α ↔
       ∀ x, (𝓝 x).HasBasis (fun s : Set α => IsOpen s ∧ x ∈ s ∧ IsConnected s) id :=
   ⟨@LocallyConnectedSpace.open_connected_basis _ _, LocallyConnectedSpace.mk⟩
 #align locally_connected_space_iff_open_connected_basis locallyConnectedSpace_iff_open_connected_basis
+-/
 
+/- warning: locally_connected_space_iff_open_connected_subsets -> locallyConnectedSpace_iff_open_connected_subsets is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (LocallyConnectedSpace.{u1} α _inst_1) (forall (x : α) (U : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) V U) (fun (H : HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) V U) => And (IsOpen.{u1} α _inst_1 V) (And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x V) (IsConnected.{u1} α _inst_1 V))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (LocallyConnectedSpace.{u1} α _inst_1) (forall (x : α) (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) V U) (And (IsOpen.{u1} α _inst_1 V) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x V) (IsConnected.{u1} α _inst_1 V))))))
+Case conversion may be inaccurate. Consider using '#align locally_connected_space_iff_open_connected_subsets locallyConnectedSpace_iff_open_connected_subsetsₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (V «expr ⊆ » U) -/
 theorem locallyConnectedSpace_iff_open_connected_subsets :
@@ -1293,6 +1651,7 @@ theorem locallyConnectedSpace_iff_open_connected_subsets :
           fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
 #align locally_connected_space_iff_open_connected_subsets locallyConnectedSpace_iff_open_connected_subsets
 
+#print connectedComponentIn_mem_nhds /-
 theorem connectedComponentIn_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α} (h : F ∈ 𝓝 x) :
     connectedComponentIn F x ∈ 𝓝 x :=
   by
@@ -1300,7 +1659,9 @@ theorem connectedComponentIn_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x
   rcases h with ⟨s, ⟨h1s, hxs, h2s⟩, hsF⟩
   exact mem_nhds_iff.mpr ⟨s, h2s.is_preconnected.subset_connected_component_in hxs hsF, h1s, hxs⟩
 #align connected_component_in_mem_nhds connectedComponentIn_mem_nhds
+-/
 
+#print IsOpen.connectedComponentIn /-
 theorem IsOpen.connectedComponentIn [LocallyConnectedSpace α] {F : Set α} {x : α} (hF : IsOpen F) :
     IsOpen (connectedComponentIn F x) :=
   by
@@ -1311,19 +1672,25 @@ theorem IsOpen.connectedComponentIn [LocallyConnectedSpace α] {F : Set α} {x :
     connectedComponentIn_mem_nhds
       (is_open_iff_mem_nhds.mp hF y <| connectedComponentIn_subset F x hy)
 #align is_open.connected_component_in IsOpen.connectedComponentIn
+-/
 
+#print isOpen_connectedComponent /-
 theorem isOpen_connectedComponent [LocallyConnectedSpace α] {x : α} :
     IsOpen (connectedComponent x) :=
   by
   rw [← connectedComponentIn_univ]
   exact is_open_univ.connected_component_in
 #align is_open_connected_component isOpen_connectedComponent
+-/
 
+#print isClopen_connectedComponent /-
 theorem isClopen_connectedComponent [LocallyConnectedSpace α] {x : α} :
     IsClopen (connectedComponent x) :=
   ⟨isOpen_connectedComponent, isClosed_connectedComponent⟩
 #align is_clopen_connected_component isClopen_connectedComponent
+-/
 
+#print locallyConnectedSpace_iff_connectedComponentIn_open /-
 theorem locallyConnectedSpace_iff_connectedComponentIn_open :
     LocallyConnectedSpace α ↔ ∀ F : Set α, IsOpen F → ∀ x ∈ F, IsOpen (connectedComponentIn F x) :=
   by
@@ -1338,7 +1705,14 @@ theorem locallyConnectedSpace_iff_connectedComponentIn_open :
           mem_connectedComponentIn _, is_connected_connected_component_in_iff.mpr _⟩ <;>
       exact mem_interior_iff_mem_nhds.mpr hU
 #align locally_connected_space_iff_connected_component_in_open locallyConnectedSpace_iff_connectedComponentIn_open
+-/
 
+/- warning: locally_connected_space_iff_connected_subsets -> locallyConnectedSpace_iff_connected_subsets is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (LocallyConnectedSpace.{u1} α _inst_1) (forall (x : α) (U : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V (nhds.{u1} α _inst_1 x)) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) V (nhds.{u1} α _inst_1 x)) => And (IsPreconnected.{u1} α _inst_1 V) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) V U)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], Iff (LocallyConnectedSpace.{u1} α _inst_1) (forall (x : α) (U : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) U (nhds.{u1} α _inst_1 x)) -> (Exists.{succ u1} (Set.{u1} α) (fun (V : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) V (nhds.{u1} α _inst_1 x)) (And (IsPreconnected.{u1} α _inst_1 V) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) V U)))))
+Case conversion may be inaccurate. Consider using '#align locally_connected_space_iff_connected_subsets locallyConnectedSpace_iff_connected_subsetsₓ'. -/
 theorem locallyConnectedSpace_iff_connected_subsets :
     LocallyConnectedSpace α ↔ ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ V ∈ 𝓝 x, IsPreconnected V ∧ V ⊆ U :=
   by
@@ -1355,6 +1729,7 @@ theorem locallyConnectedSpace_iff_connected_subsets :
 #align locally_connected_space_iff_connected_subsets locallyConnectedSpace_iff_connected_subsets
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]] -/
+#print locallyConnectedSpace_iff_connected_basis /-
 theorem locallyConnectedSpace_iff_connected_basis :
     LocallyConnectedSpace α ↔
       ∀ x, (𝓝 x).HasBasis (fun s : Set α => s ∈ 𝓝 x ∧ IsPreconnected s) id :=
@@ -1364,7 +1739,14 @@ theorem locallyConnectedSpace_iff_connected_basis :
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr ∀ x, (_ : exprProp())]]"
   exact filter.has_basis_self.symm
 #align locally_connected_space_iff_connected_basis locallyConnectedSpace_iff_connected_basis
+-/
 
+/- warning: locally_connected_space_of_connected_bases -> locallyConnectedSpace_of_connected_bases is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {ι : Type.{u2}} (b : α -> ι -> (Set.{u1} α)) (p : α -> ι -> Prop), (forall (x : α), Filter.HasBasis.{u1, succ u2} α ι (nhds.{u1} α _inst_1 x) (p x) (b x)) -> (forall (x : α) (i : ι), (p x i) -> (IsPreconnected.{u1} α _inst_1 (b x i))) -> (LocallyConnectedSpace.{u1} α _inst_1)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {ι : Type.{u1}} (b : α -> ι -> (Set.{u2} α)) (p : α -> ι -> Prop), (forall (x : α), Filter.HasBasis.{u2, succ u1} α ι (nhds.{u2} α _inst_1 x) (p x) (b x)) -> (forall (x : α) (i : ι), (p x i) -> (IsPreconnected.{u2} α _inst_1 (b x i))) -> (LocallyConnectedSpace.{u2} α _inst_1)
+Case conversion may be inaccurate. Consider using '#align locally_connected_space_of_connected_bases locallyConnectedSpace_of_connected_basesₓ'. -/
 theorem locallyConnectedSpace_of_connected_bases {ι : Type _} (b : α → ι → Set α) (p : α → ι → Prop)
     (hbasis : ∀ x, (𝓝 x).HasBasis (p x) (b x))
     (hconnected : ∀ x i, p x i → IsPreconnected (b x i)) : LocallyConnectedSpace α :=
@@ -1380,30 +1762,41 @@ end LocallyConnectedSpace
 
 section TotallyDisconnected
 
+#print IsTotallyDisconnected /-
 /-- A set `s` is called totally disconnected if every subset `t ⊆ s` which is preconnected is
 a subsingleton, ie either empty or a singleton.-/
 def IsTotallyDisconnected (s : Set α) : Prop :=
   ∀ t, t ⊆ s → IsPreconnected t → t.Subsingleton
 #align is_totally_disconnected IsTotallyDisconnected
+-/
 
+#print isTotallyDisconnected_empty /-
 theorem isTotallyDisconnected_empty : IsTotallyDisconnected (∅ : Set α) := fun _ ht _ _ x_in _ _ =>
   (ht x_in).elim
 #align is_totally_disconnected_empty isTotallyDisconnected_empty
+-/
 
+#print isTotallyDisconnected_singleton /-
 theorem isTotallyDisconnected_singleton {x} : IsTotallyDisconnected ({x} : Set α) := fun _ ht _ =>
   subsingleton_singleton.anti ht
 #align is_totally_disconnected_singleton isTotallyDisconnected_singleton
+-/
 
+#print TotallyDisconnectedSpace /-
 /-- A space is totally disconnected if all of its connected components are singletons. -/
 class TotallyDisconnectedSpace (α : Type u) [TopologicalSpace α] : Prop where
   isTotallyDisconnected_univ : IsTotallyDisconnected (univ : Set α)
 #align totally_disconnected_space TotallyDisconnectedSpace
+-/
 
+#print IsPreconnected.subsingleton /-
 theorem IsPreconnected.subsingleton [TotallyDisconnectedSpace α] {s : Set α}
     (h : IsPreconnected s) : s.Subsingleton :=
   TotallyDisconnectedSpace.isTotallyDisconnected_univ s (subset_univ s) h
 #align is_preconnected.subsingleton IsPreconnected.subsingleton
+-/
 
+#print Pi.totallyDisconnectedSpace /-
 instance Pi.totallyDisconnectedSpace {α : Type _} {β : α → Type _}
     [t₂ : ∀ a, TopologicalSpace (β a)] [∀ a, TotallyDisconnectedSpace (β a)] :
     TotallyDisconnectedSpace (∀ a : α, β a) :=
@@ -1412,7 +1805,14 @@ instance Pi.totallyDisconnectedSpace {α : Type _} {β : α → Type _}
       h2.image (fun x => x a) (continuous_apply a).ContinuousOn
     fun x x_in y y_in => funext fun a => (this a).Subsingleton ⟨x, x_in, rfl⟩ ⟨y, y_in, rfl⟩⟩
 #align pi.totally_disconnected_space Pi.totallyDisconnectedSpace
+-/
 
+/- warning: prod.totally_disconnected_space -> Prod.totallyDisconnectedSpace is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TotallyDisconnectedSpace.{u1} α _inst_1] [_inst_4 : TotallyDisconnectedSpace.{u2} β _inst_2], TotallyDisconnectedSpace.{max u1 u2} (Prod.{u1, u2} α β) (Prod.topologicalSpace.{u1, u2} α β _inst_1 _inst_2)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TotallyDisconnectedSpace.{u1} α _inst_1] [_inst_4 : TotallyDisconnectedSpace.{u2} β _inst_2], TotallyDisconnectedSpace.{max u2 u1} (Prod.{u1, u2} α β) (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2)
+Case conversion may be inaccurate. Consider using '#align prod.totally_disconnected_space Prod.totallyDisconnectedSpaceₓ'. -/
 instance Prod.totallyDisconnectedSpace [TopologicalSpace β] [TotallyDisconnectedSpace α]
     [TotallyDisconnectedSpace β] : TotallyDisconnectedSpace (α × β) :=
   ⟨fun t h1 h2 =>
@@ -1440,6 +1840,12 @@ instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i
   · obtain ⟨a, t, ht, rfl⟩ := Sigma.isConnected_iff.1 ⟨h, hs⟩
     exact ht.is_preconnected.subsingleton.image _
 
+/- warning: is_totally_disconnected_of_clopen_set -> isTotallyDisconnected_of_clopen_set is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} X], (forall {x : X} {y : X}, (Ne.{succ u1} X x y) -> (Exists.{succ u1} (Set.{u1} X) (fun (U : Set.{u1} X) => Exists.{0} (IsClopen.{u1} X _inst_2 U) (fun (h_clopen : IsClopen.{u1} X _inst_2 U) => And (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x U) (Not (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) y U)))))) -> (IsTotallyDisconnected.{u1} X _inst_2 (Set.univ.{u1} X))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} X], (Pairwise.{u1} X (fun (x : X) (y : X) => Exists.{succ u1} (Set.{u1} X) (fun (U : Set.{u1} X) => And (IsClopen.{u1} X _inst_2 U) (And (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x U) (Not (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) y U)))))) -> (IsTotallyDisconnected.{u1} X _inst_2 (Set.univ.{u1} X))
+Case conversion may be inaccurate. Consider using '#align is_totally_disconnected_of_clopen_set isTotallyDisconnected_of_clopen_setₓ'. -/
 /-- Let `X` be a topological space, and suppose that for all distinct `x,y ∈ X`, there
   is some clopen set `U` such that `x ∈ U` and `y ∉ U`. Then `X` is totally disconnected. -/
 theorem isTotallyDisconnected_of_clopen_set {X : Type _} [TopologicalSpace X]
@@ -1457,6 +1863,7 @@ theorem isTotallyDisconnected_of_clopen_set {X : Type _} [TopologicalSpace X]
   exact Set.not_nonempty_empty hS
 #align is_totally_disconnected_of_clopen_set isTotallyDisconnected_of_clopen_set
 
+#print totallyDisconnectedSpace_iff_connectedComponent_subsingleton /-
 /-- A space is totally disconnected iff its connected components are subsingletons. -/
 theorem totallyDisconnectedSpace_iff_connectedComponent_subsingleton :
     TotallyDisconnectedSpace α ↔ ∀ x : α, (connectedComponent x).Subsingleton :=
@@ -1472,7 +1879,9 @@ theorem totallyDisconnectedSpace_iff_connectedComponent_subsingleton :
   · exact subsingleton_empty
   · exact (h x).anti (hs.subset_connected_component x_in)
 #align totally_disconnected_space_iff_connected_component_subsingleton totallyDisconnectedSpace_iff_connectedComponent_subsingleton
+-/
 
+#print totallyDisconnectedSpace_iff_connectedComponent_singleton /-
 /-- A space is totally disconnected iff its connected components are singletons. -/
 theorem totallyDisconnectedSpace_iff_connectedComponent_singleton :
     TotallyDisconnectedSpace α ↔ ∀ x : α, connectedComponent x = {x} :=
@@ -1482,7 +1891,14 @@ theorem totallyDisconnectedSpace_iff_connectedComponent_singleton :
   rw [subsingleton_iff_singleton]
   exact mem_connectedComponent
 #align totally_disconnected_space_iff_connected_component_singleton totallyDisconnectedSpace_iff_connectedComponent_singleton
+-/
 
+/- warning: continuous.image_connected_component_eq_singleton -> Continuous.image_connectedComponent_eq_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TotallyDisconnectedSpace.{u2} β _inst_2] {f : α -> β}, (Continuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (connectedComponent.{u1} α _inst_1 a)) (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) (f a)))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} β] [_inst_3 : TotallyDisconnectedSpace.{u1} β _inst_2] {f : α -> β}, (Continuous.{u2, u1} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β f (connectedComponent.{u2} α _inst_1 a)) (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) (f a)))
+Case conversion may be inaccurate. Consider using '#align continuous.image_connected_component_eq_singleton Continuous.image_connectedComponent_eq_singletonₓ'. -/
 /-- The image of a connected component in a totally disconnected space is a singleton. -/
 @[simp]
 theorem Continuous.image_connectedComponent_eq_singleton {β : Type _} [TopologicalSpace β]
@@ -1492,11 +1908,14 @@ theorem Continuous.image_connectedComponent_eq_singleton {β : Type _} [Topologi
     (isPreconnected_connectedComponent.image f h.ContinuousOn).Subsingleton
 #align continuous.image_connected_component_eq_singleton Continuous.image_connectedComponent_eq_singleton
 
+#print isTotallyDisconnected_of_totallyDisconnectedSpace /-
 theorem isTotallyDisconnected_of_totallyDisconnectedSpace [TotallyDisconnectedSpace α] (s : Set α) :
     IsTotallyDisconnected s := fun t hts ht =>
   TotallyDisconnectedSpace.isTotallyDisconnected_univ _ t.subset_univ ht
 #align is_totally_disconnected_of_totally_disconnected_space isTotallyDisconnected_of_totallyDisconnectedSpace
+-/
 
+#print isTotallyDisconnected_of_image /-
 theorem isTotallyDisconnected_of_image [TopologicalSpace β] {f : α → β} (hf : ContinuousOn f s)
     (hf' : Injective f) (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s :=
   fun t hts ht x x_in y y_in =>
@@ -1504,36 +1923,48 @@ theorem isTotallyDisconnected_of_image [TopologicalSpace β] {f : α → β} (hf
     h _ (image_subset f hts) (ht.image f <| hf.mono hts) (mem_image_of_mem f x_in)
       (mem_image_of_mem f y_in)
 #align is_totally_disconnected_of_image isTotallyDisconnected_of_image
+-/
 
+#print Embedding.isTotallyDisconnected /-
 theorem Embedding.isTotallyDisconnected [TopologicalSpace β] {f : α → β} (hf : Embedding f)
     {s : Set α} (h : IsTotallyDisconnected (f '' s)) : IsTotallyDisconnected s :=
   isTotallyDisconnected_of_image hf.Continuous.ContinuousOn hf.inj h
 #align embedding.is_totally_disconnected Embedding.isTotallyDisconnected
+-/
 
+#print Subtype.totallyDisconnectedSpace /-
 instance Subtype.totallyDisconnectedSpace {α : Type _} {p : α → Prop} [TopologicalSpace α]
     [TotallyDisconnectedSpace α] : TotallyDisconnectedSpace (Subtype p) :=
   ⟨embedding_subtype_val.IsTotallyDisconnected
       (isTotallyDisconnected_of_totallyDisconnectedSpace _)⟩
 #align subtype.totally_disconnected_space Subtype.totallyDisconnectedSpace
+-/
 
 end TotallyDisconnected
 
 section TotallySeparated
 
+#print IsTotallySeparated /-
 /-- A set `s` is called totally separated if any two points of this set can be separated
 by two disjoint open sets covering `s`. -/
 def IsTotallySeparated (s : Set α) : Prop :=
   ∀ x ∈ s,
     ∀ y ∈ s, x ≠ y → ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ s ⊆ u ∪ v ∧ Disjoint u v
 #align is_totally_separated IsTotallySeparated
+-/
 
+#print isTotallySeparated_empty /-
 theorem isTotallySeparated_empty : IsTotallySeparated (∅ : Set α) := fun x => False.elim
 #align is_totally_separated_empty isTotallySeparated_empty
+-/
 
+#print isTotallySeparated_singleton /-
 theorem isTotallySeparated_singleton {x} : IsTotallySeparated ({x} : Set α) := fun p hp q hq hpq =>
   (hpq <| (eq_of_mem_singleton hp).symm ▸ (eq_of_mem_singleton hq).symm).elim
 #align is_totally_separated_singleton isTotallySeparated_singleton
+-/
 
+#print isTotallyDisconnected_of_isTotallySeparated /-
 theorem isTotallyDisconnected_of_isTotallySeparated {s : Set α} (H : IsTotallySeparated s) :
     IsTotallyDisconnected s := by
   intro t hts ht x x_in y y_in
@@ -1545,29 +1976,42 @@ theorem isTotallyDisconnected_of_isTotallySeparated {s : Set α} (H : IsTotallyS
   refine' (ht _ _ hu hv (hts.trans hs) ⟨x, x_in, hxu⟩ ⟨y, y_in, hyv⟩).ne_empty _
   rw [huv.inter_eq, inter_empty]
 #align is_totally_disconnected_of_is_totally_separated isTotallyDisconnected_of_isTotallySeparated
+-/
 
 alias isTotallyDisconnected_of_isTotallySeparated ← IsTotallySeparated.isTotallyDisconnected
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.isTotallyDisconnected
 
+#print TotallySeparatedSpace /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where
   isTotallySeparated_univ : IsTotallySeparated (univ : Set α)
 #align totally_separated_space TotallySeparatedSpace
+-/
 
+#print TotallySeparatedSpace.totallyDisconnectedSpace /-
 -- see Note [lower instance priority]
 instance (priority := 100) TotallySeparatedSpace.totallyDisconnectedSpace (α : Type u)
     [TopologicalSpace α] [TotallySeparatedSpace α] : TotallyDisconnectedSpace α :=
   ⟨isTotallyDisconnected_of_isTotallySeparated <| TotallySeparatedSpace.isTotallySeparated_univ α⟩
 #align totally_separated_space.totally_disconnected_space TotallySeparatedSpace.totallyDisconnectedSpace
+-/
 
+#print TotallySeparatedSpace.of_discrete /-
 -- see Note [lower instance priority]
 instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α]
     [DiscreteTopology α] : TotallySeparatedSpace α :=
   ⟨fun a _ b _ h => ⟨{b}ᶜ, {b}, isOpen_discrete _, isOpen_discrete _, by simpa⟩⟩
 #align totally_separated_space.of_discrete TotallySeparatedSpace.of_discrete
+-/
 
+/- warning: exists_clopen_of_totally_separated -> exists_clopen_of_totally_separated is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : TotallySeparatedSpace.{u1} α _inst_2] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => Exists.{0} (IsClopen.{u1} α _inst_2 U) (fun (hU : IsClopen.{u1} α _inst_2 U) => And (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x U) (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) U)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : TotallySeparatedSpace.{u1} α _inst_2] {x : α} {y : α}, (Ne.{succ u1} α x y) -> (Exists.{succ u1} (Set.{u1} α) (fun (U : Set.{u1} α) => And (IsClopen.{u1} α _inst_2 U) (And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x U) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) U)))))
+Case conversion may be inaccurate. Consider using '#align exists_clopen_of_totally_separated exists_clopen_of_totally_separatedₓ'. -/
 theorem exists_clopen_of_totally_separated {α : Type _} [TopologicalSpace α]
     [TotallySeparatedSpace α] {x y : α} (hxy : x ≠ y) :
     ∃ (U : Set α)(hU : IsClopen U), x ∈ U ∧ y ∈ Uᶜ :=
@@ -1584,36 +2028,46 @@ end TotallySeparated
 
 section connectedComponentSetoid
 
+#print connectedComponentSetoid /-
 /-- The setoid of connected components of a topological space -/
 def connectedComponentSetoid (α : Type _) [TopologicalSpace α] : Setoid α :=
   ⟨fun x y => connectedComponent x = connectedComponent y,
     ⟨fun x => by trivial, fun x y h1 => h1.symm, fun x y z h1 h2 => h1.trans h2⟩⟩
 #align connected_component_setoid connectedComponentSetoid
+-/
 
+#print ConnectedComponents /-
 /-- The quotient of a space by its connected components -/
 def ConnectedComponents (α : Type u) [TopologicalSpace α] :=
   Quotient (connectedComponentSetoid α)
 #align connected_components ConnectedComponents
+-/
 
 instance : CoeTC α (ConnectedComponents α) :=
   ⟨Quotient.mk''⟩
 
 namespace ConnectedComponents
 
+#print ConnectedComponents.coe_eq_coe /-
 @[simp]
 theorem coe_eq_coe {x y : α} :
     (x : ConnectedComponents α) = y ↔ connectedComponent x = connectedComponent y :=
   Quotient.eq''
 #align connected_components.coe_eq_coe ConnectedComponents.coe_eq_coe
+-/
 
+#print ConnectedComponents.coe_ne_coe /-
 theorem coe_ne_coe {x y : α} :
     (x : ConnectedComponents α) ≠ y ↔ connectedComponent x ≠ connectedComponent y :=
   not_congr coe_eq_coe
 #align connected_components.coe_ne_coe ConnectedComponents.coe_ne_coe
+-/
 
+#print ConnectedComponents.coe_eq_coe' /-
 theorem coe_eq_coe' {x y : α} : (x : ConnectedComponents α) = y ↔ x ∈ connectedComponent y :=
   coe_eq_coe.trans ⟨fun h => h ▸ mem_connectedComponent, fun h => (connectedComponent_eq h).symm⟩
 #align connected_components.coe_eq_coe' ConnectedComponents.coe_eq_coe'
+-/
 
 instance [Inhabited α] : Inhabited (ConnectedComponents α) :=
   ⟨↑(default : α)⟩
@@ -1621,70 +2075,97 @@ instance [Inhabited α] : Inhabited (ConnectedComponents α) :=
 instance : TopologicalSpace (ConnectedComponents α) :=
   Quotient.topologicalSpace
 
+#print ConnectedComponents.surjective_coe /-
 theorem surjective_coe : Surjective (coe : α → ConnectedComponents α) :=
   surjective_quot_mk _
 #align connected_components.surjective_coe ConnectedComponents.surjective_coe
+-/
 
+#print ConnectedComponents.quotientMap_coe /-
 theorem quotientMap_coe : QuotientMap (coe : α → ConnectedComponents α) :=
   quotientMap_quot_mk
 #align connected_components.quotient_map_coe ConnectedComponents.quotientMap_coe
+-/
 
+#print ConnectedComponents.continuous_coe /-
 @[continuity]
 theorem continuous_coe : Continuous (coe : α → ConnectedComponents α) :=
   quotientMap_coe.Continuous
 #align connected_components.continuous_coe ConnectedComponents.continuous_coe
+-/
 
+#print ConnectedComponents.range_coe /-
 @[simp]
 theorem range_coe : range (coe : α → ConnectedComponents α) = univ :=
   surjective_coe.range_eq
 #align connected_components.range_coe ConnectedComponents.range_coe
+-/
 
 end ConnectedComponents
 
 variable [TopologicalSpace β] [TotallyDisconnectedSpace β] {f : α → β}
 
+#print Continuous.image_eq_of_connectedComponent_eq /-
 theorem Continuous.image_eq_of_connectedComponent_eq (h : Continuous f) (a b : α)
     (hab : connectedComponent a = connectedComponent b) : f a = f b :=
   singleton_eq_singleton_iff.1 <|
     h.image_connectedComponent_eq_singleton a ▸
       h.image_connectedComponent_eq_singleton b ▸ hab ▸ rfl
 #align continuous.image_eq_of_connected_component_eq Continuous.image_eq_of_connectedComponent_eq
+-/
 
+#print Continuous.connectedComponentsLift /-
 /--
 The lift to `connected_components α` of a continuous map from `α` to a totally disconnected space
 -/
 def Continuous.connectedComponentsLift (h : Continuous f) : ConnectedComponents α → β := fun x =>
   Quotient.liftOn' x f h.image_eq_of_connectedComponent_eq
 #align continuous.connected_components_lift Continuous.connectedComponentsLift
+-/
 
+#print Continuous.connectedComponentsLift_continuous /-
 @[continuity]
 theorem Continuous.connectedComponentsLift_continuous (h : Continuous f) :
     Continuous h.connectedComponentsLift :=
   h.quotient_liftOn' h.image_eq_of_connectedComponent_eq
 #align continuous.connected_components_lift_continuous Continuous.connectedComponentsLift_continuous
+-/
 
+#print Continuous.connectedComponentsLift_apply_coe /-
 @[simp]
 theorem Continuous.connectedComponentsLift_apply_coe (h : Continuous f) (x : α) :
     h.connectedComponentsLift x = f x :=
   rfl
 #align continuous.connected_components_lift_apply_coe Continuous.connectedComponentsLift_apply_coe
+-/
 
+#print Continuous.connectedComponentsLift_comp_coe /-
 @[simp]
 theorem Continuous.connectedComponentsLift_comp_coe (h : Continuous f) :
     h.connectedComponentsLift ∘ coe = f :=
   rfl
 #align continuous.connected_components_lift_comp_coe Continuous.connectedComponentsLift_comp_coe
+-/
 
+/- warning: connected_components_lift_unique' -> connectedComponents_lift_unique' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Sort.{u2}} {g₁ : (ConnectedComponents.{u1} α _inst_1) -> β} {g₂ : (ConnectedComponents.{u1} α _inst_1) -> β}, (Eq.{imax (succ u1) u2} (α -> β) (Function.comp.{succ u1, succ u1, u2} α (ConnectedComponents.{u1} α _inst_1) β g₁ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (ConnectedComponents.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (ConnectedComponents.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (ConnectedComponents.{u1} α _inst_1) (ConnectedComponents.hasCoeT.{u1} α _inst_1))))) (Function.comp.{succ u1, succ u1, u2} α (ConnectedComponents.{u1} α _inst_1) β g₂ ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) α (ConnectedComponents.{u1} α _inst_1) (HasLiftT.mk.{succ u1, succ u1} α (ConnectedComponents.{u1} α _inst_1) (CoeTCₓ.coe.{succ u1, succ u1} α (ConnectedComponents.{u1} α _inst_1) (ConnectedComponents.hasCoeT.{u1} α _inst_1)))))) -> (Eq.{imax (succ u1) u2} ((ConnectedComponents.{u1} α _inst_1) -> β) g₁ g₂)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Sort.{u1}} {g₁ : (ConnectedComponents.{u2} α _inst_1) -> β} {g₂ : (ConnectedComponents.{u2} α _inst_1) -> β}, (Eq.{imax (succ u2) u1} (α -> β) (Function.comp.{succ u2, succ u2, u1} α (ConnectedComponents.{u2} α _inst_1) β g₁ (ConnectedComponents.mk.{u2} α _inst_1)) (Function.comp.{succ u2, succ u2, u1} α (ConnectedComponents.{u2} α _inst_1) β g₂ (ConnectedComponents.mk.{u2} α _inst_1))) -> (Eq.{imax (succ u2) u1} ((ConnectedComponents.{u2} α _inst_1) -> β) g₁ g₂)
+Case conversion may be inaccurate. Consider using '#align connected_components_lift_unique' connectedComponents_lift_unique'ₓ'. -/
 theorem connectedComponents_lift_unique' {β : Sort _} {g₁ g₂ : ConnectedComponents α → β}
     (hg : g₁ ∘ (coe : α → ConnectedComponents α) = g₂ ∘ coe) : g₁ = g₂ :=
   ConnectedComponents.surjective_coe.injective_comp_right hg
 #align connected_components_lift_unique' connectedComponents_lift_unique'
 
+#print Continuous.connectedComponentsLift_unique /-
 theorem Continuous.connectedComponentsLift_unique (h : Continuous f) (g : ConnectedComponents α → β)
     (hg : g ∘ coe = f) : g = h.connectedComponentsLift :=
   connectedComponents_lift_unique' <| hg.trans h.connectedComponentsLift_comp_coe.symm
 #align continuous.connected_components_lift_unique Continuous.connectedComponentsLift_unique
+-/
 
+#print connectedComponents_preimage_singleton /-
 /-- The preimage of a singleton in `connected_components` is the connected component
 of an element in the equivalence class. -/
 theorem connectedComponents_preimage_singleton {x : α} :
@@ -1693,14 +2174,18 @@ theorem connectedComponents_preimage_singleton {x : α} :
   ext y
   simp [ConnectedComponents.coe_eq_coe']
 #align connected_components_preimage_singleton connectedComponents_preimage_singleton
+-/
 
+#print connectedComponents_preimage_image /-
 /-- The preimage of the image of a set under the quotient map to `connected_components α`
 is the union of the connected components of the elements in it. -/
 theorem connectedComponents_preimage_image (U : Set α) :
     coe ⁻¹' (coe '' U : Set (ConnectedComponents α)) = ⋃ x ∈ U, connectedComponent x := by
   simp only [connectedComponents_preimage_singleton, preimage_Union₂, image_eq_Union]
 #align connected_components_preimage_image connectedComponents_preimage_image
+-/
 
+#print ConnectedComponents.totallyDisconnectedSpace /-
 instance ConnectedComponents.totallyDisconnectedSpace :
     TotallyDisconnectedSpace (ConnectedComponents α) :=
   by
@@ -1712,13 +2197,22 @@ instance ConnectedComponents.totallyDisconnectedSpace :
   rw [connectedComponents_preimage_singleton]
   exact isConnected_connectedComponent
 #align connected_components.totally_disconnected_space ConnectedComponents.totallyDisconnectedSpace
+-/
 
+#print Continuous.connectedComponentsMap /-
 /-- Functoriality of `connected_components` -/
 def Continuous.connectedComponentsMap {β : Type _} [TopologicalSpace β] {f : α → β}
     (h : Continuous f) : ConnectedComponents α → ConnectedComponents β :=
   Continuous.connectedComponentsLift (continuous_quotient_mk'.comp h)
 #align continuous.connected_components_map Continuous.connectedComponentsMap
+-/
 
+/- warning: continuous.connected_components_map_continuous -> Continuous.connectedComponentsMap_continuous is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} β] {f : α -> β} (h : Continuous.{u1, u2} α β _inst_1 _inst_4 f), Continuous.{u1, u2} (ConnectedComponents.{u1} α _inst_1) (ConnectedComponents.{u2} β _inst_4) (ConnectedComponents.topologicalSpace.{u1} α _inst_1) (ConnectedComponents.topologicalSpace.{u2} β _inst_4) (Continuous.connectedComponentsMap.{u1, u2} α _inst_1 β _inst_4 f h)
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {β : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} β] {f : α -> β} (h : Continuous.{u2, u1} α β _inst_1 _inst_4 f), Continuous.{u2, u1} (ConnectedComponents.{u2} α _inst_1) (ConnectedComponents.{u1} β _inst_4) (ConnectedComponents.instTopologicalSpaceConnectedComponents.{u2} α _inst_1) (ConnectedComponents.instTopologicalSpaceConnectedComponents.{u1} β _inst_4) (Continuous.connectedComponentsMap.{u2, u1} α _inst_1 β _inst_4 f h)
+Case conversion may be inaccurate. Consider using '#align continuous.connected_components_map_continuous Continuous.connectedComponentsMap_continuousₓ'. -/
 theorem Continuous.connectedComponentsMap_continuous {β : Type _} [TopologicalSpace β] {f : α → β}
     (h : Continuous f) : Continuous h.connectedComponentsMap :=
   Continuous.connectedComponentsLift_continuous (continuous_quotient_mk'.comp h)
@@ -1726,6 +2220,12 @@ theorem Continuous.connectedComponentsMap_continuous {β : Type _} [TopologicalS
 
 end connectedComponentSetoid
 
+/- warning: is_preconnected.constant -> IsPreconnected.constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {Y : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : DiscreteTopology.{u2} Y _inst_2] {s : Set.{u1} α}, (IsPreconnected.{u1} α _inst_1 s) -> (forall {f : α -> Y}, (ContinuousOn.{u1, u2} α Y _inst_1 _inst_2 f s) -> (forall {x : α} {y : α}, (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Eq.{succ u2} Y (f x) (f y))))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {Y : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} Y] [_inst_3 : DiscreteTopology.{u1} Y _inst_2] {s : Set.{u2} α}, (IsPreconnected.{u2} α _inst_1 s) -> (forall {f : α -> Y}, (ContinuousOn.{u2, u1} α Y _inst_1 _inst_2 f s) -> (forall {x : α} {y : α}, (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Eq.{succ u1} Y (f x) (f y))))
+Case conversion may be inaccurate. Consider using '#align is_preconnected.constant IsPreconnected.constantₓ'. -/
 /-- A preconnected set `s` has the property that every map to a
 discrete space that is continuous on `s` is constant on `s` -/
 theorem IsPreconnected.constant {Y : Type _} [TopologicalSpace Y] [DiscreteTopology Y] {s : Set α}
@@ -1734,6 +2234,12 @@ theorem IsPreconnected.constant {Y : Type _} [TopologicalSpace Y] [DiscreteTopol
   (hs.image f hf).Subsingleton (mem_image_of_mem f hx) (mem_image_of_mem f hy)
 #align is_preconnected.constant IsPreconnected.constant
 
+/- warning: is_preconnected_of_forall_constant -> isPreconnected_of_forall_constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (forall (f : α -> Bool), (ContinuousOn.{u1, 0} α Bool _inst_1 Bool.topologicalSpace f s) -> (forall (x : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x s) -> (forall (y : α), (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) y s) -> (Eq.{1} Bool (f x) (f y))))) -> (IsPreconnected.{u1} α _inst_1 s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {s : Set.{u1} α}, (forall (f : α -> Bool), (ContinuousOn.{u1, 0} α Bool _inst_1 instTopologicalSpaceBool f s) -> (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y s) -> (Eq.{1} Bool (f x) (f y))))) -> (IsPreconnected.{u1} α _inst_1 s)
+Case conversion may be inaccurate. Consider using '#align is_preconnected_of_forall_constant isPreconnected_of_forall_constantₓ'. -/
 /-- If every map to `bool` (a discrete two-element space), that is
 continuous on a set `s`, is constant on s, then s is preconnected -/
 theorem isPreconnected_of_forall_constant {s : Set α}
@@ -1754,12 +2260,24 @@ theorem isPreconnected_of_forall_constant {s : Set α}
     hs _ this x x_in_s y y_in_s
 #align is_preconnected_of_forall_constant isPreconnected_of_forall_constant
 
+/- warning: preconnected_space.constant -> PreconnectedSpace.constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {Y : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} Y] [_inst_3 : DiscreteTopology.{u2} Y _inst_2], (PreconnectedSpace.{u1} α _inst_1) -> (forall {f : α -> Y}, (Continuous.{u1, u2} α Y _inst_1 _inst_2 f) -> (forall {x : α} {y : α}, Eq.{succ u2} Y (f x) (f y)))
+but is expected to have type
+  forall {α : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} α] {Y : Type.{u1}} [_inst_2 : TopologicalSpace.{u1} Y] [_inst_3 : DiscreteTopology.{u1} Y _inst_2], (PreconnectedSpace.{u2} α _inst_1) -> (forall {f : α -> Y}, (Continuous.{u2, u1} α Y _inst_1 _inst_2 f) -> (forall {x : α} {y : α}, Eq.{succ u1} Y (f x) (f y)))
+Case conversion may be inaccurate. Consider using '#align preconnected_space.constant PreconnectedSpace.constantₓ'. -/
 /-- A `preconnected_space` version of `is_preconnected.constant` -/
 theorem PreconnectedSpace.constant {Y : Type _} [TopologicalSpace Y] [DiscreteTopology Y]
     (hp : PreconnectedSpace α) {f : α → Y} (hf : Continuous f) {x y : α} : f x = f y :=
   IsPreconnected.constant hp.isPreconnected_univ (Continuous.continuousOn hf) trivial trivial
 #align preconnected_space.constant PreconnectedSpace.constant
 
+/- warning: preconnected_space_of_forall_constant -> preconnectedSpace_of_forall_constant is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], (forall (f : α -> Bool), (Continuous.{u1, 0} α Bool _inst_1 Bool.topologicalSpace f) -> (forall (x : α) (y : α), Eq.{1} Bool (f x) (f y))) -> (PreconnectedSpace.{u1} α _inst_1)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α], (forall (f : α -> Bool), (Continuous.{u1, 0} α Bool _inst_1 instTopologicalSpaceBool f) -> (forall (x : α) (y : α), Eq.{1} Bool (f x) (f y))) -> (PreconnectedSpace.{u1} α _inst_1)
+Case conversion may be inaccurate. Consider using '#align preconnected_space_of_forall_constant preconnectedSpace_of_forall_constantₓ'. -/
 /-- A `preconnected_space` version of `is_preconnected_of_forall_constant` -/
 theorem preconnectedSpace_of_forall_constant
     (hs : ∀ f : α → Bool, Continuous f → ∀ x y, f x = f y) : PreconnectedSpace α :=
@@ -1767,6 +2285,7 @@ theorem preconnectedSpace_of_forall_constant
       hs f (continuous_iff_continuousOn_univ.mpr hf) x y⟩
 #align preconnected_space_of_forall_constant preconnectedSpace_of_forall_constant
 
+#print IsPreconnected.constant_of_mapsTo /-
 /-- Refinement of `is_preconnected.constant` only assuming the map factors through a
 discrete subset of the target. -/
 theorem IsPreconnected.constant_of_mapsTo [TopologicalSpace β] {S : Set α} (hS : IsPreconnected S)
@@ -1781,4 +2300,5 @@ theorem IsPreconnected.constant_of_mapsTo [TopologicalSpace β] {S : Set α} (hS
     (is_preconnected_iff_preconnected_space.mp hS).constant
       (continuous_induced_rng.mpr <| continuous_on_iff_continuous_restrict.mp hc)
 #align is_preconnected.constant_of_maps_to IsPreconnected.constant_of_mapsTo
+-/
 

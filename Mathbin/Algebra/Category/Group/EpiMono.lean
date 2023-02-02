@@ -51,11 +51,11 @@ theorem range_eq_top_of_cancel {f : A →* B}
   specialize h 1 (QuotientGroup.mk' _) _
   · ext1
     simp only [one_apply, coe_comp, coe_mk', Function.comp_apply]
-    rw [show (1 : B ⧸ f.range) = (1 : B) from QuotientGroup.coe_one _, QuotientGroup.eq, inv_one,
+    rw [show (1 : B ⧸ f.range) = (1 : B) from QuotientGroup.mk_one _, QuotientGroup.eq, inv_one,
       one_mul]
     exact ⟨x, rfl⟩
   replace h : (QuotientGroup.mk' _).ker = (1 : B →* B ⧸ f.range).ker := by rw [h]
-  rwa [ker_one, QuotientGroup.ker_mk] at h
+  rwa [ker_one, QuotientGroup.ker_mk'] at h
 #align monoid_hom.range_eq_top_of_cancel MonoidHom.range_eq_top_of_cancel
 #align add_monoid_hom.range_eq_top_of_cancel AddMonoidHom.range_eq_top_of_cancel
 

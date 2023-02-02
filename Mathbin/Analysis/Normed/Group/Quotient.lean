@@ -237,7 +237,7 @@ theorem norm_mk_lt' (S : AddSubgroup M) (m : M) {ε : ℝ} (hε : 0 < ε) :
     ∃ s ∈ S, ‖m + s‖ < ‖mk' S m‖ + ε :=
   by
   obtain ⟨n : M, hn : mk' S n = mk' S m, hn' : ‖n‖ < ‖mk' S m‖ + ε⟩ :=
-    norm_mk_lt (quotientAddGroup.mk' S m) hε
+    norm_mk_lt (QuotientAddGroup.mk' S m) hε
   erw [eq_comm, QuotientAddGroup.eq] at hn
   use -m + n, hn
   rwa [add_neg_cancel_left]
@@ -354,7 +354,7 @@ noncomputable instance AddSubgroup.normedAddCommGroupQuotient (S : AddSubgroup M
     eq_of_dist_eq_zero := by
       rintro ⟨m⟩ ⟨m'⟩ (h : ‖mk' S m - mk' S m'‖ = 0)
       erw [← (mk' S).map_sub, quotient_norm_eq_zero_iff, ‹IsClosed _›.closure_eq, ←
-        quotientAddGroup.eq_iff_sub_mem] at h
+        QuotientAddGroup.eq_iff_sub_mem] at h
       exact h }
 #align add_subgroup.normed_add_comm_group_quotient AddSubgroup.normedAddCommGroupQuotient
 
@@ -370,13 +370,13 @@ open NormedAddGroupHom
 
 /-- The morphism from a seminormed group to the quotient by a subgroup. -/
 noncomputable def normedMk (S : AddSubgroup M) : NormedAddGroupHom M (M ⧸ S) :=
-  { quotientAddGroup.mk' S with
+  { QuotientAddGroup.mk' S with
     bound' := ⟨1, fun m => by simpa [one_mul] using quotient_norm_mk_le _ m⟩ }
 #align add_subgroup.normed_mk AddSubgroup.normedMk
 
 /-- `S.normed_mk` agrees with `quotient_add_group.mk' S`. -/
 @[simp]
-theorem normedMk.apply (S : AddSubgroup M) (m : M) : normedMk S m = quotientAddGroup.mk' S m :=
+theorem normedMk.apply (S : AddSubgroup M) (m : M) : normedMk S m = QuotientAddGroup.mk' S m :=
   rfl
 #align add_subgroup.normed_mk.apply AddSubgroup.normedMk.apply
 
@@ -387,7 +387,7 @@ theorem surjective_normedMk (S : AddSubgroup M) : Function.Surjective (normedMk 
 
 /-- The kernel of `S.normed_mk` is `S`. -/
 theorem ker_normedMk (S : AddSubgroup M) : S.normedMk.ker = S :=
-  quotientAddGroup.ker_mk _
+  QuotientAddGroup.ker_mk' _
 #align add_subgroup.ker_normed_mk AddSubgroup.ker_normedMk
 
 /-- The operator norm of the projection is at most `1`. -/
@@ -466,7 +466,7 @@ structure IsQuotient (f : NormedAddGroupHom M N) : Prop where
 `S : add_subgroup M` is closed, the induced morphism `normed_add_group_hom (M ⧸ S) N`. -/
 noncomputable def lift {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     (f : NormedAddGroupHom M N) (hf : ∀ s ∈ S, f s = 0) : NormedAddGroupHom (M ⧸ S) N :=
-  { quotientAddGroup.lift S f.toAddMonoidHom hf with
+  { QuotientAddGroup.lift S f.toAddMonoidHom hf with
     bound' := by
       obtain ⟨c : ℝ, hcpos : (0 : ℝ) < c, hc : ∀ x, ‖f x‖ ≤ c * ‖x‖⟩ := f.bound
       refine' ⟨c, fun mbar => le_of_forall_pos_le_add fun ε hε => _⟩

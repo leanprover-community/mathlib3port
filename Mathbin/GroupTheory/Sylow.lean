@@ -444,12 +444,12 @@ theorem not_dvd_index_sylow' [hp : Fact p.Prime] (P : Sylow p G) [(P : Subgroup 
   let Q := (zpowers x).comap (QuotientGroup.mk' (P : Subgroup G))
   have hQ : IsPGroup p Q := by
     apply h.comap_of_ker_is_p_group
-    rw [QuotientGroup.ker_mk]
+    rw [QuotientGroup.ker_mk']
     exact P.2
   replace hp := mt order_of_eq_one_iff.mpr (ne_of_eq_of_ne hx hp.1.ne_one)
   rw [← zpowers_eq_bot, ← Ne, ← bot_lt_iff_ne_bot, ←
     comap_lt_comap_of_surjective (QuotientGroup.mk'_surjective _), MonoidHom.comap_bot,
-    QuotientGroup.ker_mk] at hp
+    QuotientGroup.ker_mk'] at hp
   exact hp.ne' (P.3 hQ hp.le)
 #align not_dvd_index_sylow' not_dvd_index_sylow'
 

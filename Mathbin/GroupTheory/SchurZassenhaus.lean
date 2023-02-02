@@ -223,7 +223,7 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
   have h6 :
     Nat.coprime (Fintype.card (N.map (QuotientGroup.mk' K))) (N.map (QuotientGroup.mk' K)).index :=
     by
-    have index_map := N.index_map_eq this (by rwa [QuotientGroup.ker_mk])
+    have index_map := N.index_map_eq this (by rwa [QuotientGroup.ker_mk'])
     have index_pos : 0 < N.index := Nat.pos_of_ne_zero index_ne_zero_of_finite
     rw [index_map]
     refine' h1.coprime_dvd_left _
@@ -234,12 +234,12 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
   · have key : (N.map (QuotientGroup.mk' K)).comap (QuotientGroup.mk' K) = N :=
       by
       refine' comap_map_eq_self _
-      rwa [QuotientGroup.ker_mk]
+      rwa [QuotientGroup.ker_mk']
     rwa [← key, comap_sup_eq, hH.symm.sup_eq_top, comap_top]
   · rw [← comap_top (QuotientGroup.mk' K)]
     intro hH'
-    rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff, QuotientGroup.ker_mk] at
-      hH
+    rw [comap_injective this hH', is_complement'_top_right, map_eq_bot_iff,
+      QuotientGroup.ker_mk'] at hH
     · exact h4.2 (le_antisymm hK hH)
 #align subgroup.schur_zassenhaus_induction.step2 subgroup.schur_zassenhaus_induction.step2
 

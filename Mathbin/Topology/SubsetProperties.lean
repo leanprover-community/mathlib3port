@@ -2386,16 +2386,16 @@ theorem isClopen_discrete [DiscreteTopology α] (x : Set α) : IsClopen x :=
 #align is_clopen_discrete isClopen_discrete
 -/
 
-/- warning: clopen_range_sigma_mk -> clopen_range_sigmaMk is a dubious translation:
+/- warning: clopen_range_sigma_mk -> isClopen_range_sigmaMk is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {σ : ι -> Type.{u2}} [_inst_3 : forall (i : ι), TopologicalSpace.{u2} (σ i)] {i : ι}, IsClopen.{max u1 u2} (Sigma.{u1, u2} ι σ) (Sigma.topologicalSpace.{u1, u2} ι σ (fun (a : ι) => _inst_3 a)) (Set.range.{max u1 u2, succ u2} (Sigma.{u1, u2} ι σ) (σ i) (Sigma.mk.{u1, u2} ι σ i))
 but is expected to have type
   forall {ι : Type.{u2}} {σ : ι -> Type.{u1}} [_inst_3 : forall (i : ι), TopologicalSpace.{u1} (σ i)] {i : ι}, IsClopen.{max u2 u1} (Sigma.{u2, u1} ι σ) (instTopologicalSpaceSigma.{u2, u1} ι σ (fun (a : ι) => _inst_3 a)) (Set.range.{max u2 u1, succ u1} (Sigma.{u2, u1} ι σ) (σ i) (Sigma.mk.{u2, u1} ι σ i))
-Case conversion may be inaccurate. Consider using '#align clopen_range_sigma_mk clopen_range_sigmaMkₓ'. -/
-theorem clopen_range_sigmaMk {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)] {i : ι} :
+Case conversion may be inaccurate. Consider using '#align clopen_range_sigma_mk isClopen_range_sigmaMkₓ'. -/
+theorem isClopen_range_sigmaMk {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)] {i : ι} :
     IsClopen (Set.range (@Sigma.mk ι σ i)) :=
   ⟨openEmbedding_sigmaMk.open_range, closedEmbedding_sigmaMk.closed_range⟩
-#align clopen_range_sigma_mk clopen_range_sigmaMk
+#align clopen_range_sigma_mk isClopen_range_sigmaMk
 
 #print QuotientMap.isClopen_preimage /-
 protected theorem QuotientMap.isClopen_preimage {f : α → β} (hf : QuotientMap f) {s : Set β} :

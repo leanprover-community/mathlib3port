@@ -1328,16 +1328,16 @@ protected theorem HasBasis.binfᵢ_mem [CompleteLattice β] {f : Set α → β} 
       infᵢ₂_le_of_le i hpi (hf hi)
 #align filter.has_basis.binfi_mem Filter.HasBasis.binfᵢ_mem
 
-/- warning: filter.has_basis.bInter_mem -> Filter.HasBasis.bInter_mem is a dubious translation:
+/- warning: filter.has_basis.bInter_mem -> Filter.HasBasis.binterᵢ_mem is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {l : Filter.{u1} α} {p : ι -> Prop} {s : ι -> (Set.{u1} α)} {f : (Set.{u1} α) -> (Set.{u2} β)}, (Filter.HasBasis.{u1, u3} α ι l p s) -> (Monotone.{u1, u2} (Set.{u1} α) (Set.{u2} β) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α))))))) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.completeBooleanAlgebra.{u2} β))))))) f) -> (Eq.{succ u2} (Set.{u2} β) (Set.interᵢ.{u2, succ u1} β (Set.{u1} α) (fun (t : Set.{u1} α) => Set.interᵢ.{u2, 0} β (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) => f t))) (Set.interᵢ.{u2, u3} β ι (fun (i : ι) => Set.interᵢ.{u2, 0} β (p i) (fun (hi : p i) => f (s i)))))
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {ι : Sort.{u1}} {l : Filter.{u3} α} {p : ι -> Prop} {s : ι -> (Set.{u3} α)} {f : (Set.{u3} α) -> (Set.{u2} β)}, (Filter.HasBasis.{u3, u1} α ι l p s) -> (Monotone.{u3, u2} (Set.{u3} α) (Set.{u2} β) (PartialOrder.toPreorder.{u3} (Set.{u3} α) (CompleteSemilatticeInf.toPartialOrder.{u3} (Set.{u3} α) (CompleteLattice.toCompleteSemilatticeInf.{u3} (Set.{u3} α) (Order.Coframe.toCompleteLattice.{u3} (Set.{u3} α) (CompleteDistribLattice.toCoframe.{u3} (Set.{u3} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u3} (Set.{u3} α) (Set.instCompleteBooleanAlgebraSet.{u3} α))))))) (PartialOrder.toPreorder.{u2} (Set.{u2} β) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} β) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β))))))) f) -> (Eq.{succ u2} (Set.{u2} β) (Set.interᵢ.{u2, succ u3} β (Set.{u3} α) (fun (t : Set.{u3} α) => Set.interᵢ.{u2, 0} β (Membership.mem.{u3, u3} (Set.{u3} α) (Filter.{u3} α) (instMembershipSetFilter.{u3} α) t l) (fun (H : Membership.mem.{u3, u3} (Set.{u3} α) (Filter.{u3} α) (instMembershipSetFilter.{u3} α) t l) => f t))) (Set.interᵢ.{u2, u1} β ι (fun (i : ι) => Set.interᵢ.{u2, 0} β (p i) (fun (hi : p i) => f (s i)))))
-Case conversion may be inaccurate. Consider using '#align filter.has_basis.bInter_mem Filter.HasBasis.bInter_memₓ'. -/
-protected theorem HasBasis.bInter_mem {f : Set α → Set β} (h : HasBasis l p s) (hf : Monotone f) :
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.bInter_mem Filter.HasBasis.binterᵢ_memₓ'. -/
+protected theorem HasBasis.binterᵢ_mem {f : Set α → Set β} (h : HasBasis l p s) (hf : Monotone f) :
     (⋂ t ∈ l, f t) = ⋂ (i) (hi : p i), f (s i) :=
   h.binfᵢ_mem hf
-#align filter.has_basis.bInter_mem Filter.HasBasis.bInter_mem
+#align filter.has_basis.bInter_mem Filter.HasBasis.binterᵢ_mem
 
 /- warning: filter.has_basis.sInter_sets -> Filter.HasBasis.interₛ_sets is a dubious translation:
 lean 3 declaration is

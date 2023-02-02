@@ -173,7 +173,7 @@ theorem coe_eq_zero_of_pos_iff (hp : 0 < p) {x : 𝕜} (hx : 0 < x) :
 #align add_circle.coe_eq_zero_of_pos_iff AddCircle.coe_eq_zero_of_pos_iff
 
 theorem coe_period : (p : AddCircle p) = 0 :=
-  (quotientAddGroup.eq_zero_iff p).2 <| mem_zmultiples p
+  (QuotientAddGroup.eq_zero_iff p).2 <| mem_zmultiples p
 #align add_circle.coe_period AddCircle.coe_period
 
 @[simp]
@@ -183,7 +183,7 @@ theorem coe_add_period (x : 𝕜) : ((x + p : 𝕜) : AddCircle p) = x := by
 
 @[continuity, nolint unused_arguments]
 protected theorem continuous_mk' :
-    Continuous (quotientAddGroup.mk' (zmultiples p) : 𝕜 → AddCircle p) :=
+    Continuous (QuotientAddGroup.mk' (zmultiples p) : 𝕜 → AddCircle p) :=
   continuous_coinduced_rng
 #align add_circle.continuous_mk' AddCircle.continuous_mk'
 
@@ -316,7 +316,7 @@ variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] 
 
 /-- The rescaling equivalence between additive circles with different periods. -/
 def equivAddCircle (hp : p ≠ 0) (hq : q ≠ 0) : AddCircle p ≃+ AddCircle q :=
-  quotientAddGroup.congr _ _ (AddAut.mulRight <| (Units.mk0 p hp)⁻¹ * Units.mk0 q hq) <| by
+  QuotientAddGroup.congr _ _ (AddAut.mulRight <| (Units.mk0 p hp)⁻¹ * Units.mk0 q hq) <| by
     rw [AddMonoidHom.map_zmultiples, AddMonoidHom.coe_coe, AddAut.mulRight_apply, Units.val_mul,
       Units.val_mk0, Units.val_inv_eq_inv_val, Units.val_mk0, mul_inv_cancel_left₀ hp]
 #align add_circle.equiv_add_circle AddCircle.equivAddCircle
@@ -350,12 +350,12 @@ theorem coe_equivIco_mk_apply (x : 𝕜) :
 instance : DivisibleBy (AddCircle p) ℤ
     where
   div x n := (↑((n : 𝕜)⁻¹ * (equivIco p 0 x : 𝕜)) : AddCircle p)
-  div_zero x := by simp only [algebraMap.coe_zero, quotientAddGroup.coe_zero, inv_zero, zero_mul]
+  div_zero x := by simp only [algebraMap.coe_zero, QuotientAddGroup.mk_zero, inv_zero, zero_mul]
   div_cancel n x hn := by
     replace hn : (n : 𝕜) ≠ 0;
     · norm_cast
       assumption
-    change n • quotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p 0 x)) = x
+    change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p 0 x)) = x
     rw [← map_zsmul, ← smul_mul_assoc, zsmul_eq_mul, mul_inv_cancel hn, one_mul]
     exact (equiv_Ico p 0).symm_apply_apply x
 

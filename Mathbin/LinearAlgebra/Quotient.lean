@@ -99,7 +99,7 @@ theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotien
 #align submodule.quotient.mk_eq_zero Submodule.Quotient.mk_eq_zero
 
 instance addCommGroup : AddCommGroup (M ⧸ p) :=
-  quotientAddGroup.Quotient.addCommGroup p.toAddSubgroup
+  QuotientAddGroup.Quotient.addCommGroup p.toAddSubgroup
 #align submodule.quotient.add_comm_group Submodule.Quotient.addCommGroup
 
 @[simp]
@@ -335,7 +335,7 @@ theorem linearMap_qext ⦃f g : M ⧸ p →ₛₗ[τ₁₂] M₂⦄ (h : f.comp 
 /-- The map from the quotient of `M` by a submodule `p` to `M₂` induced by a linear map `f : M → M₂`
 vanishing on `p`, as a linear map. -/
 def liftq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ f.ker) : M ⧸ p →ₛₗ[τ₁₂] M₂ :=
-  { quotientAddGroup.lift p.toAddSubgroup f.toAddMonoidHom h with
+  { QuotientAddGroup.lift p.toAddSubgroup f.toAddMonoidHom h with
     map_smul' := by rintro a ⟨x⟩ <;> exact f.map_smulₛₗ a x }
 #align submodule.liftq Submodule.liftq
 

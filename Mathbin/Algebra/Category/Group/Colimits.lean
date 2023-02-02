@@ -346,7 +346,7 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
         exact -x
         simp only [add_zero, AddMonoidHom.map_neg])
   inv :=
-    quotientAddGroup.lift _ (cokernel.π f)
+    QuotientAddGroup.lift _ (cokernel.π f)
       (by
         intro x H_1
         cases H_1

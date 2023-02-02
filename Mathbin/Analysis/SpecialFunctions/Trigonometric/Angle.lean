@@ -44,7 +44,7 @@ theorem continuous_coe : Continuous (coe : ℝ → Angle) :=
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/
 def coeHom : ℝ →+ Angle :=
-  quotientAddGroup.mk' _
+  QuotientAddGroup.mk' _
 #align real.angle.coe_hom Real.Angle.coeHom
 
 @[simp]

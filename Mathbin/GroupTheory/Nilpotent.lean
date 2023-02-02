@@ -122,7 +122,7 @@ theorem upperCentralSeriesStep_eq_comap_center :
   rw [mem_comap, mem_center_iff, forall_coe]
   apply forall_congr'
   intro y
-  rw [coe_mk', ← QuotientGroup.coe_mul, ← QuotientGroup.coe_mul, eq_comm, eq_iff_div_mem,
+  rw [coe_mk', ← QuotientGroup.mk_mul, ← QuotientGroup.mk_mul, eq_comm, eq_iff_div_mem,
     div_eq_mul_inv, mul_inv_rev, mul_assoc]
 #align upper_central_series_step_eq_comap_center upperCentralSeriesStep_eq_comap_center
 

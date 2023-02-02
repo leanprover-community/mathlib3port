@@ -1172,7 +1172,7 @@ theorem not_memIooMod_iff_eq_add_zsmul : ¬MemIooMod a b x ↔ ∃ z : ℤ, x = 
 
 theorem not_memIooMod_iff_eq_mod_zmultiples :
     ¬MemIooMod a b x ↔ (x : α ⧸ AddSubgroup.zmultiples b) = a := by
-  simp_rw [not_memIooMod_iff_eq_add_zsmul hb, quotientAddGroup.eq_iff_sub_mem,
+  simp_rw [not_memIooMod_iff_eq_add_zsmul hb, QuotientAddGroup.eq_iff_sub_mem,
     AddSubgroup.mem_zmultiples_iff, eq_sub_iff_add_eq', eq_comm]
 #align not_mem_Ioo_mod_iff_eq_mod_zmultiples not_memIooMod_iff_eq_mod_zmultiples
 
@@ -1281,7 +1281,7 @@ def quotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
   left_inv x := by
     induction x using QuotientAddGroup.induction_on'
     dsimp
-    rw [quotientAddGroup.eq_iff_sub_mem, toIcoMod_sub_self]
+    rw [QuotientAddGroup.eq_iff_sub_mem, toIcoMod_sub_self]
     apply AddSubgroup.zsmul_mem_zmultiples
 #align quotient_add_group.equiv_Ico_mod quotientAddGroup.equivIcoMod
 
@@ -1303,7 +1303,7 @@ def quotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
   left_inv x := by
     induction x using QuotientAddGroup.induction_on'
     dsimp
-    rw [quotientAddGroup.eq_iff_sub_mem, toIocMod_sub_self]
+    rw [QuotientAddGroup.eq_iff_sub_mem, toIocMod_sub_self]
     apply AddSubgroup.zsmul_mem_zmultiples
 #align quotient_add_group.equiv_Ioc_mod quotientAddGroup.equivIocMod
 

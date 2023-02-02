@@ -247,7 +247,7 @@ noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) :
     where
   uniformContinuous_toFun := hf.to_uniformInducing.UniformContinuous.subtype_mk _
   uniformContinuous_invFun := by
-    simp [hf.to_uniform_inducing.uniform_continuous_iff, uniformContinuous_subtype_coe]
+    simp [hf.to_uniform_inducing.uniform_continuous_iff, uniformContinuous_subtype_val]
   toEquiv := Equiv.ofInjective f hf.inj
 #align uniform_equiv.of_uniform_embedding UniformEquiv.ofUniformEmbedding
 

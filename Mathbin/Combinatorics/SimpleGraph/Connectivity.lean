@@ -1871,7 +1871,7 @@ instance ConnectedComponent.inhabited [Inhabited V] : Inhabited G.ConnectedCompo
   ⟨G.connectedComponentMk default⟩
 #align simple_graph.connected_component.inhabited SimpleGraph.ConnectedComponent.inhabited
 
-section ConnectedComponent
+section connectedComponent
 
 variable {G}
 
@@ -1933,7 +1933,7 @@ theorem Preconnected.subsingleton_connectedComponent (h : G.Preconnected) :
   ⟨ConnectedComponent.ind₂ fun v w => ConnectedComponent.sound (h v w)⟩
 #align simple_graph.preconnected.subsingleton_connected_component SimpleGraph.Preconnected.subsingleton_connectedComponent
 
-end ConnectedComponent
+end connectedComponent
 
 variable {G}
 

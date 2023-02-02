@@ -56,7 +56,7 @@ theorem norm_coe_mul (x : ℝ) (t : ℝ) :
   have ht' : |t| ≠ 0 := (not_congr abs_eq_zero).mpr ht
   simp only [quotient_norm_eq, Real.norm_eq_abs]
   conv_rhs => rw [← smul_eq_mul, ← Real.infₛ_smul_of_nonneg (abs_nonneg t)]
-  simp only [quotientAddGroup.mk'_apply, quotientAddGroup.eq_iff_sub_mem]
+  simp only [QuotientAddGroup.mk'_apply, QuotientAddGroup.eq_iff_sub_mem]
   congr 1
   ext z
   rw [mem_smul_set_iff_inv_smul_mem₀ ht']
@@ -88,7 +88,7 @@ theorem norm_eq_of_zero {x : ℝ} : ‖(x : AddCircle (0 : ℝ))‖ = |x| :=
   suffices { y : ℝ | (y : AddCircle (0 : ℝ)) = (x : AddCircle (0 : ℝ)) } = {x} by
     rw [quotient_norm_eq, this, image_singleton, Real.norm_eq_abs, cinfₛ_singleton]
   ext y
-  simp [quotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff, sub_eq_zero]
+  simp [QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff, sub_eq_zero]
 #align add_circle.norm_eq_of_zero AddCircle.norm_eq_of_zero
 
 theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * p| :=
@@ -114,15 +114,15 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
       ⟨mem_lowerBounds.1 h _ ⟨fract x, _, abs_fract⟩,
         mem_lowerBounds.1 h _ ⟨fract x - 1, _, by rw [abs_sub_comm, abs_one_sub_fract]⟩⟩
     ·
-      simp only [mem_set_of_eq, fract, sub_eq_self, quotientAddGroup.coe_sub,
-        quotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one]
+      simp only [mem_set_of_eq, fract, sub_eq_self, QuotientAddGroup.mk_sub,
+        QuotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one]
     ·
-      simp only [mem_set_of_eq, fract, sub_eq_self, quotientAddGroup.coe_sub,
-        quotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one, sub_sub,
+      simp only [mem_set_of_eq, fract, sub_eq_self, QuotientAddGroup.mk_sub,
+        QuotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one, sub_sub,
         (by norm_cast : (⌊x⌋ : ℝ) + 1 = (↑(⌊x⌋ + 1) : ℝ))]
-  · simp only [quotientAddGroup.mk'_apply, Real.norm_eq_abs, le_cinfₛ_iff h₁ h₂]
+  · simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_cinfₛ_iff h₁ h₂]
     rintro b' ⟨b, hb, rfl⟩
-    simp only [mem_set_of_eq, quotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
+    simp only [mem_set_of_eq, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
       smul_one_eq_coe] at hb
     obtain ⟨z, hz⟩ := hb
     rw [(by
@@ -198,7 +198,7 @@ theorem closedBall_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {�
 @[simp]
 theorem coe_real_preimage_closedBall_period_zero (x ε : ℝ) :
     coe ⁻¹' closedBall (x : AddCircle (0 : ℝ)) ε = closedBall x ε := by
-  ext y <;> simp [dist_eq_norm, ← quotientAddGroup.coe_sub]
+  ext y <;> simp [dist_eq_norm, ← QuotientAddGroup.mk_sub]
 #align add_circle.coe_real_preimage_closed_ball_period_zero AddCircle.coe_real_preimage_closedBall_period_zero
 
 theorem coe_real_preimage_closedBall_eq_unionᵢ (x ε : ℝ) :
@@ -207,7 +207,7 @@ theorem coe_real_preimage_closedBall_eq_unionᵢ (x ε : ℝ) :
   rcases eq_or_ne p 0 with (rfl | hp); · simp [Union_const]
   ext y
   simp only [dist_eq_norm, mem_preimage, mem_closed_ball, zsmul_eq_mul, mem_Union, Real.norm_eq_abs,
-    ← quotientAddGroup.coe_sub, norm_eq, ← sub_sub]
+    ← QuotientAddGroup.mk_sub, norm_eq, ← sub_sub]
   refine' ⟨fun h => ⟨round (p⁻¹ * (y - x)), h⟩, _⟩
   rintro ⟨n, hn⟩
   rw [← mul_le_mul_left (abs_pos.mpr <| inv_ne_zero hp), ← abs_mul, mul_sub, mul_comm _ p,
@@ -227,7 +227,7 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
       exact hs.trans (closed_ball_subset_closed_ball <| by simp [hε])
     simp [closed_ball_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
   · suffices ∀ z : ℤ, closed_ball (x + z • p) ε ∩ s = if z = 0 then closed_ball x ε ∩ s else ∅ by
-      simp [-zsmul_eq_mul, ← quotientAddGroup.coe_zero, coe_real_preimage_closed_ball_eq_Union,
+      simp [-zsmul_eq_mul, ← QuotientAddGroup.mk_zero, coe_real_preimage_closed_ball_eq_Union,
         Union_inter, Union_ite, this, hε]
     intro z
     simp only [Real.closedBall_eq_Icc, zero_sub, zero_add] at hs⊢

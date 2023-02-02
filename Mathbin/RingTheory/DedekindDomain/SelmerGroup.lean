@@ -159,7 +159,7 @@ def valuationOfNeZeroMod (n : ℕ) : (K/n) →* Multiplicative (ZMod n) :=
 theorem valuation_of_unit_mod_eq (n : ℕ) (x : Rˣ) :
     v.valuationOfNeZeroMod n (Units.map (algebraMap R K : R →* K) x : K/n) = 1 := by
   rw [valuation_of_ne_zero_mod, MonoidHom.comp_apply, ← QuotientGroup.coe_mk',
-    QuotientGroup.map_mk', valuation_of_unit_eq, QuotientGroup.coe_one, map_one]
+    QuotientGroup.map_mk', valuation_of_unit_eq, QuotientGroup.mk_one, map_one]
 #align is_dedekind_domain.height_one_spectrum.valuation_of_unit_mod_eq IsDedekindDomain.HeightOneSpectrum.valuation_of_unit_mod_eq
 
 end HeightOneSpectrum

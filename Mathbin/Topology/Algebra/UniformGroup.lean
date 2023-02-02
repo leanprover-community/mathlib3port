@@ -1015,7 +1015,7 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
   haveI : (𝓤 (G ⧸ N)).IsCountablyGenerated := comap.is_countably_generated _ _
   obtain ⟨u, hu, u_mul⟩ := TopologicalGroup.exists_antitone_basis_nhds_one G
   obtain ⟨hv, v_anti⟩ := @has_antitone_basis.map _ _ _ _ _ _ (coe : G → G ⧸ N) hu
-  rw [← QuotientGroup.nhds_eq N 1, QuotientGroup.coe_one] at hv
+  rw [← QuotientGroup.nhds_eq N 1, QuotientGroup.mk_one] at hv
   refine' UniformSpace.complete_of_cauchySeq_tendsto fun x hx => _
   /- Given `n : ℕ`, for sufficiently large `a b : ℕ`, given any lift of `x b`, we can find a lift
     of `x a` such that the quotient of the lifts lies in `u n`. -/
@@ -1036,7 +1036,7 @@ instance QuotientGroup.complete_space' (G : Type u) [Group G] [TopologicalSpace 
     refine'
       ⟨y⁻¹ * g, by
         simpa only [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_cancel_left] using y_mem, _⟩
-    rw [QuotientGroup.coe_mul, QuotientGroup.coe_inv, hy, hg, inv_div, div_mul_cancel']
+    rw [QuotientGroup.mk_mul, QuotientGroup.mk_inv, hy, hg, inv_div, div_mul_cancel']
   /- Inductively construct a subsequence `φ : ℕ → ℕ` using `key₀` so that if `a b : ℕ` exceed
     `φ (n + 1)`, then we may find lifts whose quotients lie within `u n`. -/
   set φ : ℕ → ℕ := fun n => Nat.recOn n (some <| key₀ 0 0) fun k yk => some <| key₀ (k + 1) yk

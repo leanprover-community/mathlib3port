@@ -61,7 +61,7 @@ theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   induction θ using Quotient.inductionOn'
   have : (Quotient.mk'' : R → R ⧸ AddSubgroup.zmultiples p) = coe := rfl
   simp only [this]
-  simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, quotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
+  simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, QuotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
     sub_sub, AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
 #align quotient_add_group.zmultiples_zsmul_eq_zsmul_iff quotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
 

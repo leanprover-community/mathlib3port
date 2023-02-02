@@ -68,7 +68,7 @@ instance hasOne (I : Ideal R) : One (R ⧸ I) :=
 
 /-- On `ideal`s, `submodule.quotient_rel` is a ring congruence. -/
 protected def ringCon (I : Ideal R) : RingCon R :=
-  { quotientAddGroup.con I.toAddSubgroup with
+  { QuotientAddGroup.con I.toAddSubgroup with
     mul' := fun a₁ b₁ a₂ b₂ h₁ h₂ =>
       by
       rw [Submodule.quotientRel_r_def] at h₁ h₂⊢
@@ -241,7 +241,7 @@ variable [CommRing S]
 lift it to the quotient by this ideal. -/
 def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : R ⧸ I →+* S :=
   {
-    quotientAddGroup.lift I.toAddSubgroup f.toAddMonoidHom
+    QuotientAddGroup.lift I.toAddSubgroup f.toAddMonoidHom
       H with
     map_one' := f.map_one
     map_zero' := f.map_zero

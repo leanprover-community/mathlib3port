@@ -980,7 +980,7 @@ theorem pow_card_eq_one : x ^ Fintype.card G = 1 := by
 
 @[to_additive]
 theorem Subgroup.pow_index_mem {G : Type _} [Group G] (H : Subgroup G) [Normal H] (g : G) :
-    g ^ index H ∈ H := by rw [← eq_one_iff, QuotientGroup.coe_pow H, index, pow_card_eq_one']
+    g ^ index H ∈ H := by rw [← eq_one_iff, QuotientGroup.mk_pow H, index, pow_card_eq_one']
 #align subgroup.pow_index_mem Subgroup.pow_index_mem
 #align add_subgroup.nsmul_index_mem AddSubgroup.nsmul_index_mem
 

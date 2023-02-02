@@ -325,9 +325,9 @@ theorem comap_subtype {H : Subgroup G} (hH : IsPGroup p H) {K : Subgroup G} :
 theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K)
     [K.Normal] : IsPGroup p (H ⊔ K : Subgroup G) :=
   by
-  rw [← QuotientGroup.ker_mk K, ← Subgroup.comap_map_eq]
+  rw [← QuotientGroup.ker_mk' K, ← Subgroup.comap_map_eq]
   apply (hH.map (QuotientGroup.mk' K)).comap_of_ker_isPGroup
-  rwa [QuotientGroup.ker_mk]
+  rwa [QuotientGroup.ker_mk']
 #align is_p_group.to_sup_of_normal_right IsPGroup.to_sup_of_normal_right
 
 theorem to_sup_of_normal_left {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K)
@@ -419,7 +419,7 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) :
 for just the proof that `∀ a b, a * b = b * a` -/
 def commGroupOfCardEqPrimeSq (hG : card G = p ^ 2) : CommGroup G :=
   @commGroupOfCycleCenterQuotient _ _ _ _ (cyclic_center_quotient_of_card_eq_prime_sq hG) _
-    (QuotientGroup.ker_mk (center G)).le
+    (QuotientGroup.ker_mk' (center G)).le
 #align is_p_group.comm_group_of_card_eq_prime_sq IsPGroup.commGroupOfCardEqPrimeSq
 
 /-- A group of order `p ^ 2` is commutative. See also `is_p_group.comm_group_of_card_eq_prime_sq`
