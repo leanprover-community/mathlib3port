@@ -698,7 +698,7 @@ end Units
 @[to_additive]
 theorem Continuous.units_map [Monoid M] [Monoid N] [TopologicalSpace M] [TopologicalSpace N]
     (f : M →* N) (hf : Continuous f) : Continuous (Units.map f) :=
-  Units.continuous_iff.2 ⟨hf.comp Units.continuous_coe, hf.comp Units.continuous_coe_inv⟩
+  Units.continuous_iff.2 ⟨hf.comp Units.continuous_val, hf.comp Units.continuous_coe_inv⟩
 #align continuous.units_map Continuous.units_map
 #align continuous.add_units_map Continuous.add_units_map
 

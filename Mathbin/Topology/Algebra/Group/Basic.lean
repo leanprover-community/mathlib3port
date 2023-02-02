@@ -1739,7 +1739,7 @@ variable [Monoid α] [TopologicalSpace α] [Monoid β] [TopologicalSpace β]
 
 @[to_additive]
 instance [HasContinuousMul α] : TopologicalGroup αˣ
-    where continuous_inv := Units.continuous_iff.2 <| ⟨continuous_coe_inv, continuous_coe⟩
+    where continuous_inv := Units.continuous_iff.2 <| ⟨continuous_coe_inv, continuous_val⟩
 
 /-- The topological group isomorphism between the units of a product of two monoids, and the product
 of the units of each monoid. -/
@@ -1752,7 +1752,7 @@ def Homeomorph.prodUnits : (α × β)ˣ ≃ₜ αˣ × βˣ
       (continuous_snd.units_map (MonoidHom.snd α β))
   continuous_invFun :=
     Units.continuous_iff.2
-      ⟨continuous_coe.fst'.prod_mk continuous_coe.snd',
+      ⟨continuous_val.fst'.prod_mk continuous_val.snd',
         continuous_coe_inv.fst'.prod_mk continuous_coe_inv.snd'⟩
   toEquiv := MulEquiv.prodUnits.toEquiv
 #align units.homeomorph.prod_units Units.Homeomorph.prodUnits

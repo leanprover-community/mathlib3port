@@ -150,7 +150,7 @@ variable [Monoid M] [MulAction M X] [HasContinuousSmul M X]
 instance Units.hasContinuousSmul : HasContinuousSmul Mˣ X
     where continuous_smul :=
     show Continuous ((fun p : M × X => p.fst • p.snd) ∘ fun p : Mˣ × X => (p.1, p.2)) from
-      continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd)
+      continuous_smul.comp ((Units.continuous_val.comp continuous_fst).prod_mk continuous_snd)
 #align units.has_continuous_smul Units.hasContinuousSmul
 #align add_units.has_continuous_vadd AddUnits.has_continuous_vadd
 

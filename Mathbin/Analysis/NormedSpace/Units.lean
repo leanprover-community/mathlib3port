@@ -333,7 +333,7 @@ theorem isOpenMap_coe : IsOpenMap (coe : Rˣ → R) :=
 /-- In a normed ring, the coercion from `Rˣ` (equipped with the induced topology from the
 embedding in `R × R`) to `R` is an open embedding. -/
 theorem openEmbedding_coe : OpenEmbedding (coe : Rˣ → R) :=
-  openEmbedding_of_continuous_injective_open continuous_coe ext isOpenMap_coe
+  openEmbedding_of_continuous_injective_open continuous_val ext isOpenMap_coe
 #align units.open_embedding_coe Units.openEmbedding_coe
 
 end Units

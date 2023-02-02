@@ -36,8 +36,8 @@ and the units of the monoid of continuous maps. -/
 def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
     where
   toFun f :=
-    { val := ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩
-      inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_coe.comp (continuous_inv.comp f.Continuous)⟩
+    { val := ⟨fun x => f x, Units.continuous_val.comp f.Continuous⟩
+      inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_val.comp (continuous_inv.comp f.Continuous)⟩
       val_inv := ext fun x => Units.mul_inv _
       inv_val := ext fun x => Units.inv_mul _ }
   invFun f :=
@@ -84,7 +84,7 @@ noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : 
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :
-    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_coe.comp f.Continuous⟩)
+    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_val.comp f.Continuous⟩)
       fun f => ∀ x, IsUnit (f x)
     where prf f h :=
     ⟨unitsOfForallIsUnit h, by
