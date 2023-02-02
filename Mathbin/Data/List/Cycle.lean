@@ -916,7 +916,7 @@ theorem lists_coe (l : List α) : lists (l : Cycle α) = ↑l.cyclicPermutations
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
   Quotient.inductionOn' s fun l =>
     by
-    rw [lists, Quotient.liftOn'_mk'']
+    rw [Lists, Quotient.liftOn'_mk'']
     simp
 #align cycle.mem_lists_iff_coe_eq Cycle.mem_lists_iff_coe_eq
 -/
