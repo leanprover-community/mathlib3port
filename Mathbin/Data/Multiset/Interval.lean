@@ -54,7 +54,7 @@ theorem Icc_eq :
 theorem card_Icc :
     (Finset.Icc f g).card = ∏ i in f.toFinset ∪ g.toFinset, g.count i + 1 - f.count i := by
   simp_rw [Icc_eq, Finset.card_map, Dfinsupp.card_Icc, Nat.card_Icc, Multiset.toDfinsupp_apply,
-    to_dfinsupp_support]
+    toDfinsupp_support]
 #align multiset.card_Icc Multiset.card_Icc
 
 theorem card_Ico :
