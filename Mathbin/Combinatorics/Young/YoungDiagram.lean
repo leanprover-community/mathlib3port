@@ -55,6 +55,7 @@ Young diagram
 
 open Function
 
+#print YoungDiagram /-
 /-- A Young diagram is a finite collection of cells on the `ℕ × ℕ` grid such that whenever
 a cell is present, so are all the ones above and to the left of it. Like matrices, an `(i, j)` cell
 is a cell in row `i` and column `j`, where rows are enumerated downward and columns rightward.
@@ -66,6 +67,7 @@ structure YoungDiagram where
   cells : Finset (ℕ × ℕ)
   IsLowerSet : IsLowerSet (cells : Set (ℕ × ℕ))
 #align young_diagram YoungDiagram
+-/
 
 namespace YoungDiagram
 
@@ -74,35 +76,55 @@ instance : SetLike YoungDiagram (ℕ × ℕ)
   coe := coe YoungDiagram.cells
   coe_injective' μ ν h := by rwa [YoungDiagram.ext_iff, ← Finset.coe_inj]
 
+#print YoungDiagram.mem_cells /-
 @[simp]
 theorem mem_cells {μ : YoungDiagram} (c : ℕ × ℕ) : c ∈ μ.cells ↔ c ∈ μ :=
   Iff.rfl
 #align young_diagram.mem_cells YoungDiagram.mem_cells
+-/
 
+#print YoungDiagram.mem_mk /-
 @[simp]
 theorem mem_mk (c : ℕ × ℕ) (cells) (is_lower_set) :
     c ∈ YoungDiagram.mk cells IsLowerSet ↔ c ∈ cells :=
   Iff.rfl
 #align young_diagram.mem_mk YoungDiagram.mem_mk
+-/
 
+#print YoungDiagram.decidableMem /-
 instance decidableMem (μ : YoungDiagram) : DecidablePred (· ∈ μ) :=
   show DecidablePred (· ∈ μ.cells) by infer_instance
 #align young_diagram.decidable_mem YoungDiagram.decidableMem
+-/
 
+#print YoungDiagram.up_left_mem /-
 /-- In "English notation", a Young diagram is drawn so that (i1, j1) ≤ (i2, j2)
     means (i1, j1) is weakly up-and-left of (i2, j2). -/
 theorem up_left_mem (μ : YoungDiagram) {i1 i2 j1 j2 : ℕ} (hi : i1 ≤ i2) (hj : j1 ≤ j2)
     (hcell : (i2, j2) ∈ μ) : (i1, j1) ∈ μ :=
   μ.IsLowerSet (Prod.mk_le_mk.mpr ⟨hi, hj⟩) hcell
 #align young_diagram.up_left_mem YoungDiagram.up_left_mem
+-/
 
 section DistribLattice
 
+/- warning: young_diagram.cells_subset_iff -> YoungDiagram.cells_subset_iff is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, Iff (HasSubset.Subset.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasSubset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells μ) (YoungDiagram.cells ν)) (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ ν)
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, Iff (HasSubset.Subset.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instHasSubsetFinset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells μ) (YoungDiagram.cells ν)) (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.instPartialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat))) μ ν)
+Case conversion may be inaccurate. Consider using '#align young_diagram.cells_subset_iff YoungDiagram.cells_subset_iffₓ'. -/
 @[simp]
 theorem cells_subset_iff {μ ν : YoungDiagram} : μ.cells ⊆ ν.cells ↔ μ ≤ ν :=
   Iff.rfl
 #align young_diagram.cells_subset_iff YoungDiagram.cells_subset_iff
 
+/- warning: young_diagram.cells_ssubset_iff -> YoungDiagram.cells_sSubset_iff is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, Iff (HasSSubset.SSubset.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasSsubset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells μ) (YoungDiagram.cells ν)) (LT.lt.{0} YoungDiagram (Preorder.toLT.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ ν)
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, Iff (HasSSubset.SSubset.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instHasSSubsetFinset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells μ) (YoungDiagram.cells ν)) (LT.lt.{0} YoungDiagram (Preorder.toLT.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.instPartialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat))) μ ν)
+Case conversion may be inaccurate. Consider using '#align young_diagram.cells_ssubset_iff YoungDiagram.cells_sSubset_iffₓ'. -/
 @[simp]
 theorem cells_sSubset_iff {μ ν : YoungDiagram} : μ.cells ⊂ ν.cells ↔ μ < ν :=
   Iff.rfl
@@ -115,16 +137,34 @@ instance : HasSup YoungDiagram
         rw [Finset.coe_union]
         exact μ.is_lower_set.union ν.is_lower_set }
 
+/- warning: young_diagram.cells_sup -> YoungDiagram.cells_sup is a dubious translation:
+lean 3 declaration is
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasSup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Union.union.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasUnion.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => Prod.decidableEq.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+but is expected to have type
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasSup.sup.{0} YoungDiagram YoungDiagram.instHasSupYoungDiagram μ ν)) (Union.union.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instUnionFinset.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => instDecidableEqProd.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.cells_sup YoungDiagram.cells_supₓ'. -/
 @[simp]
 theorem cells_sup (μ ν : YoungDiagram) : (μ ⊔ ν).cells = μ.cells ∪ ν.cells :=
   rfl
 #align young_diagram.cells_sup YoungDiagram.cells_sup
 
+/- warning: young_diagram.coe_sup -> YoungDiagram.coe_sup is a dubious translation:
+lean 3 declaration is
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (HasSup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Union.union.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.hasUnion.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) ν))
+but is expected to have type
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat (HasSup.sup.{0} YoungDiagram YoungDiagram.instHasSupYoungDiagram μ ν)) (Union.union.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.instUnionSet.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat μ) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.coe_sup YoungDiagram.coe_supₓ'. -/
 @[simp, norm_cast]
 theorem coe_sup (μ ν : YoungDiagram) : ↑(μ ⊔ ν) = (μ ∪ ν : Set (ℕ × ℕ)) :=
   Finset.coe_union _ _
 #align young_diagram.coe_sup YoungDiagram.coe_sup
 
+/- warning: young_diagram.mem_sup -> YoungDiagram.mem_sup is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x (HasSup.sup.{0} YoungDiagram YoungDiagram.hasSup μ ν)) (Or (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x μ) (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x ν))
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x (HasSup.sup.{0} YoungDiagram YoungDiagram.instHasSupYoungDiagram μ ν)) (Or (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x μ) (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.mem_sup YoungDiagram.mem_supₓ'. -/
 @[simp]
 theorem mem_sup {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊔ ν ↔ x ∈ μ ∨ x ∈ ν :=
   Finset.mem_union
@@ -137,16 +177,34 @@ instance : HasInf YoungDiagram
         rw [Finset.coe_inter]
         exact μ.is_lower_set.inter ν.is_lower_set }
 
+/- warning: young_diagram.cells_inf -> YoungDiagram.cells_inf is a dubious translation:
+lean 3 declaration is
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasInf.inf.{0} YoungDiagram YoungDiagram.hasInf μ ν)) (Inter.inter.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasInter.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => Prod.decidableEq.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+but is expected to have type
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (HasInf.inf.{0} YoungDiagram YoungDiagram.instHasInfYoungDiagram μ ν)) (Inter.inter.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instInterFinset.{0} (Prod.{0, 0} Nat Nat) (fun (a : Prod.{0, 0} Nat Nat) (b : Prod.{0, 0} Nat Nat) => instDecidableEqProd.{0, 0} Nat Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) a b)) (YoungDiagram.cells μ) (YoungDiagram.cells ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.cells_inf YoungDiagram.cells_infₓ'. -/
 @[simp]
 theorem cells_inf (μ ν : YoungDiagram) : (μ ⊓ ν).cells = μ.cells ∩ ν.cells :=
   rfl
 #align young_diagram.cells_inf YoungDiagram.cells_inf
 
+/- warning: young_diagram.coe_inf -> YoungDiagram.coe_inf is a dubious translation:
+lean 3 declaration is
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (HasInf.inf.{0} YoungDiagram YoungDiagram.hasInf μ ν)) (Inter.inter.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.hasInter.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) ν))
+but is expected to have type
+  forall (μ : YoungDiagram) (ν : YoungDiagram), Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat (HasInf.inf.{0} YoungDiagram YoungDiagram.instHasInfYoungDiagram μ ν)) (Inter.inter.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.instInterSet.{0} (Prod.{0, 0} Nat Nat)) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat μ) (SetLike.coe.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.coe_inf YoungDiagram.coe_infₓ'. -/
 @[simp, norm_cast]
 theorem coe_inf (μ ν : YoungDiagram) : ↑(μ ⊓ ν) = (μ ∩ ν : Set (ℕ × ℕ)) :=
   Finset.coe_inter _ _
 #align young_diagram.coe_inf YoungDiagram.coe_inf
 
+/- warning: young_diagram.mem_inf -> YoungDiagram.mem_inf is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x (HasInf.inf.{0} YoungDiagram YoungDiagram.hasInf μ ν)) (And (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x μ) (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x ν))
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram} {x : Prod.{0, 0} Nat Nat}, Iff (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x (HasInf.inf.{0} YoungDiagram YoungDiagram.instHasInfYoungDiagram μ ν)) (And (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x μ) (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.mem_inf YoungDiagram.mem_infₓ'. -/
 @[simp]
 theorem mem_inf {μ ν : YoungDiagram} {x : ℕ × ℕ} : x ∈ μ ⊓ ν ↔ x ∈ μ ∧ x ∈ ν :=
   Finset.mem_inter
@@ -160,16 +218,34 @@ instance : OrderBot YoungDiagram
       IsLowerSet := fun _ _ _ => False.elim }
   bot_le _ _ := False.elim
 
+/- warning: young_diagram.cells_bot -> YoungDiagram.cells_bot is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (Bot.bot.{0} YoungDiagram (OrderBot.toHasBot.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) YoungDiagram.orderBot))) (EmptyCollection.emptyCollection.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.hasEmptyc.{0} (Prod.{0, 0} Nat Nat)))
+but is expected to have type
+  Eq.{1} (Finset.{0} (Prod.{0, 0} Nat Nat)) (YoungDiagram.cells (Bot.bot.{0} YoungDiagram (OrderBot.toBot.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.instPartialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat))) YoungDiagram.instOrderBotYoungDiagramToLEToPreorderInstPartialOrderProdNatInstSetLikeYoungDiagramProdNat))) (EmptyCollection.emptyCollection.{0} (Finset.{0} (Prod.{0, 0} Nat Nat)) (Finset.instEmptyCollectionFinset.{0} (Prod.{0, 0} Nat Nat)))
+Case conversion may be inaccurate. Consider using '#align young_diagram.cells_bot YoungDiagram.cells_botₓ'. -/
 @[simp]
 theorem cells_bot : (⊥ : YoungDiagram).cells = ∅ :=
   rfl
 #align young_diagram.cells_bot YoungDiagram.cells_bot
 
+/- warning: young_diagram.coe_bot -> YoungDiagram.coe_bot is a dubious translation:
+lean 3 declaration is
+  Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (HasLiftT.mk.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (CoeTCₓ.coe.{1, 1} YoungDiagram (Set.{0} (Prod.{0, 0} Nat Nat)) (SetLike.Set.hasCoeT.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (Bot.bot.{0} YoungDiagram (OrderBot.toHasBot.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) YoungDiagram.orderBot))) (EmptyCollection.emptyCollection.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.hasEmptyc.{0} (Prod.{0, 0} Nat Nat)))
+but is expected to have type
+  Eq.{1} (Set.{0} (Prod.{0, 0} Nat Nat)) (Finset.toSet.{0} (Prod.{0, 0} Nat Nat) (YoungDiagram.cells (Bot.bot.{0} YoungDiagram (OrderBot.toBot.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.instPartialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat))) YoungDiagram.instOrderBotYoungDiagramToLEToPreorderInstPartialOrderProdNatInstSetLikeYoungDiagramProdNat)))) (EmptyCollection.emptyCollection.{0} (Set.{0} (Prod.{0, 0} Nat Nat)) (Set.instEmptyCollectionSet.{0} (Prod.{0, 0} Nat Nat)))
+Case conversion may be inaccurate. Consider using '#align young_diagram.coe_bot YoungDiagram.coe_botₓ'. -/
 @[simp, norm_cast]
 theorem coe_bot : ↑(⊥ : YoungDiagram) = (∅ : Set (ℕ × ℕ)) :=
   rfl
 #align young_diagram.coe_bot YoungDiagram.coe_bot
 
+/- warning: young_diagram.not_mem_bot -> YoungDiagram.not_mem_bot is a dubious translation:
+lean 3 declaration is
+  forall (x : Prod.{0, 0} Nat Nat), Not (Membership.Mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.hasMem.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike) x (Bot.bot.{0} YoungDiagram (OrderBot.toHasBot.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) YoungDiagram.orderBot)))
+but is expected to have type
+  forall (x : Prod.{0, 0} Nat Nat), Not (Membership.mem.{0, 0} (Prod.{0, 0} Nat Nat) YoungDiagram (SetLike.instMembership.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat) x (Bot.bot.{0} YoungDiagram (OrderBot.toBot.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.instPartialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.instSetLikeYoungDiagramProdNat))) YoungDiagram.instOrderBotYoungDiagramToLEToPreorderInstPartialOrderProdNatInstSetLikeYoungDiagramProdNat)))
+Case conversion may be inaccurate. Consider using '#align young_diagram.not_mem_bot YoungDiagram.not_mem_botₓ'. -/
 @[simp]
 theorem not_mem_bot (x : ℕ × ℕ) : x ∉ (⊥ : YoungDiagram) :=
   Finset.not_mem_empty x
@@ -184,14 +260,17 @@ instance : DistribLattice YoungDiagram :=
 
 end DistribLattice
 
+#print YoungDiagram.card /-
 /-- Cardinality of a Young diagram -/
 @[reducible]
 protected def card (μ : YoungDiagram) : ℕ :=
   μ.cells.card
 #align young_diagram.card YoungDiagram.card
+-/
 
 section Transpose
 
+#print YoungDiagram.transpose /-
 /-- The `transpose` of a Young diagram is obtained by swapping i's with j's. -/
 def transpose (μ : YoungDiagram) : YoungDiagram
     where
@@ -203,32 +282,47 @@ def transpose (μ : YoungDiagram) : YoungDiagram
     apply μ.is_lower_set _ hcell
     simp [h]
 #align young_diagram.transpose YoungDiagram.transpose
+-/
 
+#print YoungDiagram.mem_transpose /-
 @[simp]
 theorem mem_transpose {μ : YoungDiagram} {c : ℕ × ℕ} : c ∈ μ.transpose ↔ c.symm ∈ μ := by
   simp [transpose]
 #align young_diagram.mem_transpose YoungDiagram.mem_transpose
+-/
 
+#print YoungDiagram.transpose_transpose /-
 @[simp]
 theorem transpose_transpose (μ : YoungDiagram) : μ.transpose.transpose = μ :=
   by
   ext
   simp
 #align young_diagram.transpose_transpose YoungDiagram.transpose_transpose
+-/
 
+#print YoungDiagram.transpose_eq_iff_eq_transpose /-
 theorem transpose_eq_iff_eq_transpose {μ ν : YoungDiagram} : μ.transpose = ν ↔ μ = ν.transpose := by
   constructor <;>
     · rintro rfl
       simp
 #align young_diagram.transpose_eq_iff_eq_transpose YoungDiagram.transpose_eq_iff_eq_transpose
+-/
 
+#print YoungDiagram.transpose_eq_iff /-
 @[simp]
 theorem transpose_eq_iff {μ ν : YoungDiagram} : μ.transpose = ν.transpose ↔ μ = ν :=
   by
   rw [transpose_eq_iff_eq_transpose]
   simp
 #align young_diagram.transpose_eq_iff YoungDiagram.transpose_eq_iff
+-/
 
+/- warning: young_diagram.le_of_transpose_le -> YoungDiagram.le_of_transpose_le is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (YoungDiagram.transpose μ) ν) -> (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ (YoungDiagram.transpose ν))
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) (YoungDiagram.transpose μ) ν) -> (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) μ (YoungDiagram.transpose ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.le_of_transpose_le YoungDiagram.le_of_transpose_leₓ'. -/
 -- This is effectively both directions of `transpose_le_iff` below.
 protected theorem le_of_transpose_le {μ ν : YoungDiagram} (h_le : μ.transpose ≤ ν) :
     μ ≤ ν.transpose := fun c hc => by
@@ -237,6 +331,12 @@ protected theorem le_of_transpose_le {μ ν : YoungDiagram} (h_le : μ.transpose
   simpa
 #align young_diagram.le_of_transpose_le YoungDiagram.le_of_transpose_le
 
+/- warning: young_diagram.transpose_le_iff -> YoungDiagram.transpose_le_iff is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, Iff (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (YoungDiagram.transpose μ) (YoungDiagram.transpose ν)) (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ ν)
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, Iff (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) (YoungDiagram.transpose μ) (YoungDiagram.transpose ν)) (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) μ ν)
+Case conversion may be inaccurate. Consider using '#align young_diagram.transpose_le_iff YoungDiagram.transpose_le_iffₓ'. -/
 @[simp]
 theorem transpose_le_iff {μ ν : YoungDiagram} : μ.transpose ≤ ν.transpose ↔ μ ≤ ν :=
   ⟨fun h => by
@@ -246,11 +346,23 @@ theorem transpose_le_iff {μ ν : YoungDiagram} : μ.transpose ≤ ν.transpose 
     simpa⟩
 #align young_diagram.transpose_le_iff YoungDiagram.transpose_le_iff
 
+/- warning: young_diagram.transpose_mono -> YoungDiagram.transpose_mono is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) μ ν) -> (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (YoungDiagram.transpose μ) (YoungDiagram.transpose ν))
+but is expected to have type
+  forall {μ : YoungDiagram} {ν : YoungDiagram}, (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) μ ν) -> (LE.le.{0} YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) (YoungDiagram.transpose μ) (YoungDiagram.transpose ν))
+Case conversion may be inaccurate. Consider using '#align young_diagram.transpose_mono YoungDiagram.transpose_monoₓ'. -/
 @[mono]
 protected theorem transpose_mono {μ ν : YoungDiagram} (h_le : μ ≤ ν) : μ.transpose ≤ ν.transpose :=
   transpose_le_iff.mpr h_le
 #align young_diagram.transpose_mono YoungDiagram.transpose_mono
 
+/- warning: young_diagram.transpose_order_iso -> YoungDiagram.transposeOrderIso is a dubious translation:
+lean 3 declaration is
+  OrderIso.{0, 0} YoungDiagram YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike))) (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SetLike.partialOrder.{0, 0} YoungDiagram (Prod.{0, 0} Nat Nat) YoungDiagram.Prod.setLike)))
+but is expected to have type
+  OrderIso.{0, 0} YoungDiagram YoungDiagram (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram))))) (Preorder.toLE.{0} YoungDiagram (PartialOrder.toPreorder.{0} YoungDiagram (SemilatticeInf.toPartialOrder.{0} YoungDiagram (Lattice.toSemilatticeInf.{0} YoungDiagram (DistribLattice.toLattice.{0} YoungDiagram YoungDiagram.instDistribLatticeYoungDiagram)))))
+Case conversion may be inaccurate. Consider using '#align young_diagram.transpose_order_iso YoungDiagram.transposeOrderIsoₓ'. -/
 /-- Transposing Young diagrams is an `order_iso`. -/
 @[simps]
 def transposeOrderIso : YoungDiagram ≃o YoungDiagram :=
@@ -273,18 +385,25 @@ Note: #3 is not convenient for defining `μ.row_len`; instead, `μ.row_len` is d
 as the smallest `j` such that `(i, j) ∉ μ`. -/
 
 
+#print YoungDiagram.row /-
 /-- The `i`-th row of a Young diagram consists of the cells whose first coordinate is `i`. -/
 def row (μ : YoungDiagram) (i : ℕ) : Finset (ℕ × ℕ) :=
   μ.cells.filterₓ fun c => c.fst = i
 #align young_diagram.row YoungDiagram.row
+-/
 
+#print YoungDiagram.mem_row_iff /-
 theorem mem_row_iff {μ : YoungDiagram} {i : ℕ} {c : ℕ × ℕ} : c ∈ μ.row i ↔ c ∈ μ ∧ c.fst = i := by
   simp [row]
 #align young_diagram.mem_row_iff YoungDiagram.mem_row_iff
+-/
 
+#print YoungDiagram.mk_mem_row_iff /-
 theorem mk_mem_row_iff {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ.row i ↔ (i, j) ∈ μ := by simp [row]
 #align young_diagram.mk_mem_row_iff YoungDiagram.mk_mem_row_iff
+-/
 
+#print YoungDiagram.exists_not_mem_row /-
 protected theorem exists_not_mem_row (μ : YoungDiagram) (i : ℕ) : ∃ j, (i, j) ∉ μ :=
   by
   obtain ⟨j, hj⟩ :=
@@ -296,20 +415,26 @@ protected theorem exists_not_mem_row (μ : YoungDiagram) (i : ℕ) : ∃ j, (i, 
   rw [Finset.mem_preimage] at hj
   exact ⟨j, hj⟩
 #align young_diagram.exists_not_mem_row YoungDiagram.exists_not_mem_row
+-/
 
+#print YoungDiagram.rowLen /-
 /-- Length of a row of a Young diagram -/
 def rowLen (μ : YoungDiagram) (i : ℕ) : ℕ :=
   Nat.find <| μ.exists_not_mem_row i
 #align young_diagram.row_len YoungDiagram.rowLen
+-/
 
+#print YoungDiagram.mem_iff_lt_rowLen /-
 theorem mem_iff_lt_rowLen {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ ↔ j < μ.rowLen i :=
   by
   rw [row_len, Nat.lt_find_iff]
   push_neg
   exact ⟨fun h _ hmj => μ.up_left_mem (by rfl) hmj h, fun h => h _ (by rfl)⟩
 #align young_diagram.mem_iff_lt_row_len YoungDiagram.mem_iff_lt_rowLen
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print YoungDiagram.row_eq_prod /-
 theorem row_eq_prod {μ : YoungDiagram} {i : ℕ} : μ.row i = {i} ×ˢ Finset.range (μ.rowLen i) :=
   by
   ext ⟨a, b⟩
@@ -318,11 +443,15 @@ theorem row_eq_prod {μ : YoungDiagram} {i : ℕ} : μ.row i = {i} ×ˢ Finset.r
   rintro rfl
   rfl
 #align young_diagram.row_eq_prod YoungDiagram.row_eq_prod
+-/
 
+#print YoungDiagram.rowLen_eq_card /-
 theorem rowLen_eq_card (μ : YoungDiagram) {i : ℕ} : μ.rowLen i = (μ.row i).card := by
   simp [row_eq_prod]
 #align young_diagram.row_len_eq_card YoungDiagram.rowLen_eq_card
+-/
 
+#print YoungDiagram.rowLen_anti /-
 @[mono]
 theorem rowLen_anti (μ : YoungDiagram) (i1 i2 : ℕ) (hi : i1 ≤ i2) : μ.rowLen i2 ≤ μ.rowLen i1 :=
   by
@@ -331,6 +460,7 @@ theorem rowLen_anti (μ : YoungDiagram) (i1 i2 : ℕ) (hi : i1 ≤ i2) : μ.rowL
   rw [← mem_iff_lt_row_len] at h_lt⊢
   exact μ.up_left_mem hi (by rfl) h_lt
 #align young_diagram.row_len_anti YoungDiagram.rowLen_anti
+-/
 
 end Rows
 
@@ -341,46 +471,63 @@ section Columns
 This section has an identical API to the rows section. -/
 
 
+#print YoungDiagram.col /-
 /-- The `j`-th column of a Young diagram consists of the cells whose second coordinate is `j`. -/
 def col (μ : YoungDiagram) (j : ℕ) : Finset (ℕ × ℕ) :=
   μ.cells.filterₓ fun c => c.snd = j
 #align young_diagram.col YoungDiagram.col
+-/
 
+#print YoungDiagram.mem_col_iff /-
 theorem mem_col_iff {μ : YoungDiagram} {j : ℕ} {c : ℕ × ℕ} : c ∈ μ.col j ↔ c ∈ μ ∧ c.snd = j := by
   simp [col]
 #align young_diagram.mem_col_iff YoungDiagram.mem_col_iff
+-/
 
+#print YoungDiagram.mk_mem_col_iff /-
 theorem mk_mem_col_iff {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ.col j ↔ (i, j) ∈ μ := by simp [col]
 #align young_diagram.mk_mem_col_iff YoungDiagram.mk_mem_col_iff
+-/
 
+#print YoungDiagram.exists_not_mem_col /-
 protected theorem exists_not_mem_col (μ : YoungDiagram) (j : ℕ) : ∃ i, (i, j) ∉ μ.cells :=
   by
   convert μ.transpose.exists_not_mem_row j
   simp
 #align young_diagram.exists_not_mem_col YoungDiagram.exists_not_mem_col
+-/
 
+#print YoungDiagram.colLen /-
 /-- Length of a column of a Young diagram -/
 def colLen (μ : YoungDiagram) (j : ℕ) : ℕ :=
   Nat.find <| μ.exists_not_mem_col j
 #align young_diagram.col_len YoungDiagram.colLen
+-/
 
+#print YoungDiagram.colLen_transpose /-
 @[simp]
 theorem colLen_transpose (μ : YoungDiagram) (j : ℕ) : μ.transpose.colLen j = μ.rowLen j := by
   simp [row_len, col_len]
 #align young_diagram.col_len_transpose YoungDiagram.colLen_transpose
+-/
 
+#print YoungDiagram.rowLen_transpose /-
 @[simp]
 theorem rowLen_transpose (μ : YoungDiagram) (i : ℕ) : μ.transpose.rowLen i = μ.colLen i := by
   simp [row_len, col_len]
 #align young_diagram.row_len_transpose YoungDiagram.rowLen_transpose
+-/
 
+#print YoungDiagram.mem_iff_lt_colLen /-
 theorem mem_iff_lt_colLen {μ : YoungDiagram} {i j : ℕ} : (i, j) ∈ μ ↔ i < μ.colLen j :=
   by
   rw [← row_len_transpose, ← mem_iff_lt_row_len]
   simp
 #align young_diagram.mem_iff_lt_col_len YoungDiagram.mem_iff_lt_colLen
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print YoungDiagram.col_eq_prod /-
 theorem col_eq_prod {μ : YoungDiagram} {j : ℕ} : μ.col j = Finset.range (μ.colLen j) ×ˢ {j} :=
   by
   ext ⟨a, b⟩
@@ -389,15 +536,20 @@ theorem col_eq_prod {μ : YoungDiagram} {j : ℕ} : μ.col j = Finset.range (μ.
   rintro rfl
   rfl
 #align young_diagram.col_eq_prod YoungDiagram.col_eq_prod
+-/
 
+#print YoungDiagram.colLen_eq_card /-
 theorem colLen_eq_card (μ : YoungDiagram) {j : ℕ} : μ.colLen j = (μ.col j).card := by
   simp [col_eq_prod]
 #align young_diagram.col_len_eq_card YoungDiagram.colLen_eq_card
+-/
 
+#print YoungDiagram.colLen_anti /-
 @[mono]
 theorem colLen_anti (μ : YoungDiagram) (j1 j2 : ℕ) (hj : j1 ≤ j2) : μ.colLen j2 ≤ μ.colLen j1 := by
   convert μ.transpose.row_len_anti j1 j2 hj <;> simp
 #align young_diagram.col_len_anti YoungDiagram.colLen_anti
+-/
 
 end Columns
 
@@ -412,31 +564,45 @@ This section defines `μ.row_lens : list ℕ`, the list of row lengths of a Youn
 -/
 
 
+#print YoungDiagram.rowLens /-
 /-- List of row lengths of a Young diagram -/
 def rowLens (μ : YoungDiagram) : List ℕ :=
   (List.range <| μ.colLen 0).map μ.rowLen
 #align young_diagram.row_lens YoungDiagram.rowLens
+-/
 
+/- warning: young_diagram.nth_le_row_lens -> YoungDiagram.get_rowLens is a dubious translation:
+lean 3 declaration is
+  forall {μ : YoungDiagram} {i : Nat} {hi : LT.lt.{0} Nat Nat.hasLt i (List.length.{0} Nat (YoungDiagram.rowLens μ))}, Eq.{1} Nat (List.nthLe.{0} Nat (YoungDiagram.rowLens μ) i hi) (YoungDiagram.rowLen μ i)
+but is expected to have type
+  forall {μ : YoungDiagram} {i : Fin (List.length.{0} Nat (YoungDiagram.rowLens μ))}, Eq.{1} Nat (List.get.{0} Nat (YoungDiagram.rowLens μ) i) (YoungDiagram.rowLen μ (Fin.val (List.length.{0} Nat (YoungDiagram.rowLens μ)) i))
+Case conversion may be inaccurate. Consider using '#align young_diagram.nth_le_row_lens YoungDiagram.get_rowLensₓ'. -/
 @[simp]
-theorem nthLe_rowLens {μ : YoungDiagram} {i : ℕ} {hi : i < μ.rowLens.length} :
+theorem get_rowLens {μ : YoungDiagram} {i : ℕ} {hi : i < μ.rowLens.length} :
     μ.rowLens.nthLe i hi = μ.rowLen i := by simp only [row_lens, List.nthLe_range, List.nthLe_map']
-#align young_diagram.nth_le_row_lens YoungDiagram.nthLe_rowLens
+#align young_diagram.nth_le_row_lens YoungDiagram.get_rowLens
 
+#print YoungDiagram.length_rowLens /-
 @[simp]
 theorem length_rowLens {μ : YoungDiagram} : μ.rowLens.length = μ.colLen 0 := by
   simp only [row_lens, List.length_map, List.length_range]
 #align young_diagram.length_row_lens YoungDiagram.length_rowLens
+-/
 
+#print YoungDiagram.rowLens_sorted /-
 theorem rowLens_sorted (μ : YoungDiagram) : μ.rowLens.Sorted (· ≥ ·) :=
   (List.pairwise_le_range _).map _ μ.rowLen_anti
 #align young_diagram.row_lens_sorted YoungDiagram.rowLens_sorted
+-/
 
+#print YoungDiagram.pos_of_mem_rowLens /-
 theorem pos_of_mem_rowLens (μ : YoungDiagram) (x : ℕ) (hx : x ∈ μ.rowLens) : 0 < x :=
   by
   rw [row_lens, List.mem_map'] at hx
   obtain ⟨i, hi, rfl : μ.row_len i = x⟩ := hx
   rwa [List.mem_range, ← mem_iff_lt_col_len, mem_iff_lt_row_len] at hi
 #align young_diagram.pos_of_mem_row_lens YoungDiagram.pos_of_mem_rowLens
+-/
 
 end RowLens
 
@@ -456,6 +622,7 @@ The two directions are `young_diagram.row_lens` (defined above) and `young_diagr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print YoungDiagram.cellsOfRowLens /-
 /-- The cells making up a `young_diagram` from a list of row lengths -/
 protected def cellsOfRowLens : List ℕ → Finset (ℕ × ℕ)
   | [] => ∅
@@ -463,7 +630,9 @@ protected def cellsOfRowLens : List ℕ → Finset (ℕ × ℕ)
     ({0} : Finset ℕ) ×ˢ Finset.range w ∪
       (cells_of_row_lens ws).map (Embedding.prodMap ⟨_, Nat.succ_injective⟩ (Embedding.refl ℕ))
 #align young_diagram.cells_of_row_lens YoungDiagram.cellsOfRowLens
+-/
 
+#print YoungDiagram.mem_cellsOfRowLens /-
 protected theorem mem_cellsOfRowLens {w : List ℕ} {c : ℕ × ℕ} :
     c ∈ YoungDiagram.cellsOfRowLens w ↔ ∃ h : c.fst < w.length, c.snd < w.nthLe c.fst h :=
   by
@@ -473,7 +642,9 @@ protected theorem mem_cellsOfRowLens {w : List ℕ} {c : ℕ × ℕ} :
     · simp
     · simpa [w_ih, -Finset.singleton_product, Nat.succ_lt_succ_iff]
 #align young_diagram.mem_cells_of_row_lens YoungDiagram.mem_cellsOfRowLens
+-/
 
+#print YoungDiagram.ofRowLens /-
 /-- Young diagram from a sorted list -/
 def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram
     where
@@ -492,12 +663,16 @@ def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram
     · rfl
     · apply list.pairwise_iff_nth_le.mp hw _ _ _ h
 #align young_diagram.of_row_lens YoungDiagram.ofRowLens
+-/
 
+#print YoungDiagram.mem_ofRowLens /-
 theorem mem_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} {c : ℕ × ℕ} :
     c ∈ ofRowLens w hw ↔ ∃ h : c.fst < w.length, c.snd < w.nthLe c.fst h :=
   YoungDiagram.mem_cellsOfRowLens
 #align young_diagram.mem_of_row_lens YoungDiagram.mem_ofRowLens
+-/
 
+#print YoungDiagram.rowLens_length_ofRowLens /-
 /-- The number of rows in `of_row_lens w hw` is the length of `w` -/
 theorem rowLens_length_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hpos : ∀ x ∈ w, 0 < x) :
     (ofRowLens w hw).rowLens.length = w.length :=
@@ -506,13 +681,21 @@ theorem rowLens_length_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hpo
     lt_self_iff_false, IsEmpty.exists_iff, Classical.not_not]
   exact ⟨id, fun n hn => ⟨hn, hpos _ (List.nthLe_mem _ _ hn)⟩⟩
 #align young_diagram.row_lens_length_of_row_lens YoungDiagram.rowLens_length_ofRowLens
+-/
 
+/- warning: young_diagram.row_len_of_row_lens -> YoungDiagram.rowLen_ofRowLens is a dubious translation:
+lean 3 declaration is
+  forall {w : List.{0} Nat} {hw : List.Sorted.{0} Nat (GE.ge.{0} Nat Nat.hasLe) w} (i : Nat) (hi : LT.lt.{0} Nat Nat.hasLt i (List.length.{0} Nat w)), Eq.{1} Nat (YoungDiagram.rowLen (YoungDiagram.ofRowLens w hw) i) (List.nthLe.{0} Nat w i hi)
+but is expected to have type
+  forall {w : List.{0} Nat} {hw : List.Sorted.{0} Nat (fun (x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2900 : Nat) (x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2902 : Nat) => GE.ge.{0} Nat instLENat x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2900 x._@.Mathlib.Combinatorics.Young.YoungDiagram._hyg.2902) w} (i : Fin (List.length.{0} Nat w)), Eq.{1} Nat (YoungDiagram.rowLen (YoungDiagram.ofRowLens w hw) (Fin.val (List.length.{0} Nat w) i)) (List.get.{0} Nat w i)
+Case conversion may be inaccurate. Consider using '#align young_diagram.row_len_of_row_lens YoungDiagram.rowLen_ofRowLensₓ'. -/
 /-- The length of the `i`th row in `of_row_lens w hw` is the `i`th entry of `w` -/
 theorem rowLen_ofRowLens {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (i : ℕ) (hi : i < w.length) :
     (ofRowLens w hw).rowLen i = w.nthLe i hi := by
   simp [row_len, Nat.find_eq_iff, mem_of_row_lens, hi]
 #align young_diagram.row_len_of_row_lens YoungDiagram.rowLen_ofRowLens
 
+#print YoungDiagram.ofRowLens_to_rowLens_eq_self /-
 /-- The left_inv direction of the equivalence -/
 theorem ofRowLens_to_rowLens_eq_self {μ : YoungDiagram} : ofRowLens _ (rowLens_sorted μ) = μ :=
   by
@@ -520,7 +703,9 @@ theorem ofRowLens_to_rowLens_eq_self {μ : YoungDiagram} : ofRowLens _ (rowLens_
   simp only [mem_cells, mem_of_row_lens, length_row_lens, nth_le_row_lens]
   simpa [← mem_iff_lt_col_len, mem_iff_lt_row_len] using j.zero_le.trans_lt
 #align young_diagram.of_row_lens_to_row_lens_eq_self YoungDiagram.ofRowLens_to_rowLens_eq_self
+-/
 
+#print YoungDiagram.rowLens_ofRowLens_eq_self /-
 /-- The right_inv direction of the equivalence -/
 theorem rowLens_ofRowLens_eq_self {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hpos : ∀ x ∈ w, 0 < x) :
     (ofRowLens w hw).rowLens = w := by
@@ -532,7 +717,9 @@ theorem rowLens_ofRowLens_eq_self {w : List ℕ} {hw : w.Sorted (· ≥ ·)} (hp
   · rw [list.nth_eq_none_iff.mpr h, list.nth_eq_none_iff.mpr]
     rwa [row_lens_length_of_row_lens hpos]
 #align young_diagram.row_lens_of_row_lens_eq_self YoungDiagram.rowLens_ofRowLens_eq_self
+-/
 
+#print YoungDiagram.equivListRowLens /-
 /-- Equivalence between Young diagrams and weakly decreasing lists of positive natural numbers.
 A Young diagram `μ` is equivalent to a list of row lengths. -/
 @[simps]
@@ -543,6 +730,7 @@ def equivListRowLens : YoungDiagram ≃ { w : List ℕ // w.Sorted (· ≥ ·) �
   left_inv μ := ofRowLens_to_rowLens_eq_self
   right_inv := fun ⟨w, hw⟩ => Subtype.mk_eq_mk.mpr (rowLens_ofRowLens_eq_self hw.2)
 #align young_diagram.equiv_list_row_lens YoungDiagram.equivListRowLens
+-/
 
 end EquivListRowLens
 

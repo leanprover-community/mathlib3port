@@ -32,31 +32,46 @@ universe u
 
 namespace Scott
 
+#print Scott.IsωSup /-
 /-- `x` is an `ω`-Sup of a chain `c` if it is the least upper bound of the range of `c`. -/
 def IsωSup {α : Type u} [Preorder α] (c : Chain α) (x : α) : Prop :=
   (∀ i, c i ≤ x) ∧ ∀ y, (∀ i, c i ≤ y) → x ≤ y
 #align Scott.is_ωSup Scott.IsωSup
+-/
 
+#print Scott.isωSup_iff_isLUB /-
 theorem isωSup_iff_isLUB {α : Type u} [Preorder α] {c : Chain α} {x : α} :
     IsωSup c x ↔ IsLUB (range c) x := by simp [is_ωSup, IsLUB, IsLeast, upperBounds, lowerBounds]
 #align Scott.is_ωSup_iff_is_lub Scott.isωSup_iff_isLUB
+-/
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
 
+#print Scott.IsOpen /-
 /-- The characteristic function of open sets is monotone and preserves
 the limits of chains. -/
 def IsOpen (s : Set α) : Prop :=
   Continuous' fun x => x ∈ s
 #align Scott.is_open Scott.IsOpen
+-/
 
+#print Scott.isOpen_univ /-
 theorem isOpen_univ : IsOpen α univ :=
   ⟨fun x y h hx => mem_univ _, @CompleteLattice.top_continuous α Prop _ _⟩
 #align Scott.is_open_univ Scott.isOpen_univ
+-/
 
+/- warning: Scott.is_open.inter -> Scott.IsOpen.inter is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}) [_inst_1 : OmegaCompletePartialOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), (Scott.IsOpen.{u1} α _inst_1 s) -> (Scott.IsOpen.{u1} α _inst_1 t) -> (Scott.IsOpen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s t))
+but is expected to have type
+  forall (α : Type.{u1}) [_inst_1 : OmegaCompletePartialOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), (Scott.IsOpen.{u1} α _inst_1 s) -> (Scott.IsOpen.{u1} α _inst_1 t) -> (Scott.IsOpen.{u1} α _inst_1 (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s t))
+Case conversion may be inaccurate. Consider using '#align Scott.is_open.inter Scott.IsOpen.interₓ'. -/
 theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α (s ∩ t) :=
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter Scott.IsOpen.inter
 
+#print Scott.isOpen_unionₛ /-
 theorem isOpen_unionₛ (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) :=
   by
   simp only [IsOpen] at hs⊢
@@ -67,9 +82,11 @@ theorem isOpen_unionₛ (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsO
   · intro p hp
     exact hs (setOf p) (mem_preimage.1 hp)
 #align Scott.is_open_sUnion Scott.isOpen_unionₛ
+-/
 
 end Scott
 
+#print Scott /-
 /-- A Scott topological space is defined on preorders
 such that their open sets, seen as a function `α → Prop`,
 preserves the joins of ω-chains  -/
@@ -77,7 +94,9 @@ preserves the joins of ω-chains  -/
 def Scott (α : Type u) :=
   α
 #align Scott Scott
+-/
 
+#print Scott.topologicalSpace /-
 instance Scott.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] :
     TopologicalSpace (Scott α) where
   IsOpen := Scott.IsOpen α
@@ -85,17 +104,21 @@ instance Scott.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] :
   isOpen_inter := Scott.IsOpen.inter α
   isOpen_unionₛ := Scott.isOpen_unionₛ α
 #align Scott.topological_space Scott.topologicalSpace
+-/
 
 section notBelow
 
 variable {α : Type _} [OmegaCompletePartialOrder α] (y : Scott α)
 
+#print notBelow /-
 /-- `not_below` is an open set in `Scott α` used
 to prove the monotonicity of continuous functions -/
 def notBelow :=
   { x | ¬x ≤ y }
 #align not_below notBelow
+-/
 
+#print notBelow_isOpen /-
 theorem notBelow_isOpen : IsOpen (notBelow y) :=
   by
   have h : Monotone (notBelow y) := by
@@ -111,6 +134,7 @@ theorem notBelow_isOpen : IsOpen (notBelow y) :=
   simp only [ωSup_le_iff, notBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe,
     Function.comp_apply, exists_imp, not_forall]
 #align not_below_is_open notBelow_isOpen
+-/
 
 end notBelow
 
@@ -118,15 +142,23 @@ open Scott hiding IsOpen
 
 open OmegaCompletePartialOrder
 
+#print isωSup_ωSup /-
 theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) :=
   by
   constructor
   · apply le_ωSup
   · apply ωSup_le
 #align is_ωSup_ωSup isωSup_ωSup
+-/
 
+/- warning: Scott_continuous_of_continuous -> scottContinuous_of_continuous is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OmegaCompletePartialOrder.{u1} α] [_inst_2 : OmegaCompletePartialOrder.{u2} β] (f : (Scott.{u1} α) -> (Scott.{u2} β)), (Continuous.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) (Scott.topologicalSpace.{u1} α _inst_1) (Scott.topologicalSpace.{u2} β _inst_2) f) -> (OmegaCompletePartialOrder.Continuous'.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) _inst_1 _inst_2 f)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OmegaCompletePartialOrder.{u2} α] [_inst_2 : OmegaCompletePartialOrder.{u1} β] (f : (Scott.{u2} α) -> (Scott.{u1} β)), (Continuous.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) (Scott.topologicalSpace.{u2} α _inst_1) (Scott.topologicalSpace.{u1} β _inst_2) f) -> (OmegaCompletePartialOrder.Continuous'.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) _inst_1 _inst_2 f)
+Case conversion may be inaccurate. Consider using '#align Scott_continuous_of_continuous scottContinuous_of_continuousₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:565:11: unsupported: specialize non-hyp -/
-theorem scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
+theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :
     OmegaCompletePartialOrder.Continuous' f :=
   by
@@ -153,9 +185,15 @@ theorem scott_continuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     exists_prop, mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,
     not_forall]
   tauto
-#align Scott_continuous_of_continuous scott_continuous_of_continuous
+#align Scott_continuous_of_continuous scottContinuous_of_continuous
 
-theorem continuous_of_scott_continuous {α β} [OmegaCompletePartialOrder α]
+/- warning: continuous_of_Scott_continuous -> continuous_of_scottContinuous is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OmegaCompletePartialOrder.{u1} α] [_inst_2 : OmegaCompletePartialOrder.{u2} β] (f : (Scott.{u1} α) -> (Scott.{u2} β)), (OmegaCompletePartialOrder.Continuous'.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) _inst_1 _inst_2 f) -> (Continuous.{u1, u2} (Scott.{u1} α) (Scott.{u2} β) (Scott.topologicalSpace.{u1} α _inst_1) (Scott.topologicalSpace.{u2} β _inst_2) f)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OmegaCompletePartialOrder.{u2} α] [_inst_2 : OmegaCompletePartialOrder.{u1} β] (f : (Scott.{u2} α) -> (Scott.{u1} β)), (OmegaCompletePartialOrder.Continuous'.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) _inst_1 _inst_2 f) -> (Continuous.{u2, u1} (Scott.{u2} α) (Scott.{u1} β) (Scott.topologicalSpace.{u2} α _inst_1) (Scott.topologicalSpace.{u1} β _inst_2) f)
+Case conversion may be inaccurate. Consider using '#align continuous_of_Scott_continuous continuous_of_scottContinuousₓ'. -/
+theorem continuous_of_scottContinuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β)
     (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f :=
   by
@@ -166,5 +204,5 @@ theorem continuous_of_scott_continuous {α β} [OmegaCompletePartialOrder α]
   cases' hf with hf hf'
   apply continuous.of_bundled
   apply continuous_comp _ _ hf' hs'
-#align continuous_of_Scott_continuous continuous_of_scott_continuous
+#align continuous_of_Scott_continuous continuous_of_scottContinuous
 
