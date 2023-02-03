@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.norm
-! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
+! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -498,11 +498,10 @@ theorem spanNorm_mono {I J : Ideal S} (h : I ≤ J) : spanNorm R I ≤ spanNorm 
   Ideal.span_mono (Set.monotone_image h)
 #align ideal.span_norm_mono Ideal.spanNorm_mono
 
-theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S] {M : Submonoid R}
+theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S] (M : Submonoid R)
     {Rₘ Sₘ : Type _} [CommRing Rₘ] [Algebra R Rₘ] [CommRing Sₘ] [Algebra S Sₘ] [Algebra Rₘ Sₘ]
     [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ] [IsLocalization M Rₘ]
-    [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
-    (hM : Algebra.algebraMapSubmonoid S M ≤ S⁰) :
+    [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ] :
     spanNorm Rₘ (I.map (algebraMap S Sₘ)) = (spanNorm R I).map (algebraMap R Rₘ) :=
   by
   cases h : subsingleton_or_nontrivial R
@@ -523,11 +522,11 @@ theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S
     simp only [Submodule.coe_mk, Subtype.coe_mk, map_pow] at has⊢
     apply_fun Algebra.norm Rₘ  at has
     rwa [_root_.map_mul, ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply R Rₘ,
-      Algebra.norm_algebraMap_of_basis (b.localization_localization Rₘ M Sₘ hM),
-      Algebra.norm_localization R a hM] at has
+      Algebra.norm_algebraMap_of_basis (b.localization_localization Rₘ M Sₘ),
+      Algebra.norm_localization R M a] at has
     all_goals infer_instance
   · intro a ha
-    rw [Set.mem_preimage, Function.comp_apply, ← Algebra.norm_localization R a hM]
+    rw [Set.mem_preimage, Function.comp_apply, ← Algebra.norm_localization R M a]
     exact subset_span (Set.mem_image_of_mem _ (mem_map_of_mem _ ha))
     all_goals infer_instance
 #align ideal.span_norm_localization Ideal.spanNorm_localization

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module order.compactly_generated
-! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
+! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,6 +20,9 @@ import Mathbin.Tactic.Tfae
 
 /-!
 # Compactness properties for complete lattices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For complete lattices, there are numerous equivalent ways to express the fact that the relation `>`
 is well-founded. In this file we define three especially-useful characterisations and provide

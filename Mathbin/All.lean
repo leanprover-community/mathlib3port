@@ -291,6 +291,7 @@ import Mathbin.Algebra.Opposites
 import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.Order.Algebra
 import Mathbin.Algebra.Order.Archimedean
+import Mathbin.Algebra.Order.Chebyshev
 import Mathbin.Algebra.Order.CompleteField
 import Mathbin.Algebra.Order.EuclideanAbsoluteValue
 import Mathbin.Algebra.Order.Field.Basic
@@ -1971,6 +1972,7 @@ import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition
+import Mathbin.LinearAlgebra.GeneralLinearGroup
 import Mathbin.LinearAlgebra.InvariantBasisNumber
 import Mathbin.LinearAlgebra.Isomorphisms
 import Mathbin.LinearAlgebra.Lagrange

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.module
-! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
+! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,17 +48,14 @@ theorem LinearIndependent.localization {ι : Type _} {b : ι → M} (hli : Linea
     LinearIndependent Rₛ b := by
   rw [linearIndependent_iff'] at hli⊢
   intro s g hg i hi
-  choose a g' hg' using IsLocalization.exist_integer_multiples S s g
-  letI := fun i => Classical.propDecidable (i ∈ s)
-  specialize hli s (fun i => if hi : i ∈ s then g' i hi else 0) _ i hi
+  choose! a g' hg' using IsLocalization.exist_integer_multiples S s g
+  specialize hli s g' _ i hi
   · rw [← @smul_zero _ M _ _ (a : R), ← hg, Finset.smul_sum]
     refine' Finset.sum_congr rfl fun i hi => _
-    dsimp only
-    rw [dif_pos hi, ← IsScalarTower.algebraMap_smul Rₛ, hg' i hi, smul_assoc]
+    rw [← IsScalarTower.algebraMap_smul Rₛ, hg' i hi, smul_assoc]
     infer_instance
   refine' (IsLocalization.map_units Rₛ a).mul_right_eq_zero.mp _
-  rw [← Algebra.smul_def, ← map_zero (algebraMap R Rₛ), ← hli]
-  simp [hi, hg']
+  rw [← Algebra.smul_def, ← map_zero (algebraMap R Rₛ), ← hli, hg' i hi]
 #align linear_independent.localization LinearIndependent.localization
 
 end AddCommMonoid
@@ -78,13 +75,25 @@ include hA
 open Submodule
 
 theorem LinearIndependent.localization_localization {ι : Type _} {v : ι → A}
-    (hv : LinearIndependent R v) (hS : Algebra.algebraMapSubmonoid A S ≤ A⁰) :
-    LinearIndependent Rₛ (algebraMap A Aₛ ∘ v) :=
+    (hv : LinearIndependent R v) : LinearIndependent Rₛ (algebraMap A Aₛ ∘ v) :=
   by
-  refine' (hv.map' ((Algebra.linearMap A Aₛ).restrictScalars R) _).Localization Rₛ S
-  rw [LinearMap.ker_restrictScalars, restrict_scalars_eq_bot_iff, LinearMap.ker_eq_bot,
-    Algebra.coe_linearMap]
-  exact IsLocalization.injective Aₛ hS
+  rw [linearIndependent_iff'] at hv⊢
+  intro s g hg i hi
+  choose! a g' hg' using IsLocalization.exist_integer_multiples S s g
+  have h0 : algebraMap A Aₛ (∑ i in s, g' i • v i) = 0 :=
+    by
+    apply_fun (· • ·) (a : R)  at hg
+    rw [smul_zero, Finset.smul_sum] at hg
+    rw [map_sum, ← hg]
+    refine' Finset.sum_congr rfl fun i hi => _
+    rw [← smul_assoc, ← hg' i hi, Algebra.smul_def, map_mul, ← IsScalarTower.algebraMap_apply, ←
+      Algebra.smul_def, algebraMap_smul]
+  obtain ⟨⟨_, r, hrS, rfl⟩, hr : algebraMap R A r * _ = 0⟩ :=
+    (IsLocalization.map_eq_zero_iff (Algebra.algebraMapSubmonoid A S) _ _).1 h0
+  simp_rw [Finset.mul_sum, ← Algebra.smul_def, smul_smul] at hr
+  specialize hv s _ hr i hi
+  rw [← (IsLocalization.map_units Rₛ a).mul_right_eq_zero, ← Algebra.smul_def, ← hg' i hi]
+  exact (IsLocalization.map_eq_zero_iff S _ _).2 ⟨⟨r, hrS⟩, hv⟩
 #align linear_independent.localization_localization LinearIndependent.localization_localization
 
 theorem SpanEqTop.localization_localization {v : Set A} (hv : span R v = ⊤) :
@@ -107,37 +116,34 @@ theorem SpanEqTop.localization_localization {v : Set A} (hv : span R v = ⊤) :
 
 A suitable instance for `[algebra A Aₛ]` is `localization_algebra`.
 -/
-noncomputable def Basis.localizationLocalization {ι : Type _} (b : Basis ι R A)
-    (hS : Algebra.algebraMapSubmonoid A S ≤ A⁰) : Basis ι Rₛ Aₛ :=
-  Basis.mk (b.LinearIndependent.localization_localization _ S _ hS)
+noncomputable def Basis.localizationLocalization {ι : Type _} (b : Basis ι R A) : Basis ι Rₛ Aₛ :=
+  Basis.mk (b.LinearIndependent.localization_localization _ S _)
     (by
       rw [Set.range_comp, SpanEqTop.localization_localization Rₛ S Aₛ b.span_eq]
       exact le_rfl)
 #align basis.localization_localization Basis.localizationLocalization
 
 @[simp]
-theorem Basis.localizationLocalization_apply {ι : Type _} (b : Basis ι R A)
-    (hS : Algebra.algebraMapSubmonoid A S ≤ A⁰) (i) :
-    b.localization_localization Rₛ S Aₛ hS i = algebraMap A Aₛ (b i) :=
+theorem Basis.localizationLocalization_apply {ι : Type _} (b : Basis ι R A) (i) :
+    b.localization_localization Rₛ S Aₛ i = algebraMap A Aₛ (b i) :=
   Basis.mk_apply _ _ _
 #align basis.localization_localization_apply Basis.localizationLocalization_apply
 
 @[simp]
-theorem Basis.localizationLocalization_repr_algebraMap {ι : Type _} (b : Basis ι R A)
-    (hS : Algebra.algebraMapSubmonoid A S ≤ A⁰) (x i) :
-    (b.localization_localization Rₛ S Aₛ hS).repr (algebraMap A Aₛ x) i =
+theorem Basis.localizationLocalization_repr_algebraMap {ι : Type _} (b : Basis ι R A) (x i) :
+    (b.localization_localization Rₛ S Aₛ).repr (algebraMap A Aₛ x) i =
       algebraMap R Rₛ (b.repr x i) :=
   calc
-    (b.localization_localization Rₛ S Aₛ hS).repr (algebraMap A Aₛ x) i =
-        (b.localization_localization Rₛ S Aₛ hS).repr
+    (b.localization_localization Rₛ S Aₛ).repr (algebraMap A Aₛ x) i =
+        (b.localization_localization Rₛ S Aₛ).repr
           ((b.repr x).Sum fun j c => algebraMap R Rₛ c • algebraMap A Aₛ (b j)) i :=
       by
       simp_rw [IsScalarTower.algebraMap_smul, Algebra.smul_def,
         IsScalarTower.algebraMap_apply R A Aₛ, ← _root_.map_mul, ← map_finsupp_sum, ←
         Algebra.smul_def, ← Finsupp.total_apply, Basis.total_repr]
     _ = (b.repr x).Sum fun j c => algebraMap R Rₛ c • Finsupp.single j 1 i := by
-      simp_rw [← b.localization_localization_apply Rₛ S Aₛ hS, map_finsupp_sum,
-        LinearEquiv.map_smul, Basis.repr_self, Finsupp.sum_apply, Finsupp.smul_apply]
+      simp_rw [← b.localization_localization_apply Rₛ S Aₛ, map_finsupp_sum, LinearEquiv.map_smul,
+        Basis.repr_self, Finsupp.sum_apply, Finsupp.smul_apply]
     _ = _ :=
       Finset.sum_eq_single i (fun j _ hj => by simp [hj]) fun hi => by
         simp [finsupp.not_mem_support_iff.mp hi]

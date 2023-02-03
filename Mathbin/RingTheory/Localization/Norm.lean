@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.norm
-! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
+! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,17 +36,18 @@ variable (R : Type _) {S : Type _} [CommRing R] [CommRing S] [Algebra R S]
 
 variable {Rₘ Sₘ : Type _} [CommRing Rₘ] [Algebra R Rₘ] [CommRing Sₘ] [Algebra S Sₘ]
 
-variable {M : Submonoid R}
+variable (M : Submonoid R)
 
 variable [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
 
 variable [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
 
+include M
+
 /-- Let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M` of `R S` respectively.
 Then the norm of `a : Sₘ` over `Rₘ` is the norm of `a : S` over `R` if `S` is free as `R`-module.
 -/
-theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S)
-    (hM : Algebra.algebraMapSubmonoid S M ≤ S⁰) :
+theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S) :
     Algebra.norm Rₘ (algebraMap S Sₘ a) = algebraMap R Rₘ (Algebra.norm R a) :=
   by
   cases subsingleton_or_nontrivial R
@@ -54,7 +55,7 @@ theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S)
     simp
   let b := Module.Free.chooseBasis R S
   letI := Classical.decEq (Module.Free.ChooseBasisIndex R S)
-  rw [Algebra.norm_eq_matrix_det (b.localization_localization Rₘ M Sₘ hM),
+  rw [Algebra.norm_eq_matrix_det (b.localization_localization Rₘ M Sₘ),
     Algebra.norm_eq_matrix_det b, RingHom.map_det]
   congr
   ext (i j)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.pointwise
-! leanprover-community/mathlib commit d90e4e186f1d18e375dcd4e5b5f6364b01cb3e46
+! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.GroupTheory.Submonoid.Pointwise
 import Mathbin.Data.Set.Pointwise.Basic
 
 /-! # Pointwise instances on `subsemiring`s
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides the action `subsemiring.pointwise_mul_action` which matches the action of
 `mul_action_set`.
