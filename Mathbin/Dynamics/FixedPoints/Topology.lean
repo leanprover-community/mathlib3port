@@ -31,6 +31,7 @@ open Function Filter
 
 open Topology
 
+#print isFixedPt_of_tendsto_iterate /-
 /-- If the iterates `f^[n] x` converge to `y` and `f` is continuous at `y`,
 then `y` is a fixed point for `f`. -/
 theorem isFixedPt_of_tendsto_iterate {x y : α} (hy : Tendsto (fun n => (f^[n]) x) atTop (𝓝 y))
@@ -40,9 +41,12 @@ theorem isFixedPt_of_tendsto_iterate {x y : α} (hy : Tendsto (fun n => (f^[n]) 
   simp only [iterate_succ' f]
   exact hf.tendsto.comp hy
 #align is_fixed_pt_of_tendsto_iterate isFixedPt_of_tendsto_iterate
+-/
 
+#print isClosed_fixedPoints /-
 /-- The set of fixed points of a continuous map is a closed set. -/
 theorem isClosed_fixedPoints (hf : Continuous f) : IsClosed (fixedPoints f) :=
   isClosed_eq hf continuous_id
 #align is_closed_fixed_points isClosed_fixedPoints
+-/
 
