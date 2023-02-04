@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.divisibility
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,6 +84,9 @@ theorem prime_of_aleph0_le (ha : ℵ₀ ≤ a) : Prime a :=
   cases' eq_or_ne (b * c) 0 with hz hz
   · rcases mul_eq_zero.mp hz with (rfl | rfl) <;> simp
   wlog h : c ≤ b
+  · cases le_total c b <;> [skip, rw [or_comm']] <;> apply_assumption
+    assumption'
+    all_goals rwa [mul_comm]
   left
   have habc := le_of_dvd hz hbc
   rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
@@ -130,8 +133,9 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
     intro h
     rw [h, zero_dvd_iff, mul_eq_zero] at hbc
     cases hbc <;> contradiction
-  wlog hℵ₀ : ℵ₀ ≤ b := hℵ₀ using b c
-  exact Or.inl (dvd_of_le_of_aleph_0_le hn ((nat_lt_aleph_0 n).le.trans hℵ₀) hℵ₀)
+  wlog hℵ₀b : ℵ₀ ≤ b
+  · refine' (this h c b _ _ hc hb hℵ₀.symm hn (hℵ₀.resolve_left hℵ₀b)).symm <;> rwa [mul_comm]
+  exact Or.inl (dvd_of_le_of_aleph_0_le hn ((nat_lt_aleph_0 n).le.trans hℵ₀b) hℵ₀b)
 #align cardinal.nat_is_prime_iff Cardinal.nat_is_prime_iff
 
 theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, a = p ∧ p.Prime :=

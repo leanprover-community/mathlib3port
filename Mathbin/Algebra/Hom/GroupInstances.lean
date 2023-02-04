@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.group_instances
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

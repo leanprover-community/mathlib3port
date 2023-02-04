@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.omega_complete_partial_order
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -405,7 +405,7 @@ theorem eq_of_chain {c : Chain (Part α)} {a b : α} (ha : some a ∈ c) (hb : s
   by
   cases' ha with i ha; replace ha := ha.symm
   cases' hb with j hb; replace hb := hb.symm
-  wlog h : i ≤ j := le_total i j using a b i j, b a j i
+  wlog h : i ≤ j; · exact (this j hb i ha (le_of_not_le h)).symm
   rw [eq_some_iff] at ha hb
   have := c.monotone h _ ha; apply mem_unique this hb
 #align part.eq_of_chain Part.eq_of_chain

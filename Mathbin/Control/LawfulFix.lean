@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.lawful_fix
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,8 @@ theorem mem_iff (a : α) (b : β a) : b ∈ Part.fix f a ↔ ∃ i, b ∈ approx
     revert h₁
     generalize succ (Nat.find h₀) = j
     intro
-    wlog : i ≤ j := le_total i j using i j b y, j i y b
+    wlog case : i ≤ j
+    · cases' le_total i j with H H <;> [skip, symm] <;> apply_assumption <;> assumption
     replace hh := approx_mono f case _ _ hh
     apply Part.mem_unique h₁ hh
   · simp only [fix_def' (⇑f) h₀, not_exists, false_iff_iff, not_mem_none]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.minimal
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ theorem IsOpen.unionᵢ_smul [IsMinimal G α] {U : Set α} (hUo : IsOpen U) (hne
 #align is_open.Union_vadd IsOpen.unionᵢ_vadd
 
 @[to_additive]
-theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstSmul G α]
+theorem IsCompact.exists_finite_cover_smul [IsMinimal G α] [HasContinuousConstSMul G α]
     {K U : Set α} (hK : IsCompact K) (hUo : IsOpen U) (hne : U.Nonempty) :
     ∃ I : Finset G, K ⊆ ⋃ g ∈ I, g • U :=
   (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _) <|
@@ -122,7 +122,7 @@ theorem eq_empty_or_univ_of_smul_invariant_closed [IsMinimal M α] {s : Set α} 
 #align eq_empty_or_univ_of_vadd_invariant_closed eq_empty_or_univ_of_vadd_invariant_closed
 
 @[to_additive]
-theorem isMinimal_iff_closed_smul_invariant [HasContinuousConstSmul M α] :
+theorem isMinimal_iff_closed_smul_invariant [HasContinuousConstSMul M α] :
     IsMinimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ :=
   by
   constructor;

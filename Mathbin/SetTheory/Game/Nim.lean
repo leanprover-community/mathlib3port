@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Markus Himmel
 
 ! This file was ported from Lean 3 source module set_theory.game.nim
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,16 +250,13 @@ theorem nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) : nim o ‖ 0 :=
 theorem nim_add_equiv_zero_iff (o₁ o₂ : Ordinal) : (nim o₁ + nim o₂ ≈ 0) ↔ o₁ = o₂ :=
   by
   constructor
-  · refine' not_imp_not.1 fun h : _ ≠ _ => (impartial.not_equiv_zero_iff _).2 _
-    obtain h | h := h.lt_or_lt
-    · rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
-      refine' ⟨to_left_moves_add (Sum.inr _), _⟩
-      · exact (Ordinal.principalSegOut h).top
-      · simpa using (impartial.add_self (nim o₁)).2
-    · rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₁]
-      refine' ⟨to_left_moves_add (Sum.inl _), _⟩
-      · exact (Ordinal.principalSegOut h).top
-      · simpa using (impartial.add_self (nim o₂)).2
+  · refine' not_imp_not.1 fun hne : _ ≠ _ => (impartial.not_equiv_zero_iff _).2 _
+    wlog h : o₁ < o₂
+    · exact (fuzzy_congr_left add_comm_equiv).1 (this _ _ hne.symm (hne.lt_or_lt.resolve_left h))
+    rw [impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
+    refine' ⟨to_left_moves_add (Sum.inr _), _⟩
+    · exact (Ordinal.principalSegOut h).top
+    · simpa using (impartial.add_self (nim o₁)).2
   · rintro rfl
     exact impartial.add_self (nim o₁)
 #align pgame.nim_add_equiv_zero_iff Pgame.nim_add_equiv_zero_iff

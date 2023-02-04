@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis, Johannes Hölzl, Mario Carneiro, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1876,13 +1876,11 @@ theorem Nnreal.dist_eq (a b : ℝ≥0) : dist a b = |(a : ℝ) - b| :=
 
 theorem Nnreal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) :=
   by
-  /- WLOG, `b ≤ a`. `wlog h : b ≤ a` works too but it is much slower because Lean tries to prove one
-    case from the other and fails; `tactic.skip` tells Lean not to try. -/
-  wlog (discharger := tactic.skip) h : b ≤ a := le_total b a using a b, b a
-  ·
-    rw [← Nnreal.coe_eq, ← dist_nndist, Nnreal.dist_eq, tsub_eq_zero_iff_le.2 h,
-      max_eq_left (zero_le <| a - b), ← Nnreal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
-  · rwa [nndist_comm, max_comm]
+  wlog h : b ≤ a
+  · rw [nndist_comm, max_comm]
+    exact this b a (le_of_not_le h)
+  rw [← Nnreal.coe_eq, ← dist_nndist, Nnreal.dist_eq, tsub_eq_zero_iff_le.2 h,
+    max_eq_left (zero_le <| a - b), ← Nnreal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
 #align nnreal.nndist_eq Nnreal.nndist_eq
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.strong_topology
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ theorem strongTopology.hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGr
 #align continuous_linear_map.strong_topology.has_basis_nhds_zero ContinuousLinearMap.strongTopology.hasBasis_nhds_zero
 
 theorem strongTopology.locallyConvexSpace [TopologicalSpace F'] [TopologicalAddGroup F']
-    [HasContinuousConstSmul ℝ F'] [LocallyConvexSpace ℝ F'] (𝔖 : Set (Set E')) (h𝔖₁ : 𝔖.Nonempty)
+    [HasContinuousConstSMul ℝ F'] [LocallyConvexSpace ℝ F'] (𝔖 : Set (Set E')) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     @LocallyConvexSpace ℝ (E' →L[ℝ] F') _ _ _ (strongTopology (RingHom.id ℝ) F' 𝔖) :=
   by
@@ -242,7 +242,7 @@ protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F
 #align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.hasBasis_nhds_zero
 
 instance [TopologicalSpace E'] [TopologicalSpace F'] [TopologicalAddGroup F']
-    [HasContinuousConstSmul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
+    [HasContinuousConstSMul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
   strongTopology.locallyConvexSpace _ ⟨∅, Bornology.isVonNBounded_empty ℝ E'⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sigma.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.NaturalIsomorphism
 
 /-!
 # Disjoint union of categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the category structure on a sigma-type (disjoint union) of categories.
 -/

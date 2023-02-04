@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module number_theory.l_series
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem lSeriesSummable_of_bounded_of_one_lt_real {f : ArithmeticFunction ℂ} {
     simp [hf]
   refine' summable_of_norm_bounded (fun n : ℕ => m / n ^ z) _ _
   · simp_rw [div_eq_mul_inv]
-    exact (summable_mul_left_iff h0).1 (Real.summable_nat_rpow_inv.2 hz)
+    exact (summable_mul_left_iff h0).2 (Real.summable_nat_rpow_inv.2 hz)
   · intro n
     have hm : 0 ≤ m := le_trans (complex.abs.nonneg _) (h 0)
     cases n

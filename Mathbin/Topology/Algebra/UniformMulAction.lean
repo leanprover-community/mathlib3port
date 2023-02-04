@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ instance AddGroup.hasUniformContinuousConstSmul_int [AddGroup X] [UniformAddGrou
 This can't be an instance due to it forming a loop with
 `has_uniform_continuous_const_smul.to_has_continuous_const_smul` -/
 theorem hasUniformContinuousConstSmul_of_continuous_const_smul [Monoid R] [AddCommGroup M]
-    [DistribMulAction R M] [UniformSpace M] [UniformAddGroup M] [HasContinuousConstSmul R M] :
+    [DistribMulAction R M] [UniformSpace M] [UniformAddGroup M] [HasContinuousConstSMul R M] :
     HasUniformContinuousConstSmul R M :=
   ⟨fun r =>
     uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
@@ -88,10 +88,10 @@ section SMul
 variable [SMul M X]
 
 @[to_additive]
-instance (priority := 100) HasUniformContinuousConstSmul.to_hasContinuousConstSmul
-    [HasUniformContinuousConstSmul M X] : HasContinuousConstSmul M X :=
+instance (priority := 100) HasUniformContinuousConstSmul.to_hasContinuousConstSMul
+    [HasUniformContinuousConstSmul M X] : HasContinuousConstSMul M X :=
   ⟨fun c => (uniformContinuous_const_smul c).Continuous⟩
-#align has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_hasContinuousConstSmul
+#align has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_hasContinuousConstSMul
 #align has_uniform_continuous_const_vadd.to_has_continuous_const_vadd HasUniformContinuousConstVadd.to_has_continuous_const_vadd
 
 variable {M X Y}

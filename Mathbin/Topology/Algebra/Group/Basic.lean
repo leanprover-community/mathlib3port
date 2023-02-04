@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -447,10 +447,10 @@ class TopologicalGroup (G : Type _) [TopologicalSpace G] [Group G] extends HasCo
 
 section Conj
 
-instance ConjAct.units_hasContinuousConstSmul {M} [Monoid M] [TopologicalSpace M]
-    [HasContinuousMul M] : HasContinuousConstSmul (ConjAct Mˣ) M :=
+instance ConjAct.units_hasContinuousConstSMul {M} [Monoid M] [TopologicalSpace M]
+    [HasContinuousMul M] : HasContinuousConstSMul (ConjAct Mˣ) M :=
   ⟨fun m => (continuous_const.mul continuous_id).mul continuous_const⟩
-#align conj_act.units_has_continuous_const_smul ConjAct.units_hasContinuousConstSmul
+#align conj_act.units_has_continuous_const_smul ConjAct.units_hasContinuousConstSMul
 
 variable [TopologicalSpace G] [Inv G] [Mul G] [HasContinuousMul G]
 
@@ -494,10 +494,10 @@ theorem continuous_zpow : ∀ z : ℤ, Continuous fun a : G => a ^ z
 #align continuous_zpow continuous_zpow
 #align continuous_zsmul continuous_zsmul
 
-instance AddGroup.hasContinuousConstSmul_int {A} [AddGroup A] [TopologicalSpace A]
-    [TopologicalAddGroup A] : HasContinuousConstSmul ℤ A :=
+instance AddGroup.hasContinuousConstSMul_int {A} [AddGroup A] [TopologicalSpace A]
+    [TopologicalAddGroup A] : HasContinuousConstSMul ℤ A :=
   ⟨continuous_zsmul⟩
-#align add_group.has_continuous_const_smul_int AddGroup.hasContinuousConstSmul_int
+#align add_group.has_continuous_const_smul_int AddGroup.hasContinuousConstSMul_int
 
 instance AddGroup.hasContinuousSmul_int {A} [AddGroup A] [TopologicalSpace A]
     [TopologicalAddGroup A] : HasContinuousSmul ℤ A :=
@@ -1215,9 +1215,9 @@ with continuous addition/multiplication. See also `submonoid.top_closure_mul_sel
 -/
 
 
-section HasContinuousConstSmul
+section HasContinuousConstSMul
 
-variable [TopologicalSpace β] [Group α] [MulAction α β] [HasContinuousConstSmul α β] {s : Set α}
+variable [TopologicalSpace β] [Group α] [MulAction α β] [HasContinuousConstSMul α β] {s : Set α}
   {t : Set β}
 
 @[to_additive]
@@ -1250,11 +1250,11 @@ theorem subset_interior_smul : interior s • interior t ⊆ interior (s • t) 
 #align subset_interior_smul subset_interior_smul
 #align subset_interior_vadd subset_interior_vadd
 
-end HasContinuousConstSmul
+end HasContinuousConstSMul
 
-section HasContinuousConstSmul
+section HasContinuousConstSMul
 
-variable [TopologicalSpace α] [Group α] [HasContinuousConstSmul α α] {s t : Set α}
+variable [TopologicalSpace α] [Group α] [HasContinuousConstSMul α α] {s t : Set α}
 
 @[to_additive]
 theorem IsOpen.mul_left : IsOpen t → IsOpen (s * t) :=
@@ -1288,11 +1288,11 @@ theorem singleton_mul_mem_nhds_of_nhds_one (a : α) (h : s ∈ 𝓝 (1 : α)) : 
 #align singleton_mul_mem_nhds_of_nhds_one singleton_mul_mem_nhds_of_nhds_one
 #align singleton_add_mem_nhds_of_nhds_zero singleton_add_mem_nhds_of_nhds_zero
 
-end HasContinuousConstSmul
+end HasContinuousConstSMul
 
 section HasContinuousConstSmulOp
 
-variable [TopologicalSpace α] [Group α] [HasContinuousConstSmul αᵐᵒᵖ α] {s t : Set α}
+variable [TopologicalSpace α] [Group α] [HasContinuousConstSMul αᵐᵒᵖ α] {s t : Set α}
 
 @[to_additive]
 theorem IsOpen.mul_right (hs : IsOpen s) : IsOpen (s * t) :=
@@ -1477,8 +1477,8 @@ it is discrete in the sense that `S ∩ K` is finite for all compact `K`. (See a
 `discrete_topology`.) -/
 @[to_additive
       "A subgroup `S` of an additive topological group `G` acts on `G` properly\ndiscontinuously on the left, if it is discrete in the sense that `S ∩ K` is finite for all compact\n`K`. (See also `discrete_topology`."]
-theorem Subgroup.properlyDiscontinuousSmul_of_tendsto_cofinite (S : Subgroup G)
-    (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSmul S G :=
+theorem Subgroup.properlyDiscontinuousSMul_of_tendsto_cofinite (S : Subgroup G)
+    (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSMul S G :=
   {
     finite_disjoint_inter_image := by
       intro K L hK hL
@@ -1487,7 +1487,7 @@ theorem Subgroup.properlyDiscontinuousSmul_of_tendsto_cofinite (S : Subgroup G)
       convert H
       ext x
       simpa only [image_smul, mem_image, Prod.exists] using Set.smul_inter_ne_empty_iff' }
-#align subgroup.properly_discontinuous_smul_of_tendsto_cofinite Subgroup.properlyDiscontinuousSmul_of_tendsto_cofinite
+#align subgroup.properly_discontinuous_smul_of_tendsto_cofinite Subgroup.properlyDiscontinuousSMul_of_tendsto_cofinite
 #align add_subgroup.properly_discontinuous_vadd_of_tendsto_cofinite AddSubgroup.properly_discontinuous_vadd_of_tendsto_cofinite
 
 attribute [local semireducible] MulOpposite
@@ -1500,8 +1500,8 @@ If `G` is Hausdorff, this can be combined with `t2_space_of_properly_discontinuo
 to show that the quotient group `G ⧸ S` is Hausdorff. -/
 @[to_additive
       "A subgroup `S` of an additive topological group `G` acts on `G` properly\ndiscontinuously on the right, if it is discrete in the sense that `S ∩ K` is finite for all compact\n`K`. (See also `discrete_topology`.)\n\nIf `G` is Hausdorff, this can be combined with `t2_space_of_properly_discontinuous_vadd_of_t2_space`\nto show that the quotient group `G ⧸ S` is Hausdorff."]
-theorem Subgroup.properlyDiscontinuousSmul_opposite_of_tendsto_cofinite (S : Subgroup G)
-    (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSmul S.opposite G :=
+theorem Subgroup.properlyDiscontinuousSMul_opposite_of_tendsto_cofinite (S : Subgroup G)
+    (hS : Tendsto S.Subtype cofinite (cocompact G)) : ProperlyDiscontinuousSMul S.opposite G :=
   {
     finite_disjoint_inter_image := by
       intro K L hK hL
@@ -1512,7 +1512,7 @@ theorem Subgroup.properlyDiscontinuousSmul_opposite_of_tendsto_cofinite (S : Sub
       convert H
       ext x
       simpa only [image_smul, mem_image, Prod.exists] using Set.op_smul_inter_ne_empty_iff }
-#align subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite Subgroup.properlyDiscontinuousSmul_opposite_of_tendsto_cofinite
+#align subgroup.properly_discontinuous_smul_opposite_of_tendsto_cofinite Subgroup.properlyDiscontinuousSMul_opposite_of_tendsto_cofinite
 #align add_subgroup.properly_discontinuous_vadd_opposite_of_tendsto_cofinite AddSubgroup.properly_discontinuous_vadd_opposite_of_tendsto_cofinite
 
 end
@@ -1706,10 +1706,10 @@ section Quotient
 variable [Group G] [TopologicalSpace G] [TopologicalGroup G] {Γ : Subgroup G}
 
 @[to_additive]
-instance QuotientGroup.hasContinuousConstSmul : HasContinuousConstSmul G (G ⧸ Γ)
+instance QuotientGroup.hasContinuousConstSMul : HasContinuousConstSMul G (G ⧸ Γ)
     where continuous_const_smul g := by
     convert ((@continuous_const _ _ _ _ g).mul continuous_id).quotient_map' _
-#align quotient_group.has_continuous_const_smul QuotientGroup.hasContinuousConstSmul
+#align quotient_group.has_continuous_const_smul QuotientGroup.hasContinuousConstSMul
 #align quotient_add_group.has_continuous_const_vadd quotientAddGroup.has_continuous_const_vadd
 
 @[to_additive]
@@ -1725,7 +1725,7 @@ theorem QuotientGroup.continuous_smul₁ (x : G ⧸ Γ) : Continuous fun g : G =
       "The quotient of a second countable additive topological group by a subgroup is second\ncountable."]
 instance QuotientGroup.secondCountableTopology [SecondCountableTopology G] :
     SecondCountableTopology (G ⧸ Γ) :=
-  HasContinuousConstSmul.secondCountableTopology
+  HasContinuousConstSMul.secondCountableTopology
 #align quotient_group.second_countable_topology QuotientGroup.secondCountableTopology
 #align quotient_add_group.second_countable_topology quotientAddGroup.second_countable_topology
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_paracompact
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,6 +35,7 @@ open Set
 
 namespace Emetric
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [":", expr «expr < »(j₁, j₂)], ["generalizing", ident j₁, ident j₂, ident y, ident z], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
@@ -163,8 +164,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       have Hle : ∀ m ≤ n + k, Set.Subsingleton { j | (D m j ∩ B).Nonempty } :=
         by
         rintro m hm j₁ ⟨y, hyD, hyB⟩ j₂ ⟨z, hzD, hzB⟩
-        by_contra h
-        wlog h : j₁ < j₂ := Ne.lt_or_lt h using j₁ j₂ y z, j₂ j₁ z y
+        by_contra' h' : j₁ ≠ j₂
+        trace
+          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [\":\", expr «expr < »(j₁, j₂)], [\"generalizing\", ident j₁, ident j₂, ident y, ident z], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+        · exact this z hzD hzB y hyD hyB h'.symm (h'.lt_or_lt.resolve_left h)
         rcases memD.1 hyD with ⟨y', rfl, hsuby, -, hdisty⟩
         rcases memD.1 hzD with ⟨z', rfl, -, -, hdistz⟩
         suffices : edist z' y' < 3 * 2⁻¹ ^ m

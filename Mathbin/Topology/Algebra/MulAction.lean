@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,9 +74,9 @@ section SMul
 variable [SMul M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance (priority := 100) HasContinuousSmul.hasContinuousConstSmul : HasContinuousConstSmul M X
+instance (priority := 100) HasContinuousSmul.hasContinuousConstSMul : HasContinuousConstSMul M X
     where continuous_const_smul _ := continuous_smul.comp (continuous_const.prod_mk continuous_id)
-#align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.hasContinuousConstSmul
+#align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.hasContinuousConstSMul
 #align has_continuous_vadd.has_continuous_const_vadd HasContinuousVadd.has_continuous_const_vadd
 
 @[to_additive]

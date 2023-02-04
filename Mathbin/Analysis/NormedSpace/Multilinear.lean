@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.multilinear
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1178,9 +1178,9 @@ end ContinuousMultilinearMap
 
 section Smul
 
-variable {R : Type _} [Semiring R] [Module R G] [SMulCommClass 𝕜 R G] [HasContinuousConstSmul R G]
+variable {R : Type _} [Semiring R] [Module R G] [SMulCommClass 𝕜 R G] [HasContinuousConstSMul R G]
 
-instance : HasContinuousConstSmul R (ContinuousMultilinearMap 𝕜 E G) :=
+instance : HasContinuousConstSMul R (ContinuousMultilinearMap 𝕜 E G) :=
   ⟨fun c =>
     (ContinuousLinearMap.compContinuousMultilinearMapL 𝕜 _ G G (c • ContinuousLinearMap.id 𝕜 G)).2⟩
 

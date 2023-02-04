@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem const_sub (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun 
 #align diff_cont_on_cl.const_sub DiffContOnCl.const_sub
 
 theorem const_smul {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
-    [HasContinuousConstSmul R F] (hf : DiffContOnCl 𝕜 f s) (c : R) : DiffContOnCl 𝕜 (c • f) s :=
+    [HasContinuousConstSMul R F] (hf : DiffContOnCl 𝕜 f s) (c : R) : DiffContOnCl 𝕜 (c • f) s :=
   ⟨hf.1.const_smul c, hf.2.const_smul c⟩
 #align diff_cont_on_cl.const_smul DiffContOnCl.const_smul
 

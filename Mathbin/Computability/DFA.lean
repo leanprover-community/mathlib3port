@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.DFA
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,8 +105,8 @@ theorem evalFrom_split [Fintype σ] {x : List α} {s t : σ} (hlen : Fintype.car
   obtain ⟨n, m, hneq, heq⟩ :=
     Fintype.exists_ne_map_eq_of_card_lt
       (fun n : Fin (Fintype.card σ + 1) => M.eval_from s (x.take n)) (by norm_num)
-  wlog hle : (n : ℕ) ≤ m using n m
-  have hlt : (n : ℕ) < m := (Ne.le_iff_lt hneq).mp hle
+  wlog hle : (n : ℕ) ≤ m
+  · exact this hlen hx _ _ hneq.symm HEq.symm (le_of_not_le hle)
   have hm : (m : ℕ) ≤ Fintype.card σ := Fin.is_le m
   dsimp at heq
   refine'

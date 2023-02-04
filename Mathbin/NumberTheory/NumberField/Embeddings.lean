@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,15 +125,9 @@ theorem pow_eq_one_of_norm_eq_one {x : K} (hxi : IsIntegral ℤ x) (hx : ∀ φ 
   obtain ⟨a, -, b, -, habne, h⟩ :=
     @Set.Infinite.exists_ne_map_eq_of_mapsTo _ _ _ _ ((· ^ ·) x : ℕ → K) Set.infinite_univ _
       (finite_of_norm_le K A (1 : ℝ))
-  · replace habne := habne.lt_or_lt
-    have : _
-    swap
-    cases habne
-    swap
-    · revert a b
-      exact this
-    · exact this b a h.symm habne
-    refine' fun a b h hlt => ⟨a - b, tsub_pos_of_lt hlt, _⟩
+  · wlog hlt : b < a
+    · exact this hxi hx b a habne.symm h.symm (habne.lt_or_lt.resolve_right hlt)
+    refine' ⟨a - b, tsub_pos_of_lt hlt, _⟩
     rw [← Nat.sub_add_cancel hlt.le, pow_add, mul_left_eq_self₀] at h
     refine' h.resolve_right fun hp => _
     specialize hx (IsAlgClosed.lift (NumberField.isAlgebraic K)).toRingHom

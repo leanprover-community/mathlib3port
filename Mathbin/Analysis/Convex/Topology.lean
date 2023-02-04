@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,10 +82,10 @@ end stdSimplex
 /-! ### Topological vector space -/
 
 
-section HasContinuousConstSmul
+section HasContinuousConstSMul
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
-  [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+  [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
 
 /-- If `s` is a convex set, then `a • interior s + b • closure s ⊆ interior s` for all `0 < a`,
 `0 ≤ b`, `a + b = 1`. See also `convex.combo_interior_self_subset_interior` for a weaker version. -/
@@ -255,7 +255,7 @@ protected theorem Convex.strictConvex {s : Set E} (hs : Convex 𝕜 s)
   exact (segment_eq_image_lineMap 𝕜 x y).symm ▸ mem_image_of_mem _ hc
 #align convex.strict_convex Convex.strictConvex
 
-end HasContinuousConstSmul
+end HasContinuousConstSMul
 
 section HasContinuousSmul
 

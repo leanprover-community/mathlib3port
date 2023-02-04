@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.order.left_right_lim
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,6 +235,7 @@ theorem continuousAt_iff_leftLim_eq_rightLim : ContinuousAt f x ↔ leftLim f x 
       exact hf.continuous_within_at_Ioi_iff_right_lim_eq.2 h'
 #align monotone.continuous_at_iff_left_lim_eq_right_lim Monotone.continuousAt_iff_leftLim_eq_rightLim
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [":", expr «expr ≤ »(u, v)], ["generalizing", ident u, ident v], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- In a second countable space, the set of points where a monotone function is not right-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
@@ -272,15 +273,14 @@ theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTo
     have A : (f '' s).PairwiseDisjoint fun x => Ioo x (z (inv_fun_on f s x)) :=
       by
       rintro _ ⟨u, us, rfl⟩ _ ⟨v, vs, rfl⟩ huv
-      wlog (discharger := tactic.skip) h'uv : u ≤ v := le_total u v using u v, v u
-      · rcases eq_or_lt_of_le h'uv with (rfl | h''uv)
-        · exact (huv rfl).elim
-        apply disjoint_iff_forall_ne.2
-        rintro a ha b hb rfl
-        simp [I.left_inv_on_inv_fun_on us, I.left_inv_on_inv_fun_on vs] at ha hb
-        exact lt_irrefl _ ((ha.2.trans_le ((hz u us).2 v h''uv)).trans hb.1)
-      · intro hu hv h'uv
-        exact (this hv hu h'uv.symm).symm
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [\":\", expr «expr ≤ »(u, v)], [\"generalizing\", ident u, ident v], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      · exact (this v vs u us huv.symm (le_of_not_le hle)).symm
+      have hlt : u < v := hle.lt_of_ne (ne_of_apply_ne _ huv)
+      apply disjoint_iff_forall_ne.2
+      rintro a ha b hb rfl
+      simp only [I.left_inv_on_inv_fun_on us, I.left_inv_on_inv_fun_on vs] at ha hb
+      exact lt_irrefl _ ((ha.2.trans_le ((hz u us).2 v hlt)).trans hb.1)
     apply Set.PairwiseDisjoint.countable_of_Ioo A
     rintro _ ⟨y, ys, rfl⟩
     simpa only [I.left_inv_on_inv_fun_on ys] using (hz y ys).1

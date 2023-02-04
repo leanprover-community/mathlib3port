@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module combinatorics.composition
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -397,15 +397,13 @@ theorem mem_range_embedding_iff {j : Fin n} {i : Fin c.length} :
 theorem disjoint_range {i₁ i₂ : Fin c.length} (h : i₁ ≠ i₂) :
     Disjoint (Set.range (c.Embedding i₁)) (Set.range (c.Embedding i₂)) := by
   classical
-    wlog h' : i₁ ≤ i₂ using i₁ i₂
-    swap
-    exact (this h.symm).symm
+    wlog h' : i₁ < i₂
+    · exact (this c h.symm (h.lt_or_lt.resolve_left h')).symm
     by_contra d
     obtain ⟨x, hx₁, hx₂⟩ :
       ∃ x : Fin n, x ∈ Set.range (c.embedding i₁) ∧ x ∈ Set.range (c.embedding i₂) :=
       Set.not_disjoint_iff.1 d
-    have : i₁ < i₂ := lt_of_le_of_ne h' h
-    have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_lt this
+    have A : (i₁ : ℕ).succ ≤ i₂ := Nat.succ_le_of_lt h'
     apply lt_irrefl (x : ℕ)
     calc
       (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2

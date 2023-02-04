@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,11 +192,9 @@ theorem HasBoundedVariationOn.hasLocallyBoundedVariationOn {f : α → E} {s : S
 theorem edist_le (f : α → E) {s : Set α} {x y : α} (hx : x ∈ s) (hy : y ∈ s) :
     edist (f x) (f y) ≤ evariationOn f s :=
   by
-  wlog (discharger := tactic.skip) hxy : x ≤ y := le_total x y using x y, y x
-  swap
-  · intro hx hy
-    rw [edist_comm]
-    exact this hy hx
+  wlog hxy : x ≤ y
+  · rw [edist_comm]
+    exact this f hy hx (le_of_not_le hxy)
   let u : ℕ → α := fun n => if n = 0 then x else y
   have hu : Monotone u := by
     intro m n hmn
@@ -838,17 +836,15 @@ theorem add {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s) 
 @[protected]
 theorem edist_zero_of_eq_zero {f : α → E} {s : Set α} (hf : HasLocallyBoundedVariationOn f s)
     {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : variationOnFromTo f s a b = 0) :
-    edist (f a) (f b) = 0 :=
-  by
-  wlog (discharger := tactic.skip) h' : a ≤ b := le_total a b using b a, a b
+    edist (f a) (f b) = 0 := by
+  wlog h' : a ≤ b
+  · rw [edist_comm]
+    apply this hf hb ha _ (le_of_not_le h')
+    rw [eq_neg_swap, h, neg_zero]
   · apply le_antisymm _ (zero_le _)
     rw [← Ennreal.ofReal_zero, ← h, eq_of_le f s h', Ennreal.ofReal_toReal (hf a b ha hb)]
     apply evariationOn.edist_le
     exacts[⟨ha, ⟨le_rfl, h'⟩⟩, ⟨hb, ⟨h', le_rfl⟩⟩]
-  · intro ha hb hab
-    rw [edist_comm]
-    apply this hb ha
-    rw [eq_neg_swap, hab, neg_zero]
 #align variation_on_from_to.edist_zero_of_eq_zero variationOnFromTo.edist_zero_of_eq_zero
 
 @[protected]

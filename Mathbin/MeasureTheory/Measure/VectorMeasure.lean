@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.vector_measure
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -268,7 +268,7 @@ section SMul
 
 variable {M : Type _} [AddCommMonoid M] [TopologicalSpace M]
 
-variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmul R M]
+variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSMul R M]
 
 include m
 
@@ -412,7 +412,7 @@ section DistribMulAction
 
 variable {M : Type _} [AddCommMonoid M] [TopologicalSpace M]
 
-variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmul R M]
+variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSMul R M]
 
 include m
 
@@ -425,7 +425,7 @@ section Module
 
 variable {M : Type _} [AddCommMonoid M] [TopologicalSpace M]
 
-variable {R : Type _} [Semiring R] [Module R M] [HasContinuousConstSmul R M]
+variable {R : Type _} [Semiring R] [Module R M] [HasContinuousConstSMul R M]
 
 include m
 
@@ -709,8 +709,8 @@ section Module
 
 variable {R : Type _} [Semiring R] [Module R M] [Module R N]
 
-variable [HasContinuousAdd M] [HasContinuousAdd N] [HasContinuousConstSmul R M]
-  [HasContinuousConstSmul R N]
+variable [HasContinuousAdd M] [HasContinuousAdd N] [HasContinuousConstSMul R M]
+  [HasContinuousConstSMul R N]
 
 /-- Given a continuous linear map `f : M → N`, `map_rangeₗ` is the linear map mapping the
 vector measure `v` on `M` to the vector measure `f ∘ v` on `N`. -/
@@ -829,7 +829,7 @@ variable [MeasurableSpace β]
 
 variable {M : Type _} [AddCommMonoid M] [TopologicalSpace M]
 
-variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmul R M]
+variable {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSMul R M]
 
 include m
 
@@ -866,7 +866,7 @@ variable [MeasurableSpace β]
 
 variable {M : Type _} [AddCommMonoid M] [TopologicalSpace M]
 
-variable {R : Type _} [Semiring R] [Module R M] [HasContinuousConstSmul R M] [HasContinuousAdd M]
+variable {R : Type _} [Semiring R] [Module R M] [HasContinuousConstSMul R M] [HasContinuousAdd M]
 
 include m
 
@@ -1217,7 +1217,7 @@ theorem sub {M : Type _} [AddCommGroup M] [TopologicalSpace M] [TopologicalAddGr
     v₁ - v₂ ≪ᵥ w := fun s hs => by rw [sub_apply, hv₁ hs, hv₂ hs, zero_sub, neg_zero]
 #align measure_theory.vector_measure.absolutely_continuous.sub MeasureTheory.VectorMeasure.AbsolutelyContinuous.sub
 
-theorem smul {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmul R M] {r : R}
+theorem smul {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSMul R M] {r : R}
     {v : VectorMeasure α M} {w : VectorMeasure α N} (h : v ≪ᵥ w) : r • v ≪ᵥ w := fun s hs => by
   rw [smul_apply, h hs, smul_zero]
 #align measure_theory.vector_measure.absolutely_continuous.smul MeasureTheory.VectorMeasure.AbsolutelyContinuous.smul
@@ -1318,13 +1318,13 @@ theorem addRight [T2Space M] [HasContinuousAdd N] (h₁ : v ⊥ᵥ w₁) (h₂ :
   (addLeft h₁.symm h₂.symm).symm
 #align measure_theory.vector_measure.mutually_singular.add_right MeasureTheory.VectorMeasure.MutuallySingular.addRight
 
-theorem smulRight {R : Type _} [Semiring R] [DistribMulAction R N] [HasContinuousConstSmul R N]
+theorem smulRight {R : Type _} [Semiring R] [DistribMulAction R N] [HasContinuousConstSMul R N]
     (r : R) (h : v ⊥ᵥ w) : v ⊥ᵥ r • w :=
   let ⟨s, hmeas, hs₁, hs₂⟩ := h
   ⟨s, hmeas, hs₁, fun t ht => by simp only [coe_smul, Pi.smul_apply, hs₂ t ht, smul_zero]⟩
 #align measure_theory.vector_measure.mutually_singular.smul_right MeasureTheory.VectorMeasure.MutuallySingular.smulRight
 
-theorem smulLeft {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSmul R M]
+theorem smulLeft {R : Type _} [Semiring R] [DistribMulAction R M] [HasContinuousConstSMul R M]
     (r : R) (h : v ⊥ᵥ w) : r • v ⊥ᵥ w :=
   (smulRight r h.symm).symm
 #align measure_theory.vector_measure.mutually_singular.smul_left MeasureTheory.VectorMeasure.MutuallySingular.smulLeft

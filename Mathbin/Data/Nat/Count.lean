@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.count
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,9 +139,9 @@ theorem count_strict_mono {m n : ℕ} (hm : p m) (hmn : m < n) : count p m < cou
 
 theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = count p n) : m = n :=
   by
-  by_contra
+  by_contra' h : m ≠ n
   wlog hmn : m < n
-  · exact Ne.lt_or_lt h
+  · exact this hn hm HEq.symm h.symm (h.lt_or_lt.resolve_left hmn)
   · simpa [HEq] using count_strict_mono hm hmn
 #align nat.count_injective Nat.count_injective
 

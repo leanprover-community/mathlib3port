@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_affine_map
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -217,7 +217,7 @@ section MulAction
 
 variable [Monoid S] [DistribMulAction S W] [SMulCommClass R S W]
 
-variable [HasContinuousConstSmul S W]
+variable [HasContinuousConstSMul S W]
 
 instance : SMul S (P →A[R] W)
     where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
@@ -282,12 +282,12 @@ instance : AddCommGroup (P →A[R] W) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
     coe_smul _ _
 
-instance [Monoid S] [DistribMulAction S W] [SMulCommClass R S W] [HasContinuousConstSmul S W] :
+instance [Monoid S] [DistribMulAction S W] [SMulCommClass R S W] [HasContinuousConstSMul S W] :
     DistribMulAction S (P →A[R] W) :=
   Function.Injective.distribMulAction ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective
     coe_smul
 
-instance [Semiring S] [Module S W] [SMulCommClass R S W] [HasContinuousConstSmul S W] :
+instance [Semiring S] [Module S W] [SMulCommClass R S W] [HasContinuousConstSMul S W] :
     Module S (P →A[R] W) :=
   Function.Injective.module S ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,6 +171,7 @@ theorem nth_injective_of_infinite (hp : (setOf p).Infinite) : Function.Injective
   by
   intro m n h
   wlog h' : m ≤ n
+  · exact (this p hp h.symm (le_of_not_le h')).symm
   rw [le_iff_lt_or_eq] at h'
   obtain h' | rfl := h'
   · simpa [h] using nth_strict_mono p hp h'

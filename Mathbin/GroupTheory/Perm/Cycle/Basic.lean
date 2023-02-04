@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Yaël Dillies
 
 ! This file was ported from Lean 3 source module group_theory.perm.cycle.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -721,6 +721,7 @@ theorem IsCycle.pow_eq_one_iff'' [Finite β] {f : Perm β} (hf : IsCycle f) {n :
     (hf.pow_eq_one_iff' hx).2 (h _ hx)⟩
 #align equiv.perm.is_cycle.pow_eq_one_iff'' Equiv.Perm.IsCycle.pow_eq_one_iff''
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hab], [":", expr «expr ≤ »(a, b)], ["generalizing", ident a, ident b], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 -- TODO: Define a `set`-valued support to get rid of the `finite β` assumption
 theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b : ℕ} :
     f ^ a = f ^ b ↔ ∃ x, f x ≠ x ∧ (f ^ a) x = (f ^ b) x := by
@@ -731,7 +732,9 @@ theorem IsCycle.pow_eq_pow_iff [Finite β] {f : Perm β} (hf : IsCycle f) {a b :
       obtain ⟨x, hx, -⟩ := id hf
       exact ⟨x, hx, by simp [h]⟩
     · rintro ⟨x, hx, hx'⟩
-      wlog hab : a ≤ b
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hab], [\":\", expr «expr ≤ »(a, b)], [\"generalizing\", ident a, ident b], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      · exact (this hx'.symm (le_of_not_le hab)).symm
       suffices f ^ (b - a) = 1 by
         rw [pow_sub _ hab, mul_inv_eq_one] at this
         rw [this]

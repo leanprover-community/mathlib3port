@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometric_smul
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,10 +58,10 @@ export HasIsometricVadd (isometry_vadd)
 export HasIsometricSmul (isometry_smul)
 
 @[to_additive]
-instance (priority := 100) HasIsometricSmul.to_hasContinuousConstSmul [PseudoEmetricSpace X]
-    [SMul M X] [HasIsometricSmul M X] : HasContinuousConstSmul M X :=
+instance (priority := 100) HasIsometricSmul.to_hasContinuousConstSMul [PseudoEmetricSpace X]
+    [SMul M X] [HasIsometricSmul M X] : HasContinuousConstSMul M X :=
   ⟨fun c => (isometry_smul X c).Continuous⟩
-#align has_isometric_smul.to_has_continuous_const_smul HasIsometricSmul.to_hasContinuousConstSmul
+#align has_isometric_smul.to_has_continuous_const_smul HasIsometricSmul.to_hasContinuousConstSMul
 #align has_isometric_vadd.to_has_continuous_const_vadd HasIsometricVadd.to_has_continuous_const_vadd
 
 @[to_additive]

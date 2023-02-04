@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.complex.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -958,17 +958,16 @@ theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ |z.re| + |z.im| := by
 theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|) (|z.im|) :=
   by
   cases' z with x y
-  simp only [abs, norm_sq_mk, ← sq]
-  wlog (discharger := tactic.skip) hle : |x| ≤ |y| := le_total (|x|) (|y|) using x y, y x
-  · simp only [AbsoluteValue.coe_mk, MulHom.coe_mk, norm_sq_mk, ← sq]
-    calc
-      Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) :=
-        Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)
-      _ = Real.sqrt 2 * max (|x|) (|y|) := by
-        rw [max_eq_right hle, ← two_mul, Real.sqrt_mul two_pos.le, Real.sqrt_sq_eq_abs]
-      
-  · dsimp
-    rwa [add_comm, max_comm]
+  simp only [abs_apply, norm_sq_mk, ← sq]
+  wlog hle : |x| ≤ |y|
+  · rw [add_comm, max_comm]
+    exact this _ _ (le_of_not_le hle)
+  calc
+    Real.sqrt (x ^ 2 + y ^ 2) ≤ Real.sqrt (y ^ 2 + y ^ 2) :=
+      Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)
+    _ = Real.sqrt 2 * max (|x|) (|y|) := by
+      rw [max_eq_right hle, ← two_mul, Real.sqrt_mul two_pos.le, Real.sqrt_sq_eq_abs]
+    
 #align complex.abs_le_sqrt_two_mul_max Complex.abs_le_sqrt_two_mul_max
 
 theorem abs_re_div_abs_le_one (z : ℂ) : |z.re / z.abs| ≤ 1 :=

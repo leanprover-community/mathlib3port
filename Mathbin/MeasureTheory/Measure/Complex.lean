@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.complex
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ section
 
 variable {R : Type _} [Semiring R] [Module R ℝ]
 
-variable [HasContinuousConstSmul R ℝ] [HasContinuousConstSmul R ℂ]
+variable [HasContinuousConstSMul R ℝ] [HasContinuousConstSMul R ℂ]
 
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]

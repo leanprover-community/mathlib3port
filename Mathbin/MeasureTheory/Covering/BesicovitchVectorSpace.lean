@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch_vector_space
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -572,6 +572,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
     
 #align besicovitch.satellite_config.exists_normalized_aux3 Besicovitch.SatelliteConfig.exists_normalized_aux3
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hij], [":", expr «expr ≤ »(«expr‖ ‖»(a.c i), «expr‖ ‖»(a.c j))], ["generalizing", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
     (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :
     ∃ c' : Fin N.succ → E, (∀ n, ‖c' n‖ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ‖c' i - c' j‖ :=
@@ -584,15 +585,12 @@ theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (las
     · exact h
     by_cases hi : ‖a.c i‖ = 0 <;> field_simp [norm_smul, hi]
   refine' ⟨c', fun n => norm_c'_le n, fun i j inej => _⟩
-  -- up to exchanging `i` and `j`, one can assume `‖c i‖ ≤ ‖c j‖`.
-  wlog (discharger := tactic.skip) hij : ‖a.c i‖ ≤ ‖a.c j‖ := le_total ‖a.c i‖ ‖a.c j‖ using i j,
-    j i
-  swap
-  · intro i_ne_j
-    rw [norm_sub_rev]
-    exact this i_ne_j.symm
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hij], [\":\", expr «expr ≤ »(«expr‖ ‖»(a.c i), «expr‖ ‖»(a.c j))], [\"generalizing\", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · rw [norm_sub_rev]
+    exact this j i inej.symm (le_of_not_le hij)
   rcases le_or_lt ‖a.c j‖ 2 with (Hj | Hj)
-  -- case `‖c j‖ ≤ 2` (and therefore also `‖c i‖ ≤ 2`)
+  -- case `∥c j∥ ≤ 2` (and therefore also `∥c i∥ ≤ 2`)
   · simp_rw [c', Hj, hij.trans Hj, if_true]
     exact exists_normalized_aux1 a lastr hτ δ hδ1 hδ2 i j inej
   -- case `2 < ‖c j‖`

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ordered
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Algebra.Order.ProjIcc
+import Mathbin.Topology.Algebra.Order.Group
 import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!

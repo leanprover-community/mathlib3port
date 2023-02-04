@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,6 +209,10 @@ theorem hasSum_ite_eq (b : β) [DecidablePred (· = b)] (a : α) :
   intro b' hb'
   exact if_neg hb'
 #align has_sum_ite_eq hasSum_ite_eq
+
+theorem hasSum_pi_single [DecidableEq β] (b : β) (a : α) : HasSum (Pi.single b a) a :=
+  show HasSum (fun x => Pi.single b a x) a by simpa only [Pi.single_apply] using hasSum_ite_eq b a
+#align has_sum_pi_single hasSum_pi_single
 
 theorem Equiv.hasSum_iff (e : γ ≃ β) : HasSum (f ∘ e) a ↔ HasSum f a :=
   e.Injective.hasSum_iff <| by simp
@@ -610,6 +614,11 @@ theorem tsum_ite_eq (b : β) [DecidablePred (· = b)] (a : α) :
     (∑' b', if b' = b then a else 0) = a :=
   (hasSum_ite_eq b a).tsum_eq
 #align tsum_ite_eq tsum_ite_eq
+
+@[simp]
+theorem tsum_pi_single [DecidableEq β] (b : β) (a : α) : (∑' b', Pi.single b a b') = a :=
+  (hasSum_pi_single b a).tsum_eq
+#align tsum_pi_single tsum_pi_single
 
 theorem tsum_dite_right (P : Prop) [Decidable P] (x : β → ¬P → α) :
     (∑' b : β, if h : P then (0 : α) else x b h) = if h : P then (0 : α) else ∑' b : β, x b h := by
@@ -1267,7 +1276,7 @@ end TopologicalSemiring
 section ConstSmul
 
 variable {R : Type _} [Monoid R] [TopologicalSpace α] [AddCommMonoid α] [DistribMulAction R α]
-  [HasContinuousConstSmul R α] {f : β → α}
+  [HasContinuousConstSMul R α] {f : β → α}
 
 theorem HasSum.const_smul {a : α} {r : R} (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
   hf.map (DistribMulAction.toAddMonoidHom α r) (continuous_const_smul r)
@@ -1314,21 +1323,29 @@ theorem Summable.div_const (h : Summable f) (b : α) : Summable fun x => f x / b
   (h.HasSum.div_const b).Summable
 #align summable.div_const Summable.div_const
 
-theorem hasSum_mul_left_iff (h : a₂ ≠ 0) : HasSum f a₁ ↔ HasSum (fun b => a₂ * f b) (a₂ * a₁) :=
-  ⟨HasSum.mul_left _, fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a₂⁻¹⟩
+theorem hasSum_mul_left_iff (h : a₂ ≠ 0) : HasSum (fun b => a₂ * f b) (a₂ * a₁) ↔ HasSum f a₁ :=
+  ⟨fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a₂⁻¹, HasSum.mul_left _⟩
 #align has_sum_mul_left_iff hasSum_mul_left_iff
 
-theorem hasSum_mul_right_iff (h : a₂ ≠ 0) : HasSum f a₁ ↔ HasSum (fun b => f b * a₂) (a₁ * a₂) :=
-  ⟨HasSum.mul_right _, fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a₂⁻¹⟩
+theorem hasSum_mul_right_iff (h : a₂ ≠ 0) : HasSum (fun b => f b * a₂) (a₁ * a₂) ↔ HasSum f a₁ :=
+  ⟨fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a₂⁻¹, HasSum.mul_right _⟩
 #align has_sum_mul_right_iff hasSum_mul_right_iff
 
-theorem summable_mul_left_iff (h : a ≠ 0) : Summable f ↔ Summable fun b => a * f b :=
-  ⟨fun H => H.mul_left _, fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a⁻¹⟩
+theorem hasSum_div_const_iff (h : a₂ ≠ 0) : HasSum (fun b => f b / a₂) (a₁ / a₂) ↔ HasSum f a₁ := by
+  simpa only [div_eq_mul_inv] using hasSum_mul_right_iff (inv_ne_zero h)
+#align has_sum_div_const_iff hasSum_div_const_iff
+
+theorem summable_mul_left_iff (h : a ≠ 0) : (Summable fun b => a * f b) ↔ Summable f :=
+  ⟨fun H => by simpa only [inv_mul_cancel_left₀ h] using H.mul_left a⁻¹, fun H => H.mul_left _⟩
 #align summable_mul_left_iff summable_mul_left_iff
 
-theorem summable_mul_right_iff (h : a ≠ 0) : Summable f ↔ Summable fun b => f b * a :=
-  ⟨fun H => H.mul_right _, fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a⁻¹⟩
+theorem summable_mul_right_iff (h : a ≠ 0) : (Summable fun b => f b * a) ↔ Summable f :=
+  ⟨fun H => by simpa only [mul_inv_cancel_right₀ h] using H.mul_right a⁻¹, fun H => H.mul_right _⟩
 #align summable_mul_right_iff summable_mul_right_iff
+
+theorem summable_div_const_iff (h : a ≠ 0) : (Summable fun b => f b / a) ↔ Summable f := by
+  simpa only [div_eq_mul_inv] using summable_mul_right_iff (inv_ne_zero h)
+#align summable_div_const_iff summable_div_const_iff
 
 theorem tsum_mul_left [T2Space α] : (∑' x, a * f x) = a * ∑' x, f x :=
   if hf : Summable f then hf.tsum_mul_left a
@@ -1336,7 +1353,7 @@ theorem tsum_mul_left [T2Space α] : (∑' x, a * f x) = a * ∑' x, f x :=
     if ha : a = 0 then by simp [ha]
     else by
       rw [tsum_eq_zero_of_not_summable hf,
-        tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).2 hf), mul_zero]
+        tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).mp hf), mul_zero]
 #align tsum_mul_left tsum_mul_left
 
 theorem tsum_mul_right [T2Space α] : (∑' x, f x * a) = (∑' x, f x) * a :=
@@ -1345,8 +1362,12 @@ theorem tsum_mul_right [T2Space α] : (∑' x, f x * a) = (∑' x, f x) * a :=
     if ha : a = 0 then by simp [ha]
     else by
       rw [tsum_eq_zero_of_not_summable hf,
-        tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).2 hf), zero_mul]
+        tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).mp hf), zero_mul]
 #align tsum_mul_right tsum_mul_right
+
+theorem tsum_div_const [T2Space α] : (∑' x, f x / a) = (∑' x, f x) / a := by
+  simpa only [div_eq_mul_inv] using tsum_mul_right
+#align tsum_div_const tsum_div_const
 
 end DivisionRing
 

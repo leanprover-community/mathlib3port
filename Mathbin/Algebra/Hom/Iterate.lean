@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.iterate
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -309,7 +309,7 @@ variable [Monoid G] (a : G) (n : ℕ)
 lean 3 declaration is
   forall {G : Type.{u1}} {H : Type.{u2}} [_inst_1 : Monoid.{u1} G] (a : G) (n : Nat) [_inst_2 : MulAction.{u1, u2} G H _inst_1], Eq.{succ u2} (H -> H) (Nat.iterate.{succ u2} H (SMul.smul.{u1, u2} G H (MulAction.toHasSmul.{u1, u2} G H _inst_1 _inst_2) a) n) (SMul.smul.{u1, u2} G H (MulAction.toHasSmul.{u1, u2} G H _inst_1 _inst_2) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) a n))
 but is expected to have type
-  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Monoid.{u2} G] (a : G) (n : Nat) [_inst_2 : MulAction.{u2, u1} G H _inst_1], Eq.{succ u1} (H -> H) (Nat.iterate.{succ u1} H (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1508 : H) => HSMul.hSMul.{u2, u1, u1} G H H (instHSMul.{u2, u1} G H (MulAction.toSMul.{u2, u1} G H _inst_1 _inst_2)) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.1508) n) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1526 : H) => HSMul.hSMul.{u2, u1, u1} G H H (instHSMul.{u2, u1} G H (MulAction.toSMul.{u2, u1} G H _inst_1 _inst_2)) (HPow.hPow.{u2, 0, u2} G Nat G (instHPow.{u2, 0} G Nat (Monoid.Pow.{u2} G _inst_1)) a n) x._@.Mathlib.Algebra.Hom.Iterate._hyg.1526)
+  forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Monoid.{u2} G] (a : G) (n : Nat) [_inst_2 : MulAction.{u2, u1} G H _inst_1], Eq.{succ u1} (H -> H) (Nat.iterate.{succ u1} H (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1506 : H) => HSMul.hSMul.{u2, u1, u1} G H H (instHSMul.{u2, u1} G H (MulAction.toSMul.{u2, u1} G H _inst_1 _inst_2)) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.1506) n) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1524 : H) => HSMul.hSMul.{u2, u1, u1} G H H (instHSMul.{u2, u1} G H (MulAction.toSMul.{u2, u1} G H _inst_1 _inst_2)) (HPow.hPow.{u2, 0, u2} G Nat G (instHPow.{u2, 0} G Nat (Monoid.Pow.{u2} G _inst_1)) a n) x._@.Mathlib.Algebra.Hom.Iterate._hyg.1524)
 Case conversion may be inaccurate. Consider using '#align smul_iterate smul_iterateₓ'. -/
 @[simp, to_additive]
 theorem smul_iterate [MulAction G H] : ((· • ·) a : H → H)^[n] = (· • ·) (a ^ n) :=
@@ -323,7 +323,7 @@ theorem smul_iterate [MulAction G H] : ((· • ·) a : H → H)^[n] = (· • �
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} (G -> G) (Nat.iterate.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) a) n) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) a n))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} (G -> G) (Nat.iterate.{succ u1} G (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1639 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.1639) n) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1652 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) a n) x._@.Mathlib.Algebra.Hom.Iterate._hyg.1652)
+  forall {G : Type.{u1}} [_inst_1 : Monoid.{u1} G] (a : G) (n : Nat), Eq.{succ u1} (G -> G) (Nat.iterate.{succ u1} G (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1637 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.1637) n) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1650 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G _inst_1))) (HPow.hPow.{u1, 0, u1} G Nat G (instHPow.{u1, 0} G Nat (Monoid.Pow.{u1} G _inst_1)) a n) x._@.Mathlib.Algebra.Hom.Iterate._hyg.1650)
 Case conversion may be inaccurate. Consider using '#align mul_left_iterate mul_left_iterateₓ'. -/
 @[simp, to_additive]
 theorem mul_left_iterate : (· * ·) a^[n] = (· * ·) (a ^ n) :=
@@ -398,7 +398,7 @@ variable [Semigroup G] {a b c : G}
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] {a : G} {b : G} {c : G}, (SemiconjBy.{u1} G (Semigroup.toHasMul.{u1} G _inst_1) a b c) -> (Function.Semiconj.{u1, u1} G G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) a) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) c))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] {a : G} {b : G} {c : G}, (SemiconjBy.{u1} G (Semigroup.toMul.{u1} G _inst_1) a b c) -> (Function.Semiconj.{u1, u1} G G (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1979 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.1979) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1991 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) b x._@.Mathlib.Algebra.Hom.Iterate._hyg.1991) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.2003 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) c x._@.Mathlib.Algebra.Hom.Iterate._hyg.2003))
+  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] {a : G} {b : G} {c : G}, (SemiconjBy.{u1} G (Semigroup.toMul.{u1} G _inst_1) a b c) -> (Function.Semiconj.{u1, u1} G G (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1977 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.1977) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.1989 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) b x._@.Mathlib.Algebra.Hom.Iterate._hyg.1989) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.2001 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) c x._@.Mathlib.Algebra.Hom.Iterate._hyg.2001))
 Case conversion may be inaccurate. Consider using '#align semiconj_by.function_semiconj_mul_left SemiconjBy.function_semiconj_mul_leftₓ'. -/
 @[to_additive]
 theorem SemiconjBy.function_semiconj_mul_left (h : SemiconjBy a b c) :
@@ -411,7 +411,7 @@ theorem SemiconjBy.function_semiconj_mul_left (h : SemiconjBy a b c) :
 lean 3 declaration is
   forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] {a : G} {b : G}, (Commute.{u1} G (Semigroup.toHasMul.{u1} G _inst_1) a b) -> (Function.Commute.{u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) a) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toHasMul.{u1} G _inst_1)) b))
 but is expected to have type
-  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] {a : G} {b : G}, (Commute.{u1} G (Semigroup.toMul.{u1} G _inst_1) a b) -> (Function.Commute.{u1} G (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.2071 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.2071) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.2083 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) b x._@.Mathlib.Algebra.Hom.Iterate._hyg.2083))
+  forall {G : Type.{u1}} [_inst_1 : Semigroup.{u1} G] {a : G} {b : G}, (Commute.{u1} G (Semigroup.toMul.{u1} G _inst_1) a b) -> (Function.Commute.{u1} G (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.2069 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) a x._@.Mathlib.Algebra.Hom.Iterate._hyg.2069) (fun (x._@.Mathlib.Algebra.Hom.Iterate._hyg.2081 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (Semigroup.toMul.{u1} G _inst_1)) b x._@.Mathlib.Algebra.Hom.Iterate._hyg.2081))
 Case conversion may be inaccurate. Consider using '#align commute.function_commute_mul_left Commute.function_commute_mul_leftₓ'. -/
 @[to_additive]
 theorem Commute.function_commute_mul_left (h : Commute a b) :

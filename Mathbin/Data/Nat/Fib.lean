@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann, Kyle Miller, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.fib
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -326,15 +326,13 @@ theorem gcd_fib_add_mul_self (m n : ℕ) : ∀ k, gcd (fib m) (fib (n + k * m)) 
   see https://proofwiki.org/wiki/GCD_of_Fibonacci_Numbers -/
 theorem fib_gcd (m n : ℕ) : fib (gcd m n) = gcd (fib m) (fib n) :=
   by
-  wlog h : m ≤ n using n m, m n
-  exact le_total m n
-  · apply gcd.induction m n
-    · simp
-    intro m n mpos h
-    rw [← gcd_rec m n] at h
-    conv_rhs => rw [← mod_add_div' n m]
-    rwa [gcd_fib_add_mul_self m (n % m) (n / m), gcd_comm (fib m) _]
-  rwa [gcd_comm, gcd_comm (fib m)]
+  wlog h : m ≤ n; · simpa only [gcd_comm] using this _ _ (le_of_not_le h)
+  apply gcd.induction m n
+  · simp
+  intro m n mpos h
+  rw [← gcd_rec m n] at h
+  conv_rhs => rw [← mod_add_div' n m]
+  rwa [gcd_fib_add_mul_self m (n % m) (n / m), gcd_comm (fib m) _]
 #align nat.fib_gcd Nat.fib_gcd
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.separation
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Inseparable
 
 /-!
 # Separation properties of topological spaces.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the predicate `separated_nhds`, and common separation axioms
 (under the Kolmogorov classification).
@@ -316,7 +319,9 @@ theorem minimal_nonempty_closed_subsingleton [T0Space α] {s : Set α} (hs : IsC
   by
   refine' fun x hx y hy => of_not_not fun hxy => _
   rcases exists_isOpen_xor'_mem hxy with ⟨U, hUo, hU⟩
-  wlog h : x ∈ U ∧ y ∉ U := hU using x y, y x; cases' h with hxU hyU
+  wlog h : x ∈ U ∧ y ∉ U
+  · exact this hmin y hy x hx (Ne.symm hxy) U hUo hU.symm (hU.resolve_left h)
+  cases' h with hxU hyU
   have : s \ U = s := hmin (s \ U) (diff_subset _ _) ⟨y, hy, hyU⟩ (hs.sdiff hUo)
   exact (this.symm.subset hx).2 hxU
 #align minimal_nonempty_closed_subsingleton minimal_nonempty_closed_subsingleton
@@ -351,7 +356,9 @@ theorem minimal_nonempty_open_subsingleton [T0Space α] {s : Set α} (hs : IsOpe
   by
   refine' fun x hx y hy => of_not_not fun hxy => _
   rcases exists_isOpen_xor'_mem hxy with ⟨U, hUo, hU⟩
-  wlog h : x ∈ U ∧ y ∉ U := hU using x y, y x; cases' h with hxU hyU
+  wlog h : x ∈ U ∧ y ∉ U
+  · exact this hs hmin y hy x hx (Ne.symm hxy) U hUo hU.symm (hU.resolve_left h)
+  cases' h with hxU hyU
   have : s ∩ U = s := hmin (s ∩ U) (inter_subset_left _ _) ⟨x, hx, hxU⟩ (hs.inter hUo)
   exact hyU (this.symm.subset hy).2
 #align minimal_nonempty_open_subsingleton minimal_nonempty_open_subsingleton
@@ -4045,11 +4052,11 @@ instance (priority := 100) T3Space.t25Space [T3Space α] : T25Space α :=
   by
   refine' ⟨fun x y hne => _⟩
   rw [lift'_nhds_closure, lift'_nhds_closure]
-  have : x ∉ closure {y} ∨ y ∉ closure {x} :=
+  have aux : x ∉ closure {y} ∨ y ∉ closure {x} :=
     (t0Space_iff_or_not_mem_closure α).mp inferInstance x y hne
-  wlog (discharger := tactic.skip) H : x ∉ closure {y} := this using x y, y x
+  wlog H : x ∉ closure ({y} : Set α)
+  · refine' (this y x hne.symm aux.symm (aux.resolve_left H)).symm
   · rwa [← disjoint_nhds_nhdsSet, nhdsSet_singleton] at H
-  · exact fun h => (this h.symm).symm
 #align t3_space.t2_5_space T3Space.t25Space
 -/
 

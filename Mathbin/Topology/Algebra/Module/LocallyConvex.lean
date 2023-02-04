@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.locally_convex
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ end Module
 section LinearOrderedField
 
 variable (𝕜 E : Type _) [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
-  [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+  [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
 
 theorem LocallyConvexSpace.convex_open_basis_zero [LocallyConvexSpace 𝕜 E] :
     (𝓝 0 : Filter E).HasBasis (fun s => (0 : E) ∈ s ∧ IsOpen s ∧ Convex 𝕜 s) id :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.function
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -453,9 +453,11 @@ theorem LinearOrder.convexOn_of_lt (hs : Convex 𝕜 s)
     ConvexOn 𝕜 s f :=
   by
   refine' convexOn_iff_pairwise_pos.2 ⟨hs, fun x hx y hy hxy a b ha hb hab => _⟩
-  wlog h : x ≤ y using x y a b, y x b a
-  · exact le_total _ _
-  exact hf hx hy (h.lt_of_ne hxy) ha hb hab
+  wlog h : x < y
+  · rw [add_comm (a • x), add_comm (a • f x)]
+    rw [add_comm] at hab
+    refine' this hs hf y hy x hx hxy.symm b a hb ha hab (hxy.lt_or_lt.resolve_left h)
+  exact hf hx hy h ha hb hab
 #align linear_order.convex_on_of_lt LinearOrder.convexOn_of_lt
 
 /-- For a function on a convex set in a linearly ordered space (where the order and the algebraic
@@ -489,9 +491,11 @@ theorem LinearOrder.strictConvexOn_of_lt (hs : Convex 𝕜 s)
     StrictConvexOn 𝕜 s f :=
   by
   refine' ⟨hs, fun x hx y hy hxy a b ha hb hab => _⟩
-  wlog h : x ≤ y using x y a b, y x b a
-  · exact le_total _ _
-  exact hf hx hy (h.lt_of_ne hxy) ha hb hab
+  wlog h : x < y
+  · rw [add_comm (a • x), add_comm (a • f x)]
+    rw [add_comm] at hab
+    refine' this hs hf y hy x hx hxy.symm b a hb ha hab (hxy.lt_or_lt.resolve_left h)
+  exact hf hx hy h ha hb hab
 #align linear_order.strict_convex_on_of_lt LinearOrder.strictConvexOn_of_lt
 
 /-- For a function on a convex set in a linearly ordered space (where the order and the algebraic

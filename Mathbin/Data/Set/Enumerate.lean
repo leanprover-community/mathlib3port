@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.enumerate
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Tactic.Wlog
+import Mathbin.Data.Set.Lattice
 import Mathbin.Data.Nat.Order.Basic
+import Mathbin.Tactic.Wlog
 
 /-!
 # Set enumeration
@@ -90,6 +91,7 @@ theorem enumerate_inj {n₁ n₂ : ℕ} {a : α} {s : Set α} (h_sel : ∀ s a, 
     (h₁ : enumerate s n₁ = some a) (h₂ : enumerate s n₂ = some a) : n₁ = n₂ :=
   by
   wlog hn : n₁ ≤ n₂
+  · cases' le_total n₁ n₂ with H H <;> [skip, symm] <;> apply_assumption <;> assumption
   · rcases Nat.le.dest hn with ⟨m, rfl⟩
     clear hn
     induction n₁ generalizing s

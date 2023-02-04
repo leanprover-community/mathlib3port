@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.scheme
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -372,8 +372,8 @@ private unsafe def mem_tac : tactic Unit :=
 
 include f_deg
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
 /-- The function from `Spec A⁰_f` to `Proj|D(f)` is defined by `q ↦ {a | aᵢᵐ/fⁱ ∈ q}`, i.e. sending
 `q` a prime ideal in `A⁰_f` to the homogeneous prime relevant ideal containing only and all the
 elements `a : A` such that for every `i`, the degree 0 element formed by dividing the `m`-th power
@@ -403,8 +403,8 @@ def carrier (q : Spec.T A⁰_ f) : Set A :=
         q.1 }
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
 theorem mem_carrier_iff (q : Spec.T A⁰_ f) (a : A) :
     a ∈ carrier f_deg q ↔
       ∀ i,
@@ -442,14 +442,14 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
         rfl)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_carrier_iff' AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
 theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg q)
     (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q :=
   by
@@ -541,8 +541,8 @@ theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i =>
   convert Localization.mk_zero _ using 1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.zero_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.zero_mem
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2881919951.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3599523199.mem_tac -/
 theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ carrier f_deg q :=
   by
   revert c

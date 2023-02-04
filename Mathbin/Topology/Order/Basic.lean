@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Set.Intervals.Pi
 import Mathbin.Data.Set.Pointwise.Interval
 import Mathbin.Order.Filter.Interval
-import Mathbin.Topology.Algebra.Group.Basic
+import Mathbin.Topology.Support
 import Mathbin.Topology.Algebra.Order.LeftRight
 
 /-!
@@ -104,10 +104,6 @@ instance [TopologicalSpace α] [h : FirstCountableTopology α] : FirstCountableT
   h
 
 instance [TopologicalSpace α] [h : SecondCountableTopology α] : SecondCountableTopology αᵒᵈ :=
-  h
-
-@[to_additive]
-instance [TopologicalSpace α] [Mul α] [h : HasContinuousMul α] : HasContinuousMul αᵒᵈ :=
   h
 
 theorem Dense.orderDual [TopologicalSpace α] {s : Set α} (hs : Dense s) :
@@ -3181,57 +3177,41 @@ theorem eventually_abs_sub_lt (a : α) {ε : α} (hε : 0 < ε) : ∀ᶠ x in �
     mem_infᵢ_of_mem ε (mem_infᵢ_of_mem hε <| by simp only [abs_sub_comm, mem_principal_self])
 #align eventually_abs_sub_lt eventually_abs_sub_lt
 
--- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedAddCommGroup.topologicalAddGroup : TopologicalAddGroup α
-    where
-  continuous_add := by
-    refine' continuous_iff_continuousAt.2 _
-    rintro ⟨a, b⟩
-    refine' LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 => _
-    rcases dense_or_discrete 0 ε with (⟨δ, δ0, δε⟩ | ⟨h₁, h₂⟩)
-    · -- If there exists `δ ∈ (0, ε)`, then we choose `δ`-nhd of `a` and `(ε-δ)`-nhd of `b`
-      filter_upwards [(eventually_abs_sub_lt a δ0).prod_nhds
-          (eventually_abs_sub_lt b (sub_pos.2 δε))]
-      rintro ⟨x, y⟩ ⟨hx : |x - a| < δ, hy : |y - b| < ε - δ⟩
-      rw [add_sub_add_comm]
-      calc
-        |x - a + (y - b)| ≤ |x - a| + |y - b| := abs_add _ _
-        _ < δ + (ε - δ) := add_lt_add hx hy
-        _ = ε := add_sub_cancel'_right _ _
-        
-    · -- Otherwise `ε`-nhd of each point `a` is `{a}`
-      have hε : ∀ {x y}, |x - y| < ε → x = y :=
-        by
-        intro x y h
-        simpa [sub_eq_zero] using h₂ _ h
-      filter_upwards [(eventually_abs_sub_lt a ε0).prod_nhds (eventually_abs_sub_lt b ε0)]
-      rintro ⟨x, y⟩ ⟨hx : |x - a| < ε, hy : |y - b| < ε⟩
-      simpa [hε hx, hε hy]
-  continuous_neg :=
-    continuous_iff_continuousAt.2 fun a =>
-      LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 =>
-        (eventually_abs_sub_lt a ε0).mono fun x hx => by rwa [neg_sub_neg, abs_sub_comm]
-#align linear_ordered_add_comm_group.topological_add_group LinearOrderedAddCommGroup.topologicalAddGroup
-
-@[continuity]
-theorem continuous_abs : Continuous (abs : α → α) :=
-  continuous_id.max continuous_neg
-#align continuous_abs continuous_abs
-
-theorem Filter.Tendsto.abs {f : β → α} {a : α} {l : Filter β} (h : Tendsto f l (𝓝 a)) :
-    Tendsto (fun x => |f x|) l (𝓝 (|a|)) :=
-  (continuous_abs.Tendsto _).comp h
-#align filter.tendsto.abs Filter.Tendsto.abs
-
-theorem tendsto_zero_iff_abs_tendsto_zero (f : β → α) {l : Filter β} :
-    Tendsto f l (𝓝 0) ↔ Tendsto (abs ∘ f) l (𝓝 0) :=
+/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to `C`
+and `g` tends to `at_top` then `f + g` tends to `at_top`. -/
+theorem Filter.Tendsto.add_atTop {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atTop) :
+    Tendsto (fun x => f x + g x) l atTop :=
   by
-  refine' ⟨fun h => (abs_zero : |(0 : α)| = 0) ▸ h.abs, fun h => _⟩
-  have : tendsto (fun a => -|f a|) l (𝓝 0) := (neg_zero : -(0 : α) = 0) ▸ h.neg
-  exact
-    tendsto_of_tendsto_of_tendsto_of_le_of_le this h (fun x => neg_abs_le_self <| f x) fun x =>
-      le_abs_self <| f x
-#align tendsto_zero_iff_abs_tendsto_zero tendsto_zero_iff_abs_tendsto_zero
+  nontriviality α
+  obtain ⟨C', hC'⟩ : ∃ C', C' < C := exists_lt C
+  refine' tendsto_at_top_add_left_of_le' _ C' _ hg
+  exact (hf.eventually (lt_mem_nhds hC')).mono fun x => le_of_lt
+#align filter.tendsto.add_at_top Filter.Tendsto.add_atTop
+
+/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to `C`
+and `g` tends to `at_bot` then `f + g` tends to `at_bot`. -/
+theorem Filter.Tendsto.add_atBot {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atBot) :
+    Tendsto (fun x => f x + g x) l atBot :=
+  @Filter.Tendsto.add_atTop αᵒᵈ _ _ _ _ _ _ _ _ hf hg
+#align filter.tendsto.add_at_bot Filter.Tendsto.add_atBot
+
+/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to
+`at_top` and `g` tends to `C` then `f + g` tends to `at_top`. -/
+theorem Filter.Tendsto.atTop_add {C : α} (hf : Tendsto f l atTop) (hg : Tendsto g l (𝓝 C)) :
+    Tendsto (fun x => f x + g x) l atTop :=
+  by
+  conv in _ + _ => rw [add_comm]
+  exact hg.add_at_top hf
+#align filter.tendsto.at_top_add Filter.Tendsto.atTop_add
+
+/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to
+`at_bot` and `g` tends to `C` then `f + g` tends to `at_bot`. -/
+theorem Filter.Tendsto.atBot_add {C : α} (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
+    Tendsto (fun x => f x + g x) l atBot :=
+  by
+  conv in _ + _ => rw [add_comm]
+  exact hg.add_at_bot hf
+#align filter.tendsto.at_bot_add Filter.Tendsto.atBot_add
 
 theorem nhds_basis_Ioo_pos [NoMinOrder α] [NoMaxOrder α] (a : α) :
     (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε) fun ε => Ioo (a - ε) (a + ε) :=
@@ -3282,70 +3262,6 @@ theorem nhds_basis_Ioo_pos_of_pos [NoMinOrder α] [NoMaxOrder α] {a : α} (ha :
         let ⟨i, hi, hit⟩ := h
         ⟨i, hi.1, hit⟩⟩⟩
 #align nhds_basis_Ioo_pos_of_pos nhds_basis_Ioo_pos_of_pos
-
-section
-
-variable [TopologicalSpace β] {b : β} {a : α} {s : Set β}
-
-theorem Continuous.abs (h : Continuous f) : Continuous fun x => |f x| :=
-  continuous_abs.comp h
-#align continuous.abs Continuous.abs
-
-theorem ContinuousAt.abs (h : ContinuousAt f b) : ContinuousAt (fun x => |f x|) b :=
-  h.abs
-#align continuous_at.abs ContinuousAt.abs
-
-theorem ContinuousWithinAt.abs (h : ContinuousWithinAt f s b) :
-    ContinuousWithinAt (fun x => |f x|) s b :=
-  h.abs
-#align continuous_within_at.abs ContinuousWithinAt.abs
-
-theorem ContinuousOn.abs (h : ContinuousOn f s) : ContinuousOn (fun x => |f x|) s := fun x hx =>
-  (h x hx).abs
-#align continuous_on.abs ContinuousOn.abs
-
-theorem tendsto_abs_nhdsWithin_zero : Tendsto (abs : α → α) (𝓝[≠] 0) (𝓝[>] 0) :=
-  (continuous_abs.tendsto' (0 : α) 0 abs_zero).inf <|
-    tendsto_principal_principal.2 fun x => abs_pos.2
-#align tendsto_abs_nhds_within_zero tendsto_abs_nhdsWithin_zero
-
-end
-
-/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to `C`
-and `g` tends to `at_top` then `f + g` tends to `at_top`. -/
-theorem Filter.Tendsto.add_atTop {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atTop) :
-    Tendsto (fun x => f x + g x) l atTop :=
-  by
-  nontriviality α
-  obtain ⟨C', hC'⟩ : ∃ C', C' < C := exists_lt C
-  refine' tendsto_at_top_add_left_of_le' _ C' _ hg
-  exact (hf.eventually (lt_mem_nhds hC')).mono fun x => le_of_lt
-#align filter.tendsto.add_at_top Filter.Tendsto.add_atTop
-
-/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to `C`
-and `g` tends to `at_bot` then `f + g` tends to `at_bot`. -/
-theorem Filter.Tendsto.add_atBot {C : α} (hf : Tendsto f l (𝓝 C)) (hg : Tendsto g l atBot) :
-    Tendsto (fun x => f x + g x) l atBot :=
-  @Filter.Tendsto.add_atTop αᵒᵈ _ _ _ _ _ _ _ _ hf hg
-#align filter.tendsto.add_at_bot Filter.Tendsto.add_atBot
-
-/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to
-`at_top` and `g` tends to `C` then `f + g` tends to `at_top`. -/
-theorem Filter.Tendsto.atTop_add {C : α} (hf : Tendsto f l atTop) (hg : Tendsto g l (𝓝 C)) :
-    Tendsto (fun x => f x + g x) l atTop :=
-  by
-  conv in _ + _ => rw [add_comm]
-  exact hg.add_at_top hf
-#align filter.tendsto.at_top_add Filter.Tendsto.atTop_add
-
-/-- In a linearly ordered additive commutative group with the order topology, if `f` tends to
-`at_bot` and `g` tends to `C` then `f + g` tends to `at_bot`. -/
-theorem Filter.Tendsto.atBot_add {C : α} (hf : Tendsto f l atBot) (hg : Tendsto g l (𝓝 C)) :
-    Tendsto (fun x => f x + g x) l atBot :=
-  by
-  conv in _ + _ => rw [add_comm]
-  exact hg.add_at_bot hf
-#align filter.tendsto.at_bot_add Filter.Tendsto.atBot_add
 
 end LinearOrderedAddCommGroup
 
@@ -4346,16 +4262,14 @@ section NhdsWithPos
 
 section LinearOrderedAddCommGroup
 
-variable [LinearOrderedAddCommGroup α] [TopologicalSpace α] [OrderTopology α]
+variable [LinearOrder α] [Zero α] [TopologicalSpace α] [OrderTopology α]
 
 theorem eventually_nhdsWithin_pos_mem_Ioo {ε : α} (h : 0 < ε) : ∀ᶠ x in 𝓝[>] 0, x ∈ Ioo 0 ε :=
-  by
-  rw [eventually_iff, mem_nhdsWithin]
-  exact ⟨Ioo (-ε) ε, isOpen_Ioo, by simp [h], fun x hx => ⟨hx.2, hx.1.2⟩⟩
+  Ioo_mem_nhdsWithin_Ioi (left_mem_Ico.2 h)
 #align eventually_nhds_within_pos_mem_Ioo eventually_nhdsWithin_pos_mem_Ioo
 
 theorem eventually_nhdsWithin_pos_mem_Ioc {ε : α} (h : 0 < ε) : ∀ᶠ x in 𝓝[>] 0, x ∈ Ioc 0 ε :=
-  (eventually_nhdsWithin_pos_mem_Ioo h).mono Ioo_subset_Ioc_self
+  Ioc_mem_nhdsWithin_Ioi (left_mem_Ico.2 h)
 #align eventually_nhds_within_pos_mem_Ioc eventually_nhdsWithin_pos_mem_Ioc
 
 end LinearOrderedAddCommGroup

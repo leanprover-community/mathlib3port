@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.density
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,7 @@ open Finset
 
 open BigOperators
 
-variable {ι κ α β : Type _}
+variable {𝕜 ι κ α β : Type _}
 
 /-! ### Density of a relation -/
 
@@ -40,8 +40,8 @@ namespace Rel
 
 section Asymmetric
 
-variable (r : α → β → Prop) [∀ a, DecidablePred (r a)] {s s₁ s₂ : Finset α} {t t₁ t₂ : Finset β}
-  {a : α} {b : β} {δ : ℚ}
+variable [LinearOrderedField 𝕜] (r : α → β → Prop) [∀ a, DecidablePred (r a)] {s s₁ s₂ : Finset α}
+  {t t₁ t₂ : Finset β} {a : α} {b : β} {δ : 𝕜}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Finset of edges of a relation between two finsets of vertices. -/
@@ -221,32 +221,36 @@ theorem abs_edgeDensity_sub_edgeDensity_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht 
 theorem abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁)
     (hδ₀ : 0 ≤ δ) (hδ₁ : δ < 1) (hs₂ : (1 - δ) * s₁.card ≤ s₂.card)
     (ht₂ : (1 - δ) * t₁.card ≤ t₂.card) :
-    |edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁| ≤ 2 * δ - δ ^ 2 :=
+    |(edgeDensity r s₂ t₂ : 𝕜) - edgeDensity r s₁ t₁| ≤ 2 * δ - δ ^ 2 :=
   by
   have hδ' : 0 ≤ 2 * δ - δ ^ 2 := by
     rw [sub_nonneg, sq]
     exact mul_le_mul_of_nonneg_right (hδ₁.le.trans (by norm_num)) hδ₀
   rw [← sub_pos] at hδ₁
-  simp only [edge_density]
   obtain rfl | hs₂' := s₂.eq_empty_or_nonempty
   · rw [Finset.card_empty, Nat.cast_zero] at hs₂
-    simpa [(nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
+    simpa [edge_density, (nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using
+      hδ'
   obtain rfl | ht₂' := t₂.eq_empty_or_nonempty
   · rw [Finset.card_empty, Nat.cast_zero] at ht₂
-    simpa [(nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
+    simpa [edge_density, (nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using
+      hδ'
   rw [show 2 * δ - δ ^ 2 = 1 - (1 - δ) * (1 - δ) by ring]
-  refine' (abs_edge_density_sub_edge_density_le_one_sub_mul r hs ht hs₂' ht₂').trans _
-  apply sub_le_sub_left (mul_le_mul ((le_div_iff _).2 hs₂) ((le_div_iff _).2 ht₂) hδ₁.le _)
-  · exact_mod_cast (hs₂'.mono hs).card_pos
-  · exact_mod_cast (ht₂'.mono ht).card_pos
-  · positivity
+  norm_cast
+  refine'
+    (Rat.cast_le.2 <| abs_edge_density_sub_edge_density_le_one_sub_mul r hs ht hs₂' ht₂').trans _
+  push_cast
+  have := hs₂'.mono hs
+  have := ht₂'.mono ht
+  refine' sub_le_sub_left (mul_le_mul ((le_div_iff _).2 hs₂) ((le_div_iff _).2 ht₂) hδ₁.le _) _ <;>
+    positivity
 #align rel.abs_edge_density_sub_edge_density_le_two_mul_sub_sq Rel.abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq
 
 /-- If `s₂ ⊆ s₁`, `t₂ ⊆ t₁` and they take up all but a `δ`-proportion, then the difference in edge
 densities is at most `2 * δ`. -/
 theorem abs_edgeDensity_sub_edgeDensity_le_two_mul (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁) (hδ : 0 ≤ δ)
     (hscard : (1 - δ) * s₁.card ≤ s₂.card) (htcard : (1 - δ) * t₁.card ≤ t₂.card) :
-    |edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁| ≤ 2 * δ :=
+    |(edgeDensity r s₂ t₂ : 𝕜) - edgeDensity r s₁ t₁| ≤ 2 * δ :=
   by
   cases lt_or_le δ 1
   ·
@@ -399,7 +403,7 @@ theorem edgeDensity_add_edgeDensity_compl (hs : s.Nonempty) (ht : t.Nonempty) (h
   by
   rw [edge_density_def, edge_density_def, div_add_div_same, div_eq_one_iff_eq]
   · exact_mod_cast card_interedges_add_card_interedges_compl _ h
-  · exact_mod_cast (mul_pos hs.card_pos ht.card_pos).ne'
+  · positivity
 #align simple_graph.edge_density_add_edge_density_compl SimpleGraph.edgeDensity_add_edgeDensity_compl
 
 end DecidableEq

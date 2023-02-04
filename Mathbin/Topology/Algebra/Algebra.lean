@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.algebra
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,10 +197,10 @@ end Ring
 section DivisionRing
 
 /-- The action induced by `algebra_rat` is continuous. -/
-instance DivisionRing.hasContinuousConstSmul_rat {A} [DivisionRing A] [TopologicalSpace A]
-    [HasContinuousMul A] [CharZero A] : HasContinuousConstSmul ℚ A :=
+instance DivisionRing.hasContinuousConstSMul_rat {A} [DivisionRing A] [TopologicalSpace A]
+    [HasContinuousMul A] [CharZero A] : HasContinuousConstSMul ℚ A :=
   ⟨fun r => by simpa only [Algebra.smul_def] using continuous_const.mul continuous_id⟩
-#align division_ring.has_continuous_const_smul_rat DivisionRing.hasContinuousConstSmul_rat
+#align division_ring.has_continuous_const_smul_rat DivisionRing.hasContinuousConstSMul_rat
 
 end DivisionRing
 

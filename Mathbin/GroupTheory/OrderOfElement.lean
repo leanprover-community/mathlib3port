@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -502,10 +502,13 @@ theorem pow_eq_one_iff_modEq : x ^ n = 1 ↔ n ≡ 0 [MOD orderOf x] := by
 #align pow_eq_one_iff_modeq pow_eq_one_iff_modEq
 #align nsmul_eq_zero_iff_modeq nsmul_eq_zero_iff_modEq
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hmn], [":", expr «expr ≤ »(m, n)], ["generalizing", ident m, ident n], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 @[to_additive]
 theorem pow_eq_pow_iff_modEq : x ^ n = x ^ m ↔ n ≡ m [MOD orderOf x] :=
   by
-  wlog hmn : m ≤ n
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hmn], [\":\", expr «expr ≤ »(m, n)], [\"generalizing\", ident m, ident n], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · rw [eq_comm, modeq.comm, this (le_of_not_le hmn)]
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
   rw [← mul_one (x ^ m), pow_add, mul_left_cancel_iff, pow_eq_one_iff_modEq]
   exact ⟨fun h => Nat.ModEq.add_left _ h, fun h => Nat.ModEq.add_left_cancel' _ h⟩

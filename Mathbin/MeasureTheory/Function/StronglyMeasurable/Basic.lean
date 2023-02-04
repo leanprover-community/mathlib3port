@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -473,12 +473,12 @@ protected theorem smul {𝕜} [TopologicalSpace 𝕜] [SMul 𝕜 β] [HasContinu
 #align measure_theory.strongly_measurable.smul MeasureTheory.StronglyMeasurable.smul
 #align measure_theory.strongly_measurable.vadd MeasureTheory.StronglyMeasurable.vadd
 
-protected theorem const_smul {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β] (hf : StronglyMeasurable f)
+protected theorem const_smul {𝕜} [SMul 𝕜 β] [HasContinuousConstSMul 𝕜 β] (hf : StronglyMeasurable f)
     (c : 𝕜) : StronglyMeasurable (c • f) :=
   ⟨fun n => c • hf.approx n, fun x => (hf.tendsto_approx x).const_smul c⟩
 #align measure_theory.strongly_measurable.const_smul MeasureTheory.StronglyMeasurable.const_smul
 
-protected theorem const_smul' {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
+protected theorem const_smul' {𝕜} [SMul 𝕜 β] [HasContinuousConstSMul 𝕜 β]
     (hf : StronglyMeasurable f) (c : 𝕜) : StronglyMeasurable fun x => c • f x :=
   hf.const_smul c
 #align measure_theory.strongly_measurable.const_smul' MeasureTheory.StronglyMeasurable.const_smul'
@@ -494,14 +494,14 @@ end Arithmetic
 
 section MulAction
 
-variable [TopologicalSpace β] {G : Type _} [Group G] [MulAction G β] [HasContinuousConstSmul G β]
+variable [TopologicalSpace β] {G : Type _} [Group G] [MulAction G β] [HasContinuousConstSMul G β]
 
 theorem stronglyMeasurable_const_smul_iff {m : MeasurableSpace α} (c : G) :
     (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 #align strongly_measurable_const_smul_iff stronglyMeasurable_const_smul_iff
 
-variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ β] [HasContinuousConstSmul G₀ β]
+variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ β] [HasContinuousConstSMul G₀ β]
 
 theorem stronglyMeasurable_const_smul_iff₀ {m : MeasurableSpace α} {c : G₀} (hc : c ≠ 0) :
     (StronglyMeasurable fun x => c • f x) ↔ StronglyMeasurable f :=
@@ -1374,12 +1374,12 @@ protected theorem smul {𝕜} [TopologicalSpace 𝕜] [SMul 𝕜 β] [HasContinu
 #align measure_theory.ae_strongly_measurable.smul MeasureTheory.AeStronglyMeasurable.smul
 #align measure_theory.ae_strongly_measurable.vadd MeasureTheory.AeStronglyMeasurable.vadd
 
-protected theorem constSmul {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
+protected theorem constSmul {𝕜} [SMul 𝕜 β] [HasContinuousConstSMul 𝕜 β]
     (hf : AeStronglyMeasurable f μ) (c : 𝕜) : AeStronglyMeasurable (c • f) μ :=
   ⟨c • hf.mk f, hf.stronglyMeasurable_mk.const_smul c, hf.ae_eq_mk.const_smul c⟩
 #align measure_theory.ae_strongly_measurable.const_smul MeasureTheory.AeStronglyMeasurable.constSmul
 
-protected theorem constSmul' {𝕜} [SMul 𝕜 β] [HasContinuousConstSmul 𝕜 β]
+protected theorem constSmul' {𝕜} [SMul 𝕜 β] [HasContinuousConstSMul 𝕜 β]
     (hf : AeStronglyMeasurable f μ) (c : 𝕜) : AeStronglyMeasurable (fun x => c • f x) μ :=
   hf.const_smul c
 #align measure_theory.ae_strongly_measurable.const_smul' MeasureTheory.AeStronglyMeasurable.constSmul'
@@ -1769,14 +1769,14 @@ end NormedSpace
 
 section MulAction
 
-variable {G : Type _} [Group G] [MulAction G β] [HasContinuousConstSmul G β]
+variable {G : Type _} [Group G] [MulAction G β] [HasContinuousConstSMul G β]
 
 theorem aeStronglyMeasurable_const_smul_iff (c : G) :
     AeStronglyMeasurable (fun x => c • f x) μ ↔ AeStronglyMeasurable f μ :=
   ⟨fun h => by simpa only [inv_smul_smul] using h.const_smul' c⁻¹, fun h => h.const_smul c⟩
 #align ae_strongly_measurable_const_smul_iff aeStronglyMeasurable_const_smul_iff
 
-variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ β] [HasContinuousConstSmul G₀ β]
+variable {G₀ : Type _} [GroupWithZero G₀] [MulAction G₀ β] [HasContinuousConstSMul G₀ β]
 
 theorem aeStronglyMeasurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) :
     AeStronglyMeasurable (fun x => c • f x) μ ↔ AeStronglyMeasurable f μ :=

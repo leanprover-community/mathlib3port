@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.measure_preserving
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,6 +140,7 @@ protected theorem iterate {f : α → α} (hf : MeasurePreserving f μa μa) :
 
 variable {μ : Measure α} {f : α → α} {s : Set α}
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hlt], [":", expr «expr < »(i, j)], ["generalizing", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- If `μ univ < n * μ s` and `f` is a map preserving measure `μ`,
 then for some `x ∈ s` and `0 < m < n`, `f^[m] x ∈ s`. -/
 theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f μ μ)
@@ -152,12 +153,12 @@ theorem exists_mem_image_mem_of_volume_lt_mul_volume (hf : MeasurePreserving f �
     simpa only [B, nsmul_eq_mul, Finset.sum_const, Finset.card_range]
   rcases exists_nonempty_inter_of_measure_univ_lt_sum_measure μ (fun m hm => A m) this with
     ⟨i, hi, j, hj, hij, x, hxi, hxj⟩
-  -- without `tactic.skip` Lean closes the extra goal but it takes a long time; not sure why
-  wlog (discharger := tactic.skip) hlt : i < j := hij.lt_or_lt using i j, j i
-  · simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
-    refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩
-    rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
-  · exact fun hi hj hij hxi hxj => this hj hi hij.symm hxj hxi
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hlt], [\":\", expr «expr < »(i, j)], [\"generalizing\", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · exact this j hj i hi hij.symm hxj hxi (hij.lt_or_lt.resolve_left hlt)
+  simp only [Set.mem_preimage, Finset.mem_range] at hi hj hxi hxj
+  refine' ⟨(f^[i]) x, hxi, j - i, ⟨tsub_pos_of_lt hlt, lt_of_le_of_lt (j.sub_le i) hj⟩, _⟩
+  rwa [← iterate_add_apply, tsub_add_cancel_of_le hlt.le]
 #align measure_theory.measure_preserving.exists_mem_image_mem_of_volume_lt_mul_volume MeasureTheory.MeasurePreserving.exists_mem_image_mem_of_volume_lt_mul_volume
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m «expr ≠ » 0) -/

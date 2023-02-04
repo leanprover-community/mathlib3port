@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.with_seminorms
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -426,7 +426,7 @@ theorem SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ (p : SeminormFamily 𝕜
 #align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ
 
 theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module 𝕝 E]
-    [HasContinuousConstSmul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
+    [HasContinuousConstSMul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
     Continuous (p i) := by
   refine' Seminorm.continuous one_pos _
   rw [p.with_seminorms_iff_nhds_eq_infi.mp hp, ball_zero_eq_preimage_ball]
@@ -601,7 +601,7 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [Topolo
 
 theorem continuous_iff_continuous_comp {q : SeminormFamily 𝕜₂ F ι'} [TopologicalSpace E]
     [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F]
-    [HasContinuousConstSmul 𝕜₂ F] (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) :
+    [HasContinuousConstSMul 𝕜₂ F] (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) :
     Continuous f ↔ ∀ i, Continuous ((q i).comp f) :=
   ⟨fun h i => Continuous.comp (hq.continuous_seminorm i) h, continuous_of_continuous_comp hq f⟩
 #align seminorm.continuous_iff_continuous_comp Seminorm.continuous_iff_continuous_comp

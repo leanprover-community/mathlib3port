@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.affine
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ end Ring
 
 section CommRing
 
-variable [CommRing R] [Module R F] [HasContinuousConstSmul R F]
+variable [CommRing R] [Module R F] [HasContinuousConstSMul R F]
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t :=
@@ -80,7 +80,7 @@ end CommRing
 
 section Field
 
-variable [Field R] [Module R F] [HasContinuousConstSmul R F]
+variable [Field R] [Module R F] [HasContinuousConstSMul R F]
 
 theorem homothety_isOpenMap (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap <| homothety x t := by
   apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;> intro e <;>

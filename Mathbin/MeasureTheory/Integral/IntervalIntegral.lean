@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -490,9 +490,8 @@ theorem compMulRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
 theorem compAddRight (hf : IntervalIntegrable f volume a b) (c : ℝ) :
     IntervalIntegrable (fun x => f (x + c)) volume (a - c) (b - c) :=
   by
-  wlog (discharger := tactic.skip) h := le_total a b using a b, b a
-  swap
-  · exact fun h => IntervalIntegrable.symm (this h.symm)
+  wlog h : a ≤ b
+  · exact IntervalIntegrable.symm (this hf.symm _ (le_of_not_le h))
   rw [intervalIntegrable_iff'] at hf⊢
   have A : MeasurableEmbedding fun x => x + c :=
     (Homeomorph.addRight c).ClosedEmbedding.MeasurableEmbedding
@@ -1142,15 +1141,16 @@ theorem integral_interval_sub_interval_comm' (hab : IntervalIntegrable f μ a b)
     sub_neg_eq_add, sub_eq_neg_add]
 #align interval_integral.integral_interval_sub_interval_comm' intervalIntegral.integral_interval_sub_interval_comm'
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hab], [":", expr «expr ≤ »(a, b)], ["generalizing", ident a, ident b], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem integral_Iic_sub_Iic (ha : IntegrableOn f (Iic a) μ) (hb : IntegrableOn f (Iic b) μ) :
     ((∫ x in Iic b, f x ∂μ) - ∫ x in Iic a, f x ∂μ) = ∫ x in a..b, f x ∂μ :=
   by
-  wlog (discharger := tactic.skip) hab : a ≤ b using a b
-  · rw [sub_eq_iff_eq_add', integral_of_le hab, ← integral_union (Iic_disjoint_Ioc le_rfl),
-      Iic_union_Ioc_eq_Iic hab]
-    exacts[measurableSet_Ioc, ha, hb.mono_set fun _ => And.right]
-  · intro ha hb
-    rw [integral_symm, ← this hb ha, neg_sub]
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hab], [\":\", expr «expr ≤ »(a, b)], [\"generalizing\", ident a, ident b], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · rw [integral_symm, ← this hb ha (le_of_not_le hab), neg_sub]
+  rw [sub_eq_iff_eq_add', integral_of_le hab, ← integral_union (Iic_disjoint_Ioc le_rfl),
+    Iic_union_Ioc_eq_Iic hab]
+  exacts[measurableSet_Ioc, ha, hb.mono_set fun _ => And.right]
 #align interval_integral.integral_Iic_sub_Iic intervalIntegral.integral_Iic_sub_Iic
 
 /-- If `μ` is a finite measure then `∫ x in a..b, c ∂μ = (μ (Iic b) - μ (Iic a)) • c`. -/

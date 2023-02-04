@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.module.character_space
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ namespace WeakDual
 /-- The character space of a topological algebra is the subset of elements of the weak dual that
 are also algebra homomorphisms. -/
 def characterSpace (𝕜 : Type _) (A : Type _) [CommSemiring 𝕜] [TopologicalSpace 𝕜]
-    [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜] [NonUnitalNonAssocSemiring A]
+    [HasContinuousAdd 𝕜] [HasContinuousConstSMul 𝕜 𝕜] [NonUnitalNonAssocSemiring A]
     [TopologicalSpace A] [Module 𝕜 A] :=
   { φ : WeakDual 𝕜 A | φ ≠ 0 ∧ ∀ x y : A, φ (x * y) = φ x * φ y }
 #align weak_dual.character_space WeakDual.characterSpace
@@ -53,7 +53,7 @@ namespace CharacterSpace
 
 section NonUnitalNonAssocSemiring
 
-variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
+variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSMul 𝕜 𝕜]
   [NonUnitalNonAssocSemiring A] [TopologicalSpace A] [Module 𝕜 A]
 
 @[simp, norm_cast, protected]
@@ -142,7 +142,7 @@ end NonUnitalNonAssocSemiring
 section Unital
 
 variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
-  [HasContinuousConstSmul 𝕜 𝕜] [TopologicalSpace A] [Semiring A] [Algebra 𝕜 A]
+  [HasContinuousConstSMul 𝕜 𝕜] [TopologicalSpace A] [Semiring A] [Algebra 𝕜 A]
 
 /-- In a unital algebra, elements of the character space are algebra homomorphisms. -/
 instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
@@ -194,7 +194,7 @@ end Unital
 section Ring
 
 variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
-  [HasContinuousConstSmul 𝕜 𝕜] [TopologicalSpace A] [Ring A] [Algebra 𝕜 A]
+  [HasContinuousConstSMul 𝕜 𝕜] [TopologicalSpace A] [Ring A] [Algebra 𝕜 A]
 
 theorem apply_mem_spectrum [Nontrivial 𝕜] (φ : characterSpace 𝕜 A) (a : A) : φ a ∈ spectrum 𝕜 a :=
   AlgHom.apply_mem_spectrum φ a
@@ -214,7 +214,7 @@ end CharacterSpace
 
 section Kernel
 
-variable [Field 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSmul 𝕜 𝕜]
+variable [Field 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [HasContinuousConstSMul 𝕜 𝕜]
 
 variable [Ring A] [TopologicalSpace A] [Algebra 𝕜 A]
 

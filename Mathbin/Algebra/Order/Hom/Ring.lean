@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.hom.ring
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -508,9 +508,9 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
     Subsingleton (α →+*o β) :=
   ⟨fun f g => by
     ext x
-    by_contra' h
-    wlog h : f x < g x using f g, g f
-    · exact Ne.lt_or_lt h
+    by_contra' h' : f x ≠ g x
+    wlog h : f x < g x
+    · exact this g f x (Ne.symm h') (h'.lt_or_lt.resolve_left h)
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h
     rw [← map_ratCast f] at hf
     rw [← map_ratCast g] at hg

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.shrinking_lemma
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,8 @@ and `i` belongs to the carriers of both partial refinements, then `v₁ i = v₂
 theorem apply_eq_of_chain {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) {v₁ v₂}
     (h₁ : v₁ ∈ c) (h₂ : v₂ ∈ c) {i} (hi₁ : i ∈ v₁.carrier) (hi₂ : i ∈ v₂.carrier) : v₁ i = v₂ i :=
   by
-  wlog hle : v₁ ≤ v₂ := hc.total h₁ h₂ using v₁ v₂, v₂ v₁
+  wlog hle : v₁ ≤ v₂
+  · cases hc.total h₁ h₂ <;> [skip, symm] <;> apply_assumption <;> assumption'
   exact hle.2 _ hi₁
 #align shrinking_lemma.partial_refinement.apply_eq_of_chain ShrinkingLemma.PartialRefinement.apply_eq_of_chain
 

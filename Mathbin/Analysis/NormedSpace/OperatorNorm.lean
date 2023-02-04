@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -655,8 +655,8 @@ theorem op_nnnorm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.Pr
 #align continuous_linear_map.op_nnnorm_prod ContinuousLinearMap.op_nnnorm_prod
 
 /-- `continuous_linear_map.prod` as a `linear_isometry_equiv`. -/
-def prodₗᵢ (R : Type _) [Semiring R] [Module R Fₗ] [Module R Gₗ] [HasContinuousConstSmul R Fₗ]
-    [HasContinuousConstSmul R Gₗ] [SMulCommClass 𝕜 R Fₗ] [SMulCommClass 𝕜 R Gₗ] :
+def prodₗᵢ (R : Type _) [Semiring R] [Module R Fₗ] [Module R Gₗ] [HasContinuousConstSMul R Fₗ]
+    [HasContinuousConstSMul R Gₗ] [SMulCommClass 𝕜 R Fₗ] [SMulCommClass 𝕜 R Gₗ] :
     (E →L[𝕜] Fₗ) × (E →L[𝕜] Gₗ) ≃ₗᵢ[R] E →L[𝕜] Fₗ × Gₗ :=
   ⟨prodₗ R, fun ⟨f, g⟩ => op_norm_prod f g⟩
 #align continuous_linear_map.prodₗᵢ ContinuousLinearMap.prodₗᵢ
@@ -1193,7 +1193,7 @@ theorem norm_restrictScalars (f : E →L[𝕜] Fₗ) : ‖f.restrictScalars 𝕜
     (op_norm_le_bound _ (norm_nonneg _) fun x => f.le_op_norm x)
 #align continuous_linear_map.norm_restrict_scalars ContinuousLinearMap.norm_restrictScalars
 
-variable (𝕜 E Fₗ 𝕜') (𝕜'' : Type _) [Ring 𝕜''] [Module 𝕜'' Fₗ] [HasContinuousConstSmul 𝕜'' Fₗ]
+variable (𝕜 E Fₗ 𝕜') (𝕜'' : Type _) [Ring 𝕜''] [Module 𝕜'' Fₗ] [HasContinuousConstSMul 𝕜'' Fₗ]
   [SMulCommClass 𝕜 𝕜'' Fₗ] [SMulCommClass 𝕜' 𝕜'' Fₗ]
 
 /-- `continuous_linear_map.restrict_scalars` as a `linear_isometry`. -/

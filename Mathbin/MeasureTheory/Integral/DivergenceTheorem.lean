@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.divergence_theorem
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -529,6 +529,8 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
     
 #align measure_theory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le MeasureTheory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₁], [":", expr «expr ≤ »(a₁, b₁)], ["generalizing", ident a₁, ident b₁], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₂], [":", expr «expr ≤ »(a₂, b₂)], ["generalizing", ident a₂, ident b₂], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -556,36 +558,37 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -
         ∫ y in a₂..b₂, f (a₁, y) :=
   by
-  wlog (discharger := tactic.skip) h₁ : a₁ ≤ b₁ := le_total a₁ b₁ using a₁ b₁, b₁ a₁
-  wlog (discharger := tactic.skip) h₂ : a₂ ≤ b₂ := le_total a₂ b₂ using a₂ b₂, b₂ a₂
-  · simp only [uIcc_of_le h₁, uIcc_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at
-      Hcf Hcg Hdf Hdg Hi
-    calc
-      (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
-          ∫ x in Icc a₁ b₁, ∫ y in Icc a₂ b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1) :=
-        by
-        simp only [intervalIntegral.integral_of_le, h₁, h₂, set_integral_congr_set_ae Ioc_ae_eq_Icc]
-      _ = ∫ x in Icc a₁ b₁ ×ˢ Icc a₂ b₂, f' x (1, 0) + g' x (0, 1) := (set_integral_prod _ Hi).symm
-      _ =
-          (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -
-            ∫ y in a₂..b₂, f (a₁, y) :=
-        by
-        rw [Icc_prod_Icc] at *
-        apply
-            integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le f g f' g'
-              (a₁, a₂) (b₁, b₂) ⟨h₁, h₂⟩ s <;>
-          assumption
-      
-  · rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
-    intro Hcf Hcg Hdf Hdg Hi
-    simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
-    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
-    abel
-  · rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
-    intro Hcf Hcg Hdf Hdg Hi
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₁], [\":\", expr «expr ≤ »(a₁, b₁)], [\"generalizing\", ident a₁, ident b₁], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · specialize this b₁ a₁
+    rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
     simp only [intervalIntegral.integral_symm b₁ a₁]
-    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi)).trans _
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₁))).trans _
     abel
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₂], [\":\", expr «expr ≤ »(a₂, b₂)], [\"generalizing\", ident a₂, ident b₂], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · specialize this b₂ a₂
+    rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
+    simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]
+    refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₂))).trans _
+    abel
+  simp only [uIcc_of_le h₁, uIcc_of_le h₂, min_eq_left, max_eq_right, h₁, h₂] at Hcf Hcg Hdf Hdg Hi
+  calc
+    (∫ x in a₁..b₁, ∫ y in a₂..b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1)) =
+        ∫ x in Icc a₁ b₁, ∫ y in Icc a₂ b₂, f' (x, y) (1, 0) + g' (x, y) (0, 1) :=
+      by
+      simp only [intervalIntegral.integral_of_le, h₁, h₂, set_integral_congr_set_ae Ioc_ae_eq_Icc]
+    _ = ∫ x in Icc a₁ b₁ ×ˢ Icc a₂ b₂, f' x (1, 0) + g' x (0, 1) := (set_integral_prod _ Hi).symm
+    _ =
+        (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -
+          ∫ y in a₂..b₂, f (a₁, y) :=
+      by
+      rw [Icc_prod_Icc] at *
+      apply
+          integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le f g f' g'
+            (a₁, a₂) (b₁, b₂) ⟨h₁, h₂⟩ s <;>
+        assumption
+    
 #align measure_theory.integral2_divergence_prod_of_has_fderiv_within_at_off_countable MeasureTheory.integral2_divergence_prod_of_has_fderiv_within_at_off_countable
 
 end MeasureTheory

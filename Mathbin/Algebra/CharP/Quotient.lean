@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_p.quotient
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,4 +46,16 @@ theorem quotient' {R : Type _} [CommRing R] (p : ℕ) [CharP R p] (I : Ideal R)
 #align char_p.quotient' CharP.quotient'
 
 end CharP
+
+theorem Ideal.Quotient.index_eq_zero {R : Type _} [CommRing R] (I : Ideal R) :
+    (I.toAddSubgroup.index : R ⧸ I) = 0 :=
+  by
+  rw [AddSubgroup.index, Nat.card_eq]
+  split_ifs with hq; swap; simp
+  by_contra h
+  -- TODO: can we avoid rewriting the `I.to_add_subgroup` here?
+  letI : Fintype (R ⧸ I) := @Fintype.ofFinite _ hq
+  have h : (Fintype.card (R ⧸ I) : R ⧸ I) ≠ 0 := h
+  simpa using h
+#align ideal.quotient.index_eq_zero Ideal.Quotient.index_eq_zero
 

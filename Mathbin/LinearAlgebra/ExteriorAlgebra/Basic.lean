@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,9 +283,11 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
     map_eq_zero_of_eq' := fun f x y hfxy hxy =>
       by
       rw [MultilinearMap.compLinearMap_apply, MultilinearMap.mkPiAlgebraFin_apply]
-      wlog h : x < y := lt_or_gt_of_ne hxy using x y
+      clear F
+      wlog h : x < y
+      · exact this n f y x hfxy.symm hxy.symm (hxy.lt_or_lt.resolve_left h)
       clear hxy
-      induction' n with n hn generalizing x y
+      induction' n with n hn
       · exact x.elim0
       · rw [List.ofFn_succ, List.prod_cons]
         by_cases hx : x = 0
@@ -295,7 +297,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
         · convert mul_zero _
           refine'
             hn (fun i => f <| Fin.succ i) (x.pred hx)
-              (y.pred (ne_of_lt <| lt_of_le_of_lt x.zero_le h).symm) (fin.pred_lt_pred_iff.mpr h) _
+              (y.pred (ne_of_lt <| lt_of_le_of_lt x.zero_le h).symm) _ (fin.pred_lt_pred_iff.mpr h)
           simp only [Fin.succ_pred]
           exact hfxy
     toFun := F }

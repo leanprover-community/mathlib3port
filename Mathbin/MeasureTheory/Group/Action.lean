@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpac
         "@["
         [(Term.attrInstance
           (Term.attrKind [])
-          (to_additive "to_additive" [] (to_additiveRest [] [] [] [])))]
+          (to_additive "to_additive" [] (toAdditiveRest [] [] [])))]
         "]")]
       []
       []
@@ -641,7 +641,7 @@ theorem measure_smul_null {s} (h : μ s = 0) (c : G) : μ (c • s) = 0 := by rw
 
 section IsMinimal
 
-variable (G) [TopologicalSpace α] [HasContinuousConstSmul G α] [MulAction.IsMinimal G α]
+variable (G) [TopologicalSpace α] [HasContinuousConstSMul G α] [MulAction.IsMinimal G α]
   {K U : Set α}
 
 /-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is

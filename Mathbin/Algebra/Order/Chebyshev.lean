@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.chebyshev
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,4 +153,17 @@ theorem Antivary.card_mul_sum_le_sum_mul_sum (hfg : Antivary f g) :
 #align antivary.card_mul_sum_le_sum_mul_sum Antivary.card_mul_sum_le_sum_mul_sum
 
 end Mul
+
+variable [LinearOrderedField α] {s : Finset ι} {f : ι → α}
+
+theorem sum_div_card_sq_le_sum_sq_div_card :
+    ((∑ i in s, f i) / s.card) ^ 2 ≤ (∑ i in s, f i ^ 2) / s.card :=
+  by
+  obtain rfl | hs := s.eq_empty_or_nonempty
+  · simp
+  rw [← card_pos, ← @Nat.cast_pos α] at hs
+  rw [div_pow, div_le_div_iff (sq_pos_of_ne_zero _ hs.ne') hs, sq (s.card : α), mul_left_comm, ←
+    mul_assoc]
+  exact mul_le_mul_of_nonneg_right sq_sum_le_card_mul_sum_sq hs.le
+#align sum_div_card_sq_le_sum_sq_div_card sum_div_card_sq_le_sum_sq_div_card
 

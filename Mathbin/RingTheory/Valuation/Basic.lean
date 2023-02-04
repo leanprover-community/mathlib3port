@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,17 +316,16 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
   suffices : ¬v (x + y) < max (v x) (v y)
   exact or_iff_not_imp_right.1 (le_iff_eq_or_lt.1 (v.map_add x y)) this
   intro h'
-  wlog vyx : v y < v x using x y
-  · apply lt_or_gt_of_ne h.symm
-  · rw [max_eq_left_of_lt vyx] at h'
-    apply lt_irrefl (v x)
-    calc
-      v x = v (x + y - y) := by simp
-      _ ≤ max (v <| x + y) (v y) := map_sub _ _ _
-      _ < v x := max_lt h' vyx
-      
-  · apply this h.symm
-    rwa [add_comm, max_comm] at h'
+  wlog vyx : v y < v x
+  · refine' this v h.symm _ (h.lt_or_lt.resolve_right vyx)
+    rwa [add_comm, max_comm]
+  rw [max_eq_left_of_lt vyx] at h'
+  apply lt_irrefl (v x)
+  calc
+    v x = v (x + y - y) := by simp
+    _ ≤ max (v <| x + y) (v y) := map_sub _ _ _
+    _ < v x := max_lt h' vyx
+    
 #align valuation.map_add_of_distinct_val Valuation.map_add_of_distinct_val
 
 theorem map_add_eq_of_lt_right (h : v x < v y) : v (x + y) = v y :=

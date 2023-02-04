@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_norm
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,12 +206,16 @@ private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicVal
           apply min_le_padic_val_rat_add <;> assumption
 #align padic_norm.nonarchimedean_aux padic_norm.nonarchimedean_aux
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [":", expr «expr ≤ »(padic_val_rat p q, padic_val_rat p r)], ["generalizing", ident q, ident r], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- The `p`-adic norm is nonarchimedean: the norm of `p + q` is at most the max of the norm of `p`
 and the norm of `q`. -/
 protected theorem nonarchimedean {q r : ℚ} :
     padicNorm p (q + r) ≤ max (padicNorm p q) (padicNorm p r) :=
   by
-  wlog hle := le_total (padicValRat p q) (padicValRat p r) using q r
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [\":\", expr «expr ≤ »(padic_val_rat p q, padic_val_rat p r)], [\"generalizing\", ident q, ident r], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · rw [add_comm, max_comm]
+    exact this (le_of_not_le hle)
   exact nonarchimedean_aux hle
 #align padic_norm.nonarchimedean padicNorm.nonarchimedean
 
@@ -236,8 +240,9 @@ of the norms of `q` and `r`. -/
 theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
     padicNorm p (q + r) = max (padicNorm p q) (padicNorm p r) :=
   by
-  wlog hle := le_total (padicNorm p r) (padicNorm p q) using q r
-  have hlt : padicNorm p r < padicNorm p q := lt_of_le_of_ne hle hne.symm
+  wlog hlt : padicNorm p r < padicNorm p q
+  · rw [add_comm, max_comm]
+    exact this hne.symm (hne.lt_or_lt.resolve_right hlt)
   have : padicNorm p q ≤ max (padicNorm p (q + r)) (padicNorm p r) :=
     calc
       padicNorm p q = padicNorm p (q + r - r) := by congr <;> ring

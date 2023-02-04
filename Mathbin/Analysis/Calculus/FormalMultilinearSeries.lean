@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.formal_multilinear_series
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,17 +39,17 @@ variable {𝕜 𝕜' E F G : Type _}
 section
 
 variable [CommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
-  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
-  [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
-  [TopologicalSpace G] [TopologicalAddGroup G] [HasContinuousConstSmul 𝕜 G]
+  [HasContinuousConstSMul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+  [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
+  [TopologicalSpace G] [TopologicalAddGroup G] [HasContinuousConstSMul 𝕜 G]
 
 /-- A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
 multilinear maps from `E^n` to `F` for all `n`. -/
 @[nolint unused_arguments]
 def FormalMultilinearSeries (𝕜 : Type _) (E : Type _) (F : Type _) [Ring 𝕜] [AddCommGroup E]
-    [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+    [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
     [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F] [TopologicalAddGroup F]
-    [HasContinuousConstSmul 𝕜 F] :=
+    [HasContinuousConstSMul 𝕜 F] :=
   ∀ n : ℕ, E[×n]→L[𝕜] F deriving AddCommGroup
 #align formal_multilinear_series FormalMultilinearSeries
 
@@ -125,9 +125,9 @@ theorem compContinuousLinearMap_apply (p : FormalMultilinearSeries 𝕜 F G) (u 
 
 variable (𝕜) [CommRing 𝕜'] [SMul 𝕜 𝕜']
 
-variable [Module 𝕜' E] [HasContinuousConstSmul 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
+variable [Module 𝕜' E] [HasContinuousConstSMul 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
 
-variable [Module 𝕜' F] [HasContinuousConstSmul 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
+variable [Module 𝕜' F] [HasContinuousConstSMul 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 
 /-- Reinterpret a formal `𝕜'`-multilinear series as a formal `𝕜`-multilinear series. -/
 @[simp]
@@ -165,9 +165,9 @@ end FormalMultilinearSeries
 namespace ContinuousLinearMap
 
 variable [CommRing 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E] [TopologicalAddGroup E]
-  [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
-  [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
-  [TopologicalSpace G] [TopologicalAddGroup G] [HasContinuousConstSmul 𝕜 G]
+  [HasContinuousConstSMul 𝕜 E] [AddCommGroup F] [Module 𝕜 F] [TopologicalSpace F]
+  [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F] [AddCommGroup G] [Module 𝕜 G]
+  [TopologicalSpace G] [TopologicalAddGroup G] [HasContinuousConstSMul 𝕜 G]
 
 /-- Composing each term `pₙ` in a formal multilinear series with a continuous linear map `f` on the
 left gives a new formal multilinear series `f.comp_formal_multilinear_series p` whose general term
@@ -194,8 +194,8 @@ namespace FormalMultilinearSeries
 section Order
 
 variable [CommRing 𝕜] {n : ℕ} [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
-  [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
-  [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F]
+  [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E] [AddCommGroup F] [Module 𝕜 F]
+  [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
   {p : FormalMultilinearSeries 𝕜 E F}
 
 /-- The index of the first non-zero coefficient in `p` (or `0` if all coefficients are zero). This
@@ -325,9 +325,9 @@ section Const
 of degree zero is `c`. It is the power series expansion of the constant function equal to `c`
 everywhere. -/
 def constFormalMultilinearSeries (𝕜 : Type _) [NontriviallyNormedField 𝕜] (E : Type _)
-    [NormedAddCommGroup E] [NormedSpace 𝕜 E] [HasContinuousConstSmul 𝕜 E] [TopologicalAddGroup E]
+    [NormedAddCommGroup E] [NormedSpace 𝕜 E] [HasContinuousConstSMul 𝕜 E] [TopologicalAddGroup E]
     {F : Type _} [NormedAddCommGroup F] [TopologicalAddGroup F] [NormedSpace 𝕜 F]
-    [HasContinuousConstSmul 𝕜 F] (c : F) : FormalMultilinearSeries 𝕜 E F
+    [HasContinuousConstSMul 𝕜 F] (c : F) : FormalMultilinearSeries 𝕜 E F
   | 0 => ContinuousMultilinearMap.curry0 _ _ c
   | _ => 0
 #align const_formal_multilinear_series constFormalMultilinearSeries

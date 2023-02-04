@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -292,35 +292,35 @@ instance [AddCommGroup β] [TopologicalAddGroup β] : AddCommGroup C₀(α, β) 
   FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
     rfl
 
-instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSmul R β] :
+instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSMul R β] :
     SMul R C₀(α, β) :=
   ⟨fun r f => ⟨r • f, by simpa [smul_zero] using (zero_at_infty f).const_smul r⟩⟩
 
 @[simp]
-theorem coe_smul [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSmul R β]
+theorem coe_smul [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSMul R β]
     (r : R) (f : C₀(α, β)) : ⇑(r • f) = r • f :=
   rfl
 #align zero_at_infty_continuous_map.coe_smul ZeroAtInftyContinuousMap.coe_smul
 
-theorem smul_apply [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSmul R β]
+theorem smul_apply [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSMul R β]
     (r : R) (f : C₀(α, β)) (x : α) : (r • f) x = r • f x :=
   rfl
 #align zero_at_infty_continuous_map.smul_apply ZeroAtInftyContinuousMap.smul_apply
 
 instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [SMulWithZero Rᵐᵒᵖ β]
-    [HasContinuousConstSmul R β] [IsCentralScalar R β] : IsCentralScalar R C₀(α, β) :=
+    [HasContinuousConstSMul R β] [IsCentralScalar R β] : IsCentralScalar R C₀(α, β) :=
   ⟨fun r f => ext fun x => op_smul_eq_smul _ _⟩
 
-instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSmul R β] :
+instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSMul R β] :
     SMulWithZero R C₀(α, β) :=
   Function.Injective.smulWithZero ⟨_, coe_zero⟩ FunLike.coe_injective coe_smul
 
 instance [Zero β] {R : Type _} [MonoidWithZero R] [MulActionWithZero R β]
-    [HasContinuousConstSmul R β] : MulActionWithZero R C₀(α, β) :=
+    [HasContinuousConstSMul R β] : MulActionWithZero R C₀(α, β) :=
   Function.Injective.mulActionWithZero ⟨_, coe_zero⟩ FunLike.coe_injective coe_smul
 
 instance [AddCommMonoid β] [HasContinuousAdd β] {R : Type _} [Semiring R] [Module R β]
-    [HasContinuousConstSmul R β] : Module R C₀(α, β) :=
+    [HasContinuousConstSMul R β] : Module R C₀(α, β) :=
   Function.Injective.module R ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
 
 instance [NonUnitalNonAssocSemiring β] [TopologicalSemiring β] :
@@ -346,7 +346,7 @@ instance [NonUnitalCommRing β] [TopologicalRing β] : NonUnitalCommRing C₀(α
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β]
-    [Module R β] [HasContinuousConstSmul R β] [IsScalarTower R β β] :
+    [Module R β] [HasContinuousConstSMul R β] [IsScalarTower R β β] :
     IsScalarTower R C₀(α, β) C₀(α, β)
     where smul_assoc r f g := by
     ext
@@ -354,7 +354,7 @@ instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSe
     rw [← smul_eq_mul, ← smul_eq_mul, smul_assoc]
 
 instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β]
-    [Module R β] [HasContinuousConstSmul R β] [SMulCommClass R β β] :
+    [Module R β] [HasContinuousConstSMul R β] [SMulCommClass R β β] :
     SMulCommClass R C₀(α, β) C₀(α, β)
     where smul_comm r f g := by
     ext
@@ -579,7 +579,7 @@ end NormedStar
 section StarModule
 
 variable {𝕜 : Type _} [Zero 𝕜] [Star 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β]
-  [HasContinuousStar β] [SMulWithZero 𝕜 β] [HasContinuousConstSmul 𝕜 β] [StarModule 𝕜 β]
+  [HasContinuousStar β] [SMulWithZero 𝕜 β] [HasContinuousConstSMul 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarModule 𝕜 C₀(α, β) where star_smul k f := ext fun x => star_smul k (f x)
 
@@ -668,7 +668,7 @@ def compMulHom [MulZeroClass δ] [HasContinuousMul δ] (g : β →co γ) : C₀(
 
 /-- Composition as a linear map. -/
 def compLinearMap [AddCommMonoid δ] [HasContinuousAdd δ] {R : Type _} [Semiring R] [Module R δ]
-    [HasContinuousConstSmul R δ] (g : β →co γ) : C₀(γ, δ) →ₗ[R] C₀(β, δ)
+    [HasContinuousConstSMul R δ] (g : β →co γ) : C₀(γ, δ) →ₗ[R] C₀(β, δ)
     where
   toFun f := f.comp g
   map_add' f₁ f₂ := rfl
@@ -677,7 +677,7 @@ def compLinearMap [AddCommMonoid δ] [HasContinuousAdd δ] {R : Type _} [Semirin
 
 /-- Composition as a non-unital algebra homomorphism. -/
 def compNonUnitalAlgHom {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring δ]
-    [TopologicalSemiring δ] [Module R δ] [HasContinuousConstSmul R δ] (g : β →co γ) :
+    [TopologicalSemiring δ] [Module R δ] [HasContinuousConstSMul R δ] (g : β →co γ) :
     C₀(γ, δ) →ₙₐ[R] C₀(β, δ) where
   toFun f := f.comp g
   map_smul' r f := rfl

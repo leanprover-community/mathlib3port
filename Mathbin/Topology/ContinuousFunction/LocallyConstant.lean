@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.continuous_function.locally_constant
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] : LocallyConstant X
 /-- The inclusion of locally-constant functions into continuous functions as a linear map. -/
 @[simps]
 def toContinuousMapLinearMap (R : Type _) [Semiring R] [AddCommMonoid Y] [Module R Y]
-    [HasContinuousAdd Y] [HasContinuousConstSmul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y)
+    [HasContinuousAdd Y] [HasContinuousConstSMul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y)
     where
   toFun := coe
   map_add' x y := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.separable
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -385,7 +385,9 @@ theorem unique_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : 0 
     (hg₂ : g₂.Separable) (hgf₂ : expand F (p ^ n₂) g₂ = f) : n₁ = n₂ ∧ g₁ = g₂ :=
   by
   revert g₁ g₂
-  wlog hn : n₁ ≤ n₂ := le_total n₁ n₂ using n₁ n₂, n₂ n₁
+  wlog hn : n₁ ≤ n₂
+  · intro g₁ g₂ hg₁ Hg₁ hg₂ Hg₂
+    simpa only [eq_comm] using this hf hp n₂ n₁ (le_of_not_le hn) g₂ g₁ hg₂ Hg₂ hg₁ Hg₁
   have hf0 : f ≠ 0 := hf.ne_zero
   intros
   rw [le_iff_exists_add] at hn
@@ -400,8 +402,6 @@ theorem unique_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : 0 
     exact absurd (is_unit_C.2 hr) hf.1
   · rw [add_zero, pow_zero, expand_one]
     constructor <;> rfl
-  obtain ⟨hn, hg⟩ := this g₂ g₁ hg₂ hgf₂ hg₁ hgf₁
-  exact ⟨hn.symm, hg.symm⟩
 #align polynomial.unique_separable_of_irreducible Polynomial.unique_separable_of_irreducible
 
 end CharP

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.Congrm
 
 /-!
 # Connected subsets of topological spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define connected subsets of a topological spaces and various other properties and
 classes related to connectivity.
@@ -135,7 +138,10 @@ theorem isPreconnected_of_forall {s : Set α} (x : α)
   have xs : x ∈ s := by
     rcases H y ys with ⟨t, ts, xt, yt, ht⟩
     exact ts xt
-  wlog xu : x ∈ u := hs xs using u v y z, v u z y
+  wlog xu : x ∈ u
+  · rw [inter_comm u v]
+    rw [union_comm] at hs
+    exact this x H v u hv hu hs y ys yv z zs zu xs ((hs xs).resolve_right xu)
   rcases H y ys with ⟨t, ts, xt, yt, ht⟩
   have := ht u v hu hv (subset.trans ts hs) ⟨x, xt, xu⟩ ⟨y, yt, yv⟩
   exact this.imp fun z hz => ⟨ts hz.1, hz.2⟩

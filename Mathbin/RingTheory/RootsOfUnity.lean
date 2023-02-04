@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.roots_of_unity
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -400,9 +400,13 @@ theorem ne_one (hk : 1 < k) : ζ ≠ 1 :=
   h.pow_ne_one_of_pos_of_lt zero_lt_one hk ∘ (pow_one ζ).trans
 #align is_primitive_root.ne_one IsPrimitiveRoot.ne_one
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hij], [":", expr «expr ≤ »(i, j)], ["generalizing", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem pow_inj (h : IsPrimitiveRoot ζ k) ⦃i j : ℕ⦄ (hi : i < k) (hj : j < k) (H : ζ ^ i = ζ ^ j) :
-    i = j := by
-  wlog hij : i ≤ j
+    i = j :=
+  by
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hij], [\":\", expr «expr ≤ »(i, j)], [\"generalizing\", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  · exact (this hj hi H.symm (le_of_not_le hij)).symm
   apply le_antisymm hij
   rw [← tsub_eq_zero_iff_le]
   apply Nat.eq_zero_of_dvd_of_lt _ (lt_of_le_of_lt tsub_le_self hj)

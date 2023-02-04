@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.ray
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,12 +42,13 @@ theorem norm_add (h : SameRay ℝ x y) : ‖x + y‖ = ‖x‖ + ‖y‖ :=
 theorem norm_sub (h : SameRay ℝ x y) : ‖x - y‖ = |‖x‖ - ‖y‖| :=
   by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
-  wlog (discharger := tactic.skip) hab : b ≤ a := le_total b a using a b, b a
-  · rw [← sub_nonneg] at hab
-    rw [← sub_smul, norm_smul_of_nonneg hab, norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, ←
-      sub_mul, abs_of_nonneg (mul_nonneg hab (norm_nonneg _))]
-  · intro ha hb hab
-    rw [norm_sub_rev, this hb ha hab.symm, abs_sub_comm]
+  wlog hab : b ≤ a
+  · rw [sameRay_comm] at h
+    rw [norm_sub_rev, abs_sub_comm]
+    exact this u b a hb ha h (le_of_not_le hab)
+  rw [← sub_nonneg] at hab
+  rw [← sub_smul, norm_smul_of_nonneg hab, norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, ←
+    sub_mul, abs_of_nonneg (mul_nonneg hab (norm_nonneg _))]
 #align same_ray.norm_sub SameRay.norm_sub
 
 theorem norm_smul_eq (h : SameRay ℝ x y) : ‖x‖ • y = ‖y‖ • x :=

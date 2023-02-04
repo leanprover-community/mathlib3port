@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3142,7 +3142,7 @@ section ConstSmul
 
 variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
 
-variable [HasContinuousConstSmul R F]
+variable [HasContinuousConstSMul R F]
 
 -- The scalar multiplication with a constant is smooth.
 theorem contDiff_const_smul (c : R) : ContDiff 𝕜 n fun p : F => c • p :=

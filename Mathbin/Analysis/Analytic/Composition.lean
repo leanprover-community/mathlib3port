@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.analytic.composition
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,11 +90,11 @@ variable [TopologicalSpace E] [TopologicalSpace F] [TopologicalSpace G]
 
 namespace FormalMultilinearSeries
 
-variable [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+variable [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
 
-variable [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F]
+variable [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
 
-variable [TopologicalAddGroup G] [HasContinuousConstSmul 𝕜 G]
+variable [TopologicalAddGroup G] [HasContinuousConstSMul 𝕜 G]
 
 /-!
 In this paragraph, we define the composition of formal multilinear series, by summing over all
@@ -189,9 +189,9 @@ namespace ContinuousMultilinearMap
 
 open FormalMultilinearSeries
 
-variable [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+variable [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
 
-variable [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F]
+variable [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
 
 /-- Given a formal multilinear series `p`, a composition `c` of `n` and a continuous multilinear
 map `f` in `c.length` variables, one may form a continuous multilinear map in `n` variables by
@@ -220,11 +220,11 @@ end ContinuousMultilinearMap
 
 namespace FormalMultilinearSeries
 
-variable [TopologicalAddGroup E] [HasContinuousConstSmul 𝕜 E]
+variable [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
 
-variable [TopologicalAddGroup F] [HasContinuousConstSmul 𝕜 F]
+variable [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
 
-variable [TopologicalAddGroup G] [HasContinuousConstSmul 𝕜 G]
+variable [TopologicalAddGroup G] [HasContinuousConstSMul 𝕜 G]
 
 /-- Given two formal multilinear series `q` and `p` and a composition `c` of `n`, one may
 form a continuous multilinear map in `n` variables by applying the right coefficient of `p` to each

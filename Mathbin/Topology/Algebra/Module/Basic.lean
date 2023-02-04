@@ -5,7 +5,7 @@ Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo, Yury Kudryashov, Fréd
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.module.basic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -420,7 +420,7 @@ end ContinuousSemilinearEquivClass
 section PointwiseLimits
 
 variable {M₁ M₂ α R S : Type _} [TopologicalSpace M₂] [T2Space M₂] [Semiring R] [Semiring S]
-  [AddCommMonoid M₁] [AddCommMonoid M₂] [Module R M₁] [Module S M₂] [HasContinuousConstSmul S M₂]
+  [AddCommMonoid M₁] [AddCommMonoid M₂] [Module R M₁] [Module S M₂] [HasContinuousConstSMul S M₂]
 
 section
 
@@ -669,9 +669,9 @@ section SmulMonoid
 
 variable {S₂ T₂ : Type _} [Monoid S₂] [Monoid T₂]
 
-variable [DistribMulAction S₂ M₂] [SMulCommClass R₂ S₂ M₂] [HasContinuousConstSmul S₂ M₂]
+variable [DistribMulAction S₂ M₂] [SMulCommClass R₂ S₂ M₂] [HasContinuousConstSMul S₂ M₂]
 
-variable [DistribMulAction T₂ M₂] [SMulCommClass R₂ T₂ M₂] [HasContinuousConstSmul T₂ M₂]
+variable [DistribMulAction T₂ M₂] [SMulCommClass R₂ T₂ M₂] [HasContinuousConstSMul T₂ M₂]
 
 instance : MulAction S₂ (M₁ →SL[σ₁₂] M₂)
     where
@@ -1014,7 +1014,7 @@ instance apply_smul_comm_class' : SMulCommClass (M₁ →L[R₁] M₁) R₁ M₁
     where smul_comm := ContinuousLinearMap.map_smul
 #align continuous_linear_map.apply_smul_comm_class' ContinuousLinearMap.apply_smul_comm_class'
 
-instance : HasContinuousConstSmul (M₁ →L[R₁] M₁) M₁ :=
+instance : HasContinuousConstSMul (M₁ →L[R₁] M₁) M₁ :=
   ⟨ContinuousLinearMap.continuous⟩
 
 end ApplyAction
@@ -1600,8 +1600,8 @@ variable {R R₂ R₃ S S₃ : Type _} [Semiring R] [Semiring R₂] [Semiring R�
   [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R₂ M₂] {M₃ : Type _} [TopologicalSpace M₃]
   [AddCommMonoid M₃] [Module R₃ M₃] {N₂ : Type _} [TopologicalSpace N₂] [AddCommMonoid N₂]
   [Module R N₂] {N₃ : Type _} [TopologicalSpace N₃] [AddCommMonoid N₃] [Module R N₃]
-  [DistribMulAction S₃ M₃] [SMulCommClass R₃ S₃ M₃] [HasContinuousConstSmul S₃ M₃]
-  [DistribMulAction S N₃] [SMulCommClass R S N₃] [HasContinuousConstSmul S N₃] {σ₁₂ : R →+* R₂}
+  [DistribMulAction S₃ M₃] [SMulCommClass R₃ S₃ M₃] [HasContinuousConstSMul S₃ M₃]
+  [DistribMulAction S N₃] [SMulCommClass R S N₃] [HasContinuousConstSMul S N₃] {σ₁₂ : R →+* R₂}
   {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
 include σ₁₃
@@ -1614,9 +1614,9 @@ theorem smul_comp (c : S₃) (h : M₂ →SL[σ₂₃] M₃) (f : M →SL[σ₁�
 
 omit σ₁₃
 
-variable [DistribMulAction S₃ M₂] [HasContinuousConstSmul S₃ M₂] [SMulCommClass R₂ S₃ M₂]
+variable [DistribMulAction S₃ M₂] [HasContinuousConstSMul S₃ M₂] [SMulCommClass R₂ S₃ M₂]
 
-variable [DistribMulAction S N₂] [HasContinuousConstSmul S N₂] [SMulCommClass R S N₂]
+variable [DistribMulAction S N₂] [HasContinuousConstSMul S N₂] [SMulCommClass R S N₂]
 
 @[simp]
 theorem comp_smul [LinearMap.CompatibleSMul N₂ N₃ S R] (hₗ : N₂ →L[R] N₃) (c : S)
@@ -1629,8 +1629,8 @@ theorem comp_smul [LinearMap.CompatibleSMul N₂ N₃ S R] (hₗ : N₂ →L[R] 
 include σ₁₃
 
 @[simp]
-theorem comp_smulₛₗ [SMulCommClass R₂ R₂ M₂] [SMulCommClass R₃ R₃ M₃] [HasContinuousConstSmul R₂ M₂]
-    [HasContinuousConstSmul R₃ M₃] (h : M₂ →SL[σ₂₃] M₃) (c : R₂) (f : M →SL[σ₁₂] M₂) :
+theorem comp_smulₛₗ [SMulCommClass R₂ R₂ M₂] [SMulCommClass R₃ R₃ M₃] [HasContinuousConstSMul R₂ M₂]
+    [HasContinuousConstSMul R₃ M₃] (h : M₂ →SL[σ₂₃] M₃) (c : R₂) (f : M →SL[σ₁₂] M₂) :
     h.comp (c • f) = σ₂₃ c • h.comp f := by
   ext x
   simp only [coe_smul', coe_comp', Function.comp_apply, Pi.smul_apply,
@@ -1654,9 +1654,9 @@ variable {R R₂ R₃ S S₃ : Type _} [Semiring R] [Semiring R₂] [Semiring R�
   [TopologicalSpace M₂] [AddCommMonoid M₂] [Module R₂ M₂] {M₃ : Type _} [TopologicalSpace M₃]
   [AddCommMonoid M₃] [Module R₃ M₃] {N₂ : Type _} [TopologicalSpace N₂] [AddCommMonoid N₂]
   [Module R N₂] {N₃ : Type _} [TopologicalSpace N₃] [AddCommMonoid N₃] [Module R N₃] [Module S₃ M₃]
-  [SMulCommClass R₃ S₃ M₃] [HasContinuousConstSmul S₃ M₃] [Module S N₂]
-  [HasContinuousConstSmul S N₂] [SMulCommClass R S N₂] [Module S N₃] [SMulCommClass R S N₃]
-  [HasContinuousConstSmul S N₃] {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃}
+  [SMulCommClass R₃ S₃ M₃] [HasContinuousConstSMul S₃ M₃] [Module S N₂]
+  [HasContinuousConstSMul S N₂] [SMulCommClass R S N₂] [Module S N₃] [SMulCommClass R S N₃]
+  [HasContinuousConstSMul S N₃] {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃}
   [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] (c : S) (h : M₂ →SL[σ₂₃] M₃) (f g : M →SL[σ₁₂] M₂) (x y z : M)
 
 /-- `continuous_linear_map.prod` as an `equiv`. -/
@@ -1731,7 +1731,7 @@ section SmulRightₗ
 variable {R S T M M₂ : Type _} [Semiring R] [Semiring S] [Semiring T] [Module R S]
   [AddCommMonoid M₂] [Module R M₂] [Module S M₂] [IsScalarTower R S M₂] [TopologicalSpace S]
   [TopologicalSpace M₂] [HasContinuousSmul S M₂] [TopologicalSpace M] [AddCommMonoid M] [Module R M]
-  [HasContinuousAdd M₂] [Module T M₂] [HasContinuousConstSmul T M₂] [SMulCommClass R T M₂]
+  [HasContinuousAdd M₂] [Module T M₂] [HasContinuousConstSMul T M₂] [SMulCommClass R T M₂]
   [SMulCommClass S T M₂]
 
 /-- Given `c : E →L[𝕜] 𝕜`, `c.smul_rightₗ` is the linear map from `F` to `E →L[𝕜] F`
@@ -1759,9 +1759,9 @@ section CommRing
 
 variable {R : Type _} [CommRing R] {M : Type _} [TopologicalSpace M] [AddCommGroup M] {M₂ : Type _}
   [TopologicalSpace M₂] [AddCommGroup M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommGroup M₃]
-  [Module R M] [Module R M₂] [Module R M₃] [HasContinuousConstSmul R M₃]
+  [Module R M] [Module R M₂] [Module R M₃] [HasContinuousConstSMul R M₃]
 
-variable [TopologicalAddGroup M₂] [HasContinuousConstSmul R M₂]
+variable [TopologicalAddGroup M₂] [HasContinuousConstSMul R M₂]
 
 instance : Algebra R (M₂ →L[R] M₂) :=
   Algebra.ofModule smul_comp fun _ _ _ => comp_smul _ _ _
@@ -1816,7 +1816,7 @@ theorem restrictScalars_neg (f : M →L[A] M₂) : (-f).restrictScalars R = -f.r
 
 end
 
-variable {S : Type _} [Ring S] [Module S M₂] [HasContinuousConstSmul S M₂] [SMulCommClass A S M₂]
+variable {S : Type _} [Ring S] [Module S M₂] [HasContinuousConstSMul S M₂] [SMulCommClass A S M₂]
   [SMulCommClass R S M₂]
 
 @[simp]

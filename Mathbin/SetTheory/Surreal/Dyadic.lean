@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 
 ! This file was ported from Lean 3 source module set_theory.surreal.dyadic
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,6 +237,8 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
     m₁ • powHalf y₂ = m₂ • powHalf y₁ := by
   revert m₁ m₂
   wlog h : y₁ ≤ y₂
+  · intro m₁ m₂ aux
+    exact (this (le_of_not_le h) aux.symm).symm
   intro m₁ m₂ h₂
   obtain ⟨c, rfl⟩ := le_iff_exists_add.mp h
   rw [add_comm, pow_add, ← mul_assoc, mul_eq_mul_right_iff] at h₂

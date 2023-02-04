@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected_component
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -294,9 +294,8 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
   rcases mem_Union₂.1 hx₂ with ⟨b, hbt, hb⟩
   clear hx₂
   rw [mem_ord_connected_component, subset_inter_iff] at ha hb
-  wlog (discharger := tactic.skip) hab : a ≤ b := le_total a b using a b s t, b a t s
-  rotate_left
-  exact fun h₁ h₂ h₃ h₄ => this h₂ h₁ h₄ h₃
+  wlog hab : a ≤ b
+  · exact this b hbt a has ha hb (le_of_not_le hab)
   cases' ha with ha ha'
   cases' hb with hb hb'
   have hsub : [a, b] ⊆ (ord_separating_set s t).ordConnectedSectionᶜ :=

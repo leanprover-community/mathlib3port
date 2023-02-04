@@ -6,7 +6,7 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.GroupTheory.Subgroup.Pointwise
 
 /-!
 # Quotients of groups by normal subgroups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This files develops the basic theory of quotients of groups by normal subgroups. In particular it
 proves Noether's first and second isomorphism theorems.

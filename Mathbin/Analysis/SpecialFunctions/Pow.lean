@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2124,19 +2124,16 @@ theorem mul_rpow_eq_ite (x y : ℝ≥0∞) (z : ℝ) :
   by
   rcases eq_or_ne z 0 with (rfl | hz); · simp
   replace hz := hz.lt_or_lt
-  wlog (discharger := tactic.skip) hxy : x ≤ y := le_total x y using x y, y x
-  · rcases eq_or_ne x 0 with (rfl | hx0)
-    · induction y using WithTop.recTopCoe <;> cases' hz with hz hz <;> simp [*, hz.not_lt]
-    rcases eq_or_ne y 0 with (rfl | hy0)
-    · exact (hx0 (bot_unique hxy)).elim
-    induction x using WithTop.recTopCoe
-    · cases' hz with hz hz <;> simp [hz, top_unique hxy]
-    induction y using WithTop.recTopCoe
-    · cases' hz with hz hz <;> simp [*]
-    simp only [*, false_and_iff, and_false_iff, false_or_iff, if_false]
-    norm_cast  at *
-    rw [coe_rpow_of_ne_zero (mul_ne_zero hx0 hy0), Nnreal.mul_rpow]
-  · convert this using 2 <;> simp only [mul_comm, and_comm', or_comm']
+  wlog hxy : x ≤ y
+  · convert this y x z hz (le_of_not_le hxy) using 2 <;> simp only [mul_comm, and_comm', or_comm']
+  rcases eq_or_ne x 0 with (rfl | hx0)
+  · induction y using WithTop.recTopCoe <;> cases' hz with hz hz <;> simp [*, hz.not_lt]
+  rcases eq_or_ne y 0 with (rfl | hy0); · exact (hx0 (bot_unique hxy)).elim
+  induction x using WithTop.recTopCoe; · cases' hz with hz hz <;> simp [hz, top_unique hxy]
+  induction y using WithTop.recTopCoe; · cases' hz with hz hz <;> simp [*]
+  simp only [*, false_and_iff, and_false_iff, false_or_iff, if_false]
+  norm_cast  at *
+  rw [coe_rpow_of_ne_zero (mul_ne_zero hx0 hy0), Nnreal.mul_rpow]
 #align ennreal.mul_rpow_eq_ite Ennreal.mul_rpow_eq_ite
 
 theorem mul_rpow_of_ne_top {x y : ℝ≥0∞} (hx : x ≠ ⊤) (hy : y ≠ ⊤) (z : ℝ) :

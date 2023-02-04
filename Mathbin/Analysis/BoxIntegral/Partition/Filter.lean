@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.filter
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -366,17 +366,15 @@ theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (
       π.unionᵢ = I \ π₁.unionᵢ ∧
         (l.bDistortion → π.distortion ≤ c₁) ∧ (l.bDistortion → π.distortion ≤ c₂) :=
   by
-  wlog (discharger := tactic.skip) hc : c₁ ≤ c₂ := le_total c₁ c₂ using c₁ c₂ r₁ r₂ π₁ π₂,
-    c₂ c₁ r₂ r₁ π₂ π₁
-  · by_cases hD : (l.bDistortion : Prop)
-    · rcases h₁.4 hD with ⟨π, hπU, hπc⟩
-      exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩
-    ·
-      exact
-        ⟨π₁.to_prepartition.compl, π₁.to_prepartition.Union_compl, fun h => (hD h).elim, fun h =>
-          (hD h).elim⟩
-  · intro h₁ h₂ hU
-    simpa [hU, and_comm'] using this h₂ h₁ hU.symm
+  wlog hc : c₁ ≤ c₂
+  · simpa [hU, and_comm'] using this h₂ h₁ hU.symm (le_of_not_le hc)
+  by_cases hD : (l.bDistortion : Prop)
+  · rcases h₁.4 hD with ⟨π, hπU, hπc⟩
+    exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩
+  ·
+    exact
+      ⟨π₁.to_prepartition.compl, π₁.to_prepartition.Union_compl, fun h => (hD h).elim, fun h =>
+        (hD h).elim⟩
 #align box_integral.integration_params.mem_base_set.exists_common_compl BoxIntegral.IntegrationParams.MemBaseSet.exists_common_compl
 
 protected theorem MemBaseSet.unionComplToSubordinate (hπ₁ : l.MemBaseSet I c r₁ π₁)

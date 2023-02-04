@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -519,13 +519,13 @@ instance compactSpace [Fact (0 < p)] : CompactSpace <| AddCircle p :=
 
 /-- The action on `ℝ` by right multiplication of its the subgroup `zmultiples p` (the multiples of
 `p:ℝ`) is properly discontinuous. -/
-instance : ProperlyDiscontinuousVadd (zmultiples p).opposite ℝ :=
+instance : ProperlyDiscontinuousVAdd (zmultiples p).opposite ℝ :=
   (zmultiples p).properly_discontinuous_vadd_opposite_of_tendsto_cofinite
     (AddSubgroup.tendsto_zmultiples_subtype_cofinite p)
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is Hausdorff. -/
 instance : T2Space (AddCircle p) :=
-  t2Space_of_properlyDiscontinuousVadd_of_t2Space
+  t2Space_of_properlyDiscontinuousVAdd_of_t2Space
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is normal. -/
 instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=

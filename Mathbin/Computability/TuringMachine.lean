@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.turing_machine
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -327,8 +327,10 @@ theorem ListBlank.ext {Γ} [Inhabited Γ] {L₁ L₂ : ListBlank Γ} :
   ListBlank.induction_on L₁ fun l₁ =>
     ListBlank.induction_on L₂ fun l₂ H =>
       by
-      wlog h : l₁.length ≤ l₂.length using l₁ l₂
-      swap; · exact (this fun i => (H i).symm).symm
+      wlog h : l₁.length ≤ l₂.length
+      · cases le_total l₁.length l₂.length <;> [skip, symm] <;> apply_assumption <;> try assumption
+        intro
+        rw [H]
       refine' Quotient.sound' (Or.inl ⟨l₂.length - l₁.length, _⟩)
       refine' List.ext_nthLe _ fun i h h₂ => Eq.symm _
       · simp only [add_tsub_cancel_of_le h, List.length_append, List.length_replicate]

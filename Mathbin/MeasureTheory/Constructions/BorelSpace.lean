@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit 2705404e701abc6b3127da906f40bae062a169c9
+! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1500,6 +1500,7 @@ protected theorem AddCircle.measurable_mk' {a : ℝ} : Measurable (coe : ℝ →
   Continuous.measurable <| AddCircle.continuous_mk' a
 #align add_circle.measurable_mk' AddCircle.measurable_mk'
 
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [":", expr «expr < »(i, j)], ["generalizing", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- One can cut out `ℝ≥0∞` into the sets `{0}`, `Ico (t^n) (t^(n+1))` for `n : ℤ` and `{∞}`. This
 gives a way to compute the measure of a set in terms of sets on which a given function `f` does not
 fluctuate by more than `t`. -/
@@ -1545,18 +1546,16 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
       preimage_Union, inter_Union]
     · intro i j
       simp only [Function.onFun]
-      wlog (discharger := tactic.skip) h : i ≤ j := le_total i j using i j, j i
-      · intro hij
-        replace hij : i + 1 ≤ j := lt_of_le_of_ne h hij
-        apply disjoint_left.2 fun x hx h'x => lt_irrefl (f x) _
-        calc
-          f x < t ^ (i + 1) := hx.2.2
-          _ ≤ t ^ j := Ennreal.zpow_le_of_le (Ennreal.one_le_coe_iff.2 ht.le) hij
-          _ ≤ f x := h'x.2.1
-          
-      · intro hij
-        rw [disjoint_comm]
-        exact this hij.symm
+      intro hij
+      trace
+        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [\":\", expr «expr < »(i, j)], [\"generalizing\", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      · exact (this hij.symm (hij.lt_or_lt.resolve_left h)).symm
+      apply disjoint_left.2 fun x hx h'x => lt_irrefl (f x) _
+      calc
+        f x < t ^ (i + 1) := hx.2.2
+        _ ≤ t ^ j := Ennreal.zpow_le_of_le (Ennreal.one_le_coe_iff.2 ht.le) h
+        _ ≤ f x := h'x.2.1
+        
     · intro n
       exact hs.inter (hf measurableSet_Ico)
   rw [A, B, C, add_assoc]
