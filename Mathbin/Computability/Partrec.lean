@@ -743,7 +743,7 @@ theorem nat_strong_rec (f : α → ℕ → σ) {g : α → List σ → Option σ
   suffices Computable₂ fun a n => (List.range n).map (f a) from
     option_some_iff.1 <|
       (list_get?.comp (this.comp fst (succ.comp snd)) snd).to₂.of_eq fun a => by
-        simp [List.nth_range (Nat.lt_succ_self a.2)] <;> rfl
+        simp [List.get?_range (Nat.lt_succ_self a.2)] <;> rfl
   option_some_iff.1 <|
     (nat_elim snd (const (Option.some []))
           (to₂ <|

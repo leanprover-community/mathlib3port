@@ -2171,7 +2171,7 @@ protected theorem Inducing.isSeparable_preimage {f : β → α} [TopologicalSpac
   by
   have : second_countable_topology s :=
     haveI : separable_space s := hs.separable_space
-    UniformSpace.second_countable_of_separable _
+    UniformSpace.secondCountable_of_separable _
   let g : f ⁻¹' s → s := cod_restrict (f ∘ coe) s fun x => x.2
   have : Inducing g := (hf.comp inducing_subtype_val).codRestrict _
   haveI : second_countable_topology (f ⁻¹' s) := this.second_countable_topology

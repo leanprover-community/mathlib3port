@@ -141,11 +141,11 @@ theorem get?_range' : ∀ (s) {m n : ℕ}, m < n → get? (range' s n) m = some 
 #align list.nth_range' List.get?_range'
 -/
 
-#print List.nth_le_range' /-
+#print List.nthLe_range' /-
 @[simp]
-theorem nth_le_range' {n m} (i) (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
+theorem nthLe_range' {n m} (i) (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
   Option.some.inj <| by rw [← nth_le_nth _, nth_range' _ (by simpa using H)]
-#align list.nth_le_range' List.nth_le_range'
+#align list.nth_le_range' List.nthLe_range'
 -/
 
 #print List.range'_concat /-
@@ -244,10 +244,10 @@ theorem self_mem_range_succ (n : ℕ) : n ∈ range (n + 1) := by
 #align list.self_mem_range_succ List.self_mem_range_succ
 -/
 
-#print List.nth_range /-
-theorem nth_range {m n : ℕ} (h : m < n) : get? (range n) m = some m := by
+#print List.get?_range /-
+theorem get?_range {m n : ℕ} (h : m < n) : get? (range n) m = some m := by
   simp only [range_eq_range', nth_range' _ h, zero_add]
-#align list.nth_range List.nth_range
+#align list.nth_range List.get?_range
 -/
 
 #print List.range_succ /-

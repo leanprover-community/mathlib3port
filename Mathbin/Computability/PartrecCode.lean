@@ -365,7 +365,7 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]
-  simp [List.get?_map, List.nth_range, hm, m1, m2]
+  simp [List.get?_map, List.get?_range, hm, m1, m2]
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
@@ -467,7 +467,7 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]
-  simp [List.get?_map, List.nth_range, hm, m1, m2]
+  simp [List.get?_map, List.get?_range, hm, m1, m2]
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
@@ -575,7 +575,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
   have m1 : m.unpair.1 < n + 4 := lt_of_le_of_lt m.unpair_left_le hm
   have m2 : m.unpair.2 < n + 4 := lt_of_le_of_lt m.unpair_right_le hm
   simp [G₁]
-  simp [List.get?_map, List.nth_range, hm, m1, m2]
+  simp [List.get?_map, List.get?_range, hm, m1, m2]
   change of_nat code (n + 4) with of_nat_code (n + 4)
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
@@ -1014,7 +1014,7 @@ private theorem evaln_map (k c n) :
     ((((List.range k).get? n).map (evaln k c)).bind fun b => b) = evaln k c n :=
   by
   by_cases kn : n < k
-  · simp [List.nth_range kn]
+  · simp [List.get?_range kn]
   · rw [List.get?_len_le]
     · cases e : evaln k c n
       · rfl
@@ -1055,7 +1055,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a
               evaln k' c' n :=
         by
         intro k₁ c₁ n₁ hl
-        simp [lup, List.nth_range hl, evaln_map, (· >>= ·)]
+        simp [lup, List.get?_range hl, evaln_map, (· >>= ·)]
       cases' c with cf cg cf cg cf cg cf <;>
         simp [evaln, nk, (· >> ·), (· >>= ·), (· <$> ·), (· <*> ·), pure]
       · cases' encode_lt_pair cf cg with lf lg

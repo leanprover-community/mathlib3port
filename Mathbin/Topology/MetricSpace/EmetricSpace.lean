@@ -925,7 +925,7 @@ variable (α)
 to avoid a loop with `sigma_compact_space_of_locally_compact_second_countable`.  -/
 theorem second_countable_of_sigma_compact [SigmaCompactSpace α] : SecondCountableTopology α :=
   by
-  suffices separable_space α by exact UniformSpace.second_countable_of_separable α
+  suffices separable_space α by exact UniformSpace.secondCountable_of_separable α
   choose T hTsub hTc hsubT using fun n =>
     subset_countable_closure_of_compact (isCompact_compactCovering α n)
   refine' ⟨⟨⋃ n, T n, countable_Union hTc, fun x => _⟩⟩
@@ -939,7 +939,7 @@ theorem second_countable_of_almost_dense_set
     (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ (⋃ x ∈ t, closedBall x ε) = univ) :
     SecondCountableTopology α :=
   by
-  suffices separable_space α by exact UniformSpace.second_countable_of_separable α
+  suffices separable_space α by exact UniformSpace.secondCountable_of_separable α
   rcases subset_countable_closure_of_almost_dense_set (univ : Set α) fun ε ε0 => _ with
     ⟨t, -, htc, ht⟩
   · exact ⟨⟨t, htc, fun x => ht (mem_univ x)⟩⟩

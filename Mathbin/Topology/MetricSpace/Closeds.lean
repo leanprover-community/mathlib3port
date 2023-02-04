@@ -413,7 +413,7 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
       have : d ∈ v := ⟨‹c.finite›, this⟩
       -- we have proved that `d` is a good approximation of `t` as requested
       exact ⟨d, ‹d ∈ v›, Dtc⟩
-  UniformSpace.second_countable_of_separable (nonempty_compacts α)
+  UniformSpace.secondCountable_of_separable (nonempty_compacts α)
 #align emetric.nonempty_compacts.second_countable_topology Emetric.NonemptyCompacts.secondCountableTopology
 
 end

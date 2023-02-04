@@ -683,7 +683,7 @@ theorem stronglyMeasurable_iff_measurable_separable {m : MeasurableSpace α} [To
   have : second_countable_topology (closure (range f)) :=
     by
     suffices separable_space (closure (range f)) by
-      exact UniformSpace.second_countable_of_separable _
+      exact UniformSpace.secondCountable_of_separable _
     exact (is_separable.closure H').SeparableSpace
   have g_smeas : strongly_measurable g := Measurable.stronglyMeasurable g_meas
   rw [fg]

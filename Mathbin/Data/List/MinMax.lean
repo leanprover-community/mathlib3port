@@ -70,11 +70,11 @@ private theorem foldl_arg_aux_mem (l) : ∀ a m : α, m ∈ foldl (argAux r) (so
             exact option.mem_some_iff.mp hm ▸ H)
 #align list.foldl_arg_aux_mem list.foldl_arg_aux_mem
 
-#print List.arg_aux_self /-
+#print List.argAux_self /-
 @[simp]
-theorem arg_aux_self (hr₀ : Irreflexive r) (a : α) : argAux r (some a) a = a :=
+theorem argAux_self (hr₀ : Irreflexive r) (a : α) : argAux r (some a) a = a :=
   if_neg <| hr₀ _
-#align list.arg_aux_self List.arg_aux_self
+#align list.arg_aux_self List.argAux_self
 -/
 
 #print List.not_of_mem_foldl_argAux /-

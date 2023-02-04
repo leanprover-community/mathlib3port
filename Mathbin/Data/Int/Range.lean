@@ -55,33 +55,33 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
 #align int.mem_range_iff Int.mem_range_iff
 -/
 
-#print Int.decidableLeLt /-
-instance decidableLeLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
+#print Int.decidableLELT /-
+instance decidableLELT (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m ≤ r → r < n → P r) :=
   decidable_of_iff (∀ r ∈ range m n, P r) <| by simp only [mem_range_iff, and_imp]
-#align int.decidable_le_lt Int.decidableLeLt
+#align int.decidable_le_lt Int.decidableLELT
 -/
 
-#print Int.decidableLeLe /-
-instance decidableLeLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
+#print Int.decidableLELE /-
+instance decidableLELE (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m ≤ r → r ≤ n → P r) :=
   decidable_of_iff (∀ r ∈ range m (n + 1), P r) <| by
     simp only [mem_range_iff, and_imp, lt_add_one_iff]
-#align int.decidable_le_le Int.decidableLeLe
+#align int.decidable_le_le Int.decidableLELE
 -/
 
-#print Int.decidableLtLt /-
-instance decidableLtLt (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
+#print Int.decidableLTLT /-
+instance decidableLTLT (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m < r → r < n → P r) :=
-  Int.decidableLeLt P _ _
-#align int.decidable_lt_lt Int.decidableLtLt
+  Int.decidableLELT P _ _
+#align int.decidable_lt_lt Int.decidableLTLT
 -/
 
-#print Int.decidableLtLe /-
-instance decidableLtLe (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
+#print Int.decidableLTLE /-
+instance decidableLTLE (P : Int → Prop) [DecidablePred P] (m n : ℤ) :
     Decidable (∀ r, m < r → r ≤ n → P r) :=
-  Int.decidableLeLe P _ _
-#align int.decidable_lt_le Int.decidableLtLe
+  Int.decidableLELE P _ _
+#align int.decidable_lt_le Int.decidableLTLE
 -/
 
 end Int

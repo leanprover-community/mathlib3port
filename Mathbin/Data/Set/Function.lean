@@ -452,14 +452,14 @@ theorem eqOn_range {ι : Sort _} {f : ι → α} {g₁ g₂ : α → β} :
   forall_range_iff.trans <| funext_iff.symm
 #align set.eq_on_range Set.eqOn_range
 
-/- warning: set.eq_on.comp_eq -> Set.eqOn.comp_eq is a dubious translation:
+/- warning: set.eq_on.comp_eq -> Set.EqOn.comp_eq is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} {f : ι -> α} {g₁ : α -> β} {g₂ : α -> β}, (Set.EqOn.{u1, u2} α β g₁ g₂ (Set.range.{u1, u3} α ι f)) -> (Eq.{max u3 (succ u2)} (ι -> β) (Function.comp.{u3, succ u1, succ u2} ι α β g₁ f) (Function.comp.{u3, succ u1, succ u2} ι α β g₂ f))
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {ι : Sort.{u3}} {f : ι -> α} {g₁ : α -> β} {g₂ : α -> β}, (Set.EqOn.{u2, u1} α β g₁ g₂ (Set.range.{u2, u3} α ι f)) -> (Eq.{max (succ u1) u3} (ι -> β) (Function.comp.{u3, succ u2, succ u1} ι α β g₁ f) (Function.comp.{u3, succ u2, succ u1} ι α β g₂ f))
-Case conversion may be inaccurate. Consider using '#align set.eq_on.comp_eq Set.eqOn.comp_eqₓ'. -/
+Case conversion may be inaccurate. Consider using '#align set.eq_on.comp_eq Set.EqOn.comp_eqₓ'. -/
 alias eq_on_range ↔ eq_on.comp_eq _
-#align set.eq_on.comp_eq Set.eqOn.comp_eq
+#align set.eq_on.comp_eq Set.EqOn.comp_eq
 
 /-! ### Congruence lemmas -/
 
@@ -2911,7 +2911,7 @@ Case conversion may be inaccurate. Consider using '#align set.piecewise_range_co
 @[simp]
 theorem piecewise_range_comp {ι : Sort _} (f : ι → α) [∀ j, Decidable (j ∈ range f)]
     (g₁ g₂ : α → β) : (range f).piecewise g₁ g₂ ∘ f = g₁ ∘ f :=
-  eqOn.comp_eq <| piecewise_eqOn _ _ _
+  EqOn.comp_eq <| piecewise_eqOn _ _ _
 #align set.piecewise_range_comp Set.piecewise_range_comp
 
 /- warning: set.maps_to.piecewise_ite -> Set.MapsTo.piecewise_ite is a dubious translation:
