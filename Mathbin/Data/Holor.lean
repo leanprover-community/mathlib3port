@@ -42,56 +42,76 @@ open List
 
 open BigOperators
 
+#print HolorIndex /-
 /-- `holor_index ds` is the type of valid index tuples used to identify an entry of a holor
 of dimensions `ds`. -/
 def HolorIndex (ds : List ℕ) : Type :=
   { is : List ℕ // Forall₂ (· < ·) is ds }
 #align holor_index HolorIndex
+-/
 
 namespace HolorIndex
 
 variable {ds₁ ds₂ ds₃ : List ℕ}
 
+#print HolorIndex.take /-
 def take : ∀ {ds₁ : List ℕ}, HolorIndex (ds₁ ++ ds₂) → HolorIndex ds₁
   | ds, is => ⟨List.take (length ds) is.1, forall₂_take_append is.1 ds ds₂ is.2⟩
 #align holor_index.take HolorIndex.take
+-/
 
+#print HolorIndex.drop /-
 def drop : ∀ {ds₁ : List ℕ}, HolorIndex (ds₁ ++ ds₂) → HolorIndex ds₂
   | ds, is => ⟨List.drop (length ds) is.1, forall₂_drop_append is.1 ds ds₂ is.2⟩
 #align holor_index.drop HolorIndex.drop
+-/
 
+#print HolorIndex.cast_type /-
 theorem cast_type (is : List ℕ) (eq : ds₁ = ds₂) (h : Forall₂ (· < ·) is ds₁) :
     (cast (congr_arg HolorIndex Eq) ⟨is, h⟩).val = is := by subst Eq <;> rfl
 #align holor_index.cast_type HolorIndex.cast_type
+-/
 
+#print HolorIndex.assocRight /-
 def assocRight : HolorIndex (ds₁ ++ ds₂ ++ ds₃) → HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) :=
   cast (congr_arg HolorIndex (append_assoc ds₁ ds₂ ds₃))
 #align holor_index.assoc_right HolorIndex.assocRight
+-/
 
+#print HolorIndex.assocLeft /-
 def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ ds₂ ++ ds₃) :=
   cast (congr_arg HolorIndex (append_assoc ds₁ ds₂ ds₃).symm)
 #align holor_index.assoc_left HolorIndex.assocLeft
+-/
 
+#print HolorIndex.take_take /-
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
   | ⟨is, h⟩ =>
     Subtype.eq <| by
       simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_right, min_eq_left]
 #align holor_index.take_take HolorIndex.take_take
+-/
 
+#print HolorIndex.drop_take /-
 theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.take = t.take.drop
   | ⟨is, h⟩ => Subtype.eq (by simp [assoc_right, take, drop, cast_type, List.drop_take])
 #align holor_index.drop_take HolorIndex.drop_take
+-/
 
+#print HolorIndex.drop_drop /-
 theorem drop_drop : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.drop = t.drop
   | ⟨is, h⟩ => Subtype.eq (by simp [add_comm, assoc_right, drop, cast_type, List.drop_drop])
 #align holor_index.drop_drop HolorIndex.drop_drop
+-/
 
 end HolorIndex
 
+#print Holor /-
 /-- Holor (indexed collections of tensor coefficients) -/
 def Holor (α : Type u) (ds : List ℕ) :=
   HolorIndex ds → α
 #align holor Holor
+-/
 
 namespace Holor
 
@@ -152,27 +172,41 @@ instance [Mul α] : SMul α (Holor α ds) :=
 instance [Semiring α] : Module α (Holor α ds) :=
   Pi.module _ _ _
 
+#print Holor.mul /-
 /-- The tensor product of two holors. -/
 def mul [s : Mul α] (x : Holor α ds₁) (y : Holor α ds₂) : Holor α (ds₁ ++ ds₂) := fun t =>
   x t.take * y t.drop
 #align holor.mul Holor.mul
+-/
 
 -- mathport name: «expr ⊗ »
 local infixl:70 " ⊗ " => mul
 
+#print Holor.cast_type /-
 theorem cast_type (eq : ds₁ = ds₂) (a : Holor α ds₁) :
     cast (congr_arg (Holor α) Eq) a = fun t => a (cast (congr_arg HolorIndex Eq.symm) t) := by
   subst Eq <;> rfl
 #align holor.cast_type Holor.cast_type
+-/
 
+#print Holor.assocRight /-
 def assocRight : Holor α (ds₁ ++ ds₂ ++ ds₃) → Holor α (ds₁ ++ (ds₂ ++ ds₃)) :=
   cast (congr_arg (Holor α) (append_assoc ds₁ ds₂ ds₃))
 #align holor.assoc_right Holor.assocRight
+-/
 
+#print Holor.assocLeft /-
 def assocLeft : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds₂ ++ ds₃) :=
   cast (congr_arg (Holor α) (append_assoc ds₁ ds₂ ds₃).symm)
 #align holor.assoc_left Holor.assocLeft
+-/
 
+/- warning: holor.mul_assoc0 -> Holor.mul_assoc0 is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {ds₃ : List.{0} Nat} [_inst_1 : Semigroup.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₃), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) ds₃)) (Holor.mul α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) ds₃ (Semigroup.toHasMul.{0} α _inst_1) (Holor.mul α ds₁ ds₂ (Semigroup.toHasMul.{0} α _inst_1) x y) z) (Holor.assocLeft α ds₁ ds₂ ds₃ (Holor.mul α ds₁ (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₂ ds₃) (Semigroup.toHasMul.{0} α _inst_1) x (Holor.mul α ds₂ ds₃ (Semigroup.toHasMul.{0} α _inst_1) y z)))
+but is expected to have type
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {ds₃ : List.{0} Nat} [_inst_1 : Semigroup.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₃), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) ds₃)) (Holor.mul α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) ds₃ (Semigroup.toMul.{0} α _inst_1) (Holor.mul α ds₁ ds₂ (Semigroup.toMul.{0} α _inst_1) x y) z) (Holor.assocLeft α ds₁ ds₂ ds₃ (Holor.mul α ds₁ (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₂ ds₃) (Semigroup.toMul.{0} α _inst_1) x (Holor.mul α ds₂ ds₃ (Semigroup.toMul.{0} α _inst_1) y z)))
+Case conversion may be inaccurate. Consider using '#align holor.mul_assoc0 Holor.mul_assoc0ₓ'. -/
 theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     x ⊗ y ⊗ z = (x ⊗ (y ⊗ z)).assocLeft :=
   funext fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) =>
@@ -186,57 +220,100 @@ theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z :
     rw [append_assoc]
 #align holor.mul_assoc0 Holor.mul_assoc0
 
+/- warning: holor.mul_assoc -> Holor.mul_assoc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {ds₃ : List.{0} Nat} [_inst_1 : Semigroup.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₃), HEq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) ds₃)) (Holor.mul α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) ds₃ (Semigroup.toHasMul.{0} α _inst_1) (Holor.mul α ds₁ ds₂ (Semigroup.toHasMul.{0} α _inst_1) x y) z) (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₂ ds₃))) (Holor.mul α ds₁ (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₂ ds₃) (Semigroup.toHasMul.{0} α _inst_1) x (Holor.mul α ds₂ ds₃ (Semigroup.toHasMul.{0} α _inst_1) y z))
+but is expected to have type
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {ds₃ : List.{0} Nat} [_inst_1 : Semigroup.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₃), HEq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) ds₃)) (Holor.mul α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) ds₃ (Semigroup.toMul.{0} α _inst_1) (Holor.mul α ds₁ ds₂ (Semigroup.toMul.{0} α _inst_1) x y) z) (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₂ ds₃))) (Holor.mul α ds₁ (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₂ ds₃) (Semigroup.toMul.{0} α _inst_1) x (Holor.mul α ds₂ ds₃ (Semigroup.toMul.{0} α _inst_1) y z))
+Case conversion may be inaccurate. Consider using '#align holor.mul_assoc Holor.mul_assocₓ'. -/
 theorem mul_assoc [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     HEq (mul (mul x y) z) (mul x (mul y z)) := by simp [cast_hEq, mul_assoc0, assoc_left]
 #align holor.mul_assoc Holor.mul_assoc
 
+/- warning: holor.mul_left_distrib -> Holor.mul_left_distrib is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} [_inst_1 : Distrib.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₂), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α _inst_1) x (HAdd.hAdd.{0, 0, 0} (Holor.{0} α ds₂) (Holor.{0} α ds₂) (Holor.{0} α ds₂) (instHAdd.{0} (Holor.{0} α ds₂) (Holor.hasAdd α ds₂ (Distrib.toHasAdd.{0} α _inst_1))) y z)) (HAdd.hAdd.{0, 0, 0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (instHAdd.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.hasAdd α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) (Distrib.toHasAdd.{0} α _inst_1))) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α _inst_1) x y) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α _inst_1) x z))
+but is expected to have type
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} [_inst_1 : Distrib.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₂), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (Distrib.toMul.{0} α _inst_1) x (HAdd.hAdd.{0, 0, 0} (Holor.{0} α ds₂) (Holor.{0} α ds₂) (Holor.{0} α ds₂) (instHAdd.{0} (Holor.{0} α ds₂) (Holor.instAddHolor α ds₂ (Distrib.toAdd.{0} α _inst_1))) y z)) (HAdd.hAdd.{0, 0, 0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (instHAdd.{0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.instAddHolor α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) (Distrib.toAdd.{0} α _inst_1))) (Holor.mul α ds₁ ds₂ (Distrib.toMul.{0} α _inst_1) x y) (Holor.mul α ds₁ ds₂ (Distrib.toMul.{0} α _inst_1) x z))
+Case conversion may be inaccurate. Consider using '#align holor.mul_left_distrib Holor.mul_left_distribₓ'. -/
 theorem mul_left_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₂) :
     x ⊗ (y + z) = x ⊗ y + x ⊗ z :=
   funext fun t =>
     left_distrib (x (HolorIndex.take t)) (y (HolorIndex.drop t)) (z (HolorIndex.drop t))
 #align holor.mul_left_distrib Holor.mul_left_distrib
 
+/- warning: holor.mul_right_distrib -> Holor.mul_right_distrib is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} [_inst_1 : Distrib.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₁) (z : Holor.{0} α ds₂), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α _inst_1) (HAdd.hAdd.{0, 0, 0} (Holor.{0} α ds₁) (Holor.{0} α ds₁) (Holor.{0} α ds₁) (instHAdd.{0} (Holor.{0} α ds₁) (Holor.hasAdd α ds₁ (Distrib.toHasAdd.{0} α _inst_1))) x y) z) (HAdd.hAdd.{0, 0, 0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (instHAdd.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.hasAdd α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) (Distrib.toHasAdd.{0} α _inst_1))) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α _inst_1) x z) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α _inst_1) y z))
+but is expected to have type
+  forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} [_inst_1 : Distrib.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₁) (z : Holor.{0} α ds₂), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (Distrib.toMul.{0} α _inst_1) (HAdd.hAdd.{0, 0, 0} (Holor.{0} α ds₁) (Holor.{0} α ds₁) (Holor.{0} α ds₁) (instHAdd.{0} (Holor.{0} α ds₁) (Holor.instAddHolor α ds₁ (Distrib.toAdd.{0} α _inst_1))) x y) z) (HAdd.hAdd.{0, 0, 0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (instHAdd.{0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.instAddHolor α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) (Distrib.toAdd.{0} α _inst_1))) (Holor.mul α ds₁ ds₂ (Distrib.toMul.{0} α _inst_1) x z) (Holor.mul α ds₁ ds₂ (Distrib.toMul.{0} α _inst_1) y z))
+Case conversion may be inaccurate. Consider using '#align holor.mul_right_distrib Holor.mul_right_distribₓ'. -/
 theorem mul_right_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₁) (z : Holor α ds₂) :
     (x + y) ⊗ z = x ⊗ z + y ⊗ z :=
   funext fun t => add_mul (x (HolorIndex.take t)) (y (HolorIndex.take t)) (z (HolorIndex.drop t))
 #align holor.mul_right_distrib Holor.mul_right_distrib
 
+/- warning: holor.zero_mul -> Holor.zero_mul is a dubious translation:
+lean 3 declaration is
+  forall {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {α : Type} [_inst_1 : Ring.{0} α] (x : Holor.{0} α ds₂), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (OfNat.ofNat.{0} (Holor.{0} α ds₁) 0 (OfNat.mk.{0} (Holor.{0} α ds₁) 0 (Zero.zero.{0} (Holor.{0} α ds₁) (Holor.hasZero α ds₁ (MulZeroClass.toHasZero.{0} α (NonUnitalNonAssocSemiring.toMulZeroClass.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))))))))) x) (OfNat.ofNat.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) 0 (OfNat.mk.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) 0 (Zero.zero.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.hasZero α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) (MulZeroClass.toHasZero.{0} α (NonUnitalNonAssocSemiring.toMulZeroClass.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))))))))
+but is expected to have type
+  forall {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {α : Type} [_inst_1 : Ring.{0} α] (x : Holor.{0} α ds₂), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (OfNat.ofNat.{0} (Holor.{0} α ds₁) 0 (Zero.toOfNat0.{0} (Holor.{0} α ds₁) (Holor.instZeroHolor α ds₁ (MonoidWithZero.toZero.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1)))))) x) (OfNat.ofNat.{0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) 0 (Zero.toOfNat0.{0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.instZeroHolor α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) (MonoidWithZero.toZero.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align holor.zero_mul Holor.zero_mulₓ'. -/
 @[simp]
 theorem zero_mul {α : Type} [Ring α] (x : Holor α ds₂) : (0 : Holor α ds₁) ⊗ x = 0 :=
   funext fun t => zero_mul (x (HolorIndex.drop t))
 #align holor.zero_mul Holor.zero_mul
 
+/- warning: holor.mul_zero -> Holor.mul_zero is a dubious translation:
+lean 3 declaration is
+  forall {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {α : Type} [_inst_1 : Ring.{0} α] (x : Holor.{0} α ds₁), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) x (OfNat.ofNat.{0} (Holor.{0} α ds₂) 0 (OfNat.mk.{0} (Holor.{0} α ds₂) 0 (Zero.zero.{0} (Holor.{0} α ds₂) (Holor.hasZero α ds₂ (MulZeroClass.toHasZero.{0} α (NonUnitalNonAssocSemiring.toMulZeroClass.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))))))))) (OfNat.ofNat.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) 0 (OfNat.mk.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) 0 (Zero.zero.{0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂)) (Holor.hasZero α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) ds₁ ds₂) (MulZeroClass.toHasZero.{0} α (NonUnitalNonAssocSemiring.toMulZeroClass.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))))))))
+but is expected to have type
+  forall {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {α : Type} [_inst_1 : Ring.{0} α] (x : Holor.{0} α ds₁), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.mul α ds₁ ds₂ (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) x (OfNat.ofNat.{0} (Holor.{0} α ds₂) 0 (Zero.toOfNat0.{0} (Holor.{0} α ds₂) (Holor.instZeroHolor α ds₂ (MonoidWithZero.toZero.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1))))))) (OfNat.ofNat.{0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) 0 (Zero.toOfNat0.{0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂)) (Holor.instZeroHolor α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) (MonoidWithZero.toZero.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1))))))
+Case conversion may be inaccurate. Consider using '#align holor.mul_zero Holor.mul_zeroₓ'. -/
 @[simp]
 theorem mul_zero {α : Type} [Ring α] (x : Holor α ds₁) : x ⊗ (0 : Holor α ds₂) = 0 :=
   funext fun t => mul_zero (x (HolorIndex.take t))
 #align holor.mul_zero Holor.mul_zero
 
+/- warning: holor.mul_scalar_mul -> Holor.mul_scalar_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] (x : Holor.{0} α (List.nil.{0} Nat)) (y : Holor.{0} α ds), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.nil.{0} Nat) ds)) (Holor.mul α (List.nil.{0} Nat) ds (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) x y) (SMul.smul.{0, 0} α (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.nil.{0} Nat) ds)) (Holor.hasSmul α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.nil.{0} Nat) ds) (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1))) (x (Subtype.mk.{1} (List.{0} Nat) (fun (is : List.{0} Nat) => List.Forall₂.{0, 0} Nat Nat (LT.lt.{0} Nat Nat.hasLt) is (List.nil.{0} Nat)) (List.nil.{0} Nat) (List.Forall₂.nil.{0, 0} Nat Nat (LT.lt.{0} Nat Nat.hasLt)))) y)
+but is expected to have type
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] (x : Holor.{0} α (List.nil.{0} Nat)) (y : Holor.{0} α ds), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (List.nil.{0} Nat) ds)) (Holor.mul α (List.nil.{0} Nat) ds (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) x y) (HSMul.hSMul.{0, 0, 0} α (Holor.{0} α ds) (Holor.{0} α ds) (instHSMul.{0, 0} α (Holor.{0} α ds) (Holor.instSMulHolor α ds (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)))) (x (Subtype.mk.{1} (List.{0} Nat) (fun (is : List.{0} Nat) => List.Forall₂.{0, 0} Nat Nat (fun (x._@.Mathlib.Data.Holor._hyg.27 : Nat) (x._@.Mathlib.Data.Holor._hyg.29 : Nat) => LT.lt.{0} Nat instLTNat x._@.Mathlib.Data.Holor._hyg.27 x._@.Mathlib.Data.Holor._hyg.29) is (List.nil.{0} Nat)) (List.nil.{0} Nat) (List.Forall₂.nil.{0, 0} Nat Nat (fun (x._@.Mathlib.Data.Holor._hyg.27 : Nat) (x._@.Mathlib.Data.Holor._hyg.29 : Nat) => LT.lt.{0} Nat instLTNat x._@.Mathlib.Data.Holor._hyg.27 x._@.Mathlib.Data.Holor._hyg.29)))) y)
+Case conversion may be inaccurate. Consider using '#align holor.mul_scalar_mul Holor.mul_scalar_mulₓ'. -/
 theorem mul_scalar_mul [Monoid α] (x : Holor α []) (y : Holor α ds) :
     x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by simp [mul, SMul.smul, HolorIndex.take, HolorIndex.drop]
 #align holor.mul_scalar_mul Holor.mul_scalar_mul
 
+#print Holor.slice /-
 -- holor slices
 /-- A slice is a subholor consisting of all entries with initial index i. -/
 def slice (x : Holor α (d :: ds)) (i : ℕ) (h : i < d) : Holor α ds := fun is : HolorIndex ds =>
   x ⟨i :: is.1, Forall₂.cons h is.2⟩
 #align holor.slice Holor.slice
+-/
 
+#print Holor.unitVec /-
 /-- The 1-dimensional "unit" holor with 1 in the `j`th position. -/
 def unitVec [Monoid α] [AddMonoid α] (d : ℕ) (j : ℕ) : Holor α [d] := fun ti =>
   if ti.1 = [j] then 1 else 0
 #align holor.unit_vec Holor.unitVec
+-/
 
-theorem holorIndex_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
+#print Holor.holor_index_cons_decomp /-
+theorem holor_index_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
     ∀ t : HolorIndex (d :: ds),
       (∀ i is, ∀ h : t.1 = i :: is, p ⟨i :: is, by rw [← h]; exact t.2⟩) → p t
   | ⟨[], hforall₂⟩, hp => absurd (forall₂_nil_left_iff.1 hforall₂) (cons_ne_nil d ds)
   | ⟨i :: is, hforall₂⟩, hp => hp i is rfl
-#align holor.holor_index_cons_decomp Holor.holorIndex_cons_decomp
+#align holor.holor_index_cons_decomp Holor.holor_index_cons_decomp
+-/
 
+#print Holor.slice_eq /-
 /-- Two holors are equal if all their slices are equal. -/
 theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x = slice y) : x = y :=
   funext fun t : HolorIndex (d :: ds) =>
-    holorIndex_cons_decomp (fun t => x t = y t) t fun i is hiis =>
+    holor_index_cons_decomp (fun t => x t = y t) t fun i is hiis =>
       have hiisdds : Forall₂ (· < ·) (i :: is) (d :: ds) := by rw [← hiis]; exact t.2
       have hid : i < d := (forall₂_cons.1 hiisdds).1
       have hisds : Forall₂ (· < ·) is ds := (forall₂_cons.1 hiisdds).2
@@ -246,23 +323,40 @@ theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x 
         _ = y ⟨i :: is, _⟩ := congr_arg (fun t => y t) (Subtype.eq rfl)
         
 #align holor.slice_eq Holor.slice_eq
+-/
 
-theorem slice_unitVec_mul [Ring α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
+/- warning: holor.slice_unit_vec_mul -> Holor.slice_unit_vec_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] {i : Nat} {j : Nat} (hid : LT.lt.{0} Nat Nat.hasLt i d) (x : Holor.{0} α ds), Eq.{1} (Holor.{0} α (List.append.{0} Nat (List.nil.{0} Nat) ds)) (Holor.slice α d (List.append.{0} Nat (List.nil.{0} Nat) ds) (Holor.mul α (List.cons.{0} Nat d (List.nil.{0} Nat)) ds (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (Holor.unitVec α (Ring.toMonoid.{0} α _inst_1) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) d j) x) i hid) (ite.{1} (Holor.{0} α (List.append.{0} Nat (List.nil.{0} Nat) ds)) (Eq.{1} Nat i j) (Nat.decidableEq i j) x (OfNat.ofNat.{0} (Holor.{0} α (List.append.{0} Nat (List.nil.{0} Nat) ds)) 0 (OfNat.mk.{0} (Holor.{0} α (List.append.{0} Nat (List.nil.{0} Nat) ds)) 0 (Zero.zero.{0} (Holor.{0} α (List.append.{0} Nat (List.nil.{0} Nat) ds)) (Holor.hasZero α (List.append.{0} Nat (List.nil.{0} Nat) ds) (MulZeroClass.toHasZero.{0} α (NonUnitalNonAssocSemiring.toMulZeroClass.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))))))))))
+but is expected to have type
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] {i : Nat} {j : Nat} (hid : LT.lt.{0} Nat instLTNat i d) (x : Holor.{0} α ds), Eq.{1} (Holor.{0} α (List.append.{0} Nat (List.nil.{0} Nat) ds)) (Holor.slice α d (List.append.{0} Nat (List.nil.{0} Nat) ds) (Holor.mul α (List.cons.{0} Nat d (List.nil.{0} Nat)) ds (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (Holor.unitVec α (MonoidWithZero.toMonoid.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) d j) x) i hid) (ite.{1} (Holor.{0} α ds) (Eq.{1} Nat i j) (instDecidableEqNat i j) x (OfNat.ofNat.{0} (Holor.{0} α ds) 0 (Zero.toOfNat0.{0} (Holor.{0} α ds) (Holor.instZeroHolor α ds (MonoidWithZero.toZero.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1)))))))
+Case conversion may be inaccurate. Consider using '#align holor.slice_unit_vec_mul Holor.slice_unit_vec_mulₓ'. -/
+theorem slice_unit_vec_mul [Ring α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
     slice (unitVec d j ⊗ x) i hid = if i = j then x else 0 :=
   funext fun t : HolorIndex ds =>
     if h : i = j then by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
     else by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
-#align holor.slice_unit_vec_mul Holor.slice_unitVec_mul
+#align holor.slice_unit_vec_mul Holor.slice_unit_vec_mul
 
+#print Holor.slice_add /-
 theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
     slice x i hid + slice y i hid = slice (x + y) i hid :=
   funext fun t => by simp [slice, (· + ·)]
 #align holor.slice_add Holor.slice_add
+-/
 
+#print Holor.slice_zero /-
 theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d :: ds)) i hid = 0 :=
   rfl
 #align holor.slice_zero Holor.slice_zero
+-/
 
+/- warning: holor.slice_sum -> Holor.slice_sum is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : AddCommMonoid.{0} α] {β : Type} (i : Nat) (hid : LT.lt.{0} Nat Nat.hasLt i d) (s : Finset.{0} β) (f : β -> (Holor.{0} α (List.cons.{0} Nat d ds))), Eq.{1} (Holor.{0} α ds) (Finset.sum.{0, 0} (Holor.{0} α ds) β (Holor.addCommMonoid α ds _inst_1) s (fun (x : β) => Holor.slice α d ds (f x) i hid)) (Holor.slice α d ds (Finset.sum.{0, 0} (Holor.{0} α (List.cons.{0} Nat d ds)) β (Holor.addCommMonoid α (List.cons.{0} Nat d ds) _inst_1) s (fun (x : β) => f x)) i hid)
+but is expected to have type
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : AddCommMonoid.{0} α] {β : Type} (i : Nat) (hid : LT.lt.{0} Nat instLTNat i d) (s : Finset.{0} β) (f : β -> (Holor.{0} α (List.cons.{0} Nat d ds))), Eq.{1} (Holor.{0} α ds) (Finset.sum.{0, 0} (Holor.{0} α ds) β (Holor.instAddCommMonoidHolor α ds _inst_1) s (fun (x : β) => Holor.slice α d ds (f x) i hid)) (Holor.slice α d ds (Finset.sum.{0, 0} (Holor.{0} α (List.cons.{0} Nat d ds)) β (Holor.instAddCommMonoidHolor α (List.cons.{0} Nat d ds) _inst_1) s (fun (x : β) => f x)) i hid)
+Case conversion may be inaccurate. Consider using '#align holor.slice_sum Holor.slice_sumₓ'. -/
 theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β)
     (f : β → Holor α (d :: ds)) : (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid :=
   by
@@ -273,10 +367,16 @@ theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Fi
     rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
 #align holor.slice_sum Holor.slice_sum
 
+/- warning: holor.sum_unit_vec_mul_slice -> Holor.sum_unit_vec_mul_slice is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] (x : Holor.{0} α (List.cons.{0} Nat d ds)), Eq.{1} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds)) (Finset.sum.{0, 0} (Holor.{0} α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds)) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) (Holor.addCommMonoid α (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds) (AddCommGroup.toAddCommMonoid.{0} α (NonUnitalNonAssocRing.toAddCommGroup.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))))) (Finset.attach.{0} Nat (Finset.range d)) (fun (i : Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) => Holor.mul α (List.cons.{0} Nat d (List.nil.{0} Nat)) ds (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (Holor.unitVec α (Ring.toMonoid.{0} α _inst_1) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (HasLiftT.mk.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (CoeTCₓ.coe.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeBase.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)))))) i)) (Holor.slice α d ds x ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (HasLiftT.mk.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (CoeTCₓ.coe.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeBase.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)))))) i) (Nat.succ_le_of_lt ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (HasLiftT.mk.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (CoeTCₓ.coe.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeBase.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)))))) i) d (Iff.mp (Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (HasLiftT.mk.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (CoeTCₓ.coe.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeBase.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)))))) i) (Finset.range d)) (LT.lt.{0} Nat Nat.hasLt ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (HasLiftT.mk.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (CoeTCₓ.coe.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeBase.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)))))) i) d) (Finset.mem_range d ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (HasLiftT.mk.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (CoeTCₓ.coe.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeBase.{1, 1} (Subtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d))) Nat (coeSubtype.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)))))) i)) (Subtype.prop.{1} Nat (fun (x : Nat) => Membership.Mem.{0, 0} Nat (Finset.{0} Nat) (Finset.hasMem.{0} Nat) x (Finset.range d)) i)))))) x
+but is expected to have type
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] (x : Holor.{0} α (List.cons.{0} Nat d ds)), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds)) (Finset.sum.{0, 0} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds)) (Subtype.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d))) (Holor.instAddCommMonoidHolor α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds) (NonUnitalNonAssocSemiring.toAddCommMonoid.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))))) (Finset.attach.{0} Nat (Finset.range d)) (fun (i : Subtype.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d))) => Holor.mul α (List.cons.{0} Nat d (List.nil.{0} Nat)) ds (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (Holor.unitVec α (MonoidWithZero.toMonoid.{0} α (Semiring.toMonoidWithZero.{0} α (Ring.toSemiring.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) d (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i)) (Holor.slice α d ds x (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i) (Nat.succ_le_of_lt (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i) d (Iff.mp (Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i) (Finset.range d)) (LT.lt.{0} Nat instLTNat (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i) d) (Finset.mem_range d (Subtype.val.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i)) (Subtype.prop.{1} Nat (fun (x : Nat) => Membership.mem.{0, 0} Nat (Finset.{0} Nat) (Finset.instMembershipFinset.{0} Nat) x (Finset.range d)) i)))))) x
+Case conversion may be inaccurate. Consider using '#align holor.sum_unit_vec_mul_slice Holor.sum_unit_vec_mul_sliceₓ'. -/
 /-- The original holor can be recovered from its slices by multiplying with unit vectors and
 summing up. -/
 @[simp]
-theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
+theorem sum_unit_vec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
     (∑ i in (Finset.range d).attach,
         unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop))) =
       x :=
@@ -293,40 +393,62 @@ theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
   · intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
     exfalso
     exact absurd (Finset.mem_attach _ _) hid'
-#align holor.sum_unit_vec_mul_slice Holor.sum_unitVec_mul_slice
+#align holor.sum_unit_vec_mul_slice Holor.sum_unit_vec_mul_slice
 
+#print Holor.CPRankMax1 /-
 -- CP rank
 /-- `cprank_max1 x` means `x` has CP rank at most 1, that is,
   it is the tensor product of 1-dimensional holors. -/
-inductive CprankMax1 [Mul α] : ∀ {ds}, Holor α ds → Prop
+inductive CPRankMax1 [Mul α] : ∀ {ds}, Holor α ds → Prop
   | nil (x : Holor α []) : cprank_max1 x
   | cons {d} {ds} (x : Holor α [d]) (y : Holor α ds) : cprank_max1 y → cprank_max1 (x ⊗ y)
-#align holor.cprank_max1 Holor.CprankMax1
+#align holor.cprank_max1 Holor.CPRankMax1
+-/
 
+#print Holor.CPRankMax /-
 /-- `cprank_max N x` means `x` has CP rank at most `N`, that is,
   it can be written as the sum of N holors of rank at most 1. -/
-inductive CprankMax [Mul α] [AddMonoid α] : ℕ → ∀ {ds}, Holor α ds → Prop
+inductive CPRankMax [Mul α] [AddMonoid α] : ℕ → ∀ {ds}, Holor α ds → Prop
   | zero {ds} : cprank_max 0 (0 : Holor α ds)
   |
   succ (n) {ds} (x : Holor α ds) (y : Holor α ds) :
-    CprankMax1 x → cprank_max n y → cprank_max (n + 1) (x + y)
-#align holor.cprank_max Holor.CprankMax
+    CPRankMax1 x → cprank_max n y → cprank_max (n + 1) (x + y)
+#align holor.cprank_max Holor.CPRankMax
+-/
 
-theorem cprankMax_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CprankMax 1 x :=
+/- warning: holor.cprank_max_nil -> Holor.cprankMax_nil is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} [_inst_1 : Monoid.{0} α] [_inst_2 : AddMonoid.{0} α] (x : Holor.{0} α (List.nil.{0} Nat)), Holor.CPRankMax α (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (List.nil.{0} Nat) x
+but is expected to have type
+  forall {α : Type} [_inst_1 : Monoid.{0} α] [_inst_2 : AddMonoid.{0} α] (x : Holor.{0} α (List.nil.{0} Nat)), Holor.CPRankMax α (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (List.nil.{0} Nat) x
+Case conversion may be inaccurate. Consider using '#align holor.cprank_max_nil Holor.cprankMax_nilₓ'. -/
+theorem cprankMax_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CPRankMax 1 x :=
   by
-  have h := CprankMax.succ 0 x 0 (CprankMax1.nil x) CprankMax.zero
+  have h := CPRankMax.succ 0 x 0 (CPRankMax1.nil x) CPRankMax.zero
   rwa [add_zero x, zero_add] at h
 #align holor.cprank_max_nil Holor.cprankMax_nil
 
-theorem cprankMax_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CprankMax1 x) : CprankMax 1 x :=
+/- warning: holor.cprank_max_1 -> Holor.cprankMax_1 is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] [_inst_2 : AddMonoid.{0} α] {x : Holor.{0} α ds}, (Holor.CPRankMax1 α (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) ds x) -> (Holor.CPRankMax α (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) ds x)
+but is expected to have type
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] [_inst_2 : AddMonoid.{0} α] {x : Holor.{0} α ds}, (Holor.CPRankMax1 α (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) ds x) -> (Holor.CPRankMax α (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) ds x)
+Case conversion may be inaccurate. Consider using '#align holor.cprank_max_1 Holor.cprankMax_1ₓ'. -/
+theorem cprankMax_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CPRankMax1 x) : CPRankMax 1 x :=
   by
-  have h' := CprankMax.succ 0 x 0 h CprankMax.zero
+  have h' := CPRankMax.succ 0 x 0 h CPRankMax.zero
   rwa [zero_add, add_zero] at h'
 #align holor.cprank_max_1 Holor.cprankMax_1
 
+/- warning: holor.cprank_max_add -> Holor.cprankMax_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] [_inst_2 : AddMonoid.{0} α] {m : Nat} {n : Nat} {x : Holor.{0} α ds} {y : Holor.{0} α ds}, (Holor.CPRankMax α (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 m ds x) -> (Holor.CPRankMax α (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 n ds y) -> (Holor.CPRankMax α (MulOneClass.toHasMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) m n) ds (HAdd.hAdd.{0, 0, 0} (Holor.{0} α ds) (Holor.{0} α ds) (Holor.{0} α ds) (instHAdd.{0} (Holor.{0} α ds) (Holor.hasAdd α ds (AddZeroClass.toHasAdd.{0} α (AddMonoid.toAddZeroClass.{0} α _inst_2)))) x y))
+but is expected to have type
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] [_inst_2 : AddMonoid.{0} α] {m : Nat} {n : Nat} {x : Holor.{0} α ds} {y : Holor.{0} α ds}, (Holor.CPRankMax α (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 m ds x) -> (Holor.CPRankMax α (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 n ds y) -> (Holor.CPRankMax α (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) _inst_2 (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m n) ds (HAdd.hAdd.{0, 0, 0} (Holor.{0} α ds) (Holor.{0} α ds) (Holor.{0} α ds) (instHAdd.{0} (Holor.{0} α ds) (Holor.instAddHolor α ds (AddZeroClass.toAdd.{0} α (AddMonoid.toAddZeroClass.{0} α _inst_2)))) x y))
+Case conversion may be inaccurate. Consider using '#align holor.cprank_max_add Holor.cprankMax_addₓ'. -/
 theorem cprankMax_add [Monoid α] [AddMonoid α] :
     ∀ {m : ℕ} {n : ℕ} {x : Holor α ds} {y : Holor α ds},
-      CprankMax m x → CprankMax n y → CprankMax (m + n) (x + y)
+      CPRankMax m x → CPRankMax n y → CPRankMax (m + n) (x + y)
   | 0, n, x, y, cprank_max.zero, hy => by simp [hy]
   | m + 1, n, _, y, cprank_max.succ k x₁ x₂ hx₁ hx₂, hy =>
     by
@@ -336,8 +458,14 @@ theorem cprankMax_add [Monoid α] [AddMonoid α] :
     · exact cprank_max_add hx₂ hy
 #align holor.cprank_max_add Holor.cprankMax_add
 
+/- warning: holor.cprank_max_mul -> Holor.cprankMax_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] (n : Nat) (x : Holor.{0} α (List.cons.{0} Nat d (List.nil.{0} Nat))) (y : Holor.{0} α ds), (Holor.CPRankMax α (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) n ds y) -> (Holor.CPRankMax α (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) n (Append.append.{0} (List.{0} Nat) (List.hasAppend.{0} Nat) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds) (Holor.mul α (List.cons.{0} Nat d (List.nil.{0} Nat)) ds (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) x y))
+but is expected to have type
+  forall {α : Type} {d : Nat} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] (n : Nat) (x : Holor.{0} α (List.cons.{0} Nat d (List.nil.{0} Nat))) (y : Holor.{0} α ds), (Holor.CPRankMax α (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) n ds y) -> (Holor.CPRankMax α (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) n (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (List.cons.{0} Nat d (List.nil.{0} Nat)) ds) (Holor.mul α (List.cons.{0} Nat d (List.nil.{0} Nat)) ds (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) x y))
+Case conversion may be inaccurate. Consider using '#align holor.cprank_max_mul Holor.cprankMax_mulₓ'. -/
 theorem cprankMax_mul [Ring α] :
-    ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CprankMax n y → CprankMax n (x ⊗ y)
+    ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CPRankMax n y → CPRankMax n (x ⊗ y)
   | 0, x, _, cprank_max.zero => by simp [mul_zero x, cprank_max.zero]
   | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ =>
     by
@@ -348,8 +476,14 @@ theorem cprankMax_mul [Ring α] :
     · exact cprank_max_mul k x y₂ hy₂
 #align holor.cprank_max_mul Holor.cprankMax_mul
 
+/- warning: holor.cprank_max_sum -> Holor.cprankMax_sum is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] {β : Type.{u1}} {n : Nat} (s : Finset.{u1} β) (f : β -> (Holor.{0} α ds)), (forall (x : β), (Membership.Mem.{u1, u1} β (Finset.{u1} β) (Finset.hasMem.{u1} β) x s) -> (Holor.CPRankMax α (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) n ds (f x))) -> (Holor.CPRankMax α (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Finset.card.{u1} β s) n) ds (Finset.sum.{0, u1} (Holor.{0} α ds) β (Holor.addCommMonoid α ds (AddCommGroup.toAddCommMonoid.{0} α (NonUnitalNonAssocRing.toAddCommGroup.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))))) s (fun (x : β) => f x)))
+but is expected to have type
+  forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Ring.{0} α] {β : Type.{u1}} {n : Nat} (s : Finset.{u1} β) (f : β -> (Holor.{0} α ds)), (forall (x : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) x s) -> (Holor.CPRankMax α (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) n ds (f x))) -> (Holor.CPRankMax α (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Finset.card.{u1} β s) n) ds (Finset.sum.{0, u1} (Holor.{0} α ds) β (Holor.instAddCommMonoidHolor α ds (NonUnitalNonAssocSemiring.toAddCommMonoid.{0} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))))) s (fun (x : β) => f x)))
+Case conversion may be inaccurate. Consider using '#align holor.cprank_max_sum Holor.cprankMax_sumₓ'. -/
 theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
-    (∀ x ∈ s, CprankMax n (f x)) → CprankMax (s.card * n) (∑ x in s, f x) :=
+    (∀ x ∈ s, CPRankMax n (f x)) → CPRankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
   Finset.induction_on s (by simp [cprank_max.zero])
     (by
@@ -365,23 +499,29 @@ theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor
       exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 #align holor.cprank_max_sum Holor.cprankMax_sum
 
-theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CprankMax ds.Prod x
+/- warning: holor.cprank_max_upper_bound -> Holor.cprankMax_upper_bound is a dubious translation:
+lean 3 declaration is
+  forall {α : Type} [_inst_1 : Ring.{0} α] {ds : List.{0} Nat} (x : Holor.{0} α ds), Holor.CPRankMax α (Distrib.toHasMul.{0} α (Ring.toDistrib.{0} α _inst_1)) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (NonAssocRing.toAddGroupWithOne.{0} α (Ring.toNonAssocRing.{0} α _inst_1)))) (List.prod.{0} Nat Nat.hasMul Nat.hasOne ds) ds x
+but is expected to have type
+  forall {α : Type} [_inst_1 : Ring.{0} α] {ds : List.{0} Nat} (x : Holor.{0} α ds), Holor.CPRankMax α (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) (List.prod.{0} Nat instMulNat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring) ds) ds x
+Case conversion may be inaccurate. Consider using '#align holor.cprank_max_upper_bound Holor.cprankMax_upper_boundₓ'. -/
+theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankMax ds.Prod x
   | [], x => cprankMax_nil x
   | d :: ds, x =>
     by
     have h_summands :
       ∀ i : { x // x ∈ Finset.range d },
-        CprankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=
+        CPRankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=
       fun i => cprankMax_mul _ _ _ (cprank_max_upper_bound (slice x i.1 (mem_range.1 i.2)))
     have h_dds_prod : (List.cons d ds).Prod = Finset.card (Finset.range d) * Prod ds := by
       simp [Finset.card_range]
     have :
-      CprankMax (Finset.card (Finset.attach (Finset.range d)) * Prod ds)
+      CPRankMax (Finset.card (Finset.attach (Finset.range d)) * Prod ds)
         (∑ i in Finset.attach (Finset.range d),
           unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
       cprankMax_sum (Finset.range d).attach _ fun i _ => h_summands i
     have h_cprank_max_sum :
-      CprankMax (Finset.card (Finset.range d) * Prod ds)
+      CPRankMax (Finset.card (Finset.range d) * Prod ds)
         (∑ i in Finset.attach (Finset.range d),
           unitVec d i.val ⊗ slice x i.val (mem_range.1 i.2)) :=
       by rwa [Finset.card_attach] at this
@@ -390,18 +530,22 @@ theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CprankM
     exact h_cprank_max_sum
 #align holor.cprank_max_upper_bound Holor.cprankMax_upper_bound
 
+#print Holor.cprank /-
 /-- The CP rank of a holor `x`: the smallest N such that
   `x` can be written as the sum of N holors of rank at most 1. -/
 noncomputable def cprank [Ring α] (x : Holor α ds) : Nat :=
-  @Nat.find (fun n => CprankMax n x) (Classical.decPred _) ⟨ds.Prod, cprankMax_upper_bound x⟩
+  @Nat.find (fun n => CPRankMax n x) (Classical.decPred _) ⟨ds.Prod, cprankMax_upper_bound x⟩
 #align holor.cprank Holor.cprank
+-/
 
+#print Holor.cprank_upper_bound /-
 theorem cprank_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod :=
   fun ds (x : Holor α ds) =>
   letI := Classical.decPred fun n : ℕ => cprank_max n x
   Nat.find_min' ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩
     (cprank_max_upper_bound x)
 #align holor.cprank_upper_bound Holor.cprank_upper_bound
+-/
 
 end Holor
 

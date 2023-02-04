@@ -304,7 +304,7 @@ def IsPartition.finpartition {c : Finset (Set α)} (hc : Setoid.IsPartition (c :
     Finpartition (Set.univ : Set α) where
   parts := c
   SupIndep := Finset.supIndep_iff_pairwiseDisjoint.mpr <| eqv_classes_disjoint hc.2
-  sup_parts := c.sup_id_set_eq_unionₛ.trans hc.unionₛ_eq_univ
+  supParts := c.sup_id_set_eq_unionₛ.trans hc.unionₛ_eq_univ
   not_bot_mem := hc.left
 #align setoid.is_partition.finpartition Setoid.IsPartition.finpartition
 
@@ -314,7 +314,7 @@ end Setoid
 theorem Finpartition.isPartition_parts {α} (f : Finpartition (Set.univ : Set α)) :
     Setoid.IsPartition (f.parts : Set (Set α)) :=
   ⟨f.not_bot_mem,
-    Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_unionₛ.symm.trans f.sup_parts)
+    Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_unionₛ.symm.trans f.supParts)
       f.SupIndep.PairwiseDisjoint⟩
 #align finpartition.is_partition_parts Finpartition.isPartition_parts
 
