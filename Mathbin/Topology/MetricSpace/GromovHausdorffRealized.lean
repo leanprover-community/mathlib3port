@@ -455,7 +455,7 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
   have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g :=
     by
     intro x
-    refine' Monotone.map_cinfi_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · show BddBelow (range fun y : Y => g (inl x, inr y))
@@ -487,7 +487,7 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
   have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g :=
     by
     intro y
-    refine' Monotone.map_cinfi_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
+    refine' Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ _
     · intro x y hx
       simpa
     · show BddBelow (range fun x : X => g (inl x, inr y))

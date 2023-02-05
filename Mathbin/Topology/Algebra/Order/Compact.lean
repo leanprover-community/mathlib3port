@@ -159,7 +159,7 @@ variable {α β γ : Type _} [ConditionallyCompleteLinearOrder α] [TopologicalS
   [OrderTopology α] [TopologicalSpace β] [TopologicalSpace γ]
 
 theorem IsCompact.infₛ_mem {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : infₛ s ∈ s :=
-  hs.IsClosed.cInf_mem ne_s hs.BddBelow
+  hs.IsClosed.cinfₛ_mem ne_s hs.BddBelow
 #align is_compact.Inf_mem IsCompact.infₛ_mem
 
 theorem IsCompact.supₛ_mem {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : supₛ s ∈ s :=

@@ -124,7 +124,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => t + dist y z) ∘ fun p => dist y (Φ p) + dist x (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
+          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -147,7 +147,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => dist x y + t) ∘ fun p => dist z (Φ p) + dist y (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
+          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -170,7 +170,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => dist x y + t) ∘ fun p => dist y (Φ p) + dist z (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
+          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_const.add continuousAt_id) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]
@@ -193,7 +193,7 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           infᵢ ((fun t => t + dist y z) ∘ fun p => dist x (Φ p) + dist y (Ψ p)) :=
         by
         refine'
-          Monotone.map_cinfi_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
+          Monotone.map_cinfᵢ_of_continuousAt (continuous_at_id.add continuousAt_const) _ (B _ _)
         intro x y hx
         simpa
       rw [this, comp]

@@ -625,7 +625,7 @@ protected theorem tendsto_inv_nat_nhds_zero : Tendsto (fun n : ℕ => (n : ℝ�
 #align ennreal.tendsto_inv_nat_nhds_zero Ennreal.tendsto_inv_nat_nhds_zero
 
 theorem supᵢ_add {ι : Sort _} {s : ι → ℝ≥0∞} [h : Nonempty ι] : supᵢ s + a = ⨆ b, s b + a :=
-  Monotone.map_supᵢ_of_continuous_at' (continuousAt_id.add continuousAt_const) <|
+  Monotone.map_supᵢ_of_continuousAt' (continuousAt_id.add continuousAt_const) <|
     monotone_id.add monotone_const
 #align ennreal.supr_add Ennreal.supᵢ_add
 
@@ -1781,7 +1781,7 @@ theorem ediam_eq {s : Set ℝ} (h : Bounded s) : Emetric.diam s = Ennreal.ofReal
     calc
       Sup s - Inf s ≤ dist (Sup s) (Inf s) := le_abs_self _
       _ ≤ diam (closure s) :=
-        dist_le_diam_of_mem h.closure (cSup_mem_closure hne h'.2) (cInf_mem_closure hne h'.1)
+        dist_le_diam_of_mem h.closure (csupₛ_mem_closure hne h'.2) (cinfₛ_mem_closure hne h'.1)
       
 #align real.ediam_eq Real.ediam_eq
 

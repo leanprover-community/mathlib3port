@@ -147,7 +147,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       have : BddAbove (range fun x => ‖iteratedFderiv ℝ i (fun x : E => g n x) x‖) :=
         by
         apply
-          ((g_smooth n).continuous_iteratedFderiv le_top).norm.bddAbove_range_of_has_compact_support
+          ((g_smooth n).continuous_iteratedFderiv le_top).norm.bddAbove_range_of_hasCompactSupport
         apply HasCompactSupport.comp_left _ norm_zero
         apply (g_comp_supp n).iteratedFderiv
       rcases this with ⟨R, hR⟩

@@ -32,12 +32,15 @@ open Finset Function List Equiv Equiv.Perm
 
 variable [DecidableEq α] [DecidableEq β]
 
+#print permsOfList /-
 /-- Given a list, produce a list of all permutations of its elements. -/
 def permsOfList : List α → List (Perm α)
   | [] => [1]
   | a :: l => permsOfList l ++ l.bind fun b => (permsOfList l).map fun f => swap a b * f
 #align perms_of_list permsOfList
+-/
 
+#print length_permsOfList /-
 theorem length_permsOfList : ∀ l : List α, length (permsOfList l) = l.length !
   | [] => rfl
   | a :: l => by
@@ -45,7 +48,9 @@ theorem length_permsOfList : ∀ l : List α, length (permsOfList l) = l.length 
     simp [permsOfList, length_bind, length_permsOfList, Function.comp, Nat.succ_mul]
     cc
 #align length_perms_of_list length_permsOfList
+-/
 
+#print mem_permsOfList_of_mem /-
 theorem mem_permsOfList_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x → x ∈ l) :
     f ∈ permsOfList l := by
   induction' l with a l IH generalizing f h
@@ -72,7 +77,9 @@ theorem mem_permsOfList_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x
   · exact mem_of_ne_of_mem hfa (h _ hfa')
   · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mul]
 #align mem_perms_of_list_of_mem mem_permsOfList_of_mem
+-/
 
+#print mem_of_mem_permsOfList /-
 theorem mem_of_mem_permsOfList :
     ∀ {l : List α} {f : Perm α}, f ∈ permsOfList l → ∀ {x}, f x ≠ x → x ∈ l
   | [], f, h => by
@@ -93,12 +100,16 @@ theorem mem_of_mem_permsOfList :
                   split_ifs <;>
                 [exact Ne.symm hxy, exact Ne.symm hxa, exact hx]
 #align mem_of_mem_perms_of_list mem_of_mem_permsOfList
+-/
 
+#print mem_permsOfList_iff /-
 theorem mem_permsOfList_iff {l : List α} {f : Perm α} :
     f ∈ permsOfList l ↔ ∀ {x}, f x ≠ x → x ∈ l :=
   ⟨mem_of_mem_permsOfList, mem_permsOfList_of_mem⟩
 #align mem_perms_of_list_iff mem_permsOfList_iff
+-/
 
+#print nodup_permsOfList /-
 theorem nodup_permsOfList : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).Nodup
   | [], hl => by simp [permsOfList]
   | a :: l, hl => by
@@ -126,7 +137,9 @@ theorem nodup_permsOfList : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).No
           (List.nodup_cons.1 hl).1 <|
             hgxa ▸ mem_of_mem_permsOfList hg.1 (by rwa [apply_inv_self, hgxa])⟩
 #align nodup_perms_of_list nodup_permsOfList
+-/
 
+#print permsOfFinset /-
 /-- Given a finset, produce the finset of all permutations of its elements. -/
 def permsOfFinset (s : Finset α) : Finset (Perm α) :=
   Quotient.hrecOn s.1 (fun l hl => ⟨permsOfList l, nodup_permsOfList hl⟩)
@@ -135,20 +148,27 @@ def permsOfFinset (s : Finset α) : Finset (Perm α) :=
         hEq_of_eq <| Finset.ext <| by simp [mem_permsOfList_iff, hab.mem_iff])
     s.2
 #align perms_of_finset permsOfFinset
+-/
 
-theorem mem_permsOfFinset_iff :
+#print mem_perms_of_finset_iff /-
+theorem mem_perms_of_finset_iff :
     ∀ {s : Finset α} {f : Perm α}, f ∈ permsOfFinset s ↔ ∀ {x}, f x ≠ x → x ∈ s := by
   rintro ⟨⟨l⟩, hs⟩ f <;> exact mem_permsOfList_iff
-#align mem_perms_of_finset_iff mem_permsOfFinset_iff
+#align mem_perms_of_finset_iff mem_perms_of_finset_iff
+-/
 
-theorem card_permsOfFinset : ∀ s : Finset α, (permsOfFinset s).card = s.card ! := by
+#print card_perms_of_finset /-
+theorem card_perms_of_finset : ∀ s : Finset α, (permsOfFinset s).card = s.card ! := by
   rintro ⟨⟨l⟩, hs⟩ <;> exact length_permsOfList l
-#align card_perms_of_finset card_permsOfFinset
+#align card_perms_of_finset card_perms_of_finset
+-/
 
+#print fintypePerm /-
 /-- The collection of permutations of a fintype is a fintype. -/
 def fintypePerm [Fintype α] : Fintype (Perm α) :=
-  ⟨permsOfFinset (@Finset.univ α _), by simp [mem_permsOfFinset_iff]⟩
+  ⟨permsOfFinset (@Finset.univ α _), by simp [mem_perms_of_finset_iff]⟩
 #align fintype_perm fintypePerm
+-/
 
 instance [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
   if h : Fintype.card β = Fintype.card α then
@@ -158,10 +178,22 @@ instance [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
           (equivCongr (Equiv.refl α) (eα.trans (Eq.recOn h eβ.symm)) : α ≃ α ≃ (α ≃ β))
   else ⟨∅, fun x => False.elim (h (Fintype.card_eq.2 ⟨x.symm⟩))⟩
 
+/- warning: fintype.card_perm -> Fintype.card_perm is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{u1} (Equiv.Perm.{succ u1} α) (Equiv.fintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) (b : α) => _inst_1 a b) _inst_3 _inst_3)) (Nat.factorial (Fintype.card.{u1} α _inst_3))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Fintype.{u1} α], Eq.{1} Nat (Fintype.card.{u1} (Equiv.Perm.{succ u1} α) (equivFintype.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (a : α) (b : α) => _inst_1 a b) _inst_3 _inst_3)) (Nat.factorial (Fintype.card.{u1} α _inst_3))
+Case conversion may be inaccurate. Consider using '#align fintype.card_perm Fintype.card_permₓ'. -/
 theorem Fintype.card_perm [Fintype α] : Fintype.card (Perm α) = (Fintype.card α)! :=
-  Subsingleton.elim (@fintypePerm α _ _) (@Equiv.fintype α α _ _ _ _) ▸ card_permsOfFinset _
+  Subsingleton.elim (@fintypePerm α _ _) (@Equiv.fintype α α _ _ _ _) ▸ card_perms_of_finset _
 #align fintype.card_perm Fintype.card_perm
 
+/- warning: fintype.card_equiv -> Fintype.card_equiv is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : DecidableEq.{succ u2} β] [_inst_3 : Fintype.{u1} α] [_inst_4 : Fintype.{u2} β], (Equiv.{succ u1, succ u2} α β) -> (Eq.{1} Nat (Fintype.card.{max (max u1 u2) u2 u1} (Equiv.{succ u1, succ u2} α β) (Equiv.fintype.{u1, u2} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) _inst_3 _inst_4)) (Nat.factorial (Fintype.card.{u1} α _inst_3)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} β] [_inst_3 : Fintype.{u2} α] [_inst_4 : Fintype.{u1} β], (Equiv.{succ u2, succ u1} α β) -> (Eq.{1} Nat (Fintype.card.{max u2 u1} (Equiv.{succ u2, succ u1} α β) (equivFintype.{u2, u1} α β (fun (a : α) (b : α) => _inst_1 a b) (fun (a : β) (b : β) => _inst_2 a b) _inst_3 _inst_4)) (Nat.factorial (Fintype.card.{u2} α _inst_3)))
+Case conversion may be inaccurate. Consider using '#align fintype.card_equiv Fintype.card_equivₓ'. -/
 theorem Fintype.card_equiv [Fintype α] [Fintype β] (e : α ≃ β) :
     Fintype.card (α ≃ β) = (Fintype.card α)! :=
   Fintype.card_congr (equivCongr (Equiv.refl α) e) ▸ Fintype.card_perm
