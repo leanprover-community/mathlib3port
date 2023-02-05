@@ -155,9 +155,9 @@ theorem card_eq_of_mem_parts_equitabilise :
   (P.equitabilise_aux h).choose_spec.1 _
 #align finpartition.card_eq_of_mem_parts_equitabilise Finpartition.card_eq_of_mem_parts_equitabilise
 
-theorem equitabiliseIsEquipartition : (P.equitabilise h).IsEquipartition :=
+theorem equitabilise_isEquipartition : (P.equitabilise h).IsEquipartition :=
   Set.equitableOn_iff_exists_eq_eq_add_one.2 ⟨m, fun u => card_eq_of_mem_parts_equitabilise⟩
-#align finpartition.equitabilise_is_equipartition Finpartition.equitabiliseIsEquipartition
+#align finpartition.equitabilise_is_equipartition Finpartition.equitabilise_isEquipartition
 
 variable (P h)
 

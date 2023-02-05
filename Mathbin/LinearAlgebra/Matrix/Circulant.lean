@@ -129,7 +129,7 @@ theorem circulant_mul [Semiring α] [Fintype n] [AddGroup n] (v w : n → α) :
   simp only [mul_apply, mul_vec, circulant, dot_product]
   refine' Fintype.sum_equiv (Equiv.subRight j) _ _ _
   intro x
-  simp only [Equiv.sub_right_apply, sub_sub_sub_cancel_right]
+  simp only [Equiv.subRight_apply, sub_sub_sub_cancel_right]
 #align matrix.circulant_mul Matrix.circulant_mul
 
 theorem Fin.circulant_mul [Semiring α] :
@@ -148,7 +148,7 @@ theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [Ad
   intro x
   congr 2
   · simp
-  · simp only [Equiv.coe_addRight, Function.comp_apply, Equiv.coe_trans, Equiv.sub_left_apply]
+  · simp only [Equiv.coe_addRight, Function.comp_apply, Equiv.coe_trans, Equiv.subLeft_apply]
     abel
 #align matrix.circulant_mul_comm Matrix.circulant_mul_comm
 
