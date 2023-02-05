@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.shrinking_lemma
-! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
+! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ theorem exists_locallyFinite_subset_unionᵢ_ball_radius_lt (hs : IsClosed s) {R
   by
   have : ∀ x ∈ s, (𝓝 x).HasBasis (fun r : ℝ => 0 < r ∧ r < R x) fun r => ball x r := fun x hx =>
     nhds_basis_uniformity (uniformity_basis_dist_lt (hR x hx))
-  rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis_set hs this with
+  rcases refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set hs this with
     ⟨ι, c, r', hr', hsub', hfin⟩
   rcases exists_subset_unionᵢ_ball_radius_pos_lt (fun i => (hr' i).2.1) hs
       (fun x hx => hfin.point_finite x) hsub' with

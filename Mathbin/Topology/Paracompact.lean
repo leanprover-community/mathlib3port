@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.paracompact
-! leanprover-community/mathlib commit b363547b3113d350d053abdf2884e9850a56b205
+! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,6 +57,7 @@ open Filter Topology
 
 universe u v
 
+#print ParacompactSpace /-
 /-- A topological space is called paracompact, if every open covering of this space admits a locally
 finite refinement. We use the same universe for all types in the definition to avoid creating a
 class like `paracompact_space.{u v}`. Due to lemma `precise_refinement` below, every open covering
@@ -68,9 +69,11 @@ class ParacompactSpace (X : Type v) [TopologicalSpace X] : Prop where
       ∃ (β : Type v)(t : β → Set X)(ho : ∀ b, IsOpen (t b))(hc : (⋃ b, t b) = univ),
         LocallyFinite t ∧ ∀ b, ∃ a, t b ⊆ s a
 #align paracompact_space ParacompactSpace
+-/
 
 variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
+#print precise_refinement /-
 /-- Any open cover of a paracompact space has a locally finite *precise* refinement, that is,
 one indexed on the same type with each open set contained in the corresponding original one. -/
 theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, IsOpen (u a))
@@ -97,7 +100,9 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
     rintro i x ⟨a, rfl, hxa⟩
     exact hind _ hxa
 #align precise_refinement precise_refinement
+-/
 
+#print precise_refinement_set /-
 /-- In a paracompact space, every open covering of a closed set admits a locally finite refinement
 indexed by the same type. -/
 theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s) (u : ι → Set X)
@@ -112,7 +117,9 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
     exact subset.trans (subset_compl_comm.1 <| vu Option.none) vc
   · simpa only [Union_option, Option.elim', ← compl_subset_iff_union, compl_compl]
 #align precise_refinement_set precise_refinement_set
+-/
 
+#print paracompact_of_compact /-
 -- See note [lower instance priority]
 /-- A compact space is paracompact. -/
 instance (priority := 100) paracompact_of_compact [CompactSpace X] : ParacompactSpace X :=
@@ -127,7 +134,9 @@ instance (priority := 100) paracompact_of_compact [CompactSpace X] : Paracompact
       ⟨t, subset.rfl⟩⟩
   simpa only [Union_coe_set, ← univ_subset_iff]
 #align paracompact_of_compact paracompact_of_compact
+-/
 
+#print refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set /-
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space, let `s` be a closed set
 in `X`. Suppose that for each `x ∈ s` the sets `B x : ι x → set X` with the predicate
 `p x : ι x → Prop` form a basis of the filter `𝓝 x`. Then there exists a locally finite covering
@@ -148,7 +157,7 @@ dealing with a covering of the whole space.
 
 In most cases (namely, if `B c r ∪ B c r'` is again a set of the form `B c r''`) it is possible
 to choose `α = X`. This fact is not yet formalized in `mathlib`. -/
-theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCompactSpace X]
+theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [LocallyCompactSpace X]
     [SigmaCompactSpace X] [T2Space X] {ι : X → Type u} {p : ∀ x, ι x → Prop} {B : ∀ x, ι x → Set X}
     {s : Set X} (hs : IsClosed s) (hB : ∀ x ∈ s, (𝓝 x).HasBasis (p x) (B x)) :
     ∃ (α : Type v)(c : α → X)(r : ∀ a, ι (c a)),
@@ -200,8 +209,10 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis_set [LocallyCo
       have := (mem_compl_iff _ _).1 (hr k c hxB)
       contrapose! this with hnk
       exact K.subset hnk (interior_subset hxK)
-#align refinement_of_locally_compact_sigma_compact_of_nhds_basis_set refinement_of_locally_compact_sigma_compact_of_nhds_basis_set
+#align refinement_of_locally_compact_sigma_compact_of_nhds_basis_set refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set
+-/
 
+#print refinement_of_locallyCompact_sigmaCompact_of_nhds_basis /-
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space. Suppose that for each
 `x` the sets `B x : ι x → set X` with the predicate `p x : ι x → Prop` form a basis of the filter
 `𝓝 x`. Then there exists a locally finite covering `λ i, B (c i) (r i)` of `X` such that each `r i`
@@ -221,31 +232,34 @@ dealing with a covering of a closed set.
 
 In most cases (namely, if `B c r ∪ B c r'` is again a set of the form `B c r''`) it is possible
 to choose `α = X`. This fact is not yet formalized in `mathlib`. -/
-theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompactSpace X]
+theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis [LocallyCompactSpace X]
     [SigmaCompactSpace X] [T2Space X] {ι : X → Type u} {p : ∀ x, ι x → Prop} {B : ∀ x, ι x → Set X}
     (hB : ∀ x, (𝓝 x).HasBasis (p x) (B x)) :
     ∃ (α : Type v)(c : α → X)(r : ∀ a, ι (c a)),
       (∀ a, p (c a) (r a)) ∧ (⋃ a, B (c a) (r a)) = univ ∧ LocallyFinite fun a => B (c a) (r a) :=
   let ⟨α, c, r, hp, hU, hfin⟩ :=
-    refinement_of_locally_compact_sigma_compact_of_nhds_basis_set isClosed_univ fun x _ => hB x
+    refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set isClosed_univ fun x _ => hB x
   ⟨α, c, r, fun a => (hp a).2, univ_subset_iff.1 hU, hfin⟩
-#align refinement_of_locally_compact_sigma_compact_of_nhds_basis refinement_of_locally_compact_sigma_compact_of_nhds_basis
+#align refinement_of_locally_compact_sigma_compact_of_nhds_basis refinement_of_locallyCompact_sigmaCompact_of_nhds_basis
+-/
 
+#print paracompact_of_locallyCompact_sigmaCompact /-
 -- See note [lower instance priority]
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also
 `refinement_of_locally_compact_sigma_compact_of_nhds_basis` for a more precise statement. -/
-instance (priority := 100) paracompact_of_locally_compact_sigma_compact [LocallyCompactSpace X]
+instance (priority := 100) paracompact_of_locallyCompact_sigmaCompact [LocallyCompactSpace X]
     [SigmaCompactSpace X] [T2Space X] : ParacompactSpace X :=
   by
   refine' ⟨fun α s ho hc => _⟩
   choose i hi using Union_eq_univ_iff.1 hc
   have : ∀ x : X, (𝓝 x).HasBasis (fun t : Set X => (x ∈ t ∧ IsOpen t) ∧ t ⊆ s (i x)) id :=
     fun x : X => (nhds_basis_opens x).restrict_subset (IsOpen.mem_nhds (ho (i x)) (hi x))
-  rcases refinement_of_locally_compact_sigma_compact_of_nhds_basis this with
-    ⟨β, c, t, hto, htc, htf⟩
+  rcases refinement_of_locallyCompact_sigmaCompact_of_nhds_basis this with ⟨β, c, t, hto, htc, htf⟩
   exact ⟨β, t, fun x => (hto x).1.2, htc, htf, fun b => ⟨i <| c b, (hto b).2⟩⟩
-#align paracompact_of_locally_compact_sigma_compact paracompact_of_locally_compact_sigma_compact
+#align paracompact_of_locally_compact_sigma_compact paracompact_of_locallyCompact_sigmaCompact
+-/
 
+#print normal_of_paracompact_t2 /-
 /- Dieudonné‘s theorem: a paracompact Hausdorff space is normal. Formalization is based on the proof
 at [ncatlab](https://ncatlab.org/nlab/show/paracompact+Hausdorff+spaces+are+normal). -/
 theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace X :=
@@ -279,4 +293,5 @@ theorem normal_of_paracompact_t2 [T2Space X] [ParacompactSpace X] : NormalSpace 
   · simp_rw [singleton_subset_iff]
     exact t2_separation (hst.symm.ne_of_mem hy hx)
 #align normal_of_paracompact_t2 normal_of_paracompact_t2
+-/
 
