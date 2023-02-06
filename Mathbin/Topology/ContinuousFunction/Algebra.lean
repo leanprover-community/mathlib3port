@@ -916,7 +916,7 @@ variable [TopologicalSpace α] [TopologicalSpace β]
 
 section Star
 
-variable [Star β] [HasContinuousStar β]
+variable [Star β] [ContinuousStar β]
 
 instance : Star C(α, β) where unit f := starContinuousMap.comp f
 
@@ -932,20 +932,20 @@ theorem star_apply (f : C(α, β)) (x : α) : star f x = star (f x) :=
 
 end Star
 
-instance [InvolutiveStar β] [HasContinuousStar β] : InvolutiveStar C(α, β)
+instance [InvolutiveStar β] [ContinuousStar β] : InvolutiveStar C(α, β)
     where star_involutive f := ext fun x => star_star _
 
-instance [AddMonoid β] [HasContinuousAdd β] [StarAddMonoid β] [HasContinuousStar β] :
+instance [AddMonoid β] [HasContinuousAdd β] [StarAddMonoid β] [ContinuousStar β] :
     StarAddMonoid C(α, β) where star_add f g := ext fun x => star_add _ _
 
-instance [Semigroup β] [HasContinuousMul β] [StarSemigroup β] [HasContinuousStar β] :
+instance [Semigroup β] [HasContinuousMul β] [StarSemigroup β] [ContinuousStar β] :
     StarSemigroup C(α, β) where star_mul f g := ext fun x => star_mul _ _
 
-instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [HasContinuousStar β] :
+instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [ContinuousStar β] :
     StarRing C(α, β) :=
   { ContinuousMap.starAddMonoid with }
 
-instance [Star R] [Star β] [SMul R β] [StarModule R β] [HasContinuousStar β]
+instance [Star R] [Star β] [SMul R β] [StarModule R β] [ContinuousStar β]
     [HasContinuousConstSMul R β] : StarModule R C(α, β)
     where star_smul k f := ext fun x => star_smul _ _
 
@@ -957,7 +957,7 @@ variable (𝕜 : Type _) [CommSemiring 𝕜]
 
 variable (A : Type _) [TopologicalSpace A] [Semiring A] [TopologicalSemiring A] [StarRing A]
 
-variable [HasContinuousStar A] [Algebra 𝕜 A]
+variable [ContinuousStar A] [Algebra 𝕜 A]
 
 /-- The functorial map taking `f : C(X, Y)` to `C(Y, A) →⋆ₐ[𝕜] C(X, A)` given by pre-composition
 with the continuous function `f`. See `continuous_map.comp_monoid_hom'` and
@@ -998,7 +998,7 @@ variable (𝕜 : Type _) [CommSemiring 𝕜]
 
 variable (A : Type _) [TopologicalSpace A] [Semiring A] [TopologicalSemiring A] [StarRing A]
 
-variable [HasContinuousStar A] [Algebra 𝕜 A]
+variable [ContinuousStar A] [Algebra 𝕜 A]
 
 /-- `continuous_map.comp_star_alg_hom'` as a `star_alg_equiv` when the continuous map `f` is
 actually a homeomorphism. -/

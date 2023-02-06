@@ -350,7 +350,7 @@ theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
   Subtype.ext <| dist_conj_comm _ _
 #align complex.nndist_conj_comm Complex.nndist_conj_comm
 
-instance : HasContinuousStar ℂ :=
+instance : ContinuousStar ℂ :=
   ⟨conjLie.Continuous⟩
 
 @[continuity]

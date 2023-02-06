@@ -623,7 +623,7 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
     ⟨completion.extension (SeparationQuotient.lift (coe : α → completion α)),
       completion.map Quotient.mk', _, _⟩
   · intro a
-    refine' induction_on a (isClosed_eq (continuous_map.comp continuous_extension) continuous_id) _
+    refine' induction_on a (isClosed_eq (ContinuousMap.comp continuous_extension) continuous_id) _
     rintro ⟨a⟩
     show
       completion.map Quotient.mk' (completion.extension (SeparationQuotient.lift coe) ↑(⟦a⟧)) =
@@ -635,7 +635,7 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
   · intro a
     refine'
       completion.induction_on a
-        (isClosed_eq (continuous_extension.comp continuous_map) continuous_id) fun a => _
+        (isClosed_eq (continuous_extension.comp ContinuousMap) continuous_id) fun a => _
     rw [map_coe uniform_continuous_quotient_mk,
         extension_coe (separation_quotient.uniform_continuous_lift _),
         SeparationQuotient.lift_mk (uniform_continuous_coe α) _] <;>

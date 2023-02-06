@@ -350,9 +350,9 @@ theorem summable_unop {f : β → αᵐᵒᵖ} : (Summable fun a => unop (f a)) 
 
 end MulOpposite
 
-section HasContinuousStar
+section ContinuousStar
 
-variable [StarAddMonoid α] [HasContinuousStar α]
+variable [StarAddMonoid α] [ContinuousStar α]
 
 theorem HasSum.star (h : HasSum f a) : HasSum (fun b => star (f b)) (star a) := by
   simpa only using h.map (starAddEquiv : α ≃+ α) continuous_star
@@ -376,7 +376,7 @@ theorem summable_star_iff' : Summable (star f) ↔ Summable f :=
   summable_star_iff
 #align summable_star_iff' summable_star_iff'
 
-end HasContinuousStar
+end ContinuousStar
 
 variable [HasContinuousAdd α]
 
@@ -778,9 +778,9 @@ theorem tsum_comm' {f : β → γ → δ} (h : Summable (Function.uncurry f)) (h
 
 end HasContinuousAdd
 
-section HasContinuousStar
+section ContinuousStar
 
-variable [StarAddMonoid α] [HasContinuousStar α]
+variable [StarAddMonoid α] [ContinuousStar α]
 
 theorem tsum_star : star (∑' b, f b) = ∑' b, star (f b) :=
   by
@@ -791,7 +791,7 @@ theorem tsum_star : star (∑' b, f b) = ∑' b, star (f b) :=
       star_zero]
 #align tsum_star tsum_star
 
-end HasContinuousStar
+end ContinuousStar
 
 open Encodable
 

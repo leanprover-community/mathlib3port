@@ -543,7 +543,7 @@ counterparts on `α →ᵇ β`. Ultimately, when `β` is a C⋆-ring, then so is
 -/
 
 
-variable [TopologicalSpace β] [AddMonoid β] [StarAddMonoid β] [HasContinuousStar β]
+variable [TopologicalSpace β] [AddMonoid β] [StarAddMonoid β] [ContinuousStar β]
 
 instance : Star C₀(α, β)
     where unit f :=
@@ -579,7 +579,7 @@ end NormedStar
 section StarModule
 
 variable {𝕜 : Type _} [Zero 𝕜] [Star 𝕜] [AddMonoid β] [StarAddMonoid β] [TopologicalSpace β]
-  [HasContinuousStar β] [SMulWithZero 𝕜 β] [HasContinuousConstSMul 𝕜 β] [StarModule 𝕜 β]
+  [ContinuousStar β] [SMulWithZero 𝕜 β] [HasContinuousConstSMul 𝕜 β] [StarModule 𝕜 β]
 
 instance : StarModule 𝕜 C₀(α, β) where star_smul k f := ext fun x => star_smul k (f x)
 
@@ -587,7 +587,7 @@ end StarModule
 
 section StarRing
 
-variable [NonUnitalSemiring β] [StarRing β] [TopologicalSpace β] [HasContinuousStar β]
+variable [NonUnitalSemiring β] [StarRing β] [TopologicalSpace β] [ContinuousStar β]
   [TopologicalSemiring β]
 
 instance : StarRing C₀(α, β) :=

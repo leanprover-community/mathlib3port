@@ -51,7 +51,7 @@ theorem Real.uniformContinuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
     ⟨_, ε0, fun a b h => by rw [dist_comm] at h <;> simpa [Real.dist_eq] using h⟩
 #align real.uniform_continuous_neg Real.uniformContinuous_neg
 
-instance : HasContinuousStar ℝ :=
+instance : ContinuousStar ℝ :=
   ⟨continuous_id⟩
 
 instance : UniformAddGroup ℝ :=

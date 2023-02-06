@@ -96,12 +96,12 @@ theorem Continuous.matrix_transpose {A : X → Matrix m n R} (hA : Continuous A)
   continuous_matrix fun i j => hA.matrix_elem j i
 #align continuous.matrix_transpose Continuous.matrix_transpose
 
-theorem Continuous.matrix_conjTranspose [Star R] [HasContinuousStar R] {A : X → Matrix m n R}
+theorem Continuous.matrix_conjTranspose [Star R] [ContinuousStar R] {A : X → Matrix m n R}
     (hA : Continuous A) : Continuous fun x => (A x)ᴴ :=
   hA.matrix_transpose.matrix_map continuous_star
 #align continuous.matrix_conj_transpose Continuous.matrix_conjTranspose
 
-instance [Star R] [HasContinuousStar R] : HasContinuousStar (Matrix m m R) :=
+instance [Star R] [ContinuousStar R] : ContinuousStar (Matrix m m R) :=
   ⟨continuous_id.matrix_conjTranspose⟩
 
 @[continuity]
@@ -322,25 +322,25 @@ theorem Matrix.transpose_tsum [T2Space R] {f : X → Matrix m n R} : (∑' x, f 
     rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hft, transpose_zero]
 #align matrix.transpose_tsum Matrix.transpose_tsum
 
-theorem HasSum.matrix_conjTranspose [StarAddMonoid R] [HasContinuousStar R] {f : X → Matrix m n R}
+theorem HasSum.matrix_conjTranspose [StarAddMonoid R] [ContinuousStar R] {f : X → Matrix m n R}
     {a : Matrix m n R} (hf : HasSum f a) : HasSum (fun x => (f x)ᴴ) aᴴ :=
   (hf.map (Matrix.conjTransposeAddEquiv m n R) continuous_id.matrix_conjTranspose : _)
 #align has_sum.matrix_conj_transpose HasSum.matrix_conjTranspose
 
-theorem Summable.matrix_conjTranspose [StarAddMonoid R] [HasContinuousStar R] {f : X → Matrix m n R}
+theorem Summable.matrix_conjTranspose [StarAddMonoid R] [ContinuousStar R] {f : X → Matrix m n R}
     (hf : Summable f) : Summable fun x => (f x)ᴴ :=
   hf.HasSum.matrix_conjTranspose.Summable
 #align summable.matrix_conj_transpose Summable.matrix_conjTranspose
 
 @[simp]
-theorem summable_matrix_conjTranspose [StarAddMonoid R] [HasContinuousStar R]
-    {f : X → Matrix m n R} : (Summable fun x => (f x)ᴴ) ↔ Summable f :=
+theorem summable_matrix_conjTranspose [StarAddMonoid R] [ContinuousStar R] {f : X → Matrix m n R} :
+    (Summable fun x => (f x)ᴴ) ↔ Summable f :=
   (Summable.map_iff_of_equiv (Matrix.conjTransposeAddEquiv m n R)
       (@continuous_id (Matrix m n R) _).matrix_conjTranspose continuous_id.matrix_conjTranspose :
     _)
 #align summable_matrix_conj_transpose summable_matrix_conjTranspose
 
-theorem Matrix.conjTranspose_tsum [StarAddMonoid R] [HasContinuousStar R] [T2Space R]
+theorem Matrix.conjTranspose_tsum [StarAddMonoid R] [ContinuousStar R] [T2Space R]
     {f : X → Matrix m n R} : (∑' x, f x)ᴴ = ∑' x, (f x)ᴴ :=
   by
   by_cases hf : Summable f

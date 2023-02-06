@@ -71,9 +71,9 @@ theorem star_isometry : Isometry (star : E → E) :=
     AddMonoidHomClass.isometry_of_norm starAddEquiv (show ∀ x, ‖x⋆‖ = ‖x‖ from norm_star)
 #align star_isometry star_isometry
 
-instance (priority := 100) NormedStarGroup.to_hasContinuousStar : HasContinuousStar E :=
+instance (priority := 100) NormedStarGroup.to_continuousStar : ContinuousStar E :=
   ⟨star_isometry.Continuous⟩
-#align normed_star_group.to_has_continuous_star NormedStarGroup.to_hasContinuousStar
+#align normed_star_group.to_has_continuous_star NormedStarGroup.to_continuousStar
 
 end NormedStarGroup
 

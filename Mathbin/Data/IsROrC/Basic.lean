@@ -1170,7 +1170,7 @@ theorem conjCle_apply : (conjCle : K → K) = conj :=
   rfl
 #align is_R_or_C.conj_cle_apply IsROrC.conjCle_apply
 
-instance (priority := 100) : HasContinuousStar K :=
+instance (priority := 100) : ContinuousStar K :=
   ⟨conjLie.Continuous⟩
 
 @[continuity]

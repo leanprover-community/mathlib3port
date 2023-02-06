@@ -124,7 +124,7 @@ theorem exp_blockDiagonal' (v : ∀ i, Matrix (n' i) (n' i) 𝔸) :
   simp_rw [exp_eq_tsum, ← block_diagonal'_pow, ← block_diagonal'_smul, ← block_diagonal'_tsum]
 #align matrix.exp_block_diagonal' Matrix.exp_blockDiagonal'
 
-theorem exp_conjTranspose [StarRing 𝔸] [HasContinuousStar 𝔸] (A : Matrix m m 𝔸) :
+theorem exp_conjTranspose [StarRing 𝔸] [ContinuousStar 𝔸] (A : Matrix m m 𝔸) :
     exp 𝕂 Aᴴ = (exp 𝕂 A)ᴴ :=
   (star_exp A).symm
 #align matrix.exp_conj_transpose Matrix.exp_conjTranspose

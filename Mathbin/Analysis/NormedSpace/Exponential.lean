@@ -136,7 +136,7 @@ theorem exp_unop [T2Space 𝔸] (x : 𝔸ᵐᵒᵖ) : exp 𝕂 (MulOpposite.unop
   by simp_rw [exp, expSeries_sum_eq, ← MulOpposite.unop_pow, ← MulOpposite.unop_smul, tsum_unop]
 #align exp_unop exp_unop
 
-theorem star_exp [T2Space 𝔸] [StarRing 𝔸] [HasContinuousStar 𝔸] (x : 𝔸) :
+theorem star_exp [T2Space 𝔸] [StarRing 𝔸] [ContinuousStar 𝔸] (x : 𝔸) :
     star (exp 𝕂 x) = exp 𝕂 (star x) := by
   simp_rw [exp_eq_tsum, ← star_pow, ← star_inv_nat_cast_smul, ← tsum_star]
 #align star_exp star_exp

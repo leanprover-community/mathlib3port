@@ -26,7 +26,7 @@ subtypes `self_adjoint A` and `unitary A`.
 
 section Star
 
-variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [StarRing A] [HasContinuousStar A]
+variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [StarRing A] [ContinuousStar A]
   [CompleteSpace A] [StarModule ℂ A]
 
 open Complex
