@@ -97,7 +97,7 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
   rcases ihN with ⟨n, hn, hμn⟩
   set T := s ∩ ⋃ n ≥ N + 1, f^[n] ⁻¹' s
   have hT : MeasurableSet T :=
-    hs.inter (MeasurableSet.bUnion (to_countable _) fun _ _ => hf.measurable.iterate _ hs)
+    hs.inter (MeasurableSet.bunionᵢ (to_countable _) fun _ _ => hf.measurable.iterate _ hs)
   have hμT : μ T = 0 :=
     by
     convert (measure_bUnion_null_iff <| to_countable _).2 hN
@@ -131,7 +131,7 @@ theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : Conservative f μ) (hs
     by
     simp only [set_of_forall, ← compl_set_of]
     exact
-      hs.inter (MeasurableSet.bInter (to_countable _) fun m _ => hf.measurable.iterate m hs.compl)
+      hs.inter (MeasurableSet.binterᵢ (to_countable _) fun m _ => hf.measurable.iterate m hs.compl)
   rcases(hf.exists_gt_measure_inter_ne_zero this H) n with ⟨m, hmn, hm⟩
   rcases nonempty_of_measure_ne_zero hm with ⟨x, ⟨hxs, hxn⟩, hxm, -⟩
   exact hxn m hmn.lt.le hxm

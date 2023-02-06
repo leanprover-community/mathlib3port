@@ -857,7 +857,7 @@ theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : s.Count
     (ht : ∀ i ∈ s, MeasurableSet (t i)) : MeasurableSet (s.pi t) :=
   by
   rw [pi_def]
-  exact MeasurableSet.bInter hs fun i hi => measurable_pi_apply _ (ht i hi)
+  exact MeasurableSet.binterᵢ hs fun i hi => measurable_pi_apply _ (ht i hi)
 #align measurable_set.pi MeasurableSet.pi
 
 theorem MeasurableSet.univ_pi [Countable δ] {t : ∀ i : δ, Set (π i)}

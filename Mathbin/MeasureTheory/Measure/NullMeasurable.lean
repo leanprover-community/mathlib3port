@@ -149,18 +149,18 @@ protected theorem union {ι : Sort _} [Countable ι] {s : ι → Set α}
 
 protected theorem bUnionDecode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : ∀ i, NullMeasurableSet (f i) μ)
     (n : ℕ) : NullMeasurableSet (⋃ b ∈ Encodable.decode₂ ι n, f b) μ :=
-  MeasurableSet.bUnion_decode₂ h n
+  MeasurableSet.bunionᵢ_decode₂ h n
 #align measure_theory.null_measurable_set.bUnion_decode₂ MeasureTheory.NullMeasurableSet.bUnionDecode₂
 
 protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : s.Countable)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
-  MeasurableSet.bUnion hs h
+  MeasurableSet.bunionᵢ hs h
 #align measure_theory.null_measurable_set.bUnion MeasureTheory.NullMeasurableSet.bUnion
 
 protected theorem sUnion {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
     NullMeasurableSet (⋃₀ s) μ := by
   rw [sUnion_eq_bUnion]
-  exact MeasurableSet.bUnion hs h
+  exact MeasurableSet.bunionᵢ hs h
 #align measure_theory.null_measurable_set.sUnion MeasureTheory.NullMeasurableSet.sUnion
 
 protected theorem inter {ι : Sort _} [Countable ι] {f : ι → Set α}
@@ -170,7 +170,7 @@ protected theorem inter {ι : Sort _} [Countable ι] {f : ι → Set α}
 
 protected theorem bInter {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
-  MeasurableSet.bInter hs h
+  MeasurableSet.binterᵢ hs h
 #align measure_theory.null_measurable_set.bInter MeasureTheory.NullMeasurableSet.bInter
 
 protected theorem sInter {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, NullMeasurableSet t μ) :
@@ -387,12 +387,12 @@ end MeasurableSingletonClass
 
 theorem Set.Finite.nullMeasurableSetBUnion {f : ι → Set α} {s : Set ι} (hs : s.Finite)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
-  Finite.measurableSet_bUnion hs h
+  Finite.measurableSet_bunionᵢ hs h
 #align set.finite.null_measurable_set_bUnion Set.Finite.nullMeasurableSetBUnion
 
 theorem Finset.nullMeasurableSetBUnion {f : ι → Set α} (s : Finset ι)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋃ b ∈ s, f b) μ :=
-  Finset.measurableSet_bUnion s h
+  Finset.measurableSet_bunionᵢ s h
 #align finset.null_measurable_set_bUnion Finset.nullMeasurableSetBUnion
 
 theorem Set.Finite.nullMeasurableSetSUnion {s : Set (Set α)} (hs : s.Finite)
@@ -402,7 +402,7 @@ theorem Set.Finite.nullMeasurableSetSUnion {s : Set (Set α)} (hs : s.Finite)
 
 theorem Set.Finite.nullMeasurableSetBInter {f : ι → Set α} {s : Set ι} (hs : s.Finite)
     (h : ∀ b ∈ s, NullMeasurableSet (f b) μ) : NullMeasurableSet (⋂ b ∈ s, f b) μ :=
-  Finite.measurableSet_bInter hs h
+  Finite.measurableSet_binterᵢ hs h
 #align set.finite.null_measurable_set_bInter Set.Finite.nullMeasurableSetBInter
 
 theorem Finset.nullMeasurableSetBInter {f : ι → Set α} (s : Finset ι)

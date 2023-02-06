@@ -418,7 +418,7 @@ theorem generateFrom_piUnionInter_singleton_left (s : ι → Set α) (S : Set ι
   by
   refine' le_antisymm (generate_from_le _) (generate_from_mono _)
   · rintro _ ⟨I, hI, f, hf, rfl⟩
-    refine' Finset.measurableSet_bInter _ fun m hm => measurable_set_generate_from _
+    refine' Finset.measurableSet_binterᵢ _ fun m hm => measurable_set_generate_from _
     exact ⟨m, hI hm, (hf m hm).symm⟩
   · rintro _ ⟨k, hk, rfl⟩
     refine' ⟨{k}, fun m hm => _, s, fun i hi => _, _⟩
@@ -485,7 +485,7 @@ theorem generateFrom_piUnionInter_le {m : MeasurableSpace α} (π : ι → Set (
   by
   refine' generate_from_le _
   rintro t ⟨ht_p, ht_p_mem, ft, hft_mem_pi, rfl⟩
-  refine' Finset.measurableSet_bInter _ fun x hx_mem => (h x) _ _
+  refine' Finset.measurableSet_binterᵢ _ fun x hx_mem => (h x) _ _
   exact measurable_set_generate_from (hft_mem_pi x hx_mem)
 #align generate_from_pi_Union_Inter_le generateFrom_piUnionInter_le
 

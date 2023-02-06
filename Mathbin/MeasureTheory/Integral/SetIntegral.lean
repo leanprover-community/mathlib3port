@@ -113,7 +113,7 @@ theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α}
     · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
     · simp only [disjoint_Union_right]
       exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_mem hi hat).symm).1
-    · exact Finset.measurableSet_bUnion _ hs.2
+    · exact Finset.measurableSet_bunionᵢ _ hs.2
 #align measure_theory.integral_finset_bUnion MeasureTheory.integral_finset_bUnion
 
 theorem integral_fintype_unionᵢ {ι : Type _} [Fintype ι] {s : ι → Set α}

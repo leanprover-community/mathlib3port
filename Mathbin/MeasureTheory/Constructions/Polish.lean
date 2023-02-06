@@ -757,13 +757,13 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
   simp_rw [and_iff_right (hl.map _),
     Filter.HasBasis.le_basis_iff (this _).to_hasBasis Metric.uniformity_basis_dist_inv_nat_succ,
     Set.setOf_forall]
-  refine' MeasurableSet.bInter Set.countable_univ fun K _ => _
+  refine' MeasurableSet.binterᵢ Set.countable_univ fun K _ => _
   simp_rw [Set.setOf_exists]
-  refine' MeasurableSet.bUnion Set.countable_univ fun N hN => _
+  refine' MeasurableSet.bunionᵢ Set.countable_univ fun N hN => _
   simp_rw [prod_image_image_eq, image_subset_iff, prod_subset_iff, Set.setOf_forall]
   exact
-    MeasurableSet.bInter (to_countable (u N)) fun i _ =>
-      MeasurableSet.bInter (to_countable (u N)) fun j _ =>
+    MeasurableSet.binterᵢ (to_countable (u N)) fun i _ =>
+      MeasurableSet.binterᵢ (to_countable (u N)) fun j _ =>
         measurableSet_lt (Measurable.dist (hf i) (hf j)) measurable_const
 #align measure_theory.measurable_set_exists_tendsto MeasureTheory.measurableSet_exists_tendsto
 

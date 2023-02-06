@@ -220,7 +220,7 @@ def extend : ℝ → X :=
 /-- See Note [continuity lemma statement]. -/
 theorem Continuous.path_extend {γ : Y → Path x y} {f : Y → ℝ} (hγ : Continuous ↿γ)
     (hf : Continuous f) : Continuous fun t => (γ t).extend (f t) :=
-  Continuous.iccExtend hγ hf
+  Continuous.IccExtend hγ hf
 #align continuous.path_extend Continuous.path_extend
 
 /-- A useful special case of `continuous.path_extend`. -/
@@ -233,7 +233,7 @@ theorem Filter.Tendsto.path_extend {X Y : Type _} [TopologicalSpace X] [Topologi
     {l r : Y → X} {y : Y} {l₁ : Filter ℝ} {l₂ : Filter X} {γ : ∀ y, Path (l y) (r y)}
     (hγ : Tendsto (↿γ) (𝓝 y ×ᶠ l₁.map (projIcc 0 1 zero_le_one)) l₂) :
     Tendsto (↿fun x => (γ x).extend) (𝓝 y ×ᶠ l₁) l₂ :=
-  Filter.Tendsto.iccExtend _ hγ
+  Filter.Tendsto.IccExtend' _ hγ
 #align filter.tendsto.path_extend Filter.Tendsto.path_extend
 
 theorem ContinuousAt.path_extend {g : Y → ℝ} {l r : Y → X} (γ : ∀ y, Path (l y) (r y)) {y : Y}

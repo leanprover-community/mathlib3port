@@ -211,7 +211,7 @@ theorem measurableSet_cut (r : α → β → Prop) (f : α →ₛ β) (h : ∀ b
     exact ⟨fun h => ⟨a, ⟨h, rfl⟩⟩, fun ⟨a', ⟨h', e⟩⟩ => e.symm ▸ h'⟩
   rw [this]
   exact
-    MeasurableSet.bUnion f.finite_range.countable fun b _ =>
+    MeasurableSet.bunionᵢ f.finite_range.countable fun b _ =>
       MeasurableSet.inter (h b) (f.measurable_set_fiber _)
 #align measure_theory.simple_func.measurable_set_cut MeasureTheory.SimpleFunc.measurableSet_cut
 
@@ -1183,7 +1183,7 @@ variable {m : MeasurableSpace α} [Zero β] [Zero γ] {μ : Measure α} {f : α 
 theorem measurableSet_support [MeasurableSpace α] (f : α →ₛ β) : MeasurableSet (support f) :=
   by
   rw [f.support_eq]
-  exact Finset.measurableSet_bUnion _ fun y hy => measurable_set_fiber _ _
+  exact Finset.measurableSet_bunionᵢ _ fun y hy => measurable_set_fiber _ _
 #align measure_theory.simple_func.measurable_set_support MeasureTheory.SimpleFunc.measurableSet_support
 
 /-- A `simple_func` has finite measure support if it is equal to `0` outside of a set of finite

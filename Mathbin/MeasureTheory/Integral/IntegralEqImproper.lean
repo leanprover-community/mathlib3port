@@ -327,7 +327,7 @@ theorem AeCover.bUnionIicAeCover [Preorder ι] {φ : ι → Set α} (hφ : AeCov
     AeCover μ atTop fun n : ι => ⋃ (k) (h : k ∈ Iic n), φ k :=
   { ae_eventually_mem :=
       hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bunionᵢ right_mem_Iic hi
-    Measurable := fun i => MeasurableSet.bUnion (to_countable _) fun n _ => hφ.Measurable n }
+    Measurable := fun i => MeasurableSet.bunionᵢ (to_countable _) fun n _ => hφ.Measurable n }
 #align measure_theory.ae_cover.bUnion_Iic_ae_cover MeasureTheory.AeCover.bUnionIicAeCover
 
 theorem AeCover.bInterIciAeCover [SemilatticeSup ι] [Nonempty ι] {φ : ι → Set α}
@@ -341,7 +341,7 @@ theorem AeCover.bInterIciAeCover [SemilatticeSup ι] [Nonempty ι] {φ : ι → 
           use i
           intro j hj
           exact mem_bInter fun k hk => hi k (le_trans hj hk))
-    Measurable := fun i => MeasurableSet.bInter (to_countable _) fun n _ => hφ.Measurable n }
+    Measurable := fun i => MeasurableSet.binterᵢ (to_countable _) fun n _ => hφ.Measurable n }
 #align measure_theory.ae_cover.bInter_Ici_ae_cover MeasureTheory.AeCover.bInterIciAeCover
 
 end AeCoverUnionInterCountable

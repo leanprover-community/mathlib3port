@@ -625,7 +625,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     exact this.mono ball_subset_interior_closed_ball
   let v : Fin N → Set α := fun i => ⋃ (x : s) (hx : x ∈ u i), closed_ball x (r x)
   have : ∀ i, MeasurableSet (v i) := fun i =>
-    MeasurableSet.bUnion (u_count i) fun b hb => measurableSet_closedBall
+    MeasurableSet.bunionᵢ (u_count i) fun b hb => measurableSet_closedBall
   have A : s = ⋃ i : Fin N, s ∩ v i :=
     by
     refine' subset.antisymm _ (Union_subset fun i => inter_subset_left _ _)

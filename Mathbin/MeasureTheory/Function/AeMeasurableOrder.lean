@@ -66,7 +66,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
   have u'_meas : ∀ i, MeasurableSet (u' i) := by
     intro i
-    exact MeasurableSet.bInter (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
+    exact MeasurableSet.binterᵢ (s_count.mono (inter_subset_left _ _)) fun b hb => (huv i b).1
   let f' : α → β := fun x => ⨅ i : s, piecewise (u' i) (fun x => (i : β)) (fun x => (⊤ : β)) x
   have f'_meas : Measurable f' := by
     apply measurable_infᵢ

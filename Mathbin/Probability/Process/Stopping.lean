@@ -113,7 +113,7 @@ protected theorem measurableSet_eq_of_countable_range (hτ : IsStoppingTime f τ
       · rfl
   rw [this]
   refine' (hτ.measurable_set_le i).diffₓ _
-  refine' MeasurableSet.bUnion h_countable fun j hj => _
+  refine' MeasurableSet.bunionᵢ h_countable fun j hj => _
   by_cases hji : j < i
   · simp only [hji, Set.unionᵢ_true]
     exact f.mono hji.le _ (hτ.measurable_set_le j)
@@ -272,7 +272,7 @@ theorem isStoppingTime_of_measurableSet_eq [Preorder ι] [Countable ι] {f : Fil
       by
       ext
       simp]
-  refine' MeasurableSet.bUnion (Set.to_countable _) fun k hk => _
+  refine' MeasurableSet.bunionᵢ (Set.to_countable _) fun k hk => _
   exact f.mono hk _ (hτ k)
 #align measure_theory.is_stopping_time_of_measurable_set_eq MeasureTheory.isStoppingTime_of_measurableSet_eq
 
@@ -635,7 +635,7 @@ protected theorem measurableSpace_le_of_countable_range (hτ : IsStoppingTime f 
   intro s hs
   change ∀ i, measurable_set[f i] (s ∩ { ω | τ ω ≤ i }) at hs
   rw [(_ : s = ⋃ i ∈ Set.range τ, s ∩ { ω | τ ω ≤ i })]
-  · exact MeasurableSet.bUnion h_countable fun i _ => f.le i _ (hs i)
+  · exact MeasurableSet.bunionᵢ h_countable fun i _ => f.le i _ (hs i)
   · ext ω
     constructor <;> rw [Set.mem_unionᵢ]
     · exact fun hx => ⟨τ ω, by simpa using hx⟩

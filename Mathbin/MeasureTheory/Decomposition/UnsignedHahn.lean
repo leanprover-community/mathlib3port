@@ -106,7 +106,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   have hf : ∀ n m, MeasurableSet (f n m) := by
     intro n m
     simp only [f, Finset.inf_eq_infᵢ]
-    exact MeasurableSet.bInter (to_countable _) fun i _ => he₁ _
+    exact MeasurableSet.binterᵢ (to_countable _) fun i _ => he₁ _
   have f_subset_f : ∀ {a b c d}, a ≤ b → c ≤ d → f a d ⊆ f b c :=
     by
     intro a b c d hab hcd

@@ -73,7 +73,7 @@ theorem borel_eq_top_of_discrete [TopologicalSpace α] [DiscreteTopology α] : b
 theorem borel_eq_top_of_countable [TopologicalSpace α] [T1Space α] [Countable α] : borel α = ⊤ :=
   by
   refine' top_le_iff.1 fun s hs => bUnion_of_singleton s ▸ _
-  apply MeasurableSet.bUnion s.to_countable
+  apply MeasurableSet.bunionᵢ s.to_countable
   intro x hx
   apply MeasurableSet.of_compl
   apply generate_measurable.basic
@@ -597,7 +597,7 @@ theorem Dense.borel_eq_generateFrom_Ico_mem_aux {α : Type _} [TopologicalSpace 
         exact ⟨l, hlt, u, hut, hly.trans_lt hyu, hua.le, hly, hyu⟩
       · rintro ⟨l, -, u, -, -, hua, -, hyu⟩
         exact hyu.trans_le hua
-    · refine' MeasurableSet.bUnion hc fun a ha => MeasurableSet.bUnion hc fun b hb => _
+    · refine' MeasurableSet.bunionᵢ hc fun a ha => MeasurableSet.bunionᵢ hc fun b hb => _
       refine' MeasurableSet.unionᵢ fun hab => MeasurableSet.unionᵢ fun hb' => _
       exact generate_measurable.basic _ ⟨a, hts ha, b, hts hb, hab, mem_singleton _⟩
   · simp only [not_forall, not_nonempty_iff_eq_empty] at ha
@@ -609,7 +609,7 @@ theorem Dense.borel_eq_generateFrom_Ico_mem_aux {α : Type _} [TopologicalSpace 
       intro x hx
       rcases htd.exists_le' (fun b hb => htb _ hb (hbot b hb)) x with ⟨z, hzt, hzx⟩
       exact ⟨z, hzt, hzx.trans_lt hx, hzx⟩
-    · refine' MeasurableSet.bUnion hc fun x hx => MeasurableSet.unionᵢ fun hlt => _
+    · refine' MeasurableSet.bunionᵢ hc fun x hx => MeasurableSet.unionᵢ fun hlt => _
       exact generate_measurable.basic _ ⟨x, hts hx, a, ha, hlt, mem_singleton _⟩
 #align dense.borel_eq_generate_from_Ico_mem_aux Dense.borel_eq_generateFrom_Ico_mem_aux
 
@@ -1387,7 +1387,7 @@ theorem measurable_cSup {ι} {f : ι → δ → α} {s : Set ι} (hs : s.Countab
   · apply measurable_of_Iic
     intro y
     simp_rw [preimage, mem_Iic, csupₛ_le_iff (bdd _) (h2s.image _), ball_image_iff, set_of_forall]
-    exact MeasurableSet.bInter hs fun i hi => measurableSet_le (hf i) measurable_const
+    exact MeasurableSet.binterᵢ hs fun i hi => measurableSet_le (hf i) measurable_const
 #align measurable_cSup measurable_cSup
 
 end ConditionallyCompleteLinearOrder
@@ -1785,7 +1785,7 @@ theorem borel_eq_generateFrom_Iio_rat : borel ℝ = generateFrom (⋃ a : ℚ, {
     · have hg : ∀ q : ℚ, measurable_set[g] (Iio q) := fun q =>
         generate_measurable.basic (Iio q) (by simp)
       refine' @MeasurableSet.inter _ g _ _ _ (hg _)
-      refine' @MeasurableSet.bUnion _ _ g _ _ (to_countable _) fun c h => _
+      refine' @MeasurableSet.bunionᵢ _ _ g _ _ (to_countable _) fun c h => _
       exact @MeasurableSet.compl _ _ g (hg _)
     · suffices x < ↑b → (↑a < x ↔ ∃ i : ℚ, a < i ∧ ↑i ≤ x) by simpa
       refine' fun _ => ⟨fun h => _, fun ⟨i, hai, hix⟩ => (Rat.cast_lt.2 hai).trans_le hix⟩
