@@ -1013,19 +1013,19 @@ theorem irreducible_pow_sup_of_le (hJ : Irreducible J) (n : ℕ) (hn : ↑n ≤ 
   by_cases hI : I = ⊥
   · simp_all
   rw [irreducible_pow_sup hI hJ, min_eq_right]
-  rwa [multiplicity_eq_count_normalized_factors hJ hI, PartEnat.coe_le_coe, normalize_eq J] at hn
+  rwa [multiplicity_eq_count_normalized_factors hJ hI, PartENat.coe_le_coe, normalize_eq J] at hn
 #align irreducible_pow_sup_of_le irreducible_pow_sup_of_le
 
 theorem irreducible_pow_sup_of_ge (hI : I ≠ ⊥) (hJ : Irreducible J) (n : ℕ)
     (hn : multiplicity J I ≤ n) :
-    J ^ n ⊔ I = J ^ (multiplicity J I).get (PartEnat.dom_of_le_coe hn) :=
+    J ^ n ⊔ I = J ^ (multiplicity J I).get (PartENat.dom_of_le_natCast hn) :=
   by
   rw [irreducible_pow_sup hI hJ, min_eq_left]
   congr
   ·
-    rw [← PartEnat.coe_inj, PartEnat.coe_get, multiplicity_eq_count_normalized_factors hJ hI,
-      normalize_eq J]
-  · rwa [multiplicity_eq_count_normalized_factors hJ hI, PartEnat.coe_le_coe, normalize_eq J] at hn
+    rw [← PartENat.natCast_inj, PartENat.natCast_get,
+      multiplicity_eq_count_normalized_factors hJ hI, normalize_eq J]
+  · rwa [multiplicity_eq_count_normalized_factors hJ hI, PartENat.coe_le_coe, normalize_eq J] at hn
 #align irreducible_pow_sup_of_ge irreducible_pow_sup_of_ge
 
 end IsDedekindDomain
@@ -1533,7 +1533,7 @@ theorem multiplicity_eq_multiplicity_span [DecidableRel ((· ∣ ·) : R → R �
     multiplicity (Ideal.span {a}) (Ideal.span ({b} : Set R)) = multiplicity a b :=
   by
   by_cases h : Finite a b
-  · rw [← PartEnat.coe_get (finite_iff_dom.mp h)]
+  · rw [← PartENat.natCast_get (finite_iff_dom.mp h)]
     refine'
         (multiplicity.unique
             (show Ideal.span {a} ^ (multiplicity a b).get h ∣ Ideal.span {b} from _) _).symm <;>
@@ -1542,10 +1542,10 @@ theorem multiplicity_eq_multiplicity_span [DecidableRel ((· ∣ ·) : R → R �
     ·
       exact
         multiplicity.is_greatest
-          ((PartEnat.lt_coe_iff _ _).mpr (Exists.intro (finite_iff_dom.mp h) (Nat.lt_succ_self _)))
+          ((PartENat.lt_coe_iff _ _).mpr (Exists.intro (finite_iff_dom.mp h) (Nat.lt_succ_self _)))
   · suffices ¬Finite (Ideal.span ({a} : Set R)) (Ideal.span ({b} : Set R))
       by
-      rw [finite_iff_dom, PartEnat.not_dom_iff_eq_top] at h this
+      rw [finite_iff_dom, PartENat.not_dom_iff_eq_top] at h this
       rw [h, this]
     refine'
       not_finite_iff_forall.mpr fun n =>

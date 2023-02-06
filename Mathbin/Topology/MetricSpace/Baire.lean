@@ -324,7 +324,7 @@ instance : CountableInterFilter (residual α) :=
     refine' ⟨⋂ s ∈ S, T s ‹_›, _, _, _⟩
     · rw [sInter_eq_bInter]
       exact Inter₂_mono hTs
-    · exact isGδ_bInter hSc fun s hs => (hT s hs).1
+    · exact isGδ_binterᵢ hSc fun s hs => (hT s hs).1
     · exact dense_bInter_of_Gδ (fun s hs => (hT s hs).1) hSc fun s hs => (hT s hs).2⟩
 
 /-- If a countable family of closed sets cover a dense `Gδ` set, then the union of their interiors

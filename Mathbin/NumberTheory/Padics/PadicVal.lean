@@ -89,7 +89,7 @@ theorem self (hp : 1 < p) : padicValNat p p = 1 :=
 
 @[simp]
 theorem eq_zero_iff {n : ℕ} : padicValNat p n = 0 ↔ p = 1 ∨ n = 0 ∨ ¬p ∣ n := by
-  simp only [padicValNat, dite_eq_right_iff, PartEnat.get_eq_iff_eq_coe, Nat.cast_zero,
+  simp only [padicValNat, dite_eq_right_iff, PartENat.get_eq_iff_eq_coe, Nat.cast_zero,
     multiplicity_eq_zero, and_imp, pos_iff_ne_zero, Ne.def, ← or_iff_not_imp_left]
 #align padic_val_nat.eq_zero_iff padicValNat.eq_zero_iff
 
@@ -244,7 +244,7 @@ theorem padicValNat_self [Fact p.Prime] : padicValNat p p = 1 := by
 
 theorem one_le_padicValNat_of_dvd {n : ℕ} [hp : Fact p.Prime] (hn : 0 < n) (div : p ∣ n) :
     1 ≤ padicValNat p n := by
-  rwa [← PartEnat.coe_le_coe, padicValNat_def' hp.out.ne_one hn, ← pow_dvd_iff_le_multiplicity,
+  rwa [← PartENat.coe_le_coe, padicValNat_def' hp.out.ne_one hn, ← pow_dvd_iff_le_multiplicity,
     pow_one]
 #align one_le_padic_val_nat_of_dvd one_le_padicValNat_of_dvd
 
@@ -339,7 +339,7 @@ theorem padicValRat_le_padicValRat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : n₁
       add_sub_assoc, le_sub_iff_add_le]
     norm_cast
     rw [← multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1) hf1, add_comm, ←
-      multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1) hf2, PartEnat.get_le_get,
+      multiplicity.mul' (Nat.prime_iff_prime_int.1 hp.1) hf2, PartENat.get_le_get,
       multiplicity_le_multiplicity_iff]
 #align padic_val_rat.padic_val_rat_le_padic_val_rat_iff padicValRat.padicValRat_le_padicValRat_iff
 
@@ -482,7 +482,7 @@ theorem pow_padicValNat_dvd {n : ℕ} : p ^ padicValNat p n ∣ n :=
 
 theorem padicValNat_dvd_iff_le [hp : Fact p.Prime] {a n : ℕ} (ha : a ≠ 0) :
     p ^ n ∣ a ↔ n ≤ padicValNat p a := by
-  rw [pow_dvd_iff_le_multiplicity, ← padicValNat_def' hp.out.ne_one ha.bot_lt, PartEnat.coe_le_coe]
+  rw [pow_dvd_iff_le_multiplicity, ← padicValNat_def' hp.out.ne_one ha.bot_lt, PartENat.coe_le_coe]
 #align padic_val_nat_dvd_iff_le padicValNat_dvd_iff_le
 
 theorem padicValNat_dvd_iff (n : ℕ) [hp : Fact p.Prime] (a : ℕ) :

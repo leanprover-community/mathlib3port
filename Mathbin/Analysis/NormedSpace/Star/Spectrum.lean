@@ -194,7 +194,7 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
   map_star φ a := by
     suffices hsa : ∀ s : selfAdjoint A, (φ s)⋆ = φ s
     · rw [← realPart_add_i_smul_imaginaryPart a]
-      simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_coe_eq]
+      simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_val_eq]
     · intro s
       have := AlgHom.apply_mem_spectrum φ (s : A)
       rw [selfAdjoint.coe_re_map_spectrum s] at this

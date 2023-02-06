@@ -1063,7 +1063,7 @@ theorem OrderIso.apply_bliminf [CompleteLattice γ] (e : α ≃o γ) :
   @OrderIso.apply_blimsup αᵒᵈ β γᵒᵈ _ f p u _ e.dual
 #align filter.order_iso.apply_bliminf Filter.OrderIso.apply_bliminf
 
-theorem SupHom.apply_blimsup_le [CompleteLattice γ] (g : SupHomCat α γ) :
+theorem SupHom.apply_blimsup_le [CompleteLattice γ] (g : SupₛHom α γ) :
     g (blimsup u f p) ≤ blimsup (g ∘ u) f p :=
   by
   simp only [blimsup_eq_infi_bsupr]
@@ -1071,7 +1071,7 @@ theorem SupHom.apply_blimsup_le [CompleteLattice γ] (g : SupHomCat α γ) :
   simp only [_root_.map_supr]
 #align filter.Sup_hom.apply_blimsup_le Filter.SupHom.apply_blimsup_le
 
-theorem InfHom.le_apply_bliminf [CompleteLattice γ] (g : InfHomCat α γ) :
+theorem InfHom.le_apply_bliminf [CompleteLattice γ] (g : InfₛHom α γ) :
     bliminf (g ∘ u) f p ≤ g (bliminf u f p) :=
   @SupHom.apply_blimsup_le αᵒᵈ β γᵒᵈ _ f p u _ g.dual
 #align filter.Inf_hom.le_apply_bliminf Filter.InfHom.le_apply_bliminf

@@ -539,7 +539,7 @@ theorem rootMultiplicity_zero {x : R} : rootMultiplicity x 0 = 0 :=
 @[simp]
 theorem rootMultiplicity_eq_zero_iff {p : R[X]} {x : R} :
     rootMultiplicity x p = 0 ↔ IsRoot p x → p = 0 := by
-  simp only [root_multiplicity_eq_multiplicity, dite_eq_left_iff, PartEnat.get_eq_iff_eq_coe,
+  simp only [root_multiplicity_eq_multiplicity, dite_eq_left_iff, PartENat.get_eq_iff_eq_coe,
     Nat.cast_zero, multiplicity.multiplicity_eq_zero, dvd_iff_is_root, not_imp_not]
 #align polynomial.root_multiplicity_eq_zero_iff Polynomial.rootMultiplicity_eq_zero_iff
 

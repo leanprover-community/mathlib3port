@@ -1020,7 +1020,7 @@ theorem multiplicity_eq_count_normalizedFactors {a b : R} (ha : Irreducible a) (
     multiplicity a b = (normalizedFactors b).count (normalize a) :=
   by
   apply le_antisymm
-  · apply PartEnat.le_of_lt_add_one
+  · apply PartENat.le_of_lt_add_one
     rw [← Nat.cast_one, ← Nat.cast_add, lt_iff_not_ge, ge_iff_le,
       le_multiplicity_iff_replicate_le_normalized_factors ha hb, ← le_count_iff_replicate_le]
     simp
@@ -1041,7 +1041,7 @@ theorem count_normalizedFactors_eq {p x : R} (hp : Irreducible p) (hnorm : norma
   by_cases hx0 : x = 0
   · simp [hx0] at hlt
     contradiction
-  rw [← PartEnat.coe_inj]
+  rw [← PartENat.natCast_inj]
   convert (multiplicity_eq_count_normalized_factors hp hx0).symm
   · exact hnorm.symm
   exact (multiplicity.eq_coe_iff.mpr ⟨hle, hlt⟩).symm

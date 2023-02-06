@@ -426,14 +426,14 @@ def skewAdjoint.negISmul : skewAdjoint A →ₗ[ℝ] selfAdjoint A
   toFun a :=
     ⟨-i • a, by
       simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_I,
-        skewAdjoint.star_coe_eq, neg_smul_neg]⟩
+        skewAdjoint.star_val_eq, neg_smul_neg]⟩
   map_add' a b := by
     ext
     simp only [AddSubgroup.coe_add, smul_add, AddMemClass.mk_add_mk]
   map_smul' a b := by
     ext
-    simp only [neg_smul, skewAdjoint.coe_smul, AddSubgroup.coe_mk, RingHom.id_apply,
-      selfAdjoint.coe_smul, smul_neg, neg_inj]
+    simp only [neg_smul, skewAdjoint.val_smul, AddSubgroup.coe_mk, RingHom.id_apply,
+      selfAdjoint.val_smul, smul_neg, neg_inj]
     rw [smul_comm]
 #align skew_adjoint.neg_I_smul skewAdjoint.negISmul
 

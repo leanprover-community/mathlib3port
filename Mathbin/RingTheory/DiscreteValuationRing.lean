@@ -421,7 +421,7 @@ open multiplicity
 
 /-- The `part_enat`-valued additive valuation on a DVR -/
 noncomputable def addVal (R : Type u) [CommRing R] [IsDomain R] [DiscreteValuationRing R] :
-    AddValuation R PartEnat :=
+    AddValuation R PartENat :=
   AddValuation (Classical.choose_spec (exists_prime R))
 #align discrete_valuation_ring.add_val DiscreteValuationRing.addVal
 
@@ -477,7 +477,7 @@ theorem addVal_eq_top_iff {a : R} : addVal R a = ⊤ ↔ a = 0 :=
     obtain ⟨n, ha⟩ := associated_pow_irreducible h hi
     obtain ⟨u, rfl⟩ := ha.symm
     rw [mul_comm, add_val_def' u hi n]
-    exact PartEnat.coe_ne_top _
+    exact PartENat.natCast_ne_top _
   · rintro rfl
     exact add_val_zero
 #align discrete_valuation_ring.add_val_eq_top_iff DiscreteValuationRing.addVal_eq_top_iff
@@ -510,7 +510,7 @@ instance (R : Type _) [CommRing R] [IsDomain R] [DiscreteValuationRing R] :
     simp only [← Ideal.one_eq_top, smul_eq_mul, mul_one, Smodeq.zero, hϖ.maximal_ideal_eq,
       Ideal.span_singleton_pow, Ideal.mem_span_singleton, ← add_val_le_iff_dvd, hϖ.add_val_pow] at
       hx
-    rwa [← add_val_eq_top_iff, PartEnat.eq_top_iff_forall_le]
+    rwa [← add_val_eq_top_iff, PartENat.eq_top_iff_forall_le]
 
 end DiscreteValuationRing
 

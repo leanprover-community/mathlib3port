@@ -232,7 +232,7 @@ theorem IsCompact.exists_supₛ_image_eq :
 
 theorem eq_Icc_of_connected_compact {s : Set α} (h₁ : IsConnected s) (h₂ : IsCompact s) :
     s = Icc (infₛ s) (supₛ s) :=
-  eq_Icc_cInf_cSup_of_connected_bdd_closed h₁ h₂.BddBelow h₂.BddAbove h₂.IsClosed
+  eq_Icc_cinfₛ_csupₛ_of_connected_bdd_closed h₁ h₂.BddBelow h₂.BddAbove h₂.IsClosed
 #align eq_Icc_of_connected_compact eq_Icc_of_connected_compact
 
 /-!

@@ -315,7 +315,7 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
   have := multiplicity_factors_map_eq_multiplicity hI hI' hx hx' hJ
   rw [multiplicity_eq_count_normalized_factors, multiplicity_eq_count_normalized_factors,
     UniqueFactorizationMonoid.normalize_normalized_factor _ hJ,
-    UniqueFactorizationMonoid.normalize_normalized_factor, PartEnat.coe_inj] at this
+    UniqueFactorizationMonoid.normalize_normalized_factor, PartENat.natCast_inj] at this
   refine' this.trans _
   -- Get rid of the `map` by applying the equiv to both sides.
   generalize hJ' :

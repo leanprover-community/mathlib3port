@@ -273,7 +273,7 @@ section CompleteLattice
 variable [CompleteLattice α] [CompleteLattice β] [TopologicalSpace α] [LowerTopology α]
   [TopologicalSpace β] [LowerTopology β]
 
-theorem InfHomCat.continuous (f : InfHomCat α β) : Continuous f :=
+theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
   by
   convert continuous_generateFrom _
   · exact LowerTopology.topology_eq_lowerTopology β
@@ -282,11 +282,11 @@ theorem InfHomCat.continuous (f : InfHomCat α β) : Continuous f :=
   convert LowerTopology.isClosed_Ici (Inf <| f ⁻¹' Ici b)
   refine' subset_antisymm (fun a => infₛ_le) fun a ha => le_trans _ <| OrderHomClass.mono f ha
   simp [map_Inf]
-#align Inf_hom.continuous InfHomCat.continuous
+#align Inf_hom.continuous InfₛHom.continuous
 
 -- see Note [lower instance priority]
 instance (priority := 90) LowerTopology.to_hasContinuousInf : HasContinuousInf α :=
-  ⟨(infInfHom : InfHomCat (α × α) α).Continuous⟩
+  ⟨(infInfₛHom : InfₛHom (α × α) α).Continuous⟩
 #align lower_topology.to_has_continuous_inf LowerTopology.to_hasContinuousInf
 
 end CompleteLattice

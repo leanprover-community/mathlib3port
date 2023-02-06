@@ -1686,7 +1686,7 @@ theorem toNat_add_of_lt_aleph0 {a : Cardinal.{u}} {b : Cardinal.{v}} (ha : a < �
 
 /-- This function sends finite cardinals to the corresponding natural, and infinite cardinals
   to `⊤`. -/
-def toPartEnat : Cardinal →+ PartEnat
+def toPartEnat : Cardinal →+ PartENat
     where
   toFun c := if c < ℵ₀ then c.toNat else ⊤
   map_zero' := by simp [if_pos (zero_lt_one.trans one_lt_aleph_0)]
@@ -1697,10 +1697,10 @@ def toPartEnat : Cardinal →+ PartEnat
       · obtain ⟨y0, rfl⟩ := lt_aleph_0.1 hy
         simp only [add_lt_aleph_0 hx hy, hx, hy, to_nat_cast, if_true]
         rw [← Nat.cast_add, to_nat_cast, Nat.cast_add]
-      · rw [if_neg hy, if_neg, PartEnat.add_top]
+      · rw [if_neg hy, if_neg, PartENat.add_top]
         contrapose! hy
         apply le_add_self.trans_lt hy
-    · rw [if_neg hx, if_neg, PartEnat.top_add]
+    · rw [if_neg hx, if_neg, PartENat.top_add]
       contrapose! hx
       apply le_self_add.trans_lt hx
 #align cardinal.to_part_enat Cardinal.toPartEnat
@@ -1729,7 +1729,7 @@ theorem aleph0_toPartEnat : toPartEnat ℵ₀ = ⊤ :=
 #align cardinal.aleph_0_to_part_enat Cardinal.aleph0_toPartEnat
 
 theorem toPartEnat_surjective : Surjective toPartEnat := fun x =>
-  PartEnat.cases_on x ⟨ℵ₀, toPartEnat_apply_of_aleph0_le le_rfl⟩ fun n => ⟨n, toPartEnat_cast n⟩
+  PartENat.casesOn x ⟨ℵ₀, toPartEnat_apply_of_aleph0_le le_rfl⟩ fun n => ⟨n, toPartEnat_cast n⟩
 #align cardinal.to_part_enat_surjective Cardinal.toPartEnat_surjective
 
 theorem mk_toPartEnat_eq_coe_card [Fintype α] : (#α).toPartEnat = Fintype.card α := by simp

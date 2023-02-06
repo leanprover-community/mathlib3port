@@ -115,7 +115,7 @@ theorem squarefree_iff_multiplicity_le_one (r : R) :
   by
   refine' forall_congr' fun a => _
   rw [← sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_le, imp_congr _ Iff.rfl]
-  simpa using PartEnat.add_one_le_iff_lt (PartEnat.coe_ne_top 1)
+  simpa using PartENat.add_one_le_iff_lt (PartENat.natCast_ne_top 1)
 #align multiplicity.squarefree_iff_multiplicity_le_one multiplicity.squarefree_iff_multiplicity_le_one
 
 end CommMonoid
@@ -131,11 +131,11 @@ theorem finite_prime_left {a b : R} (ha : Prime a) (hb : b ≠ 0) : multiplicity
       WfDvdMonoid.induction_on_irreducible b (by contradiction) (fun u hu hu' => _)
         fun b p hb hp ih hpb => _
     · rw [multiplicity.finite_iff_dom, multiplicity.isUnit_right ha.not_unit hu]
-      exact PartEnat.dom_coe 0
+      exact PartENat.dom_natCast 0
     · refine'
         multiplicity.finite_mul ha
           (multiplicity.finite_iff_dom.mpr
-            (PartEnat.dom_of_le_coe (show multiplicity a p ≤ ↑1 from _)))
+            (PartENat.dom_of_le_natCast (show multiplicity a p ≤ ↑1 from _)))
           (ih hb)
       norm_cast
       exact

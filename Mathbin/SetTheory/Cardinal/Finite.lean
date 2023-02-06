@@ -135,23 +135,23 @@ theorem card_zMod (n : ℕ) : Nat.card (ZMod n) = n :=
 
 end Nat
 
-namespace PartEnat
+namespace PartENat
 
 /-- `part_enat.card α` is the cardinality of `α` as an extended natural number.
   If `α` is infinite, `part_enat.card α = ⊤`. -/
-def card (α : Type _) : PartEnat :=
+def card (α : Type _) : PartENat :=
   (mk α).toPartEnat
-#align part_enat.card PartEnat.card
+#align part_enat.card PartENat.card
 
 @[simp]
 theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
   mk_toPartEnat_eq_coe_card
-#align part_enat.card_eq_coe_fintype_card PartEnat.card_eq_coe_fintype_card
+#align part_enat.card_eq_coe_fintype_card PartENat.card_eq_coe_fintype_card
 
 @[simp]
 theorem card_eq_top_of_infinite [Infinite α] : card α = ⊤ :=
   mk_toPartEnat_of_infinite
-#align part_enat.card_eq_top_of_infinite PartEnat.card_eq_top_of_infinite
+#align part_enat.card_eq_top_of_infinite PartENat.card_eq_top_of_infinite
 
-end PartEnat
+end PartENat
 

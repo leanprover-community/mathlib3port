@@ -1147,7 +1147,7 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
   have habs : map (Int.castRingHom (ZMod p)) P ^ 2 ∣ map (Int.castRingHom (ZMod p)) P ^ 2 * R := by
     use R
   replace habs :=
-    lt_of_lt_of_le (PartEnat.coe_lt_coe.2 one_lt_two)
+    lt_of_lt_of_le (PartENat.coe_lt_coe.2 one_lt_two)
       (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs Prod))
   have hfree : Squarefree (X ^ n - 1 : (ZMod p)[X]) :=
     (separable_X_pow_sub_C 1 (fun h => hdiv <| (ZMod.nat_coe_zMod_eq_zero_iff_dvd n p).1 h)

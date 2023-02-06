@@ -159,7 +159,7 @@ theorem multiplicity_le_one_of_separable {p q : R[X]} (hq : ¬IsUnit q) (hsep : 
   apply is_unit_of_self_mul_dvd_separable hsep
   rw [← sq]
   apply multiplicity.pow_dvd_of_le_multiplicity
-  simpa only [Nat.cast_one, Nat.cast_bit0] using PartEnat.add_one_le_of_lt hq
+  simpa only [Nat.cast_one, Nat.cast_bit0] using PartENat.add_one_le_of_lt hq
 #align polynomial.multiplicity_le_one_of_separable Polynomial.multiplicity_le_one_of_separable
 
 theorem Separable.squarefree {p : R[X]} (hsep : Separable p) : Squarefree p :=
@@ -255,7 +255,7 @@ theorem rootMultiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : S
   by
   by_cases hp : p = 0
   · simp [hp]
-  rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← PartEnat.coe_le_coe, PartEnat.coe_get,
+  rw [root_multiplicity_eq_multiplicity, dif_neg hp, ← PartENat.coe_le_coe, PartENat.natCast_get,
     Nat.cast_one]
   exact multiplicity_le_one_of_separable (not_is_unit_X_sub_C _) hsep
 #align polynomial.root_multiplicity_le_one_of_separable Polynomial.rootMultiplicity_le_one_of_separable

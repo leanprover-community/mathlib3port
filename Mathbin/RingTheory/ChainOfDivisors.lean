@@ -346,8 +346,9 @@ theorem multiplicity_prime_le_multiplicity_image_by_factor_orderIso [DecidableEq
   by_cases hm : m = 0
   · simpa [hm] using hp
   rw [←
-    PartEnat.coe_get (finite_iff_dom.1 <| finite_prime_left (prime_of_normalized_factor p hp) hm), ←
-    pow_dvd_iff_le_multiplicity]
+    PartENat.natCast_get
+      (finite_iff_dom.1 <| finite_prime_left (prime_of_normalized_factor p hp) hm),
+    ← pow_dvd_iff_le_multiplicity]
   exact pow_image_of_prime_by_factor_orderIso_dvd hn hp d (pow_multiplicity_dvd _)
 #align multiplicity_prime_le_multiplicity_image_by_factor_order_iso multiplicity_prime_le_multiplicity_image_by_factor_orderIso
 

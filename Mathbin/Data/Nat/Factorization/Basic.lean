@@ -78,7 +78,7 @@ theorem factors_count_eq {n p : ℕ} : n.factors.count p = n.factorization p :=
   · rw [count_eq_zero_of_not_mem (mt prime_of_mem_factors pp)]
     simp [factorization, pp]
   simp only [factorization, coe_mk, pp, if_true]
-  rw [← PartEnat.coe_inj, padicValNat_def' pp.ne_one hn0,
+  rw [← PartENat.natCast_inj, padicValNat_def' pp.ne_one hn0,
     UniqueFactorizationMonoid.multiplicity_eq_count_normalizedFactors pp hn0.ne']
   simp [factors_eq]
 #align nat.factors_count_eq Nat.factors_count_eq

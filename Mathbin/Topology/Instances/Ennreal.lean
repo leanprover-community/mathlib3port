@@ -233,7 +233,7 @@ theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0�
 
 @[instance]
 theorem nhdsWithin_Ioi_coe_neBot {r : ℝ≥0} : (𝓝[>] (r : ℝ≥0∞)).ne_bot :=
-  nhdsWithin_Ioi_self_ne_bot' ⟨⊤, Ennreal.coe_lt_top⟩
+  nhdsWithin_Ioi_self_neBot' ⟨⊤, Ennreal.coe_lt_top⟩
 #align ennreal.nhds_within_Ioi_coe_ne_bot Ennreal.nhdsWithin_Ioi_coe_neBot
 
 @[instance]
@@ -538,7 +538,7 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0∞} (h : ∀ a < 1, a * x ≤ 
   have : tendsto (· * x) (𝓝[<] 1) (𝓝 (1 * x)) :=
     (Ennreal.continuousAt_mul_const (Or.inr one_ne_zero)).mono_left inf_le_left
   rw [one_mul] at this
-  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_Iio_self_ne_bot' ⟨0, Ennreal.zero_lt_one⟩
+  haveI : (𝓝[<] (1 : ℝ≥0∞)).ne_bot := nhdsWithin_Iio_self_neBot' ⟨0, Ennreal.zero_lt_one⟩
   exact le_of_tendsto this (eventually_nhdsWithin_iff.2 <| eventually_of_forall h)
 #align ennreal.le_of_forall_lt_one_mul_le Ennreal.le_of_forall_lt_one_mul_le
 
@@ -766,8 +766,8 @@ theorem exists_countable_dense_no_zero_top :
 theorem exists_lt_add_of_lt_add {x y z : ℝ≥0∞} (h : x < y + z) (hy : y ≠ 0) (hz : z ≠ 0) :
     ∃ y' z', y' < y ∧ z' < z ∧ x < y' + z' :=
   by
-  haveI : ne_bot (𝓝[<] y) := nhdsWithin_Iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hy⟩
-  haveI : ne_bot (𝓝[<] z) := nhdsWithin_Iio_self_ne_bot' ⟨0, pos_iff_ne_zero.2 hz⟩
+  haveI : ne_bot (𝓝[<] y) := nhdsWithin_Iio_self_neBot' ⟨0, pos_iff_ne_zero.2 hy⟩
+  haveI : ne_bot (𝓝[<] z) := nhdsWithin_Iio_self_neBot' ⟨0, pos_iff_ne_zero.2 hz⟩
   have A : tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1 + p.2) ((𝓝[<] y).Prod (𝓝[<] z)) (𝓝 (y + z)) :=
     by
     apply tendsto.mono_left _ (Filter.prod_mono nhdsWithin_le_nhds nhdsWithin_le_nhds)

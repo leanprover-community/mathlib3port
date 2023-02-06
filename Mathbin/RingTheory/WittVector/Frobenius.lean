@@ -147,8 +147,8 @@ theorem MapFrobeniusPoly.key₁ (n j : ℕ) (hj : j < p ^ n) :
     by
     rw [← multiplicity.finite_iff_dom, multiplicity.finite_nat_iff]
     exact ⟨hp.1.ne_one, Nat.choose_pos hj⟩
-  rw [← PartEnat.coe_get aux, PartEnat.coe_le_coe, tsub_le_iff_left, ← PartEnat.coe_le_coe,
-    Nat.cast_add, pnat_multiplicity, PartEnat.coe_get, PartEnat.coe_get, add_comm]
+  rw [← PartENat.natCast_get aux, PartENat.coe_le_coe, tsub_le_iff_left, ← PartENat.coe_le_coe,
+    Nat.cast_add, pnat_multiplicity, PartENat.natCast_get, PartENat.natCast_get, add_comm]
   exact (hp.1.multiplicity_choose_prime_pow hj j.succ_pos).ge
 #align witt_vector.map_frobenius_poly.key₁ WittVector.MapFrobeniusPoly.key₁
 
@@ -162,7 +162,7 @@ theorem MapFrobeniusPoly.key₂ {n i j : ℕ} (hi : i < n) (hj : j < p ^ (n - i)
       add_tsub_assoc_of_le (this.1.trans (Nat.sub_le n i)), add_assoc, tsub_right_comm, add_comm i,
       tsub_add_cancel_of_le (le_tsub_of_add_le_right ((le_tsub_iff_left hi.le).mp this.1))]
   constructor
-  · rw [← h, ← PartEnat.coe_le_coe, pnat_multiplicity, PartEnat.coe_get, ←
+  · rw [← h, ← PartENat.coe_le_coe, pnat_multiplicity, PartENat.natCast_get, ←
       hp.1.multiplicity_choose_prime_pow hj j.succ_pos]
     apply le_add_left
     rfl

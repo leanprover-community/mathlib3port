@@ -5095,7 +5095,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_supr Filter.tendsto_supᵢₓ'. -/
 @[simp]
 theorem tendsto_supᵢ {f : α → β} {x : ι → Filter α} {y : Filter β} :
-    Tendsto f (⨆ i, x i) y ↔ ∀ i, Tendsto f (x i) y := by simp only [tendsto, map_supr, supᵢ_le_iff]
+    Tendsto f (⨆ i, x i) y ↔ ∀ i, Tendsto f (x i) y := by simp only [tendsto, map_supᵢ, supᵢ_le_iff]
 #align filter.tendsto_supr Filter.tendsto_supᵢ
 
 #print Filter.tendsto_principal /-

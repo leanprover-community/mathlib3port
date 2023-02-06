@@ -48,7 +48,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
     refine' le_of_not_lt fun hnk => h _
     simp [choose_eq_zero_of_lt hnk]
   rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
-  simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe]
+  simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast]
   refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_Ico _ _))
 #align nat.factorization_choose_le_log Nat.factorization_choose_le_log
 
@@ -76,7 +76,7 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   cases' lt_or_le n k with hnk hkn
   · simp [choose_eq_zero_of_lt hnk]
   rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
-  simp only [hp.multiplicity_choose hkn (lt_add_one _), PartEnat.get_coe, Finset.card_eq_zero,
+  simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast, Finset.card_eq_zero,
     Finset.filter_eq_empty_iff, not_le]
   intro i hi
   rcases eq_or_lt_of_le (finset.mem_Ico.mp hi).1 with (rfl | hi)
