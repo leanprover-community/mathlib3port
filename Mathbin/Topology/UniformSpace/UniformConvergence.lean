@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.uniform_space.uniform_convergence
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
+! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.UniformSpace.Cauchy
 
 /-!
 # Uniform convergence
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A sequence of functions `Fₙ` (with values in a metric space) converges uniformly on a set `s` to a
 function `f` if, for all `ε > 0`, for all large enough `n`, one has for all `y ∈ s` the inequality

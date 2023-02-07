@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
+! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1431,7 +1431,7 @@ theorem comp_neg (f : M →ₛₗ[σ₁₂] N₂) (g : N₂ →ₛₗ[σ₂₃] 
 
 omit σ₁₃
 
-/-- The negation of a linear map is linear. -/
+/-- The subtraction of two linear maps is linear. -/
 instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
   ⟨fun f g =>
     { toFun := f - g

@@ -11,7 +11,7 @@ terminates_parallel and exists_of_mem_parallel.
 honor sequence equivalence (irrelevance of computation time).)
 
 ! This file was ported from Lean 3 source module data.seq.parallel
-! leanprover-community/mathlib commit 4c19a16e4b705bf135cf9a80ac18fcc99c438514
+! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
