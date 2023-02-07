@@ -644,9 +644,6 @@ theorem ContinuousLinearMap.comp_analyticOn {s : Set E} (g : F →L[𝕜] G) (h 
   exact ⟨g.comp_formal_multilinear_series p, r, g.comp_has_fpower_series_on_ball hp⟩
 #align continuous_linear_map.comp_analytic_on ContinuousLinearMap.comp_analyticOn
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr sub_pos.2, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr pow_nonneg, ",", expr hC.lt.le, ",", expr ha.1.le, ",", expr norm_nonneg, ",", expr nnreal.coe_nonneg, ",", expr ha.2, ",", expr (sub_le_sub_iff_left
-    _).2, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence.
 
@@ -676,8 +673,8 @@ theorem HasFpowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
   suffices ‖p.partial_sum n y - f (x + y)‖ ≤ C * (a * (‖y‖ / r')) ^ n / (1 - a * (‖y‖ / r'))
     by
     refine' this.trans _
-    trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr sub_pos.2, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr pow_nonneg, \",\", expr hC.lt.le, \",\", expr ha.1.le, \",\", expr norm_nonneg, \",\", expr nnreal.coe_nonneg, \",\", expr ha.2, \",\", expr (sub_le_sub_iff_left\n    _).2, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
+    apply_rules [div_le_div_of_le_left, sub_pos.2, div_nonneg, mul_nonneg, pow_nonneg, hC.lt.le,
+        ha.1.le, norm_nonneg, Nnreal.coe_nonneg, ha.2, (sub_le_sub_iff_left _).2] <;>
       infer_instance
   apply norm_sub_le_of_geometric_bound_of_hasSum (ya.trans_lt ha.2) _ (hf.has_sum this)
   intro n
@@ -729,8 +726,6 @@ theorem HasFpowerSeriesAt.isO_sub_partialSum_pow (hf : HasFpowerSeriesAt f p x) 
 #align has_fpower_series_at.is_O_sub_partial_sum_pow HasFpowerSeriesAt.isO_sub_partialSum_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_right, ",", expr mul_le_mul, ",", expr hp, ",", expr pow_le_pow_of_le_left, ",", expr hy'.le, ",", expr norm_nonneg, ",", expr pow_nonneg, ",", expr div_nonneg, ",", expr mul_nonneg, ",", expr nat.cast_nonneg, ",", expr hC.le, ",", expr r'.coe_nonneg, ",", expr ha.1.le, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- If `f` has formal power series `∑ n, pₙ` on a ball of radius `r`, then for `y, z` in any smaller
 ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded above by
 `C * (max ‖y - x‖ ‖z - x‖) * ‖y - z‖`. This lemma formulates this property using `is_O` and
@@ -777,8 +772,9 @@ theorem HasFpowerSeriesOnBall.isO_image_sub_image_sub_deriv_principal
           rw [pow_succ ‖y - (x, x)‖]
           ring
         _ ≤ C * a ^ (n + 2) / r' ^ (n + 2) * r' ^ n * (↑(n + 2) * ‖y - (x, x)‖ * ‖y.1 - y.2‖) := by
-          trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_right, \",\", expr mul_le_mul, \",\", expr hp, \",\", expr pow_le_pow_of_le_left, \",\", expr hy'.le, \",\", expr norm_nonneg, \",\", expr pow_nonneg, \",\", expr div_nonneg, \",\", expr mul_nonneg, \",\", expr nat.cast_nonneg, \",\", expr hC.le, \",\", expr r'.coe_nonneg, \",\", expr ha.1.le, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          apply_rules [mul_le_mul_of_nonneg_right, mul_le_mul, hp, pow_le_pow_of_le_left, hy'.le,
+            norm_nonneg, pow_nonneg, div_nonneg, mul_nonneg, Nat.cast_nonneg, hC.le, r'.coe_nonneg,
+            ha.1.le]
         _ = B n := by
           field_simp [B, pow_succ, hr'0.ne']
           simp only [mul_assoc, mul_comm, mul_left_comm]

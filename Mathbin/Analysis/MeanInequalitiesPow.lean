@@ -80,8 +80,6 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀ i ∈ s,
   (convexOn_rpow hp).map_sum_le hw hw' hz
 #align real.rpow_arith_mean_le_arith_mean_rpow Real.rpow_arith_mean_le_arith_mean_rpow
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr sum_nonneg, ",", expr rpow_nonneg_of_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_nonneg, ",", expr rpow_nonneg_of_nonneg, ",", expr hw i hi, ",", expr hz i hi, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i) (hw' : (∑ i in s, w i) = 1)
     (hz : ∀ i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) :
     (∑ i in s, w i * z i) ≤ (∑ i in s, w i * z i ^ p) ^ (1 / p) :=
@@ -90,11 +88,9 @@ theorem arith_mean_le_rpow_mean (w z : ι → ℝ) (hw : ∀ i ∈ s, 0 ≤ w i)
   rw [← rpow_le_rpow_iff _ _ this, ← rpow_mul, one_div_mul_cancel (ne_of_gt this), rpow_one]
   exact rpow_arith_mean_le_arith_mean_rpow s w z hw hw' hz hp
   all_goals
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr sum_nonneg, \",\", expr rpow_nonneg_of_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [sum_nonneg, rpow_nonneg_of_nonneg]
     intro i hi
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_nonneg, \",\", expr rpow_nonneg_of_nonneg, \",\", expr hw i hi, \",\", expr hz i hi, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [mul_nonneg, rpow_nonneg_of_nonneg, hw i hi, hz i hi]
 #align real.arith_mean_le_rpow_mean Real.arith_mean_le_rpow_mean
 
 end Real

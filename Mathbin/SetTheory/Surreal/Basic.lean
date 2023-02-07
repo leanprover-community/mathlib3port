@@ -161,14 +161,12 @@ theorem lf_iff_lt {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y ↔ 
   ⟨fun h => h.lt ox oy, lf_of_lt⟩
 #align pgame.lf_iff_lt Pgame.lf_iff_lt
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr numeric.move_left, ",", expr numeric.move_right, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Definition of `x ≤ y` on numeric pre-games, in terms of `<` -/
 theorem le_iff_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x ≤ y ↔ (∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j := by
   refine' le_iff_forall_lf.trans (and_congr _ _) <;>
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr numeric.move_left, \",\", expr numeric.move_right, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [numeric.move_left, numeric.move_right]
 #align pgame.le_iff_forall_lt Pgame.le_iff_forall_lt
 
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
@@ -182,7 +180,6 @@ theorem lt_of_exists_le {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
   (lt_iff_exists_le ox oy).2
 #align pgame.lt_of_exists_le Pgame.lt_of_exists_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr numeric.move_left, ",", expr numeric.move_right, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The definition of `x < y` on numeric pre-games, in terms of `<` two moves later. -/
 theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔
@@ -192,8 +189,7 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
   rw [← lf_iff_lt ox oy, lf_def]
   refine' or_congr _ _ <;> refine' exists_congr fun x_1 => _ <;> refine' and_congr _ _ <;>
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr numeric.move_left, \",\", expr numeric.move_right, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [numeric.move_left, numeric.move_right]
 #align pgame.lt_def Pgame.lt_def
 
 theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>

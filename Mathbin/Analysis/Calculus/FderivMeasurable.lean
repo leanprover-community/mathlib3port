@@ -238,7 +238,6 @@ theorem differentiable_set_subset_d : { x | DifferentiableAt 𝕜 f x ∧ fderiv
       exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
 #align fderiv_measurable_aux.differentiable_set_subset_D FderivMeasurableAux.differentiable_set_subset_d
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete K) :
     d f K ⊆ { x | DifferentiableAt 𝕜 f x ∧ fderiv 𝕜 f x ∈ K } :=
@@ -307,8 +306,7 @@ theorem d_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
       _ ≤ ‖L e p q - L e p r‖ + ‖L e p r - L e' p' r‖ + ‖L e' p' r - L e' p' q'‖ :=
         le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
       _ ≤ 4 * ‖c‖ * (1 / 2) ^ e + 4 * ‖c‖ * (1 / 2) ^ e + 4 * ‖c‖ * (1 / 2) ^ e := by
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        apply_rules [add_le_add]
       _ = 12 * ‖c‖ * (1 / 2) ^ e := by ring
       
   /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this
@@ -649,7 +647,6 @@ theorem differentiable_set_subset_d :
       exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
 #align right_deriv_measurable_aux.differentiable_set_subset_D RightDerivMeasurableAux.differentiable_set_subset_d
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     d f K ⊆ { x | DifferentiableWithinAt ℝ f (Ici x) x ∧ derivWithin f (Ici x) x ∈ K } :=
@@ -714,9 +711,7 @@ theorem d_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
         abel
       _ ≤ ‖L e p q - L e p r‖ + ‖L e p r - L e' p' r‖ + ‖L e' p' r - L e' p' q'‖ :=
         le_trans (norm_add_le _ _) (add_le_add_right (norm_add_le _ _) _)
-      _ ≤ 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e := by
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      _ ≤ 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e + 4 * (1 / 2) ^ e := by apply_rules [add_le_add]
       _ = 12 * (1 / 2) ^ e := by ring
       
   /- For definiteness, use `L0 e = L e (n e) (n e)`, to have a single sequence. We claim that this

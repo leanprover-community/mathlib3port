@@ -64,8 +64,6 @@ theorem embeddingOfSubset_dist_le (a b : α) :
   ring
 #align Kuratowski_embedding.embedding_of_subset_dist_le KuratowskiEmbedding.embeddingOfSubset_dist_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add_left, ",", expr le_abs_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr hn.le, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
 theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSubset x) :=
   by
@@ -84,12 +82,9 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
         simp [dist_comm]
         ring
       _ ≤ 2 * dist a (x n) + |dist b (x n) - dist a (x n)| := by
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add_left, \",\", expr le_abs_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        apply_rules [add_le_add_left, le_abs_self]
       _ ≤ 2 * (e / 2) + |embedding_of_subset x b n - embedding_of_subset x a n| := by rw [C];
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr hn.le, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error";
-        norm_num
+        apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_refl] ; norm_num
       _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) :=
         by
         have :

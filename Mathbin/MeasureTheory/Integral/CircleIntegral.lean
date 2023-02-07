@@ -619,7 +619,6 @@ theorem le_radius_cauchyPowerSeries (f : ℂ → E) (c : ℂ) (R : ℝ≥0) :
   · rw [inv_pow, inv_mul_cancel_right₀ hR]
 #align le_radius_cauchy_power_series le_radius_cauchyPowerSeries
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr ae_strongly_measurable.smul, ",", expr hf.def.1, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- For any circle integrable function `f`, the power series `cauchy_power_series f c R` multiplied
 by `2πI` converges to the integral `∮ z in C(c, R), (z - w)⁻¹ • f z` on the open disc
 `metric.ball c R`. -/
@@ -635,8 +634,7 @@ theorem hasSum_two_pi_I_cauchy_power_series_integral {f : ℂ → E} {c : ℂ} {
     intervalIntegral.hasSum_integral_of_dominated_convergence
       (fun n θ => ‖f (circleMap c R θ)‖ * (abs w / R) ^ n) (fun n => _) (fun n => _) _ _ _
   · simp only [deriv_circleMap]
-    trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr ae_strongly_measurable.smul, \",\", expr hf.def.1, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
+    apply_rules [ae_strongly_measurable.smul, hf.def.1] <;>
       · apply Measurable.aeStronglyMeasurable
         measurability
   · simp [norm_smul, abs_of_pos hR, mul_left_comm R, mul_inv_cancel_left₀ hR.ne', mul_comm ‖_‖]

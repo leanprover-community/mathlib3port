@@ -79,15 +79,12 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x :=
     rw [completion.dist_eq, completion.dist_eq, dist_comm]
 #align uniform_space.completion.dist_comm UniformSpace.Completion.dist_comm
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr completion.continuous_dist, ",", expr continuous.fst, ",", expr continuous.snd, ",", expr continuous_id, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z :=
   by
   apply induction_on₃ x y z
   ·
     refine' isClosed_le _ (Continuous.add _ _) <;>
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr completion.continuous_dist, \",\", expr continuous.fst, \",\", expr continuous.snd, \",\", expr continuous_id, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      apply_rules [completion.continuous_dist, Continuous.fst, Continuous.snd, continuous_id]
   · intro a b c
     rw [completion.dist_eq, completion.dist_eq, completion.dist_eq]
     exact dist_triangle a b c

@@ -77,14 +77,11 @@ private def max_var : ℝ≥0 :=
   2 * ⟨diam (univ : Set X), diam_nonneg⟩ + 1 + 2 * ⟨diam (univ : Set Y), diam_nonneg⟩
 #align Gromov_Hausdorff.max_var Gromov_Hausdorff.max_var
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_left, ",", expr diam_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 private theorem one_le_max_var : 1 ≤ maxVar X Y :=
   calc
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by
-      trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_left, \",\", expr diam_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
-        norm_num
+      apply_rules [add_le_add, mul_le_mul_of_nonneg_left, diam_nonneg] <;> norm_num
     
 #align Gromov_Hausdorff.one_le_max_var Gromov_Hausdorff.one_le_max_var
 
@@ -116,7 +113,6 @@ variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X]
 
 attribute [local instance] inhabited_of_nonempty'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_le_add, ",", expr mul_le_mul_of_nonneg_right, ",", expr diam_nonneg, ",", expr le_refl, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 private theorem max_var_bound : dist x y ≤ maxVar X Y :=
   calc
     dist x y ≤ diam (univ : Set (Sum X Y)) :=
@@ -136,8 +132,7 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
     _ = 1 * diam (univ : Set X) + 1 + 1 * diam (univ : Set Y) := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) :=
       by
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_le_add, \",\", expr mul_le_mul_of_nonneg_right, \",\", expr diam_nonneg, \",\", expr le_refl, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      apply_rules [add_le_add, mul_le_mul_of_nonneg_right, diam_nonneg, le_refl]
       norm_num; norm_num
     
 #align Gromov_Hausdorff.max_var_bound Gromov_Hausdorff.max_var_bound

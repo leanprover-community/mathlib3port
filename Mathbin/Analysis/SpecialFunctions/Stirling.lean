@@ -78,7 +78,6 @@ theorem log_stirlingSeq_formula (n : ℕ) :
     positivity
 #align stirling.log_stirling_seq_formula Stirling.log_stirlingSeq_formula
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr succ_ne_zero, ",", expr factorial_ne_zero, ",", expr exp_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- TODO: Make `positivity` handle `≠ 0` goals
 /-- The sequence `log (stirling_seq (m + 1)) - log (stirling_seq (m + 2))` has the series expansion
    `∑ 1 / (2 * (k + 1) + 1) * (1 / 2 * (m + 1) + 1)^(2 * (k + 1))`
@@ -107,8 +106,8 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
       rw [_root_.add_div, div_self hx, inv_eq_one_div]
     simp (disch :=
       norm_cast
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr succ_ne_zero, \",\", expr factorial_ne_zero, \",\", expr exp_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error") only [log_stirling_seq_formula,
+      apply_rules [mul_ne_zero, succ_ne_zero, factorial_ne_zero, exp_ne_zero]
+        ) only [log_stirling_seq_formula,
       log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one,
       sum_singleton, h]
     ring

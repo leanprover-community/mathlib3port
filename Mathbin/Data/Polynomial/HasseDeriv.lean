@@ -168,7 +168,6 @@ theorem factorial_smul_hasseDeriv : ⇑(k ! • @hasseDeriv R _ k) = @derivative
   ring
 #align polynomial.factorial_smul_hasse_deriv Polynomial.factorial_smul_hasseDeriv
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr H, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem hasseDeriv_comp (k l : ℕ) :
     (@hasseDeriv R _ k).comp (hasseDeriv l) = (k + l).choose k • hasseDeriv (k + l) :=
   by
@@ -197,9 +196,7 @@ theorem hasseDeriv_comp (k l : ℕ) :
   rw [eq_div_iff_mul_eq, eq_comm, div_mul_eq_mul_div, eq_div_iff_mul_eq, ← tsub_add_eq_tsub_tsub,
     add_comm l k]
   · ring
-  all_goals
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr H, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  all_goals apply_rules [mul_ne_zero, H]
 #align polynomial.hasse_deriv_comp Polynomial.hasseDeriv_comp
 
 theorem natDegree_hasseDeriv_le (p : R[X]) (n : ℕ) : natDegree (hasseDeriv n p) ≤ natDegree p - n :=

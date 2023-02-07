@@ -1333,11 +1333,8 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q => {Q}
 #align turing.TM1.stmts₁ Turing.TM1.stmts₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
-  cases q <;>
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 #align turing.TM1.stmts₁_self Turing.TM1.stmts₁_self
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ :=
@@ -2227,11 +2224,8 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@halt => {Q}
 #align turing.TM2.stmts₁ Turing.TM2.stmts₁
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr finset.mem_insert_self, ",", expr finset.mem_singleton_self, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
-  cases q <;>
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr finset.mem_insert_self, \",\", expr finset.mem_singleton_self, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 #align turing.TM2.stmts₁_self Turing.TM2.stmts₁_self
 
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ :=

@@ -84,7 +84,6 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr is_open.union, ",", expr is_open.prod, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -137,9 +136,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       rw [mem_nhdsSet_iff_forall]
       rintro ⟨z, z'⟩ (rfl : z = z')
       refine' IsOpen.mem_nhds _ _
-      ·
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr is_open.union, \",\", expr is_open.prod, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      · apply_rules [IsOpen.union, IsOpen.prod]
       · simp only [mem_union, mem_prod, and_self_iff]
         exact (em _).imp_left fun h => union_subset_union VU₁ VU₂ h
     -- So W ○ W ∈ F by definition of F

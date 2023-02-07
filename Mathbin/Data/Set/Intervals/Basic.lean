@@ -1369,7 +1369,6 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s 
 #align set.mem_Iic_Iio_of_subset_of_subset Set.mem_Iic_Iio_of_subset_of_subset
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr subset_diff_singleton, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 #print Set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset /-
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s) (hc : s ⊆ Icc a b) :
     s ∈ ({Icc a b, Ico a b, Ioc a b, Ioo a b} : Set (Set α)) := by
@@ -1388,8 +1387,7 @@ theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s
       · rwa [← Ioc_diff_right, diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
     · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
       rw [← Ico_diff_left, ← Icc_diff_right]
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr subset_diff_singleton, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      apply_rules [subset_diff_singleton]
 #align set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset Set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
 -/
 

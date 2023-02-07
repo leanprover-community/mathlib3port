@@ -178,14 +178,11 @@ theorem center_zero (z : ℍ) : center z 0 = z :=
   Subtype.ext <| ext rfl <| by rw [coe_im, coe_im, center_im, Real.cosh_zero, mul_one]
 #align upper_half_plane.center_zero UpperHalfPlane.center_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr two_ne_zero, ",", expr im_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
     dist (z : ℂ) (w.center r) ^ 2 =
       2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 :=
   by
-  have H : 2 * z.im * w.im ≠ 0 := by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr two_ne_zero, \",\", expr im_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  have H : 2 * z.im * w.im ≠ 0 := by apply_rules [mul_ne_zero, two_ne_zero, im_ne_zero]
   simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im,
     cosh_dist', mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
     sq]
@@ -309,8 +306,6 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ
     
 #align upper_half_plane.le_dist_coe UpperHalfPlane.le_dist_coe
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous.div, ",", expr continuous.mul, ",", expr continuous_const, ",", expr continuous.arsinh, ",", expr continuous.dist, ",", expr continuous_coe.comp, ",", expr continuous_fst, ",", expr continuous_snd, ",", expr real.continuous_sqrt.comp, ",", expr continuous_im.comp, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The hyperbolic metric on the upper half plane. We ensure that the projection to
 `topological_space` is definitionally equal to the subtype topology. -/
 instance : MetricSpace ℍ :=
@@ -320,8 +315,10 @@ instance : MetricSpace ℍ :=
     · refine' (@continuous_iff_continuous_dist _ _ metric_space_aux.to_pseudo_metric_space _ _).2 _
       have : ∀ x : ℍ × ℍ, 2 * Real.sqrt (x.1.im * x.2.im) ≠ 0 := fun x =>
         mul_ne_zero two_ne_zero (Real.sqrt_pos.2 <| mul_pos x.1.im_pos x.2.im_pos).ne'
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous.div, \",\", expr continuous.mul, \",\", expr continuous_const, \",\", expr continuous.arsinh, \",\", expr continuous.dist, \",\", expr continuous_coe.comp, \",\", expr continuous_fst, \",\", expr continuous_snd, \",\", expr real.continuous_sqrt.comp, \",\", expr continuous_im.comp, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      -- `continuity` fails to apply `continuous.div`
+      apply_rules [Continuous.div, Continuous.mul, continuous_const, Continuous.arsinh,
+        Continuous.dist, continuous_coe.comp, continuous_fst, continuous_snd,
+        real.continuous_sqrt.comp, continuous_im.comp]
     · letI : MetricSpace ℍ := metric_space_aux
       refine' le_of_nhds_le_nhds fun z => _
       rw [nhds_induced]

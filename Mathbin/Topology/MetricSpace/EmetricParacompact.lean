@@ -36,7 +36,6 @@ open Set
 namespace Emetric
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [":", expr «expr < »(j₁, j₂)], ["generalizing", ident j₁, ident j₂, ident y, ident z], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr ennreal.add_lt_add, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
@@ -177,8 +176,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
           _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
             add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
           _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
-            trace
-              "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr ennreal.add_lt_add, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+            apply_rules [Ennreal.add_lt_add]
           _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
           _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
             Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)

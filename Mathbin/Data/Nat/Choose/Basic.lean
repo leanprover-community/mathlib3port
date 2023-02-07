@@ -177,14 +177,11 @@ theorem choose_mul_factorial_mul_factorial : ∀ {n k}, k ≤ n → choose n k *
 #align nat.choose_mul_factorial_mul_factorial Nat.choose_mul_factorial_mul_factorial
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_ne_zero, ",", expr factorial_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 #print Nat.choose_mul /-
 theorem choose_mul {n k s : ℕ} (hkn : k ≤ n) (hsk : s ≤ k) :
     n.choose k * k.choose s = n.choose s * (n - s).choose (k - s) :=
   by
-  have h : (n - k)! * (k - s)! * s ! ≠ 0 := by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_ne_zero, \",\", expr factorial_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  have h : (n - k)! * (k - s)! * s ! ≠ 0 := by apply_rules [mul_ne_zero, factorial_ne_zero]
   refine' mul_right_cancel₀ h _
   calc
     n.choose k * k.choose s * ((n - k)! * (k - s)! * s !) =

@@ -120,7 +120,6 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
     dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
 #align euclidean_geometry.dist_inversion_inversion EuclideanGeometry.dist_inversion_inversion
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- **Ptolemy's inequality**: in a quadrangle `ABCD`, `|AC| * |BD| ≤ |AB| * |CD| + |BC| * |AD|`. If
 `ABCD` is a convex cyclic polygon, then this inequality becomes an equality, see
 `euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical`.  -/
@@ -132,8 +131,7 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   · rw [dist_self, zero_mul, zero_add]
   rcases eq_or_ne c a with (rfl | hc)
   · rw [dist_self, zero_mul]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [add_nonneg, mul_nonneg, dist_nonneg]
   rcases eq_or_ne d a with (rfl | hd)
   · rw [dist_self, mul_zero, add_zero, dist_comm d, dist_comm d, mul_comm]
   /- Otherwise, we apply the triangle inequality to `euclidean_geometry.inversion a 1 b`,

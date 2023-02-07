@@ -436,16 +436,14 @@ theorem measurable_find_greatest' {p : α → ℕ → Prop} [∀ x, DecidablePre
   measurable_to_nat fun x => hN _ N.findGreatest_le
 #align measurable_find_greatest' measurable_find_greatest'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr measurable_set.inter, ",", expr measurable_set.const, ",", expr measurable_set.Inter, ",", expr measurable_set.compl, ",", expr hN, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem measurable_findGreatest {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N}
     (hN : ∀ k ≤ N, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N :=
   by
   refine' measurable_find_greatest' fun k hk => _
   simp only [Nat.findGreatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
   repeat'
-    trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr measurable_set.inter, \",\", expr measurable_set.const, \",\", expr measurable_set.Inter, \",\", expr measurable_set.compl, \",\", expr hN, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error" <;>
+    apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.interᵢ,
+        MeasurableSet.compl, hN] <;>
       try intros
 #align measurable_find_greatest measurable_findGreatest
 

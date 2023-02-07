@@ -654,13 +654,10 @@ theorem stdSimplex_eq_inter : stdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) �
   simp only [stdSimplex, Set.mem_inter_iff, Set.mem_interᵢ, Set.mem_setOf_eq]
 #align std_simplex_eq_inter stdSimplex_eq_inter
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_nonneg, ",", expr mul_nonneg, ",", expr hf.1, ",", expr hg.1, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem convex_stdSimplex : Convex 𝕜 (stdSimplex 𝕜 ι) :=
   by
   refine' fun f hf g hg a b ha hb hab => ⟨fun x => _, _⟩
-  ·
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr mul_nonneg, \",\", expr hf.1, \",\", expr hg.1, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]
   · erw [Finset.sum_add_distrib, ← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul,
       smul_eq_mul, mul_one, mul_one]
     exact hab

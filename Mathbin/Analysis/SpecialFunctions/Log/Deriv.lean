@@ -229,7 +229,6 @@ theorem tendsto_mul_log_one_plus_div_atTop (t : ℝ) :
 
 open BigOperators
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr pow_le_pow_of_le_left, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- A crude lemma estimating the difference between `log (1-x)` and its Taylor series at `0`,
 where the main point of the bound is that it tends to `0`. The goal is to deduce the series
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
@@ -263,8 +262,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
         have : 0 < 1 - |x| := by linarith
         have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr pow_le_pow_of_le_left, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
       
   -- third step: apply the mean value inequality
   have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ :=
@@ -281,8 +279,6 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
   simpa [F, norm_eq_abs, div_mul_eq_mul_div, pow_succ'] using C
 #align real.abs_log_sub_add_sum_range_le Real.abs_log_sub_add_sum_range_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr div_le_div_of_le_left, ",", expr pow_nonneg, ",", expr abs_nonneg, ",", expr add_le_add_right, ",", expr i.cast_nonneg, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Power series expansion of the logarithm around `1`. -/
 theorem hasSum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
     HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) :=
@@ -306,8 +302,7 @@ theorem hasSum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
         rw [norm_eq_abs, abs_div, ← pow_abs, abs_of_nonneg this]
       _ ≤ |x| ^ (i + 1) / (0 + 1) :=
         by
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr div_le_div_of_le_left, \",\", expr pow_nonneg, \",\", expr abs_nonneg, \",\", expr add_le_add_right, \",\", expr i.cast_nonneg, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+        apply_rules [div_le_div_of_le_left, pow_nonneg, abs_nonneg, add_le_add_right, i.cast_nonneg]
         norm_num
       _ ≤ |x| ^ i := by
         simpa [pow_succ'] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)

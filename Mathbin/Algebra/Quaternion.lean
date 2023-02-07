@@ -984,28 +984,23 @@ section LinearOrderedCommRing
 
 variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 @[simp]
 theorem normSq_eq_zero : normSq a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
   rw [norm_sq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
   exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
-  all_goals
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  all_goals apply_rules [sq_nonneg, add_nonneg]
 #align quaternion.norm_sq_eq_zero Quaternion.normSq_eq_zero
 
 theorem normSq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
   not_congr normSq_eq_zero
 #align quaternion.norm_sq_ne_zero Quaternion.normSq_ne_zero
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr sq_nonneg, ",", expr add_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 @[simp]
 theorem normSq_nonneg : 0 ≤ normSq a := by
   rw [norm_sq_def']
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr sq_nonneg, \",\", expr add_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  apply_rules [sq_nonneg, add_nonneg]
 #align quaternion.norm_sq_nonneg Quaternion.normSq_nonneg
 
 @[simp]

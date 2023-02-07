@@ -92,7 +92,6 @@ theorem fAux_zero_eq : fAux 0 = expNegInvGlue :=
   · simp [h, expNegInvGlue, f_aux, ne_of_gt (not_le.1 h), P_aux]
 #align exp_neg_inv_glue.f_aux_zero_eq expNegInvGlue.fAux_zero_eq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr pow_ne_zero, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`
 (given in this statement in unfolded form) is the `n+1`-th auxiliary function, since
 the polynomial `P_aux (n+1)` was chosen precisely to ensure this. -/
@@ -113,9 +112,7 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
       ring
     · rw [(id rfl : 2 * n.succ - 1 = 2 * n + 1)]
       ring
-  all_goals
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr pow_ne_zero, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  all_goals apply_rules [pow_ne_zero]
 #align exp_neg_inv_glue.f_aux_deriv expNegInvGlue.f_aux_deriv
 
 /-- For positive values, the derivative of the `n`-th auxiliary function `f_aux n`

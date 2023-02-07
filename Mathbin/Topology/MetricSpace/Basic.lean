@@ -2913,15 +2913,12 @@ theorem diam_pair : diam ({x, y} : Set α) = dist x y := by
   simp only [diam, Emetric.diam_pair, dist_edist]
 #align metric.diam_pair Metric.diam_pair
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr ne_of_lt, ",", expr edist_lt_top, ",", expr max_lt, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 -- Does not work as a simp-lemma, since {x, y, z} reduces to (insert z (insert y {x}))
 theorem diam_triple :
     Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (dist x z)) (dist y z) :=
   by
   simp only [Metric.diam, Emetric.diam_triple, dist_edist]
-  rw [Ennreal.toReal_max, Ennreal.toReal_max] <;>
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr ne_of_lt, \",\", expr edist_lt_top, \",\", expr max_lt, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  rw [Ennreal.toReal_max, Ennreal.toReal_max] <;> apply_rules [ne_of_lt, edist_lt_top, max_lt]
 #align metric.diam_triple Metric.diam_triple
 
 /-- If the distance between any two points in a set is bounded by some constant `C`,
@@ -3007,7 +3004,6 @@ theorem diam_mono {s t : Set α} (h : s ⊆ t) (ht : Bounded t) : diam s ≤ dia
   exact Emetric.diam_mono h
 #align metric.diam_mono Metric.diam_mono
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr add_nonneg, ",", expr diam_nonneg, ",", expr dist_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The diameter of a union is controlled by the sum of the diameters, and the distance between
 any two points in each of the sets. This lemma is true without any side condition, since it is
 obviously true if `s ∪ t` is unbounded. -/
@@ -3025,8 +3021,7 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
       try apply edist_ne_top
     exact Emetric.diam_union xs yt
   · rw [diam_eq_zero_of_unbounded H]
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr add_nonneg, \",\", expr diam_nonneg, \",\", expr dist_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [add_nonneg, diam_nonneg, dist_nonneg]
 #align metric.diam_union Metric.diam_union
 
 /-- If two sets intersect, the diameter of the union is bounded by the sum of the diameters. -/

@@ -78,17 +78,13 @@ theorem integral_circleTransform [CompleteSpace E] (f : ℂ → E) :
   simp
 #align complex.integral_circle_transform Complex.integral_circleTransform
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous.smul, ",", expr continuous_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous.mul, ",", expr continuous_circle_map 0 R, ",", expr continuous_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 theorem continuous_circleTransform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ}
     (hf : ContinuousOn f <| sphere z R) (hw : w ∈ ball z R) :
     Continuous (circleTransform R z w f) :=
   by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous.smul, \",\", expr continuous_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  apply_rules [Continuous.smul, continuous_const]
   simp_rw [deriv_circleMap]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous.mul, \",\", expr continuous_circle_map 0 R, \",\", expr continuous_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  apply_rules [Continuous.mul, continuous_circleMap 0 R, continuous_const]
   · apply continuous_circleMap_inv hw
   · apply ContinuousOn.comp_continuous hf (continuous_circleMap z R)
     exact fun _ => (circleMap_mem_sphere _ hR.le) _
@@ -107,14 +103,12 @@ def circleTransformBoundingFunction (R : ℝ) (z : ℂ) (w : ℂ × ℝ) : ℂ :
   circleTransformDeriv R z w.1 (fun x => 1) w.2
 #align complex.circle_transform_bounding_function Complex.circleTransformBoundingFunction
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous_on.pow, ",", expr continuous_on.div, ",", expr continuous_on_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z : ℂ} :
     ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (closedBall z r ×ˢ univ) :=
   by
   simp_rw [← one_div]
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous_on.pow, \",\", expr continuous_on.div, \",\", expr continuous_on_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+  apply_rules [ContinuousOn.pow, ContinuousOn.div, continuousOn_const]
   refine'
     ((continuous_circleMap z R).ContinuousOn.comp continuousOn_snd fun _ => And.right).sub
       (continuous_on_id.comp continuousOn_fst fun _ => And.left)
@@ -127,22 +121,16 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
 #align complex.continuous_on_prod_circle_transform_function Complex.continuousOn_prod_circle_transform_function
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous_on.smul, ",", expr continuous_on_const, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr continuous_on.mul, ",", expr c.comp continuous_on_snd
-   (λ _, and.right), ",", expr continuous_on_const, "]"],
-  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R) (z : ℂ) :
     ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (closedBall z r ×ˢ univ) :=
   by
   have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) :=
     by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous_on.smul, \",\", expr continuous_on_const, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [ContinuousOn.smul, continuousOn_const]
     simp only [deriv_circleMap]
     have c := (continuous_circleMap 0 R).ContinuousOn
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr continuous_on.mul, \",\", expr c.comp continuous_on_snd\n   (λ _, and.right), \",\", expr continuous_on_const, \"]\"],\n  []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [ContinuousOn.mul, c.comp continuousOn_snd fun _ => And.right, continuousOn_const]
     simp_rw [← inv_pow]
     apply continuous_on_prod_circle_transform_function hr
   refine' continuous_abs.continuous_on.comp this _
@@ -151,7 +139,6 @@ theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R
 #align complex.continuous_on_abs_circle_transform_bounding_function Complex.continuousOn_abs_circleTransformBoundingFunction
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr is_compact.prod, ",", expr proper_space.is_compact_closed_ball z r, ",", expr is_compact_uIcc, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -162,8 +149,7 @@ theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0
   by
   have cts := continuous_on_abs_circle_transform_bounding_function hr z
   have comp : IsCompact (closed_ball z r ×ˢ [0, 2 * π]) := by
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr is_compact.prod, \",\", expr proper_space.is_compact_closed_ball z r, \",\", expr is_compact_uIcc, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+    apply_rules [IsCompact.prod, ProperSpace.isCompact_closedBall z r, isCompact_uIcc]
   have none : (closed_ball z r ×ˢ [0, 2 * π]).Nonempty :=
     (nonempty_closed_ball.2 hr').Prod nonempty_uIcc
   have :=

@@ -488,7 +488,6 @@ theorem inverse_continuousOn (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) 
   exact fun x hx => (hf.to_local_equiv hc).map_target hx
 #align approximates_linear_on.inverse_continuous_on ApproximatesLinearOn.inverse_continuousOn
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_le_mul_of_nonneg_left, ",", expr nnreal.coe_nonneg, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- The inverse function is approximated linearly on `f '' s` by `f'.symm`. -/
 theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Subsingleton E ∨ c < N⁻¹) :
     ApproximatesLinearOn (hf.toLocalEquiv hc).symm (f'.symm : F →L[𝕜] E) (f '' s)
@@ -510,8 +509,7 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
     _ ≤ N * (c * ‖y' - x'‖) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (Nnreal.coe_nonneg _)
     _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0) * ‖A y' - A x'‖)) :=
       by
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_le_mul_of_nonneg_left, \",\", expr nnreal.coe_nonneg, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      apply_rules [mul_le_mul_of_nonneg_left, Nnreal.coe_nonneg]
       rw [← dist_eq_norm, ← dist_eq_norm]
       exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
     _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ‖A x' - A y'‖ :=

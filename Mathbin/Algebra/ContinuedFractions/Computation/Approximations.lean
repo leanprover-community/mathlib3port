@@ -608,7 +608,6 @@ theorem abs_sub_convergents_le (not_terminated_at_n : ¬(of v).TerminatedAt n) :
     mono
 #align generalized_continued_fraction.abs_sub_convergents_le GeneralizedContinuedFraction.abs_sub_convergents_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr mul_pos, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (bₙ * Bₙ * Bₙ)`. This bound is worse than the one shown in
 `gcf.abs_sub_convergents_le`, but sometimes it is easier to apply and sufficient for one's use case.
  -/
@@ -626,8 +625,7 @@ theorem abs_sub_convergents_le' {b : K}
   · simp only [hB, mul_zero, zero_mul, div_zero]
   · apply one_div_le_one_div_of_le
     · have : 0 < b := zero_lt_one.trans_le (of_one_le_nth_part_denom nth_part_denom_eq)
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr mul_pos, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      apply_rules [mul_pos]
     · conv_rhs => rw [mul_comm]
       exact mul_le_mul_of_nonneg_right (le_of_succ_nth_denom nth_part_denom_eq) hB.le
 #align generalized_continued_fraction.abs_sub_convergents_le' GeneralizedContinuedFraction.abs_sub_convergents_le'

@@ -2434,8 +2434,7 @@ theorem lintegral_supᵢ_directed_of_measurable [Countable β] {f : β → α �
     
 #align measure_theory.lintegral_supr_directed_of_measurable MeasureTheory.lintegral_supᵢ_directed_of_measurable
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[["[", expr hz₁, ",", expr hz₂, "]"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], ["with", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args -/
 /-- Monotone convergence for a supremum over a directed family and indexed by a countable type. -/
 theorem lintegral_supᵢ_directed [Countable β] {f : β → α → ℝ≥0∞} (hf : ∀ b, AeMeasurable (f b) μ)
     (h_directed : Directed (· ≤ ·) f) : (∫⁻ a, ⨆ b, f b a ∂μ) = ⨆ b, ∫⁻ a, f b a ∂μ :=
@@ -2445,7 +2444,7 @@ theorem lintegral_supᵢ_directed [Countable β] {f : β → α → ℝ≥0∞} 
   have hp : ∀ᵐ x ∂μ, p x fun i => f i x :=
     by
     trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in filter_upwards #[[], [\"with\", ident x, ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error @ arg 0: next failed, no more args"
     obtain ⟨z, hz₁, hz₂⟩ := h_directed i j
     exact ⟨z, hz₁ x, hz₂ x⟩
   have h_ae_seq_directed : Directed LE.le (aeSeq hf p) :=
@@ -2456,8 +2455,7 @@ theorem lintegral_supᵢ_directed [Countable β] {f : β → α → ℝ≥0∞} 
       · intro x
         by_cases hx : x ∈ aeSeqSet hf p
         · repeat' rw [aeSeq.aeSeq_eq_fun_of_mem_aeSeqSet hf hx]
-          trace
-            "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in apply_rules #[[\"[\", expr hz₁, \",\", expr hz₂, \"]\"], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: parse error"
+          apply_rules [hz₁, hz₂]
         · simp only [aeSeq, hx, if_false]
           exact le_rfl
   convert lintegral_supr_directed_of_measurable (aeSeq.measurable hf p) h_ae_seq_directed using 1
