@@ -30,29 +30,40 @@ This file proves properties of the central binomial coefficients (that is, `nat.
 
 namespace Nat
 
+#print Nat.centralBinom /-
 /-- The central binomial coefficient, `nat.choose (2 * n) n`.
 -/
 def centralBinom (n : ℕ) :=
   (2 * n).choose n
 #align nat.central_binom Nat.centralBinom
+-/
 
+#print Nat.centralBinom_eq_two_mul_choose /-
 theorem centralBinom_eq_two_mul_choose (n : ℕ) : centralBinom n = (2 * n).choose n :=
   rfl
 #align nat.central_binom_eq_two_mul_choose Nat.centralBinom_eq_two_mul_choose
+-/
 
+#print Nat.centralBinom_pos /-
 theorem centralBinom_pos (n : ℕ) : 0 < centralBinom n :=
   choose_pos (Nat.le_mul_of_pos_left zero_lt_two)
 #align nat.central_binom_pos Nat.centralBinom_pos
+-/
 
+#print Nat.centralBinom_ne_zero /-
 theorem centralBinom_ne_zero (n : ℕ) : centralBinom n ≠ 0 :=
   (centralBinom_pos n).ne'
 #align nat.central_binom_ne_zero Nat.centralBinom_ne_zero
+-/
 
+#print Nat.centralBinom_zero /-
 @[simp]
 theorem centralBinom_zero : centralBinom 0 = 1 :=
   choose_zero_right _
 #align nat.central_binom_zero Nat.centralBinom_zero
+-/
 
+#print Nat.choose_le_centralBinom /-
 /-- The central binomial coefficient is the largest binomial coefficient.
 -/
 theorem choose_le_centralBinom (r n : ℕ) : choose (2 * n) r ≤ centralBinom n :=
@@ -61,7 +72,9 @@ theorem choose_le_centralBinom (r n : ℕ) : choose (2 * n) r ≤ centralBinom n
     _ = (2 * n).choose n := by rw [Nat.mul_div_cancel_left n zero_lt_two]
     
 #align nat.choose_le_central_binom Nat.choose_le_centralBinom
+-/
 
+#print Nat.two_le_centralBinom /-
 theorem two_le_centralBinom (n : ℕ) (n_pos : 0 < n) : 2 ≤ centralBinom n :=
   calc
     2 ≤ 2 * n := le_mul_of_pos_right n_pos
@@ -69,7 +82,9 @@ theorem two_le_centralBinom (n : ℕ) (n_pos : 0 < n) : 2 ≤ centralBinom n :=
     _ ≤ centralBinom n := choose_le_centralBinom 1 n
     
 #align nat.two_le_central_binom Nat.two_le_centralBinom
+-/
 
+#print Nat.succ_mul_centralBinom_succ /-
 /-- An inductive property of the central binomial coefficient.
 -/
 theorem succ_mul_centralBinom_succ (n : ℕ) :
@@ -84,7 +99,9 @@ theorem succ_mul_centralBinom_succ (n : ℕ) :
     _ = 2 * (2 * n + 1) * (2 * n).choose n := by rw [mul_assoc, mul_comm (2 * n + 1)]
     
 #align nat.succ_mul_central_binom_succ Nat.succ_mul_centralBinom_succ
+-/
 
+#print Nat.four_pow_lt_mul_centralBinom /-
 /-- An exponential lower bound on the central binomial coefficient.
 This bound is of interest because it appears in
 [Tochiori's refinement of Erdős's proof of Bertrand's postulate](tochiori_bertrand).
@@ -107,7 +124,9 @@ theorem four_pow_lt_mul_centralBinom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * c
     _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
     
 #align nat.four_pow_lt_mul_central_binom Nat.four_pow_lt_mul_centralBinom
+-/
 
+#print Nat.four_pow_le_two_mul_self_mul_centralBinom /-
 /-- An exponential lower bound on the central binomial coefficient.
 This bound is weaker than `nat.four_pow_lt_mul_central_binom`, but it is of historical interest
 because it appears in Erdős's proof of Bertrand's postulate.
@@ -126,20 +145,26 @@ theorem four_pow_le_two_mul_self_mul_centralBinom :
         refine' le_mul_of_pos_left zero_lt_two
       
 #align nat.four_pow_le_two_mul_self_mul_central_binom Nat.four_pow_le_two_mul_self_mul_centralBinom
+-/
 
+#print Nat.two_dvd_centralBinom_succ /-
 theorem two_dvd_centralBinom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) :=
   by
   use (n + 1 + n).choose n
   rw [central_binom_eq_two_mul_choose, two_mul, ← add_assoc, choose_succ_succ, choose_symm_add, ←
     two_mul]
 #align nat.two_dvd_central_binom_succ Nat.two_dvd_centralBinom_succ
+-/
 
+#print Nat.two_dvd_centralBinom_of_one_le /-
 theorem two_dvd_centralBinom_of_one_le {n : ℕ} (h : 0 < n) : 2 ∣ centralBinom n :=
   by
   rw [← Nat.succ_pred_eq_of_pos h]
   exact two_dvd_central_binom_succ n.pred
 #align nat.two_dvd_central_binom_of_one_le Nat.two_dvd_centralBinom_of_one_le
+-/
 
+#print Nat.succ_dvd_centralBinom /-
 /-- A crucial lemma to ensure that Catalan numbers can be defined via their explicit formula
   `catalan n = n.central_binom / (n + 1)`. -/
 theorem succ_dvd_centralBinom (n : ℕ) : n + 1 ∣ n.centralBinom :=
@@ -153,6 +178,7 @@ theorem succ_dvd_centralBinom (n : ℕ) : n + 1 ∣ n.centralBinom :=
   rw [← mul_assoc, ← succ_mul_central_binom_succ, mul_comm]
   exact mul_dvd_mul_left _ (two_dvd_central_binom_succ n)
 #align nat.succ_dvd_central_binom Nat.succ_dvd_centralBinom
+-/
 
 end Nat
 
