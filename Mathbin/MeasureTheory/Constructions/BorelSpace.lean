@@ -892,29 +892,29 @@ instance (priority := 100) HasContinuousSmul.hasMeasurableSmul {M α} [Topologic
 
 section Lattice
 
-instance (priority := 100) HasContinuousSup.hasMeasurableSup [HasSup γ] [HasContinuousSup γ] :
+instance (priority := 100) ContinuousSup.hasMeasurableSup [HasSup γ] [ContinuousSup γ] :
     HasMeasurableSup γ
     where
   measurable_const_sup c := (continuous_const.sup continuous_id).Measurable
   measurable_sup_const c := (continuous_id.sup continuous_const).Measurable
-#align has_continuous_sup.has_measurable_sup HasContinuousSup.hasMeasurableSup
+#align has_continuous_sup.has_measurable_sup ContinuousSup.hasMeasurableSup
 
-instance (priority := 100) HasContinuousSup.hasMeasurableSup₂ [SecondCountableTopology γ] [HasSup γ]
-    [HasContinuousSup γ] : HasMeasurableSup₂ γ :=
+instance (priority := 100) ContinuousSup.hasMeasurableSup₂ [SecondCountableTopology γ] [HasSup γ]
+    [ContinuousSup γ] : HasMeasurableSup₂ γ :=
   ⟨continuous_sup.Measurable⟩
-#align has_continuous_sup.has_measurable_sup₂ HasContinuousSup.hasMeasurableSup₂
+#align has_continuous_sup.has_measurable_sup₂ ContinuousSup.hasMeasurableSup₂
 
-instance (priority := 100) HasContinuousInf.hasMeasurableInf [HasInf γ] [HasContinuousInf γ] :
+instance (priority := 100) ContinuousInf.hasMeasurableInf [HasInf γ] [ContinuousInf γ] :
     HasMeasurableInf γ
     where
   measurable_const_inf c := (continuous_const.inf continuous_id).Measurable
   measurable_inf_const c := (continuous_id.inf continuous_const).Measurable
-#align has_continuous_inf.has_measurable_inf HasContinuousInf.hasMeasurableInf
+#align has_continuous_inf.has_measurable_inf ContinuousInf.hasMeasurableInf
 
-instance (priority := 100) HasContinuousInf.hasMeasurableInf₂ [SecondCountableTopology γ] [HasInf γ]
-    [HasContinuousInf γ] : HasMeasurableInf₂ γ :=
+instance (priority := 100) ContinuousInf.hasMeasurableInf₂ [SecondCountableTopology γ] [HasInf γ]
+    [ContinuousInf γ] : HasMeasurableInf₂ γ :=
   ⟨continuous_inf.Measurable⟩
-#align has_continuous_inf.has_measurable_inf₂ HasContinuousInf.hasMeasurableInf₂
+#align has_continuous_inf.has_measurable_inf₂ ContinuousInf.hasMeasurableInf₂
 
 end Lattice
 

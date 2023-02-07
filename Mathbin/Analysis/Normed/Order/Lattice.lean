@@ -144,7 +144,7 @@ theorem norm_sup_le_add (x y : α) : ‖x ⊔ y‖ ≤ ‖x‖ + ‖y‖ :=
 -- see Note [lower instance priority]
 /-- Let `α` be a normed lattice ordered group. Then the infimum is jointly continuous.
 -/
-instance (priority := 100) normedLatticeAddCommGroup_hasContinuousInf : HasContinuousInf α :=
+instance (priority := 100) normedLatticeAddCommGroup_continuousInf : ContinuousInf α :=
   by
   refine' ⟨continuous_iff_continuousAt.2 fun q => tendsto_iff_norm_tendsto_zero.2 <| _⟩
   have : ∀ p : α × α, ‖p.1 ⊓ p.2 - q.1 ⊓ q.2‖ ≤ ‖p.1 - q.1‖ + ‖p.2 - q.2‖ := fun _ =>
@@ -154,13 +154,13 @@ instance (priority := 100) normedLatticeAddCommGroup_hasContinuousInf : HasConti
     ((continuous_fst.tendsto q).sub tendsto_const_nhds).norm.add
       ((continuous_snd.tendsto q).sub tendsto_const_nhds).norm
   simp
-#align normed_lattice_add_comm_group_has_continuous_inf normedLatticeAddCommGroup_hasContinuousInf
+#align normed_lattice_add_comm_group_has_continuous_inf normedLatticeAddCommGroup_continuousInf
 
 -- see Note [lower instance priority]
-instance (priority := 100) normedLatticeAddCommGroup_hasContinuousSup {α : Type _}
-    [NormedLatticeAddCommGroup α] : HasContinuousSup α :=
-  OrderDual.hasContinuousSup αᵒᵈ
-#align normed_lattice_add_comm_group_has_continuous_sup normedLatticeAddCommGroup_hasContinuousSup
+instance (priority := 100) normedLatticeAddCommGroup_continuousSup {α : Type _}
+    [NormedLatticeAddCommGroup α] : ContinuousSup α :=
+  OrderDual.continuousSup αᵒᵈ
+#align normed_lattice_add_comm_group_has_continuous_sup normedLatticeAddCommGroup_continuousSup
 
 -- see Note [lower instance priority]
 /--

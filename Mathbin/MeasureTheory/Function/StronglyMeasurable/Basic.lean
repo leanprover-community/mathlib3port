@@ -521,13 +521,13 @@ open Filter
 
 open Filter
 
-protected theorem sup [HasSup β] [HasContinuousSup β] (hf : StronglyMeasurable f)
+protected theorem sup [HasSup β] [ContinuousSup β] (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable (f ⊔ g) :=
   ⟨fun n => hf.approx n ⊔ hg.approx n, fun x =>
     (hf.tendsto_approx x).sup_right_nhds (hg.tendsto_approx x)⟩
 #align measure_theory.strongly_measurable.sup MeasureTheory.StronglyMeasurable.sup
 
-protected theorem inf [HasInf β] [HasContinuousInf β] (hf : StronglyMeasurable f)
+protected theorem inf [HasInf β] [ContinuousInf β] (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable (f ⊓ g) :=
   ⟨fun n => hf.approx n ⊓ hg.approx n, fun x =>
     (hf.tendsto_approx x).inf_right_nhds (hg.tendsto_approx x)⟩
@@ -1151,7 +1151,7 @@ section Order
 
 variable [TopologicalSpace β] [Zero β]
 
-protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : FinStronglyMeasurable f μ)
+protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f ⊔ g) μ :=
   by
   refine'
@@ -1161,7 +1161,7 @@ protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : FinStrongl
   exact measure_union_lt_top_iff.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩
 #align measure_theory.fin_strongly_measurable.sup MeasureTheory.FinStronglyMeasurable.sup
 
-protected theorem inf [SemilatticeInf β] [HasContinuousInf β] (hf : FinStronglyMeasurable f μ)
+protected theorem inf [SemilatticeInf β] [ContinuousInf β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f ⊓ g) μ :=
   by
   refine'
@@ -1395,13 +1395,13 @@ end Arithmetic
 
 section Order
 
-protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : AeStronglyMeasurable f μ)
+protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : AeStronglyMeasurable f μ)
     (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (f ⊔ g) μ :=
   ⟨hf.mk f ⊔ hg.mk g, hf.stronglyMeasurable_mk.sup hg.stronglyMeasurable_mk,
     hf.ae_eq_mk.sup hg.ae_eq_mk⟩
 #align measure_theory.ae_strongly_measurable.sup MeasureTheory.AeStronglyMeasurable.sup
 
-protected theorem inf [SemilatticeInf β] [HasContinuousInf β] (hf : AeStronglyMeasurable f μ)
+protected theorem inf [SemilatticeInf β] [ContinuousInf β] (hf : AeStronglyMeasurable f μ)
     (hg : AeStronglyMeasurable g μ) : AeStronglyMeasurable (f ⊓ g) μ :=
   ⟨hf.mk f ⊓ hg.mk g, hf.stronglyMeasurable_mk.inf hg.stronglyMeasurable_mk,
     hf.ae_eq_mk.inf hg.ae_eq_mk⟩
@@ -1916,13 +1916,13 @@ section Order
 
 variable [Zero β]
 
-protected theorem sup [SemilatticeSup β] [HasContinuousSup β] (hf : AeFinStronglyMeasurable f μ)
+protected theorem sup [SemilatticeSup β] [ContinuousSup β] (hf : AeFinStronglyMeasurable f μ)
     (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f ⊔ g) μ :=
   ⟨hf.mk f ⊔ hg.mk g, hf.finStronglyMeasurableMk.sup hg.finStronglyMeasurableMk,
     hf.ae_eq_mk.sup hg.ae_eq_mk⟩
 #align measure_theory.ae_fin_strongly_measurable.sup MeasureTheory.AeFinStronglyMeasurable.sup
 
-protected theorem inf [SemilatticeInf β] [HasContinuousInf β] (hf : AeFinStronglyMeasurable f μ)
+protected theorem inf [SemilatticeInf β] [ContinuousInf β] (hf : AeFinStronglyMeasurable f μ)
     (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f ⊓ g) μ :=
   ⟨hf.mk f ⊓ hg.mk g, hf.finStronglyMeasurableMk.inf hg.finStronglyMeasurableMk,
     hf.ae_eq_mk.inf hg.ae_eq_mk⟩

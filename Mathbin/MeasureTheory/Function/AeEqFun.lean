@@ -456,7 +456,7 @@ section Lattice
 
 section Sup
 
-variable [SemilatticeSup β] [HasContinuousSup β]
+variable [SemilatticeSup β] [ContinuousSup β]
 
 instance : HasSup (α →ₘ[μ] β) where sup f g := AeEqFun.comp₂ (· ⊔ ·) continuous_sup f g
 
@@ -492,7 +492,7 @@ end Sup
 
 section Inf
 
-variable [SemilatticeInf β] [HasContinuousInf β]
+variable [SemilatticeInf β] [ContinuousInf β]
 
 instance : HasInf (α →ₘ[μ] β) where inf f g := AeEqFun.comp₂ (· ⊓ ·) continuous_inf f g
 

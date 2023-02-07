@@ -285,9 +285,9 @@ theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
 #align Inf_hom.continuous InfₛHom.continuous
 
 -- see Note [lower instance priority]
-instance (priority := 90) LowerTopology.to_hasContinuousInf : HasContinuousInf α :=
+instance (priority := 90) LowerTopology.to_continuousInf : ContinuousInf α :=
   ⟨(infInfₛHom : InfₛHom (α × α) α).Continuous⟩
-#align lower_topology.to_has_continuous_inf LowerTopology.to_hasContinuousInf
+#align lower_topology.to_has_continuous_inf LowerTopology.to_continuousInf
 
 end CompleteLattice
 
