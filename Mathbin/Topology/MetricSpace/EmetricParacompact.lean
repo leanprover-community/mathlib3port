@@ -35,7 +35,6 @@ open Set
 
 namespace Emetric
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [":", expr «expr < »(j₁, j₂)], ["generalizing", ident j₁, ident j₂, ident y, ident z], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 -- See note [lower instance priority]
 /-- A `pseudo_emetric_space` is always a paracompact space. Formalization is based
 on [MR0236876]. -/
@@ -164,8 +163,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         by
         rintro m hm j₁ ⟨y, hyD, hyB⟩ j₂ ⟨z, hzD, hzB⟩
         by_contra' h' : j₁ ≠ j₂
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [\":\", expr «expr < »(j₁, j₂)], [\"generalizing\", ident j₁, ident j₂, ident y, ident z], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+        wlog h : j₁ < j₂ generalizing j₁ j₂ y z
         · exact this z hzD hzB y hyD hyB h'.symm (h'.lt_or_lt.resolve_left h)
         rcases memD.1 hyD with ⟨y', rfl, hsuby, -, hdisty⟩
         rcases memD.1 hzD with ⟨z', rfl, -, -, hdistz⟩

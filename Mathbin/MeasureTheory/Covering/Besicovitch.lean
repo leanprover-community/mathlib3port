@@ -285,7 +285,6 @@ def lastStep : Ordinal.{u} :=
   infₛ { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }
 #align besicovitch.tau_package.last_step Besicovitch.TauPackage.lastStep
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident x_le_y], [":", expr «expr ≤ »(x, y)], ["generalizing", ident x, ident y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem last_step_nonempty :
     { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }.Nonempty :=
   by
@@ -293,8 +292,7 @@ theorem last_step_nonempty :
   suffices H : Function.Injective p.index
   exact not_injective_of_ordinal p.index H
   intro x y hxy
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident x_le_y], [\":\", expr «expr ≤ »(x, y)], [\"generalizing\", ident x, ident y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  wlog x_le_y : x ≤ y generalizing x y
   · exact (this hxy.symm (le_of_not_le x_le_y)).symm
   rcases eq_or_lt_of_le x_le_y with (rfl | H)
   · rfl
@@ -348,7 +346,6 @@ theorem mem_unionUpTo_lastStep (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
     exact lt_irrefl _ (Hy.trans_le this)
 #align besicovitch.tau_package.mem_Union_up_to_last_step Besicovitch.TauPackage.mem_unionUpTo_lastStep
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident G_le], [":", expr «expr ≤ »(G a, G b)], ["generalizing", ident a, ident b], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- If there are no configurations of satellites with `N+1` points, one never uses more than `N`
 distinct families in the Besicovitch inductive construction. -/
 theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
@@ -466,8 +463,7 @@ theorem color_lt {i : Ordinal.{u}} (hi : i < p.lastStep) {N : ℕ}
       rpos := fun k => p.rpos (p.index (G k))
       h := by
         intro a b a_ne_b
-        trace
-          "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident G_le], [\":\", expr «expr ≤ »(G a, G b)], [\"generalizing\", ident a, ident b], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+        wlog G_le : G a ≤ G b generalizing a b
         · exact (this b a a_ne_b.symm (le_of_not_le G_le)).symm
         have G_lt : G a < G b := by
           rcases G_le.lt_or_eq with (H | H)
@@ -501,7 +497,6 @@ end TauPackage
 
 open TauPackage
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident jxy], [":", expr «expr ≤ »(jx, jy)], ["generalizing", ident jx, ident jy], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- The topological Besicovitch covering theorem: there exist finitely many families of disjoint
 balls covering all the centers in a package. More specifically, one can use `N` families if there
 are no satellite configurations with `N+1` points. -/
@@ -534,8 +529,7 @@ theorem exist_disjoint_covering_families {N : ℕ} {τ : ℝ} (hτ : 1 < τ)
     obtain ⟨jy, jy_lt, jyi, rfl⟩ :
       ∃ jy : Ordinal, jy < p.last_step ∧ p.color jy = i ∧ y = p.index jy := by
       simpa only [exists_prop, mem_Union, mem_singleton_iff] using hy
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident jxy], [\":\", expr «expr ≤ »(jx, jy)], [\"generalizing\", ident jx, ident jy], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    wlog jxy : jx ≤ jy generalizing jx jy
     · exact (this jy jy_lt jyi hy jx jx_lt jxi hx x_ne_y.symm (le_of_not_le jxy)).symm
     replace jxy : jx < jy
     · rcases lt_or_eq_of_le jxy with (H | rfl)

@@ -206,14 +206,12 @@ private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicVal
           apply min_le_padic_val_rat_add <;> assumption
 #align padic_norm.nonarchimedean_aux padic_norm.nonarchimedean_aux
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [":", expr «expr ≤ »(padic_val_rat p q, padic_val_rat p r)], ["generalizing", ident q, ident r], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- The `p`-adic norm is nonarchimedean: the norm of `p + q` is at most the max of the norm of `p`
 and the norm of `q`. -/
 protected theorem nonarchimedean {q r : ℚ} :
     padicNorm p (q + r) ≤ max (padicNorm p q) (padicNorm p r) :=
   by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [\":\", expr «expr ≤ »(padic_val_rat p q, padic_val_rat p r)], [\"generalizing\", ident q, ident r], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  wlog hle : padicValRat p q ≤ padicValRat p r generalizing q r
   · rw [add_comm, max_comm]
     exact this (le_of_not_le hle)
   exact nonarchimedean_aux hle

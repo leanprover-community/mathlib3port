@@ -400,12 +400,9 @@ theorem ne_one (hk : 1 < k) : ζ ≠ 1 :=
   h.pow_ne_one_of_pos_of_lt zero_lt_one hk ∘ (pow_one ζ).trans
 #align is_primitive_root.ne_one IsPrimitiveRoot.ne_one
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hij], [":", expr «expr ≤ »(i, j)], ["generalizing", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 theorem pow_inj (h : IsPrimitiveRoot ζ k) ⦃i j : ℕ⦄ (hi : i < k) (hj : j < k) (H : ζ ^ i = ζ ^ j) :
-    i = j :=
-  by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hij], [\":\", expr «expr ≤ »(i, j)], [\"generalizing\", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    i = j := by
+  wlog hij : i ≤ j generalizing i j
   · exact (this hj hi H.symm (le_of_not_le hij)).symm
   apply le_antisymm hij
   rw [← tsub_eq_zero_iff_le]

@@ -529,8 +529,6 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
     
 #align measure_theory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le MeasureTheory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₁], [":", expr «expr ≤ »(a₁, b₁)], ["generalizing", ident a₁, ident b₁], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₂], [":", expr «expr ≤ »(a₂, b₂)], ["generalizing", ident a₂, ident b₂], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -558,15 +556,13 @@ theorem integral2_divergence_prod_of_has_fderiv_within_at_off_countable (f g : �
       (((∫ x in a₁..b₁, g (x, b₂)) - ∫ x in a₁..b₁, g (x, a₂)) + ∫ y in a₂..b₂, f (b₁, y)) -
         ∫ y in a₂..b₂, f (a₁, y) :=
   by
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₁], [\":\", expr «expr ≤ »(a₁, b₁)], [\"generalizing\", ident a₁, ident b₁], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  wlog h₁ : a₁ ≤ b₁ generalizing a₁ b₁
   · specialize this b₁ a₁
     rw [uIcc_comm b₁ a₁, min_comm b₁ a₁, max_comm b₁ a₁] at this
     simp only [intervalIntegral.integral_symm b₁ a₁]
     refine' (congr_arg Neg.neg (this Hcf Hcg Hdf Hdg Hi (le_of_not_le h₁))).trans _
     abel
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h₂], [\":\", expr «expr ≤ »(a₂, b₂)], [\"generalizing\", ident a₂, ident b₂], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  wlog h₂ : a₂ ≤ b₂ generalizing a₂ b₂
   · specialize this b₂ a₂
     rw [uIcc_comm b₂ a₂, min_comm b₂ a₂, max_comm b₂ a₂] at this
     simp only [intervalIntegral.integral_symm b₂ a₂, intervalIntegral.integral_neg]

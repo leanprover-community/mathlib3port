@@ -123,7 +123,7 @@ subtraction from `x : P`. -/
 @[simps]
 def IsometryEquiv.constVsub (x : P) : P ≃ᵢ V
     where
-  toEquiv := Equiv.constVsub x
+  toEquiv := Equiv.constVSub x
   isometry_toFun := Isometry.of_dist_eq fun y z => dist_vsub_cancel_left _ _ _
 #align isometry_equiv.const_vsub IsometryEquiv.constVsub
 

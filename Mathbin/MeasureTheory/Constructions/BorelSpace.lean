@@ -1500,7 +1500,6 @@ protected theorem AddCircle.measurable_mk' {a : ℝ} : Measurable (coe : ℝ →
   Continuous.measurable <| AddCircle.continuous_mk' a
 #align add_circle.measurable_mk' AddCircle.measurable_mk'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [":", expr «expr < »(i, j)], ["generalizing", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- One can cut out `ℝ≥0∞` into the sets `{0}`, `Ico (t^n) (t^(n+1))` for `n : ℤ` and `{∞}`. This
 gives a way to compute the measure of a set in terms of sets on which a given function `f` does not
 fluctuate by more than `t`. -/
@@ -1547,8 +1546,7 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
     · intro i j
       simp only [Function.onFun]
       intro hij
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident h], [\":\", expr «expr < »(i, j)], [\"generalizing\", ident i, ident j], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      wlog h : i < j generalizing i j
       · exact (this hij.symm (hij.lt_or_lt.resolve_left h)).symm
       apply disjoint_left.2 fun x hx h'x => lt_irrefl (f x) _
       calc

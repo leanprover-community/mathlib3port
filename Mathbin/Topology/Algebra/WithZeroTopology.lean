@@ -200,15 +200,13 @@ instance (priority := 100) t3Space : T3Space Γ₀
             is_closed_iff.2 <| Or.inl <| zero_lt_iff.2 hx
 #align linear_ordered_comm_group_with_zero.t3_space LinearOrderedCommGroupWithZero.t3Space
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [":", expr «expr ≤ »(x, y)], ["generalizing", ident x, ident y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
 instance (priority := 100) : HasContinuousMul Γ₀ :=
   ⟨by
     rw [continuous_iff_continuousAt]
     rintro ⟨x, y⟩
-    trace
-      "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [\":\", expr «expr ≤ »(x, y)], [\"generalizing\", ident x, ident y], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+    wlog hle : x ≤ y generalizing x y
     · have := tendsto.comp (this y x (le_of_not_le hle)) (continuous_swap.tendsto (x, y))
       simpa only [mul_comm, Function.comp, Prod.swap]
     rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy), skip]

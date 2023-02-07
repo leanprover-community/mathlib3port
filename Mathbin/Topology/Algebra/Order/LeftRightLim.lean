@@ -235,7 +235,6 @@ theorem continuousAt_iff_leftLim_eq_rightLim : ContinuousAt f x ↔ leftLim f x 
       exact hf.continuous_within_at_Ioi_iff_right_lim_eq.2 h'
 #align monotone.continuous_at_iff_left_lim_eq_right_lim Monotone.continuousAt_iff_leftLim_eq_rightLim
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [":", expr «expr ≤ »(u, v)], ["generalizing", ident u, ident v], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 /-- In a second countable space, the set of points where a monotone function is not right-continuous
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
@@ -273,8 +272,7 @@ theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTo
     have A : (f '' s).PairwiseDisjoint fun x => Ioo x (z (inv_fun_on f s x)) :=
       by
       rintro _ ⟨u, us, rfl⟩ _ ⟨v, vs, rfl⟩ huv
-      trace
-        "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hle], [\":\", expr «expr ≤ »(u, v)], [\"generalizing\", ident u, ident v], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+      wlog hle : u ≤ v generalizing u v
       · exact (this v vs u us huv.symm (le_of_not_le hle)).symm
       have hlt : u < v := hle.lt_of_ne (ne_of_apply_ne _ huv)
       apply disjoint_iff_forall_ne.2

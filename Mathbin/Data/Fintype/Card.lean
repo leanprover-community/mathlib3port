@@ -1491,14 +1491,12 @@ private noncomputable def nat_embedding_aux (α : Type _) [Infinite α] : ℕ �
             Multiset.mem_range.1).toFinset)
 #align infinite.nat_embedding_aux infinite.nat_embedding_aux
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hmlen], [":", expr «expr ≤ »(m, n)], ["generalizing", ident m, ident n], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args -/
 private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] :
     Function.Injective (natEmbeddingAux α) :=
   by
   rintro m n h
   letI := Classical.decEq α
-  trace
-    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:75:38: in wlog #[[ident hmlen], [\":\", expr «expr ≤ »(m, n)], [\"generalizing\", ident m, ident n], []]: ./././Mathport/Syntax/Translate/Basic.lean:349:22: unsupported: too many args"
+  wlog hmlen : m ≤ n generalizing m n
   · exact (this h.symm <| le_of_not_le hmlen).symm
   by_contra hmn
   have hmn : m < n := lt_of_le_of_ne hmlen hmn

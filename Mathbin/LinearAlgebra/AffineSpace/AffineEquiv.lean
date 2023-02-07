@@ -461,7 +461,7 @@ def vaddConst (b : P₁) : V₁ ≃ᵃ[k] P₁
 /-- `p' ↦ p -ᵥ p'` as an equivalence. -/
 def constVsub (p : P₁) : P₁ ≃ᵃ[k] V₁
     where
-  toEquiv := Equiv.constVsub p
+  toEquiv := Equiv.constVSub p
   linear := LinearEquiv.neg k
   map_vadd' p' v := by simp [vsub_vadd_eq_vsub_sub, neg_add_eq_sub]
 #align affine_equiv.const_vsub AffineEquiv.constVsub
@@ -485,7 +485,7 @@ This is roughly to `distrib_mul_action.to_linear_equiv` as `+ᵥ` is to `•`. -
 @[simps apply linear]
 def constVadd (v : V₁) : P₁ ≃ᵃ[k] P₁
     where
-  toEquiv := Equiv.constVadd P₁ v
+  toEquiv := Equiv.constVAdd P₁ v
   linear := LinearEquiv.refl _ _
   map_vadd' p w := vadd_comm _ _ _
 #align affine_equiv.const_vadd AffineEquiv.constVadd
