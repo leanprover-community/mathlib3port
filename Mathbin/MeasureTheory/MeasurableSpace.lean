@@ -1891,7 +1891,7 @@ instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
 theorem measurableSet_blimsup {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
     MeasurableSet <| Filter.blimsup s Filter.atTop p :=
   by
-  simp only [Filter.blimsup_eq_infᵢ_bsupr_of_nat, supr_eq_Union, infi_eq_Inter]
+  simp only [Filter.blimsup_eq_infᵢ_bsupᵢ_of_nat, supr_eq_Union, infi_eq_Inter]
   exact
     MeasurableSet.interᵢ fun n =>
       MeasurableSet.unionᵢ fun m => MeasurableSet.unionᵢ fun hm => h m hm.1
@@ -1901,7 +1901,7 @@ theorem measurableSet_blimsup {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n
 theorem measurableSet_bliminf {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
     MeasurableSet <| Filter.bliminf s Filter.atTop p :=
   by
-  simp only [Filter.bliminf_eq_supᵢ_binfi_of_nat, infi_eq_Inter, supr_eq_Union]
+  simp only [Filter.bliminf_eq_supᵢ_binfᵢ_of_nat, infi_eq_Inter, supr_eq_Union]
   exact
     MeasurableSet.unionᵢ fun n =>
       MeasurableSet.interᵢ fun m => MeasurableSet.interᵢ fun hm => h m hm.1

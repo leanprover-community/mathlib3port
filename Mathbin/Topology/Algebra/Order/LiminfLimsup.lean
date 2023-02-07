@@ -133,29 +133,29 @@ section ConditionallyCompleteLinearOrder
 
 variable [ConditionallyCompleteLinearOrder α]
 
-theorem lt_mem_sets_of_limsup_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·)) (l : f.limsup < b) :
+theorem lt_mem_sets_of_limsupₛ_lt {f : Filter α} {b} (h : f.IsBounded (· ≤ ·)) (l : f.limsupₛ < b) :
     ∀ᶠ a in f, a < b :=
   let ⟨c, (h : ∀ᶠ a in f, a ≤ c), hcb⟩ := exists_lt_of_cinfₛ_lt h l
   mem_of_superset h fun a hac => lt_of_le_of_lt hac hcb
-#align lt_mem_sets_of_Limsup_lt lt_mem_sets_of_limsup_lt
+#align lt_mem_sets_of_Limsup_lt lt_mem_sets_of_limsupₛ_lt
 
-theorem gt_mem_sets_of_liminf_gt :
-    ∀ {f : Filter α} {b}, f.IsBounded (· ≥ ·) → b < f.liminf → ∀ᶠ a in f, b < a :=
-  @lt_mem_sets_of_limsup_lt αᵒᵈ _
-#align gt_mem_sets_of_Liminf_gt gt_mem_sets_of_liminf_gt
+theorem gt_mem_sets_of_liminfₛ_gt :
+    ∀ {f : Filter α} {b}, f.IsBounded (· ≥ ·) → b < f.liminfₛ → ∀ᶠ a in f, b < a :=
+  @lt_mem_sets_of_limsupₛ_lt αᵒᵈ _
+#align gt_mem_sets_of_Liminf_gt gt_mem_sets_of_liminfₛ_gt
 
 variable [TopologicalSpace α] [OrderTopology α]
 
 /-- If the liminf and the limsup of a filter coincide, then this filter converges to
 their common value, at least if the filter is eventually bounded above and below. -/
-theorem le_nhds_of_limsup_eq_liminf {f : Filter α} {a : α} (hl : f.IsBounded (· ≤ ·))
-    (hg : f.IsBounded (· ≥ ·)) (hs : f.limsup = a) (hi : f.liminf = a) : f ≤ 𝓝 a :=
+theorem le_nhds_of_limsupₛ_eq_liminfₛ {f : Filter α} {a : α} (hl : f.IsBounded (· ≤ ·))
+    (hg : f.IsBounded (· ≥ ·)) (hs : f.limsupₛ = a) (hi : f.liminfₛ = a) : f ≤ 𝓝 a :=
   tendsto_order.2 <|
-    And.intro (fun b hb => gt_mem_sets_of_liminf_gt hg <| hi.symm ▸ hb) fun b hb =>
-      lt_mem_sets_of_limsup_lt hl <| hs.symm ▸ hb
-#align le_nhds_of_Limsup_eq_Liminf le_nhds_of_limsup_eq_liminf
+    And.intro (fun b hb => gt_mem_sets_of_liminfₛ_gt hg <| hi.symm ▸ hb) fun b hb =>
+      lt_mem_sets_of_limsupₛ_lt hl <| hs.symm ▸ hb
+#align le_nhds_of_Limsup_eq_Liminf le_nhds_of_limsupₛ_eq_liminfₛ
 
-theorem limsup_nhds (a : α) : limsup (𝓝 a) = a :=
+theorem limsupₛ_nhds (a : α) : limsupₛ (𝓝 a) = a :=
   cinfₛ_eq_of_forall_ge_of_forall_gt_exists_lt (isBounded_le_nhds a)
     (fun a' (h : { n : α | n ≤ a' } ∈ 𝓝 a) => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
     fun b (hba : a < b) =>
@@ -163,43 +163,43 @@ theorem limsup_nhds (a : α) : limsup (𝓝 a) = a :=
       match dense_or_discrete a b with
       | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
       | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
-#align Limsup_nhds limsup_nhds
+#align Limsup_nhds limsupₛ_nhds
 
-theorem liminf_nhds : ∀ a : α, liminf (𝓝 a) = a :=
-  @limsup_nhds αᵒᵈ _ _ _
-#align Liminf_nhds liminf_nhds
+theorem liminfₛ_nhds : ∀ a : α, liminfₛ (𝓝 a) = a :=
+  @limsupₛ_nhds αᵒᵈ _ _ _
+#align Liminf_nhds liminfₛ_nhds
 
 /-- If a filter is converging, its limsup coincides with its limit. -/
-theorem liminf_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝 a) : f.liminf = a :=
+theorem liminfₛ_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝 a) : f.liminfₛ = a :=
   have hb_ge : IsBounded (· ≥ ·) f := (isBounded_ge_nhds a).mono h
   have hb_le : IsBounded (· ≤ ·) f := (isBounded_le_nhds a).mono h
   le_antisymm
     (calc
-      f.liminf ≤ f.limsup := liminf_le_limsup hb_le hb_ge
-      _ ≤ (𝓝 a).limsup := limsup_le_limsup_of_le h hb_ge.isCobounded_flip (isBounded_le_nhds a)
-      _ = a := limsup_nhds a
+      f.liminfₛ ≤ f.limsupₛ := liminfₛ_le_limsupₛ hb_le hb_ge
+      _ ≤ (𝓝 a).limsupₛ := limsupₛ_le_limsupₛ_of_le h hb_ge.isCobounded_flip (isBounded_le_nhds a)
+      _ = a := limsupₛ_nhds a
       )
     (calc
-      a = (𝓝 a).liminf := (liminf_nhds a).symm
-      _ ≤ f.liminf := liminf_le_liminf_of_le h (isBounded_ge_nhds a) hb_le.isCobounded_flip
+      a = (𝓝 a).liminfₛ := (liminfₛ_nhds a).symm
+      _ ≤ f.liminfₛ := liminfₛ_le_liminfₛ_of_le h (isBounded_ge_nhds a) hb_le.isCobounded_flip
       )
-#align Liminf_eq_of_le_nhds liminf_eq_of_le_nhds
+#align Liminf_eq_of_le_nhds liminfₛ_eq_of_le_nhds
 
 /-- If a filter is converging, its liminf coincides with its limit. -/
-theorem limsup_eq_of_le_nhds : ∀ {f : Filter α} {a : α} [NeBot f], f ≤ 𝓝 a → f.limsup = a :=
-  @liminf_eq_of_le_nhds αᵒᵈ _ _ _
-#align Limsup_eq_of_le_nhds limsup_eq_of_le_nhds
+theorem limsupₛ_eq_of_le_nhds : ∀ {f : Filter α} {a : α} [NeBot f], f ≤ 𝓝 a → f.limsupₛ = a :=
+  @liminfₛ_eq_of_le_nhds αᵒᵈ _ _ _
+#align Limsup_eq_of_le_nhds limsupₛ_eq_of_le_nhds
 
 /-- If a function has a limit, then its limsup coincides with its limit. -/
 theorem Filter.Tendsto.limsup_eq {f : Filter β} {u : β → α} {a : α} [NeBot f]
     (h : Tendsto u f (𝓝 a)) : limsup u f = a :=
-  limsup_eq_of_le_nhds h
+  limsupₛ_eq_of_le_nhds h
 #align filter.tendsto.limsup_eq Filter.Tendsto.limsup_eq
 
 /-- If a function has a limit, then its liminf coincides with its limit. -/
 theorem Filter.Tendsto.liminf_eq {f : Filter β} {u : β → α} {a : α} [NeBot f]
     (h : Tendsto u f (𝓝 a)) : liminf u f = a :=
-  liminf_eq_of_le_nhds h
+  liminfₛ_eq_of_le_nhds h
 #align filter.tendsto.liminf_eq Filter.Tendsto.liminf_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
@@ -215,7 +215,7 @@ theorem tendsto_of_liminf_eq_limsup {f : Filter β} {u : β → α} {a : α} (hi
       run_tac
         is_bounded_default) :
     Tendsto u f (𝓝 a) :=
-  le_nhds_of_limsup_eq_liminf h h' hsup hinf
+  le_nhds_of_limsupₛ_eq_liminfₛ h h' hsup hinf
 #align tendsto_of_liminf_eq_limsup tendsto_of_liminf_eq_limsup
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic is_bounded_default -/
@@ -283,8 +283,8 @@ variable {ι R S : Type _} {F : Filter ι} [NeBot F] [CompleteLinearOrder R] [To
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /-- An antitone function between complete linear ordered spaces sends a `filter.Limsup`
 to the `filter.liminf` of the image if it is continuous at the `Limsup`. -/
-theorem Antitone.map_limsup_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
-    (f_decr : Antitone f) (f_cont : ContinuousAt f F.limsup) : f F.limsup = F.liminf f :=
+theorem Antitone.map_limsupₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
+    (f_decr : Antitone f) (f_cont : ContinuousAt f F.limsupₛ) : f F.limsupₛ = F.liminf f :=
   by
   apply le_antisymm
   · have A : { a : R | ∀ᶠ n : R in F, n ≤ a }.Nonempty := ⟨⊤, by simp⟩
@@ -337,84 +337,56 @@ theorem Antitone.map_limsup_of_continuousAt {F : Filter R} [NeBot F] {f : R → 
       exact f_decr hx.le
     have I : f m < F.liminf f := h'l ⟨l_m, m_lt.le⟩
     exact lt_irrefl _ (B.trans_lt I)
-#align antitone.map_Limsup_of_continuous_at Antitone.map_limsup_of_continuousAt
+#align antitone.map_Limsup_of_continuous_at Antitone.map_limsupₛ_of_continuousAt
 
-/- warning: antitone.map_limsup_of_continuous_at clashes with antitone.map_Limsup_of_continuous_at -> Antitone.map_limsup_of_continuousAt
-warning: antitone.map_limsup_of_continuous_at -> Antitone.map_limsup_of_continuousAt is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u_1}} {R : Type.{u_2}} {S : Type.{u_3}} {F : Filter.{u_1} ι} [_inst_1 : Filter.NeBot.{u_1} ι F] [_inst_2 : CompleteLinearOrder.{u_2} R] [_inst_3 : TopologicalSpace.{u_2} R] [_inst_4 : OrderTopology.{u_2} R _inst_3 (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2))))] [_inst_5 : CompleteLinearOrder.{u_3} S] [_inst_6 : TopologicalSpace.{u_3} S] [_inst_7 : OrderTopology.{u_3} S _inst_6 (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5))))] {f : R -> S}, (Antitone.{u_2, u_3} R S (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)))) (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)))) f) -> (forall (a : ι -> R), (ContinuousAt.{u_2, u_3} R S _inst_3 _inst_6 f (Filter.limsup.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) -> (Eq.{succ u_3} S (f (Filter.limsup.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) (Filter.liminf.{u_3, u_1} S ι (CompleteLattice.toConditionallyCompleteLattice.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)) (Function.comp.{succ u_1, succ u_2, succ u_3} ι R S f a) F)))
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align antitone.map_limsup_of_continuous_at Antitone.map_limsup_of_continuousAtₓ'. -/
 /-- A continuous antitone function between complete linear ordered spaces sends a `filter.limsup`
 to the `filter.liminf` of the images. -/
 theorem Antitone.map_limsup_of_continuousAt {f : R → S} (f_decr : Antitone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.limsup a)) : f (F.limsup a) = F.liminf (f ∘ a) :=
-  f_decr.map_limsup_of_continuousAt f_cont
+  f_decr.map_limsupₛ_of_continuousAt f_cont
 #align antitone.map_limsup_of_continuous_at Antitone.map_limsup_of_continuousAt
 
 /-- An antitone function between complete linear ordered spaces sends a `filter.Liminf`
 to the `filter.limsup` of the image if it is continuous at the `Liminf`. -/
-theorem Antitone.map_liminf_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
-    (f_decr : Antitone f) (f_cont : ContinuousAt f F.liminf) : f F.liminf = F.limsup f :=
-  @Antitone.map_limsup_of_continuousAt (OrderDual R) (OrderDual S) _ _ _ _ _ _ _ _ f f_decr.dual
+theorem Antitone.map_liminfₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
+    (f_decr : Antitone f) (f_cont : ContinuousAt f F.liminfₛ) : f F.liminfₛ = F.limsup f :=
+  @Antitone.map_limsupₛ_of_continuousAt (OrderDual R) (OrderDual S) _ _ _ _ _ _ _ _ f f_decr.dual
     f_cont
-#align antitone.map_Liminf_of_continuous_at Antitone.map_liminf_of_continuousAt
+#align antitone.map_Liminf_of_continuous_at Antitone.map_liminfₛ_of_continuousAt
 
-/- warning: antitone.map_liminf_of_continuous_at clashes with antitone.map_Liminf_of_continuous_at -> Antitone.map_liminf_of_continuousAt
-warning: antitone.map_liminf_of_continuous_at -> Antitone.map_liminf_of_continuousAt is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u_1}} {R : Type.{u_2}} {S : Type.{u_3}} {F : Filter.{u_1} ι} [_inst_1 : Filter.NeBot.{u_1} ι F] [_inst_2 : CompleteLinearOrder.{u_2} R] [_inst_3 : TopologicalSpace.{u_2} R] [_inst_4 : OrderTopology.{u_2} R _inst_3 (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2))))] [_inst_5 : CompleteLinearOrder.{u_3} S] [_inst_6 : TopologicalSpace.{u_3} S] [_inst_7 : OrderTopology.{u_3} S _inst_6 (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5))))] {f : R -> S}, (Antitone.{u_2, u_3} R S (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)))) (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)))) f) -> (forall (a : ι -> R), (ContinuousAt.{u_2, u_3} R S _inst_3 _inst_6 f (Filter.liminf.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) -> (Eq.{succ u_3} S (f (Filter.liminf.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) (Filter.limsup.{u_3, u_1} S ι (CompleteLattice.toConditionallyCompleteLattice.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)) (Function.comp.{succ u_1, succ u_2, succ u_3} ι R S f a) F)))
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align antitone.map_liminf_of_continuous_at Antitone.map_liminf_of_continuousAtₓ'. -/
 /-- A continuous antitone function between complete linear ordered spaces sends a `filter.liminf`
 to the `filter.limsup` of the images. -/
 theorem Antitone.map_liminf_of_continuousAt {f : R → S} (f_decr : Antitone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.liminf a)) : f (F.liminf a) = F.limsup (f ∘ a) :=
-  f_decr.map_liminf_of_continuousAt f_cont
+  f_decr.map_liminfₛ_of_continuousAt f_cont
 #align antitone.map_liminf_of_continuous_at Antitone.map_liminf_of_continuousAt
 
 /-- A monotone function between complete linear ordered spaces sends a `filter.Limsup`
 to the `filter.limsup` of the image if it is continuous at the `Limsup`. -/
-theorem Monotone.map_limsup_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
-    (f_incr : Monotone f) (f_cont : ContinuousAt f F.limsup) : f F.limsup = F.limsup f :=
-  @Antitone.map_limsup_of_continuousAt R (OrderDual S) _ _ _ _ _ _ _ _ f f_incr f_cont
-#align monotone.map_Limsup_of_continuous_at Monotone.map_limsup_of_continuousAt
+theorem Monotone.map_limsupₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
+    (f_incr : Monotone f) (f_cont : ContinuousAt f F.limsupₛ) : f F.limsupₛ = F.limsup f :=
+  @Antitone.map_limsupₛ_of_continuousAt R (OrderDual S) _ _ _ _ _ _ _ _ f f_incr f_cont
+#align monotone.map_Limsup_of_continuous_at Monotone.map_limsupₛ_of_continuousAt
 
-/- warning: monotone.map_limsup_of_continuous_at clashes with monotone.map_Limsup_of_continuous_at -> Monotone.map_limsup_of_continuousAt
-warning: monotone.map_limsup_of_continuous_at -> Monotone.map_limsup_of_continuousAt is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u_1}} {R : Type.{u_2}} {S : Type.{u_3}} {F : Filter.{u_1} ι} [_inst_1 : Filter.NeBot.{u_1} ι F] [_inst_2 : CompleteLinearOrder.{u_2} R] [_inst_3 : TopologicalSpace.{u_2} R] [_inst_4 : OrderTopology.{u_2} R _inst_3 (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2))))] [_inst_5 : CompleteLinearOrder.{u_3} S] [_inst_6 : TopologicalSpace.{u_3} S] [_inst_7 : OrderTopology.{u_3} S _inst_6 (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5))))] {f : R -> S}, (Monotone.{u_2, u_3} R S (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)))) (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)))) f) -> (forall (a : ι -> R), (ContinuousAt.{u_2, u_3} R S _inst_3 _inst_6 f (Filter.limsup.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) -> (Eq.{succ u_3} S (f (Filter.limsup.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) (Filter.limsup.{u_3, u_1} S ι (CompleteLattice.toConditionallyCompleteLattice.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)) (Function.comp.{succ u_1, succ u_2, succ u_3} ι R S f a) F)))
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align monotone.map_limsup_of_continuous_at Monotone.map_limsup_of_continuousAtₓ'. -/
 /-- A continuous monotone function between complete linear ordered spaces sends a `filter.limsup`
 to the `filter.limsup` of the images. -/
 theorem Monotone.map_limsup_of_continuousAt {f : R → S} (f_incr : Monotone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.limsup a)) : f (F.limsup a) = F.limsup (f ∘ a) :=
-  f_incr.map_limsup_of_continuousAt f_cont
+  f_incr.map_limsupₛ_of_continuousAt f_cont
 #align monotone.map_limsup_of_continuous_at Monotone.map_limsup_of_continuousAt
 
 /-- A monotone function between complete linear ordered spaces sends a `filter.Liminf`
 to the `filter.liminf` of the image if it is continuous at the `Liminf`. -/
-theorem Monotone.map_liminf_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
-    (f_incr : Monotone f) (f_cont : ContinuousAt f F.liminf) : f F.liminf = F.liminf f :=
-  @Antitone.map_liminf_of_continuousAt R (OrderDual S) _ _ _ _ _ _ _ _ f f_incr f_cont
-#align monotone.map_Liminf_of_continuous_at Monotone.map_liminf_of_continuousAt
+theorem Monotone.map_liminfₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R → S}
+    (f_incr : Monotone f) (f_cont : ContinuousAt f F.liminfₛ) : f F.liminfₛ = F.liminf f :=
+  @Antitone.map_liminfₛ_of_continuousAt R (OrderDual S) _ _ _ _ _ _ _ _ f f_incr f_cont
+#align monotone.map_Liminf_of_continuous_at Monotone.map_liminfₛ_of_continuousAt
 
-/- warning: monotone.map_liminf_of_continuous_at clashes with monotone.map_Liminf_of_continuous_at -> Monotone.map_liminf_of_continuousAt
-warning: monotone.map_liminf_of_continuous_at -> Monotone.map_liminf_of_continuousAt is a dubious translation:
-lean 3 declaration is
-  forall {ι : Type.{u_1}} {R : Type.{u_2}} {S : Type.{u_3}} {F : Filter.{u_1} ι} [_inst_1 : Filter.NeBot.{u_1} ι F] [_inst_2 : CompleteLinearOrder.{u_2} R] [_inst_3 : TopologicalSpace.{u_2} R] [_inst_4 : OrderTopology.{u_2} R _inst_3 (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2))))] [_inst_5 : CompleteLinearOrder.{u_3} S] [_inst_6 : TopologicalSpace.{u_3} S] [_inst_7 : OrderTopology.{u_3} S _inst_6 (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5))))] {f : R -> S}, (Monotone.{u_2, u_3} R S (PartialOrder.toPreorder.{u_2} R (CompleteSemilatticeInf.toPartialOrder.{u_2} R (CompleteLattice.toCompleteSemilatticeInf.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)))) (PartialOrder.toPreorder.{u_3} S (CompleteSemilatticeInf.toPartialOrder.{u_3} S (CompleteLattice.toCompleteSemilatticeInf.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)))) f) -> (forall (a : ι -> R), (ContinuousAt.{u_2, u_3} R S _inst_3 _inst_6 f (Filter.liminf.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) -> (Eq.{succ u_3} S (f (Filter.liminf.{u_2, u_1} R ι (CompleteLattice.toConditionallyCompleteLattice.{u_2} R (CompleteLinearOrder.toCompleteLattice.{u_2} R _inst_2)) a F)) (Filter.liminf.{u_3, u_1} S ι (CompleteLattice.toConditionallyCompleteLattice.{u_3} S (CompleteLinearOrder.toCompleteLattice.{u_3} S _inst_5)) (Function.comp.{succ u_1, succ u_2, succ u_3} ι R S f a) F)))
-but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align monotone.map_liminf_of_continuous_at Monotone.map_liminf_of_continuousAtₓ'. -/
 /-- A continuous monotone function between complete linear ordered spaces sends a `filter.liminf`
 to the `filter.liminf` of the images. -/
 theorem Monotone.map_liminf_of_continuousAt {f : R → S} (f_incr : Monotone f) (a : ι → R)
     (f_cont : ContinuousAt f (F.liminf a)) : f (F.liminf a) = F.liminf (f ∘ a) :=
-  f_incr.map_liminf_of_continuousAt f_cont
+  f_incr.map_liminfₛ_of_continuousAt f_cont
 #align monotone.map_liminf_of_continuous_at Monotone.map_liminf_of_continuousAt
 
 end Monotone
