@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module data.fin.tuple.bubble_sort_induction
-! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
+! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.WellFounded
 
 /-!
 # "Bubble sort" induction
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We implement the following induction principle `tuple.bubble_sort_induction`
 on tuples with values in a linear order `α`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.noetherian_space
-! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
+! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,28 +59,27 @@ theorem noetherianSpace_iff_opens : NoetherianSpace α ↔ ∀ s : Opens α, IsC
 #align topological_space.noetherian_space_iff_opens TopologicalSpace.noetherianSpace_iff_opens
 
 instance (priority := 100) NoetherianSpace.compactSpace [h : NoetherianSpace α] : CompactSpace α :=
-  isCompact_univ_iff.mp ((noetherianSpace_iff_opens α).mp h ⊤)
+  ⟨(noetherianSpace_iff_opens α).mp h ⊤⟩
 #align topological_space.noetherian_space.compact_space TopologicalSpace.NoetherianSpace.compactSpace
 
-variable {α}
+variable {α β}
+
+protected theorem NoetherianSpace.isCompact [NoetherianSpace α] (s : Set α) : IsCompact s :=
+  by
+  refine' isCompact_iff_finite_subcover.2 fun ι U hUo hs => _
+  rcases((noetherian_space_iff_opens α).mp ‹_› ⟨⋃ i, U i, isOpen_unionᵢ hUo⟩).elim_finite_subcover U
+      hUo Set.Subset.rfl with
+    ⟨t, ht⟩
+  exact ⟨t, hs.trans ht⟩
+#align topological_space.noetherian_space.is_compact TopologicalSpace.NoetherianSpace.isCompact
+
+protected theorem Inducing.noetherianSpace [NoetherianSpace α] {i : β → α} (hi : Inducing i) :
+    NoetherianSpace β :=
+  (noetherianSpace_iff_opens _).2 fun s => hi.isCompact_iff.1 (NoetherianSpace.isCompact _)
+#align topological_space.inducing.noetherian_space TopologicalSpace.Inducing.noetherianSpace
 
 instance NoetherianSpace.set [h : NoetherianSpace α] (s : Set α) : NoetherianSpace s :=
-  by
-  rw [noetherian_space_iff]
-  apply WellFounded.wellFounded_iff_has_max'.2
-  intro p hp
-  obtain ⟨⟨_, u, hu, rfl⟩, hu'⟩ := hp
-  obtain ⟨U, hU, hU'⟩ :=
-    WellFounded.wellFounded_iff_has_max'.1 h.1 (opens.comap ⟨_, continuous_subtype_val⟩ ⁻¹' p)
-      ⟨⟨u, hu⟩, hu'⟩
-  refine' ⟨opens.comap ⟨_, continuous_subtype_val⟩ U, hU, _⟩
-  rintro ⟨_, x, hx, rfl⟩ hx' hx''
-  refine' le_antisymm (Set.preimage_mono (_ : (⟨x, hx⟩ : opens α) ≤ U)) hx''
-  refine' sup_eq_right.mp (hU' (⟨x, hx⟩ ⊔ U) _ le_sup_right)
-  dsimp [Set.preimage]
-  rw [map_sup]
-  convert hx'
-  exact sup_eq_left.mpr hx''
+  inducing_subtype_val.NoetherianSpace
 #align topological_space.noetherian_space.set TopologicalSpace.NoetherianSpace.set
 
 variable (α)
@@ -98,10 +97,7 @@ theorem noetherianSpace_tFAE :
   tfae_have 1 ↔ 4
   · exact noetherian_space_iff_opens α
   tfae_have 1 → 3
-  · intro H s
-    rw [isCompact_iff_compactSpace]
-    skip
-    infer_instance
+  · exact @noetherian_space.is_compact _ _
   tfae_have 3 → 4
   · exact fun H s => H s
   tfae_finish
@@ -118,11 +114,6 @@ instance {α} : NoetherianSpace (CofiniteTopology α) :=
   · rcases Filter.nonempty_of_mem (Filter.le_principal_iff.1 hs) with ⟨a, ha⟩
     exact ⟨a, ha, Or.inr hf⟩
   · exact ⟨a, filter.le_principal_iff.mp hs, Or.inl le_rfl⟩
-
-theorem NoetherianSpace.isCompact [h : NoetherianSpace α] (s : Set α) : IsCompact s :=
-  let H := (noetherianSpace_tFAE α).out 0 2
-  H.mp h s
-#align topological_space.noetherian_space.is_compact TopologicalSpace.NoetherianSpace.isCompact
 
 theorem noetherianSpace_of_surjective [NoetherianSpace α] (f : α → β) (hf : Continuous f)
     (hf' : Function.Surjective f) : NoetherianSpace β :=

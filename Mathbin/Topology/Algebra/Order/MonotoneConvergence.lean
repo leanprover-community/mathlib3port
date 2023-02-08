@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.monotone_convergence
-! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
+! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Topology.Order.Basic
 
 /-!
 # Bounded monotone sequences converge
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove a few theorems of the form “if the range of a monotone function `f : ι → α`
 admits a least upper bound `a`, then `f x` tends to `a` as `x → ∞`”, as well as version of this

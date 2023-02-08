@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.setoid.partition
-! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
+! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Order.Partition.Finpartition
 
 /-!
 # Equivalence relations: partitions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file comprises properties of equivalence relations viewed as partitions.
 There are two implementations of partitions here:

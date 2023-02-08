@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
+! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,6 +49,8 @@ Then the rest is usual set theory.
   function `x → y`. That is, each member of `x` is related by the ZFC set to exactly one member of
   `y`.
 * `Set.funs`: ZFC set of ZFC functions `x → y`.
+* `Set.hereditarily p x`: Predicate that every set in the transitive closure of `x` has property
+  `p`.
 * `Class.iota`: Definite description operator.
 
 ## Notes
@@ -1372,6 +1374,42 @@ theorem map_isFunc {f : SetCat → SetCat} [H : Definable 1 f] {x y : SetCat} :
       ze ▸ pair_mem_prod.2 ⟨zx, h z zx⟩,
       fun z => map_unique⟩⟩
 #align Set.map_is_func SetCat.map_isFunc
+
+/-- Given a predicate `p` on ZFC sets. `hereditarily p x` means that `x` has property `p` and the
+members of `x` are all `hereditarily p`. -/
+def Hereditarily (p : SetCat → Prop) : SetCat → Prop
+  | x => p x ∧ ∀ y ∈ x, hereditarily y
+#align Set.hereditarily SetCat.Hereditarily
+
+section Hereditarily
+
+variable {p : SetCat.{u} → Prop} {x y : SetCat.{u}}
+
+theorem hereditarily_iff : Hereditarily p x ↔ p x ∧ ∀ y ∈ x, Hereditarily p y := by
+  rw [← hereditarily]
+#align Set.hereditarily_iff SetCat.hereditarily_iff
+
+alias hereditarily_iff ↔ hereditarily.def _
+#align Set.hereditarily.def SetCat.Hereditarily.def
+
+theorem Hereditarily.self (h : x.Hereditarily p) : p x :=
+  h.def.1
+#align Set.hereditarily.self SetCat.Hereditarily.self
+
+theorem Hereditarily.mem (h : x.Hereditarily p) (hy : y ∈ x) : y.Hereditarily p :=
+  h.def.2 _ hy
+#align Set.hereditarily.mem SetCat.Hereditarily.mem
+
+theorem Hereditarily.empty : Hereditarily p x → p ∅ :=
+  by
+  apply x.induction_on
+  intro y IH h
+  rcases SetCat.eq_empty_or_nonempty y with (rfl | ⟨a, ha⟩)
+  · exact h.self
+  · exact IH a ha (h.mem ha)
+#align Set.hereditarily.empty SetCat.Hereditarily.empty
+
+end Hereditarily
 
 end SetCat
 

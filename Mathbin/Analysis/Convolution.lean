@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 0a0ec35061ed9960bf0e7ffb0335f44447b58977
+! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Group.Prod
 import Mathbin.MeasureTheory.Function.LocallyIntegrable
+import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.ParametricIntegral
 
@@ -1760,4 +1761,79 @@ theorem HasCompactSupport.contDiff_convolution_left [μ.IsAddLeftInvariant] [μ.
 #align has_compact_support.cont_diff_convolution_left HasCompactSupport.contDiff_convolution_left
 
 end WithParam
+
+section Nonneg
+
+variable [NormedSpace ℝ E] [NormedSpace ℝ E'] [NormedSpace ℝ F] [CompleteSpace F]
+
+/-- The forward convolution of two functions `f` and `g` on `ℝ`, with respect to a continuous
+bilinear map `L` and measure `ν`. It is defined to be the function mapping `x` to
+`∫ t in 0..x, L (f t) (g (x - t)) ∂ν` if `0 < x`, and 0 otherwise. -/
+noncomputable def posConvolution (f : ℝ → E) (g : ℝ → E') (L : E →L[ℝ] E' →L[ℝ] F)
+    (ν : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) : ℝ → F :=
+  indicator (Ioi (0 : ℝ)) fun x => ∫ t in 0 ..x, L (f t) (g (x - t)) ∂ν
+#align pos_convolution posConvolution
+
+theorem posConvolution_eq_convolution_indicator (f : ℝ → E) (g : ℝ → E') (L : E →L[ℝ] E' →L[ℝ] F)
+    (ν : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) [HasNoAtoms ν] :
+    posConvolution f g L ν = convolution (indicator (Ioi 0) f) (indicator (Ioi 0) g) L ν :=
+  by
+  ext1 x
+  rw [convolution, posConvolution, indicator]
+  split_ifs
+  · rw [intervalIntegral.integral_of_le (le_of_lt h), integral_Ioc_eq_integral_Ioo, ←
+      integral_indicator (measurableSet_Ioo : MeasurableSet (Ioo 0 x))]
+    congr 1 with t : 1
+    have : t ≤ 0 ∨ t ∈ Ioo 0 x ∨ x ≤ t :=
+      by
+      rcases le_or_lt t 0 with (h | h)
+      · exact Or.inl h
+      · rcases lt_or_le t x with (h' | h')
+        exacts[Or.inr (Or.inl ⟨h, h'⟩), Or.inr (Or.inr h')]
+    rcases this with (ht | ht | ht)
+    ·
+      rw [indicator_of_not_mem (not_mem_Ioo_of_le ht), indicator_of_not_mem (not_mem_Ioi.mpr ht),
+        ContinuousLinearMap.map_zero, ContinuousLinearMap.zero_apply]
+    ·
+      rw [indicator_of_mem ht, indicator_of_mem (mem_Ioi.mpr ht.1),
+        indicator_of_mem (mem_Ioi.mpr <| sub_pos.mpr ht.2)]
+    ·
+      rw [indicator_of_not_mem (not_mem_Ioo_of_ge ht),
+        indicator_of_not_mem (not_mem_Ioi.mpr (sub_nonpos_of_le ht)), ContinuousLinearMap.map_zero]
+  · convert (integral_zero ℝ F).symm
+    ext1 t
+    by_cases ht : 0 < t
+    · rw [indicator_of_not_mem (_ : x - t ∉ Ioi 0), ContinuousLinearMap.map_zero]
+      rw [not_mem_Ioi] at h⊢
+      exact sub_nonpos.mpr (h.trans ht.le)
+    ·
+      rw [indicator_of_not_mem (mem_Ioi.not.mpr ht), ContinuousLinearMap.map_zero,
+        ContinuousLinearMap.zero_apply]
+#align pos_convolution_eq_convolution_indicator posConvolution_eq_convolution_indicator
+
+theorem integrablePosConvolution {f : ℝ → E} {g : ℝ → E'} {μ ν : Measure ℝ} [SigmaFinite μ]
+    [SigmaFinite ν] [IsAddRightInvariant μ] [HasNoAtoms ν] (hf : IntegrableOn f (Ioi 0) ν)
+    (hg : IntegrableOn g (Ioi 0) μ) (L : E →L[ℝ] E' →L[ℝ] F) :
+    Integrable (posConvolution f g L ν) μ :=
+  by
+  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg
+  rw [posConvolution_eq_convolution_indicator f g L ν]
+  exact (hf.convolution_integrand L hg).integral_prod_left
+#align integrable_pos_convolution integrablePosConvolution
+
+/-- The integral over `Ioi 0` of a forward convolution of two functions is equal to the product
+of their integrals over this set. (Compare `integral_convolution` for the two-sided convolution.) -/
+theorem integral_pos_convolution [CompleteSpace E] [CompleteSpace E'] {μ ν : Measure ℝ}
+    [SigmaFinite μ] [SigmaFinite ν] [IsAddRightInvariant μ] [HasNoAtoms ν] {f : ℝ → E} {g : ℝ → E'}
+    (hf : IntegrableOn f (Ioi 0) ν) (hg : IntegrableOn g (Ioi 0) μ) (L : E →L[ℝ] E' →L[ℝ] F) :
+    (∫ x : ℝ in Ioi 0, ∫ t : ℝ in 0 ..x, L (f t) (g (x - t)) ∂ν ∂μ) =
+      L (∫ x : ℝ in Ioi 0, f x ∂ν) (∫ x : ℝ in Ioi 0, g x ∂μ) :=
+  by
+  rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg
+  simp_rw [← integral_indicator measurableSet_Ioi]
+  convert integral_convolution L hf hg using 2
+  apply posConvolution_eq_convolution_indicator
+#align integral_pos_convolution integral_pos_convolution
+
+end Nonneg
 
