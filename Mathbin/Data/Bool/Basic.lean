@@ -110,11 +110,11 @@ theorem decide_or (p q : Prop) [Decidable p] [Decidable q] : decide (p ∨ q) = 
 #align bool.to_bool_or Bool.decide_or
 -/
 
-#print Bool.decide_eq /-
+#print decide_eq_decide /-
 @[simp]
-theorem decide_eq {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q ↔ (p ↔ q) :=
+theorem decide_eq_decide {p q : Prop} [Decidable p] [Decidable q] : decide p = decide q ↔ (p ↔ q) :=
   ⟨fun h => (coe_decide p).symm.trans <| by simp [h], Bool.decide_congr⟩
-#align bool.to_bool_eq Bool.decide_eq
+#align bool.to_bool_eq decide_eq_decide
 -/
 
 #print Bool.not_false' /-

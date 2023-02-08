@@ -860,7 +860,7 @@ end Pmap
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toHasSeq.{u1, u1} Option.{u1} (Monad.toApplicative.{u1, u1} Option.{u1} Option.monad.{u1})) α β (Option.some.{u1} (α -> β) f) (Option.some.{u1} α a)) (Option.some.{u1} β (f a))
 but is expected to have type
-  forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) α β (Option.some.{u1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2317 : Unit) => Option.some.{u1} α a)) (Option.some.{u1} β (f a))
+  forall {α : Type.{u1}} {β : Type.{u1}} {a : α} {f : α -> β}, Eq.{succ u1} (Option.{u1} β) (Seq.seq.{u1, u1} Option.{u1} (Applicative.toSeq.{u1, u1} Option.{u1} (Alternative.toApplicative.{u1, u1} Option.{u1} instAlternativeOption.{u1})) α β (Option.some.{u1} (α -> β) f) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2260 : Unit) => Option.some.{u1} α a)) (Option.some.{u1} β (f a))
 Case conversion may be inaccurate. Consider using '#align option.seq_some Option.seq_someₓ'. -/
 @[simp]
 theorem seq_some {α β} {a : α} {f : α → β} : some f <*> some a = some (f a) :=
@@ -878,7 +878,7 @@ theorem some_orElse' (a : α) (x : Option α) : (some a).orelse x = some a :=
 lean 3 declaration is
   forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α (Option.some.{u1} α a) x) (Option.some.{u1} α a)
 but is expected to have type
-  forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.some.{u1} α a) (fun (x._@.Std.Data.Option.Lemmas._hyg.3041 : Unit) => x)) (Option.some.{u1} α a)
+  forall {α : Type.{u1}} (a : α) (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.some.{u1} α a) (fun (x._@.Std.Data.Option.Lemmas._hyg.3089 : Unit) => x)) (Option.some.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align option.some_orelse Option.some_orElseₓ'. -/
 @[simp]
 theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
@@ -889,7 +889,7 @@ theorem some_orElse (a : α) (x : Option α) : (some a <|> x) = some a :=
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α (Option.none.{u1} α) x) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α (Option.none.{u1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2371 : Unit) => x)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α (Option.none.{u1} α) (fun (x._@.Mathlib.Data.Option.Basic._hyg.2314 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse' Option.none_orElse'ₓ'. -/
 @[simp]
 theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
@@ -899,7 +899,7 @@ theorem none_orElse' (x : Option α) : none.orelse x = x := by cases x <;> rfl
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α (Option.none.{u1} α) x) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.none.{u1} α) (fun (x._@.Std.Data.Option.Lemmas._hyg.3055 : Unit) => x)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) (Option.none.{u1} α) (fun (x._@.Std.Data.Option.Lemmas._hyg.3103 : Unit) => x)) x
 Case conversion may be inaccurate. Consider using '#align option.none_orelse Option.none_orElseₓ'. -/
 @[simp]
 theorem none_orElse (x : Option α) : (none <|> x) = x :=
@@ -916,7 +916,7 @@ theorem orElse_none' (x : Option α) : x.orelse none = x := by cases x <;> rfl
 lean 3 declaration is
   forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α x (Option.none.{u1} α)) x
 but is expected to have type
-  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x (fun (x._@.Std.Data.Option.Lemmas._hyg.3069 : Unit) => Option.none.{u1} α)) x
+  forall {α : Type.{u1}} (x : Option.{u1} α), Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) x (fun (x._@.Std.Data.Option.Lemmas._hyg.3117 : Unit) => Option.none.{u1} α)) x
 Case conversion may be inaccurate. Consider using '#align option.orelse_none Option.orElse_noneₓ'. -/
 @[simp]
 theorem orElse_none (x : Option α) : (x <|> none) = x :=
@@ -1134,7 +1134,7 @@ theorem getD_map (f : α → β) (x : α) (o : Option α) : getD (o.map f) (f x)
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α o o') (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3097 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3040 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_some Option.orElse_eq_someₓ'. -/
 theorem orElse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -1148,7 +1148,7 @@ theorem orElse_eq_some (o o' : Option α) (x : α) :
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α o o') (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3158 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α) (x : α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3101 : Unit) => o')) (Option.some.{u1} α x)) (Or (Eq.{succ u1} (Option.{u1} α) o (Option.some.{u1} α x)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.some.{u1} α x))))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_some' Option.orElse_eq_some'ₓ'. -/
 theorem orElse_eq_some' (o o' : Option α) (x : α) :
     o.orelse o' = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
@@ -1159,7 +1159,7 @@ theorem orElse_eq_some' (o o' : Option α) (x : α) :
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HasOrelse.orelse.{u1, u1} Option.{u1} (Alternative.toHasOrelse.{u1, u1} Option.{u1} Option.alternative.{u1}) α o o') (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3210 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (HOrElse.hOrElse.{u1, u1, u1} (Option.{u1} α) (Option.{u1} α) (Option.{u1} α) (instHOrElse.{u1} (Option.{u1} α) (Option.instOrElseOption.{u1} α)) o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3153 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none Option.orElse_eq_noneₓ'. -/
 @[simp]
 theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none :=
@@ -1173,7 +1173,7 @@ theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o
 lean 3 declaration is
   forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orelse.{u1} α o o') (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 but is expected to have type
-  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3260 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
+  forall {α : Type.{u1}} (o : Option.{u1} α) (o' : Option.{u1} α), Iff (Eq.{succ u1} (Option.{u1} α) (Option.orElse.{u1} α o (fun (x._@.Mathlib.Data.Option.Basic._hyg.3203 : Unit) => o')) (Option.none.{u1} α)) (And (Eq.{succ u1} (Option.{u1} α) o (Option.none.{u1} α)) (Eq.{succ u1} (Option.{u1} α) o' (Option.none.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none' Option.orElse_eq_none'ₓ'. -/
 @[simp]
 theorem orElse_eq_none' (o o' : Option α) : o.orelse o' = none ↔ o = none ∧ o' = none :=

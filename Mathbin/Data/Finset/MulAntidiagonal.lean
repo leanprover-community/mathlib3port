@@ -67,7 +67,7 @@ well-ordered. -/
 @[to_additive
       "`finset.add_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in\n`s` and an element in `t` that add to `a`, but its construction requires proofs that `s` and `t` are\nwell-ordered."]
 noncomputable def mulAntidiagonal : Finset (α × α) :=
-  (Set.mulAntidiagonal.finite_of_isPwo hs ht a).toFinset
+  (Set.MulAntidiagonal.finite_of_isPwo hs ht a).toFinset
 #align finset.mul_antidiagonal Finset.mulAntidiagonal
 #align finset.add_antidiagonal Finset.addAntidiagonal
 
