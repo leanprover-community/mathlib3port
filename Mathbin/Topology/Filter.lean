@@ -51,14 +51,32 @@ basic open sets, see `filter.is_open_iff`. -/
 instance : TopologicalSpace (Filter α) :=
   generateFrom <| range <| Iic ∘ 𝓟
 
+/- warning: filter.is_open_Iic_principal -> Filter.isOpen_Iic_principal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, IsOpen.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α s))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, IsOpen.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α s))
+Case conversion may be inaccurate. Consider using '#align filter.is_open_Iic_principal Filter.isOpen_Iic_principalₓ'. -/
 theorem isOpen_Iic_principal {s : Set α} : IsOpen (Iic (𝓟 s)) :=
   GenerateOpen.basic _ (mem_range_self _)
 #align filter.is_open_Iic_principal Filter.isOpen_Iic_principal
 
+/- warning: filter.is_open_set_of_mem -> Filter.isOpen_setOf_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} α}, IsOpen.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (setOf.{u1} (Filter.{u1} α) (fun (l : Filter.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} α}, IsOpen.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (setOf.{u1} (Filter.{u1} α) (fun (l : Filter.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l))
+Case conversion may be inaccurate. Consider using '#align filter.is_open_set_of_mem Filter.isOpen_setOf_memₓ'. -/
 theorem isOpen_setOf_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := by
   simpa only [Iic_principal] using is_open_Iic_principal
 #align filter.is_open_set_of_mem Filter.isOpen_setOf_mem
 
+/- warning: filter.is_topological_basis_Iic_principal -> Filter.isTopologicalBasis_Iic_principal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, TopologicalSpace.IsTopologicalBasis.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Set.range.{u1, succ u1} (Set.{u1} (Filter.{u1} α)) (Set.{u1} α) (Function.comp.{succ u1, succ u1, succ u1} (Set.{u1} α) (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}}, TopologicalSpace.IsTopologicalBasis.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Set.range.{u1, succ u1} (Set.{u1} (Filter.{u1} α)) (Set.{u1} α) (Function.comp.{succ u1, succ u1, succ u1} (Set.{u1} α) (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.principal.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align filter.is_topological_basis_Iic_principal Filter.isTopologicalBasis_Iic_principalₓ'. -/
 theorem isTopologicalBasis_Iic_principal :
     IsTopologicalBasis (range (Iic ∘ 𝓟 : Set α → Set (Filter α))) :=
   { exists_subset_inter := by
@@ -68,26 +86,56 @@ theorem isTopologicalBasis_Iic_principal :
     eq_generateFrom := rfl }
 #align filter.is_topological_basis_Iic_principal Filter.isTopologicalBasis_Iic_principal
 
+/- warning: filter.is_open_iff -> Filter.isOpen_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Iff (IsOpen.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) s) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (T : Set.{u1} (Set.{u1} α)) => Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) s (Set.unionᵢ.{u1, succ u1} (Filter.{u1} α) (Set.{u1} α) (fun (t : Set.{u1} α) => Set.unionᵢ.{u1, 0} (Filter.{u1} α) (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t T) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t T) => Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α t))))))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)}, Iff (IsOpen.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) s) (Exists.{succ u1} (Set.{u1} (Set.{u1} α)) (fun (T : Set.{u1} (Set.{u1} α)) => Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) s (Set.unionᵢ.{u1, succ u1} (Filter.{u1} α) (Set.{u1} α) (fun (t : Set.{u1} α) => Set.unionᵢ.{u1, 0} (Filter.{u1} α) (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t T) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t T) => Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α t))))))
+Case conversion may be inaccurate. Consider using '#align filter.is_open_iff Filter.isOpen_iffₓ'. -/
 theorem isOpen_iff {s : Set (Filter α)} : IsOpen s ↔ ∃ T : Set (Set α), s = ⋃ t ∈ T, Iic (𝓟 t) :=
   isTopologicalBasis_Iic_principal.open_iff_eq_unionₛ.trans <| by
     simp only [exists_subset_range_iff, sUnion_image]
 #align filter.is_open_iff Filter.isOpen_iff
 
+/- warning: filter.nhds_eq -> Filter.nhds_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l) (Filter.lift'.{u1, u1} α (Filter.{u1} α) l (Function.comp.{succ u1, succ u1, succ u1} (Set.{u1} α) (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) (Filter.principal.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l) (Filter.lift'.{u1, u1} α (Filter.{u1} α) l (Function.comp.{succ u1, succ u1, succ u1} (Set.{u1} α) (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Filter.principal.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_eq Filter.nhds_eqₓ'. -/
 theorem nhds_eq (l : Filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
   nhds_generateFrom.trans <| by
     simp only [mem_set_of_eq, and_comm' (l ∈ _), infᵢ_and, infᵢ_range, Filter.lift', Filter.lift,
       (· ∘ ·), mem_Iic, le_principal_iff]
 #align filter.nhds_eq Filter.nhds_eq
 
+/- warning: filter.nhds_eq' -> Filter.nhds_eq' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l) (Filter.lift'.{u1, u1} α (Filter.{u1} α) l (fun (s : Set.{u1} α) => setOf.{u1} (Filter.{u1} α) (fun (l' : Filter.{u1} α) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) s l')))
+but is expected to have type
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l) (Filter.lift'.{u1, u1} α (Filter.{u1} α) l (fun (s : Set.{u1} α) => setOf.{u1} (Filter.{u1} α) (fun (l' : Filter.{u1} α) => Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l')))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_eq' Filter.nhds_eq'ₓ'. -/
 theorem nhds_eq' (l : Filter α) : 𝓝 l = l.lift' fun s => { l' | s ∈ l' } := by
   simpa only [(· ∘ ·), Iic_principal] using nhds_eq l
 #align filter.nhds_eq' Filter.nhds_eq'
 
+/- warning: filter.tendsto_nhds -> Filter.tendsto_nhds is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {la : Filter.{u1} α} {lb : Filter.{u2} β} {f : α -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α (Filter.{u2} β) f la (nhds.{u2} (Filter.{u2} β) (Filter.topologicalSpace.{u2} β) lb)) (forall (s : Set.{u2} β), (Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s lb) -> (Filter.Eventually.{u1} α (fun (a : α) => Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) s (f a)) la))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {la : Filter.{u2} α} {lb : Filter.{u1} β} {f : α -> (Filter.{u1} β)}, Iff (Filter.Tendsto.{u2, u1} α (Filter.{u1} β) f la (nhds.{u1} (Filter.{u1} β) (Filter.instTopologicalSpaceFilter.{u1} β) lb)) (forall (s : Set.{u1} β), (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s lb) -> (Filter.Eventually.{u2} α (fun (a : α) => Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s (f a)) la))
+Case conversion may be inaccurate. Consider using '#align filter.tendsto_nhds Filter.tendsto_nhdsₓ'. -/
 protected theorem tendsto_nhds {la : Filter α} {lb : Filter β} {f : α → Filter β} :
     Tendsto f la (𝓝 lb) ↔ ∀ s ∈ lb, ∀ᶠ a in la, s ∈ f a := by
   simp only [nhds_eq', tendsto_lift', mem_set_of_eq]
 #align filter.tendsto_nhds Filter.tendsto_nhds
 
+/- warning: filter.has_basis.nhds -> Filter.HasBasis.nhds is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Filter.HasBasis.{u2, u1} (Filter.{u2} α) ι (nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) l) p (fun (i : ι) => Set.Iic.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.partialOrder.{u2} α)) (Filter.principal.{u2} α (s i))))
+but is expected to have type
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Filter.HasBasis.{u2, u1} (Filter.{u2} α) ι (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) l) p (fun (i : ι) => Set.Iic.{u2} (Filter.{u2} α) (PartialOrder.toPreorder.{u2} (Filter.{u2} α) (Filter.instPartialOrderFilter.{u2} α)) (Filter.principal.{u2} α (s i))))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.nhds Filter.HasBasis.nhdsₓ'. -/
 theorem HasBasis.nhds {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
     HasBasis (𝓝 l) p fun i => Iic (𝓟 (s i)) :=
   by
@@ -100,37 +148,85 @@ instance {l : Filter α} [IsCountablyGenerated l] : IsCountablyGenerated (𝓝 l
   let ⟨b, hb⟩ := l.exists_antitone_basis
   HasCountableBasis.isCountablyGenerated <| ⟨hb.nhds, Set.to_countable _⟩
 
+/- warning: filter.has_basis.nhds' -> Filter.HasBasis.nhds' is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Filter.HasBasis.{u2, u1} (Filter.{u2} α) ι (nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) l) p (fun (i : ι) => setOf.{u2} (Filter.{u2} α) (fun (l' : Filter.{u2} α) => Membership.Mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (Filter.hasMem.{u2} α) (s i) l')))
+but is expected to have type
+  forall {ι : Sort.{u1}} {α : Type.{u2}} {l : Filter.{u2} α} {p : ι -> Prop} {s : ι -> (Set.{u2} α)}, (Filter.HasBasis.{u2, u1} α ι l p s) -> (Filter.HasBasis.{u2, u1} (Filter.{u2} α) ι (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) l) p (fun (i : ι) => setOf.{u2} (Filter.{u2} α) (fun (l' : Filter.{u2} α) => Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) (s i) l')))
+Case conversion may be inaccurate. Consider using '#align filter.has_basis.nhds' Filter.HasBasis.nhds'ₓ'. -/
 theorem HasBasis.nhds' {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
     HasBasis (𝓝 l) p fun i => { l' | s i ∈ l' } := by simpa only [Iic_principal] using h.nhds
 #align filter.has_basis.nhds' Filter.HasBasis.nhds'
 
+/- warning: filter.mem_nhds_iff -> Filter.mem_nhds_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l : Filter.{u1} α} {S : Set.{u1} (Filter.{u1} α)}, Iff (Membership.Mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (Filter.hasMem.{u1} (Filter.{u1} α)) S (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) => HasSubset.Subset.{u1} (Set.{u1} (Filter.{u1} α)) (Set.hasSubset.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α t)) S)))
+but is expected to have type
+  forall {α : Type.{u1}} {l : Filter.{u1} α} {S : Set.{u1} (Filter.{u1} α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (instMembershipSetFilter.{u1} (Filter.{u1} α)) S (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) (HasSubset.Subset.{u1} (Set.{u1} (Filter.{u1} α)) (Set.instHasSubsetSet.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α t)) S)))
+Case conversion may be inaccurate. Consider using '#align filter.mem_nhds_iff Filter.mem_nhds_iffₓ'. -/
 theorem mem_nhds_iff {l : Filter α} {S : Set (Filter α)} : S ∈ 𝓝 l ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ S :=
   l.basis_sets.nhds.mem_iff
 #align filter.mem_nhds_iff Filter.mem_nhds_iff
 
+/- warning: filter.mem_nhds_iff' -> Filter.mem_nhds_iff' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l : Filter.{u1} α} {S : Set.{u1} (Filter.{u1} α)}, Iff (Membership.Mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (Filter.hasMem.{u1} (Filter.{u1} α)) S (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) => forall {{l' : Filter.{u1} α}}, (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l') -> (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) l' S))))
+but is expected to have type
+  forall {α : Type.{u1}} {l : Filter.{u1} α} {S : Set.{u1} (Filter.{u1} α)}, Iff (Membership.mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (instMembershipSetFilter.{u1} (Filter.{u1} α)) S (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) (forall {{l' : Filter.{u1} α}}, (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l') -> (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) l' S))))
+Case conversion may be inaccurate. Consider using '#align filter.mem_nhds_iff' Filter.mem_nhds_iff'ₓ'. -/
 theorem mem_nhds_iff' {l : Filter α} {S : Set (Filter α)} :
     S ∈ 𝓝 l ↔ ∃ t ∈ l, ∀ ⦃l' : Filter α⦄, t ∈ l' → l' ∈ S :=
   l.basis_sets.nhds'.mem_iff
 #align filter.mem_nhds_iff' Filter.mem_nhds_iff'
 
+/- warning: filter.nhds_bot -> Filter.nhds_bot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α)))) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} (Filter.{u1} α) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} (Filter.{u1} α) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_bot Filter.nhds_botₓ'. -/
 @[simp]
 theorem nhds_bot : 𝓝 (⊥ : Filter α) = pure ⊥ := by simp [nhds_eq, lift'_bot monotone_principal.Iic]
 #align filter.nhds_bot Filter.nhds_bot
 
+/- warning: filter.nhds_top -> Filter.nhds_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Top.top.{u1} (Filter.{u1} α) (Filter.hasTop.{u1} α))) (Top.top.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.hasTop.{u1} (Filter.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}}, Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Top.top.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instTopFilter.{u1} (Filter.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_top Filter.nhds_topₓ'. -/
 @[simp]
 theorem nhds_top : 𝓝 (⊤ : Filter α) = ⊤ := by simp [nhds_eq]
 #align filter.nhds_top Filter.nhds_top
 
+/- warning: filter.nhds_principal -> Filter.nhds_principal is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.principal.{u1} α s)) (Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α s)))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.principal.{u1} α s)) (Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α s)))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_principal Filter.nhds_principalₓ'. -/
 @[simp]
 theorem nhds_principal (s : Set α) : 𝓝 (𝓟 s) = 𝓟 (Iic (𝓟 s)) :=
   (hasBasis_principal s).nhds.eq_of_same_basis (hasBasis_principal _)
 #align filter.nhds_principal Filter.nhds_principal
 
+/- warning: filter.nhds_pure -> Filter.nhds_pure is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (x : α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α x)) (Filter.principal.{u1} (Filter.{u1} α) (Insert.insert.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasInsert.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toHasBot.{u1} (Filter.{u1} α) (Filter.completeLattice.{u1} α))) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasSingleton.{u1} (Filter.{u1} α)) (Pure.pure.{u1, u1} Filter.{u1} Filter.hasPure.{u1} α x))))
+but is expected to have type
+  forall {α : Type.{u1}} (x : α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α x)) (Filter.principal.{u1} (Filter.{u1} α) (Insert.insert.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instInsertSet.{u1} (Filter.{u1} α)) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instSingletonSet.{u1} (Filter.{u1} α)) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α x))))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_pure Filter.nhds_pureₓ'. -/
 @[simp]
 theorem nhds_pure (x : α) : 𝓝 (pure x : Filter α) = 𝓟 {⊥, pure x} := by
   rw [← principal_singleton, nhds_principal, principal_singleton, Iic_pure]
 #align filter.nhds_pure Filter.nhds_pure
 
+/- warning: filter.nhds_infi -> Filter.nhds_infᵢ is a dubious translation:
+lean 3 declaration is
+  forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) (infᵢ.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.completeLattice.{u2} α))) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toHasInf.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.completeLattice.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.topologicalSpace.{u2} α) (f i)))
+but is expected to have type
+  forall {ι : Sort.{u1}} {α : Type.{u2}} (f : ι -> (Filter.{u2} α)), Eq.{succ u2} (Filter.{u2} (Filter.{u2} α)) (nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (infᵢ.{u2, u1} (Filter.{u2} α) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} α) (Filter.instCompleteLatticeFilter.{u2} α))) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (Filter.{u2} (Filter.{u2} α)) (ConditionallyCompleteLattice.toInfSet.{u2} (Filter.{u2} (Filter.{u2} α)) (CompleteLattice.toConditionallyCompleteLattice.{u2} (Filter.{u2} (Filter.{u2} α)) (Filter.instCompleteLatticeFilter.{u2} (Filter.{u2} α)))) ι (fun (i : ι) => nhds.{u2} (Filter.{u2} α) (Filter.instTopologicalSpaceFilter.{u2} α) (f i)))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_infi Filter.nhds_infᵢₓ'. -/
 @[simp]
 theorem nhds_infᵢ (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f i) :=
   by
@@ -138,20 +234,44 @@ theorem nhds_infᵢ (f : ι → Filter α) : 𝓝 (⨅ i, f i) = ⨅ i, 𝓝 (f 
   apply lift'_infi_of_map_univ <;> simp
 #align filter.nhds_infi Filter.nhds_infᵢ
 
+/- warning: filter.nhds_inf -> Filter.nhds_inf is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (HasInf.inf.{u1} (Filter.{u1} α) (Filter.hasInf.{u1} α) l₁ l₂)) (HasInf.inf.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.hasInf.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₂))
+but is expected to have type
+  forall {α : Type.{u1}} (l₁ : Filter.{u1} α) (l₂ : Filter.{u1} α), Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) l₁ l₂)) (HasInf.inf.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instHasInfFilter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₂))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_inf Filter.nhds_infₓ'. -/
 @[simp]
 theorem nhds_inf (l₁ l₂ : Filter α) : 𝓝 (l₁ ⊓ l₂) = 𝓝 l₁ ⊓ 𝓝 l₂ := by
   simpa only [infᵢ_bool_eq] using nhds_infᵢ fun b => cond b l₁ l₂
 #align filter.nhds_inf Filter.nhds_inf
 
+/- warning: filter.monotone_nhds -> Filter.monotone_nhds is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}}, Monotone.{u1, u1} (Filter.{u1} α) (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.partialOrder.{u1} (Filter.{u1} α))) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α))
+but is expected to have type
+  forall {α : Type.{u1}}, Monotone.{u1, u1} (Filter.{u1} α) (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instPartialOrderFilter.{u1} (Filter.{u1} α))) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α))
+Case conversion may be inaccurate. Consider using '#align filter.monotone_nhds Filter.monotone_nhdsₓ'. -/
 theorem monotone_nhds : Monotone (𝓝 : Filter α → Filter (Filter α)) :=
   Monotone.of_map_inf nhds_inf
 #align filter.monotone_nhds Filter.monotone_nhds
 
-theorem Inter_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
+/- warning: filter.Inter_nhds -> Filter.interₛ_nhds is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.interₛ.{u1} (Filter.{u1} α) (setOf.{u1} (Set.{u1} (Filter.{u1} α)) (fun (s : Set.{u1} (Filter.{u1} α)) => Membership.Mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (Filter.hasMem.{u1} (Filter.{u1} α)) s (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l)))) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) l)
+but is expected to have type
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (Set.interₛ.{u1} (Filter.{u1} α) (setOf.{u1} (Set.{u1} (Filter.{u1} α)) (fun (s : Set.{u1} (Filter.{u1} α)) => Membership.mem.{u1, u1} (Set.{u1} (Filter.{u1} α)) (Filter.{u1} (Filter.{u1} α)) (instMembershipSetFilter.{u1} (Filter.{u1} α)) s (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l)))) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) l)
+Case conversion may be inaccurate. Consider using '#align filter.Inter_nhds Filter.interₛ_nhdsₓ'. -/
+theorem interₛ_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
   simp only [nhds_eq, sInter_lift'_sets monotone_principal.Iic, Iic, le_principal_iff, ←
     set_of_forall, ← Filter.le_def]
-#align filter.Inter_nhds Filter.Inter_nhds
+#align filter.Inter_nhds Filter.interₛ_nhds
 
+/- warning: filter.nhds_mono -> Filter.nhds_mono is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toLE.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.partialOrder.{u1} (Filter.{u1} α)))) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂)
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (LE.le.{u1} (Filter.{u1} (Filter.{u1} α)) (Preorder.toLE.{u1} (Filter.{u1} (Filter.{u1} α)) (PartialOrder.toPreorder.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instPartialOrderFilter.{u1} (Filter.{u1} α)))) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₁) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₂)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ l₂)
+Case conversion may be inaccurate. Consider using '#align filter.nhds_mono Filter.nhds_monoₓ'. -/
 @[simp]
 theorem nhds_mono {l₁ l₂ : Filter α} : 𝓝 l₁ ≤ 𝓝 l₂ ↔ l₁ ≤ l₂ :=
   by
@@ -160,10 +280,22 @@ theorem nhds_mono {l₁ l₂ : Filter α} : 𝓝 l₁ ≤ 𝓝 l₂ ↔ l₁ ≤
   exact sInter_subset_sInter h
 #align filter.nhds_mono Filter.nhds_mono
 
+/- warning: filter.mem_interior -> Filter.mem_interior is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, Iff (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) l (interior.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) s)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) (fun (H : Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) => HasSubset.Subset.{u1} (Set.{u1} (Filter.{u1} α)) (Set.hasSubset.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α t)) s)))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, Iff (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) l (interior.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) s)) (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) (HasSubset.Subset.{u1} (Set.{u1} (Filter.{u1} α)) (Set.instHasSubsetSet.{u1} (Filter.{u1} α)) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α t)) s)))
+Case conversion may be inaccurate. Consider using '#align filter.mem_interior Filter.mem_interiorₓ'. -/
 protected theorem mem_interior {s : Set (Filter α)} {l : Filter α} :
     l ∈ interior s ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ s := by rw [mem_interior_iff_mem_nhds, mem_nhds_iff]
 #align filter.mem_interior Filter.mem_interior
 
+/- warning: filter.mem_closure -> Filter.mem_closure is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, Iff (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) l (closure.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) s)) (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l) -> (Exists.{succ u1} (Filter.{u1} α) (fun (l' : Filter.{u1} α) => Exists.{0} (Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) l' s) (fun (H : Membership.Mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasMem.{u1} (Filter.{u1} α)) l' s) => Membership.Mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (Filter.hasMem.{u1} α) t l'))))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} (Filter.{u1} α)} {l : Filter.{u1} α}, Iff (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) l (closure.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) s)) (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) -> (Exists.{succ u1} (Filter.{u1} α) (fun (l' : Filter.{u1} α) => And (Membership.mem.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instMembershipSet.{u1} (Filter.{u1} α)) l' s) (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l'))))
+Case conversion may be inaccurate. Consider using '#align filter.mem_closure Filter.mem_closureₓ'. -/
 protected theorem mem_closure {s : Set (Filter α)} {l : Filter α} :
     l ∈ closure s ↔ ∀ t ∈ l, ∃ l' ∈ s, t ∈ l' := by
   simp only [closure_eq_compl_interior_compl, Filter.mem_interior, mem_compl_iff, not_exists,
@@ -171,6 +303,12 @@ protected theorem mem_closure {s : Set (Filter α)} {l : Filter α} :
     le_principal_iff]
 #align filter.mem_closure Filter.mem_closure
 
+/- warning: filter.closure_singleton -> Filter.closure_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (closure.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.hasSingleton.{u1} (Filter.{u1} α)) l)) (Set.Ici.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) l)
+but is expected to have type
+  forall {α : Type.{u1}} (l : Filter.{u1} α), Eq.{succ u1} (Set.{u1} (Filter.{u1} α)) (closure.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Singleton.singleton.{u1, u1} (Filter.{u1} α) (Set.{u1} (Filter.{u1} α)) (Set.instSingletonSet.{u1} (Filter.{u1} α)) l)) (Set.Ici.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) l)
+Case conversion may be inaccurate. Consider using '#align filter.closure_singleton Filter.closure_singletonₓ'. -/
 @[simp]
 protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l :=
   by
@@ -178,6 +316,12 @@ protected theorem closure_singleton (l : Filter α) : closure {l} = Ici l :=
   simp [Filter.mem_closure, Filter.le_def]
 #align filter.closure_singleton Filter.closure_singleton
 
+/- warning: filter.specializes_iff_le -> Filter.specializes_iff_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (Specializes.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α))) l₁ l₂)
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : Filter.{u1} α} {l₂ : Filter.{u1} α}, Iff (Specializes.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) l₁ l₂) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) l₁ l₂)
+Case conversion may be inaccurate. Consider using '#align filter.specializes_iff_le Filter.specializes_iff_leₓ'. -/
 @[simp]
 theorem specializes_iff_le {l₁ l₂ : Filter α} : l₁ ⤳ l₂ ↔ l₁ ≤ l₂ := by
   simp only [specializes_iff_closure_subset, Filter.closure_singleton, Ici_subset_Ici]
@@ -187,19 +331,43 @@ instance : T0Space (Filter α) :=
   ⟨fun x y h =>
     (specializes_iff_le.1 h.Specializes).antisymm (specializes_iff_le.1 h.symm.Specializes)⟩
 
+/- warning: filter.nhds_at_top -> Filter.nhds_atTop is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.atTop.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α (Set.Ici.{u1} α _inst_1 x)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.atTop.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α (Set.Ici.{u1} α _inst_1 x)))))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_at_top Filter.nhds_atTopₓ'. -/
 theorem nhds_atTop [Preorder α] : 𝓝 atTop = ⨅ x : α, 𝓟 (Iic (𝓟 (Ici x))) := by
   simp only [at_top, nhds_infᵢ, nhds_principal]
 #align filter.nhds_at_top Filter.nhds_atTop
 
+/- warning: filter.tendsto_nhds_at_top_iff -> Filter.tendsto_nhds_atTop_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α (Filter.{u2} β) f l (nhds.{u2} (Filter.{u2} β) (Filter.topologicalSpace.{u2} β) (Filter.atTop.{u2} β _inst_1))) (forall (y : β), Filter.Eventually.{u1} α (fun (a : α) => Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.Ici.{u2} β _inst_1 y) (f a)) l)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α (Filter.{u2} β) f l (nhds.{u2} (Filter.{u2} β) (Filter.instTopologicalSpaceFilter.{u2} β) (Filter.atTop.{u2} β _inst_1))) (forall (y : β), Filter.Eventually.{u1} α (fun (a : α) => Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.Ici.{u2} β _inst_1 y) (f a)) l)
+Case conversion may be inaccurate. Consider using '#align filter.tendsto_nhds_at_top_iff Filter.tendsto_nhds_atTop_iffₓ'. -/
 protected theorem tendsto_nhds_atTop_iff [Preorder β] {l : Filter α} {f : α → Filter β} :
     Tendsto f l (𝓝 atTop) ↔ ∀ y, ∀ᶠ a in l, Ici y ∈ f a := by
   simp only [nhds_at_top, tendsto_infi, tendsto_principal, mem_Iic, le_principal_iff]
 #align filter.tendsto_nhds_at_top_iff Filter.tendsto_nhds_atTop_iff
 
+/- warning: filter.nhds_at_bot -> Filter.nhds_atBot is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.topologicalSpace.{u1} α) (Filter.atBot.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.completeLattice.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.partialOrder.{u1} α)) (Filter.principal.{u1} α (Set.Iic.{u1} α _inst_1 x)))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α], Eq.{succ u1} (Filter.{u1} (Filter.{u1} α)) (nhds.{u1} (Filter.{u1} α) (Filter.instTopologicalSpaceFilter.{u1} α) (Filter.atBot.{u1} α _inst_1)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} α)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} α)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} α)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} α)))) α (fun (x : α) => Filter.principal.{u1} (Filter.{u1} α) (Set.Iic.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (Filter.principal.{u1} α (Set.Iic.{u1} α _inst_1 x)))))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_at_bot Filter.nhds_atBotₓ'. -/
 theorem nhds_atBot [Preorder α] : 𝓝 atBot = ⨅ x : α, 𝓟 (Iic (𝓟 (Iic x))) :=
   @nhds_atTop αᵒᵈ _
 #align filter.nhds_at_bot Filter.nhds_atBot
 
+/- warning: filter.tendsto_nhds_at_bot_iff -> Filter.tendsto_nhds_atBot_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α (Filter.{u2} β) f l (nhds.{u2} (Filter.{u2} β) (Filter.topologicalSpace.{u2} β) (Filter.atBot.{u2} β _inst_1))) (forall (y : β), Filter.Eventually.{u1} α (fun (a : α) => Membership.Mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (Filter.hasMem.{u2} β) (Set.Iic.{u2} β _inst_1 y) (f a)) l)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u2} β] {l : Filter.{u1} α} {f : α -> (Filter.{u2} β)}, Iff (Filter.Tendsto.{u1, u2} α (Filter.{u2} β) f l (nhds.{u2} (Filter.{u2} β) (Filter.instTopologicalSpaceFilter.{u2} β) (Filter.atBot.{u2} β _inst_1))) (forall (y : β), Filter.Eventually.{u1} α (fun (a : α) => Membership.mem.{u2, u2} (Set.{u2} β) (Filter.{u2} β) (instMembershipSetFilter.{u2} β) (Set.Iic.{u2} β _inst_1 y) (f a)) l)
+Case conversion may be inaccurate. Consider using '#align filter.tendsto_nhds_at_bot_iff Filter.tendsto_nhds_atBot_iffₓ'. -/
 protected theorem tendsto_nhds_atBot_iff [Preorder β] {l : Filter α} {f : α → Filter β} :
     Tendsto f l (𝓝 atBot) ↔ ∀ y, ∀ᶠ a in l, Iic y ∈ f a :=
   @Filter.tendsto_nhds_atTop_iff α βᵒᵈ _ _ _
@@ -207,10 +375,22 @@ protected theorem tendsto_nhds_atBot_iff [Preorder β] {l : Filter α} {f : α �
 
 variable [TopologicalSpace X]
 
+/- warning: filter.nhds_nhds -> Filter.nhds_nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (x : X), Eq.{succ u1} (Filter.{u1} (Filter.{u1} X)) (nhds.{u1} (Filter.{u1} X) (Filter.topologicalSpace.{u1} X) (nhds.{u1} X _inst_1 x)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (Set.{u1} X) (fun (s : Set.{u1} X) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (IsOpen.{u1} X _inst_1 s) (fun (hs : IsOpen.{u1} X _inst_1 s) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toHasInf.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.completeLattice.{u1} (Filter.{u1} X)))) (Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) (fun (hx : Membership.Mem.{u1, u1} X (Set.{u1} X) (Set.hasMem.{u1} X) x s) => Filter.principal.{u1} (Filter.{u1} X) (Set.Iic.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.partialOrder.{u1} X)) (Filter.principal.{u1} X s))))))
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] (x : X), Eq.{succ u1} (Filter.{u1} (Filter.{u1} X)) (nhds.{u1} (Filter.{u1} X) (Filter.instTopologicalSpaceFilter.{u1} X) (nhds.{u1} X _inst_1 x)) (infᵢ.{u1, succ u1} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (Set.{u1} X) (fun (s : Set.{u1} X) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (IsOpen.{u1} X _inst_1 s) (fun (hs : IsOpen.{u1} X _inst_1 s) => infᵢ.{u1, 0} (Filter.{u1} (Filter.{u1} X)) (ConditionallyCompleteLattice.toInfSet.{u1} (Filter.{u1} (Filter.{u1} X)) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} (Filter.{u1} X)) (Filter.instCompleteLatticeFilter.{u1} (Filter.{u1} X)))) (Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) (fun (hx : Membership.mem.{u1, u1} X (Set.{u1} X) (Set.instMembershipSet.{u1} X) x s) => Filter.principal.{u1} (Filter.{u1} X) (Set.Iic.{u1} (Filter.{u1} X) (PartialOrder.toPreorder.{u1} (Filter.{u1} X) (Filter.instPartialOrderFilter.{u1} X)) (Filter.principal.{u1} X s))))))
+Case conversion may be inaccurate. Consider using '#align filter.nhds_nhds Filter.nhds_nhdsₓ'. -/
 theorem nhds_nhds (x : X) : 𝓝 (𝓝 x) = ⨅ (s : Set X) (hs : IsOpen s) (hx : x ∈ s), 𝓟 (Iic (𝓟 s)) :=
   by simp only [(nhds_basis_opens x).nhds.eq_binfᵢ, infᵢ_and, @infᵢ_comm _ (_ ∈ _)]
 #align filter.nhds_nhds Filter.nhds_nhds
 
+/- warning: filter.inducing_nhds -> Filter.inducing_nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X], Inducing.{u1, u1} X (Filter.{u1} X) _inst_1 (Filter.topologicalSpace.{u1} X) (nhds.{u1} X _inst_1)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X], Inducing.{u1, u1} X (Filter.{u1} X) _inst_1 (Filter.instTopologicalSpaceFilter.{u1} X) (nhds.{u1} X _inst_1)
+Case conversion may be inaccurate. Consider using '#align filter.inducing_nhds Filter.inducing_nhdsₓ'. -/
 theorem inducing_nhds : Inducing (𝓝 : X → Filter X) :=
   inducing_iff_nhds.2 fun x =>
     (nhds_def' _).trans <| by
@@ -219,11 +399,23 @@ theorem inducing_nhds : Inducing (𝓝 : X → Filter X) :=
         IsOpen.interior_eq]
 #align filter.inducing_nhds Filter.inducing_nhds
 
+/- warning: filter.continuous_nhds -> Filter.continuous_nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X], Continuous.{u1, u1} X (Filter.{u1} X) _inst_1 (Filter.topologicalSpace.{u1} X) (nhds.{u1} X _inst_1)
+but is expected to have type
+  forall {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X], Continuous.{u1, u1} X (Filter.{u1} X) _inst_1 (Filter.instTopologicalSpaceFilter.{u1} X) (nhds.{u1} X _inst_1)
+Case conversion may be inaccurate. Consider using '#align filter.continuous_nhds Filter.continuous_nhdsₓ'. -/
 @[continuity]
 theorem continuous_nhds : Continuous (𝓝 : X → Filter X) :=
   inducing_nhds.Continuous
 #align filter.continuous_nhds Filter.continuous_nhds
 
+/- warning: filter.tendsto.nhds -> Filter.Tendsto.nhds is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {f : α -> X} {l : Filter.{u1} α} {x : X}, (Filter.Tendsto.{u1, u2} α X f l (nhds.{u2} X _inst_1 x)) -> (Filter.Tendsto.{u1, u2} α (Filter.{u2} X) (Function.comp.{succ u1, succ u2, succ u2} α X (Filter.{u2} X) (nhds.{u2} X _inst_1) f) l (nhds.{u2} (Filter.{u2} X) (Filter.topologicalSpace.{u2} X) (nhds.{u2} X _inst_1 x)))
+but is expected to have type
+  forall {α : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] {f : α -> X} {l : Filter.{u2} α} {x : X}, (Filter.Tendsto.{u2, u1} α X f l (nhds.{u1} X _inst_1 x)) -> (Filter.Tendsto.{u2, u1} α (Filter.{u1} X) (Function.comp.{succ u2, succ u1, succ u1} α X (Filter.{u1} X) (nhds.{u1} X _inst_1) f) l (nhds.{u1} (Filter.{u1} X) (Filter.instTopologicalSpaceFilter.{u1} X) (nhds.{u1} X _inst_1 x)))
+Case conversion may be inaccurate. Consider using '#align filter.tendsto.nhds Filter.Tendsto.nhdsₓ'. -/
 protected theorem Tendsto.nhds {f : α → X} {l : Filter α} {x : X} (h : Tendsto f l (𝓝 x)) :
     Tendsto (𝓝 ∘ f) l (𝓝 (𝓝 x)) :=
   (continuous_nhds.Tendsto _).comp h
@@ -233,18 +425,42 @@ end Filter
 
 variable [TopologicalSpace X] [TopologicalSpace Y] {f : X → Y} {x : X} {s : Set X}
 
+/- warning: continuous_within_at.nhds -> ContinuousWithinAt.nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {f : X -> Y} {x : X} {s : Set.{u1} X}, (ContinuousWithinAt.{u1, u2} X Y _inst_1 _inst_2 f s x) -> (ContinuousWithinAt.{u1, u2} X (Filter.{u2} Y) _inst_1 (Filter.topologicalSpace.{u2} Y) (Function.comp.{succ u1, succ u2, succ u2} X Y (Filter.{u2} Y) (nhds.{u2} Y _inst_2) f) s x)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : X -> Y} {x : X} {s : Set.{u2} X}, (ContinuousWithinAt.{u2, u1} X Y _inst_1 _inst_2 f s x) -> (ContinuousWithinAt.{u2, u1} X (Filter.{u1} Y) _inst_1 (Filter.instTopologicalSpaceFilter.{u1} Y) (Function.comp.{succ u2, succ u1, succ u1} X Y (Filter.{u1} Y) (nhds.{u1} Y _inst_2) f) s x)
+Case conversion may be inaccurate. Consider using '#align continuous_within_at.nhds ContinuousWithinAt.nhdsₓ'. -/
 theorem ContinuousWithinAt.nhds (h : ContinuousWithinAt f s x) : ContinuousWithinAt (𝓝 ∘ f) s x :=
   h.nhds
 #align continuous_within_at.nhds ContinuousWithinAt.nhds
 
+/- warning: continuous_at.nhds -> ContinuousAt.nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {f : X -> Y} {x : X}, (ContinuousAt.{u1, u2} X Y _inst_1 _inst_2 f x) -> (ContinuousAt.{u1, u2} X (Filter.{u2} Y) _inst_1 (Filter.topologicalSpace.{u2} Y) (Function.comp.{succ u1, succ u2, succ u2} X Y (Filter.{u2} Y) (nhds.{u2} Y _inst_2) f) x)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : X -> Y} {x : X}, (ContinuousAt.{u2, u1} X Y _inst_1 _inst_2 f x) -> (ContinuousAt.{u2, u1} X (Filter.{u1} Y) _inst_1 (Filter.instTopologicalSpaceFilter.{u1} Y) (Function.comp.{succ u2, succ u1, succ u1} X Y (Filter.{u1} Y) (nhds.{u1} Y _inst_2) f) x)
+Case conversion may be inaccurate. Consider using '#align continuous_at.nhds ContinuousAt.nhdsₓ'. -/
 theorem ContinuousAt.nhds (h : ContinuousAt f x) : ContinuousAt (𝓝 ∘ f) x :=
   h.nhds
 #align continuous_at.nhds ContinuousAt.nhds
 
+/- warning: continuous_on.nhds -> ContinuousOn.nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {f : X -> Y} {s : Set.{u1} X}, (ContinuousOn.{u1, u2} X Y _inst_1 _inst_2 f s) -> (ContinuousOn.{u1, u2} X (Filter.{u2} Y) _inst_1 (Filter.topologicalSpace.{u2} Y) (Function.comp.{succ u1, succ u2, succ u2} X Y (Filter.{u2} Y) (nhds.{u2} Y _inst_2) f) s)
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : X -> Y} {s : Set.{u2} X}, (ContinuousOn.{u2, u1} X Y _inst_1 _inst_2 f s) -> (ContinuousOn.{u2, u1} X (Filter.{u1} Y) _inst_1 (Filter.instTopologicalSpaceFilter.{u1} Y) (Function.comp.{succ u2, succ u1, succ u1} X Y (Filter.{u1} Y) (nhds.{u1} Y _inst_2) f) s)
+Case conversion may be inaccurate. Consider using '#align continuous_on.nhds ContinuousOn.nhdsₓ'. -/
 theorem ContinuousOn.nhds (h : ContinuousOn f s) : ContinuousOn (𝓝 ∘ f) s := fun x hx =>
   (h x hx).nhds
 #align continuous_on.nhds ContinuousOn.nhds
 
+/- warning: continuous.nhds -> Continuous.nhds is a dubious translation:
+lean 3 declaration is
+  forall {X : Type.{u1}} {Y : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : TopologicalSpace.{u2} Y] {f : X -> Y}, (Continuous.{u1, u2} X Y _inst_1 _inst_2 f) -> (Continuous.{u1, u2} X (Filter.{u2} Y) _inst_1 (Filter.topologicalSpace.{u2} Y) (Function.comp.{succ u1, succ u2, succ u2} X Y (Filter.{u2} Y) (nhds.{u2} Y _inst_2) f))
+but is expected to have type
+  forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {f : X -> Y}, (Continuous.{u2, u1} X Y _inst_1 _inst_2 f) -> (Continuous.{u2, u1} X (Filter.{u1} Y) _inst_1 (Filter.instTopologicalSpaceFilter.{u1} Y) (Function.comp.{succ u2, succ u1, succ u1} X Y (Filter.{u1} Y) (nhds.{u1} Y _inst_2) f))
+Case conversion may be inaccurate. Consider using '#align continuous.nhds Continuous.nhdsₓ'. -/
 theorem Continuous.nhds (h : Continuous f) : Continuous (𝓝 ∘ f) :=
   Filter.continuous_nhds.comp h
 #align continuous.nhds Continuous.nhds
