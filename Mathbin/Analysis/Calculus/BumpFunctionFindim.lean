@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Calculus.SpecificFunctions
+import Mathbin.Analysis.Calculus.BumpFunctionInner
 import Mathbin.Analysis.Calculus.Series
 import Mathbin.Analysis.Convolution
 import Mathbin.Data.Set.Pointwise.Support
@@ -21,9 +21,8 @@ Let `E` be a finite-dimensional real normed vector space. We show that any open 
 exactly the support of a smooth function taking values in `[0, 1]`,
 in `is_open.exists_smooth_support_eq`.
 
-TODO: use this construction to construct bump functions with nice behavior in any finite-dimensional
-real normed vector space, by convolving the indicator function of `closed_ball 0 1` with a
-function as above with `s = ball 0 D`.
+Then we use this construction to construct bump functions with nice behavior, by convolving
+the indicator function of `closed_ball 0 1` with a function as above with `s = ball 0 D`.
 -/
 
 
@@ -48,7 +47,7 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
   by
   obtain ⟨d, d_pos, hd⟩ : ∃ (d : ℝ)(hr : 0 < d), Euclidean.closedBall x d ⊆ s
   exact euclidean.nhds_basis_closed_ball.mem_iff.1 hs
-  let c : ContDiffBumpOfInner (toEuclidean x) :=
+  let c : ContDiffBump (toEuclidean x) :=
     { R := d / 2
       r := d
       r_pos := half_pos d_pos
@@ -548,28 +547,6 @@ theorem y_support {D : ℝ} (Dpos : 0 < D) (D_lt_one : D < 1) :
 variable {E}
 
 end HelperDefinitions
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- The base function from which one will construct a family of bump functions. One could
-add more properties if they are useful and satisfied in the examples of inner product spaces
-and finite dimensional vector spaces, notably derivative norm control in terms of `R - 1`.
-TODO: move to the right file and use this to refactor bump functions in general. -/
-@[nolint has_nonempty_instance]
-structure ContDiffBumpBase (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] where
-  toFun : ℝ → E → ℝ
-  mem_Icc : ∀ (R : ℝ) (x : E), to_fun R x ∈ Icc (0 : ℝ) 1
-  Symmetric : ∀ (R : ℝ) (x : E), to_fun R (-x) = to_fun R x
-  smooth : ContDiffOn ℝ ⊤ (uncurry to_fun) (Ioi (1 : ℝ) ×ˢ (univ : Set E))
-  eq_one : ∀ (R : ℝ) (hR : 1 < R) (x : E) (hx : ‖x‖ ≤ 1), to_fun R x = 1
-  support : ∀ (R : ℝ) (hR : 1 < R), support (to_fun R) = Metric.ball (0 : E) R
-#align cont_diff_bump_base ContDiffBumpBase
-
-/-- A class registering that a real vector space admits bump functions. This will be instantiated
-first for inner product spaces, and then for finite-dimensional normed spaces.
-We use a specific class instead of `nonempty (cont_diff_bump_base E)` for performance reasons. -/
-class HasContDiffBump (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] : Prop where
-  out : Nonempty (ContDiffBumpBase E)
-#align has_cont_diff_bump HasContDiffBump
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]

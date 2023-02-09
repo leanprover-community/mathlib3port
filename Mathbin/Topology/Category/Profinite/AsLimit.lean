@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.as_limit
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,9 @@ variable (X : Profinite.{u})
 /-- The functor `discrete_quotient X ⥤ Fintype` whose limit is isomorphic to `X`. -/
 def fintypeDiagram : DiscreteQuotient X ⥤ FintypeCat
     where
-  obj S := FintypeCat.of S
+  obj S :=
+    haveI := Fintype.ofFinite S
+    FintypeCat.of S
   map S T f := DiscreteQuotient.ofLe f.le
 #align Profinite.fintype_diagram Profinite.fintypeDiagram
 
@@ -65,9 +67,8 @@ def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
 instance isIso_asLimitCone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
   isIso_of_bijective _
     (by
-      refine' ⟨fun a b => _, fun a => _⟩
-      · intro h
-        refine' DiscreteQuotient.eq_of_proj_eq fun S => _
+      refine' ⟨fun a b h => _, fun a => _⟩
+      · refine' DiscreteQuotient.eq_of_forall_proj_eq fun S => _
         apply_fun fun f : (limit_cone X.diagram).x => f.val S  at h
         exact h
       · obtain ⟨b, hb⟩ :=

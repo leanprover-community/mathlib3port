@@ -3,8 +3,8 @@ Copyright (c) 2020 Sébastien Gouëzel. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
-! This file was ported from Lean 3 source module analysis.calculus.specific_functions
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! This file was ported from Lean 3 source module analysis.calculus.bump_function_inner
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,29 +25,19 @@ function cannot have:
 * `real.smooth_transition` is equal to zero for `x ≤ 0` and is equal to one for `x ≥ 1`; it is given
   by `exp_neg_inv_glue x / (exp_neg_inv_glue x + exp_neg_inv_glue (1 - x))`;
 
-* `f : cont_diff_bump_of_inner c`, where `c` is a point in an inner product space, is
+* `f : cont_diff_bump c`, where `c` is a point in a real vector space, is
   a bundled smooth function such that
 
   - `f` is equal to `1` in `metric.closed_ball c f.r`;
   - `support f = metric.ball c f.R`;
   - `0 ≤ f x ≤ 1` for all `x`.
 
-  The structure `cont_diff_bump_of_inner` contains the data required to construct the
+  The structure `cont_diff_bump` contains the data required to construct the
   function: real numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available
   through `coe_fn`.
 
-* If `f : cont_diff_bump_of_inner c` and `μ` is a measure on the domain of `f`, then `f.normed μ`
+* If `f : cont_diff_bump c` and `μ` is a measure on the domain of `f`, then `f.normed μ`
   is a smooth bump function with integral `1` w.r.t. `μ`.
-
-* `f : cont_diff_bump c`, where `c` is a point in a finite dimensional real vector space, is a
-  bundled smooth function such that
-
-  - `f` is equal to `1` in `euclidean.closed_ball c f.r`;
-  - `support f = euclidean.ball c f.R`;
-  - `0 ≤ f x ≤ 1` for all `x`.
-
-  The structure `cont_diff_bump` contains the data required to construct the function: real
-  numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available through `coe_fn`.
 -/
 
 
@@ -307,122 +297,217 @@ end Real
 
 variable {E X : Type _}
 
-/-- `f : cont_diff_bump_of_inner c`, where `c` is a point in an inner product space, is a
+/-- `f : cont_diff_bump c`, where `c` is a point in a normed vector space, is a
 bundled smooth function such that
 
 - `f` is equal to `1` in `metric.closed_ball c f.r`;
 - `support f = metric.ball c f.R`;
 - `0 ≤ f x ≤ 1` for all `x`.
 
-The structure `cont_diff_bump_of_inner` contains the data required to construct the function:
+The structure `cont_diff_bump` contains the data required to construct the function:
 real numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available through
-`coe_fn`. -/
-structure ContDiffBumpOfInner (c : E) where
+`coe_fn` when the space is nice enough, i.e., satisfies the `has_cont_diff_bump` typeclass. -/
+structure ContDiffBump (c : E) where
   (R r : ℝ)
   r_pos : 0 < r
   r_lt_r : r < R
-#align cont_diff_bump_of_inner ContDiffBumpOfInner
+#align cont_diff_bump ContDiffBump
 
-namespace ContDiffBumpOfInner
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- The base function from which one will construct a family of bump functions. One could
+add more properties if they are useful and satisfied in the examples of inner product spaces
+and finite dimensional vector spaces, notably derivative norm control in terms of `R - 1`. -/
+@[nolint has_nonempty_instance]
+structure ContDiffBumpBase (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] where
+  toFun : ℝ → E → ℝ
+  mem_Icc : ∀ (R : ℝ) (x : E), to_fun R x ∈ Icc (0 : ℝ) 1
+  Symmetric : ∀ (R : ℝ) (x : E), to_fun R (-x) = to_fun R x
+  smooth : ContDiffOn ℝ ⊤ (uncurry to_fun) (Ioi (1 : ℝ) ×ˢ (univ : Set E))
+  eq_one : ∀ (R : ℝ) (hR : 1 < R) (x : E) (hx : ‖x‖ ≤ 1), to_fun R x = 1
+  support : ∀ (R : ℝ) (hR : 1 < R), support (to_fun R) = Metric.ball (0 : E) R
+#align cont_diff_bump_base ContDiffBumpBase
 
-/- warning: cont_diff_bump_of_inner.R_pos clashes with cont_diff_bump_of_inner.r_pos -> ContDiffBumpOfInner.r_pos
-Case conversion may be inaccurate. Consider using '#align cont_diff_bump_of_inner.R_pos ContDiffBumpOfInner.r_posₓ'. -/
-#print ContDiffBumpOfInner.r_pos /-
-theorem r_pos {c : E} (f : ContDiffBumpOfInner c) : 0 < f.r :=
+/-- A class registering that a real vector space admits bump functions. This will be instantiated
+first for inner product spaces, and then for finite-dimensional normed spaces.
+We use a specific class instead of `nonempty (cont_diff_bump_base E)` for performance reasons. -/
+class HasContDiffBump (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E] : Prop where
+  out : Nonempty (ContDiffBumpBase E)
+#align has_cont_diff_bump HasContDiffBump
+
+/-- In a space with `C^∞` bump functions, register some function that will be used as a basis
+to construct bump functions of arbitrary size around any point. -/
+def someContDiffBumpBase (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [hb : HasContDiffBump E] : ContDiffBumpBase E :=
+  Nonempty.some hb.out
+#align some_cont_diff_bump_base someContDiffBumpBase
+
+/-- Any inner product space has smooth bump functions. -/
+instance (priority := 100) hasContDiffBumpOfInnerProductSpace (E : Type _) [InnerProductSpace ℝ E] :
+    HasContDiffBump E :=
+  let e : ContDiffBumpBase E :=
+    { toFun := fun R x => Real.smoothTransition ((R - ‖x‖) / (R - 1))
+      mem_Icc := fun R x => ⟨Real.smoothTransition.nonneg _, Real.smoothTransition.le_one _⟩
+      Symmetric := fun R x => by simp only [norm_neg]
+      smooth := by
+        rintro ⟨R, x⟩ ⟨hR : 1 < R, hx⟩
+        apply ContDiffAt.contDiffWithinAt
+        rcases eq_or_ne x 0 with (rfl | hx)
+        · have :
+            (fun p : ℝ × E => Real.smoothTransition ((p.1 - ‖p.2‖) / (p.1 - 1))) =ᶠ[𝓝 (R, 0)]
+              fun p => 1 :=
+            by
+            have A :
+              tendsto (fun p : ℝ × E => (p.1 - ‖p.2‖) / (p.1 - 1)) (𝓝 (R, 0))
+                (𝓝 ((R - ‖(0 : E)‖) / (R - 1))) :=
+              by
+              rw [nhds_prod_eq]
+              apply (tendsto_fst.sub tendsto_snd.norm).div (tendsto_fst.sub tendsto_const_nhds)
+              exact (sub_pos.2 hR).ne'
+            have : ∀ᶠ p : ℝ × E in 𝓝 (R, 0), 1 < (p.1 - ‖p.2‖) / (p.1 - 1) :=
+              by
+              apply (tendsto_order.1 A).1
+              apply (one_lt_div (sub_pos.2 hR)).2
+              simp only [norm_zero, tsub_zero, sub_lt_self_iff, zero_lt_one]
+            filter_upwards [this]with q hq
+            exact Real.smoothTransition.one_of_one_le hq.le
+          exact cont_diff_at_const.congr_of_eventually_eq this
+        · refine' real.smooth_transition.cont_diff_at.comp _ _
+          refine' ContDiffAt.div _ _ (sub_pos.2 hR).ne'
+          · exact cont_diff_at_fst.sub (cont_diff_at_snd.norm hx)
+          · exact cont_diff_at_fst.sub contDiffAt_const
+      eq_one := fun R hR x hx =>
+        Real.smoothTransition.one_of_one_le <| (one_le_div (sub_pos.2 hR)).2 (sub_le_sub_left hx _)
+      support := fun R hR => by
+        apply subset.antisymm
+        · intro x hx
+          simp only [mem_support] at hx
+          contrapose! hx
+          simp only [mem_ball_zero_iff, not_lt] at hx
+          apply Real.smoothTransition.zero_of_nonpos
+          apply div_nonpos_of_nonpos_of_nonneg <;> linarith
+        · intro x hx
+          simp only [mem_ball_zero_iff] at hx
+          apply (Real.smoothTransition.pos_of_pos _).ne'
+          apply div_pos <;> linarith }
+  ⟨⟨e⟩⟩
+#align has_cont_diff_bump_of_inner_product_space hasContDiffBumpOfInnerProductSpace
+
+namespace ContDiffBump
+
+/- warning: cont_diff_bump.R_pos clashes with cont_diff_bump.r_pos -> ContDiffBump.r_pos
+Case conversion may be inaccurate. Consider using '#align cont_diff_bump.R_pos ContDiffBump.r_posₓ'. -/
+#print ContDiffBump.r_pos /-
+theorem r_pos {c : E} (f : ContDiffBump c) : 0 < f.r :=
   f.r_pos.trans f.r_lt_r
-#align cont_diff_bump_of_inner.R_pos ContDiffBumpOfInner.r_pos
+#align cont_diff_bump.R_pos ContDiffBump.r_pos
 -/
 
-instance (c : E) : Inhabited (ContDiffBumpOfInner c) :=
+theorem one_lt_r_div_r {c : E} (f : ContDiffBump c) : 1 < f.r / f.R :=
+  by
+  rw [one_lt_div f.r_pos]
+  exact f.r_lt_R
+#align cont_diff_bump.one_lt_R_div_r ContDiffBump.one_lt_r_div_r
+
+instance (c : E) : Inhabited (ContDiffBump c) :=
   ⟨⟨1, 2, zero_lt_one, one_lt_two⟩⟩
 
-variable [InnerProductSpace ℝ E] [NormedAddCommGroup X] [NormedSpace ℝ X]
+variable [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup X] [NormedSpace ℝ X]
+  [HasContDiffBump E] {c : E} (f : ContDiffBump c) {x : E} {n : ℕ∞}
 
-variable {c : E} (f : ContDiffBumpOfInner c) {x : E} {n : ℕ∞}
-
-/-- The function defined by `f : cont_diff_bump_of_inner c`. Use automatic coercion to
+/-- The function defined by `f : cont_diff_bump c`. Use automatic coercion to
 function instead. -/
-def toFun (f : ContDiffBumpOfInner c) : E → ℝ := fun x =>
-  Real.smoothTransition ((f.r - dist x c) / (f.r - f.R))
-#align cont_diff_bump_of_inner.to_fun ContDiffBumpOfInner.toFun
+def toFun {c : E} (f : ContDiffBump c) : E → ℝ := fun x =>
+  (someContDiffBumpBase E).toFun (f.r / f.R) (f.R⁻¹ • (x - c))
+#align cont_diff_bump.to_fun ContDiffBump.toFun
 
-instance : CoeFun (ContDiffBumpOfInner c) fun _ => E → ℝ :=
+instance : CoeFun (ContDiffBump c) fun _ => E → ℝ :=
   ⟨toFun⟩
 
-protected theorem def (x : E) : f x = Real.smoothTransition ((f.r - dist x c) / (f.r - f.R)) :=
+protected theorem def (x : E) :
+    f x = (someContDiffBumpBase E).toFun (f.r / f.R) (f.R⁻¹ • (x - c)) :=
   rfl
-#align cont_diff_bump_of_inner.def ContDiffBumpOfInner.def
+#align cont_diff_bump.def ContDiffBump.def
 
-protected theorem sub (x : E) : f (c - x) = f (c + x) := by
-  simp_rw [f.def, dist_self_sub_left, dist_self_add_left]
-#align cont_diff_bump_of_inner.sub ContDiffBumpOfInner.sub
+protected theorem sub (x : E) : f (c - x) = f (c + x) := by simp [f.def, ContDiffBumpBase.symmetric]
+#align cont_diff_bump.sub ContDiffBump.sub
 
-protected theorem neg (f : ContDiffBumpOfInner (0 : E)) (x : E) : f (-x) = f x := by
+protected theorem neg (f : ContDiffBump (0 : E)) (x : E) : f (-x) = f x := by
   simp_rw [← zero_sub, f.sub, zero_add]
-#align cont_diff_bump_of_inner.neg ContDiffBumpOfInner.neg
+#align cont_diff_bump.neg ContDiffBump.neg
 
-open Real (smoothTransition)
-
-open Real.smoothTransition Metric
+open Metric
 
 theorem one_of_mem_closedBall (hx : x ∈ closedBall c f.R) : f x = 1 :=
-  one_of_one_le <| (one_le_div (sub_pos.2 f.r_lt_r)).2 <| sub_le_sub_left hx _
-#align cont_diff_bump_of_inner.one_of_mem_closed_ball ContDiffBumpOfInner.one_of_mem_closedBall
+  by
+  apply ContDiffBumpBase.eq_one _ _ f.one_lt_R_div_r
+  simpa only [norm_smul, norm_eq_abs, abs_inv, abs_of_nonneg f.r_pos.le, ← div_eq_inv_mul,
+    div_le_one f.r_pos] using mem_closedBall_iff_norm.1 hx
+#align cont_diff_bump.one_of_mem_closed_ball ContDiffBump.one_of_mem_closedBall
 
 theorem nonneg : 0 ≤ f x :=
-  nonneg _
-#align cont_diff_bump_of_inner.nonneg ContDiffBumpOfInner.nonneg
+  (ContDiffBumpBase.mem_Icc (someContDiffBumpBase E) _ _).1
+#align cont_diff_bump.nonneg ContDiffBump.nonneg
 
-/-- A version of `cont_diff_bump_of_inner.nonneg` with `x` explicit -/
+/-- A version of `cont_diff_bump.nonneg` with `x` explicit -/
 theorem nonneg' (x : E) : 0 ≤ f x :=
   f.NonNeg
-#align cont_diff_bump_of_inner.nonneg' ContDiffBumpOfInner.nonneg'
+#align cont_diff_bump.nonneg' ContDiffBump.nonneg'
 
 theorem le_one : f x ≤ 1 :=
-  le_one _
-#align cont_diff_bump_of_inner.le_one ContDiffBumpOfInner.le_one
+  (ContDiffBumpBase.mem_Icc (someContDiffBumpBase E) _ _).2
+#align cont_diff_bump.le_one ContDiffBump.le_one
 
 theorem pos_of_mem_ball (hx : x ∈ ball c f.r) : 0 < f x :=
-  pos_of_pos <| div_pos (sub_pos.2 hx) (sub_pos.2 f.r_lt_r)
-#align cont_diff_bump_of_inner.pos_of_mem_ball ContDiffBumpOfInner.pos_of_mem_ball
-
-theorem lt_one_of_lt_dist (h : f.R < dist x c) : f x < 1 :=
-  lt_one_of_lt_one <| (div_lt_one (sub_pos.2 f.r_lt_r)).2 <| sub_lt_sub_left h _
-#align cont_diff_bump_of_inner.lt_one_of_lt_dist ContDiffBumpOfInner.lt_one_of_lt_dist
+  by
+  refine' lt_iff_le_and_ne.2 ⟨f.nonneg, Ne.symm _⟩
+  change f.r⁻¹ • (x - c) ∈ support ((someContDiffBumpBase E).toFun (f.R / f.r))
+  rw [ContDiffBumpBase.support _ _ f.one_lt_R_div_r]
+  simp only [dist_eq_norm, mem_ball] at hx
+  simpa only [norm_smul, mem_ball_zero_iff, norm_eq_abs, abs_inv, abs_of_nonneg f.r_pos.le, ←
+    div_eq_inv_mul] using (div_lt_div_right f.r_pos).2 hx
+#align cont_diff_bump.pos_of_mem_ball ContDiffBump.pos_of_mem_ball
 
 theorem zero_of_le_dist (hx : f.r ≤ dist x c) : f x = 0 :=
-  zero_of_nonpos <| div_nonpos_of_nonpos_of_nonneg (sub_nonpos.2 hx) (sub_nonneg.2 f.r_lt_r.le)
-#align cont_diff_bump_of_inner.zero_of_le_dist ContDiffBumpOfInner.zero_of_le_dist
+  by
+  rw [dist_eq_norm] at hx
+  suffices H : f.r⁻¹ • (x - c) ∉ support ((someContDiffBumpBase E).toFun (f.R / f.r))
+  · simpa only [mem_support, Classical.not_not] using H
+  rw [ContDiffBumpBase.support _ _ f.one_lt_R_div_r]
+  simp [norm_smul, norm_eq_abs, abs_inv, abs_of_nonneg f.r_pos.le, ← div_eq_inv_mul]
+  exact div_le_div_of_le f.r_pos.le hx
+#align cont_diff_bump.zero_of_le_dist ContDiffBump.zero_of_le_dist
 
 theorem support_eq : support (f : E → ℝ) = Metric.ball c f.r :=
   by
   ext x
   suffices f x ≠ 0 ↔ dist x c < f.R by simpa [mem_support]
   cases' lt_or_le (dist x c) f.R with hx hx
-  · simp [hx, (f.pos_of_mem_ball hx).ne']
-  · simp [hx.not_lt, f.zero_of_le_dist hx]
-#align cont_diff_bump_of_inner.support_eq ContDiffBumpOfInner.support_eq
+  · simp only [hx, (f.pos_of_mem_ball hx).ne', Ne.def, not_false_iff]
+  · simp only [hx.not_lt, f.zero_of_le_dist hx, Ne.def, eq_self_iff_true, not_true]
+#align cont_diff_bump.support_eq ContDiffBump.support_eq
 
 theorem tsupport_eq : tsupport f = closedBall c f.r := by
   simp_rw [tsupport, f.support_eq, closure_ball _ f.R_pos.ne']
-#align cont_diff_bump_of_inner.tsupport_eq ContDiffBumpOfInner.tsupport_eq
+#align cont_diff_bump.tsupport_eq ContDiffBump.tsupport_eq
 
 protected theorem hasCompactSupport [FiniteDimensional ℝ E] : HasCompactSupport f := by
   simp_rw [HasCompactSupport, f.tsupport_eq, is_compact_closed_ball]
-#align cont_diff_bump_of_inner.has_compact_support ContDiffBumpOfInner.hasCompactSupport
+#align cont_diff_bump.has_compact_support ContDiffBump.hasCompactSupport
 
 theorem eventuallyEq_one_of_mem_ball (h : x ∈ ball c f.R) : f =ᶠ[𝓝 x] 1 :=
   ((isOpen_lt (continuous_id.dist continuous_const) continuous_const).eventually_mem h).mono
     fun z hz => f.one_of_mem_closedBall (le_of_lt hz)
-#align cont_diff_bump_of_inner.eventually_eq_one_of_mem_ball ContDiffBumpOfInner.eventuallyEq_one_of_mem_ball
+#align cont_diff_bump.eventually_eq_one_of_mem_ball ContDiffBump.eventuallyEq_one_of_mem_ball
 
 theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
   f.eventuallyEq_one_of_mem_ball (mem_ball_self f.r_pos)
-#align cont_diff_bump_of_inner.eventually_eq_one ContDiffBumpOfInner.eventuallyEq_one
+#align cont_diff_bump.eventually_eq_one ContDiffBump.eventuallyEq_one
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `cont_diff_bump` is `𝒞ⁿ` in all its arguments. -/
-protected theorem ContDiffAt.cont_diff_bump {c g : X → E} {f : ∀ x, ContDiffBumpOfInner (c x)}
-    {x : X} (hc : ContDiffAt ℝ n c x) (hr : ContDiffAt ℝ n (fun x => (f x).R) x)
+protected theorem ContDiffAt.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBump (c x)} {x : X}
+    (hc : ContDiffAt ℝ n c x) (hr : ContDiffAt ℝ n (fun x => (f x).R) x)
     (hR : ContDiffAt ℝ n (fun x => (f x).r) x) (hg : ContDiffAt ℝ n g x) :
     ContDiffAt ℝ n (fun x => f x (g x)) x :=
   by
@@ -434,33 +519,43 @@ protected theorem ContDiffAt.cont_diff_bump {c g : X → E} {f : ∀ x, ContDiff
         ContinuousAt.eventually_lt (hg.continuous_at.dist hc.continuous_at) hr.continuous_at this
       exact eventually_of_mem this fun x hx => (f x).one_of_mem_closedBall (mem_set_of_eq.mp hx).le
     exact cont_diff_at_const.congr_of_eventually_eq this
-  · refine' real.smooth_transition.cont_diff_at.comp x _
-    refine' (hR.sub <| hg.dist hc hx).div (hR.sub hr) (sub_pos.mpr (f x).r_lt_r).ne'
-#align cont_diff_at.cont_diff_bump ContDiffAt.cont_diff_bump
+  · change
+      ContDiffAt ℝ n
+        (uncurry (someContDiffBumpBase E).toFun ∘ fun x : X =>
+          ((f x).r / (f x).R, (f x).R⁻¹ • (g x - c x)))
+        x
+    have A : ((f x).r / (f x).R, (f x).R⁻¹ • (g x - c x)) ∈ Ioi (1 : ℝ) ×ˢ (univ : Set E) := by
+      simpa only [prod_mk_mem_set_prod_eq, mem_univ, and_true_iff] using (f x).one_lt_r_div_r
+    have B : Ioi (1 : ℝ) ×ˢ (univ : Set E) ∈ 𝓝 ((f x).r / (f x).R, (f x).R⁻¹ • (g x - c x)) :=
+      (is_open_Ioi.prod isOpen_univ).mem_nhds A
+    apply
+      ((((someContDiffBumpBase E).smooth.ContDiffWithinAt A).ContDiffAt B).of_le le_top).comp x _
+    exact (hR.div hr (f x).r_pos.ne').Prod ((hr.inv (f x).r_pos.ne').smul (hg.sub hc))
+#align cont_diff_at.cont_diff_bump ContDiffAt.contDiffBump
 
-theorem ContDiff.contDiff_bump {c g : X → E} {f : ∀ x, ContDiffBumpOfInner (c x)}
-    (hc : ContDiff ℝ n c) (hr : ContDiff ℝ n fun x => (f x).R) (hR : ContDiff ℝ n fun x => (f x).r)
+theorem ContDiff.contDiffBump {c g : X → E} {f : ∀ x, ContDiffBump (c x)} (hc : ContDiff ℝ n c)
+    (hr : ContDiff ℝ n fun x => (f x).R) (hR : ContDiff ℝ n fun x => (f x).r)
     (hg : ContDiff ℝ n g) : ContDiff ℝ n fun x => f x (g x) :=
   by
   rw [contDiff_iff_contDiffAt] at *
-  exact fun x => (hc x).cont_diff_bump (hr x) (hR x) (hg x)
-#align cont_diff.cont_diff_bump ContDiff.contDiff_bump
+  exact fun x => (hc x).ContDiffBump (hr x) (hR x) (hg x)
+#align cont_diff.cont_diff_bump ContDiff.contDiffBump
 
 protected theorem contDiff : ContDiff ℝ n f :=
-  contDiff_const.cont_diff_bump contDiff_const contDiff_const contDiff_id
-#align cont_diff_bump_of_inner.cont_diff ContDiffBumpOfInner.contDiff
+  contDiff_const.ContDiffBump contDiff_const contDiff_const contDiff_id
+#align cont_diff_bump.cont_diff ContDiffBump.contDiff
 
 protected theorem contDiffAt : ContDiffAt ℝ n f x :=
   f.ContDiff.ContDiffAt
-#align cont_diff_bump_of_inner.cont_diff_at ContDiffBumpOfInner.contDiffAt
+#align cont_diff_bump.cont_diff_at ContDiffBump.contDiffAt
 
 protected theorem contDiffWithinAt {s : Set E} : ContDiffWithinAt ℝ n f s x :=
   f.ContDiffAt.ContDiffWithinAt
-#align cont_diff_bump_of_inner.cont_diff_within_at ContDiffBumpOfInner.contDiffWithinAt
+#align cont_diff_bump.cont_diff_within_at ContDiffBump.contDiffWithinAt
 
 protected theorem continuous : Continuous f :=
   contDiff_zero.mp f.ContDiff
-#align cont_diff_bump_of_inner.continuous ContDiffBumpOfInner.continuous
+#align cont_diff_bump.continuous ContDiffBump.continuous
 
 open MeasureTheory
 
@@ -468,41 +563,41 @@ variable [MeasurableSpace E] {μ : Measure E}
 
 /-- A bump function normed so that `∫ x, f.normed μ x ∂μ = 1`. -/
 protected def normed (μ : Measure E) : E → ℝ := fun x => f x / ∫ x, f x ∂μ
-#align cont_diff_bump_of_inner.normed ContDiffBumpOfInner.normed
+#align cont_diff_bump.normed ContDiffBump.normed
 
 theorem normed_def {μ : Measure E} (x : E) : f.normed μ x = f x / ∫ x, f x ∂μ :=
   rfl
-#align cont_diff_bump_of_inner.normed_def ContDiffBumpOfInner.normed_def
+#align cont_diff_bump.normed_def ContDiffBump.normed_def
 
 theorem nonneg_normed (x : E) : 0 ≤ f.normed μ x :=
   div_nonneg f.NonNeg <| integral_nonneg f.nonneg'
-#align cont_diff_bump_of_inner.nonneg_normed ContDiffBumpOfInner.nonneg_normed
+#align cont_diff_bump.nonneg_normed ContDiffBump.nonneg_normed
 
 theorem contDiff_normed {n : ℕ∞} : ContDiff ℝ n (f.normed μ) :=
   f.ContDiff.div_const
-#align cont_diff_bump_of_inner.cont_diff_normed ContDiffBumpOfInner.contDiff_normed
+#align cont_diff_bump.cont_diff_normed ContDiffBump.contDiff_normed
 
 theorem continuous_normed : Continuous (f.normed μ) :=
   f.Continuous.div_const
-#align cont_diff_bump_of_inner.continuous_normed ContDiffBumpOfInner.continuous_normed
+#align cont_diff_bump.continuous_normed ContDiffBump.continuous_normed
 
 theorem normed_sub (x : E) : f.normed μ (c - x) = f.normed μ (c + x) := by
   simp_rw [f.normed_def, f.sub]
-#align cont_diff_bump_of_inner.normed_sub ContDiffBumpOfInner.normed_sub
+#align cont_diff_bump.normed_sub ContDiffBump.normed_sub
 
-theorem normed_neg (f : ContDiffBumpOfInner (0 : E)) (x : E) : f.normed μ (-x) = f.normed μ x := by
+theorem normed_neg (f : ContDiffBump (0 : E)) (x : E) : f.normed μ (-x) = f.normed μ x := by
   simp_rw [f.normed_def, f.neg]
-#align cont_diff_bump_of_inner.normed_neg ContDiffBumpOfInner.normed_neg
+#align cont_diff_bump.normed_neg ContDiffBump.normed_neg
 
 variable [BorelSpace E] [FiniteDimensional ℝ E] [IsLocallyFiniteMeasure μ]
 
 protected theorem integrable : Integrable f μ :=
   f.Continuous.integrableOfHasCompactSupport f.HasCompactSupport
-#align cont_diff_bump_of_inner.integrable ContDiffBumpOfInner.integrable
+#align cont_diff_bump.integrable ContDiffBump.integrable
 
 protected theorem integrableNormed : Integrable (f.normed μ) μ :=
   f.Integrable.div_const _
-#align cont_diff_bump_of_inner.integrable_normed ContDiffBumpOfInner.integrableNormed
+#align cont_diff_bump.integrable_normed ContDiffBump.integrableNormed
 
 variable [μ.IsOpenPosMeasure]
 
@@ -511,28 +606,28 @@ theorem integral_pos : 0 < ∫ x, f x ∂μ :=
   refine' (integral_pos_iff_support_of_nonneg f.nonneg' f.integrable).mpr _
   rw [f.support_eq]
   refine' is_open_ball.measure_pos _ (nonempty_ball.mpr f.R_pos)
-#align cont_diff_bump_of_inner.integral_pos ContDiffBumpOfInner.integral_pos
+#align cont_diff_bump.integral_pos ContDiffBump.integral_pos
 
 theorem integral_normed : (∫ x, f.normed μ x ∂μ) = 1 :=
   by
-  simp_rw [ContDiffBumpOfInner.normed, div_eq_mul_inv, mul_comm (f _), ← smul_eq_mul, integral_smul]
+  simp_rw [ContDiffBump.normed, div_eq_mul_inv, mul_comm (f _), ← smul_eq_mul, integral_smul]
   exact inv_mul_cancel f.integral_pos.ne'
-#align cont_diff_bump_of_inner.integral_normed ContDiffBumpOfInner.integral_normed
+#align cont_diff_bump.integral_normed ContDiffBump.integral_normed
 
 theorem support_normed_eq : support (f.normed μ) = Metric.ball c f.r := by
-  simp_rw [ContDiffBumpOfInner.normed, support_div, f.support_eq, support_const f.integral_pos.ne',
+  simp_rw [ContDiffBump.normed, support_div, f.support_eq, support_const f.integral_pos.ne',
     inter_univ]
-#align cont_diff_bump_of_inner.support_normed_eq ContDiffBumpOfInner.support_normed_eq
+#align cont_diff_bump.support_normed_eq ContDiffBump.support_normed_eq
 
 theorem tsupport_normed_eq : tsupport (f.normed μ) = Metric.closedBall c f.r := by
   simp_rw [tsupport, f.support_normed_eq, closure_ball _ f.R_pos.ne']
-#align cont_diff_bump_of_inner.tsupport_normed_eq ContDiffBumpOfInner.tsupport_normed_eq
+#align cont_diff_bump.tsupport_normed_eq ContDiffBump.tsupport_normed_eq
 
 theorem hasCompactSupport_normed : HasCompactSupport (f.normed μ) := by
   simp_rw [HasCompactSupport, f.tsupport_normed_eq, is_compact_closed_ball]
-#align cont_diff_bump_of_inner.has_compact_support_normed ContDiffBumpOfInner.hasCompactSupport_normed
+#align cont_diff_bump.has_compact_support_normed ContDiffBump.hasCompactSupport_normed
 
-theorem tendsto_support_normed_smallSets {ι} {φ : ι → ContDiffBumpOfInner c} {l : Filter ι}
+theorem tendsto_support_normed_smallSets {ι} {φ : ι → ContDiffBump c} {l : Filter ι}
     (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) :
     Tendsto (fun i => support fun x => (φ i).normed μ x) l (𝓝 c).smallSets :=
   by
@@ -544,143 +639,13 @@ theorem tendsto_support_normed_smallSets {ι} {φ : ι → ContDiffBumpOfInner c
   refine' (hφ ε hε).mono fun i hi => subset_trans _ ht
   simp_rw [(φ i).support_normed_eq]
   exact ball_subset_ball hi.le
-#align cont_diff_bump_of_inner.tendsto_support_normed_small_sets ContDiffBumpOfInner.tendsto_support_normed_smallSets
+#align cont_diff_bump.tendsto_support_normed_small_sets ContDiffBump.tendsto_support_normed_smallSets
 
 variable (μ)
 
-theorem integral_normed_smul (z : X) [CompleteSpace X] : (∫ x, f.normed μ x • z ∂μ) = z := by
+theorem integral_normed_smul [CompleteSpace X] (z : X) : (∫ x, f.normed μ x • z ∂μ) = z := by
   simp_rw [integral_smul_const, f.integral_normed, one_smul]
-#align cont_diff_bump_of_inner.integral_normed_smul ContDiffBumpOfInner.integral_normed_smul
-
-end ContDiffBumpOfInner
-
-/-- `f : cont_diff_bump c`, where `c` is a point in a finite dimensional real vector space, is
-a bundled smooth function such that
-
-  - `f` is equal to `1` in `euclidean.closed_ball c f.r`;
-  - `support f = euclidean.ball c f.R`;
-  - `0 ≤ f x ≤ 1` for all `x`.
-
-The structure `cont_diff_bump` contains the data required to construct the function: real
-numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available through `coe_fn`.-/
-structure ContDiffBump [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-  (c : E) extends ContDiffBumpOfInner (toEuclidean c)
-#align cont_diff_bump ContDiffBump
-
-namespace ContDiffBump
-
-variable [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {c x : E}
-  (f : ContDiffBump c)
-
-/-- The function defined by `f : cont_diff_bump c`. Use automatic coercion to function
-instead. -/
-def toFun (f : ContDiffBump c) : E → ℝ :=
-  f.toContDiffBumpOfInner ∘ toEuclidean
-#align cont_diff_bump.to_fun ContDiffBump.toFun
-
-instance : CoeFun (ContDiffBump c) fun _ => E → ℝ :=
-  ⟨toFun⟩
-
-instance (c : E) : Inhabited (ContDiffBump c) :=
-  ⟨⟨default⟩⟩
-
-theorem r_pos : 0 < f.r :=
-  f.toContDiffBumpOfInner.r_pos
-#align cont_diff_bump.R_pos ContDiffBump.r_pos
-
-theorem coe_eq_comp : ⇑f = f.toContDiffBumpOfInner ∘ toEuclidean :=
-  rfl
-#align cont_diff_bump.coe_eq_comp ContDiffBump.coe_eq_comp
-
-theorem one_of_mem_closedBall (hx : x ∈ Euclidean.closedBall c f.R) : f x = 1 :=
-  f.toContDiffBumpOfInner.one_of_mem_closedBall hx
-#align cont_diff_bump.one_of_mem_closed_ball ContDiffBump.one_of_mem_closedBall
-
-theorem nonneg : 0 ≤ f x :=
-  f.toContDiffBumpOfInner.NonNeg
-#align cont_diff_bump.nonneg ContDiffBump.nonneg
-
-theorem le_one : f x ≤ 1 :=
-  f.toContDiffBumpOfInner.le_one
-#align cont_diff_bump.le_one ContDiffBump.le_one
-
-theorem pos_of_mem_ball (hx : x ∈ Euclidean.ball c f.r) : 0 < f x :=
-  f.toContDiffBumpOfInner.pos_of_mem_ball hx
-#align cont_diff_bump.pos_of_mem_ball ContDiffBump.pos_of_mem_ball
-
-theorem lt_one_of_lt_dist (h : f.R < Euclidean.dist x c) : f x < 1 :=
-  f.toContDiffBumpOfInner.lt_one_of_lt_dist h
-#align cont_diff_bump.lt_one_of_lt_dist ContDiffBump.lt_one_of_lt_dist
-
-theorem zero_of_le_dist (hx : f.r ≤ Euclidean.dist x c) : f x = 0 :=
-  f.toContDiffBumpOfInner.zero_of_le_dist hx
-#align cont_diff_bump.zero_of_le_dist ContDiffBump.zero_of_le_dist
-
-theorem support_eq : support (f : E → ℝ) = Euclidean.ball c f.r := by
-  rw [Euclidean.ball_eq_preimage, ← f.to_cont_diff_bump_of_inner.support_eq, ←
-    support_comp_eq_preimage, coe_eq_comp]
-#align cont_diff_bump.support_eq ContDiffBump.support_eq
-
-theorem tsupport_eq : tsupport f = Euclidean.closedBall c f.r := by
-  rw [tsupport, f.support_eq, Euclidean.closure_ball _ f.R_pos.ne']
-#align cont_diff_bump.tsupport_eq ContDiffBump.tsupport_eq
-
-protected theorem hasCompactSupport : HasCompactSupport f := by
-  simp_rw [HasCompactSupport, f.tsupport_eq, Euclidean.isCompact_closedBall]
-#align cont_diff_bump.has_compact_support ContDiffBump.hasCompactSupport
-
-theorem eventuallyEq_one_of_mem_ball (h : x ∈ Euclidean.ball c f.R) : f =ᶠ[𝓝 x] 1 :=
-  toEuclidean.ContinuousAt (f.toContDiffBumpOfInner.eventuallyEq_one_of_mem_ball h)
-#align cont_diff_bump.eventually_eq_one_of_mem_ball ContDiffBump.eventuallyEq_one_of_mem_ball
-
-theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
-  f.eventuallyEq_one_of_mem_ball <| Euclidean.mem_ball_self f.r_pos
-#align cont_diff_bump.eventually_eq_one ContDiffBump.eventuallyEq_one
-
-protected theorem contDiff {n} : ContDiff ℝ n f :=
-  f.toContDiffBumpOfInner.ContDiff.comp (toEuclidean : E ≃L[ℝ] _).ContDiff
-#align cont_diff_bump.cont_diff ContDiffBump.contDiff
-
-protected theorem contDiffAt {n} : ContDiffAt ℝ n f x :=
-  f.ContDiff.ContDiffAt
-#align cont_diff_bump.cont_diff_at ContDiffBump.contDiffAt
-
-protected theorem contDiffWithinAt {s n} : ContDiffWithinAt ℝ n f s x :=
-  f.ContDiffAt.ContDiffWithinAt
-#align cont_diff_bump.cont_diff_within_at ContDiffBump.contDiffWithinAt
-
-theorem exists_tsupport_subset {s : Set E} (hs : s ∈ 𝓝 c) : ∃ f : ContDiffBump c, tsupport f ⊆ s :=
-  let ⟨R, h0, hR⟩ := Euclidean.nhds_basis_closedBall.mem_iff.1 hs
-  ⟨⟨⟨R / 2, R, half_pos h0, half_lt_self h0⟩⟩, by rwa [tsupport_eq]⟩
-#align cont_diff_bump.exists_tsupport_subset ContDiffBump.exists_tsupport_subset
-
-theorem exists_closure_subset {R : ℝ} (hR : 0 < R) {s : Set E} (hs : IsClosed s)
-    (hsR : s ⊆ Euclidean.ball c R) : ∃ f : ContDiffBump c, f.r = R ∧ s ⊆ Euclidean.ball c f.R :=
-  by
-  rcases Euclidean.exists_pos_lt_subset_ball hR hs hsR with ⟨r, hr, hsr⟩
-  exact ⟨⟨⟨r, R, hr.1, hr.2⟩⟩, rfl, hsr⟩
-#align cont_diff_bump.exists_closure_subset ContDiffBump.exists_closure_subset
+#align cont_diff_bump.integral_normed_smul ContDiffBump.integral_normed_smul
 
 end ContDiffBump
-
-open FiniteDimensional Metric
-
-/-- If `E` is a finite dimensional normed space over `ℝ`, then for any point `x : E` and its
-neighborhood `s` there exists an infinitely smooth function with the following properties:
-
-* `f y = 1` in a neighborhood of `x`;
-* `f y = 0` outside of `s`;
-*  moreover, `tsupport f ⊆ s` and `f` has compact support;
-* `f y ∈ [0, 1]` for all `y`.
-
-This lemma is a simple wrapper around lemmas about bundled smooth bump functions, see
-`cont_diff_bump`. -/
-theorem exists_contDiff_bump_function_of_mem_nhds [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [FiniteDimensional ℝ E] {x : E} {s : Set E} (hs : s ∈ 𝓝 x) :
-    ∃ f : E → ℝ,
-      f =ᶠ[𝓝 x] 1 ∧
-        (∀ y, f y ∈ Icc (0 : ℝ) 1) ∧ ContDiff ℝ ⊤ f ∧ HasCompactSupport f ∧ tsupport f ⊆ s :=
-  let ⟨f, hf⟩ := ContDiffBump.exists_tsupport_subset hs
-  ⟨f, f.eventuallyEq_one, fun y => ⟨f.NonNeg, f.le_one⟩, f.ContDiff, f.HasCompactSupport, hf⟩
-#align exists_cont_diff_bump_function_of_mem_nhds exists_contDiff_bump_function_of_mem_nhds
 

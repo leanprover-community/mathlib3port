@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.abstract_completion
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ derived from the predicate is more universe polymorphic.
 ## References
 
 We don't know any traditional text discussing this. Real world mathematics simply silently
-identify the results of any two constructions that lead to something one could reasonnably
+identify the results of any two constructions that lead to something one could reasonably
 call a completion.
 
 ## Tags

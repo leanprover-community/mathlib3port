@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.bump_function
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Calculus.SpecificFunctions
+import Mathbin.Analysis.Calculus.BumpFunctionFindim
 import Mathbin.Geometry.Manifold.ContMdiff
 
 /-!
@@ -19,8 +19,8 @@ In this file we define `smooth_bump_function I c` to be a bundled smooth "bump" 
 define a coercion to function for this type, and for `f : smooth_bump_function I c`, the function
 `⇑f` written in the extended chart at `c` has the following properties:
 
-* `f x = 1` in the closed euclidean ball of radius `f.r` centered at `c`;
-* `f x = 0` outside of the euclidean ball of radius `f.R` centered at `c`;
+* `f x = 1` in the closed ball of radius `f.r` centered at `c`;
+* `f x = 0` outside of the ball of radius `f.R` centered at `c`;
 * `0 ≤ f x ≤ 1` for all `x`.
 
 The actual statements involve (pre)images under `ext_chart_at I f` and are given as lemmas in the
@@ -38,7 +38,7 @@ variable {E : Type uE} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensi
   {H : Type uH} [TopologicalSpace H] (I : ModelWithCorners ℝ E H) {M : Type uM} [TopologicalSpace M]
   [ChartedSpace H M] [SmoothManifoldWithCorners I M]
 
-open Function Filter FiniteDimensional Set
+open Function Filter FiniteDimensional Set Metric
 
 open Topology Manifold Classical Filter BigOperators
 
@@ -55,8 +55,8 @@ In this section we define a structure for a bundled smooth bump function and pro
 `f : smooth_bump_function I M` is a smooth function on `M` such that in the extended chart `e` at
 `f.c`:
 
-* `f x = 1` in the closed euclidean ball of radius `f.r` centered at `f.c`;
-* `f x = 0` outside of the euclidean ball of radius `f.R` centered at `f.c`;
+* `f x = 1` in the closed ball of radius `f.r` centered at `f.c`;
+* `f x = 0` outside of the ball of radius `f.R` centered at `f.c`;
 * `0 ≤ f x ≤ 1` for all `x`.
 
 The structure contains data required to construct a function with these properties. The function is
@@ -64,14 +64,12 @@ available as `⇑f` or `f x`. Formal statements of the properties listed above i
 (pre)images under `ext_chart_at I f.c` and are given as lemmas in the `smooth_bump_function`
 namespace. -/
 structure SmoothBumpFunction (c : M) extends ContDiffBump (extChartAt I c c) where
-  closedBall_subset : Euclidean.closedBall (extChartAt I c c) R ∩ range I ⊆ (extChartAt I c).target
+  closedBall_subset : closedBall (extChartAt I c c) R ∩ range I ⊆ (extChartAt I c).target
 #align smooth_bump_function SmoothBumpFunction
 
 variable {M}
 
 namespace SmoothBumpFunction
-
-open Euclidean renaming dist → eudist
 
 variable {c : M} (f : SmoothBumpFunction I c) {x : M} {I}
 
@@ -182,7 +180,7 @@ theorem eventuallyEq_one_of_dist_lt (hs : x ∈ (chartAt H c).source)
 theorem eventuallyEq_one : f =ᶠ[𝓝 c] 1 :=
   f.eventuallyEq_one_of_dist_lt (mem_chart_source _ _) <|
     by
-    rw [Euclidean.dist, dist_self]
+    rw [dist_self]
     exact f.r_pos
 #align smooth_bump_function.eventually_eq_one SmoothBumpFunction.eventuallyEq_one
 
@@ -209,11 +207,11 @@ theorem nonempty_support : (support f).Nonempty :=
   ⟨c, f.c_mem_support⟩
 #align smooth_bump_function.nonempty_support SmoothBumpFunction.nonempty_support
 
-theorem compact_symm_image_closedBall :
+theorem isCompact_symm_image_closedBall :
     IsCompact ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
-  (Euclidean.isCompact_closedBall.inter_right I.closed_range).image_of_continuousOn <|
+  ((isCompact_closedBall _ _).inter_right I.closed_range).image_of_continuousOn <|
     (continuousOn_extChartAt_symm _ _).mono f.closedBall_subset
-#align smooth_bump_function.compact_symm_image_closed_ball SmoothBumpFunction.compact_symm_image_closedBall
+#align smooth_bump_function.is_compact_symm_image_closed_ball SmoothBumpFunction.isCompact_symm_image_closedBall
 
 /-- Given a smooth bump function `f : smooth_bump_function I c`, the closed ball of radius `f.R` is
 known to include the support of `f`. These closed balls (in the model normed space `E`) intersected
@@ -223,14 +221,14 @@ theorem nhdsWithin_range_basis :
       closedBall (extChartAt I c c) f.r ∩ range I :=
   by
   refine'
-    ((nhdsWithin_hasBasis Euclidean.nhds_basis_closedBall _).restrict_subset
+    ((nhdsWithin_hasBasis nhds_basis_closed_ball _).restrict_subset
           (extChartAt_target_mem_nhdsWithin _ _)).to_has_basis'
       _ _
   · rintro R ⟨hR0, hsub⟩
-    exact ⟨⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩⟩, hsub⟩, trivial, subset.rfl⟩
+    exact ⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩, hsub⟩, trivial, subset.rfl⟩
   ·
     exact fun f _ =>
-      inter_mem (mem_nhdsWithin_of_mem_nhds <| closed_ball_mem_nhds f.r_pos) self_mem_nhdsWithin
+      inter_mem (mem_nhdsWithin_of_mem_nhds <| closed_ball_mem_nhds _ f.r_pos) self_mem_nhdsWithin
 #align smooth_bump_function.nhds_within_range_basis SmoothBumpFunction.nhdsWithin_range_basis
 
 theorem isClosed_image_of_isClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
@@ -240,7 +238,7 @@ theorem isClosed_image_of_isClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ su
   refine'
     ContinuousOn.preimage_closed_of_closed
       ((continuousOn_extChartAt_symm _ _).mono f.closed_ball_subset) _ hsc
-  exact IsClosed.inter is_closed_closed_ball I.closed_range
+  exact IsClosed.inter is_closed_ball I.closed_range
 #align smooth_bump_function.is_closed_image_of_is_closed SmoothBumpFunction.isClosed_image_of_isClosed
 
 /-- If `f` is a smooth bump function and `s` closed subset of the support of `f` (i.e., of the open
@@ -253,13 +251,13 @@ theorem exists_r_pos_lt_subset_ball {s : Set M} (hsc : IsClosed s) (hs : s ⊆ s
   set e := extChartAt I c
   have : IsClosed (e '' s) := f.is_closed_image_of_is_closed hsc hs
   rw [support_eq_inter_preimage, subset_inter_iff, ← image_subset_iff] at hs
-  rcases Euclidean.exists_pos_lt_subset_ball f.R_pos this hs.2 with ⟨r, hrR, hr⟩
+  rcases exists_pos_lt_subset_ball f.R_pos this hs.2 with ⟨r, hrR, hr⟩
   exact ⟨r, hrR, subset_inter hs.1 (image_subset_iff.1 hr)⟩
 #align smooth_bump_function.exists_r_pos_lt_subset_ball SmoothBumpFunction.exists_r_pos_lt_subset_ball
 
 /-- Replace `r` with another value in the interval `(0, f.R)`. -/
 def updateR (r : ℝ) (hr : r ∈ Ioo 0 f.r) : SmoothBumpFunction I c :=
-  ⟨⟨⟨r, f.r, hr.1, hr.2⟩⟩, f.closedBall_subset⟩
+  ⟨⟨r, f.r, hr.1, hr.2⟩, f.closedBall_subset⟩
 #align smooth_bump_function.update_r SmoothBumpFunction.updateR
 
 @[simp]
@@ -288,7 +286,7 @@ variable [T2Space M]
 
 theorem isClosed_symm_image_closedBall :
     IsClosed ((extChartAt I c).symm '' (closedBall (extChartAt I c c) f.r ∩ range I)) :=
-  f.compact_symm_image_closedBall.IsClosed
+  f.isCompact_symm_image_closedBall.IsClosed
 #align smooth_bump_function.is_closed_symm_image_closed_ball SmoothBumpFunction.isClosed_symm_image_closedBall
 
 theorem tsupport_subset_symm_image_closedBall :
@@ -314,7 +312,7 @@ theorem tsupport_subset_chartAt_source : tsupport f ⊆ (chartAt H c).source := 
 #align smooth_bump_function.tsupport_subset_chart_at_source SmoothBumpFunction.tsupport_subset_chartAt_source
 
 protected theorem hasCompactSupport : HasCompactSupport f :=
-  isCompact_of_isClosed_subset f.compact_symm_image_closedBall isClosed_closure
+  isCompact_of_isClosed_subset f.isCompact_symm_image_closedBall isClosed_closure
     f.tsupport_subset_symm_image_closedBall
 #align smooth_bump_function.has_compact_support SmoothBumpFunction.hasCompactSupport
 
@@ -363,11 +361,11 @@ protected theorem smooth : Smooth I 𝓘(ℝ) f :=
 #align smooth_bump_function.smooth SmoothBumpFunction.smooth
 
 protected theorem smoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
-  f.Smooth.SmoothAt
+  f.smooth.SmoothAt
 #align smooth_bump_function.smooth_at SmoothBumpFunction.smoothAt
 
 protected theorem continuous : Continuous f :=
-  f.Smooth.Continuous
+  f.smooth.Continuous
 #align smooth_bump_function.continuous SmoothBumpFunction.continuous
 
 /-- If `f : smooth_bump_function I c` is a smooth bump function and `g : M → G` is a function smooth

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -589,6 +589,7 @@ theorem sub_emod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n :=
 -/
 
 #print Int.ediv_emod_unique /-
+/-- See also `int.div_mod_equiv` for a similar statement as an `equiv`. -/
 protected theorem ediv_emod_unique {a b r q : ℤ} (h : 0 < b) :
     a / b = q ∧ a % b = r ↔ r + b * q = a ∧ 0 ≤ r ∧ r < b :=
   by

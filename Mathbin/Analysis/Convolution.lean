@@ -4,15 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.MeasureTheory.Group.Prod
 import Mathbin.MeasureTheory.Function.LocallyIntegrable
+import Mathbin.Analysis.Calculus.BumpFunctionInner
 import Mathbin.MeasureTheory.Integral.IntervalIntegral
-import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.ParametricIntegral
 
 /-!
@@ -71,7 +71,7 @@ Versions of these statements for functions depending on a parameter are also giv
 
 * `convolution_tendsto_right`: Given a sequence of nonnegative normalized functions whose support
   tends to a small neighborhood around `0`, the convolution tends to the right argument.
-  This is specialized to bump functions in `cont_diff_bump_of_inner.convolution_tendsto_right`.
+  This is specialized to bump functions in `cont_diff_bump.convolution_tendsto_right`.
 
 # Notation
 The following notations are localized in the locale `convolution`:
@@ -1026,7 +1026,7 @@ theorem dist_convolution_le {f : G → ℝ} {x₀ : G} {R ε : ℝ} {z₀ : E'} 
 * `g i x` tends to `z₀` as `(i, x)` tends to `l ×ᶠ 𝓝 x₀`;
 * `k i` tends to `x₀`.
 
-See also `cont_diff_bump_of_inner.convolution_tendsto_right`.
+See also `cont_diff_bump.convolution_tendsto_right`.
 -/
 theorem convolution_tendsto_right {ι} {g : ι → G → E'} {l : Filter ι} {x₀ : G} {z₀ : E'}
     {φ : ι → G → ℝ} {k : ι → G} (hnφ : ∀ᶠ i in l, ∀ x, 0 ≤ φ i x)
@@ -1061,23 +1061,23 @@ theorem convolution_tendsto_right {ι} {g : ι → G → E'} {l : Filter ι} {x�
 
 end NormedAddCommGroup
 
-namespace ContDiffBumpOfInner
+namespace ContDiffBump
 
 variable {n : ℕ∞}
 
 variable [NormedSpace ℝ E']
 
-variable [InnerProductSpace ℝ G]
+variable [NormedAddCommGroup G] [NormedSpace ℝ G] [HasContDiffBump G]
 
 variable [CompleteSpace E']
 
-variable {a : G} {φ : ContDiffBumpOfInner (0 : G)}
+variable {a : G} {φ : ContDiffBump (0 : G)}
 
 /-- If `φ` is a bump function, compute `(φ ⋆ g) x₀` if `g` is constant on `metric.ball x₀ φ.R`. -/
 theorem convolution_eq_right {x₀ : G} (hg : ∀ x ∈ ball x₀ φ.r, g x = g x₀) :
     (φ ⋆[lsmul ℝ ℝ, μ] g : G → E') x₀ = integral μ φ • g x₀ := by
   simp_rw [convolution_eq_right' _ φ.support_eq.subset hg, lsmul_apply, integral_smul_const]
-#align cont_diff_bump_of_inner.convolution_eq_right ContDiffBumpOfInner.convolution_eq_right
+#align cont_diff_bump.convolution_eq_right ContDiffBump.convolution_eq_right
 
 variable [BorelSpace G]
 
@@ -1091,7 +1091,7 @@ theorem normed_convolution_eq_right {x₀ : G} (hg : ∀ x ∈ ball x₀ φ.r, g
   by
   simp_rw [convolution_eq_right' _ φ.support_normed_eq.subset hg, lsmul_apply]
   exact integral_normed_smul φ μ (g x₀)
-#align cont_diff_bump_of_inner.normed_convolution_eq_right ContDiffBumpOfInner.normed_convolution_eq_right
+#align cont_diff_bump.normed_convolution_eq_right ContDiffBump.normed_convolution_eq_right
 
 variable [IsAddLeftInvariant μ]
 
@@ -1102,33 +1102,33 @@ theorem dist_normed_convolution_le {x₀ : G} {ε : ℝ} (hmg : AeStronglyMeasur
     dist ((φ.normed μ ⋆[lsmul ℝ ℝ, μ] g : G → E') x₀) (g x₀) ≤ ε :=
   dist_convolution_le (by simp_rw [← dist_self (g x₀), hg x₀ (mem_ball_self φ.R_pos)])
     φ.support_normed_eq.Subset φ.nonneg_normed φ.integral_normed hmg hg
-#align cont_diff_bump_of_inner.dist_normed_convolution_le ContDiffBumpOfInner.dist_normed_convolution_le
+#align cont_diff_bump.dist_normed_convolution_le ContDiffBump.dist_normed_convolution_le
 
 /-- `(φ i ⋆ g i) (k i)` tends to `z₀` as `i` tends to some filter `l` if
 * `φ` is a sequence of normed bump functions such that `(φ i).R` tends to `0` as `i` tends to `l`;
 * `g i` is `mu`-a.e. strongly measurable as `i` tends to `l`;
 * `g i x` tends to `z₀` as `(i, x)` tends to `l ×ᶠ 𝓝 x₀`;
 * `k i` tends to `x₀`. -/
-theorem convolution_tendsto_right {ι} {φ : ι → ContDiffBumpOfInner (0 : G)} {g : ι → G → E'}
-    {k : ι → G} {x₀ : G} {z₀ : E'} {l : Filter ι} (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0))
+theorem convolution_tendsto_right {ι} {φ : ι → ContDiffBump (0 : G)} {g : ι → G → E'} {k : ι → G}
+    {x₀ : G} {z₀ : E'} {l : Filter ι} (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0))
     (hig : ∀ᶠ i in l, AeStronglyMeasurable (g i) μ) (hcg : Tendsto (uncurry g) (l ×ᶠ 𝓝 x₀) (𝓝 z₀))
     (hk : Tendsto k l (𝓝 x₀)) :
     Tendsto (fun i => ((fun x => (φ i).normed μ x) ⋆[lsmul ℝ ℝ, μ] g i : G → E') (k i)) l (𝓝 z₀) :=
   convolution_tendsto_right (eventually_of_forall fun i => (φ i).nonneg_normed)
     (eventually_of_forall fun i => (φ i).integral_normed) (tendsto_support_normed_smallSets hφ) hig
     hcg hk
-#align cont_diff_bump_of_inner.convolution_tendsto_right ContDiffBumpOfInner.convolution_tendsto_right
+#align cont_diff_bump.convolution_tendsto_right ContDiffBump.convolution_tendsto_right
 
-/-- Special case of `cont_diff_bump_of_inner.convolution_tendsto_right` where `g` is continuous,
+/-- Special case of `cont_diff_bump.convolution_tendsto_right` where `g` is continuous,
   and the limit is taken only in the first function. -/
-theorem convolution_tendsto_right_of_continuous {ι} {φ : ι → ContDiffBumpOfInner (0 : G)}
-    {l : Filter ι} (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) (hg : Continuous g) (x₀ : G) :
+theorem convolution_tendsto_right_of_continuous {ι} {φ : ι → ContDiffBump (0 : G)} {l : Filter ι}
+    (hφ : Tendsto (fun i => (φ i).r) l (𝓝 0)) (hg : Continuous g) (x₀ : G) :
     Tendsto (fun i => ((fun x => (φ i).normed μ x) ⋆[lsmul ℝ ℝ, μ] g : G → E') x₀) l (𝓝 (g x₀)) :=
   convolution_tendsto_right hφ (eventually_of_forall fun _ => hg.AeStronglyMeasurable)
     ((hg.Tendsto x₀).comp tendsto_snd) tendsto_const_nhds
-#align cont_diff_bump_of_inner.convolution_tendsto_right_of_continuous ContDiffBumpOfInner.convolution_tendsto_right_of_continuous
+#align cont_diff_bump.convolution_tendsto_right_of_continuous ContDiffBump.convolution_tendsto_right_of_continuous
 
-end ContDiffBumpOfInner
+end ContDiffBump
 
 end Measurability
 

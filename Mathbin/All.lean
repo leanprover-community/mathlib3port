@@ -513,6 +513,7 @@ import Mathbin.Analysis.BoxIntegral.Partition.SubboxInduction
 import Mathbin.Analysis.BoxIntegral.Partition.Tagged
 import Mathbin.Analysis.Calculus.AffineMap
 import Mathbin.Analysis.Calculus.BumpFunctionFindim
+import Mathbin.Analysis.Calculus.BumpFunctionInner
 import Mathbin.Analysis.Calculus.Conformal.InnerProduct
 import Mathbin.Analysis.Calculus.Conformal.NormedSpace
 import Mathbin.Analysis.Calculus.ContDiff
@@ -537,7 +538,6 @@ import Mathbin.Analysis.Calculus.Monotone
 import Mathbin.Analysis.Calculus.ParametricIntegral
 import Mathbin.Analysis.Calculus.ParametricIntervalIntegral
 import Mathbin.Analysis.Calculus.Series
-import Mathbin.Analysis.Calculus.SpecificFunctions
 import Mathbin.Analysis.Calculus.TangentCone
 import Mathbin.Analysis.Calculus.Taylor
 import Mathbin.Analysis.Calculus.UniformLimitsDeriv
@@ -1149,6 +1149,8 @@ import Mathbin.Combinatorics.SimpleGraph.Coloring
 import Mathbin.Combinatorics.SimpleGraph.Connectivity
 import Mathbin.Combinatorics.SimpleGraph.DegreeSum
 import Mathbin.Combinatorics.SimpleGraph.Density
+import Mathbin.Combinatorics.SimpleGraph.Ends.Defs
+import Mathbin.Combinatorics.SimpleGraph.Ends.Properties
 import Mathbin.Combinatorics.SimpleGraph.Hasse
 import Mathbin.Combinatorics.SimpleGraph.IncMatrix
 import Mathbin.Combinatorics.SimpleGraph.Matching

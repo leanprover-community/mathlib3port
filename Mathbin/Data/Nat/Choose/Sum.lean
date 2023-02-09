@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 
 ! This file was ported from Lean 3 source module data.nat.choose.sum
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Algebra.BigOperators.NatAntidiagonal
 
 /-!
 # Sums of binomial coefficients
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file includes variants of the binomial theorem and other results on sums of binomial
 coefficients. Theorems whose proofs depend on such sums may also go in this file for import

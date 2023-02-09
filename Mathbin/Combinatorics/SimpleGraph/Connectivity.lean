@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.connectivity
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1149,6 +1149,20 @@ protected theorem IsCycle.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCycle) (h 
 
 end WalkDecomp
 
+/-- Given a set `S` and a walk `w` from `u` to `v` such that `u ∈ S` but `v ∉ S`,
+there exists a dart in the walk whose start is in `S` but whose end is not.
+-/
+theorem exists_boundary_dart {u v : V} (p : G.Walk u v) (S : Set V) (uS : u ∈ S) (vS : v ∉ S) :
+    ∃ d : G.Dart, d ∈ p.darts ∧ d.fst ∈ S ∧ d.snd ∉ S :=
+  by
+  induction' p with _ x y w a p' ih
+  · exact absurd uS vS
+  · by_cases h : y ∈ S
+    · obtain ⟨d, hd, hcd⟩ := ih h vS
+      exact ⟨d, Or.inr hd, hcd⟩
+    · exact ⟨⟨(x, y), a⟩, Or.inl rfl, uS, h⟩
+#align simple_graph.walk.exists_boundary_dart SimpleGraph.Walk.exists_boundary_dart
+
 end Walk
 
 /-! ### Type of paths -/
@@ -1932,6 +1946,35 @@ theorem Preconnected.subsingleton_connectedComponent (h : G.Preconnected) :
     Subsingleton G.ConnectedComponent :=
   ⟨ConnectedComponent.ind₂ fun v w => ConnectedComponent.sound (h v w)⟩
 #align simple_graph.preconnected.subsingleton_connected_component SimpleGraph.Preconnected.subsingleton_connectedComponent
+
+/-- The map on connected components induced by a graph homomorphism. -/
+def ConnectedComponent.map {V : Type _} {G : SimpleGraph V} {V' : Type _} {G' : SimpleGraph V'}
+    (φ : G →g G') (C : G.ConnectedComponent) : G'.ConnectedComponent :=
+  C.lift (fun v => G'.connectedComponentMk (φ v)) fun v w p _ =>
+    ConnectedComponent.eq.mpr (p.map φ).Reachable
+#align simple_graph.connected_component.map SimpleGraph.ConnectedComponent.map
+
+@[simp]
+theorem ConnectedComponent.map_mk {V : Type _} {G : SimpleGraph V} {V' : Type _}
+    {G' : SimpleGraph V'} (φ : G →g G') (v : V) :
+    (G.connectedComponentMk v).map φ = G'.connectedComponentMk (φ v) :=
+  rfl
+#align simple_graph.connected_component.map_mk SimpleGraph.ConnectedComponent.map_mk
+
+@[simp]
+theorem ConnectedComponent.map_id (C : ConnectedComponent G) : C.map Hom.id = C :=
+  by
+  refine' C.ind _
+  exact fun _ => rfl
+#align simple_graph.connected_component.map_id SimpleGraph.ConnectedComponent.map_id
+
+@[simp]
+theorem ConnectedComponent.map_comp {V' : Type _} {G' : SimpleGraph V'} {V'' : Type _}
+    {G'' : SimpleGraph V''} (C : G.ConnectedComponent) (φ : G →g G') (ψ : G' →g G'') :
+    (C.map φ).map ψ = C.map (ψ.comp φ) := by
+  refine' C.ind _
+  exact fun _ => rfl
+#align simple_graph.connected_component.map_comp SimpleGraph.ConnectedComponent.map_comp
 
 end connectedComponent
 

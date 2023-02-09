@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -469,22 +469,11 @@ theorem eq_coe_norm_of_nonneg {z : ℂ} (hz : 0 ≤ z) : z = ↑‖z‖ := by
 
 end ComplexOrder
 
-theorem hasSum_iff {α} (f : α → ℂ) (c : ℂ) :
-    HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im :=
-  by
-  -- For some reason, `continuous_linear_map.has_sum` is orders of magnitude faster than
-  -- `has_sum.mapL` here:
-  refine' ⟨fun h => ⟨re_clm.has_sum h, im_clm.has_sum h⟩, _⟩
-  rintro ⟨h₁, h₂⟩
-  convert (h₁.prod_mk h₂).mapL equiv_real_prod_clm.symm.to_continuous_linear_map
-  · ext x <;> rfl
-  · cases c
-    rfl
-#align complex.has_sum_iff Complex.hasSum_iff
-
 end Complex
 
 namespace IsROrC
+
+open ComplexConjugate
 
 -- mathport name: exprreC
 local notation "reC" => @IsROrC.re ℂ _
@@ -525,5 +514,158 @@ theorem normSq_to_complex {x : ℂ} : norm_sqC x = Complex.normSq x := by
 theorem abs_to_complex {x : ℂ} : absC x = Complex.abs x := by simp [IsROrC.abs, Complex.abs]
 #align is_R_or_C.abs_to_complex IsROrC.abs_to_complex
 
+section tsum
+
+variable {α : Type _} (𝕜 : Type _) [IsROrC 𝕜]
+
+@[simp]
+theorem hasSum_conj {f : α → 𝕜} {x : 𝕜} : HasSum (fun x => conj (f x)) x ↔ HasSum f (conj x) :=
+  conjCle.HasSum
+#align is_R_or_C.has_sum_conj IsROrC.hasSum_conj
+
+theorem hasSum_conj' {f : α → 𝕜} {x : 𝕜} : HasSum (fun x => conj (f x)) (conj x) ↔ HasSum f x :=
+  conjCle.has_sum'
+#align is_R_or_C.has_sum_conj' IsROrC.hasSum_conj'
+
+@[simp]
+theorem summable_conj {f : α → 𝕜} : (Summable fun x => conj (f x)) ↔ Summable f :=
+  summable_star_iff
+#align is_R_or_C.summable_conj IsROrC.summable_conj
+
+variable {𝕜}
+
+theorem conj_tsum (f : α → 𝕜) : conj (∑' a, f a) = ∑' a, conj (f a) :=
+  tsum_star
+#align is_R_or_C.conj_tsum IsROrC.conj_tsum
+
+variable (𝕜)
+
+@[simp, norm_cast]
+theorem hasSum_of_real {f : α → ℝ} {x : ℝ} : HasSum (fun x => (f x : 𝕜)) x ↔ HasSum f x :=
+  ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.of_real_re] using re_clm.has_sum h,
+    ofRealClm.HasSum⟩
+#align is_R_or_C.has_sum_of_real IsROrC.hasSum_of_real
+
+@[simp, norm_cast]
+theorem summable_of_real {f : α → ℝ} : (Summable fun x => (f x : 𝕜)) ↔ Summable f :=
+  ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.of_real_re] using re_clm.summable h,
+    ofRealClm.Summable⟩
+#align is_R_or_C.summable_of_real IsROrC.summable_of_real
+
+@[norm_cast]
+theorem of_real_tsum (f : α → ℝ) : (↑(∑' a, f a) : 𝕜) = ∑' a, f a :=
+  by
+  by_cases h : Summable f
+  · exact ContinuousLinearMap.map_tsum of_real_clm h
+  ·
+    rw [tsum_eq_zero_of_not_summable h,
+      tsum_eq_zero_of_not_summable ((summable_of_real _).Not.mpr h), of_real_zero]
+#align is_R_or_C.of_real_tsum IsROrC.of_real_tsum
+
+theorem hasSum_re {f : α → 𝕜} {x : 𝕜} (h : HasSum f x) : HasSum (fun x => re (f x)) (re x) :=
+  reClm.HasSum h
+#align is_R_or_C.has_sum_re IsROrC.hasSum_re
+
+theorem hasSum_im {f : α → 𝕜} {x : 𝕜} (h : HasSum f x) : HasSum (fun x => im (f x)) (im x) :=
+  imClm.HasSum h
+#align is_R_or_C.has_sum_im IsROrC.hasSum_im
+
+theorem re_tsum {f : α → 𝕜} (h : Summable f) : re (∑' a, f a) = ∑' a, re (f a) :=
+  reClm.map_tsum h
+#align is_R_or_C.re_tsum IsROrC.re_tsum
+
+theorem im_tsum {f : α → 𝕜} (h : Summable f) : im (∑' a, f a) = ∑' a, im (f a) :=
+  imClm.map_tsum h
+#align is_R_or_C.im_tsum IsROrC.im_tsum
+
+variable {𝕜}
+
+theorem hasSum_iff (f : α → 𝕜) (c : 𝕜) :
+    HasSum f c ↔ HasSum (fun x => re (f x)) (re c) ∧ HasSum (fun x => im (f x)) (im c) :=
+  by
+  refine' ⟨fun h => ⟨has_sum_re _ h, has_sum_im _ h⟩, _⟩
+  rintro ⟨h₁, h₂⟩
+  rw [← IsROrC.re_add_im c]
+  convert ((has_sum_of_real 𝕜).mpr h₁).add (((has_sum_of_real 𝕜).mpr h₂).mul_right I)
+  simp_rw [IsROrC.re_add_im]
+#align is_R_or_C.has_sum_iff IsROrC.hasSum_iff
+
+end tsum
+
 end IsROrC
+
+namespace Complex
+
+/-!
+We have to repeat the lemmas about `is_R_or_C.re` and `is_R_or_C.im` as they are not syntactic
+matches for `complex.re` and `complex.im`.
+
+We do not have this problem with `of_real` and `conj`, although we repeat them anyway for
+discoverability and to avoid the need to unify `𝕜`.
+-/
+
+
+section tsum
+
+variable {α : Type _}
+
+open ComplexConjugate
+
+@[simp]
+theorem hasSum_conj {f : α → ℂ} {x : ℂ} : HasSum (fun x => conj (f x)) x ↔ HasSum f (conj x) :=
+  IsROrC.hasSum_conj _
+#align complex.has_sum_conj Complex.hasSum_conj
+
+theorem hasSum_conj' {f : α → ℂ} {x : ℂ} : HasSum (fun x => conj (f x)) (conj x) ↔ HasSum f x :=
+  IsROrC.hasSum_conj' _
+#align complex.has_sum_conj' Complex.hasSum_conj'
+
+@[simp]
+theorem summable_conj {f : α → ℂ} : (Summable fun x => conj (f x)) ↔ Summable f :=
+  IsROrC.summable_conj _
+#align complex.summable_conj Complex.summable_conj
+
+theorem conj_tsum (f : α → ℂ) : conj (∑' a, f a) = ∑' a, conj (f a) :=
+  IsROrC.conj_tsum _
+#align complex.conj_tsum Complex.conj_tsum
+
+@[simp, norm_cast]
+theorem hasSum_of_real {f : α → ℝ} {x : ℝ} : HasSum (fun x => (f x : ℂ)) x ↔ HasSum f x :=
+  IsROrC.hasSum_of_real _
+#align complex.has_sum_of_real Complex.hasSum_of_real
+
+@[simp, norm_cast]
+theorem summable_of_real {f : α → ℝ} : (Summable fun x => (f x : ℂ)) ↔ Summable f :=
+  IsROrC.summable_of_real _
+#align complex.summable_of_real Complex.summable_of_real
+
+@[norm_cast]
+theorem of_real_tsum (f : α → ℝ) : (↑(∑' a, f a) : ℂ) = ∑' a, f a :=
+  IsROrC.of_real_tsum _ _
+#align complex.of_real_tsum Complex.of_real_tsum
+
+theorem hasSum_re {f : α → ℂ} {x : ℂ} (h : HasSum f x) : HasSum (fun x => (f x).re) x.re :=
+  IsROrC.hasSum_re _ h
+#align complex.has_sum_re Complex.hasSum_re
+
+theorem hasSum_im {f : α → ℂ} {x : ℂ} (h : HasSum f x) : HasSum (fun x => (f x).im) x.im :=
+  IsROrC.hasSum_im _ h
+#align complex.has_sum_im Complex.hasSum_im
+
+theorem re_tsum {f : α → ℂ} (h : Summable f) : (∑' a, f a).re = ∑' a, (f a).re :=
+  IsROrC.re_tsum _ h
+#align complex.re_tsum Complex.re_tsum
+
+theorem im_tsum {f : α → ℂ} (h : Summable f) : (∑' a, f a).im = ∑' a, (f a).im :=
+  IsROrC.im_tsum _ h
+#align complex.im_tsum Complex.im_tsum
+
+theorem hasSum_iff (f : α → ℂ) (c : ℂ) :
+    HasSum f c ↔ HasSum (fun x => (f x).re) c.re ∧ HasSum (fun x => (f x).im) c.im :=
+  IsROrC.hasSum_iff _ _
+#align complex.has_sum_iff Complex.hasSum_iff
+
+end tsum
+
+end Complex
 

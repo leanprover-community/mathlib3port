@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.connected
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -986,6 +986,11 @@ theorem connectedComponent_eq {x y : α} (h : y ∈ connectedComponent x) :
 #align connected_component_eq connectedComponent_eq
 -/
 
+theorem connectedComponent_eq_iff_mem {x y : α} :
+    connectedComponent x = connectedComponent y ↔ x ∈ connectedComponent y :=
+  ⟨fun h => h ▸ mem_connectedComponent, fun h => (connectedComponent_eq h).symm⟩
+#align connected_component_eq_iff_mem connectedComponent_eq_iff_mem
+
 #print connectedComponentIn_eq /-
 theorem connectedComponentIn_eq {x y : α} {F : Set α} (h : y ∈ connectedComponentIn F x) :
     connectedComponentIn F x = connectedComponentIn F y :=
@@ -1657,6 +1662,14 @@ theorem locallyConnectedSpace_iff_open_connected_subsets :
           fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
 #align locally_connected_space_iff_open_connected_subsets locallyConnectedSpace_iff_open_connected_subsets
 
+/-- A space with discrete topology is a locally connected space. -/
+instance (priority := 100) DiscreteTopology.to_locallyConnectedSpace (α) [TopologicalSpace α]
+    [DiscreteTopology α] : LocallyConnectedSpace α :=
+  locallyConnectedSpace_iff_open_connected_subsets.2 fun x _U hU =>
+    ⟨{x}, singleton_subset_iff.2 <| mem_of_mem_nhds hU, isOpen_discrete _, mem_singleton _,
+      isConnected_singleton⟩
+#align discrete_topology.to_locally_connected_space DiscreteTopology.to_locallyConnectedSpace
+
 #print connectedComponentIn_mem_nhds /-
 theorem connectedComponentIn_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α} (h : F ∈ 𝓝 x) :
     connectedComponentIn F x ∈ 𝓝 x :=
@@ -1899,6 +1912,12 @@ theorem totallyDisconnectedSpace_iff_connectedComponent_singleton :
 #align totally_disconnected_space_iff_connected_component_singleton totallyDisconnectedSpace_iff_connectedComponent_singleton
 -/
 
+@[simp]
+theorem connectedComponent_eq_singleton [TotallyDisconnectedSpace α] (x : α) :
+    connectedComponent x = {x} :=
+  totallyDisconnectedSpace_iff_connectedComponent_singleton.1 ‹_› x
+#align connected_component_eq_singleton connectedComponent_eq_singleton
+
 /- warning: continuous.image_connected_component_eq_singleton -> Continuous.image_connectedComponent_eq_singleton is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {β : Type.{u2}} [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : TotallyDisconnectedSpace.{u2} β _inst_2] {f : α -> β}, (Continuous.{u1, u2} α β _inst_1 _inst_2 f) -> (forall (a : α), Eq.{succ u2} (Set.{u2} β) (Set.image.{u1, u2} α β f (connectedComponent.{u1} α _inst_1 a)) (Singleton.singleton.{u2, u2} β (Set.{u2} β) (Set.hasSingleton.{u2} β) (f a)))
@@ -2071,7 +2090,7 @@ theorem coe_ne_coe {x y : α} :
 
 #print ConnectedComponents.coe_eq_coe' /-
 theorem coe_eq_coe' {x y : α} : (x : ConnectedComponents α) = y ↔ x ∈ connectedComponent y :=
-  coe_eq_coe.trans ⟨fun h => h ▸ mem_connectedComponent, fun h => (connectedComponent_eq h).symm⟩
+  coe_eq_coe.trans connectedComponent_eq_iff_mem
 #align connected_components.coe_eq_coe' ConnectedComponents.coe_eq_coe'
 -/
 

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module combinatorics.catalan
-! leanprover-community/mathlib commit 98e83c3d541c77cdb7da20d79611a780ff8e7d90
+! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Data.Nat.Choose.Central
 import Mathbin.Algebra.BigOperators.Fin
+import Mathbin.Algebra.BigOperators.NatAntidiagonal
 import Mathbin.Algebra.CharZero.Lemmas
+import Mathbin.Data.Finset.NatAntidiagonal
+import Mathbin.Data.Nat.Choose.Central
+import Mathbin.Data.Tree
 import Mathbin.Tactic.FieldSimp
 import Mathbin.Tactic.LinearCombination
 
@@ -31,6 +34,9 @@ triangulations of convex polygons.
 * `catalan_eq_central_binom_div `: The explicit formula for the Catalan number using the central
   binomial coefficient, `catalan n = nat.central_binom n / (n + 1)`.
 
+* `trees_of_nodes_eq_card_eq_catalan`: The number of binary trees with `n` internal nodes
+  is `catalan n`
+
 ## Implementation details
 
 The proof of `catalan_eq_central_binom_div` follows
@@ -48,6 +54,8 @@ https://math.stackexchange.com/questions/3304415/catalan-numbers-algebraic-proof
 open BigOperators
 
 open Finset
+
+open Finset.Nat.antidiagonal (fst_le snd_le)
 
 /-- The recursive definition of the sequence of Catalan numbers:
 `catalan (n + 1) = ∑ i : fin n.succ, catalan i * catalan (n - i)` -/
@@ -67,6 +75,12 @@ theorem catalan_zero : catalan 0 = 1 := by rw [catalan]
 theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Fin n.succ, catalan i * catalan (n - i) := by
   rw [catalan]
 #align catalan_succ catalan_succ
+
+theorem catalan_succ' (n : ℕ) :
+    catalan (n + 1) = ∑ ij in Nat.antidiagonal n, catalan ij.1 * catalan ij.2 := by
+  rw [catalan_succ, nat.sum_antidiagonal_eq_sum_range_succ (fun x y => catalan x * catalan y) n,
+    sum_range]
+#align catalan_succ' catalan_succ'
 
 @[simp]
 theorem catalan_one : catalan 1 = 1 := by simp [catalan_succ]
@@ -149,4 +163,74 @@ theorem catalan_two : catalan 2 = 2 := by
 theorem catalan_three : catalan 3 = 5 := by
   norm_num [catalan_eq_centralBinom_div, Nat.centralBinom, Nat.choose]
 #align catalan_three catalan_three
+
+namespace Tree
+
+open Tree
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- Given two finsets, find all trees that can be formed with
+  left child in `a` and right child in `b` -/
+@[reducible]
+def pairwiseNode (a b : Finset (Tree Unit)) : Finset (Tree Unit) :=
+  (a ×ˢ b).map ⟨fun x => x.1 △ x.2, fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => fun h => by simpa using h⟩
+#align tree.pairwise_node Tree.pairwiseNode
+
+/-- A finset of all trees with `n` nodes. See `mem_trees_of_nodes_eq` -/
+def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
+  | 0 => {nil}
+  | n + 1 =>
+    (Finset.Nat.antidiagonal n).attach.bunionᵢ fun ijh =>
+      have := Nat.lt_succ_of_le (fst_le ijh.2)
+      have := Nat.lt_succ_of_le (snd_le ijh.2)
+      pairwiseNode (trees_of_num_nodes_eq ijh.1.1) (trees_of_num_nodes_eq ijh.1.2)
+#align tree.trees_of_num_nodes_eq Tree.treesOfNumNodesEq
+
+@[simp]
+theorem trees_of_nodes_eq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_num_nodes_eq]
+#align tree.trees_of_nodes_eq_zero Tree.trees_of_nodes_eq_zero
+
+theorem trees_of_nodes_eq_succ (n : ℕ) :
+    treesOfNumNodesEq (n + 1) =
+      (Nat.antidiagonal n).bunionᵢ fun ij =>
+        pairwiseNode (treesOfNumNodesEq ij.1) (treesOfNumNodesEq ij.2) :=
+  by
+  rw [trees_of_num_nodes_eq]
+  ext
+  simp
+#align tree.trees_of_nodes_eq_succ Tree.trees_of_nodes_eq_succ
+
+@[simp]
+theorem mem_trees_of_nodes_eq {x : Tree Unit} {n : ℕ} : x ∈ treesOfNumNodesEq n ↔ x.numNodes = n :=
+  by
+  induction x using Tree.unitRecOn generalizing n <;> cases n <;>
+    simp [trees_of_nodes_eq_succ, Nat.succ_eq_add_one, *]
+  trivial
+#align tree.mem_trees_of_nodes_eq Tree.mem_trees_of_nodes_eq
+
+theorem mem_trees_of_nodes_eq_numNodes (x : Tree Unit) : x ∈ treesOfNumNodesEq x.numNodes :=
+  mem_trees_of_nodes_eq.mpr rfl
+#align tree.mem_trees_of_nodes_eq_num_nodes Tree.mem_trees_of_nodes_eq_numNodes
+
+@[simp, norm_cast]
+theorem coe_trees_of_nodes_eq (n : ℕ) :
+    ↑(treesOfNumNodesEq n) = { x : Tree Unit | x.numNodes = n } :=
+  Set.ext (by simp)
+#align tree.coe_trees_of_nodes_eq Tree.coe_trees_of_nodes_eq
+
+theorem trees_of_nodes_eq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = catalan n :=
+  by
+  induction' n using Nat.case_strong_induction_on with n ih
+  · simp
+  rw [trees_of_nodes_eq_succ, card_bUnion, catalan_succ']
+  · apply sum_congr rfl
+    rintro ⟨i, j⟩ H
+    simp [ih _ (fst_le H), ih _ (snd_le H)]
+  · simp_rw [disjoint_left]
+    rintro ⟨i, j⟩ _ ⟨i', j'⟩ _
+    clear * -
+    tidy
+#align tree.trees_of_nodes_eq_card_eq_catalan Tree.trees_of_nodes_eq_card_eq_catalan
+
+end Tree
 
